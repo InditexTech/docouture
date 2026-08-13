@@ -10,14 +10,18 @@
  */
 
 .ids-scale-medium,:host,:host(.ids-scale-medium),:root {
+  --ids-size-0: 0px;
   --ids-size-12: 2px;
+  --ids-size-25: 4px;
+  --ids-size-50: 8px;
   --ids-size-125: 20px;
+  --ids-size-250: 40px;
   --ids-typo-font-family-primary: Helvetica Now Text SW10;
   --ids-typo-font-family-monospace: NotoSansMono;
+  --ids-typo-line-height-22: 22px;
   --ids-typo-line-height-16: 16px;
   --ids-typo-line-height-18: 18px;
   --ids-typo-line-height-20: 20px;
-  --ids-typo-line-height-22: 22px;
   --ids-typo-line-height-24: 24px;
   --ids-typo-line-height-32: 32px;
   --ids-typo-line-height-36: 36px;
@@ -41,14 +45,18 @@
 }
 
 .ids-scale-large,:host(.ids-scale-large) {
+  --ids-size-0: 0px;
   --ids-size-12: 2px;
+  --ids-size-25: 6px;
+  --ids-size-50: 12px;
   --ids-size-125: 26px;
+  --ids-size-250: 50px;
   --ids-typo-font-family-primary: Helvetica Now Text SW10;
   --ids-typo-font-family-monospace: NotoSansMono;
+  --ids-typo-line-height-22: 29px;
   --ids-typo-line-height-16: 21px;
   --ids-typo-line-height-18: 23px;
   --ids-typo-line-height-20: 26px;
-  --ids-typo-line-height-22: 29px;
   --ids-typo-line-height-24: 31px;
   --ids-typo-line-height-32: 42px;
   --ids-typo-line-height-36: 47px;
@@ -75,12 +83,17 @@
   --ids-color-content-default: #000;
   --ids-color-content-low: #757575;
   --ids-color-content-inverse: #fff;
+  --ids-color-content-states-hover: #757575;
+  --ids-color-content-states-pressed: #363636;
   --ids-color-content-states-disabled: #b3b3b3;
   --ids-color-bg-default: #fff;
   --ids-color-bg-low: #f7f7f7;
   --ids-color-bg-states-hover: #f7f7f7;
   --ids-color-border-low: #e3e3e3;
   --ids-color-border-states-focus: #0170e9;
+  --ids-color-border-states-disabled: #ededed;
+  --ids-color-border-states-pressed: #363636;
+  --ids-color-border-states-hover: #757575;
   --ids-color-alt-orange-high: #b65321;
   --ids-color-alt-green-high: #178329;
   --ids-color-alt-red-high: #c93b3a;
@@ -93,12 +106,17 @@
   --ids-color-content-default: #fff;
   --ids-color-content-low: #c4c4c4;
   --ids-color-content-inverse: #000;
+  --ids-color-content-states-hover: #c4c4c4;
+  --ids-color-content-states-pressed: #d4d4d4;
   --ids-color-content-states-disabled: #757575;
   --ids-color-bg-default: #000;
   --ids-color-bg-low: #363636;
   --ids-color-bg-states-hover: #434343;
   --ids-color-border-low: #5e5e5e;
   --ids-color-border-states-focus: #0084ff;
+  --ids-color-border-states-disabled: #434343;
+  --ids-color-border-states-pressed: #d4d4d4;
+  --ids-color-border-states-hover: #c4c4c4;
   --ids-color-alt-orange-high: #feb48d;
   --ids-color-alt-green-high: #9df5ab;
   --ids-color-alt-red-high: #fe9693;
@@ -108,6 +126,7 @@
 }
 
 :host,:root {
+  --ids-size-border-default: 1px;
   --ids-size-border-high: 2px;
   --ids-typo-font-weight-default: 400;
   --ids-typo-font-weight-mid: 500;
@@ -167,6 +186,7 @@
   --ids-typo-display-m: var(--ids-typo-font-weight-default) var(--ids-typo-font-size-48) /var(--ids-typo-line-height-56) var(--ids-typo-font-family-primary);
   --ids-typo-display-m-letter-spacing: -2px;
   --ids-typo-display-m-text-transform: var(--ids-typo-text-transform-none);
+  --ids-motion-easing-standard-4: cubic-bezier(0.42,0,0.58,1);
   --ids-motion-micro-states: all var(--ids-motion-duration-s) var(--ids-motion-easing-standard-1);
   --ids-z-base: 0;
   --ids-z-sticky: 1;
@@ -177,6 +197,7 @@
 }
 
 .ids-resolution-mid,:host(.ids-resolution-mid) {
+  --ids-size-border-default: 1px;
   --ids-size-border-high: 2px;
   --ids-typo-font-weight-default: 350;
   --ids-typo-font-weight-mid: 400;
@@ -184,6 +205,7 @@
 }
 
 .ids-resolution-high,:host(.ids-resolution-high) {
+  --ids-size-border-default: 0.5px;
   --ids-size-border-high: 1px;
   --ids-typo-font-weight-default: 350;
   --ids-typo-font-weight-mid: 400;
@@ -192,6 +214,7 @@
 
 @media (min-resolution:96.01dpi) and (max-resolution:191.99dpi) {
 :host:not(.ids-resolution-standard):not(.ids-resolution-high),:root:not(.ids-resolution-standard):not(.ids-resolution-high) {
+    --ids-size-border-default: 1px;
     --ids-size-border-high: 2px;
     --ids-typo-font-weight-default: 350;
     --ids-typo-font-weight-mid: 400;
@@ -201,6 +224,7 @@
 
 @media (min-resolution:192dpi) {
 :host:not(.ids-resolution-standard):not(.ids-resolution-mid),:root:not(.ids-resolution-standard):not(.ids-resolution-mid) {
+    --ids-size-border-default: 0.5px;
     --ids-size-border-high: 1px;
     --ids-typo-font-weight-default: 350;
     --ids-typo-font-weight-mid: 400;
@@ -212,5 +236,6 @@
 :root {
     --ids-motion-duration-s: 0.01ms;
     --ids-motion-easing-standard-1: linear;
+    --ids-motion-easing-standard-4: linear;
   }
 }

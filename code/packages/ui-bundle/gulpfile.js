@@ -14,7 +14,9 @@ const destDir = `${previewDestDir}/_`
 // The bundle is named for the version of this package, which `just bump` moves
 // in lockstep with the rest of the workspace.
 const { version } = require('./package.json')
-const { reload: livereload } = process.env.LIVERELOAD === 'true' ? require('gulp-connect') : {}
+// Default on: `just preview-ui` advertises live reload, so the recipe should
+// not silently need an env var nobody sets. `LIVERELOAD=false` opts back out.
+const { reload: livereload } = process.env.LIVERELOAD === 'false' ? {} : require('gulp-connect')
 const serverConfig = { host: '0.0.0.0', port: 5252, livereload }
 
 const task = require('./gulp.d/tasks')
@@ -71,13 +73,18 @@ const bundleTask = createTask({
 
 const buildPreviewPagesTask = createTask({
   name: 'preview:build-pages',
-  call: task.buildPreviewPages(srcDir, previewSrcDir, previewDestDir, livereload),
+  call: task.buildPreviewPages(srcDir, previewSrcDir, previewDestDir),
+})
+
+const reloadTask = createTask({
+  name: 'preview:reload',
+  call: task.reload(previewDestDir, livereload),
 })
 
 const previewBuildTask = createTask({
   name: 'preview:build',
   desc: 'Process and stage the UI assets and generate pages for the preview',
-  call: parallel(buildTask, buildPreviewPagesTask),
+  call: series(parallel(buildTask, buildPreviewPagesTask), reloadTask),
 })
 
 const previewServeTask = createTask({

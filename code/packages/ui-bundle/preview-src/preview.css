@@ -1,0 +1,256 @@
+/*
+ * Styles for the preview-only pages: hub (index.html) and icons (icons.html).
+ * Neither preview-src/layouts/*.hbs is packed into the published UI bundle
+ * (see build-preview-pages.js), so this stylesheet never ships either — it is
+ * copied straight to public/preview.css, not staged into public/_.
+ *
+ * tools/ids/sync.mjs only scans packages/ui-bundle/src/css when deciding which
+ * --ids-* custom properties survive into ids-tokens.css, so every var(--ids-*)
+ * reference here MUST carry a literal fallback. Without one, the declaration
+ * resolves to nothing the moment the token isn't otherwise referenced by a
+ * real (shipped) stylesheet — see tools/ids/README.md.
+ */
+
+/* ---------------------------------------------------------------- hub --- */
+
+body.hub-page {
+  min-block-size: 100svh;
+}
+
+body.hub-page .hub {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-block-size: 100svh;
+  padding: var(--ids-size-200, 32px) var(--ids-size-100, 16px);
+}
+
+body.hub-page .hub__menu {
+  display: grid;
+  gap: var(--ids-size-100, 16px);
+  grid-template-columns: repeat(2, minmax(calc(220 / 18 * 1rem), 1fr));
+  list-style: none;
+  margin: 0;
+  max-width: calc(880 / 18 * 1rem);
+  padding: 0;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  body.hub-page .hub__menu {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.hub-page .hub-card {
+  align-items: flex-start;
+  background: var(--ids-color-bg-low, #f7f7f7);
+  border: var(--ids-size-border-default, 1px) solid var(--ids-color-border-low, #e3e3e3);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-50, 8px);
+  height: 100%;
+  padding: var(--ids-size-150, 24px);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+/*
+ * NOTE --ids-color-bg-states-hover equals --ids-color-bg-low exactly in the
+ * light theme (both #f7f7f7 — see @inditex/sewingiopdsweb-styles variables/
+ * color.css), so a hover state that only swaps background is invisible in
+ * light mode. The border-color change is what actually reads as "hovering"
+ * in both themes.
+ *
+ * No box-shadow/lift here: real IOP DS interactive surfaces (list-item,
+ * menu-item) signal hover with a plain colour change only — never elevation
+ * — see list/list-item.css and menu/items/item.css.
+ */
+body.hub-page .hub-card:hover,
+body.hub-page .hub-card:focus-visible {
+  background: var(--ids-color-bg-states-hover, #efefef);
+  border-color: var(--ids-color-border-states-hover, #757575);
+  text-decoration: none;
+}
+
+body.hub-page .hub-card:focus-visible {
+  outline: var(--ids-size-border-high, 2px) solid var(--ids-color-border-states-focus, #0170e9);
+  outline-offset: 2px;
+}
+
+body.hub-page .hub-card .ids-icon {
+  block-size: var(--ids-size-150, 24px);
+  inline-size: var(--ids-size-150, 24px);
+}
+
+body.hub-page .hub-card__title {
+  font-weight: var(--ids-typo-font-weight-high, 700);
+}
+
+body.hub-page .hub-card__desc {
+  opacity: 0.75;
+}
+
+/* -------------------------------------------------------------- icons --- */
+
+body.icons-page .icons {
+  margin: 0 auto;
+  max-width: calc(1400 / 18 * 1rem);
+  padding: 0 var(--ids-size-100, 16px) var(--ids-size-200, 32px);
+}
+
+body.icons-page .icons__back {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  gap: var(--ids-size-25, 4px);
+  margin-bottom: var(--ids-size-150, 24px);
+  opacity: 0.75;
+  text-decoration: none;
+}
+
+body.icons-page .icons__back:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+body.icons-page .icons__missing {
+  background: var(--ids-color-bg-low, #f7f7f7);
+  border: var(--ids-size-border-default, 1px) solid var(--ids-color-border-low, #e3e3e3);
+  border-radius: var(--ids-size-radius-rounded, 8px);
+  padding: var(--ids-size-150, 24px);
+}
+
+body.icons-page .icons__missing code {
+  font-family: var(--monospace-font-family);
+}
+
+body.icons-page .icons__toolbar {
+  align-items: center;
+  background: var(--body-background);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ids-size-100, 16px);
+  margin-bottom: var(--ids-size-150, 24px);
+  padding-block: var(--ids-size-75, 12px);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/*
+ * .icons__search is a plain layout hook around the vendored
+ * .ids-search-field-minimal component (search-field/search-field.minimal.css)
+ * — "minimal" means no box in the real design system (it's meant to sit
+ * inline in a toolbar, see src/partials/header-content.hbs), so this wrapper
+ * only sizes it and must not add a border/background the DS component
+ * doesn't have — see .opencode/skills/iop-ds-components.
+ */
+body.icons-page .icons__search {
+  flex: 1 1 auto;
+  min-width: calc(200 / 18 * 1rem);
+}
+
+/* .icons__size is a plain layout hook alongside .ids-option-picker (option-picker/*.css) — the component supplies its own visuals. */
+
+body.icons-page .icons__count {
+  opacity: 0.7;
+}
+
+body.icons-page .icons__group {
+  margin-bottom: var(--ids-size-200, 32px);
+}
+
+body.icons-page .icons__group-title {
+  border-bottom: var(--ids-size-border-default, 1px) solid var(--ids-color-border-low, #e3e3e3);
+  margin-bottom: var(--ids-size-100, 16px);
+  padding-bottom: var(--ids-size-25, 4px);
+}
+
+body.icons-page .icons__grid {
+  display: grid;
+  gap: var(--ids-size-75, 12px);
+  grid-template-columns: repeat(6, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+body.icons-page .icon-cell {
+  align-items: center;
+  aspect-ratio: 1;
+  background: none;
+  border: var(--ids-size-border-default, 1px) solid var(--ids-color-border-low, #e3e3e3);
+  border-radius: var(--ids-size-radius-rounded, 8px);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font: inherit;
+  gap: var(--ids-size-25, 4px);
+  inline-size: 100%;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--ids-size-75, 12px);
+  text-align: center;
+}
+
+body.icons-page .icon-cell:hover {
+  background: var(--ids-color-bg-states-hover, #efefef);
+}
+
+body.icons-page .icon-cell.is-vendored {
+  border-color: var(--ids-color-border-states-focus, #0170e9);
+}
+
+body.icons-page .icon-cell svg {
+  block-size: var(--ids-size-150, 24px);
+  color: var(--body-font-color);
+  inline-size: var(--ids-size-150, 24px);
+}
+
+body.icons-page .icons__grid[data-size='16'] .icon-cell svg {
+  block-size: var(--ids-size-100, 16px);
+  inline-size: var(--ids-size-100, 16px);
+}
+
+body.icons-page .icons__grid[data-size='48'] .icon-cell svg {
+  block-size: var(--ids-size-300, 48px);
+  inline-size: var(--ids-size-300, 48px);
+}
+
+body.icons-page .icon-cell__name {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+body.icons-page .icon-cell__vendored {
+  color: var(--ids-color-border-states-focus, #0170e9);
+}
+
+body.icons-page .icon-cell.is-hidden {
+  display: none;
+}
+
+body.icons-page .icons__toast {
+  background: var(--ids-color-bg-inverse, #1a1a1a);
+  border-radius: var(--ids-size-radius-rounded, 8px);
+  bottom: var(--ids-size-150, 24px);
+  color: var(--ids-color-content-inverse);
+  left: 50%;
+  opacity: 0;
+  padding: var(--ids-size-50, 8px) var(--ids-size-100, 16px);
+  pointer-events: none;
+  position: fixed;
+  transform: translateX(-50%);
+  transition: opacity 0.15s ease;
+}
+
+body.icons-page .icons__toast.is-visible {
+  opacity: 1;
+}

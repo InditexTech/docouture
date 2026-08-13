@@ -6,6 +6,7 @@ Author Name
 :!table-caption:
 //:page-role: -toc
 :page-pagination:
+:page-labels: Beta, Internal
 :description: Content test page: exercises the article, TOC and pagination templates against long-form AsciiDoc.
 
 [.lead]
@@ -259,6 +260,24 @@ At ornatus splendide sed.
 
 h|Total
 |6
+|===
+
+.Configuration properties
+[.properties%autowidth,cols="1,1,2"]
+|===
+|Property |Default |Description
+
+|`retry.max-attempts`
+|`3`
+|Number of times a failed request is retried before it is reported as failed.
+
+|`retry.backoff`
+|`200ms`
+|Base delay between retries; doubles on each subsequent attempt.
+
+|`timeout.connect`
+|`5s`
+|Maximum time to wait for a connection to be established.
 |===
 
 Cum dicat putant ne.

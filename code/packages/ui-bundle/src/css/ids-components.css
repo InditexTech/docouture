@@ -122,3 +122,311 @@
   letter-spacing: var(--ids-typo-display-m-letter-spacing);
   text-transform: var(--ids-typo-display-m-text-transform)
 }
+
+/* @inditex/sewingiopdsweb-react-components/search-field/search-field.minimal.css */
+.ids-placeholder-rotation {
+  display: flex;
+  flex-direction: column;
+  will-change: transform
+}
+.ids-placeholder-rotation--animated {
+  transition: transform var(--ids-placeholder-rotation-duration) var(--ids-motion-easing-standard-4)
+}
+.ids-placeholder-rotation__item {
+  flex-shrink: 0;
+  height: var(--ids-placeholder-rotation-line);
+  line-height: var(--ids-placeholder-rotation-line);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.ids-search-field-minimal {
+  --ids-placeholder-rotation-line: var(--ids-typo-line-height-22);
+  --ids-placeholder-rotation-duration: 0.6s;
+  align-items: center;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: var(--ids-size-250);
+  max-width: 100%;
+  min-width: 10px
+}
+.ids-search-field-minimal__hidden-measure {
+  font: var(--ids-typo-body-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  left: -9999px;
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  pointer-events: none;
+  position: absolute;
+  text-transform: var(--ids-typo-body-m-text-transform);
+  top: -9999px;
+  visibility: hidden;
+  white-space: pre
+}
+.ids-search-field-minimal__input-container {
+  align-items: center;
+  background: transparent;
+  border: none;
+  display: flex;
+  outline: none;
+  width: 100%
+}
+.ids-search-field-minimal__icon-start {
+  align-items: center;
+  color: var(--ids-color-content-default);
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  margin-inline-end: var(--ids-size-50)
+}
+.ids-search-field-minimal__input {
+  background: transparent;
+  border: none;
+  caret-color: var(--ids-color-content-default);
+  color: var(--ids-color-content-default);
+  flex: 1;
+  font: var(--ids-typo-body-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  min-width: 0;
+  outline: none;
+  padding: 0;
+  text-transform: var(--ids-typo-body-m-text-transform)
+}
+.ids-search-field-minimal__input::-moz-placeholder {
+  color: var(--ids-color-content-low)
+}
+.ids-search-field-minimal__input::placeholder {
+  color: var(--ids-color-content-low)
+}
+.ids-search-field-minimal__input::-webkit-search-cancel-button {
+  display: none
+}
+.ids-search-field-minimal__input--rotating::-moz-placeholder {
+  color: transparent
+}
+.ids-search-field-minimal__input--rotating::placeholder {
+  color: transparent
+}
+.ids-search-field-minimal__input-wrapper {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  position: relative
+}
+.ids-search-field-minimal__placeholder {
+  color: var(--ids-color-content-low);
+  font: var(--ids-typo-body-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  height: var(--ids-placeholder-rotation-line);
+  inset-inline-start: 0;
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  text-transform: var(--ids-typo-body-m-text-transform);
+  top: 50%;
+  transform: translateY(-50%)
+}
+.ids-search-field-minimal__right-content {
+  align-items: center;
+  display: flex;
+  margin-inline-start: var(--ids-size-50)
+}
+.ids-search-field-minimal__icons {
+  align-items: center;
+  display: flex;
+  gap: var(--ids-size-25)
+}
+.ids-search-field-minimal--disabled {
+  pointer-events: none
+}
+.ids-search-field-minimal--disabled,.ids-search-field-minimal--disabled .ids-search-field-minimal__icon-start,.ids-search-field-minimal--disabled .ids-search-field-minimal__input {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-search-field-minimal--disabled .ids-search-field-minimal__input::-moz-placeholder {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-search-field-minimal--disabled .ids-search-field-minimal__input::placeholder {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-search-field-minimal--readonly .ids-search-field-minimal__input {
+  pointer-events: none
+}
+.ids-search-field-minimal--full-width {
+  flex-shrink: 1;
+  width: 100%
+}
+.ids-search-field-minimal--has-value:not(.ids-search-field-minimal--focused) .ids-search-field-minimal__input {
+  font: var(--ids-typo-body-m-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-body-m-high-letter-spacing);
+  text-transform: var(--ids-typo-body-m-high-text-transform)
+}
+@media (hover:hover) {
+  .ids-search-field-minimal:hover:not(.ids-search-field-minimal--disabled) .ids-search-field-minimal__icon-start {
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-search-field-minimal:hover:not(.ids-search-field-minimal--disabled) .ids-search-field-minimal__input::-moz-placeholder {
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-search-field-minimal:hover:not(.ids-search-field-minimal--disabled) .ids-search-field-minimal__input::placeholder {
+    color: var(--ids-color-content-states-hover)
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .ids-search-field-minimal {
+    --ids-placeholder-rotation-duration: 0.01ms
+  }
+}
+
+/* @inditex/sewingiopdsweb-react-components/option-picker/option-picker.css */
+.ids-option-picker {
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--ids-size-25);
+  margin: 0;
+  min-inline-size: 0;
+  min-width: 0;
+  padding: 0
+}
+.ids-option-picker--wrap {
+  flex-wrap: wrap
+}
+.ids-option-picker--full {
+  gap: var(--ids-size-25);
+  width: 100%
+}
+.ids-option-picker--full .ids-option-picker-item {
+  flex: 1;
+  min-width: 0
+}
+.ids-option-picker--full .ids-option-picker-item>.ids-option-picker-item__button {
+  min-width: 0;
+  width: 100%
+}
+.ids-option-picker--full .ids-option-picker-item>.ids-option-picker-item__button .ids-option-picker-button__icon-icon {
+  flex-shrink: 0
+}
+
+/* @inditex/sewingiopdsweb-react-components/option-picker/option-picker-item.css */
+.ids-option-picker-item {
+  display: flex;
+  justify-content: center;
+  outline: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  outline-offset: calc(var(--ids-size-border-default)*-1);
+  transition: var(--ids-motion-micro-states)
+}
+@media (hover:hover) {
+  .ids-option-picker-item--hover:hover {
+    outline-color: var(--ids-color-border-states-hover)
+  }
+}
+.ids-option-picker-item--selected {
+  outline-color: var(--ids-color-border-states-pressed)
+}
+.ids-option-picker-item--disabled {
+  outline-color: var(--ids-color-border-states-disabled)
+}
+.ids-option-picker-item--vertical>.ids-option-picker-item__button {
+  height: auto;
+  padding: var(--ids-size-50)
+}
+.ids-option-picker-item--vertical>.ids-option-picker-item__button>.ids-option-picker-button__content {
+  flex-direction: column;
+  gap: var(--ids-size-50)
+}
+.ids-option-picker-item--vertical>.ids-option-picker-item__button>.ids-option-picker-button__content>.ids-option-picker-button__icon.ids-option-picker-button__icon-icon {
+  margin-inline-end: 0
+}
+.ids-option-picker-item--vertical>.ids-option-picker-item__button>.ids-option-picker-button__content>.ids-option-picker-button__icon.ids-option-picker-button__icon-action {
+  margin-inline-start: 0
+}
+.ids-option-picker-item--vertical>.ids-option-picker-item__button.ids-option-picker-button--icon-only>.ids-option-picker-button__content .ids-option-picker-button__icon-icon {
+  margin-inline: var(--ids-size-12)
+}
+
+/* @inditex/sewingiopdsweb-react-components/option-picker/option-picker-button.css */
+.ids-option-picker-button {
+  align-items: center;
+  background-color: transparent;
+  color: var(--ids-color-content-low);
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  justify-content: center;
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  max-width: 100%;
+  min-height: var(--ids-size-250);
+  padding-inline: var(--ids-size-0);
+  padding: var(--ids-size-50);
+  position: relative;
+  text-transform: var(--ids-typo-label-l-text-transform);
+  transition: var(--ids-motion-micro-states),outline 0s,outline-offset 0s
+}
+.ids-option-picker-button:focus-visible {
+  color: var(--ids-color-content-states-hover);
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: 1px
+}
+@media (hover:hover) {
+  .ids-option-picker-button:hover {
+    color: var(--ids-color-content-states-hover)
+  }
+}
+.ids-option-picker-button:active {
+  color: var(--ids-color-content-states-pressed)
+}
+.ids-option-picker-button:disabled {
+  background-color: transparent;
+  border: none;
+  color: var(--ids-color-content-states-disabled);
+  cursor: not-allowed;
+  pointer-events: none
+}
+.ids-option-picker-button__content {
+  align-items: center;
+  display: inline-flex;
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform)
+}
+.ids-option-picker-button__content,.ids-option-picker-button__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.ids-option-picker-button__icon {
+  display: inline-flex;
+  width: var(--ids-size-125)
+}
+.ids-option-picker-button__icon-icon {
+  margin-inline-end: var(--ids-size-25)
+}
+.ids-option-picker-button__icon-action {
+  width: auto
+}
+.ids-option-picker-button--icon-and-label .ids-option-picker-button__icon-action {
+  margin-inline-start: var(--ids-size-50)
+}
+.ids-option-picker-button--icon-only {
+  width: auto
+}
+.ids-option-picker-button--icon-only .ids-option-picker-button__icon-icon {
+  margin-inline: var(--ids-size-12)
+}
+.ids-option-picker-button--selected {
+  color: var(--ids-color-content-default)
+}
+.ids-option-picker-button--selected>.ids-option-picker-button__content .ids-option-picker-button__label {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-transform: var(--ids-typo-label-l-high-text-transform)
+}

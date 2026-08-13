@@ -4,3 +4,4 @@
 # applied to; regenerating does not "fix" a style this project didn't choose.
 src/css/ids-tokens.css
 src/css/ids-breakpoints.css
+src/css/ids-components.css

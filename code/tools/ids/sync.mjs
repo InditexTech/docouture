@@ -1,29 +1,48 @@
 #!/usr/bin/env node
 //
 // Regenerate the IOP Design System derivatives committed under
-// packages/ui-bundle/src/css/ from the real DS package installed alongside
+// packages/ui-bundle/src/css/ from the real DS packages installed alongside
 // this script (see README.md for why the DS itself never enters the pnpm
 // workspace).
 //
-// Two derivatives, both mechanically extracted — nothing here is authored by
+// Three derivatives, all mechanically extracted — nothing here is authored by
 // hand:
 //
-//   ids-tokens.css       the --ids-* custom property declarations that
-//                         packages/ui-bundle/src/css/**/*.css actually
+//   ids-components.css   the component stylesheets listed in
+//                         src/css/ids-components.yml, pulled verbatim (then
+//                         reformatted for a readable diff — see
+//                         prettifyCss) from @inditex/sewingiopdsweb-react-
+//                         components. Built FIRST: whatever --ids-* tokens
+//                         these files reference feed into the token scan
+//                         below, same as every other stylesheet in src/css.
+//
+//   ids-tokens.css        the --ids-* custom property declarations that
+//                         packages/ui-bundle/src/css/**/*.css (including the
+//                         freshly generated ids-components.css) actually
 //                         reference via var(--ids-...), pulled from
 //                         @inditex/sewingiopdsweb-styles's variables/,
-//                         motion.css and zindex.css, preserving whatever
-//                         selector (:root, .ids-theme-dark, .ids-scale-large,
-//                         an @media block, ...) each declaration lived under.
+//                         typography.css, motion.css and zindex.css,
+//                         preserving whatever selector (:root,
+//                         .ids-theme-dark, .ids-scale-large, an @media
+//                         block, ...) each declaration lived under.
 //
 //   ids-breakpoints.css  the @custom-media declarations actually referenced
-//                         via (--ids-breakpoints-*) in a @media query,
+//                         via (--ids-breakpoints-...) in a @media query,
 //                         pulled from variables/breakpoints.css.
 //
 // A declaration that is itself `var(--ids-something-else)` pulls in
 // --ids-something-else too (one level is enough for every value seen in this
 // package's CSS today; walkDecls below repeats until nothing new is found,
 // so deeper chains are handled without changing this comment).
+//
+// Not every var(--ids-...) reference in a vendored component file resolves to
+// a static declaration in the styles package: some DS tokens are injected at
+// runtime by React with no default, always referenced with a CSS fallback
+// (var(--ids-header-reserved-end-space, 0px)), and some are declared inside
+// the component's own stylesheet rather than the shared token layer
+// (--ids-list-item-tree-indent in list/list-item.css). Both count as
+// satisfied — see unsatisfiedTokens below — only a bare, undeclared,
+// fallback-less reference fails the build.
 //
 // Usage:
 //   node sync.mjs            regenerate the derivatives and ids.lock.json
@@ -39,26 +58,31 @@ import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import yaml from 'js-yaml'
 import postcss from 'postcss'
 
 const require = createRequire(import.meta.url)
 const here = dirname(fileURLToPath(import.meta.url))
 
 const UI_BUNDLE_CSS = join(here, '../../packages/ui-bundle/src/css')
+const COMPONENTS_MANIFEST = join(UI_BUNDLE_CSS, 'ids-components.yml')
+const OUT_COMPONENTS = join(UI_BUNDLE_CSS, 'ids-components.css')
 const OUT_TOKENS = join(UI_BUNDLE_CSS, 'ids-tokens.css')
 const OUT_BREAKPOINTS = join(UI_BUNDLE_CSS, 'ids-breakpoints.css')
 const OUT_LOCK = join(UI_BUNDLE_CSS, 'ids.lock.json')
 
-// Source files read from the DS package. Deliberately not typography.css or
-// mixins/index.css: nothing in packages/ui-bundle/src/css uses a typography
-// shorthand token or a `@mixin ids-...` today (verified by the scan below —
-// if that ever changes, add the relevant source file here and it starts
-// getting scanned).
-const TOKEN_SOURCES = ['variables/index.css', 'motion.css', 'zindex.css']
+// Source files read from @inditex/sewingiopdsweb-styles for the token layer.
+// Deliberately not mixins/index.css: nothing in packages/ui-bundle/src/css
+// uses a `@mixin ids-...` today (verified by the scan below — if that ever
+// changes, add the relevant source file here and it starts getting scanned).
+const TOKEN_SOURCES = ['variables/index.css', 'typography.css', 'motion.css', 'zindex.css']
 const BREAKPOINTS_SOURCE = 'variables/breakpoints.css'
 
+const STYLES_PKG = '@inditex/sewingiopdsweb-styles'
+const COMPONENTS_PKG = '@inditex/sewingiopdsweb-react-components'
+
 const HEADER = (sources) => `/*
- * Generated by tools/ids/sync.mjs from @inditex/sewingiopdsweb-styles@${dsVersion()}.
+ * Generated by tools/ids/sync.mjs from ${STYLES_PKG}@${dsVersion(STYLES_PKG)}.
  * Do not edit by hand — edits are overwritten by the next sync.
  *
  * Contains only the declarations packages/ui-bundle/src/css actually
@@ -69,20 +93,42 @@ const HEADER = (sources) => `/*
  */
 `
 
-function dsPath(rel) {
-  return require.resolve(`@inditex/sewingiopdsweb-styles/${rel}`, { paths: [here] })
+const COMPONENTS_HEADER = () => `/*
+ * Generated by tools/ids/sync.mjs from ${COMPONENTS_PKG}@${dsVersion(COMPONENTS_PKG)},
+ * per src/css/ids-components.yml. Do not edit by hand — edits are
+ * overwritten by the next sync. Reformatted from the package's minified
+ * source for a readable diff on a design system version bump; declarations
+ * are otherwise untouched.
+ *
+ * Adding a component: add a line to ids-components.yml, then \`just
+ * ids-sync\`. See tools/ids/README.md and
+ * .opencode/skills/iop-ds-components/SKILL.md.
+ */
+`
+
+function dsPath(pkg, rel) {
+  return require.resolve(`${pkg}/${rel}`, { paths: [here] })
 }
 
-function dsVersion() {
-  // Not require.resolve('.../package.json') — the package's `exports` map
-  // doesn't grant that subpath. Its main entry does resolve, and package.json
-  // always sits next to it.
-  const entry = require.resolve('@inditex/sewingiopdsweb-styles', { paths: [here] })
-  return require(join(dirname(entry), 'package.json')).version
+function dsVersion(pkg) {
+  // sewingiopdsweb-styles's `exports` map is `./*.css`/`./*.json`-only and
+  // does not grant `./package.json` — its main entry resolves instead, and
+  // package.json always sits next to it. sewingiopdsweb-react-components
+  // does grant `./package.json` directly (its `./*.json` pattern matches),
+  // but resolving both packages the same defensive way keeps this one
+  // function correct regardless of which export shape a future DS version
+  // ships.
+  let entry
+  try {
+    entry = require.resolve(`${pkg}/package.json`, { paths: [here] })
+  } catch {
+    entry = require.resolve(pkg, { paths: [here] })
+  }
+  return require(entry.endsWith('.json') ? entry : join(dirname(entry), 'package.json')).version
 }
 
 async function readSource(rel) {
-  const path = dsPath(rel)
+  const path = dsPath(STYLES_PKG, rel)
   const content = await readFile(path, 'utf8')
   return { rel, path, content }
 }
@@ -91,9 +137,45 @@ function sha256(content) {
   return createHash('sha256').update(content).digest('hex')
 }
 
-// Every custom property this file's own CSS reads via var(--ids-...), plus
-// every (--ids-breakpoints-...) named inside a media query.
-async function scanUsed() {
+// postcss's own Node#cleanRaws() resets formatting to its stringifier
+// default, which indents 4 spaces per nesting level; halved here to match
+// this bundle's 2-space CSS. Safe for any nesting depth: every run of
+// leading spaces is a multiple of 4 by construction, so halving in place
+// can't collide with content.
+function prettifyCss(content) {
+  const root = postcss.parse(content)
+  root.cleanRaws()
+  return root
+    .toString()
+    .replace(/^ +/gm, (spaces) => ' '.repeat(spaces.length / 2))
+    .trim()
+}
+
+// Reads the manifest and returns, per listed file, its resolved path and
+// (prettified) content plus the relative path used in its header comment —
+// in manifest order, which is also emission order.
+async function readComponents() {
+  const manifestYaml = await readFile(COMPONENTS_MANIFEST, 'utf8')
+  const manifest = yaml.load(manifestYaml) ?? {}
+  const files = []
+  for (const [dir, leaves] of Object.entries(manifest.components ?? {})) {
+    for (const leaf of leaves) {
+      const rel = `${dir}/${leaf}`
+      const path = dsPath(COMPONENTS_PKG, rel)
+      const raw = await readFile(path, 'utf8')
+      files.push({ rel, path, raw, pretty: prettifyCss(raw) })
+    }
+  }
+  return { manifestYaml, files }
+}
+
+// Every custom property referenced via var(--ids-...) across src/css, plus
+// every (--ids-breakpoints-...) named inside a media query. `extraContent` is
+// the freshly generated ids-components.css, scanned in memory rather than off
+// disk so a token a newly-added component references is picked up in the same
+// run that adds it, and --check never depends on a possibly-stale committed
+// copy of that same file.
+async function scanUsed(extraContent) {
   // Minimal recursive glob — the css tree is flat enough not to need a dep.
   const { readdirSync, statSync } = await import('node:fs')
   const files = []
@@ -101,19 +183,43 @@ async function scanUsed() {
     for (const name of readdirSync(dir)) {
       const path = join(dir, name)
       if (statSync(path).isDirectory()) walk(path)
-      else if (name.endsWith('.css') && !name.startsWith('ids-tokens') && !name.startsWith('ids-breakpoints'))
+      else if (
+        name.endsWith('.css') &&
+        !name.startsWith('ids-tokens') &&
+        !name.startsWith('ids-breakpoints') &&
+        !name.startsWith('ids-components')
+      )
         files.push(path)
     }
   })(UI_BUNDLE_CSS)
 
   const tokens = new Set()
   const breakpoints = new Set()
-  for (const file of files) {
-    const content = await readFile(file, 'utf8')
+  const scan = (content) => {
     for (const m of content.matchAll(/var\((--ids-[a-z0-9-]+)/g)) tokens.add(m[1])
     for (const m of content.matchAll(/\(--ids-breakpoints-[a-z0-9-]+\)/g)) breakpoints.add(m[0].slice(1, -1))
   }
+  for (const file of files) scan(await readFile(file, 'utf8'))
+  scan(extraContent)
   return { tokens, breakpoints }
+}
+
+// A token referenced with a CSS fallback (var(--ids-x, default)) is always
+// satisfied, whatever the styles package does or doesn't declare — the
+// fallback is what actually renders when the package doesn't supply it. A
+// token declared inside the vendored component CSS itself (rather than the
+// shared token layer) is satisfied too. Returns the set of wanted tokens that
+// are neither of those AND not emitted by extractTokens — i.e. actually
+// missing.
+function unsatisfiedTokens(wanted, emitted, componentsCss) {
+  const hasFallback = new Set()
+  for (const m of componentsCss.matchAll(/var\((--ids-[a-z0-9-]+)\s*,/g)) hasFallback.add(m[1])
+  const declaredInComponents = new Set()
+  postcss.parse(componentsCss).walkDecls((decl) => {
+    if (decl.prop.startsWith('--ids-')) declaredInComponents.add(decl.prop)
+  })
+  const emittedProps = new Set([...emitted.values()].flatMap((b) => [...b.decls.keys()]))
+  return [...wanted].filter((t) => !emittedProps.has(t) && !hasFallback.has(t) && !declaredInComponents.has(t))
 }
 
 // Parses each source, keeps only rules with at least one kept declaration,
@@ -193,7 +299,17 @@ function extractBreakpoints(content, wanted) {
 
 async function main() {
   const check = process.argv.includes('--check')
-  const { tokens: wantedTokens, breakpoints: wantedBreakpoints } = await scanUsed()
+
+  const { manifestYaml, files: componentFiles } = await readComponents()
+  const componentsCss =
+    componentFiles.length === 0
+      ? ''
+      : COMPONENTS_HEADER() +
+        '\n' +
+        componentFiles.map((f) => `/* ${COMPONENTS_PKG}/${f.rel} */\n${f.pretty}`).join('\n\n') +
+        '\n'
+
+  const { tokens: wantedTokens, breakpoints: wantedBreakpoints } = await scanUsed(componentsCss)
 
   const tokenSources = await Promise.all(TOKEN_SOURCES.map(readSource))
   const breakpointsSource = await readSource(BREAKPOINTS_SOURCE)
@@ -212,7 +328,7 @@ async function main() {
   }
   const breakpointsCss = HEADER([BREAKPOINTS_SOURCE]) + '\n' + breakpointLines.join('\n') + '\n'
 
-  const missingTokens = [...wantedTokens].filter((t) => ![...emitted.values()].some((b) => b.decls.has(t)))
+  const missingTokens = unsatisfiedTokens(wantedTokens, emitted, componentsCss)
   if (missingTokens.length) {
     console.error(`sync.mjs: token(s) referenced in src/css but not found in any source: ${missingTokens.join(', ')}`)
     process.exitCode = 1
@@ -220,24 +336,34 @@ async function main() {
   }
 
   const lock = {
-    designSystemVersion: dsVersion(),
+    designSystemVersion: dsVersion(STYLES_PKG),
+    componentsPackageVersion: dsVersion(COMPONENTS_PKG),
     generatedAt: new Date().toISOString(),
     sources: Object.fromEntries([...tokenSources, breakpointsSource].map((s) => [s.rel, sha256(s.content)])),
+    components: Object.fromEntries(componentFiles.map((f) => [f.rel, sha256(f.raw)])),
+    componentsManifest: sha256(manifestYaml),
     emittedTokens: [...wantedTokens].sort(),
     emittedBreakpoints: [...wantedBreakpoints].sort(),
   }
 
   if (check) {
-    const [currentTokens, currentBreakpoints, currentLock] = await Promise.all([
+    const [currentComponents, currentTokens, currentBreakpoints, currentLock] = await Promise.all([
+      readFile(OUT_COMPONENTS, 'utf8').catch(() => null),
       readFile(OUT_TOKENS, 'utf8').catch(() => null),
       readFile(OUT_BREAKPOINTS, 'utf8').catch(() => null),
       readFile(OUT_LOCK, 'utf8').catch(() => null),
     ])
     const drift = []
+    if ((currentComponents ?? '') !== componentsCss) drift.push('ids-components.css')
     if (currentTokens !== tokensCss) drift.push('ids-tokens.css')
     if (currentBreakpoints !== breakpointsCss) drift.push('ids-breakpoints.css')
-    if (currentLock === null || JSON.parse(currentLock).designSystemVersion !== lock.designSystemVersion)
-      drift.push('ids.lock.json (version)')
+    if (
+      currentLock === null ||
+      JSON.parse(currentLock).designSystemVersion !== lock.designSystemVersion ||
+      JSON.parse(currentLock).componentsPackageVersion !== lock.componentsPackageVersion ||
+      JSON.parse(currentLock).componentsManifest !== lock.componentsManifest
+    )
+      drift.push('ids.lock.json (version or manifest)')
     if (drift.length) {
       console.error(
         `sync.mjs --check: drift detected in ${drift.join(', ')}. Run 'just ids-sync' and commit the result.`
@@ -249,11 +375,14 @@ async function main() {
     return
   }
 
+  await writeFile(OUT_COMPONENTS, componentsCss)
   await writeFile(OUT_TOKENS, tokensCss)
   await writeFile(OUT_BREAKPOINTS, breakpointsCss)
   await writeFile(OUT_LOCK, JSON.stringify(lock, null, 2) + '\n')
   console.log(
-    `sync.mjs: wrote ${OUT_TOKENS}, ${OUT_BREAKPOINTS}, ${OUT_LOCK} (DS ${lock.designSystemVersion}, ${lock.emittedTokens.length} tokens, ${lock.emittedBreakpoints.length} breakpoints).`
+    `sync.mjs: wrote ${OUT_COMPONENTS} (${componentFiles.length} file(s)), ${OUT_TOKENS}, ${OUT_BREAKPOINTS}, ` +
+      `${OUT_LOCK} (DS ${lock.designSystemVersion}, ${lock.emittedTokens.length} tokens, ` +
+      `${lock.emittedBreakpoints.length} breakpoints).`
   )
 }
 

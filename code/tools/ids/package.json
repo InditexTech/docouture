@@ -13,6 +13,7 @@
     "@inditex/sewingiopdsweb-styles": "1.28.0"
   },
   "devDependencies": {
+    "js-yaml": "~4.3.1",
     "postcss": "~8.5.26"
   }
 }

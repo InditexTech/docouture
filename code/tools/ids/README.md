@@ -22,16 +22,38 @@ Two things, and only these two:
    contains a small number of files generated _from_ this sidecar and checked
    into git:
 
-   | generated file                        | source                                                                        |
-   | ------------------------------------- | ----------------------------------------------------------------------------- |
-   | `ids-tokens.css`                      | the subset of `--ids-*` custom properties actually referenced in `src/css/**` |
-   | `ids-breakpoints.css`                 | the `@custom-media` breakpoint declarations actually referenced               |
-   | `icons.css`'s `.ids-icon` sizing rule | `@inditex/sewingiopdsweb-react-components/icon/icon.css`                      |
+   | generated file                        | source                                                                                                            |
+   | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+   | `ids-components.css`                  | the component stylesheets listed in `src/css/ids-components.yml`, from `@inditex/sewingiopdsweb-react-components` |
+   | `ids-tokens.css`                      | the subset of `--ids-*` custom properties actually referenced in `src/css/**` (including `ids-components.css`)    |
+   | `ids-breakpoints.css`                 | the `@custom-media` breakpoint declarations actually referenced                                                   |
+   | `icons.css`'s `.ids-icon` sizing rule | `@inditex/sewingiopdsweb-react-components/icon/icon.css` (hand-copied, not generated — see its own comment)       |
 
    The build (`gulp bundle`) reads only the generated files. It never touches
    this sidecar and never requires `@inditex/*` — that dependency was removed
    from `packages/ui-bundle/package.json` entirely. `sync.mjs` is what keeps
    the generated files honest against the real thing.
+
+### Vendoring a component stylesheet
+
+Adding a DS component's CSS to the bundle is one line in
+`packages/ui-bundle/src/css/ids-components.yml` (component directory → leaf
+file names, same shape as `src/img/icons.yml` for icons) plus `just ids-sync`.
+`ls` the component's directory under
+`tools/ids/node_modules/@inditex/sewingiopdsweb-react-components/<dir>/`
+first — multi-file components need every file listed or the component breaks
+(`breadcrumbs/` has 4, `menu/` 9, `list/` 5, `modal/` 6). There is no
+tree-shaking: every file listed is paid for in the shipped bundle.
+
+`sync.mjs` builds `ids-components.css` before scanning for `--ids-*` token
+usage, so a `var(--ids-...)` a newly-vendored component references is pulled
+into `ids-tokens.css` automatically, same as every other stylesheet in
+`src/css`. A handful of DS tokens have no static declaration in the styles
+package — they're injected by React at runtime and always referenced with a
+CSS fallback (`var(--ids-header-reserved-end-space, 0px)`), or declared
+inside the component's own CSS rather than the shared token layer
+(`--ids-list-item-tree-indent`). Both count as satisfied; only a bare,
+undeclared, fallback-less reference fails the sync.
 
 ## Why not just install it in `packages/ui-bundle`?
 
@@ -73,7 +95,10 @@ Bump the version in `package.json` here, run `just ids-install` then
 Nothing under this directory (`node_modules/`, the lockfile) is committed;
 see `.gitignore`. The generated derivative committed under
 `packages/ui-bundle/src/css/` is a small, mechanically-extracted subset
-(custom property declarations and breakpoint media queries), the same shape
-of derivation this repository already makes for DS icons — not a copy of the
+(custom property declarations, breakpoint media queries, and whichever
+component stylesheets `ids-components.yml` lists), the same shape of
+derivation this repository already makes for DS icons — not a copy of either
 package. If this repository's visibility changes, revisit whether that
-derivative needs sign-off, same as the icon sprite.
+derivative needs sign-off, same as the icon sprite. See
+`packages/ui-bundle/NOTICE` for what's currently vendored, and the tracked
+backlog item for a full licensing review before any external publication.

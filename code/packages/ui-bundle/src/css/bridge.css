@@ -19,28 +19,12 @@
 :root {
   /*
    * Legacy neutral palette. antora-ui-default's stylesheets reference these
-   * greys directly in ~46 places. The design system's neutral ramp is three
-   * steps deep, not seventeen, so several upstream greys collapse onto the same
-   * token — deliberately. TRANSITIONAL: every entry here disappears as its
-   * consumers move onto design system components.
+   * greys directly in a handful of places. The design system's neutral ramp
+   * is three steps deep, not seventeen, so several upstream greys collapse
+   * onto the same token — deliberately. TRANSITIONAL: every entry here
+   * disappears as its consumers move onto design system components.
    */
   --color-white: var(--ids-color-bg-default);
-  --color-smoke-10: var(--ids-color-bg-low);
-  --color-smoke-30: var(--ids-color-bg-low);
-  --color-smoke-50: var(--ids-color-bg-low);
-  --color-smoke-70: var(--ids-color-bg-low);
-  --color-smoke-90: var(--ids-color-border-low);
-  --color-gray-10: var(--ids-color-border-low);
-  --color-gray-30: var(--ids-color-content-low);
-  --color-gray-40: var(--ids-color-content-low);
-  --color-gray-50: var(--ids-color-content-low);
-  --color-gray-70: var(--ids-color-content-low);
-  --color-jet-20: var(--ids-color-content-default);
-  --color-jet-30: var(--ids-color-content-default);
-  --color-jet-50: var(--ids-color-content-default);
-  --color-jet-70: var(--ids-color-content-default);
-  --color-jet-80: var(--ids-color-content-default);
-  --color-black: var(--ids-color-content-default);
 
   /* fonts */
   --body-font-color: var(--ids-color-content-default);

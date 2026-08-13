@@ -101,35 +101,39 @@ Never remove an outline without replacing it with this one.
 
 There is no live `@import` of `@inditex/sewingiopdsweb-react-components` — that package
 is deliberately not part of this workspace's install (see the intro). Shipping a DS
-component's CSS means generating a derivative from it, the same shape as
-`ids-tokens.css` and the `.ids-icon` rule in `icons.css`:
+component's CSS means adding it to the generated derivative
+`packages/ui-bundle/src/css/ids-components.css`:
 
 1. `just ids-install`, then read the real stylesheet(s) at
    `code/tools/ids/node_modules/@inditex/sewingiopdsweb-react-components/<dir>/*.css`
    (`ls` the directory first — components with several stylesheets need all of them:
-   `breadcrumbs/` has 4, `modal/` 6).
-2. For a small, stable rule set (a handful of declarations, like the icon sizing rule),
-   copy it verbatim into the relevant `src/css/*.css` file with a comment naming the
-   source path and DS version — see `icons.css` for the pattern.
-3. For a larger component, or one likely to need re-syncing as the DS version bumps,
-   extend `tools/ids/sync.mjs` to extract it mechanically instead of hand-copying —
-   read that script before adding to it, it already does this for tokens and
-   breakpoints. Emit the result as its own generated file under
-   `packages/ui-bundle/src/css/`, `@import`ed from `site.css`, with the same
-   "generated, do not edit" header the existing generated files use.
+   `breadcrumbs/` has 4, `modal/` 6, `menu/` 9, `list/` 5).
+2. Add one line per file to `packages/ui-bundle/src/css/ids-components.yml` (component
+   directory → leaf file names, same shape as `src/img/icons.yml` for icons), with a
+   trailing comment naming what uses it.
+3. `just ids-sync`. This regenerates `ids-components.css` (concatenated, reformatted
+   for a readable diff, in manifest order) and pulls any `--ids-*` token the new CSS
+   references into `ids-tokens.css` automatically — same generator, same "generated,
+   do not edit" header convention as the token layer.
 
-Either way: copy only the components actually used, and note the DS version copied
-from (the DS has no semver guarantee on component CSS between versions).
+The one exception is `.ids-icon`'s sizing rule in `icons.css`: a single 77-byte rule,
+hand-copied rather than run through the manifest — not worth a generator entry, and
+it predates this pipeline. Don't extend that pattern for anything larger; a second
+component belongs in the manifest.
+
+Either way: add only the components actually used, and let `just ids-sync` record the
+DS version and source hashes in `ids.lock.json` (the DS has no semver guarantee on
+component CSS between versions).
 
 ## Licensing
 
 The DS packages are `license: INDITEX`. `ui-bundle.zip` bakes in whatever's been
-generated from them — currently the token layer and one icon-sizing rule; any
-component CSS added per the section above joins that same generated surface.
-`code/packages/ui-bundle/NOTICE` records what's derived and from where.
-**If a pdocs site is ever published externally, or before generating a large chunk
-of component CSS, this must be revisited with whoever owns DS licensing** — flag it
-rather than shipping quietly.
+generated from them — the token layer, one icon-sizing rule, and whatever
+`ids-components.yml` currently lists (`text/text.css` as of this writing). Every
+manifest addition joins that same generated surface. `code/packages/ui-bundle/NOTICE`
+records what's derived and from where. **If a pdocs site is ever published
+externally, or before vendoring a large chunk of component CSS, this must be
+revisited with whoever owns DS licensing** — flag it rather than shipping quietly.
 
 ## Reference
 

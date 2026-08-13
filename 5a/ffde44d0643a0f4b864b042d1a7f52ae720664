@@ -1,0 +1,27 @@
+code/packages/ui-bundle/src/css/ids-components.css
+  s_25d5699cad54bb::t_0d646a9da15ccd 1-124
+code/packages/ui-bundle/src/css/ids-tokens.css
+  s_25d5699cad54bb::t_0f6f877390f3e1 9,17-40,48-71,115-169
+code/packages/ui-bundle/src/css/ids.lock.json
+  s_25d5699cad54bb::t_ff6fc858afae3b 3-4,7,12-15,38-64,67-76,80-121
+code/tools/ids/README.md
+  s_25d5699cad54bb::t_8351a66c4905cf 25-30,37-57,98-100,102-104
+code/tools/ids/sync.mjs
+  s_25d5699cad54bb::t_53b53490aa9ef6 4,8,11-21,24-27,30,38-46,61,68-69,74-78,81-83,85,96-110,113-127,131,140-178,186-191,198,202-203,207-224,302-312,331,339-340,343-344,350-351,357,360-366,378,383-385
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "5affde44d0643a0f4b864b042d1a7f52ae720664",
+  "prompts": {},
+  "sessions": {
+    "s_25d5699cad54bb": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0046baedbffev6s4uzohiQQV5o",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+code/README.md
+  s_8cc39099025b82::t_bd7eeb16bbab5f 49-92
+code/packages/ui-bundle/package.json
+  s_8cc39099025b82::t_2321c5e4e385be 26-27,42,44
+code/packages/ui-bundle/src/css/base.css
+  s_8cc39099025b82::t_c21077cddddf33 14
+code/packages/ui-bundle/src/css/body.css
+  s_8cc39099025b82::t_94122edb3621e1 1
+code/packages/ui-bundle/src/css/breadcrumbs.css
+  s_8cc39099025b82::t_1c91d5afd5fbde 8
+code/packages/ui-bundle/src/css/bridge.css
+  s_8cc39099025b82::t_d2e6abdcfc6e01 1-166
+code/packages/ui-bundle/src/css/doc.css
+  s_8cc39099025b82::t_e82f929c86c119 11,39
+code/packages/ui-bundle/src/css/header.css
+  s_8cc39099025b82::t_57416ede45ad2c 1,193,200,211,240
+code/packages/ui-bundle/src/css/highlight.css
+  s_8cc39099025b82::t_1dc36bccd73ebe 13-18,36-52
+code/packages/ui-bundle/src/css/main.css
+  s_8cc39099025b82::t_38f2decc079425 5,15,35
+code/packages/ui-bundle/src/css/nav.css
+  s_8cc39099025b82::t_0561d87456347a 1,17,23,44,50
+code/packages/ui-bundle/src/css/page-versions.css
+  s_8cc39099025b82::t_b54bcf2e79fbb5 7
+code/packages/ui-bundle/src/css/print.css
+  s_8cc39099025b82::t_0895130592fb89 6-24
+code/packages/ui-bundle/src/css/site.css
+  s_8cc39099025b82::t_d3b47c8454f947 1-16
+code/packages/ui-bundle/src/css/toc.css
+  s_8cc39099025b82::t_b29a1f44bd4d27 52
+code/packages/ui-bundle/src/css/toolbar.css
+  s_8cc39099025b82::t_173bcdbdd3fc00 31,60,69-120
+code/packages/ui-bundle/src/css/vars.css
+  s_8cc39099025b82::t_c8c7c15dcdf880 1-12,14-17,24-29,31,34,52-56
+code/pnpm-lock.yaml
+  s_8cc39099025b82::t_cf3482c9c1a5ad 70-75,118-120,124-126,236-243,253-255,257-258,267-272,287-290,295-301,321-325,327-344,550-554,556-571,604-634,648-657,723-733,738-747,751-777,790-795,855-887,1061-1063,1143-1146,1197-1200,1250-1252,1323-1372,1401-1406,1456-1461,1475-1477,1556-1558,1631-1633,1638-1640,1767-1774,1803-1816,1973-1975,2032-2038,2059-2062,2067-2069,2265-2267,2271-2273,2278-2285,2297-2301,2374-2382,2491-2499,2616-2618,2652-2657,2709-2714,2797-2802,2851-2853,2891-2940,2963-2970,2975-2982,3006-3011,3068-3070,3198-3200,3281-3286,3341-3343,3449-3473,3481-3484,3493-3495,3783-3788,3803,3805-3806,3813-3816,3825-3826,3829-3833,3847-3849,3851-3872,3999-4019,4021-4033,4059-4134,4145-4155,4204-4215,4218-4223,4228-4251,4262-4266,4358-4391,4555-4556,4656-4657,4716-4717,4763-4764,4857-4898,4915-4918,4956-4959,4974-4977,5048-5049,5157-5158,5161-5162,5299-5306,5331-5339,5546-5547,5604-5609,5625-5626,5629-5635,5796-5797,5800-5801,5807-5812,5821-5822,5874-5884,6114-6120,6242,6244-6247,6274-6278,6327-6334,6406-6409,6449-6454,6488-6533,6568-6587,6592-6597,6610-6613,6659-6660,6821-6822,6938-6941,7013-7014,7121-7135,7140-7141,7146-7162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "af4c51edf501d5848b77543a89c079657e59beca",
+  "prompts": {},
+  "sessions": {
+    "s_8cc39099025b82": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0055cbb3effeEln1JqV74I3E1v",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

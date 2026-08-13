@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "antora --fetch antora-playbook.yml",
-    "serve": "node ../../scripts/serve.mjs build/site",
+    "dev": "node ../../scripts/dev.mjs build/site",
     "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
   },
   "dependencies": {

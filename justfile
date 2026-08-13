@@ -138,13 +138,33 @@ doctor: (_hdr "doctor")
 
 # Live-reloading UI bundle preview on :5252
 [group('dev')]
-preview: (_hdr "preview")
-    {{ nx }} run @inditextech/pdocs-ui-bundle:preview
+preview-ui: (_hdr "preview-ui")
+    pnpm --filter @inditextech/pdocs-ui-bundle preview
 
-# Build and serve a site on :5000
+# Build a site and serve it on :5000, rebuilding as you edit it
 [group('dev')]
-serve site='starter': (_hdr "serve " + site)
-    {{ nx }} run @inditextech/pdocs-{{ site }}:serve
+[no-exit-message]
+dev site='example' port='5000': (_hdr "dev " + site)
+    #!/usr/bin/env bash
+    set -uo pipefail
+
+    # The build runs through Nx, for the cache and to pull in the UI bundle it
+    # depends on. Its progress output is noise in front of a server you are
+    # about to watch: on a cache hit it is twenty lines describing 90ms. Hold it
+    # and print it only if the build fails, when it is the whole story.
+    if ! out=$({{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static 2>&1); then
+      printf '%s\n' "$out"
+      exit 1
+    fi
+
+    # The server itself does not go through Nx: there is nothing left to
+    # orchestrate, and running the script directly keeps a task runner from
+    # drawing over its output. `exec` so Ctrl-C reaches the server.
+    #
+    # `-C` rather than `--filter`: the filtered form routes through pnpm's
+    # recursive runner, which wraps any failure in an ERR_PNPM_RECURSIVE_RUN
+    # report that buries the server's own error message.
+    PORT='{{ port }}' exec pnpm -C 'packages/{{ site }}' run dev
 
 # ---------------------------------------------------------------- build ------
 

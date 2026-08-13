@@ -26,12 +26,23 @@ convenience: Antora's `ui.bundle.url` takes a literal path and does not glob, so
 without it every playbook would need editing on every version bump. Both are
 rebuilt from scratch on each `bundle` run, so stale versions do not accumulate.
 
-## The UI preview
+## The dev servers
 
-`packages/ui-bundle` has a `preview` target that renders `preview-src/index.adoc`
-— a single page exercising admonitions, code blocks, lists, tables and the
-navigation — and reloads on save. Prefer it over building a whole site when
-changing the UI.
+There are two, and they answer different questions.
+
+`packages/{starter,example}` have a `dev` target (`just dev <site>`) that serves
+`build/site` on :5000, watches `docs/` and `../ui-bundle/src`, re-runs Antora on
+change and reloads the browser. It is the real site, so it is the one to trust —
+but a UI edit costs a bundle rebuild plus a full Antora run, and Antora has no
+incremental mode.
+
+`packages/ui-bundle` has a `preview` target (`just preview-ui`) that renders
+`preview-src/index.adoc` — a single page exercising admonitions, code blocks,
+lists, tables and the navigation — and reloads on save. No Antora, no content.
+Prefer it when the content is not what you are changing.
+
+Neither server has runtime dependencies: `scripts/dev.mjs` and the gulp preview
+both build on what ships with Node and the existing toolchain.
 
 ## Adding an extension package
 

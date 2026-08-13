@@ -21,15 +21,15 @@ Every command below works from anywhere in the repository.
 $ just                        # list every command
 $ just build                  # build everything
 $ just check                  # lint, typecheck and formatting — what CI runs
-$ just preview                # UI dev server, live reload, :5252
+$ just dev example            # serve a site on :5000, live reload (site defaults to example)
+$ just preview-ui             # UI-only dev server, live reload, :5252
 $ just build-site starter     # build one site
-$ just serve starter          # serve build/site on :5000 (site defaults to starter)
 $ just doctor                 # diagnose a workspace that won't build
 $ just bump minor             # set the version of every package
 ```
 
 `just build` takes passthrough arguments — `just build --skip-nx-cache`. `just
-serve` and `just build-site` take a bare package name, so `example` rather than
+dev` and `just build-site` take a bare package name, so `example` rather than
 `@inditextech/pdocs-example`.
 
 `just bump` accepts `major`, `minor`, `patch`, a prerelease level or an explicit
@@ -38,9 +38,16 @@ version describes one release of the platform. It rewrites `package.json` and
 nothing else: no commit, no tag, no rebuild. The new version reaches
 `ui-bundle-<version>.zip` on the next `just build`.
 
-When changing the UI, prefer `just preview` over building a whole site. It
-renders a single page exercising admonitions, code blocks, lists, tables and the
-navigation, and reloads on save.
+`just dev` rebuilds the site whenever its AsciiDoc or the UI bundle changes and
+reloads the browser. Antora has no incremental mode, so each change re-runs the
+whole build — fast for these sites, less so as one grows.
+
+It takes a second argument for the port, so two sites can run side by side:
+`just dev example` in one terminal and `just dev starter 5001` in another.
+
+When changing only the UI, prefer `just preview-ui`. It renders a single page
+exercising admonitions, code blocks, lists, tables and the navigation, and
+reloads on save without paying for an Antora run.
 
 ### just and package.json
 

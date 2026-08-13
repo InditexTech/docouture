@@ -128,24 +128,22 @@ doctor: (_hdr "doctor")
     EOF
     fi
 
-    # Resolved by path rather than by package name: the IOP DS packages do not
-    # export ./package.json, and these two are exactly what gulp.d/tasks/build.js
-    # requires, so a pass here means the CSS pipeline has its inputs.
-    if [ -d node_modules ] && node -e "
-      require.resolve('@inditex/sewingiopdsweb-styles/postcss/custom-media.cjs', { paths: ['packages/ui-bundle'] })
-      require.resolve('@inditex/sewingiopdsweb-styles/mixins/index.css', { paths: ['packages/ui-bundle'] })
-    " 2>/dev/null; then
-      ok "@inditex design system resolved"
-    elif [ -d node_modules ]; then
-      fail "@inditex design system missing"
+    echo "ids"
+    # The IOP Design System never enters this workspace's install — see
+    # tools/ids/README.md — so there is nothing to resolve here. This just
+    # confirms the generated derivative it left behind is present; if it's
+    # missing the build's CSS pipeline has no tokens to work with.
+    if [ -f packages/ui-bundle/src/css/ids-tokens.css ] && [ -f packages/ui-bundle/src/css/ids-breakpoints.css ]; then
+      ok "IOP DS token derivative present (packages/ui-bundle/src/css/ids-tokens.css)"
+    else
+      fail "IOP DS token derivative missing"
       cat <<'EOF'
 
-        The IOP DS packages are the only dependencies not on the public
-        registry, and the only reason this workspace needs credentials. Install
-        fails with 401 against inditex.jfrog.io when they are absent.
+        packages/ui-bundle/src/css/ids-tokens.css and ids-breakpoints.css are
+        committed, generated files — this should not happen from a normal
+        clone. If you deleted them, regenerate with:
 
-        Add Artifactory credentials to ~/.npmrc (not to code/.npmrc, which is
-        committed), then run 'pnpm install'.
+          just ids-install && just ids-sync
 
     EOF
     fi
@@ -213,6 +211,45 @@ build *args: (_hdr "build")
 [group('build')]
 build-site site: (_hdr "build-site " + site)
     {{ nx }} run @inditextech/pdocs-{{ site }}:build
+
+# ------------------------------------------------------------------- ids -----
+#
+# The IOP Design System (IDS) is not a dependency of this workspace — see
+# tools/ids/README.md for why. It lives in a sidecar pnpm project instead,
+# installed only when you're regenerating the derivative CSS committed under
+# packages/ui-bundle/src/css/ (ids-tokens.css, ids-breakpoints.css) or reading
+# real DS source as reference while building a component. Three stages, and
+# only the first touches the network:
+#
+#   ids-install   pnpm install in tools/ids (needs Artifactory creds in
+#                 ~/.npmrc and VPN — same credential every developer already
+#                 has from before this existed, just no longer needed for a
+#                 plain `pnpm install` at the workspace root)
+#   ids-sync      regenerate the committed derivative from tools/ids/node_modules
+#   ids-check     regenerate in memory and fail if it would differ, writing
+#                 nothing — a drift check, needs ids-install first
+#
+# Day to day you need none of these. Reach for ids-install when extending a
+# component against real DS source, or ids-install + ids-sync after a DS
+# version bump in tools/ids/package.json.
+
+# Install the design system sidecar (network, needs Artifactory credentials)
+[group('ids')]
+[no-exit-message]
+ids-install: (_hdr "ids-install")
+    pnpm -C tools/ids install --ignore-workspace
+
+# Regenerate the committed IDS token/breakpoint CSS from the sidecar
+[group('ids')]
+[no-exit-message]
+ids-sync: (_hdr "ids-sync")
+    node tools/ids/sync.mjs
+
+# Check the committed IDS token/breakpoint CSS is not stale (writes nothing)
+[group('ids')]
+[no-exit-message]
+ids-check: (_hdr "ids-check")
+    node tools/ids/sync.mjs --check
 
 # ---------------------------------------------------------------- icons ------
 #

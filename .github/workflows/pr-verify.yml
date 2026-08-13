@@ -43,20 +43,10 @@ jobs:
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
 
-      # code/.npmrc pins the default registry to npmjs and routes only the
-      # @inditex scope (the IOP Design System) to Artifactory. Everything else
-      # in the lockfile resolves anonymously — verified in the PR that added
-      # this workflow: `pnpm fetch` with no credentials fetches all ~790
-      # non-@inditex packages and fails only on that one scope. This appends
-      # the credential for that scope; it does not change where anything else
-      # resolves from.
-      - name: Configure Artifactory credentials
-        working-directory: code
-        run: |
-          echo "//inditex.jfrog.io/artifactory/api/npm/node-public/:_authToken=${ARTIFACTORY_TOKEN}" >> .npmrc
-        env:
-          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
-
+      # code/.npmrc pins the default registry to npmjs. The IOP Design System
+      # (the only dependency that was ever on a different registry) is not
+      # installed in this workspace — see code/tools/ids/README.md — so this
+      # install needs no credential and never contacts Artifactory.
       - name: Install dependencies
         working-directory: code
         run: pnpm install --frozen-lockfile

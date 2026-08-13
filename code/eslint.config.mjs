@@ -49,7 +49,7 @@ export default tseslint.config(
   {
     // Developer scripts: standalone Node programs, ES modules, run by hand or
     // through a package script. Not part of any bundle.
-    files: ['scripts/**/*.mjs', 'packages/*/scripts/**/*.mjs'],
+    files: ['scripts/**/*.mjs', 'packages/*/scripts/**/*.mjs', 'tools/*/*.mjs'],
     languageOptions: {
       sourceType: 'module',
       globals: globals.node,

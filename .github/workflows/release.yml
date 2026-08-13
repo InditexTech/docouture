@@ -65,15 +65,9 @@ jobs:
       - name: Setup just
         uses: extractions/setup-just@v2
 
-      # See pr-verify.yml: only the @inditex scope needs this. Every other
-      # package in the lockfile resolves from npmjs with no credential.
-      - name: Configure Artifactory credentials
-        working-directory: code
-        run: |
-          echo "//inditex.jfrog.io/artifactory/api/npm/node-public/:_authToken=${ARTIFACTORY_TOKEN}" >> .npmrc
-        env:
-          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
-
+      # code/.npmrc pins the default registry to npmjs. The IOP Design System
+      # is not installed in this workspace — see code/tools/ids/README.md —
+      # so this needs no credential and never contacts Artifactory.
       - name: Install dependencies
         working-directory: code
         run: pnpm install --frozen-lockfile
@@ -198,13 +192,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
           cache: pnpm
           cache-dependency-path: code/pnpm-lock.yaml
-
-      - name: Configure Artifactory credentials
-        working-directory: code
-        run: |
-          echo "//inditex.jfrog.io/artifactory/api/npm/node-public/:_authToken=${ARTIFACTORY_TOKEN}" >> .npmrc
-        env:
-          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
 
       - name: Install dependencies
         working-directory: code

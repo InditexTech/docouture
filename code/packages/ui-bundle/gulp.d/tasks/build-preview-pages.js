@@ -20,6 +20,7 @@ const vfs = require('vinyl-fs')
 const yaml = require('js-yaml')
 
 const compileHelpers = require('../lib/compile-helpers')
+const loadIconCatalog = require('../lib/load-icon-catalog')
 
 const ASCIIDOC_ATTRIBUTES = { experimental: '', icons: 'font', sectanchors: '', 'source-highlighter': 'highlight.js' }
 
@@ -39,6 +40,14 @@ module.exports =
         )
       ),
     ])
+
+    // Preview-only layouts (hub, icons, ...) live in previewSrc/layouts, not
+    // src/layouts, so they are never packed into the published UI bundle.
+    // They share the same Map and the partials already registered above.
+    await toPromise(compileLayouts(previewSrc, layouts))
+
+    const iconCatalog = await loadIconCatalog(previewDest)
+
 
     const extensions = ((sampleUiModel.asciidoc || {}).extensions || []).map((request) => {
       ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replace(/[/]/g, '-') + '-loaded'] = ''
@@ -82,6 +91,11 @@ module.exports =
             uiModel.page.layout = doc.getAttribute('page-layout', 'default')
             uiModel.page.title = doc.getDocumentTitle()
             uiModel.page.contents = Buffer.from(await doc.convert())
+            // NOTE the sample ui-model pins `home: true` globally; only the
+            // landing page should actually behave like the docs home page
+            // (toolbar home-link current, search autofocused).
+            uiModel.page.home = file.stem === 'landing'
+            if (uiModel.page.layout === 'icons') uiModel.icons = iconCatalog
           }
           file.extname = '.html'
           try {
@@ -126,9 +140,8 @@ function registerHelpers(tsbuildDir) {
   )
 }
 
-function compileLayouts(src) {
-  const layouts = new Map()
-  return vfs.src('layouts/*.hbs', { base: src, cwd: src }).pipe(
+function compileLayouts(src, layouts = new Map()) {
+  return vfs.src('layouts/*.hbs', { base: src, cwd: src, allowEmpty: true }).pipe(
     map(
       (file, enc, next) => {
         const srcName = path.join(src, file.relative)

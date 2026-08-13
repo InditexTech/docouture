@@ -1,0 +1,5 @@
+= Icons Catalog
+:page-layout: icons
+:description: Every icon in the IOP Design System mirror, for visual and colour-contrast checks against the vendored sprite.
+
+Browse the full IOP Design System icon mirror.

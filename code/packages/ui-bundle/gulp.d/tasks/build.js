@@ -4,7 +4,7 @@ const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const esbuild = require('esbuild')
 const fs = require('fs-extra')
-const idsCustomMedia = require('@inditex/sewingiopdsweb-styles/postcss/custom-media.cjs')
+const idsCustomMedia = require('../lib/ids-custom-media')
 const merge = require('../lib/concat-streams')
 const ospath = require('path')
 const path = ospath.posix
@@ -12,7 +12,6 @@ const postcss = require('gulp-postcss')
 const postcssCalc = require('postcss-calc')
 const postcssCustomMedia = require('postcss-custom-media')
 const postcssImport = require('postcss-import')
-const postcssMixins = require('postcss-mixins')
 const postcssUrl = require('postcss-url')
 const { Transform } = require('stream')
 const { finished } = require('stream/promises')
@@ -44,11 +43,8 @@ module.exports = (src, dest, preview) => async () => {
   const postcssPlugins = [
     postcssImport,
     trackImportedStylesheetMtimes,
-    // Expand the IOP DS typography mixins (`@mixin ids-body-m;`). The
-    // definitions are `@define-mixin` rules in the design system package and
-    // are never imported into a stylesheet, so they are loaded by path.
-    postcssMixins({ mixinsFiles: require.resolve('@inditex/sewingiopdsweb-styles/mixins/index.css') }),
-    // Prepend the design system's `@custom-media` breakpoint declarations to
+    // Prepend this bundle's own @custom-media breakpoint declarations
+    // (generated from the design system into src/css/ids-breakpoints.css) to
     // every stylesheet, then resolve them. Together these let any rule write
     // `@media (--ids-breakpoints-m)` instead of a hardcoded width.
     idsCustomMedia(),

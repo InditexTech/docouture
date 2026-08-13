@@ -9,9 +9,20 @@ The DS ships **framework-agnostic BEM CSS** for every component in
 `@inditex/sewingiopdsweb-react-components@1.28.0`. The React code is irrelevant to us;
 the stylesheets reference nothing but `--ids-*` tokens and plain class names.
 
-**The rule: import the DS stylesheet, emit its markup. Never re-implement a component's
-styling.** React is a devDependency for reading markup structure only — nothing from
-it reaches the browser.
+**The rule: copy the DS component's real CSS as your reference, emit its markup. Never
+re-implement a component's styling from memory.** React is there for reading markup
+structure only — nothing from it reaches the browser.
+
+> **`@inditex/sewingiopdsweb-react-components` is not installed in this workspace** —
+> `code/packages/ui-bundle/package.json` has no dependency on it, and `pnpm install` at
+> the workspace root never touches Artifactory. To read the real stylesheets this skill
+> describes, run `just ids-install` first: it installs the DS into a sidecar,
+> `code/tools/ids/node_modules/`, kept outside the pnpm workspace for exactly this. See
+> `code/tools/ids/README.md` and the `iop-ds-reference` skill.
+>
+> This changes how you ship a component's CSS, too — see "Importing DS component CSS"
+> below: it is no longer a live `@import`, it is a generated derivative, same shape as
+> the icon sprite and the token layer.
 
 Read the `iop-ds-foundations` skill first for tokens, theming and breakpoints.
 
@@ -88,26 +99,37 @@ Never remove an outline without replacing it with this one.
 
 ## Importing DS component CSS
 
-Add the import to `src/css/site.css`, in the chrome/content section, after the token
-imports and after `bridge.css`:
+There is no live `@import` of `@inditex/sewingiopdsweb-react-components` — that package
+is deliberately not part of this workspace's install (see the intro). Shipping a DS
+component's CSS means generating a derivative from it, the same shape as
+`ids-tokens.css` and the `.ids-icon` rule in `icons.css`:
 
-```css
-@import url(~@inditex/sewingiopdsweb-react-components/banner/banner.css);
-```
+1. `just ids-install`, then read the real stylesheet(s) at
+   `code/tools/ids/node_modules/@inditex/sewingiopdsweb-react-components/<dir>/*.css`
+   (`ls` the directory first — components with several stylesheets need all of them:
+   `breadcrumbs/` has 4, `modal/` 6).
+2. For a small, stable rule set (a handful of declarations, like the icon sizing rule),
+   copy it verbatim into the relevant `src/css/*.css` file with a comment naming the
+   source path and DS version — see `icons.css` for the pattern.
+3. For a larger component, or one likely to need re-syncing as the DS version bumps,
+   extend `tools/ids/sync.mjs` to extract it mechanically instead of hand-copying —
+   read that script before adding to it, it already does this for tokens and
+   breakpoints. Emit the result as its own generated file under
+   `packages/ui-bundle/src/css/`, `@import`ed from `site.css`, with the same
+   "generated, do not edit" header the existing generated files use.
 
-`postcss-import` plus the existing `~` resolution handle it; the rules are inlined into
-`css/site.css` in the built zip. Import only the components actually used — the package
-has ~90 of them and none are tree-shaken.
-
-Components with several stylesheets need all of them (`breadcrumbs/` has 4, `modal/` 6).
-`ls node_modules/@inditex/sewingiopdsweb-react-components/<dir>/*.css` before importing.
+Either way: copy only the components actually used, and note the DS version copied
+from (the DS has no semver guarantee on component CSS between versions).
 
 ## Licensing
 
-The DS packages are `license: INDITEX`. pdocs is MPL-2.0 and its `ui-bundle.zip` bakes
-these stylesheets in. This is accepted because the resulting sites are internal.
-`code/packages/ui-bundle/NOTICE` records it. **If a pdocs site is ever published
-externally, this must be revisited** — flag it rather than shipping quietly.
+The DS packages are `license: INDITEX`. `ui-bundle.zip` bakes in whatever's been
+generated from them — currently the token layer and one icon-sizing rule; any
+component CSS added per the section above joins that same generated surface.
+`code/packages/ui-bundle/NOTICE` records what's derived and from where.
+**If a pdocs site is ever published externally, or before generating a large chunk
+of component CSS, this must be revisited with whoever owns DS licensing** — flag it
+rather than shipping quietly.
 
 ## Reference
 

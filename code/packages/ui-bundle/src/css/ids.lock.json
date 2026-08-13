@@ -1,0 +1,49 @@
+{
+  "designSystemVersion": "1.28.0",
+  "generatedAt": "2026-08-13T14:25:25.193Z",
+  "sources": {
+    "variables/index.css": "e4a4d34ec45638533f0029016641d85170294e0e720d42dc2eff63ee5fa00a08",
+    "motion.css": "5fbeb022d87acb9b21a23bfece39b6a7feb15af3d23676e33e94a7c2c65cc1ea",
+    "zindex.css": "488fd83b264bcb0cecc65f4ab3d976b8af92502af71de75ecb9b53fecd2f50f4",
+    "variables/breakpoints.css": "a5062943b36f83c821d5b5680d932aca8ae5ec7525875391f1676c7268c0ca2c"
+  },
+  "emittedTokens": [
+    "--ids-color-alt-blue-high",
+    "--ids-color-alt-blue-mid",
+    "--ids-color-alt-green-high",
+    "--ids-color-alt-orange-high",
+    "--ids-color-alt-red-high",
+    "--ids-color-bg-default",
+    "--ids-color-bg-low",
+    "--ids-color-bg-states-hover",
+    "--ids-color-border-low",
+    "--ids-color-border-states-focus",
+    "--ids-color-content-default",
+    "--ids-color-content-inverse",
+    "--ids-color-content-low",
+    "--ids-color-content-states-disabled",
+    "--ids-color-viz-item-1-level-03",
+    "--ids-motion-duration-s",
+    "--ids-motion-easing-standard-1",
+    "--ids-motion-micro-states",
+    "--ids-size-12",
+    "--ids-size-125",
+    "--ids-size-border-high",
+    "--ids-typo-font-family-monospace",
+    "--ids-typo-font-family-primary",
+    "--ids-typo-font-weight-default",
+    "--ids-typo-font-weight-high",
+    "--ids-typo-font-weight-mid",
+    "--ids-z-base",
+    "--ids-z-dropdown",
+    "--ids-z-modal-drawer",
+    "--ids-z-sticky"
+  ],
+  "emittedBreakpoints": [
+    "--ids-breakpoints-l",
+    "--ids-breakpoints-m",
+    "--ids-breakpoints-s",
+    "--ids-breakpoints-xs",
+    "--ids-breakpoints-xs-s"
+  ]
+}

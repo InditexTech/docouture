@@ -2,6 +2,8 @@
 
 const { Transform } = require('stream')
 
+const svgoConfig = require('./svgo-config')
+
 // svgo is ESM-only, so it is loaded lazily with a dynamic import from this
 // CommonJS pipeline and cached after the first use.
 let svgoPromise
@@ -24,24 +26,7 @@ module.exports = () =>
       if (!file.isBuffer() || file.extname !== '.svg') return next(null, file)
       try {
         const { optimize } = await loadSvgo()
-        const { data } = optimize(file.contents.toString('utf8'), {
-          path: file.path,
-          plugins: [
-            {
-              name: 'preset-default',
-              params: {
-                overrides: {
-                  // IDs are referenced by `<use href="...#icon-foo">` from the
-                  // templates and by CSS, so they must survive optimization.
-                  cleanupIds: false,
-                  removeDesc: false,
-                },
-              },
-            },
-          ],
-          // NOTE svgo 4 dropped removeViewBox from preset-default, so the
-          // viewBox that drives icon scaling is preserved without an override.
-        })
+        const { data } = optimize(file.contents.toString('utf8'), { path: file.path, ...svgoConfig })
         file.contents = Buffer.from(data, 'utf8')
         next(null, file)
       } catch (err) {

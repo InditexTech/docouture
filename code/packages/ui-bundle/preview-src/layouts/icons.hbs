@@ -1,0 +1,293 @@
+<!--
+  Preview-only layout. Lives in preview-src/layouts, not src/layouts, so it is
+  never packed into the published UI bundle. Icon data comes from the
+  gitignored `.icons/` mirror (`just icons-fetch`), not from the vendored
+  `src/img/icons.yml` manifest — see gulp.d/lib/load-icon-catalog.js. Sprites
+  referenced here are copied to `_/img/preview-icons/` for this preview only.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+{{> head defaultPageTitle='Icons Catalog'}}
+    <style>
+      body.icons-page .icons {
+        margin: 0 auto;
+        max-width: calc(1400 / 18 * 1rem);
+        padding: var(--ids-size-200) var(--ids-size-100);
+      }
+
+      body.icons-page .icons__intro {
+        margin-bottom: var(--ids-size-150);
+      }
+
+      body.icons-page .icons__missing {
+        background: var(--ids-color-bg-low);
+        border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+        border-radius: var(--ids-size-radius-rounded);
+        padding: var(--ids-size-150);
+      }
+
+      body.icons-page .icons__missing code {
+        font-family: var(--monospace-font-family);
+      }
+
+      body.icons-page .icons__toolbar {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--ids-size-100);
+        margin-bottom: var(--ids-size-150);
+        position: sticky;
+        top: 0;
+        background: var(--body-background);
+        padding-block: var(--ids-size-75);
+        z-index: 1;
+      }
+
+      body.icons-page .icons__filter {
+        background: var(--ids-color-bg-default);
+        border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+        border-radius: var(--ids-size-radius-rounded);
+        color: inherit;
+        flex: 1 1 auto;
+        font: inherit;
+        min-width: calc(200 / 18 * 1rem);
+        padding: var(--ids-size-50) var(--ids-size-75);
+      }
+
+      body.icons-page .icons__size {
+        display: flex;
+        gap: var(--ids-size-25);
+      }
+
+      body.icons-page .icons__size button {
+        background: var(--ids-color-bg-default);
+        border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+        border-radius: var(--ids-size-radius-rounded);
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        padding: var(--ids-size-25) var(--ids-size-75);
+      }
+
+      body.icons-page .icons__size button[aria-pressed="true"] {
+        background: var(--ids-color-bg-states-pressed);
+        border-color: var(--ids-color-border-states-pressed);
+      }
+
+      body.icons-page .icons__count {
+        color: var(--body-font-color);
+        font-size: 0.875em;
+        opacity: 0.7;
+      }
+
+      body.icons-page .icons__group {
+        margin-bottom: var(--ids-size-200);
+      }
+
+      body.icons-page .icons__group-title {
+        border-bottom: var(--ids-size-border-default) solid var(--ids-color-border-low);
+        font-size: 1em;
+        padding-bottom: var(--ids-size-25);
+      }
+
+      body.icons-page .icons__grid {
+        display: grid;
+        gap: var(--ids-size-75);
+        grid-template-columns: repeat(auto-fill, minmax(calc(120 / 18 * 1rem), 1fr));
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      body.icons-page .icons__grid[data-size="16"] {
+        grid-template-columns: repeat(auto-fill, minmax(calc(96 / 18 * 1rem), 1fr));
+      }
+
+      body.icons-page .icons__grid[data-size="48"] {
+        grid-template-columns: repeat(auto-fill, minmax(calc(150 / 18 * 1rem), 1fr));
+      }
+
+      body.icons-page .icon-cell {
+        align-items: center;
+        background: none;
+        border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+        border-radius: var(--ids-size-radius-rounded);
+        color: inherit;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        font: inherit;
+        gap: var(--ids-size-25);
+        padding: var(--ids-size-75);
+        text-align: center;
+      }
+
+      body.icons-page .icon-cell:hover {
+        background: var(--ids-color-bg-states-hover);
+      }
+
+      body.icons-page .icon-cell.is-vendored {
+        border-color: var(--ids-color-border-states-focus);
+      }
+
+      body.icons-page .icon-cell svg {
+        block-size: var(--ids-size-150);
+        color: var(--body-font-color);
+        inline-size: var(--ids-size-150);
+      }
+
+      body.icons-page .icons__grid[data-size="16"] .icon-cell svg {
+        block-size: var(--ids-size-100);
+        inline-size: var(--ids-size-100);
+      }
+
+      body.icons-page .icons__grid[data-size="48"] .icon-cell svg {
+        block-size: var(--ids-size-300);
+        inline-size: var(--ids-size-300);
+      }
+
+      body.icons-page .icon-cell__name {
+        font-size: 0.75em;
+        overflow-wrap: anywhere;
+      }
+
+      body.icons-page .icon-cell__vendored {
+        color: var(--ids-color-border-states-focus);
+        font-size: 0.6875em;
+      }
+
+      body.icons-page .icon-cell.is-hidden {
+        display: none;
+      }
+
+      body.icons-page .icons__toast {
+        background: var(--ids-color-bg-inverse);
+        border-radius: var(--ids-size-radius-rounded);
+        bottom: var(--ids-size-150);
+        color: var(--ids-color-content-inverse);
+        left: 50%;
+        opacity: 0;
+        padding: var(--ids-size-50) var(--ids-size-100);
+        pointer-events: none;
+        position: fixed;
+        transform: translateX(-50%);
+        transition: opacity 0.15s ease;
+      }
+
+      body.icons-page .icons__toast.is-visible {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="icons-page">
+{{> header}}
+    <main class="icons">
+      <div class="icons__intro">
+{{{page.contents}}}
+      </div>
+{{#if icons.available}}
+      <div class="icons__toolbar">
+        <input class="icons__filter" type="search" placeholder="Filter by name or group&hellip;" aria-label="Filter icons">
+        <div class="icons__size" role="group" aria-label="Icon size">
+          <button type="button" data-size="16">16</button>
+          <button type="button" data-size="24" aria-pressed="true">24</button>
+          <button type="button" data-size="48">48</button>
+        </div>
+        <span class="icons__count">{{icons.total}} icons</span>
+      </div>
+{{#each icons.groups}}
+      <section class="icons__group" data-group="{{this.name}}">
+        <h2 class="icons__group-title">{{this.name}}</h2>
+        <ul class="icons__grid" data-size="24">
+{{#each this.icons}}
+          <li>
+            <button
+              type="button"
+              class="icon-cell{{#if this.vendored}} is-vendored{{/if}}"
+              data-search="{{../name}} {{this.name}}"
+              data-group="{{../name}}"
+              data-icon-name="{{this.name}}"
+            >
+              <svg class="ids-icon" aria-hidden="true" focusable="false">
+                <use href="{{@root.uiRootPath}}/img/preview-icons/sw-icons-{{../name}}.symbol.svg#{{this.id}}"></use>
+              </svg>
+              <span class="icon-cell__name">{{this.name}}</span>
+{{#if this.vendored}}
+              <span class="icon-cell__vendored">vendored</span>
+{{/if}}
+            </button>
+          </li>
+{{/each}}
+        </ul>
+      </section>
+{{/each}}
+{{else}}
+      <div class="icons__missing">
+        <p>The icon mirror is not present, so there is nothing to catalog yet.</p>
+        <p>Run <code>just icons-fetch</code> to pull the IOP Design System sprites, then restart the preview.</p>
+        <p>This is separate from <code>just icons-build</code>, which only regenerates the small vendored sprite (<code>src/img/ids-icons.svg</code>) that the published bundle ships.</p>
+      </div>
+{{/if}}
+    </main>
+    <div class="icons__toast" role="status" aria-live="polite"></div>
+{{> footer}}
+    <script>
+      (function () {
+        var main = document.querySelector('.icons')
+        if (!main) return
+
+        var filter = main.querySelector('.icons__filter')
+        var toast = document.querySelector('.icons__toast')
+
+        if (filter) {
+          filter.addEventListener('input', function () {
+            var term = filter.value.trim().toLowerCase()
+            main.querySelectorAll('.icon-cell').forEach(function (cell) {
+              var haystack = (cell.getAttribute('data-search') || '').toLowerCase()
+              cell.parentElement.classList.toggle('is-hidden', term !== '' && haystack.indexOf(term) === -1)
+            })
+            main.querySelectorAll('.icons__group').forEach(function (group) {
+              var anyVisible = Array.prototype.some.call(
+                group.querySelectorAll('li'),
+                function (li) { return !li.classList.contains('is-hidden') }
+              )
+              group.classList.toggle('is-hidden', !anyVisible)
+            })
+          })
+        }
+
+        main.querySelectorAll('.icons__size button').forEach(function (button) {
+          button.addEventListener('click', function () {
+            var size = button.getAttribute('data-size')
+            main.querySelectorAll('.icons__size button').forEach(function (b) {
+              b.setAttribute('aria-pressed', String(b === button))
+            })
+            main.querySelectorAll('.icons__grid').forEach(function (grid) {
+              grid.setAttribute('data-size', size)
+            })
+          })
+        })
+
+        var toastTimer
+        main.querySelectorAll('.icon-cell').forEach(function (cell) {
+          cell.addEventListener('click', function () {
+            var snippet = '\{{icon "' + cell.getAttribute('data-group') + '" "' + cell.getAttribute('data-icon-name') + '"}}'
+            var done = function () {
+              if (!toast) return
+              toast.textContent = 'Copied ' + snippet
+              toast.classList.add('is-visible')
+              clearTimeout(toastTimer)
+              toastTimer = setTimeout(function () { toast.classList.remove('is-visible') }, 1500)
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(snippet).then(done, done)
+            } else {
+              done()
+            }
+          })
+        })
+      })()
+    </script>
+  </body>
+</html>

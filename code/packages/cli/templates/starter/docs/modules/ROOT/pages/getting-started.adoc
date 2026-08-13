@@ -1,0 +1,38 @@
+= Getting started
+
+== Add a page
+
+Create an AsciiDoc file under `modules/ROOT/pages/`, then add it to
+`modules/ROOT/nav.adoc` so it appears in the navigation:
+
+[,asciidoc]
+----
+* xref:my-new-page.adoc[My new page]
+----
+
+A page that is not listed in the navigation is still published; it just cannot
+be reached by browsing.
+
+== Build the site
+
+[,console]
+----
+$ npm install
+$ npm run build
+----
+
+The generated site is written to `build/site`.
+
+== Set the version
+
+If this site's version needs to move — for example when it starts tracking a
+release — use `pdocs version`:
+
+[,console]
+----
+$ pdocs version 1.0.0
+$ pdocs version 1.1.0-rc.0 --prerelease
+----
+
+It rewrites `docs/antora.yml` in place and leaves everything else in this
+directory untouched.

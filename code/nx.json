@@ -36,6 +36,15 @@
     "preview": {
       "cache": false
     },
+    "icons:fetch": {
+      "cache": false
+    },
+    "icons:build": {
+      "cache": false
+    },
+    "icons:search": {
+      "cache": false
+    },
     "dev": {
       "cache": false
     }

@@ -1,0 +1,54 @@
+# Icons vendored from the IOP Design System.
+#
+# Each entry is a group and the leaf names taken from it. The leaf name always
+# carries its variant suffix (`-outlined` or `-filled`) because the design
+# system ships no bare names — `information` does not exist, only
+# `information-outlined` and `information-filled`. The symbol id in the
+# generated sprite is `sw-icons-<group>-<name>`, matching the design system's
+# own ids so the sprite stays swappable with the CDN one.
+#
+# Group names are not intuitive: `sections` is Zara's womenswear/menswear
+# sections, `controls` is media transport only. Use `just icons-search <term>`
+# rather than guessing — the search covers all 1370 icons in the mirror, and
+# `just icons-build` fails with suggestions when a name is wrong.
+#
+#   just icons-search sidebar     find the right group/name
+#   just icons-build              regenerate src/img/ids-icons.svg
+#
+# Adding an icon is one line here plus `just icons-build`. Refreshing the
+# catalogue from the design system is `just icons-fetch`.
+
+icons:
+  accessibility:
+    - moon-outlined # theme toggle, dark
+  actions:
+    - add-outlined
+    - back-outlined
+    - check-circle-outlined # admonition: tip / important
+    - copy-outlined
+    - full-screen-enter-outlined
+    - full-screen-exit-outlined
+    - search-outlined
+  alerts:
+    - information-outlined # admonition: note
+    - warning-outlined # admonition: warning / caution
+  arrows:
+    - arrow-left-outlined # pagination: previous
+    - arrow-right-outlined # pagination: next
+    - chevron-down-outlined
+    - chevron-up-outlined
+  business:
+    - user-outlined
+  connectivity:
+    - link-outlined # section anchor / copy link
+    - link-external-outlined
+  controls:
+    - play-circle-outlined
+  design:
+    - grid-outlined
+    - menu-outlined
+    - sidebar-outlined # "on this page" toggle
+  others:
+    - home-outlined
+  weather:
+    - sunny-outlined # theme toggle, light

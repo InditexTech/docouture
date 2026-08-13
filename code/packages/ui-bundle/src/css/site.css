@@ -1,20 +1,21 @@
 /*
- * IOP Design System token layer. Provides every --ids-* custom property: the
- * light and dark palettes, the size and typography scales, the density scale,
- * the resolution tiers, motion and stacking.
+ * IOP Design System token layer: every --ids-* custom property this bundle's
+ * CSS references (palette, size and typography scales, motion, stacking).
+ * Generated from the real design system by tools/ids/sync.mjs — see
+ * ids-tokens.css's own header and tools/ids/README.md. Not the design
+ * system's own stylesheets: this repo has no dependency on
+ * @inditex/sewingiopdsweb-styles, only on this small extracted subset.
  *
- * These must come first — bridge.css and every stylesheet below consume them.
- * Breakpoint @custom-media declarations are injected by a PostCSS plugin, not
- * imported here.
+ * Must come first — bridge.css and every stylesheet below consume it.
+ * Breakpoint @custom-media declarations are injected by a PostCSS plugin
+ * (gulp.d/lib/ids-custom-media.js), not imported here.
  */
-@import url("@inditex/sewingiopdsweb-styles/variables/index.css");
-@import url("@inditex/sewingiopdsweb-styles/typography.css");
-@import url("@inditex/sewingiopdsweb-styles/motion.css");
-@import url("@inditex/sewingiopdsweb-styles/zindex.css");
+@import url("ids-tokens.css");
 
 /* This bundle's own variables, expressed in design system tokens. */
 @import url("bridge.css");
 @import url("vars.css");
+@import url("icons.css");
 @import url("base.css");
 @import url("body.css");
 @import url("nav.css");

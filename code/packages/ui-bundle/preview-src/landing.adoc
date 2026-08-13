@@ -1,0 +1,28 @@
+= Brand&#8217;s Hardware &amp; Software Requirements
+Author Name
+:idprefix:
+:idseparator: -
+:page-pagination:
+:description: Landing test page: the site chrome around a normal doc page — header, toolbar, breadcrumbs, nav tree, page-versions, theme toggle, edit-this-page, pagination and footer — with the toolbar home-link marked current.
+
+[.lead]
+This is the *landing* test page.
+It renders through the same `default` layout as link:content.html[the content test page], so the diff between the two is entirely in `preview-src/ui-model.yml`: this page is `page.home: true`, so the toolbar home-link should show as current and the search field autofocuses.
+
+Everything else on this page is here to exercise site chrome rather than article content: the header navbar, the toolbar (home-link, breadcrumbs, page-versions dropdown, theme toggle, edit-this-page), the left-hand nav tree, the right-hand table of contents, and the previous/next pagination in the footer.
+
+== Cu solet
+
+Nominavi luptatum eos, an vim hinc philosophia intellegebat.
+Eu mea inani iriure.
+
+== Liber recusabo
+
+Select menu:File[Open Project] to open the project in your IDE.
+
+=== Some Code
+
+[,js]
+----
+const chrome = 'header + toolbar + nav + toc + pagination + footer'
+----

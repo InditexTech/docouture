@@ -101,12 +101,6 @@
   outline-offset: calc(-1 * var(--ids-size-12));
 }
 
-.theme-toggle svg {
-  display: block;
-  height: var(--ids-size-125);
-  width: var(--ids-size-125);
-}
-
 /* Show the icon for the theme the button switches TO, not the one in use. */
 .theme-toggle-icon--dark,
 .ids-theme-dark .theme-toggle-icon--light {

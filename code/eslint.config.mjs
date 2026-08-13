@@ -45,5 +45,14 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
     },
+  },
+  {
+    // Developer scripts: standalone Node programs, ES modules, run by hand or
+    // through a package script. Not part of any bundle.
+    files: ['scripts/**/*.mjs', 'packages/*/scripts/**/*.mjs', 'tools/*/*.mjs'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: globals.node,
+    },
   }
 )

@@ -6,8 +6,18 @@ description: "IOP Design System (IDS) design tokens, theming, breakpoints, typog
 # IOP DS — Foundations
 
 The design system is **shipped as npm packages**, not as a Figma spec you transcribe.
-Everything below already exists as plain CSS in `node_modules`. Read it, import it,
-reference it. Never re-author it.
+Everything below already exists as plain CSS. Read it, import it, reference it. Never
+re-author it.
+
+> **These packages are not a dependency of this workspace.** `code/packages/ui-bundle`
+> ships a small, generated derivative (`src/css/ids-tokens.css`, `src/css/ids-breakpoints.css`)
+> and nothing else — no `node_modules/@inditex/*` at the workspace root, no Artifactory
+> credential needed for a normal `pnpm install`. To read the real DS source described in
+> this skill, run `just ids-install` first: it installs the two packages into
+> `code/tools/ids/node_modules/`, a sidecar outside the pnpm workspace, kept there for
+> exactly this — reference while building or extending a component. See
+> `code/tools/ids/README.md` and the `iop-ds-reference` skill for the full story
+> (what's generated, how, and when to re-sync).
 
 | package | version | role |
 | --- | --- | --- |
@@ -127,9 +137,12 @@ Four tiers, mobile-first, consumed as `@custom-media`:
 and grid gaps instead of re-deriving the numbers. Full list of names in
 `reference/breakpoints.md`.
 
-The `@custom-media` names are injected into every stylesheet by the DS PostCSS plugin
-`@inditex/sewingiopdsweb-styles/postcss/custom-media.cjs`, which must sit in the chain
-before `postcss-custom-media`. You never import `variables/breakpoints.css` yourself.
+The `@custom-media` names are resolved from `code/packages/ui-bundle/src/css/ids-breakpoints.css`
+— a generated derivative of the DS's own `variables/breakpoints.css`, prepended to every
+stylesheet by `gulp.d/lib/ids-custom-media.js` before `postcss-custom-media` runs. You never
+import either file yourself; if a breakpoint you need is missing from the derivative, add
+the `(--ids-breakpoints-*)` reference to your CSS and run `just ids-install && just ids-sync`
+— the generator only emits breakpoints it finds actually referenced.
 
 ## Typography
 
@@ -182,8 +195,10 @@ duration to `0.01ms` and every easing to `linear`. Do not add your own
 
 ## Where things live
 
+Real DS source (needs `just ids-install` first — see the intro):
+
 ```
-node_modules/@inditex/sewingiopdsweb-styles/
+code/tools/ids/node_modules/@inditex/sewingiopdsweb-styles/
   variables/index.css       themes, scales, resolution tiers, margins/gutters
   variables/breakpoints.css @custom-media source of truth (do not import directly)
   typography.css            composite font tokens
@@ -191,14 +206,26 @@ node_modules/@inditex/sewingiopdsweb-styles/
   zindex.css                --ids-z-*
   mixins/index.css          @define-mixin ids-*
   normalize.css scrollbar.css
-  postcss/custom-media.cjs  PostCSS plugin
+  postcss/custom-media.cjs  PostCSS plugin (reference only — the build uses its own
+                            equivalent, gulp.d/lib/ids-custom-media.js, sourced from
+                            the committed derivative; see iop-ds-reference skill)
 ```
 
-To look a token up, grep the package rather than guessing:
+The generated derivative the build actually consumes:
+
+```
+code/packages/ui-bundle/src/css/
+  ids-tokens.css       the --ids-* declarations src/css/**/*.css references, generated
+  ids-breakpoints.css  the @custom-media declarations src/css/**/*.css references, generated
+  ids.lock.json        DS version + source hashes the above were generated from
+```
+
+To look a token up, grep the real package rather than guessing:
 
 ```console
+$ just ids-install   # first time only
 $ grep -o '\-\-ids-color-alt-[a-z-]*:#[0-9a-f]*' \
-    code/node_modules/@inditex/sewingiopdsweb-styles/variables/index.css
+    code/tools/ids/node_modules/@inditex/sewingiopdsweb-styles/variables/index.css
 ```
 
 ## In this repo

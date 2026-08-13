@@ -1,0 +1,29 @@
+/*
+ * Icons.
+ *
+ * Sizing matches the design system's own icon rule (one `--ids-size-125`
+ * square), so a `.ids-icon` here is the same box as a `.ids-icon` rendered by
+ * the design system's React components — copied inline rather than imported
+ * because it is the only rule this bundle needs from
+ * @inditex/sewingiopdsweb-react-components/icon/icon.css, and importing it
+ * would pull that whole (proprietary, Artifactory-only) package into this
+ * bundle's dependency tree for one declaration. See tools/ids/README.md. The
+ * markup is produced by the `{{icon}}` helper and references the vendored
+ * sprite; see src/img/icons.yml.
+ */
+.ids-icon {
+  display: block;
+  height: var(--ids-size-125);
+  width: var(--ids-size-125);
+
+  /*
+   * The sprite's paths are authored with `fill="currentColor"`, which
+   * resolves against the referencing element even though the symbols arrive
+   * through an external `<use>`. Stating the inheritance here means an icon
+   * takes the colour of whatever it sits in — a link, a button, a heading —
+   * with no per-context rule, and only deliberate overrides have to say
+   * anything at all.
+   */
+  color: inherit;
+  flex: none;
+}

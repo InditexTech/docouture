@@ -9,3 +9,26 @@ Modifications from upstream are described in ../../README.md and cover the build
 pipeline (gulp 5, esbuild, svgo, TypeScript sources) and the upgrade from
 highlight.js 9 to 11. The Handlebars templates and stylesheets remain
 substantially upstream's work.
+
+--------------------------------------------------------------------------------
+
+This bundle embeds CSS from the IOP Design System, which is NOT covered by the
+Mozilla Public License and is NOT redistributable outside Inditex:
+
+  IOP Design System (Sewing)
+  https://github.com/inditex/lib-sewingiopdsweb
+  Copyright (C) Industria de Diseno Textil, S.A. (Inditex)
+  Licensed under the INDITEX license — proprietary, internal use only
+
+  @inditex/sewingiopdsweb-styles              design tokens, theming, breakpoints
+  @inditex/sewingiopdsweb-react-components    per-component stylesheets
+
+Both are resolved from the Inditex Artifactory registry at build time and their
+CSS is compiled into `build/ui-bundle-<version>.zip`. Sites built with this
+bundle are therefore for internal distribution only. Publishing such a site, or
+the bundle itself, to a public location requires removing the design system CSS
+first — see .opencode/skills/iop-ds-components/SKILL.md.
+
+The typefaces referenced by those stylesheets (Helvetica Now Text SW10, Noto
+Sans Mono) are loaded at runtime from https://amgassets.inditex.com and are not
+embedded in this bundle.

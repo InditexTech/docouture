@@ -1,5 +1,19 @@
-@import url("typeface-roboto.css");
-@import url("typeface-roboto-mono.css");
+/*
+ * IOP Design System token layer. Provides every --ids-* custom property: the
+ * light and dark palettes, the size and typography scales, the density scale,
+ * the resolution tiers, motion and stacking.
+ *
+ * These must come first — bridge.css and every stylesheet below consume them.
+ * Breakpoint @custom-media declarations are injected by a PostCSS plugin, not
+ * imported here.
+ */
+@import url("@inditex/sewingiopdsweb-styles/variables/index.css");
+@import url("@inditex/sewingiopdsweb-styles/typography.css");
+@import url("@inditex/sewingiopdsweb-styles/motion.css");
+@import url("@inditex/sewingiopdsweb-styles/zindex.css");
+
+/* This bundle's own variables, expressed in design system tokens. */
+@import url("bridge.css");
 @import url("vars.css");
 @import url("base.css");
 @import url("body.css");

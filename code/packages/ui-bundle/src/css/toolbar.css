@@ -28,7 +28,7 @@
   margin-right: -0.25rem;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   .nav-toggle {
     display: none;
   }
@@ -57,7 +57,7 @@
   padding-right: 0.5rem;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   .edit-this-page {
     display: block;
   }
@@ -66,3 +66,55 @@
 .toolbar .edit-this-page a {
   color: var(--toolbar-muted-color);
 }
+
+/*
+ * TRANSITIONAL: the toolbar icons are solid-black SVGs, invisible on a dark
+ * surface. Inverting them is a stopgap until the chrome moves onto IDS Icon,
+ * which draws with currentColor and needs no such trick.
+ */
+.ids-theme-dark .nav-toggle,
+.ids-theme-dark .home-link {
+  filter: invert(1);
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 0;
+  height: var(--toolbar-height);
+  width: var(--toolbar-height);
+  transition: var(--ids-motion-micro-states);
+}
+
+.theme-toggle:hover {
+  background-color: var(--ids-color-bg-states-hover);
+}
+
+.theme-toggle:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: calc(-1 * var(--ids-size-12));
+}
+
+.theme-toggle svg {
+  display: block;
+  height: var(--ids-size-125);
+  width: var(--ids-size-125);
+}
+
+/* Show the icon for the theme the button switches TO, not the one in use. */
+.theme-toggle-icon--dark,
+.ids-theme-dark .theme-toggle-icon--light {
+  display: block;
+}
+
+.theme-toggle-icon--light,
+.ids-theme-dark .theme-toggle-icon--dark {
+  display: none;
+}
+

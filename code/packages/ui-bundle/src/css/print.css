@@ -3,6 +3,25 @@
 }
 
 @media print {
+  /*
+   * Print is always light. Re-applying the light palette here is cheaper and
+   * more reliable than auditing every rule for a dark-mode print path, and it
+   * stops a reader in dark mode from producing pages of black ink.
+   */
+  html.ids-theme-dark {
+    color-scheme: light;
+
+    --ids-color-content-default: #000;
+    --ids-color-content-low: #757575;
+    --ids-color-content-inverse: #fff;
+    --ids-color-bg-default: #fff;
+    --ids-color-bg-low: #f7f7f7;
+    --ids-color-bg-inverse: #000;
+    --ids-color-border-default: #000;
+    --ids-color-border-low: #e3e3e3;
+    --ids-color-border-inverse: #fff;
+  }
+
   .hide-for-print {
     display: none !important;
   }

@@ -5,7 +5,7 @@
   line-height: 1.25;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   .breadcrumbs {
     display: block;
   }

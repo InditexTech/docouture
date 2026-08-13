@@ -39,5 +39,6 @@
     "serve": {
       "cache": false
     }
-  }
+  },
+  "analytics": false
 }

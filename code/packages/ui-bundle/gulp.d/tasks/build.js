@@ -4,14 +4,16 @@ const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const esbuild = require('esbuild')
 const fs = require('fs-extra')
+const idsCustomMedia = require('@inditex/sewingiopdsweb-styles/postcss/custom-media.cjs')
 const merge = require('../lib/concat-streams')
 const ospath = require('path')
 const path = ospath.posix
 const postcss = require('gulp-postcss')
 const postcssCalc = require('postcss-calc')
+const postcssCustomMedia = require('postcss-custom-media')
 const postcssImport = require('postcss-import')
+const postcssMixins = require('postcss-mixins')
 const postcssUrl = require('postcss-url')
-const postcssVar = require('postcss-custom-properties')
 const { Transform } = require('stream')
 const { finished } = require('stream/promises')
 const vfs = require('vinyl-fs')
@@ -42,6 +44,15 @@ module.exports = (src, dest, preview) => async () => {
   const postcssPlugins = [
     postcssImport,
     trackImportedStylesheetMtimes,
+    // Expand the IOP DS typography mixins (`@mixin ids-body-m;`). The
+    // definitions are `@define-mixin` rules in the design system package and
+    // are never imported into a stylesheet, so they are loaded by path.
+    postcssMixins({ mixinsFiles: require.resolve('@inditex/sewingiopdsweb-styles/mixins/index.css') }),
+    // Prepend the design system's `@custom-media` breakpoint declarations to
+    // every stylesheet, then resolve them. Together these let any rule write
+    // `@media (--ids-breakpoints-m)` instead of a hardcoded width.
+    idsCustomMedia(),
+    postcssCustomMedia(),
     postcssUrl([
       {
         filter: (asset) => new RegExp('^[~][^/]*(?:font|typeface)[^/]*/.*/files/.+[.](?:ttf|woff2?)$').test(asset.url),
@@ -55,9 +66,12 @@ module.exports = (src, dest, preview) => async () => {
         },
       },
     ]),
-    postcssVar({ preserve: preview }),
-    // NOTE to make vars.css available to all top-level stylesheets, use the next line in place of the previous one
-    //postcssVar({ importFrom: path.join(src, 'css', 'vars.css'), preserve: preview }),
+    // NOTE custom properties are deliberately NOT flattened. Dark mode, the
+    // density scale and the resolution tiers are all runtime custom-property
+    // swaps performed by the design system, so a build that inlines their
+    // values would ship a permanently light, fixed-density site. postcss-custom
+    // -properties used to run here; every browser in the browserslist target
+    // supports custom properties natively, so nothing replaced it.
     // cssnano already applies postcssCalc, so it is only needed for the preview
     ...(preview ? [postcssCalc] : []),
     autoprefixer,

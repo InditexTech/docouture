@@ -1,0 +1,166 @@
+/*
+ * Bridge — the bundle's own variables, expressed in IOP Design System tokens.
+ *
+ * This file is the single seam between antora-ui-default's variable vocabulary
+ * and the design system. Every stylesheet in src/css keeps referring to
+ * --body-font-color, --panel-background and friends; those names now resolve to
+ * --ids-* tokens, so the whole bundle re-themes (light/dark, density,
+ * resolution) without any of the leaf stylesheets changing.
+ *
+ * Rules:
+ *   - Nothing here may contain a literal colour, font stack or weight.
+ *   - Never add a new --body-* / --nav-* name. This file only shrinks: as
+ *     chrome is restyled onto design system components, entries are deleted.
+ *   - Layout metrics that the design system does not model stay in vars.css.
+ *
+ * See .opencode/skills/iop-ds-foundations for the token vocabulary.
+ */
+
+:root {
+  /*
+   * Legacy neutral palette. antora-ui-default's stylesheets reference these
+   * greys directly in ~46 places. The design system's neutral ramp is three
+   * steps deep, not seventeen, so several upstream greys collapse onto the same
+   * token — deliberately. TRANSITIONAL: every entry here disappears as its
+   * consumers move onto design system components.
+   */
+  --color-white: var(--ids-color-bg-default);
+  --color-smoke-10: var(--ids-color-bg-low);
+  --color-smoke-30: var(--ids-color-bg-low);
+  --color-smoke-50: var(--ids-color-bg-low);
+  --color-smoke-70: var(--ids-color-bg-low);
+  --color-smoke-90: var(--ids-color-border-low);
+  --color-gray-10: var(--ids-color-border-low);
+  --color-gray-30: var(--ids-color-content-low);
+  --color-gray-40: var(--ids-color-content-low);
+  --color-gray-50: var(--ids-color-content-low);
+  --color-gray-70: var(--ids-color-content-low);
+  --color-jet-20: var(--ids-color-content-default);
+  --color-jet-30: var(--ids-color-content-default);
+  --color-jet-50: var(--ids-color-content-default);
+  --color-jet-70: var(--ids-color-content-default);
+  --color-jet-80: var(--ids-color-content-default);
+  --color-black: var(--ids-color-content-default);
+
+  /* fonts */
+  --body-font-color: var(--ids-color-content-default);
+  --body-font-family: var(--ids-typo-font-family-primary), "Helvetica Neue", arial, sans-serif;
+  --body-font-weight-bold: var(--ids-typo-font-weight-high);
+  --monospace-font-family: var(--ids-typo-font-family-monospace), ui-monospace, monospace;
+  --monospace-font-weight-bold: var(--ids-typo-font-weight-high);
+
+  /* base */
+  --body-background: var(--ids-color-bg-default);
+  --panel-background: var(--ids-color-bg-low);
+  --panel-border-color: var(--ids-color-border-low);
+  --scrollbar-track-color: var(--ids-color-bg-low);
+  --scrollbar-thumb-color: var(--ids-color-border-low);
+  --scrollbar_hover-thumb-color: var(--ids-color-content-low);
+
+  /*
+   * navbar — upstream shipped a dark bar regardless of theme. The design system
+   * Header is a surface with a hairline bottom border, so it now follows the
+   * theme like everything else.
+   */
+  --navbar-background: var(--ids-color-bg-default);
+  --navbar-font-color: var(--ids-color-content-default);
+  --navbar_hover-background: var(--ids-color-bg-states-hover);
+  --navbar-button-background: var(--ids-color-bg-default);
+  --navbar-button-border-color: var(--ids-color-border-low);
+  --navbar-button-font-color: var(--ids-color-content-default);
+  --navbar-menu-border-color: var(--ids-color-border-low);
+  --navbar-menu-background: var(--ids-color-bg-default);
+  --navbar-menu-font-color: var(--ids-color-content-default);
+  --navbar-menu_hover-background: var(--ids-color-bg-states-hover);
+
+  /* nav */
+  --nav-background: var(--ids-color-bg-low);
+  --nav-border-color: var(--ids-color-border-low);
+  --nav-heading-font-color: var(--ids-color-content-default);
+  --nav-muted-color: var(--ids-color-content-low);
+  --nav-panel-divider-color: var(--ids-color-border-low);
+  --nav-secondary-background: var(--ids-color-bg-default);
+
+  /* toolbar */
+  --toolbar-background: var(--ids-color-bg-default);
+  --toolbar-border-color: var(--ids-color-border-low);
+  --toolbar-font-color: var(--ids-color-content-low);
+  --toolbar-muted-color: var(--ids-color-content-low);
+  --page-version-menu-background: var(--ids-color-bg-default);
+  --page-version-missing-font-color: var(--ids-color-content-states-disabled);
+
+  /*
+   * admonitions — the design system has no success/warning/error colour family;
+   * status meaning is carried by the `alt` hues, matching IDS Banner. CAUTION
+   * and WARNING both mean "be careful", so both take orange.
+   *
+   * *-on-color is the text drawn on the hue. --ids-color-content-inverse is
+   * white in light mode and black in dark, which is exactly the contrast the
+   * alt-*-high colours need in each theme.
+   */
+  --note-color: var(--ids-color-alt-blue-high);
+  --note-on-color: var(--ids-color-content-inverse);
+  --tip-color: var(--ids-color-alt-green-high);
+  --tip-on-color: var(--ids-color-content-inverse);
+  --important-color: var(--ids-color-alt-red-high);
+  --important-on-color: var(--ids-color-content-inverse);
+  --warning-color: var(--ids-color-alt-orange-high);
+  --warning-on-color: var(--ids-color-content-inverse);
+  --caution-color: var(--ids-color-alt-orange-high);
+  --caution-on-color: var(--ids-color-content-inverse);
+
+  /* doc */
+  --doc-font-color: var(--ids-color-content-default);
+  --heading-font-color: var(--ids-color-content-default);
+  --heading-font-weight: var(--ids-typo-font-weight-default);
+  --alt-heading-font-weight: var(--ids-typo-font-weight-mid);
+  --section-divider-color: var(--ids-color-border-low);
+  --link-font-color: var(--ids-color-alt-blue-high);
+  --link_hover-font-color: var(--ids-color-alt-blue-mid);
+  --link_unresolved-font-color: var(--ids-color-alt-red-high);
+  --abstract-background: var(--ids-color-bg-low);
+  --abstract-font-color: var(--ids-color-content-default);
+  --abstract-border-color: var(--ids-color-border-low);
+  --admonition-background: var(--ids-color-bg-low);
+  --admonition-label-font-weight: var(--ids-typo-font-weight-high);
+  --caption-font-color: var(--ids-color-content-low);
+  --caption-font-weight: var(--ids-typo-font-weight-high);
+  --code-background: var(--ids-color-bg-low);
+  --code-font-color: var(--ids-color-content-default);
+  --example-background: var(--ids-color-bg-default);
+  --example-border-color: var(--ids-color-border-low);
+  --kbd-background: var(--ids-color-bg-low);
+  --kbd-border-color: var(--ids-color-border-low);
+  --pre-background: var(--ids-color-bg-low);
+  --pre-border-color: var(--ids-color-border-low);
+  --pre-annotation-font-color: var(--ids-color-content-low);
+  --quote-background: var(--ids-color-bg-low);
+  --quote-border-color: var(--ids-color-content-low);
+  --quote-font-color: var(--ids-color-content-low);
+  --quote-attribution-font-color: var(--ids-color-content-low);
+  --sidebar-background: var(--ids-color-bg-low);
+  --table-border-color: var(--ids-color-border-low);
+  --table-stripe-background: var(--ids-color-bg-low);
+  /* upstream used a white-to-smoke gradient; the design system models surfaces, not gradients */
+  --table-footer-background: var(--ids-color-bg-low);
+
+  /* toc */
+  --toc-font-color: var(--ids-color-content-low);
+  --toc-heading-font-color: var(--ids-color-content-default);
+  --toc-border-color: var(--ids-color-border-low);
+
+  /* footer */
+  --footer-background: var(--ids-color-bg-low);
+  --footer-font-color: var(--ids-color-content-low);
+  --footer-link-font-color: var(--ids-color-content-default);
+
+  /*
+   * stacking — upstream used 1..4. Mapped onto the design system scale, which
+   * leaves room between layers. The version dropdown now sits above the navbar
+   * rather than below it, which is the correct behaviour for a dropdown.
+   */
+  --z-index-nav: var(--ids-z-base);
+  --z-index-toolbar: var(--ids-z-sticky);
+  --z-index-navbar: var(--ids-z-modal-drawer);
+  --z-index-page-version-menu: var(--ids-z-dropdown);
+}

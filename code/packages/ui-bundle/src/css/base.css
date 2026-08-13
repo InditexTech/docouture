@@ -11,7 +11,7 @@ html {
   scroll-behavior: smooth;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   html {
     font-size: var(--body-font-size--desktop);
   }

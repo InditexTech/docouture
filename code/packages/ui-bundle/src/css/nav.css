@@ -1,4 +1,4 @@
-@media screen and (max-width: 1023.5px) {
+@media screen and (--ids-breakpoints-xs-s) {
   html.is-clipped--nav {
     overflow-y: hidden;
   }
@@ -14,13 +14,13 @@
   visibility: hidden;
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (--ids-breakpoints-s) {
   .nav-container {
     width: var(--nav-width);
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   .nav-container {
     font-size: calc(15.5 / var(--rem-base) * 1rem);
     flex: none;
@@ -41,13 +41,13 @@
   height: var(--nav-height);
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (--ids-breakpoints-s) {
   .nav {
     box-shadow: 0.5px 0 3px var(--nav-border-color);
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   .nav {
     top: var(--navbar-height);
     box-shadow: none;

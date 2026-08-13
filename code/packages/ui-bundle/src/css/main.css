@@ -2,7 +2,7 @@ body.-toc aside.toc.sidebar {
   display: none;
 }
 
-@media screen and (max-width: 1023.5px) {
+@media screen and (--ids-breakpoints-xs-s) {
   aside.toc.sidebar {
     display: none;
   }
@@ -12,7 +12,7 @@ body.-toc aside.toc.sidebar {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   main {
     flex: auto;
     min-width: 0; /* min-width: 0 required for flexbox to constrain overflowing elements */
@@ -32,7 +32,7 @@ body.-toc aside.toc.sidebar {
   }
 }
 
-@media screen and (min-width: 1216px) {
+@media screen and (--ids-breakpoints-l) {
   aside.toc.sidebar {
     flex-basis: var(--toc-width--widescreen);
   }

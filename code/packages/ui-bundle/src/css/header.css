@@ -1,4 +1,4 @@
-@media screen and (max-width: 1023.5px) {
+@media screen and (--ids-breakpoints-xs-s) {
   html.is-clipped--navbar {
     overflow-y: hidden;
   }
@@ -190,14 +190,14 @@ body {
   white-space: nowrap;
 }
 
-@media screen and (max-width: 768.5px) {
+@media screen and (--ids-breakpoints-xs) {
   .navbar-brand .navbar-item.search {
     padding-left: 0;
     padding-right: 0;
   }
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (--ids-breakpoints-s) {
   .navbar-brand .navbar-item.search {
     padding-right: 0;
     margin-right: 0.5rem;
@@ -208,7 +208,7 @@ body {
   }
 }
 
-@media screen and (max-width: 1023.5px) {
+@media screen and (--ids-breakpoints-xs-s) {
   .navbar-brand {
     height: inherit;
   }
@@ -237,7 +237,7 @@ body {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (--ids-breakpoints-m) {
   .navbar-burger {
     display: none;
   }

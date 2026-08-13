@@ -12,6 +12,19 @@
  */
 @import url("ids-tokens.css");
 
+/*
+ * IOP Design System component stylesheets, generated the same way from
+ * @inditex/sewingiopdsweb-react-components — see ids-components.css's own
+ * header, src/css/ids-components.yml and tools/ids/README.md.
+ *
+ * Comes before bridge.css and every bundle stylesheet below: a DS block is
+ * consumed as-is, and any wrapper or `data-*` hook this bundle adds around
+ * one wins by cascade order alone. Never override a DS declaration from a
+ * later stylesheet, and never add a non-DS class to a DS block — see
+ * .opencode/skills/iop-ds-components/SKILL.md.
+ */
+@import url("ids-components.css");
+
 /* This bundle's own variables, expressed in design system tokens. */
 @import url("bridge.css");
 @import url("vars.css");

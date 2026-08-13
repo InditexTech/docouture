@@ -22,16 +22,18 @@ Inditex:
   Licensed under the INDITEX license — proprietary, internal use only
 
   @inditex/sewingiopdsweb-styles              design tokens, theming, breakpoints
-  @inditex/sewingiopdsweb-react-components    per-component stylesheets (one rule used)
+  @inditex/sewingiopdsweb-react-components    per-component stylesheets (see src/css/ids-components.yml)
 
 Neither package is a dependency of this workspace and neither is resolved from
 Artifactory at build time — see code/tools/ids/README.md. What's embedded is a
 small, generated derivative committed under src/css/ (ids-tokens.css,
-ids-breakpoints.css, and the `.ids-icon` sizing rule in icons.css), mechanically
-extracted by code/tools/ids/sync.mjs from those packages installed in a sidecar
-outside this workspace, and re-generated only when a developer runs `just
-ids-sync` by hand. `ids.lock.json` records the design system version and source
-hashes the current derivative was generated from.
+ids-breakpoints.css, ids-components.css, and the `.ids-icon` sizing rule in
+icons.css), mechanically extracted by code/tools/ids/sync.mjs from those
+packages installed in a sidecar outside this workspace, and re-generated only
+when a developer runs `just ids-sync` by hand. Which component stylesheets are
+vendored into ids-components.css is declared in src/css/ids-components.yml.
+`ids.lock.json` records the design system version and source hashes the
+current derivative was generated from.
 
 Sites built with this bundle are for internal distribution only, on account of
 that derivative. Publishing such a site, or the bundle itself, to a public

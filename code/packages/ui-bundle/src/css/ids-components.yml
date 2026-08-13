@@ -1,0 +1,19 @@
+# Component stylesheets vendored from the IOP Design System
+# (@inditex/sewingiopdsweb-react-components).
+#
+# Each group is a component directory under that package; the leaves are the
+# CSS files taken from it, in the order they should be emitted. There is no
+# tree-shaking, so every file listed is paid for in the shipped bundle — list
+# only what's actually used. Multi-file components need ALL their files or the
+# component breaks (breadcrumbs/ has 4, menu/ 9, list/ 5, modal/ 6) — `ls` the
+# directory under code/tools/ids/node_modules/@inditex/sewingiopdsweb-react-
+# components/<dir>/ before adding an entry.
+#
+# Adding a component is one line here plus `just ids-sync`, which regenerates
+# src/css/ids-components.css (and pulls in whatever --ids-* tokens it
+# references into ids-tokens.css). See tools/ids/README.md and
+# .opencode/skills/iop-ds-components/SKILL.md.
+
+components:
+  text:
+    - text.css # .ids-text--* typography utilities, chrome copy only (not doc prose — see vars.css)

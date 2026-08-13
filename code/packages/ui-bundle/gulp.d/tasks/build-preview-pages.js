@@ -48,7 +48,6 @@ module.exports =
 
     const iconCatalog = await loadIconCatalog(previewDest)
 
-
     const extensions = ((sampleUiModel.asciidoc || {}).extensions || []).map((request) => {
       ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replace(/[/]/g, '-') + '-loaded'] = ''
       const extension = require(request)

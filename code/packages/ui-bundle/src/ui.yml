@@ -1,0 +1,5 @@
+# Declares files Antora should copy into the site root verbatim rather than
+# treat as UI assets. Paths are relative to the root of this bundle and are
+# populated from src/static/.
+static_files:
+  - .nojekyll

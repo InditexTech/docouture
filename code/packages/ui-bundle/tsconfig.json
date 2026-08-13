@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "lib": ["ES2022"],
+    "rootDir": "src/helpers",
+    "noEmit": true
+  },
+  "include": ["src/helpers/**/*.ts", "types/**/*.d.ts"]
+}

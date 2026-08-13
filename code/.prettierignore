@@ -1,0 +1,20 @@
+node_modules
+pnpm-lock.yaml
+packages/*/build
+packages/*/public
+packages/*/.tsbuild
+.nx
+
+# Handlebars templates — prettier cannot parse `{{> partial}}` syntax.
+*.hbs
+
+# AsciiDoc is content, not code.
+*.adoc
+
+# Stylesheets are owned by stylelint, which also formats them.
+*.css
+
+# Upstream's original browser scripts. Left unformatted so the diff against
+# antora-ui-default stays reviewable; they will be reformatted as the UI
+# redesign rewrites them.
+packages/ui-bundle/src/js

@@ -1,0 +1,5 @@
+name: example
+title: Example
+version: ~
+nav:
+  - modules/ROOT/nav.adoc

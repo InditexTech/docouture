@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# nx
+.nx/cache
+.nx/workspace-data
+
+# build artifacts
+packages/*/build/
+packages/*/public/
+packages/*/.tsbuild/
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# os
+.DS_Store

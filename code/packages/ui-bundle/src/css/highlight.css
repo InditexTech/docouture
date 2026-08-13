@@ -1,0 +1,116 @@
+/*!
+ * Syntax highlighting theme.
+ *
+ * Adapted from the official highlight.js 11 "GitHub" theme
+ * (highlight.js/styles/github.css, MIT).
+ *
+ * Rewritten for highlight.js 11 scopes. The previous revision targeted
+ * highlight.js 9 and referenced classes that no longer exist: `hljs-class`
+ * (now `hljs-title.class_`) and `hljs-builtin-name` (now `hljs-built_in`).
+ *
+ * Colours are declared as custom properties so the palette can be retargeted
+ * during the UI redesign without touching the selectors.
+ */
+:root {
+  --hljs-keyword-color: #d73a49;
+  --hljs-entity-color: #6f42c1;
+  --hljs-constant-color: #005cc5;
+  --hljs-string-color: #032f62;
+  --hljs-variable-color: #e36209;
+  --hljs-comment-color: #6a737d;
+  --hljs-entity-tag-color: #22863a;
+  --hljs-text-color: #24292e;
+  --hljs-list-color: #735c0f;
+  --hljs-addition-color: #22863a;
+  --hljs-addition-background: #f0fff4;
+  --hljs-deletion-color: #b31d28;
+  --hljs-deletion-background: #ffeef0;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: var(--hljs-keyword-color);
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: var(--hljs-entity-color);
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-variable {
+  color: var(--hljs-constant-color);
+}
+
+.hljs-meta .hljs-string,
+.hljs-regexp,
+.hljs-string {
+  color: var(--hljs-string-color);
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: var(--hljs-variable-color);
+}
+
+.hljs-code,
+.hljs-comment,
+.hljs-formula {
+  color: var(--hljs-comment-color);
+  font-style: italic;
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-pseudo,
+.hljs-selector-tag {
+  color: var(--hljs-entity-tag-color);
+}
+
+.hljs-subst {
+  color: var(--hljs-text-color);
+}
+
+.hljs-section {
+  color: var(--hljs-constant-color);
+  font-weight: var(--monospace-font-weight-bold);
+}
+
+.hljs-bullet {
+  color: var(--hljs-list-color);
+}
+
+.hljs-emphasis {
+  color: var(--hljs-text-color);
+  font-style: italic;
+}
+
+.hljs-strong {
+  color: var(--hljs-text-color);
+  font-weight: var(--monospace-font-weight-bold);
+}
+
+.hljs-addition {
+  color: var(--hljs-addition-color);
+  background-color: var(--hljs-addition-background);
+}
+
+.hljs-deletion {
+  color: var(--hljs-deletion-color);
+  background-color: var(--hljs-deletion-background);
+}

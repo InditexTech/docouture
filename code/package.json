@@ -1,0 +1,33 @@
+{
+  "name": "@inditextech/pdocs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Documentation platform built on Antora",
+  "license": "MPL-2.0",
+  "packageManager": "pnpm@10.24.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "nx run-many -t build",
+    "lint": "nx run-many -t lint",
+    "typecheck": "nx run-many -t typecheck",
+    "clean": "nx run-many -t clean",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "~10.0.1",
+    "@types/node": "~24.10.1",
+    "eslint": "~10.8.1",
+    "eslint-config-prettier": "~10.1.8",
+    "globals": "~17.11.0",
+    "nx": "~23.1.1",
+    "prettier": "~3.9.6",
+    "stylelint": "~17.14.1",
+    "stylelint-config-standard": "~40.0.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "~8.67.0"
+  }
+}

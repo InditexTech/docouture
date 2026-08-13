@@ -1,0 +1,27 @@
+= Getting started
+
+== Add a page
+
+Create an AsciiDoc file under `modules/ROOT/pages/`, then add it to
+`modules/ROOT/nav.adoc` so it appears in the navigation:
+
+[,asciidoc]
+----
+* xref:my-new-page.adoc[My new page]
+----
+
+A page that is not listed in the navigation is still published; it just cannot
+be reached by browsing.
+
+== Build the site
+
+[,console]
+----
+$ pnpm nx run @inditextech/pdocs-starter:build
+----
+
+The generated site is written to `build/site`.
+
+TIP: While working on the UI itself, run `pnpm nx run @inditextech/pdocs-ui-bundle:preview`
+instead. It serves a sample page with live reload and does not require a full
+site build.

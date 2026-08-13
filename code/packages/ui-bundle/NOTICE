@@ -1,0 +1,11 @@
+This package is a fork of the Antora default UI.
+
+  Antora default UI
+  https://gitlab.com/antora/antora-ui-default
+  Copyright (C) OpenDevise Inc. and individual contributors to Antora
+  Licensed under the Mozilla Public License, v. 2.0 (see LICENSE)
+
+Modifications from upstream are described in ../../README.md and cover the build
+pipeline (gulp 5, esbuild, svgo, TypeScript sources) and the upgrade from
+highlight.js 9 to 11. The Handlebars templates and stylesheets remain
+substantially upstream's work.

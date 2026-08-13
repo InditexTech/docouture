@@ -1,0 +1,23 @@
+{
+  // Browser sources shipped inside the UI bundle.
+  //
+  // These files are the upstream Antora default UI scripts, carried over as
+  // loose ES5 (488 lines, implicit `any`, unchecked DOM lookups). They are
+  // deliberately exempt from `strict` so the fork could land without rewriting
+  // behaviour that has no test coverage. Tighten these settings file by file as
+  // the UI redesign rewrites them; do NOT relax anything else in the workspace.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noUncheckedIndexedAccess": false,
+    "noEmit": true,
+    "allowJs": true
+  },
+  "include": ["src/js/**/*.ts", "types/browser.d.ts"]
+}

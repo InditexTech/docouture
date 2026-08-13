@@ -1,0 +1,75 @@
+#
+# Antora playbook — the entry point for building this site.
+# Reference: https://docs.antora.org/antora/latest/playbook/
+#
+# Build with:  pnpm nx run @inditextech/pdocs-starter:build
+# Output:      build/site
+#
+
+site:
+  title: Documentation
+  # Set this to the public URL of the deployed site. It is required for the
+  # sitemap and for canonical links; leave it out while developing locally.
+  # url: https://docs.example.com
+  start_page: starter::index.adoc
+
+content:
+  sources:
+    # This entry reads the AsciiDoc content that lives alongside this playbook.
+    #
+    # `url: .` points Antora at the enclosing git repository, so `start_path` is
+    # resolved from the REPOSITORY ROOT, not from this file. That is why the
+    # path below is fully qualified.
+    #
+    # When you copy this package into a repository of its own, the playbook ends
+    # up at the repository root and this collapses to:
+    #
+    #   - url: .
+    #     start_path: docs
+    #     branches: HEAD
+    #
+    - url: ../../..
+      start_path: code/packages/starter/docs
+      # HEAD means "whatever is checked out", so local edits are picked up
+      # without committing them.
+      branches: HEAD
+
+ui:
+  bundle:
+    # Local development: consume the UI bundle built by the sibling package.
+    # `snapshot: true` tells Antora the bundle is a local build that changes,
+    # so it must not be cached between runs.
+    #
+    # The build also emits a versioned `ui-bundle-<version>.zip` beside this
+    # one. This unversioned copy exists so that this path does not have to be
+    # edited on every version bump; `url` takes a literal path and does not
+    # glob.
+    url: ../ui-bundle/build/ui-bundle.zip
+    snapshot: true
+    #
+    # Outside this monorepo, point at a published bundle instead — a release
+    # artifact URL or a path to a downloaded zip. Prefer the versioned name
+    # there, so the site records which bundle it was built against:
+    #
+    # url: https://example.com/pdocs-ui-bundle/releases/0.1.0/ui-bundle-0.1.0.zip
+    # snapshot: false
+
+output:
+  dir: build/site
+
+runtime:
+  # Fail the build on broken xrefs and other content problems rather than
+  # publishing a site with silent gaps.
+  log:
+    failure_level: warn
+
+asciidoc:
+  attributes:
+    # Enable kbd:[], btn:[] and menu:[] macros.
+    experimental: ''
+    # Render admonition icons as font glyphs rather than text labels.
+    icons: font
+    # Add clickable anchors to section titles.
+    sectanchors: ''
+    idprefix: ''
+    idseparator: '-'

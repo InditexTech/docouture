@@ -1,0 +1,17 @@
+{
+  // Emit config for the UI helpers.
+  //
+  // `module: node16` is inherited from the base config, and this package has no
+  // `"type": "module"`, so each helper compiles to CommonJS — which is what
+  // Antora requires. Combined with `export =` in the sources, the emitted files
+  // set `module.exports` to the helper function itself.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": ".tsbuild/helpers",
+    "rootDir": "src/helpers",
+    "sourceMap": false,
+    "removeComments": false
+  },
+  "include": ["src/helpers/**/*.ts", "types/**/*.d.ts"]
+}

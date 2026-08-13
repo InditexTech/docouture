@@ -9,15 +9,26 @@ is the fastest loop available for template and CSS work.
 ```
 public/
 ├── _/            the staged bundle (identical layout to the zip)
-├── index.html    rendered from preview-src/index.adoc
+├── index.html    rendered from preview-src/index.adoc — the hub: 4 links,
+│                 no site chrome, centered in the viewport
+├── landing.html  rendered from preview-src/landing.adoc — default layout,
+│                 page.home: true
+├── content.html  rendered from preview-src/content.adoc — default layout,
+│                 long-form AsciiDoc kitchen sink
+├── icons.html    rendered from preview-src/icons.adoc — icon catalog,
+│                 no site chrome, back link to index.html
 ├── 404.html      rendered from preview-src/404.adoc
+├── preview.css   styles for the hub and icons layouts only — never staged
+│                 into public/_, so never packed into the UI bundle
 └── *.svg|png     images copied from preview-src
 ```
 
 `preview:build` runs the real `build` task and the page renderer in parallel, then
 `preview:serve` starts gulp-connect and watches `[src, preview-src]`, re-running
-`preview:build` on any change. `LIVERELOAD=true` additionally wires gulp-connect's
-livereload so the browser refreshes itself.
+`preview:build` on any change. Live reload is on by default; `LIVERELOAD=false` opts out.
+Reload fires once, after both `build` and `preview:build-pages` finish (`gulp.d/tasks/
+reload.js`, run in `series` after them in `gulpfile.js`) — never off either stream alone,
+or a CSS-only edit could reload the browser before the rebuilt stylesheet was written.
 
 The server binds `0.0.0.0`; `serve.js` rewrites the startup log to show `localhost` and
 the machine's first non-internal IPv4 address, so the preview is reachable from a phone
@@ -29,8 +40,10 @@ on the same network.
 
 1. Load `preview-src/ui-model.yml` as the base UI model.
 2. Compile every `src/layouts/*.hbs`, register every `src/partials/*.hbs`, register every
-   compiled helper from `.tsbuild/helpers`, and copy `preview-src/**/*.{png,svg}` to
-   `public/` — all four as one merged stream.
+   compiled helper from `.tsbuild/helpers`, and copy `preview-src/**/*.{png,svg,css}` to
+   `public/` — all four as one merged stream. The `.css` here is `preview-src/preview.css`
+   only; it lands in `public/` directly, never in `public/_` (the staged bundle), so it can
+   never end up in `build/ui-bundle.zip`.
 3. Register the two preview-only helpers `resolvePage` / `resolvePageURL`, which fake
    Antora's page resolution by turning `component:page.adoc` into `/page.html`.
 4. Load any Asciidoctor extensions listed under `asciidoc.extensions` in the model,
@@ -72,12 +85,31 @@ so that "the current version" and "the latest version" are the *same object* —
 partials compare with `eq`, which is identity for objects, so the anchors are what make
 `is-current` / `is-latest` light up.
 
-It defines three components (`abc`, `xyz`, `123`) with multiple versions, a navigation
-tree, breadcrumbs, page versions and the `site.homeUrl`. It does **not** define every
-branch a real Antora model has — `site.keys`, `page.attributes` and `asciidoc.extensions`
-are all absent, so the partials guarded on them render nothing here. Extend the fixture
-when you add a partial that reads a branch it does not cover, or you will only find the
-gap in a real site build.
+It defines one product component (`atd`) whose current and latest version are the same
+anchored node, displaying as `Stable - Latest`, plus a second component (`platform`) kept
+around only so `nav-explore`'s component switcher has something to list. `page.navigation`
+mirrors the Figma side menu (Overview, Getting started, Features, Components with a nested
+group, Roles and Permissions, Templates, Integrations, Additional Information) — nested one
+level under "Components" so nav-tree recursion and its `--tree--level-N` indentation both
+get exercised without the fixture needing a rewrite on every design tweak. It also carries
+breadcrumbs, page versions (one `missing: true`) and `site.homeUrl` / `site.keys.repoUrl`.
+It does **not** define every branch a real Antora model has — `page.attributes` and
+`asciidoc.extensions` are populated per-page by `build-preview-pages.js`, not here, and
+`site.keys` only has `repoUrl`. Extend the fixture when you add a partial that reads a
+branch it does not cover, or you will only find the gap in a real site build.
+
+## `preview-src/preview.css`
+
+Styles for the two preview-only layouts (`hub`, `icons`) only. Copied straight to
+`public/preview.css`, never staged into `public/_`, so it never reaches `build/ui-bundle.zip`
+— unlike `src/css/site.css`, which is real bundle content.
+
+`tools/ids/sync.mjs` decides which `--ids-*` custom properties survive into
+`src/css/ids-tokens.css` by scanning only `packages/ui-bundle/src/css`; `preview-src` is
+deliberately outside that scan; see `code/tools/ids/README.md`. Every `var(--ids-*)`
+reference in this file therefore needs a literal CSS fallback
+(`var(--ids-size-100, 16px)`) — without one the declaration silently resolves to nothing
+the moment nothing in `src/css` happens to reference the same token.
 
 ## How preview differs from a release build
 

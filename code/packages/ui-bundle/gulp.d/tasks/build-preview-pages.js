@@ -35,7 +35,7 @@ module.exports =
             compileLayouts(src),
             registerPartials(src),
             registerHelpers(tsbuildDir),
-            copyImages(previewSrc, previewDest)
+            copyPreviewAssets(previewSrc, previewDest)
           )
         )
       ),
@@ -155,9 +155,12 @@ function compileLayouts(src, layouts = new Map()) {
   )
 }
 
-function copyImages(src, dest) {
+function copyPreviewAssets(src, dest) {
+  // preview.css styles the preview-only layouts (hub, icons) and is never
+  // staged into public/_, so it can never end up in the published UI bundle —
+  // only src/css/site.css (built by build.js) reaches build/ui-bundle.zip.
   return vfs
-    .src('**/*.{png,svg}', { base: src, cwd: src, encoding: false, removeBOM: false })
+    .src('**/*.{png,svg,css}', { base: src, cwd: src, encoding: false, removeBOM: false })
     .pipe(vfs.dest(dest))
     .pipe(map((file, enc, next) => next()))
 }

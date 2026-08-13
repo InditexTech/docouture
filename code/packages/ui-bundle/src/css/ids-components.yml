@@ -17,3 +17,9 @@
 components:
   text:
     - text.css # .ids-text--* typography utilities, chrome copy only (not doc prose — see vars.css)
+  search-field:
+    - search-field.minimal.css # .ids-search-field-minimal — only search-field stylesheet that exists, see iop-ds-components skill
+  option-picker:
+    - option-picker.css # .ids-option-picker — group wrapper
+    - option-picker-item.css # .ids-option-picker-item — per-option outline/selection state
+    - option-picker-button.css # .ids-option-picker-button — the clickable control itself

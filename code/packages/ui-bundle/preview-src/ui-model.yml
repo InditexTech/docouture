@@ -1,126 +1,139 @@
+#
+# Hand-written fixture standing in for what Antora computes at build time.
+# Rewritten to be design-shaped (see .figma design linked from GH issue #1 /
+# #8) rather than the inherited antora-ui-default sample: one product, the
+# Figma side-menu tree, a "Stable - Latest" version tag and a repo link.
+#
+# YAML anchors are load-bearing, not decorative: `nav-explore.hbs` compares
+# the current component/version against `site.components[].versions[]` with
+# the `eq` helper, which for objects is identity — so "the latest version"
+# and "the version this page is on" must be the SAME node for `is-current`
+# and `is-latest` to light up. Keep every `is-current` / `is-latest` case
+# wired through an anchor, not a value that merely looks equal.
+#
+# Intentionally thin: `site.keys` (beyond `repoUrl`), `page.attributes` and
+# `asciidoc.extensions` are populated per-page by build-preview-pages.js, not
+# here. If you add a partial that reads a branch this fixture doesn't cover,
+# extend it — don't let the gap surface for the first time in a real build.
+#
 antoraVersion: '1.0.0'
 site:
   url: http://localhost:5252
-  title: Brand Docs
-  homeUrl: &home_url /xyz/5.2/index.html
+  title: Atd Docs
+  homeUrl: &home_url /landing.html
+  keys:
+    repoUrl: https://github.com/InditexTech/atd-docs
   components:
-    - name: abc
-      title: Project ABC
-      url: '#'
-      versions:
-        - &latest_version_abc
-          url: '#'
-          version: '1.1'
-          displayVersion: '1.1'
-        - url: '#'
-          version: '1.0'
-          displayVersion: '1.0'
-      latestVersion: *latest_version_abc
     - &component
-      name: xyz
-      title: &component_title Project XYZ
-      url: /xyz/6.0/index.html
+      name: atd
+      title: &component_title ATD
+      url: *home_url
       versions:
-        - &latest_version_xyz
-          url: /xyz/6.0/index.html
-          version: '6.0'
-          displayVersion: '6.0'
-        - &component_version
+        - &latest_version
           title: *component_title
-          url: '#'
-          version: '5.2'
-          displayVersion: '5.2'
+          url: *home_url
+          version: stable
+          displayVersion: Stable - Latest
         - url: '#'
-          version: '5.1'
-          displayVersion: '5.1'
-        - url: '#'
-          version: '5.0'
-          displayVersion: '5.0'
-      latestVersion: *latest_version_xyz
-    - name: '123'
-      title: Project 123
+          version: '2024.1'
+          displayVersion: '2024.1'
+      latestVersion: *latest_version
+    - name: platform
+      title: Platform
       url: '#'
       versions:
-        - &latest_version_123
+        - &platform_version
           url: '#'
-          version: '2.2'
-          displayVersion: '2.2'
-        - url: '#'
-          version: '2.1'
-          displayVersion: '2.1'
-        - url: '#'
-          version: '2.0'
-          displayVersion: '2.0'
-      latestVersion: *latest_version_123
+          version: '3.4'
+          displayVersion: '3.4'
+      latestVersion: *platform_version
 page:
   url: *home_url
   home: true
-  title: Brand&#8217;s Hardware &amp; Software Requirements
+  title: Hardware and Software Requirements
   component: *component
-  componentVersion: *component_version
-  version: '5.2'
-  displayVersion: '5.2'
+  componentVersion: *latest_version
+  version: stable
+  displayVersion: Stable - Latest
   module: ROOT
   relativeSrcPath: index.adoc
-  editUrl: http://example.com/project-xyz/blob/main/index.adoc
+  editUrl: https://github.com/InditexTech/atd-docs/edit/main/docs/modules/ROOT/pages/index.adoc
   origin:
     private: false
   previous:
-    content: Quickstart
+    content: Getting started
     url: '#'
-    urlType: 'internal'
+    urlType: internal
   next:
-    content: Liber Recusabo
+    content: Features
     url: '#'
-    urlType: 'internal'
+    urlType: internal
   breadcrumbs:
-    - content: Quickstart
+    - content: Overview
       url: '#'
       urlType: fragment
-    - content: Brand&#8217;s Hardware &amp; Software Requirements
-      url: /xyz/5.2/index.html
+    - content: Hardware and Software Requirements
+      url: *home_url
       urlType: internal
   versions:
-    - version: '6.0'
-      displayVersion: '6.0'
+    - version: stable
+      displayVersion: Stable - Latest
       url: '#'
-    - version: '5.2'
-      displayVersion: '5.2'
+    - version: '2024.1'
+      displayVersion: '2024.1'
       url: '#'
-    - version: '5.1'
-      displayVersion: '5.1'
-      url: '#'
-    - version: '5.0'
-      displayVersion: '5.0'
+    - version: '2023.2'
+      displayVersion: '2023.2'
       missing: true
       url: '#'
+  # Mirrors the Figma side menu (see GH issue #8): top-level entries plus one
+  # nested branch under "Components", so nav-tree recursion and the
+  # `.ids-list-item--tree--level-N` indentation both get exercised without
+  # the fixture needing a rewrite on every design tweak.
   navigation:
     - root: true
       items:
-        - content: Quickstart
-          url: '#'
+        - content: Overview
+          url: *home_url
+          urlType: internal
+        - content: Getting started
+          url: '#getting-started'
           urlType: fragment
-          items:
-            - content: Brand&#8217;s Hardware &amp; Software Requirements
-              url: /xyz/5.2/index.html
-              urlType: internal
-            - content: Cu Solet
-              url: '/xyz/5.2/index.html#cu-solet'
-              urlType: internal
-            - content: English + 中文
-              url: '/xyz/5.2/index.html#english+中文'
-              urlType: internal
-        - content: Liber Recusabo
-          url: '#liber-recusabo'
+        - content: Features
+          url: '#features'
           urlType: fragment
-        - content: Reference
+        - content: Components
           items:
-            - content: Keyboard Shortcuts
-              url: '#'
+            - content: Architecture overview
+              url: '#architecture-overview'
               urlType: fragment
-            - content: Importing and Exporting
-              url: '#'
+            - content: Supported artifacts
+              url: '#supported-artifacts'
               urlType: fragment
-            - content: Some Code
-              url: '/xyz/5.2/index.html#some-code'
-              urlType: internal
+            - content: Teams
+              url: '#teams'
+              urlType: fragment
+            - content: Virtual Threads
+              url: '#virtual-threads'
+              urlType: fragment
+            - content: Resilience
+              url: '#resilience'
+              urlType: fragment
+            - content: Administration
+              url: '#administration'
+              urlType: fragment
+            - content: Tasks and notifications
+              url: '#tasks-and-notifications'
+              urlType: fragment
+        - content: Roles and Permissions
+          url: '#roles-and-permissions'
+          urlType: fragment
+        - content: Templates
+          url: '#templates'
+          urlType: fragment
+        - content: Integrations
+          url: '#integrations'
+          urlType: fragment
+        - content: Additional Information
+          url: '#additional-information'
+          urlType: fragment

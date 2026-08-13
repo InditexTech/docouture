@@ -20,8 +20,8 @@
     "icons:build": "node scripts/build-sprite.mjs",
     "icons:search": "node scripts/search-icons.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.browser.json",
-    "lint": "eslint . && stylelint \"src/css/**/*.css\"",
-    "lint:fix": "eslint . --fix && stylelint \"src/css/**/*.css\" --fix",
+    "lint": "eslint . && stylelint \"src/css/**/*.css\" \"preview-src/**/*.css\"",
+    "lint:fix": "eslint . --fix && stylelint \"src/css/**/*.css\" \"preview-src/**/*.css\" --fix",
     "clean": "gulp clean"
   },
   "devDependencies": {

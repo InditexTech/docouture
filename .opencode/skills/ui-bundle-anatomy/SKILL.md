@@ -130,7 +130,7 @@ Environment:
 
 | variable | effect |
 | --- | --- |
-| `LIVERELOAD=true` | enables gulp-connect livereload in the preview |
+| `LIVERELOAD=false` | disables gulp-connect livereload in the preview (on by default) |
 | `SOURCEMAPS=true` | emit sourcemaps from a non-preview build (preview always does) |
 | `CI` | suppresses the bundle-path log from `bundle:alias`; also hides the edit-this-page link |
 

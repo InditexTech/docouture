@@ -48,7 +48,12 @@ tree-shaking: every file listed is paid for in the shipped bundle.
 `sync.mjs` builds `ids-components.css` before scanning for `--ids-*` token
 usage, so a `var(--ids-...)` a newly-vendored component references is pulled
 into `ids-tokens.css` automatically, same as every other stylesheet in
-`src/css`. A handful of DS tokens have no static declaration in the styles
+`src/css`. The scan only walks `packages/ui-bundle/src/css` — it deliberately
+does not look at `packages/ui-bundle/preview-src`, which is preview-only and
+never part of the shipped bundle. A token referenced only from
+`preview-src/preview.css` therefore will not survive into `ids-tokens.css`;
+give it a literal CSS fallback (`var(--ids-size-100, 16px)`) instead of
+adding `preview-src` to the scan. A handful of DS tokens have no static declaration in the styles
 package — they're injected by React at runtime and always referenced with a
 CSS fallback (`var(--ids-header-reserved-end-space, 0px)`), or declared
 inside the component's own CSS rather than the shared token layer

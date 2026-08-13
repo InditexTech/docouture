@@ -1,0 +1,21 @@
+/*
+ * Icons.
+ *
+ * Sizing comes from the design system's own icon rule, so a `.ids-icon` here is
+ * the same box as a `.ids-icon` rendered by the React components: one
+ * `--ids-size-125` square. The markup is produced by the `{{icon}}` helper and
+ * references the vendored sprite; see src/img/icons.yml.
+ */
+@import url("@inditex/sewingiopdsweb-react-components/icon/icon.css");
+
+/*
+ * The sprite's paths are authored with `fill="currentColor"`, which resolves
+ * against the referencing element even though the symbols arrive through an
+ * external `<use>`. Stating the inheritance here means an icon takes the colour
+ * of whatever it sits in — a link, a button, a heading — with no per-context
+ * rule, and only deliberate overrides have to say anything at all.
+ */
+.ids-icon {
+  color: inherit;
+  flex: none;
+}

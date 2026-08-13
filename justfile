@@ -114,6 +114,42 @@ doctor: (_hdr "doctor")
       fail "node_modules missing — run 'just bootstrap'"
     fi
 
+    echo "registry"
+    if grep -qx 'registry=https://registry.npmjs.org/' .npmrc; then
+      ok "default registry pinned to npmjs"
+    else
+      fail "default registry not pinned in code/.npmrc"
+      cat <<'EOF'
+
+        Without the pin, installs inherit `registry=` from ~/.npmrc. A machine
+        that defaults to an internal mirror resolves every package through it,
+        and CI — which has no such default — resolves them from somewhere else.
+
+    EOF
+    fi
+
+    # Resolved by path rather than by package name: the IOP DS packages do not
+    # export ./package.json, and these two are exactly what gulp.d/tasks/build.js
+    # requires, so a pass here means the CSS pipeline has its inputs.
+    if [ -d node_modules ] && node -e "
+      require.resolve('@inditex/sewingiopdsweb-styles/postcss/custom-media.cjs', { paths: ['packages/ui-bundle'] })
+      require.resolve('@inditex/sewingiopdsweb-styles/mixins/index.css', { paths: ['packages/ui-bundle'] })
+    " 2>/dev/null; then
+      ok "@inditex design system resolved"
+    elif [ -d node_modules ]; then
+      fail "@inditex design system missing"
+      cat <<'EOF'
+
+        The IOP DS packages are the only dependencies not on the public
+        registry, and the only reason this workspace needs credentials. Install
+        fails with 401 against inditex.jfrog.io when they are absent.
+
+        Add Artifactory credentials to ~/.npmrc (not to code/.npmrc, which is
+        committed), then run 'pnpm install'.
+
+    EOF
+    fi
+
     echo "content"
     if git rev-parse HEAD >/dev/null 2>&1; then
       ok "repository has at least one commit"
@@ -177,6 +213,42 @@ build *args: (_hdr "build")
 [group('build')]
 build-site site: (_hdr "build-site " + site)
     {{ nx }} run @inditextech/pdocs-{{ site }}:build
+
+# ---------------------------------------------------------------- icons ------
+#
+# Icons are vendored from the IOP Design System into a local sprite so they
+# render in static, JavaScript-off HTML. Two stages, and only the first one
+# touches the network:
+#
+#   icons-fetch   mirrors all 25 group sprites into packages/ui-bundle/.icons
+#                 (gitignored) and records what it got in icons.lock.json
+#   icons-build   cuts src/img/ids-icons.svg from that mirror, using only the
+#                 icons listed in src/img/icons.yml
+#
+# Day to day you only need icons-build: add a line to the manifest, run it,
+# commit the sprite. icons-fetch is for design system updates.
+#
+# `-C` rather than `--filter`: these scripts exit non-zero to report a bad icon
+# name, and pnpm's recursive runner would bury their output in an
+# ERR_PNPM_RECURSIVE_RUN report.
+
+# Find an icon in the design system catalogue
+[group('icons')]
+[no-exit-message]
+icons-search *terms: (_hdr "icons-search " + terms)
+    pnpm -C packages/ui-bundle run icons:search {{ terms }}
+
+# Regenerate the icon sprite from src/img/icons.yml
+[group('icons')]
+[no-exit-message]
+icons-build *args: (_hdr "icons-build")
+    pnpm -C packages/ui-bundle run icons:build {{ args }}
+
+# Re-mirror the design system icon catalogue (network)
+[group('icons')]
+[no-exit-message]
+icons-fetch *args: (_hdr "icons-fetch")
+    pnpm -C packages/ui-bundle run icons:fetch {{ args }}
 
 # ---------------------------------------------------------------- check ------
 

@@ -15,6 +15,7 @@
 /* This bundle's own variables, expressed in design system tokens. */
 @import url("bridge.css");
 @import url("vars.css");
+@import url("icons.css");
 @import url("base.css");
 @import url("body.css");
 @import url("nav.css");

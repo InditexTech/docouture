@@ -42,6 +42,15 @@ importers:
         specifier: ~8.67.0
         version: 8.67.0(eslint@10.8.1)(typescript@6.0.3)
 
+  packages/cli:
+    devDependencies:
+      '@types/node':
+        specifier: ~24.10.1
+        version: 24.10.15
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   packages/example:
     dependencies:
       '@inditextech/pdocs-ui-bundle':
@@ -4056,13 +4065,21 @@ snapshots:
 
   '@iarna/toml@2.2.5': {}
 
-  '@inditex/sewingiopdsweb-core@1.28.0(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(typescript@6.0.3)':
+  '@inditex/sewingiopdsweb-core@1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))(typescript@6.0.3)':
     dependencies:
       '@formatjs/intl': 3.1.8(typescript@6.0.3)
-      '@inditex/sewingiopdsweb-resources': 1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))(typescript@6.0.3)
+      '@inditex/sewingiopdsweb-resources': 1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))
       react: 19.0.0-rc-fb9a90fa48-20240614
       react-dom: 19.2.8(react@19.0.0-rc-fb9a90fa48-20240614)
     transitivePeerDependencies:
+      - '@babel/runtime'
+      - '@emotion/is-prop-valid'
+      - '@monaco-editor/react'
+      - '@types/react'
+      - d3-geo
+      - monaco-editor
+      - recharts
+      - topojson-client
       - typescript
 
   '@inditex/sewingiopdsweb-react-components@1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))(typescript@6.0.3)':
@@ -4070,8 +4087,8 @@ snapshots:
       '@dnd-kit/core': 6.3.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
       '@dnd-kit/sortable': 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
       '@dnd-kit/utilities': 3.2.2(react@19.0.0-rc-fb9a90fa48-20240614)
-      '@inditex/sewingiopdsweb-core': 1.28.0(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(typescript@6.0.3)
-      '@inditex/sewingiopdsweb-resources': 1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))(typescript@6.0.3)
+      '@inditex/sewingiopdsweb-core': 1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))(typescript@6.0.3)
+      '@inditex/sewingiopdsweb-resources': 1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))
       '@inditex/sewingiopdsweb-styles': 1.28.0
       '@inditex/sewingiopdsweb-utils': 1.28.0
       '@monaco-editor/react': 4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)
@@ -4105,7 +4122,7 @@ snapshots:
       - '@types/react'
       - typescript
 
-  '@inditex/sewingiopdsweb-resources@1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))(typescript@6.0.3)':
+  '@inditex/sewingiopdsweb-resources@1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))':
     dependencies:
       '@inditex/sewingiopdsweb-react-components': 1.28.0(@babel/runtime@7.29.7)(@monaco-editor/react@4.7.0(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614))(monaco-editor@0.56.0)(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react@19.0.0-rc-fb9a90fa48-20240614)(recharts@3.10.1(react-dom@19.2.8(react@19.0.0-rc-fb9a90fa48-20240614))(react-is@16.13.1)(react@19.0.0-rc-fb9a90fa48-20240614)(redux@5.0.1))(typescript@6.0.3)
     transitivePeerDependencies:
@@ -4119,7 +4136,6 @@ snapshots:
       - react-dom
       - recharts
       - topojson-client
-      - typescript
 
   '@inditex/sewingiopdsweb-styles@1.28.0':
     dependencies:

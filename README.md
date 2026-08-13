@@ -15,6 +15,25 @@ $ just bootstrap        # asdf install + pnpm install + preflight checks
 
 Every command below works from anywhere in the repository.
 
+### Registry credentials
+
+Dependencies come from the public npm registry, with one exception: the IOP
+Design System packages (`@inditex/sewingiopdsweb-*`) are published to Inditex
+Artifactory. `code/.npmrc` routes that scope there and pins everything else to
+`registry.npmjs.org`; the pin matters because a machine whose `~/.npmrc` sets a
+different default would otherwise resolve all 790-odd packages through it, and
+CI would resolve them from somewhere else.
+
+Credentials are deliberately not in `code/.npmrc`, which is committed. Put them
+in `~/.npmrc`:
+
+```
+//inditex.jfrog.io/artifactory/api/npm/node-public/:_auth=<base64 user:token>
+```
+
+Without them `pnpm install` fails with `ERR_PNPM_FETCH_401` against
+`inditex.jfrog.io`. `just doctor` reports it as a missing design system.
+
 ## Commands
 
 ```console

@@ -29,6 +29,16 @@ bundle are therefore for internal distribution only. Publishing such a site, or
 the bundle itself, to a public location requires removing the design system CSS
 first — see .opencode/skills/iop-ds-components/SKILL.md.
 
+The same restriction covers artwork. `src/img/ids-icons.svg` is a sprite cut
+from the design system's published icon sprites at
+https://amgassets.inditex.com/amigaweb/icons/ and is committed to this
+repository and shipped inside the bundle. Those icons are INDITEX-licensed, not
+MPL, and carry their notice in the sprite's own `<desc>`. Which icons are
+vendored is declared in `src/img/icons.yml`; what they were cut from is recorded
+in `icons.lock.json`; `scripts/build-sprite.mjs` regenerates the sprite. The
+full catalogue those sprites come from is mirrored into a gitignored `.icons/`
+directory and is deliberately not committed.
+
 The typefaces referenced by those stylesheets (Helvetica Now Text SW10, Noto
 Sans Mono) are loaded at runtime from https://amgassets.inditex.com and are not
 embedded in this bundle.

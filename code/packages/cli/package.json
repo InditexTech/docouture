@@ -1,0 +1,29 @@
+{
+  "name": "@inditextech/pdocs-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Command-line tool for pdocs documentation sites: scaffold a new site and set its Antora version outside the monorepo",
+  "license": "MPL-2.0",
+  "type": "module",
+  "bin": {
+    "pdocs": "build/bin.js"
+  },
+  "files": [
+    "build",
+    "!build/**/*.map"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-templates.mjs && node scripts/chmod-bin.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
+  },
+  "devDependencies": {
+    "@types/node": "~24.10.1",
+    "typescript": "6.0.3"
+  }
+}

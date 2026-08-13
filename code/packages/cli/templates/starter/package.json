@@ -1,0 +1,13 @@
+{
+  "name": "__PDOCS_NAME__",
+  "version": "0.1.0",
+  "private": true,
+  "description": "__PDOCS_TITLE__ documentation, built with Antora",
+  "scripts": {
+    "build": "antora --fetch antora-playbook.yml",
+    "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
+  },
+  "devDependencies": {
+    "antora": "~3.1.15"
+  }
+}

@@ -1,0 +1,12 @@
+= Introduction
+
+Welcome. This is __PDOCS_TITLE__, scaffolded by `pdocs new`.
+
+== What is here
+
+* `antora-playbook.yml` — build configuration; start editing there.
+* `docs/antora.yml` — declares this component's name and version.
+* `docs/modules/ROOT/nav.adoc` — the navigation tree.
+* `docs/modules/ROOT/pages/` — the pages themselves.
+
+Continue to xref:getting-started.adoc[Getting started].

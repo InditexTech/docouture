@@ -1,0 +1,37 @@
+code/.npmrc
+  s_cf884561e38d1f::t_1523d1c6bfd4c7 4-25
+code/packages/ui-bundle/scripts/build-sprite.mjs
+  s_78b7301fbf6251::t_c63c77cc829765 1-172
+code/packages/ui-bundle/scripts/lib/icons.mjs
+  s_78b7301fbf6251::t_1bb905f6d35610 1-229
+code/packages/ui-bundle/scripts/search-icons.mjs
+  s_78b7301fbf6251::t_9ae6f643f60e1e 1-79
+code/packages/ui-bundle/src/img/icons.yml
+  s_78b7301fbf6251::t_b8d721edbab127 1-54
+code/pnpm-lock.yaml
+  s_cf884561e38d1f::t_43bc74d6100873 45-53,4068,4071,4075-4082,4090-4091,4125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b8ac2000053fa907a55955c7c74f6a9f8d9f3f48",
+  "prompts": {},
+  "sessions": {
+    "s_78b7301fbf6251": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_004f037f1ffeKyDKJDDv5cUOKs",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_cf884561e38d1f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_004d46005ffezraU5HIo4M35CO",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,28 +1,13 @@
-# pdocs
-
-Documentation platform built on [Antora](https://docs.antora.org/antora/latest/).
+# pdocs workspace
 
 This directory is the Nx workspace root. All toolchain configuration lives here,
 not at the repository root, so anything invoked directly — `pnpm`, `nx`, `asdf`
-— must run from `code/`. The `justfile` at the repository root wraps the common
-tasks and handles that for you.
+— must run from `code/`: `.tool-versions` is resolved by walking up from the
+current directory, so the shims are only visible inside this directory.
 
-## Requirements
-
-Node and pnpm are pinned in `.tool-versions` and provisioned through `asdf`.
-Everyday commands go through [just](https://github.com/casey/just) (1.38 or
-newer), which is not pinned by the workspace — install it once, globally:
-
-```console
-$ brew install just     # or: cargo install just, mise use -g just
-$ just bootstrap        # asdf install + pnpm install + preflight checks
-```
-
-`just bootstrap` works from anywhere in the repository. Every recipe runs inside
-`code/`, so you never have to change directory yourself. That matters because
-running `pnpm` from the repository root fails: `.tool-versions` is resolved by
-walking up from the current directory, so the shims are only visible inside
-`code/`.
+For everyday work use `just` from the repository root, which runs every command
+in here for you. See [`../README.md`](../README.md) for the command list. What
+follows is how the workspace itself is put together.
 
 ## Packages
 
@@ -38,64 +23,15 @@ dependency, so Nx rebuilds the bundle before either site.
 The versioned zip is the artifact to publish — it is the only thing that records
 which bundle a consumer downloaded. The unversioned copy is a byte-identical
 convenience: Antora's `ui.bundle.url` takes a literal path and does not glob, so
-without it every playbook would need editing on every version bump.
+without it every playbook would need editing on every version bump. Both are
+rebuilt from scratch on each `bundle` run, so stale versions do not accumulate.
 
-## Common tasks
+## The UI preview
 
-```console
-$ just                        # list every recipe
-$ just build                  # build everything
-$ just check                  # lint, typecheck and formatting — what CI runs
-$ just preview                # UI dev server, live reload, :5252
-$ just build-site starter     # build one site
-$ just serve starter          # serve build/site on :5000 (site defaults to starter)
-$ just doctor                 # diagnose a workspace that won't build
-$ just bump minor             # set the version of every package
-```
-
-`just build` takes passthrough arguments — `just build --skip-nx-cache`. `just
-serve` and `just build-site` take a bare package name, so `example` rather than
-`@inditextech/pdocs-example`.
-
-`just bump` accepts `major`, `minor`, `patch`, a prerelease level or an explicit
-`X.Y.Z`, and moves the workspace root and all three packages together — one
-version describes one release of the platform. It rewrites `package.json` and
-nothing else: no commit, no tag, no rebuild. The new version reaches
-`ui-bundle-<version>.zip` on the next `just build`.
-
-When changing the UI, prefer `just preview` over building a whole site. It
-renders `preview-src/index.adoc` — a single page exercising admonitions, code
-blocks, lists, tables and the navigation — and reloads on save.
-
-### just and package.json
-
-`just` is the human-facing command surface; the `package.json` scripts are the
-machine-facing one, and remain available for anything that cannot or should not
-depend on `just` — CI images, editor task panels, a shell with no `just` on the
-`PATH`:
-
-```console
-$ cd code && pnpm build       # equivalent to `just build`
-```
-
-Recipes delegate to `nx` or to a `package.json` script and never reimplement
-build logic, so the two surfaces cannot drift apart. Keep it that way when
-adding recipes: if a recipe needs new build behaviour, the behaviour belongs in
-an Nx target or a package script, and the recipe only calls it.
-
-## Content requires at least one commit
-
-Antora reads content from a git repository. It will pick up **uncommitted**
-working-tree changes, but the repository must have at least one commit, or the
-content source resolves to nothing and the site builds with zero pages:
-
-```
-Start page specified for site not found: starter::index.adoc
-```
-
-If you see that on a fresh clone with no history, make an initial commit.
-`just doctor` checks for this, along with the toolchain versions and installed
-dependencies.
+`packages/ui-bundle` has a `preview` target that renders `preview-src/index.adoc`
+— a single page exercising admonitions, code blocks, lists, tables and the
+navigation — and reloads on save. Prefer it over building a whole site when
+changing the UI.
 
 ## Adding an extension package
 

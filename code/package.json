@@ -14,8 +14,8 @@
     "lint": "nx run-many -t lint",
     "typecheck": "nx run-many -t typecheck",
     "clean": "nx run-many -t clean",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format": "prettier --write . ../README.md",
+    "format:check": "prettier --check . ../README.md"
   },
   "devDependencies": {
     "@eslint/js": "~10.0.1",

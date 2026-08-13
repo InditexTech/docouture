@@ -14,12 +14,14 @@ nx := 'pnpm nx'
 name := 'pdocs'
 version := `awk -F'"' '/"version"/ { print $4; exit }' package.json`
 
-# List the available commands
+# List the available commands. Private: it is what a bare `just` runs, so
+# listing it in its own output would be circular.
+[private]
 default: (_hdr "")
     #!/usr/bin/env bash
     # The trailing newline is part of the heading; command substitution would
     # strip it, so it is written with ANSI-C quoting instead.
-    just --list --unsorted --list-heading $'Available commands:\n'
+    just --list --unsorted --list-heading $'Available commands:\n\n'
 
 # Announce which command is about to run
 [private]

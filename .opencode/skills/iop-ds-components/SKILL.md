@@ -1,6 +1,6 @@
 ---
 name: iop-ds-components
-description: "Build UI in the pdocs Antora bundle out of IOP DS (IDS) components — reusing the design system's shipped BEM CSS instead of writing new styles. USE WHEN editing Handlebars layouts or partials in code/packages/ui-bundle, styling site chrome (header, nav, toolbar, breadcrumbs, pagination, toc, footer), rendering AsciiDoc content as a DS component, or writing an Antora/Asciidoctor extension. EXAMPLES: 'style the nav like the DS', 'add tabs to the docs', 'make admonitions look like IDS banners', 'add a card grid block macro'."
+description: "Build UI in the pdocs Antora bundle out of IOP DS (IDS) components — reusing the design system's shipped BEM CSS instead of writing new styles. USE WHEN editing Handlebars layouts or partials in code/packages/ui-bundle, styling site chrome (header, nav, toolbar, breadcrumbs, pagination, toc, footer), rendering AsciiDoc content as a DS component, or writing an Antora/Asciidoctor extension. EXAMPLES: 'style the nav like the DS', 'add tabs to the docs', 'make admonitions look like IDS notifications', 'add a card grid block macro'."
 ---
 
 # IOP DS — Components in the Antora bundle
@@ -45,7 +45,7 @@ Decide in this order. Stop at the first that fits.
 | the thing is | it lives in | example |
 | --- | --- | --- |
 | site chrome, present on every page | a Handlebars partial in `src/partials` | header, nav, toolbar, footer, toc |
-| derived from AsciiDoc that Asciidoctor already produces | CSS alone, mapped onto the converted HTML | admonitions → `.ids-banner`, tables, code blocks |
+| derived from AsciiDoc that Asciidoctor already produces | CSS alone, mapped onto the converted HTML | admonitions → `.ids-notification`, tables, code blocks |
 | authored content with no AsciiDoc equivalent | an Asciidoctor extension in `code/packages/asciidoc-extensions` | tabs, card grid, steps, timeline, KPI |
 
 Never emit component markup from `src/js`. JavaScript adds behaviour to server-rendered
@@ -60,18 +60,25 @@ markup — it does not create it. A page must be readable and correctly styled w
 .ids-<component>__<part>--<modifier> element modifier
 ```
 
-Real example, `banner/banner.css`:
+Real example, `notifications/notification/notification.css`:
 
 ```html
-<div class="ids-banner ids-banner--info">
-  <div class="ids-banner__content">
-    <p class="ids-banner__message">…</p>
-    <div class="ids-banner__actions">
-      <button class="ids-banner__dismiss">…</button>
+<div class="ids-notification ids-notification--expandable">
+  <div class="ids-notification-icon">…</div>
+  <div class="ids-notification-content">
+    <div class="ids-notification-main">
+      <p class="ids-notification-text">…</p>
+      <button class="ids-notification-toggle">…</button>
     </div>
   </div>
+  <button class="ids-notification-close">…</button>
 </div>
 ```
+
+Note this is not textbook BEM: `ids-notification-info` / `-success` / `-warning` / `-error`
+/ `-ai` / `-loading` are **variant modifiers** with a single dash, sitting next to the
+properly double-dashed `ids-notification--expandable` in the same file. See Exceptions
+below — this is not a typo, it is how the file ships.
 
 Rules:
 
@@ -80,7 +87,31 @@ Rules:
 - Never override a DS declaration from another stylesheet. If a DS component is wrong
   for the job, it is the wrong component.
 - Modifier names are fixed vocabulary — check the stylesheet, do not guess.
-  `grep -o '\.ids-[a-z0-9_-]*' <file>.css | sort -u` lists every class it defines.
+  `grep -o '\.ids-[a-z0-9_-]*' <file>.css | sort -u` lists every class it defines —
+  run it before writing markup for any component, every time. Guessing from the
+  four-line grammar above is how bugs 2–4 in issue #6 happened.
+
+### Exceptions to the grammar
+
+The four-line grammar is the default, not a guarantee. Two different departures from
+it both exist in the shipped CSS, in the same package, sometimes the same file:
+
+1. **Single-dash sub-blocks.** Many components define a second, related block with a
+   single dash instead of a leading `.ids-<component>` + `__part`, e.g.
+   `.ids-list-item` (inside `list/`, alongside the true block `.ids-list`),
+   `.ids-tabs-item` (inside `tabs/`, alongside `.ids-tabs__list` /
+   `.ids-tabs__indicator`), `.ids-timeline-item*`, `.ids-menu-item`,
+   `.ids-empty-state-footer`, `.ids-tree-*`, `.ids-lightbox-wrapper`,
+   `.ids-option-picker-item`, `.ids-field-actions`, `.ids-search-field-minimal`. These
+   are still proper blocks — they use `__part` and `--modifier` internally — the
+   single dash is just how the sub-block is named relative to its parent.
+2. **Single-dash modifiers.** Rarer, and the one that actually breaks the grammar:
+   Notification's colour variants (`-info`, `-success`, `-warning`, `-error`, `-ai`,
+   `-loading`) are modifiers, not sub-blocks, written with one dash while
+   `--expandable` in the same file uses two.
+
+Either way: the grep rule above is what tells you which one you're looking at. Do not
+assume grammar from a component's name.
 
 ## State and interaction
 
@@ -129,11 +160,12 @@ component CSS between versions).
 
 The DS packages are `license: INDITEX`. `ui-bundle.zip` bakes in whatever's been
 generated from them — the token layer, one icon-sizing rule, and whatever
-`ids-components.yml` currently lists (`text/text.css` as of this writing). Every
-manifest addition joins that same generated surface. `code/packages/ui-bundle/NOTICE`
-records what's derived and from where. **If a pdocs site is ever published
-externally, or before vendoring a large chunk of component CSS, this must be
-revisited with whoever owns DS licensing** — flag it rather than shipping quietly.
+`packages/ui-bundle/src/css/ids-components.yml` currently lists (check that file for
+the live set — it changes as components are added). Every manifest addition joins that
+same generated surface. `code/packages/ui-bundle/NOTICE` records what's derived and
+from where. **If a pdocs site is ever published externally, or before vendoring a
+large chunk of component CSS, this must be revisited with whoever owns DS
+licensing** — flag it rather than shipping quietly.
 
 ## Reference
 

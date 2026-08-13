@@ -16,7 +16,7 @@ Always confirm class names against the stylesheet before writing markup:
 
 ```console
 $ grep -o '\.ids-[a-z0-9_-]*' \
-    code/node_modules/@inditex/sewingiopdsweb-react-components/tabs/tabs.css | sort -u
+    code/tools/ids/node_modules/@inditex/sewingiopdsweb-react-components/tabs/tabs.css | sort -u
 ```
 
 ## Site chrome
@@ -30,8 +30,10 @@ $ grep -o '\.ids-[a-z0-9_-]*' \
 | Breadcrumbs | `.ids-breadcrumbs`, `.ids-breadcrumb-item` | `breadcrumbs/*.css` (4) | chrome | `breadcrumbs.hbs` |
 | Pagination | `.ids-pagination` | `pagination/pagination.css` | chrome | prev/next page links |
 | Sidebar | `.ids-sidebar` | `sidebar/*.css` (4) | chrome | mobile nav drawer |
-| Search Field | `.ids-search-field` | `search-field/*.css` | chrome | navbar search, when a provider is configured |
+| Search Field | `.ids-search-field-minimal` | `search-field/search-field.minimal.css` (1, only file present) | chrome | navbar search, when a provider is configured |
+| Field | `.ids-field` | `field/*.css` (4) | chrome | the standard text field, used inside dropdowns/select |
 | Dropdown | `.ids-dropdown` | `dropdown/*.css` | chrome | version selector menu |
+| Tree | `.ids-tree-*` | `tree/**/*.css` (24 files, incl. virtualization & plugins) | n/a | full component is a virtualized React tree, dead with JS off — do not use for the docs nav tree. Use `.ids-list-item--tree--level-0…10` + `.ids-list-item__tree-icon` from `list/list-item.css` instead (`--ids-list-item-tree-indent: 12px` per level) |
 | Button | `.ids-button` | `button/button.css` | chrome | every button; theme toggle, edit-this-page |
 | Icon | `.ids-icon` | `icon/icon.css` | chrome | icon sizing wrapper |
 | Divider | `.ids-divider` | `divider/divider.css` | chrome | panel separators |
@@ -40,11 +42,17 @@ $ grep -o '\.ids-[a-z0-9_-]*' \
 | Tooltip | `.ids-tooltip` | `tooltip/*.css` (2) | available | needs JS positioning |
 | Floating Button / Bar | `.ids-floating-*` | `floating-*/` | available | candidate for back-to-top |
 
+> `.ids-search-field` (no suffix) has no stylesheet of its own — it's referenced as a
+> descendant selector inside `select/select.css` (`.ids-select__list-container
+> .ids-search-field`) but never defined. The only search-field stylesheet that exists
+> is the `-minimal` variant above.
+
 ## Document content
 
 | IDS component | block | path | status | pdocs use |
 | --- | --- | --- | --- | --- |
-| Banner | `.ids-banner` | `banner/banner.css` | content | **admonitions** — see mapping below |
+| Banner | `.ids-banner` | `banner/banner.css` | available | design uses Notification for admonitions instead — see below |
+| Notification | `.ids-notification` | `notifications/notification/notification.css` | content | **admonitions** — see mapping below. Path has an extra `notification/` segment; `notifications/` also ships `notifications-container/`, `notification-item/`, `notification-floating/` for other uses |
 | Code Block | `.ids-code-block` | `code-block/code-block.css` | content | `<pre class="highlight">` output |
 | Label | `.ids-label` | `label/label.css` | content | inline metadata |
 | Text | `.ids-text` | `text/text.css` | content | prose helpers |
@@ -58,19 +66,22 @@ $ grep -o '\.ids-[a-z0-9_-]*' \
 ### Admonition mapping
 
 Asciidoctor emits `.admonitionblock.note|tip|important|caution|warning`. Map each onto
-a Banner modifier in CSS — no extension, no markup change:
+a Notification modifier in CSS — no extension, no markup change:
 
-| AsciiDoc | Banner modifier | hue |
+| AsciiDoc | Notification modifier | hue |
 | --- | --- | --- |
-| `NOTE` | `.ids-banner--info` | `alt-blue` |
-| `TIP` | `.ids-banner--success` | `alt-green` |
-| `WARNING` | `.ids-banner--warning` | `alt-orange` |
-| `IMPORTANT` | `.ids-banner--error` | `alt-red` |
-| `CAUTION` | `.ids-banner--warning` | `alt-orange` |
+| `NOTE` | `.ids-notification-info` | `alt-blue` |
+| `TIP` | `.ids-notification-success` | `alt-green` |
+| `WARNING` | `.ids-notification-warning` | `alt-orange` |
+| `IMPORTANT` | `.ids-notification-error` | `alt-red` |
+| `CAUTION` | `.ids-notification-warning` | `alt-orange` |
 
-The DS has five banner variants (`--ai`, `--info`, `--success`, `--warning`, `--error`)
-and AsciiDoc has five admonitions, but they are not one-to-one: `CAUTION` and `WARNING`
-both mean "be careful", so both take `--warning`. Do not invent a sixth variant.
+The DS has six Notification variants (`-info`, `-success`, `-warning`, `-error`,
+`-ai`, `-loading`) and AsciiDoc has five admonitions, but they are not one-to-one:
+`CAUTION` and `WARNING` both mean "be careful", so both take `-warning`. `-ai` and
+`-loading` are not admonition-shaped — don't reach for them here. Note these are
+single-dash modifiers, not the `--expandable` block modifier in the same file — see
+the Exceptions section in SKILL.md before writing the mapping CSS.
 
 ## Candidates for Asciidoctor extensions
 
@@ -79,7 +90,7 @@ extension emitting DS markup, with the DS stylesheet imported and little or no n
 
 | IDS component | block | path | notes |
 | --- | --- | --- | --- |
-| Tabs | `.ids-tabs`, `.ids-tabs__list`, `.ids-tabs__indicator` | `tabs/*.css` (2) | modifiers `--solid` / `--underlined`; needs a small JS controller and `aria-selected` |
+| Tabs | `.ids-tabs`, `.ids-tabs__list`, `.ids-tabs__indicator`, `.ids-tabs-item` | `tabs/*.css` (2) | modifiers `--solid` / `--underlined`; needs a small JS controller and `aria-selected`. Note `.ids-tabs-item` (in `tabs-item.css`) is a single-dash sub-block, not a typo for `.ids-tabs__item` |
 | Card | `.ids-card` | `card/card.css` | `--horizontal` / `--vertical` / `--selected`; slot elements for image corners |
 | Accordion | `.ids-accordion` | `accordion/accordion.css` | `--expanded` / `--disabled`; wrap `<details>` so it degrades without JS |
 | Progress Steps | `.ids-progress-step` | `progress-steps/*.css` (4) | numbered procedures |
@@ -93,8 +104,24 @@ extension emitting DS markup, with the DS stylesheet imported and little or no n
 
 Form and application components — Datagrid, Date/Time/Color Picker, Text/Number/Password
 Field, Select, Checkbox, Radio, Switch, Slider, Stepper, File Uploader, Modal, Message,
-Event Calendar, Charts, Map Chart, AI Launcher, Code Editor, Android Status Bar.
+Event Calendar, Charts, Map Chart, AI Launcher, Code Editor, Android Status Bar, Tree
+(virtualized, JS-required — see Site chrome table for the static alternative).
 
 A documentation site renders content; it does not collect input. If one of these seems
 necessary, the requirement is probably wrong. Exceptions worth considering later:
-Modal (image lightbox), Tree (nav), Notification (build/version banners).
+Modal (image lightbox).
+
+## Not in the DS
+
+Confirmed absent package-wide, not just unused:
+
+- **`.ids-table`** — no stylesheet. Datagrid is React-driven; AsciiDoc tables are
+  styled onto Asciidoctor's own markup using datagrid cell tokens, not a DS block.
+- **`.ids-link`** — no stylesheet. Compose inline links from typography tokens.
+- **A standalone footer component** — no `footer/` directory anywhere in the
+  package. The page footer is composed from primitives (Divider, Button, Text).
+- **`.ids-text--display-l`** — `text/text.css` defines `--display-m` and
+  `--display-s` but not `--display-l`, even though the underlying token
+  (`--ids-typo-display-l`) and its mixin (`ids-display-l`) both exist in
+  `@inditex/sewingiopdsweb-styles`. If display-l scale is needed, apply the mixin
+  directly rather than inventing a `.ids-text--display-l` class that doesn't ship.

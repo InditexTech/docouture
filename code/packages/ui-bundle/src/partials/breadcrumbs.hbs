@@ -1,20 +1,37 @@
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-  {{#if page.breadcrumbs}}
-  <ul>
-    {{#with page.componentVersion}}
-    {{#if (and ./title (ne ./title @root.page.breadcrumbs.0.content))}}
-    <li><a href="{{{relativize ./url}}}">{{{./title}}}</a></li>
-    {{/if}}
-    {{/with}}
-    {{#each page.breadcrumbs}}
-    <li>
-    {{~#if (and ./url (eq ./urlType 'internal'))~}}
-    <a href="{{{relativize ./url}}}">{{{./content}}}</a>
-    {{~else~}}
-    {{{./content}}}
-    {{~/if~}}
-    </li>
-    {{/each}}
-  </ul>
+{{!--
+  The real IOP Design System component (GH-9), not a hand-rolled <ul> — see
+  @inditex/sewingiopdsweb-react-components/breadcrumbs/{breadcrumb,breadcrumb-
+  item}.css, vendored via src/css/ids-components.yml. `.ids-breadcrumbs` is
+  the flex row; `.ids-breadcrumb-item` draws its own trailing divider via
+  `::after` and suppresses it on `:last-child` — no divider markup of our
+  own, and nothing to do for the item that ends up last except mark it
+  `--active`.
+
+  The current page's own crumb (always the last entry in page.breadcrumbs —
+  see @antora/page-composer's attachNavProperties, which pushes `match`,
+  the nav item for the current page itself, onto the end) renders
+  non-interactive with `aria-current="page"`, matching the design's
+  Current=True state — even though Antora's model usually gives it a
+  `url`/`urlType: internal` like any other crumb. Every other file in this
+  bundle that reads page.breadcrumbs (none do today) should keep that in
+  mind: the model does not itself mark "the current one", the last position
+  does.
+--}}
+<nav class="ids-breadcrumbs" aria-label="Breadcrumb">
+{{#if page.breadcrumbs}}
+  {{#with page.componentVersion}}
+  {{#if (and ./title (ne ./title @root.page.breadcrumbs.0.content))}}
+  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="{{{relativize ./url}}}"><span class="ids-breadcrumb-item__content">{{{./title}}}</span></a>
   {{/if}}
+  {{/with}}
+  {{#each page.breadcrumbs}}
+  {{#if @last}}
+  <div class="ids-breadcrumb-item ids-breadcrumb-item--active" aria-current="page"><span class="ids-breadcrumb-item__content">{{{./content}}}</span></div>
+  {{else if (and ./url (eq ./urlType 'internal'))}}
+  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="{{{relativize ./url}}}"><span class="ids-breadcrumb-item__content">{{{./content}}}</span></a>
+  {{else}}
+  <div class="ids-breadcrumb-item"><span class="ids-breadcrumb-item__content">{{{./content}}}</span></div>
+  {{/if}}
+  {{/each}}
+{{/if}}
 </nav>

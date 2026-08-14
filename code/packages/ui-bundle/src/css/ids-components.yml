@@ -32,3 +32,20 @@ components:
     - logo.css # .ids-logo — product symbol fill (GH-8)
   grid-layout:
     - grid-layout.css # .ids-grid-layout[--with-margin]/__item[--span-N] — header/toolbar container (GH-8)
+  breadcrumbs:
+    # Deliberately 2 of the directory's 4 files, not all — see the header
+    # comment above about multi-file components needing every file. That rule
+    # is for components whose *rendered* markup spans several files; here
+    # breadcrumb-ellipsis(-list).css only back the JS-driven overflow-collapse
+    # trigger (React's useBreadcrumbsOverflow), which this bundle never
+    # renders — hero.hbs lays out every crumb in a plain flex row and lets
+    # breadcrumb-item.css's own `text-overflow: ellipsis` handle narrow
+    # viewports, no collapse trigger markup at all (GH-9). Also worth noting:
+    # breadcrumb-ellipsis.css references `var(--ids-radius-sm)`, which is not
+    # a real token in @inditex/sewingiopdsweb-styles under any name — an
+    # upstream inconsistency, not something introduced here — so vendoring it
+    # would fail `just ids-sync`'s missing-token check regardless.
+    - breadcrumb.css # .ids-breadcrumbs — flex row container
+    - breadcrumb-item.css # .ids-breadcrumb-item[--link/--active] + its divider
+  label:
+    - label.css # .ids-label--white — hero page tags (GH-9)

@@ -6,8 +6,12 @@ Author Name
 :!table-caption:
 //:page-role: -toc
 :page-pagination:
-:page-labels: Beta, Internal
-:description: Content test page: exercises the article, TOC and pagination templates against long-form AsciiDoc.
+:page-tags: Beta, Internal
+:page-action: Get started
+:page-action-url: landing.adoc
+:page-action-secondary: View source
+:page-action-secondary-url: https://example.org
+:description: Content test page: exercises the hero, article, TOC and pagination templates against long-form AsciiDoc.
 
 [.lead]
 You are looking at the content test page for the Antora default UI.

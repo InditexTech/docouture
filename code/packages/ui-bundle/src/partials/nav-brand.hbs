@@ -9,6 +9,19 @@
   repo-link.hbs), a root-relative or absolute URL to an image. Absent, the
   block renders the product name alone rather than a placeholder mark.
 
+  `site.keys.productLogoDark` is an optional second image for dark mode —
+  most single-colour marks (a solid-fill PNG, or an SVG using a literal
+  fill/stroke rather than `currentColor`) don't adapt on their own, and
+  `currentColor` doesn't help here even if the asset does use it: this is a
+  bitmap `<img src>`, not inlined markup (unlike `{{icon}}`'s sprite refs),
+  and an externally-referenced SVG document does not inherit CSS from the
+  page that embeds it. When a dark variant is configured, both images
+  render and side-menu.css swaps between them off the same `.ids-theme-dark`
+  root class 08-theme.ts sets (see header.css's theme-toggle icons for the
+  identical pattern). When it isn't, the light logo alone renders
+  unconditionally — same as before this existed — rather than being hidden
+  outright with nothing to replace it.
+
   Figma only specifies this block at breakpoint l; m/s show it too (icon
   only — the title is already in the header there, see header-content.hbs)
   because a persistent product mark in the menu is worth having regardless
@@ -23,7 +36,10 @@
 <div class="side-menu__brand">
   <a class="side-menu__brand-link" href="{{{relativize (or page.componentVersion.url site.homeUrl)}}}">
     {{#with site.keys.productLogo}}
-    <img class="side-menu__brand-logo" src="{{{relativize this}}}" width="40" height="40" alt="">
+    <img class="side-menu__brand-logo{{#if @root.site.keys.productLogoDark}} side-menu__brand-logo--light{{/if}}" src="{{{relativize this}}}" width="40" height="40" alt="">
+    {{/with}}
+    {{#with site.keys.productLogoDark}}
+    <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="{{{relativize this}}}" width="40" height="40" alt="">
     {{/with}}
     <span class="side-menu__brand-title ids-text ids-text--title-m">{{or page.component.title site.title}}</span>
   </a>

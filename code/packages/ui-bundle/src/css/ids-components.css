@@ -1738,3 +1738,160 @@
     grid-column-end: 13
   }
 }
+
+/* @inditex/sewingiopdsweb-react-components/breadcrumbs/breadcrumb.css */
+.ids-breadcrumbs {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  width: 100%
+}
+
+/* @inditex/sewingiopdsweb-react-components/breadcrumbs/breadcrumb-item.css */
+.ids-breadcrumb-item {
+  font: var(--ids-typo-label-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  text-transform: var(--ids-typo-label-m-text-transform)
+}
+.ids-breadcrumb-item:after {
+  background-color: var(--ids-color-border-low);
+  content: " ";
+  display: inline-block;
+  flex-shrink: 0;
+  height: var(--ids-size-75);
+  margin-left: var(--ids-size-50);
+  margin-right: var(--ids-size-50);
+  width: var(--ids-size-border-default)
+}
+.ids-breadcrumb-item:last-child:after {
+  content: none;
+  display: none
+}
+.ids-breadcrumb-item {
+  align-items: center;
+  color: var(--ids-color-content-default);
+  display: inline-flex;
+  flex-grow: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  text-decoration: none!important
+}
+.ids-breadcrumb-item__content {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.ids-breadcrumb-item--link {
+  cursor: pointer
+}
+.ids-breadcrumb-item--link:hover {
+  color: var(--ids-color-content-states-hover)
+}
+.ids-breadcrumb-item--active {
+  color: var(--ids-color-content-low);
+  cursor: default
+}
+
+/* @inditex/sewingiopdsweb-react-components/label/label.css */
+.ids-label {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: row;
+  gap: var(--ids-size-25);
+  min-height: var(--ids-size-150);
+  padding: var(--ids-size-0) var(--ids-size-50)
+}
+.ids-label__content {
+  align-items: center;
+  display: flex;
+  font: var(--ids-typo-label-m-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-m-high-letter-spacing);
+  overflow-wrap: break-word;
+  text-transform: var(--ids-typo-label-m-high-text-transform)
+}
+.ids-label--white {
+  background-color: var(--ids-color-bg-default)
+}
+.ids-label--white .ids-label__content {
+  color: var(--ids-color-content-default)
+}
+.ids-label--white .ids-label__icon svg * {
+  fill: var(--ids-color-content-default)
+}
+.ids-label--grey {
+  background-color: var(--ids-color-bg-low)
+}
+.ids-label--grey .ids-label__content {
+  color: var(--ids-color-content-default)
+}
+.ids-label--grey .ids-label__icon svg * {
+  fill: var(--ids-color-content-default)
+}
+.ids-label--red {
+  background-color: var(--ids-color-alt-red-low)
+}
+.ids-label--red .ids-label__content {
+  color: var(--ids-color-alt-red-high)
+}
+.ids-label--red .ids-label__icon svg * {
+  fill: var(--ids-color-alt-red-high)
+}
+.ids-label--orange {
+  background-color: var(--ids-color-alt-orange-low)
+}
+.ids-label--orange .ids-label__content {
+  color: var(--ids-color-alt-orange-high)
+}
+.ids-label--orange .ids-label__icon svg * {
+  fill: var(--ids-color-alt-orange-high)
+}
+.ids-label--green {
+  background-color: var(--ids-color-alt-green-low)
+}
+.ids-label--green .ids-label__content {
+  color: var(--ids-color-alt-green-high)
+}
+.ids-label--green .ids-label__icon svg * {
+  fill: var(--ids-color-alt-green-high)
+}
+.ids-label--blue {
+  background-color: var(--ids-color-alt-blue-low)
+}
+.ids-label--blue .ids-label__content {
+  color: var(--ids-color-alt-blue-high)
+}
+.ids-label--blue .ids-label__icon svg * {
+  fill: var(--ids-color-alt-blue-high)
+}
+.ids-label--purple {
+  background-color: var(--ids-color-alt-purple-low)
+}
+.ids-label--purple .ids-label__content {
+  color: var(--ids-color-alt-purple-high)
+}
+.ids-label--purple .ids-label__icon svg * {
+  fill: var(--ids-color-alt-purple-high)
+}
+.ids-label--pink {
+  background-color: var(--ids-color-alt-pink-low)
+}
+.ids-label--pink .ids-label__content {
+  color: var(--ids-color-alt-pink-high)
+}
+.ids-label--pink .ids-label__icon svg * {
+  fill: var(--ids-color-alt-pink-high)
+}
+.ids-label--teal {
+  background-color: var(--ids-color-alt-teal-low)
+}
+.ids-label--teal .ids-label__content {
+  color: var(--ids-color-alt-teal-high)
+}
+.ids-label--teal .ids-label__icon svg * {
+  fill: var(--ids-color-alt-teal-high)
+}

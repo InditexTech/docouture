@@ -110,6 +110,28 @@ attribute fails the build**.
 | set a page-scoped attribute | an attribute entry in the page header, above the first blank line |
 | add custom syntax | an Asciidoctor extension — see `reference/extensions.md` |
 
+## Page attributes the UI reads
+
+The UI bundle's `default` layout reads specific `page-*` attributes (and `description`)
+straight off the page header — see `hero.hbs`'s own comment for the authoritative version:
+
+| attribute | effect |
+| --- | --- |
+| `description` | hero excerpt (below the title) AND `<meta name="description">` |
+| `page-tags` | comma-separated; one label pill each in the hero |
+| `page-action` / `page-action-url` | primary hero button — renders only when BOTH are set |
+| `page-action-secondary` / `page-action-secondary-url` | secondary hero button, same rule |
+| `page-role: -hero` | suppresses the hero entirely; the title falls back to an in-article `<h1>` |
+| `page-role: -toc` | suppresses the right-hand table of contents |
+| `page-pagination` | enables the previous/next footer links |
+
+`page-role` accepts several space-separated tokens (`-hero -toc`) — it becomes a literal
+class on `<body>`, so CSS/JS keying off one of them (`body.-toc`) is unaffected by the
+others being present. A `*-url` attribute accepts either an Antora page reference
+(`getting-started.adoc`) or a literal URL; `resolvePageURL` returns `undefined` rather than
+throwing when it isn't a page reference, so the literal is used as a fallback with no
+extra syntax on the author's side.
+
 ## Constraints that fail silently
 
 Each of these produces a wrong result or a hard build failure without an obvious cause.

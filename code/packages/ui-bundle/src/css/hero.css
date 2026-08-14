@@ -1,0 +1,83 @@
+/*
+ * Page hero (GH-9), Figma node 3615:59150. Gutter comes from the same DS
+ * grid container the header toolbar uses (`.ids-grid-layout--with-margin`,
+ * grid-layout/grid-layout.css — see header-content.hbs's own comment), so
+ * the hero's left edge lines up with the header's at every breakpoint
+ * (16/32/56/64px) instead of a flat 64px. `.hero__row` spans the grid's full
+ * width (`--span-full`) rather than dividing into columns — there is no
+ * second column here, just the reserved right-hand slot — and is then
+ * capped at `--hero-max-width` so it doesn't run wider than the content
+ * measure below it, a later call than Figma's own frame (see vars.css).
+ *
+ * Every colour is a `.ids-text` / `.ids-breadcrumb-item` / `.ids-label` /
+ * `.ids-button` utility class, not a literal here — that is what makes this
+ * file theme-agnostic; see hero.hbs's own header comment for the two Figma
+ * frames (light 2735:65619, dark 2735:65779) this was built against.
+ */
+
+.hero {
+  padding-block-start: var(--hero-space-block-start);
+  padding-block-end: var(--hero-space-block-end);
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .hero {
+    padding-block-start: var(--hero-space-block-start-s);
+  }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .hero {
+    padding-block-start: var(--hero-space-block-start-m);
+  }
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .hero {
+    padding-block-start: var(--hero-space-block-start-l);
+  }
+}
+
+.hero__row {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ids-size-150);
+  justify-content: space-between;
+  max-width: var(--hero-max-width);
+}
+
+.hero__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-150);
+  min-width: 0;
+}
+
+.hero__title,
+.hero__excerpt {
+  margin: 0;
+}
+
+.hero__excerpt {
+  max-width: var(--hero-excerpt-max-width);
+}
+
+.hero__tags,
+.hero__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.hero__tags {
+  gap: var(--ids-size-25);
+}
+
+.hero__actions {
+  gap: var(--ids-size-75);
+}
+
+.hero a.ids-button {
+  text-decoration: none;
+}

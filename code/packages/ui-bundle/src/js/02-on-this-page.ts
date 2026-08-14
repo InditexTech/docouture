@@ -45,7 +45,13 @@
   menu.appendChild(title)
   menu.appendChild(list)
 
-  var startOfContent = !document.getElementById('toc') && article.querySelector('h1.page ~ :not(.is-before-toc)')
+  // NOTE h1.page usually lives in the hero now, not the article (GH-9) — it
+  // only reappears here when a page opts out with `:page-role: -hero` (see
+  // article.hbs). Walking article.children directly, rather than
+  // `article.querySelector('h1.page ~ :not(.is-before-toc)')`, handles both:
+  // skip a leading h1.page if the page has one, skip anything flagged
+  // `.is-before-toc`, insert ahead of whatever's left either way.
+  var startOfContent = !document.getElementById('toc') && firstContentNode(article)
   if (startOfContent) {
     var embeddedToc = document.createElement('aside')
     embeddedToc.className = 'toc embedded'
@@ -107,6 +113,15 @@
 
   function find (selector, from) {
     return [].slice.call((from || document).querySelectorAll(selector))
+  }
+
+  function firstContentNode (article) {
+    for (var i = 0; i < article.children.length; i++) {
+      var child = article.children[i]
+      if (i === 0 && child.tagName === 'H1' && child.classList.contains('page')) continue
+      if (child.classList.contains('is-before-toc')) continue
+      return child
+    }
   }
 
   function getNumericStyleVal (el, prop) {

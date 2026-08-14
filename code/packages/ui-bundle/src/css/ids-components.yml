@@ -31,7 +31,7 @@ components:
   logo:
     - logo.css # .ids-logo — product symbol fill (GH-8)
   grid-layout:
-    - grid-layout.css # .ids-grid-layout[--with-margin]/__item[--span-N] — header/toolbar container (GH-8)
+    - grid-layout.css # .ids-grid-layout[--with-margin] — header/toolbar/hero container (GH-8, GH-9); also the content/ToC container (GH-10, main.hbs) — `.doc`/`.toc`'s own column spans are bundle CSS, not this file's `__item[--span-N]` utility classes (doc.css/toc.css explain why)
   breadcrumbs:
     # Deliberately 2 of the directory's 4 files, not all — see the header
     # comment above about multi-file components needing every file. That rule

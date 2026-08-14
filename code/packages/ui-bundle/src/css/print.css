@@ -63,7 +63,6 @@
 
   .header-toolbar,
   .side-menu,
-  .toolbar,
   aside.toc,
   nav.pagination {
     display: none;

@@ -9,6 +9,16 @@ html {
   font-size: var(--body-font-size);
   height: 100%;
   scroll-behavior: smooth;
+  /*
+   * Extra breathing room below the fixed header for in-page jumps — read
+   * back as a resolved pixel value by 03-fragment-jumper.ts (a real
+   * longhand property, unlike `--anchor-scroll-margin` itself, which
+   * `getComputedStyle` would return as its raw, unresolved `calc(...)`
+   * string). The header's own height is measured dynamically there
+   * instead of read from here, since `.header-toolbar`'s real height can
+   * change independently of `--navbar-height`.
+   */
+  scroll-padding-top: var(--anchor-scroll-margin);
 }
 
 @media screen and (--ids-breakpoints-m) {

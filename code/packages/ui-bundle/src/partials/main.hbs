@@ -2,15 +2,23 @@
 {{!--
   Page hero (GH-9): every non-404 page unless opted out with
   `:page-role: -hero` — same convention as the `-toc` role below (see
-  main.css, 02-on-this-page.ts). Lives outside .content: the hero is a
-  full-width row above the toc/article pair, not a sidebar peer of either.
+  02-on-this-page.ts). Lives outside .content: the hero is a full-width
+  row above the toc/article pair, not a sidebar peer of either.
+
+  .content (GH-10): a DS grid container, the same one the hero and header
+  toolbar use, so the article's left edge lines up with the hero title at
+  every breakpoint. `.toc` (toc.hbs) and `.doc` (article.hbs) place
+  themselves in it with plain CSS, not the DS's own span utility classes —
+  9/3 at l, 8/4 at m, both full-width and stacked (ToC first) at s/xs, only
+  once `html.has-toc` says there is a real ToC to make room for — see
+  doc.css and toc.css for why and for the split itself.
 --}}
 {{#unless (eq page.layout '404')}}
 {{#unless (includes (or page.attributes.role page.role) '-hero')}}
 {{> hero}}
 {{/unless}}
 {{/unless}}
-  <div class="content">
+  <div class="content ids-grid-layout ids-grid-layout--with-margin">
 {{#if (eq page.layout '404')}}
 {{> article-404}}
 {{else}}

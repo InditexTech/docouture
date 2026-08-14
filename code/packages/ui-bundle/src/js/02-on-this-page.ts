@@ -1,7 +1,10 @@
 ;(function () {
   'use strict'
 
-  var sidebar = document.querySelector<HTMLElement>('aside.toc.sidebar')
+  var STORAGE_KEY = 'pdocs-toc'
+
+  var root = document.documentElement
+  var sidebar = document.getElementById('on-this-page')
   if (!sidebar) return
   if (document.querySelector('body.-toc')) return sidebar.parentNode.removeChild(sidebar)
   var levels = parseInt(sidebar.dataset.levels || '2', 10)
@@ -41,22 +44,55 @@
   if (!menu) (menu = document.createElement('div')).className = 'toc-menu'
 
   var title = document.createElement('h3')
-  title.textContent = sidebar.dataset.title || 'Contents'
+  title.textContent = sidebar.dataset.title || 'On this page'
   menu.appendChild(title)
   menu.appendChild(list)
 
-  // NOTE h1.page usually lives in the hero now, not the article (GH-9) — it
-  // only reappears here when a page opts out with `:page-role: -hero` (see
-  // article.hbs). Walking article.children directly, rather than
-  // `article.querySelector('h1.page ~ :not(.is-before-toc)')`, handles both:
-  // skip a leading h1.page if the page has one, skip anything flagged
-  // `.is-before-toc`, insert ahead of whatever's left either way.
-  var startOfContent = !document.getElementById('toc') && firstContentNode(article)
-  if (startOfContent) {
-    var embeddedToc = document.createElement('aside')
-    embeddedToc.className = 'toc embedded'
-    embeddedToc.appendChild(menu.cloneNode(true))
-    startOfContent.parentNode.insertBefore(embeddedToc, startOfContent)
+  // GH-10: only now — headings found, page not opted out — reveal the
+  // panel and narrow the article to make room for it. `html.has-toc` is
+  // what toc.css/doc.css gate their grid split behind, rather than a
+  // static `.ids-grid-layout__item--span-*` utility class on either
+  // element: a page with JavaScript disabled never reaches this line, so
+  // it stays full width per this issue's own acceptance criterion, with
+  // nothing to reflow later.
+  root.classList.add('has-toc')
+
+  // Toggle button in the hero's own reserved slot (GH-9's own header
+  // comment). `hidden` until now — see theme-toggle.hbs / 08-theme.ts and
+  // the side-menu toggle for the same reasoning: a control with no ToC to
+  // open must not render. Hidden again outright below breakpoint m by
+  // hero.css — the ToC sits above the article there instead of beside it,
+  // with nothing to toggle.
+  var toggle = document.querySelector<HTMLButtonElement>('.toc-toggle')
+  if (toggle) {
+    toggle.hidden = false
+    var stored
+    try {
+      stored = localStorage.getItem(STORAGE_KEY)
+    } catch (e) {
+      // private browsing, or storage disabled: the choice simply does not persist
+    }
+    setOpen(stored !== 'closed')
+    toggle.addEventListener('click', function () {
+      setOpen(root.classList.contains('is-toc-closed'))
+    })
+  }
+
+  function setOpen (open: boolean) {
+    root.classList.toggle('is-toc-closed', !open)
+    if (toggle) {
+      toggle.setAttribute('aria-expanded', String(open))
+      toggle.setAttribute('aria-label', (open ? 'Hide' : 'Show') + ' on this page')
+      try {
+        localStorage.setItem(STORAGE_KEY, open ? 'open' : 'closed')
+      } catch (e) {
+        // private browsing, or storage disabled: the choice simply does not persist
+      }
+    }
+    // The active-link scroll math below reads offsetTop/offsetHeight off
+    // `list`, both 0 while the panel is `display: none` — recompute the
+    // instant it becomes visible rather than waiting for the next scroll.
+    onScroll()
   }
 
   window.addEventListener('load', function () {
@@ -113,15 +149,6 @@
 
   function find (selector, from) {
     return [].slice.call((from || document).querySelectorAll(selector))
-  }
-
-  function firstContentNode (article) {
-    for (var i = 0; i < article.children.length; i++) {
-      var child = article.children[i]
-      if (i === 0 && child.tagName === 'H1' && child.classList.contains('page')) continue
-      if (child.classList.contains('is-before-toc')) continue
-      return child
-    }
   }
 
   function getNumericStyleVal (el, prop) {

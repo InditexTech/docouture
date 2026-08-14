@@ -3,8 +3,21 @@
 
   var article = document.querySelector('article.doc')
   if (!article) return
-  var toolbar = document.querySelector('.toolbar')
+  // GH-9 renamed the fixed header from `.toolbar` to `.header-toolbar`
+  // (breadcrumbs moved into the hero); this stayed stale, so `toolbar` was
+  // `null` and every jump below threw before it could run, silently
+  // falling through to the browser's own unoffset anchor jump — which is
+  // exactly what lands a heading behind the fixed header.
+  var toolbar = document.querySelector('.header-toolbar')
   var supportsScrollToOptions = 'scrollTo' in document.documentElement
+
+  // Extra breathing room below the header (vars.css, base.css) — without
+  // it a jump lands a heading flush against the header's own bottom edge.
+  // Read off `scroll-padding-top`, a real longhand property, rather than
+  // `--anchor-scroll-margin` itself: `getComputedStyle` resolves the
+  // former to a pixel value but returns the latter as its raw, unresolved
+  // `calc(...)` string.
+  var scrollMargin = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0
 
   function decodeFragment (hash) {
     return hash && (~hash.indexOf('%') ? decodeURIComponent(hash) : hash).slice(1)
@@ -20,7 +33,7 @@
       window.location.hash = '#' + this.id
       e.preventDefault()
     }
-    var y = computePosition(this, 0) - toolbar.getBoundingClientRect().bottom
+    var y = computePosition(this, 0) - (toolbar ? toolbar.getBoundingClientRect().bottom : 0) - scrollMargin
     var instant = e === false && supportsScrollToOptions
     instant ? window.scrollTo({ left: 0, top: y, behavior: 'instant' }) : window.scrollTo(0, y)
   }

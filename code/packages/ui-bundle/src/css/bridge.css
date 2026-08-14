@@ -104,11 +104,6 @@
   /* upstream used a white-to-smoke gradient; the design system models surfaces, not gradients */
   --table-footer-background: var(--ids-color-bg-low);
 
-  /* toc */
-  --toc-font-color: var(--ids-color-content-low);
-  --toc-heading-font-color: var(--ids-color-content-default);
-  --toc-border-color: var(--ids-color-border-low);
-
   /* footer */
   --footer-background: var(--ids-color-bg-low);
   --footer-font-color: var(--ids-color-content-low);

@@ -4,10 +4,11 @@
  * grid-layout/grid-layout.css — see header-content.hbs's own comment), so
  * the hero's left edge lines up with the header's at every breakpoint
  * (16/32/56/64px) instead of a flat 64px. `.hero__row` spans the grid's full
- * width (`--span-full`) rather than dividing into columns — there is no
- * second column here, just the reserved right-hand slot — and is then
- * capped at `--hero-max-width` so it doesn't run wider than the content
- * measure below it, a later call than Figma's own frame (see vars.css).
+ * width (`--span-full`) and is NOT capped — the ToC toggle (GH-10) sits in
+ * its right slot flush against that same gutter, per Figma frame 3615:59159.
+ * The `--content-max-width` cap instead sits on `.hero__main` alone, so only
+ * the breadcrumbs/title/lead/tags/actions column shares its measure with
+ * the article below (doc.css) — see vars.css's own note on that variable.
  *
  * Every colour is a `.ids-text` / `.ids-breadcrumb-item` / `.ids-label` /
  * `.ids-button` utility class, not a literal here — that is what makes this
@@ -44,13 +45,13 @@
   flex-wrap: wrap;
   gap: var(--ids-size-150);
   justify-content: space-between;
-  max-width: var(--hero-max-width);
 }
 
 .hero__main {
   display: flex;
   flex-direction: column;
   gap: var(--ids-size-150);
+  max-width: var(--content-max-width);
   min-width: 0;
 }
 
@@ -76,6 +77,25 @@
 
 .hero__actions {
   gap: var(--ids-size-75);
+}
+
+/*
+ * Right slot (GH-10): the ToC toggle. Own flex row, gap 16 — matches Figma
+ * frame 3615:59159, which is already a gapped row rather than a bare icon,
+ * built to take further controls later. Hidden outright below breakpoint
+ * m — the ToC is a stacked block above the article there (toc.css), not a
+ * docked column, so there is nothing for the toggle to open or close.
+ */
+.hero__aside {
+  align-items: center;
+  display: flex;
+  gap: var(--ids-size-100);
+}
+
+@media screen and (--ids-breakpoints-xs-s) {
+  .hero__aside {
+    display: none;
+  }
 }
 
 .hero a.ids-button {

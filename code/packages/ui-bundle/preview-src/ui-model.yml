@@ -2,7 +2,8 @@
 # Hand-written fixture standing in for what Antora computes at build time.
 # Rewritten to be design-shaped (see .figma design linked from GH issue #1 /
 # #8) rather than the inherited antora-ui-default sample: one product, the
-# Figma side-menu tree, a "Stable - Latest" version tag and a repo link.
+# Figma side-menu tree, a "Stable" version tag (green only on `latest`) and a
+# repo link.
 #
 # YAML anchors are load-bearing, not decorative: `nav-explore.hbs` compares
 # the current component/version against `site.components[].versions[]` with
@@ -33,7 +34,8 @@ site:
           title: *component_title
           url: *home_url
           version: stable
-          displayVersion: Stable - Latest
+          displayVersion: Stable
+          latest: true
         - url: '#'
           version: '2024.1'
           displayVersion: '2024.1'
@@ -54,12 +56,16 @@ page:
   component: *component
   componentVersion: *latest_version
   version: stable
-  displayVersion: Stable - Latest
+  displayVersion: Stable
   module: ROOT
   relativeSrcPath: index.adoc
   editUrl: https://github.com/InditexTech/atd-docs/edit/main/docs/modules/ROOT/pages/index.adoc
   origin:
     private: false
+    # Antora derives this per-component from the content source's git remote;
+    # header-toolbar's repo link falls back to it when site.keys.repoUrl (set
+    # above) is absent. Kept here so the fallback branch is exercised too.
+    webUrl: https://github.com/InditexTech/atd-docs
   previous:
     content: Getting started
     url: '#'
@@ -77,7 +83,8 @@ page:
       urlType: internal
   versions:
     - version: stable
-      displayVersion: Stable - Latest
+      displayVersion: Stable
+      latest: true
       url: '#'
     - version: '2024.1'
       displayVersion: '2024.1'

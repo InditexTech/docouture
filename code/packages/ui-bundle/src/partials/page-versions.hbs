@@ -1,6 +1,21 @@
+{{!--
+  Header toolbar version tag (see GH issue #7). Reuses the `.ids-tag` block
+  from tag/tag.css (`Solid` + `Selected` in the design) rather than the
+  Select Tag component — Select Tag pulls in list/scrollable-panel/search-field
+  CSS for a dropdown menu this bundle already renders itself below.
+
+  Green only applies on the component's latest version (`page.componentVersion.latest`,
+  set by Antora's page-composer) — everywhere else it's the DS's default grey
+  solid tag. The label is always the real `displayVersion` Antora computed;
+  nothing here synthesises text.
+--}}
 {{#with page.versions}}
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">{{@root.page.componentVersion.displayVersion}}</button>
+  {{#if this.[1]}}
+  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if @root.page.componentVersion.latest}} header-toolbar__version--latest{{/if}} version-menu-toggle" title="Show other versions of page">
+    <span class="ids-tag__label">{{@root.page.componentVersion.displayVersion}}</span>
+    <span class="ids-tag__icon">{{icon "arrows" "chevron-down-outlined"}}</span>
+  </button>
   <div class="version-menu">
     {{#each this}}
     <a class="version
@@ -8,5 +23,10 @@
       {{~#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">{{./displayVersion}}</a>
     {{/each}}
   </div>
+  {{else}}
+  <span class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if @root.page.componentVersion.latest}} header-toolbar__version--latest{{/if}}">
+    <span class="ids-tag__label">{{@root.page.componentVersion.displayVersion}}</span>
+  </span>
+  {{/if}}
 </div>
 {{/with}}

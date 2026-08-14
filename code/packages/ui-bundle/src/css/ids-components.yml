@@ -19,6 +19,10 @@ components:
     - text.css # .ids-text--* typography utilities, chrome copy only (not doc prose — see vars.css)
   search-field:
     - search-field.minimal.css # .ids-search-field-minimal — only search-field stylesheet that exists, see iop-ds-components skill
+  button:
+    - button.css # .ids-button--ghost/--icon-only — header toolbar actions (GH-7)
+  tag:
+    - tag.css # .ids-tag--solid/--selected — header toolbar version tag (GH-7)
   option-picker:
     - option-picker.css # .ids-option-picker — group wrapper
     - option-picker-item.css # .ids-option-picker-item — per-option outline/selection state

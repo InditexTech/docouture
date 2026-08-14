@@ -2,7 +2,9 @@
   The button carries its own accessible name: src/js/08-theme.ts sets aria-label
   and aria-pressed once it wires the control up, so the icons stay decorative.
 --}}
-<button class="theme-toggle" type="button" hidden>
-  <span class="theme-toggle-icon theme-toggle-icon--light">{{icon "weather" "sunny-outlined"}}</span>
-  <span class="theme-toggle-icon theme-toggle-icon--dark">{{icon "accessibility" "moon-outlined"}}</span>
+<button class="ids-button ids-button--ghost ids-button--icon-only theme-toggle" type="button" hidden>
+  <span class="ids-button__content">
+    <span class="ids-button__icon ids-button__icon-icon theme-toggle-icon theme-toggle-icon--light" aria-hidden="true">{{icon "weather" "sunny-outlined"}}</span>
+    <span class="ids-button__icon ids-button__icon-icon theme-toggle-icon theme-toggle-icon--dark" aria-hidden="true">{{icon "accessibility" "moon-outlined"}}</span>
+  </span>
 </button>

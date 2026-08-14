@@ -1,16 +1,66 @@
+{{!--
+  Page footer navigation (GH-16), Figma "Page footer / *Navigation"
+  (2678:35507) at L (2610:27117), S (2686:42080) and XS (2686:57727).
+  Real previous/next titles from the Antora navigation model
+  (`page.previous`/`page.next`), not the design mock's literal "previous
+  topic"/"next topic" strings — a reader benefits far more from knowing
+  which page is next than from a fixed label. Sides are still individually
+  suppressible with the `pagination` page attribute (`prev` or `next` hides
+  the other side); the attribute must be set at all (to anything) for the
+  nav to render — same opt-in antora-ui-default always used.
+
+  Layout: the outer `.pagination` is the full 12-column DS grid
+  (`ids-grid-layout--with-margin`, same per-breakpoint gutter as the header
+  and hero), with a single `--span-full` item, `.pagination__row` — the
+  *container*, always full width, no flex/max-width of its own. Inside
+  that row, `.pagination__buttons` is a dedicated wrapper div around the
+  two buttons: a flex row, 50%/50% split, a fixed 40px gap, capped to
+  `--content-max-width` from `m` up (footer.css) and left-aligned, so
+  previous/next sit under the same measure the article and hero text use
+  without the container itself narrowing.
+
+  DS ghost buttons (`.ids-button--ghost`): previous carries a leading
+  `arrow-left-outlined` (`--icon-and-label --icon-icon`), next a trailing
+  `arrow-right-outlined` (`--icon-and-label --icon-action`) — same icons
+  Figma's "Arrow Left"/"Arrow Right" component instances use.
+
+  Label: the real page title at s and up, matching Figma's L/S text-and-icon
+  buttons; below s (xs) Figma itself drops to icon-only, but a bare icon
+  loses the "this goes to the next/previous page" meaning at that width, so
+  a short "Prev"/"Next" label (`.pagination__label-short`, uppercased by the
+  same `.ids-button__content` label typography as the full title) stands in
+  for it instead of nothing — a deliberate deviation from Figma's XS icon-
+  only mock, not an oversight.
+--}}
 {{#unless (eq page.attributes.pagination undefined)}}
 {{#if (or page.previous page.next)}}
-<nav class="pagination">
-  {{#if (ne page.attributes.pagination 'next')}}
-  {{#with page.previous}}
-  <span class="prev"><a href="{{{relativize ./url}}}">{{{./content}}}</a></span>
-  {{/with}}
-  {{/if}}
-  {{#if (ne page.attributes.pagination 'prev')}}
-  {{#with page.next}}
-  <span class="next"><a href="{{{relativize ./url}}}">{{{./content}}}</a></span>
-  {{/with}}
-  {{/if}}
-</nav>
+<div class="ids-grid-layout ids-grid-layout--with-margin pagination">
+  <div class="ids-grid-layout__item ids-grid-layout__item--span-full pagination__row">
+    <div class="pagination__buttons">
+    {{#if (ne page.attributes.pagination 'next')}}
+    {{#with page.previous}}
+    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-icon pagination__prev" href="{{{relativize ./url}}}">
+      <span class="ids-button__content">
+        <span class="ids-button__icon ids-button__icon-icon">{{icon "arrows" "arrow-left-outlined"}}</span>
+        <span class="pagination__label-full">{{{./content}}}</span>
+        <span class="pagination__label-short">Prev</span>
+      </span>
+    </a>
+    {{/with}}
+    {{/if}}
+    {{#if (ne page.attributes.pagination 'prev')}}
+    {{#with page.next}}
+    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action pagination__next" href="{{{relativize ./url}}}">
+      <span class="ids-button__content">
+        <span class="pagination__label-full">{{{./content}}}</span>
+        <span class="pagination__label-short">Next</span>
+        <span class="ids-button__icon ids-button__icon-action">{{icon "arrows" "arrow-right-outlined"}}</span>
+      </span>
+    </a>
+    {{/with}}
+    {{/if}}
+    </div>
+  </div>
+</div>
 {{/if}}
 {{/unless}}

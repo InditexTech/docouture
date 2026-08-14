@@ -1,5 +1,29 @@
+{{!--
+  "Propose a change" (GH-16), Figma node 3615:59424 / "*Feedback" — the
+  design's edit-page link, folded into the page footer's right column
+  (footer-content.hbs) instead of its own standalone block. Branching is
+  unchanged from the original edit-this-page.hbs: `page.fileUri` wins
+  outside CI (a local `file://` link straight to the source on disk),
+  `page.editUrl` otherwise, gated on `env.FORCE_SHOW_EDIT_PAGE_LINK` or the
+  content source being public. DS ghost button with a trailing
+  `link-external-outlined`, matching the design's own icon-and-label
+  instance — no special colour override: `.ids-button--ghost`'s own token
+  already differs correctly per theme, and this bundle's own rule is never
+  to hand-pick a colour a component already carries (Figma's node shows a
+  one-off blue that doesn't correspond to any --ids-* token here).
+--}}
 {{#if (and page.fileUri (not env.CI))}}
-<div class="edit-this-page"><a href="{{page.fileUri}}">Edit this Page</a></div>
+<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action page-footer__propose-change" href="{{page.fileUri}}">
+  <span class="ids-button__content">
+    Propose a change
+    <span class="ids-button__icon ids-button__icon-action">{{icon "connectivity" "link-external-outlined"}}</span>
+  </span>
+</a>
 {{else if (and page.editUrl (or env.FORCE_SHOW_EDIT_PAGE_LINK (not page.origin.private)))}}
-<div class="edit-this-page"><a href="{{page.editUrl}}">Edit this Page</a></div>
+<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action page-footer__propose-change" href="{{page.editUrl}}">
+  <span class="ids-button__content">
+    Propose a change
+    <span class="ids-button__icon ids-button__icon-action">{{icon "connectivity" "link-external-outlined"}}</span>
+  </span>
+</a>
 {{/if}}

@@ -1,7 +1,7 @@
 {
   "designSystemVersion": "1.28.0",
   "componentsPackageVersion": "1.28.0",
-  "generatedAt": "2026-08-14T11:01:03.834Z",
+  "generatedAt": "2026-08-14T12:36:43.724Z",
   "sources": {
     "variables/index.css": "e4a4d34ec45638533f0029016641d85170294e0e720d42dc2eff63ee5fa00a08",
     "typography.css": "5f6eae209b13452bbeadbe127fedbbf507328088ac3fa6b8980269adbee01883",
@@ -24,7 +24,7 @@
     "breadcrumbs/breadcrumb-item.css": "7d1bab82a8e18607b6c631712afc5896cdd4d27659fcb461329d6e90eeff1135",
     "label/label.css": "37331b1c8fd358c976f677e301511e12d9eddf5064fb191a5611b1091d15ab85"
   },
-  "componentsManifest": "df5c6a3d7571a22fc6f1d8869f55e53c62357605277f36acc4ce0fcdb4ba8754",
+  "componentsManifest": "cddacdd77e9bedfdf043497f59c1882bbdc272b6e44e83dcb33233ca397acb2b",
   "emittedTokens": [
     "--comp-grid-margin-l",
     "--comp-grid-margin-m",

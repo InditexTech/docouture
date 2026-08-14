@@ -308,6 +308,31 @@ function extractBreakpoints(content, wanted) {
   return kept
 }
 
+// The vendored @inditex/sewingiopdsweb-styles@1.28.0 ships its own M
+// threshold at 1024px (see its breakpoints/breakpoints.config.js:
+// S_MAX = 1023, M_MIN = 1024). This project's actual breakpoints put that
+// boundary at 1240px instead (S: 513–1239, M: 1240–1679) — a deliberate,
+// product-specific deviation from the installed DS package's own config,
+// not a version this repo has picked up yet. Applied here, after
+// extraction, so it survives every `just ids-sync` instead of being
+// clobbered by the next run — see BREAKPOINT_OVERRIDES_RX pairs below.
+//
+// Only `--ids-breakpoints-m` and `--ids-breakpoints-xs-s` actually encode
+// the M boundary (1024 / 1023.98); `--ids-breakpoints-s`, `-l`, `-xs-m` and
+// `-s-m` are bounded by S_MIN or L_MIN, neither of which changed, so they
+// need no override.
+const BREAKPOINT_OVERRIDES = [
+  { name: '--ids-breakpoints-m', from: '1024px', to: '1240px' },
+  { name: '--ids-breakpoints-xs-s', from: '1023.98px', to: '1239.98px' },
+]
+
+function applyBreakpointOverrides(lines) {
+  return lines.map((line) => {
+    const override = BREAKPOINT_OVERRIDES.find((o) => line.startsWith(`@custom-media ${o.name} `))
+    return override ? line.replace(override.from, override.to) : line
+  })
+}
+
 async function main() {
   const check = process.argv.includes('--check')
 
@@ -337,7 +362,15 @@ async function main() {
     process.exitCode = 1
     return
   }
-  const breakpointsCss = HEADER([BREAKPOINTS_SOURCE]) + '\n' + breakpointLines.join('\n') + '\n'
+  const BREAKPOINTS_OVERRIDE_NOTE =
+    `/* Project override: M starts at 1240px (not the DS package's own 1024px) — ` +
+    `see BREAKPOINT_OVERRIDES in this script. */\n`
+  const breakpointsCss =
+    HEADER([BREAKPOINTS_SOURCE]) +
+    BREAKPOINTS_OVERRIDE_NOTE +
+    '\n' +
+    applyBreakpointOverrides(breakpointLines).join('\n') +
+    '\n'
 
   const missingTokens = unsatisfiedTokens(wantedTokens, emitted, componentsCss)
   if (missingTokens.length) {

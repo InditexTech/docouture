@@ -30,7 +30,6 @@
    * `--ids-typo-*` shorthands, which already carry a line-height.)
    */
   --doc-line-height: 1.6;
-  --footer-line-height: var(--doc-line-height);
 
   /* dimensions and positioning */
   /*
@@ -153,4 +152,20 @@
 
   /* italics for figure captions; not a design system concern */
   --caption-font-style: italic;
+
+  /*
+   * Page footer (GH-16), Figma node 3615:59424. `--page-footer-nav-height`
+   * is the navigation row's fixed 40px (`--ids-size-250`, matching the
+   * header toolbar's own height — see vars.css's own `--navbar-height`
+   * note and header.css); `--page-footer-feedback-padding-block` is the
+   * feedback row's 24px vertical padding, `--page-footer-inline-padding`
+   * its (and the nav row's) 64px horizontal padding — both already the DS
+   * grid container's own `l` gutter (`.ids-grid-layout--with-margin`), so
+   * these two exist only for the shared column layout below, not to
+   * override the grid's own spacing. `--page-footer-vote-width` is the
+   * vote column's fixed 294px (Figma "Content" frame 3017:4311).
+   */
+  --page-footer-nav-height: var(--ids-size-250);
+  --page-footer-feedback-padding-block: var(--ids-size-150);
+  --page-footer-vote-width: calc(294 / var(--rem-base) * 1rem);
 }

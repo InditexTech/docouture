@@ -1,4 +1,80 @@
-<footer class="footer">
-  <p>This page was built using the Antora default UI.</p>
-  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+{{!--
+  Page footer (GH-16), Figma node 3615:59424. Two stacked regions, both in
+  the same DS grid container the header toolbar and hero use
+  (`.ids-grid-layout--with-margin`) so the footer's left/right edges line
+  up with everything above it at every breakpoint instead of a flat 64px
+  (see header.css's own precedent, hero.hbs's own comment on the same
+  choice for GH-9).
+
+  Navigation (`.page-footer__nav`): previous/next, unchanged data source —
+  see pagination.hbs, which still owns the real rendering and the
+  `page.attributes.pagination` opt-in/opt-out. This wrapper only supplies
+  the grid and the dashed top+bottom rule (footer.css) — same
+  `repeating-linear-gradient` technique as header.css / side-menu.css,
+  named here as the third consumer both of those comments point to.
+
+  Feedback (`.page-footer__feedback`): the design's two content columns,
+  not specified further by the issue itself (GH-16's own "open question")
+  but fully specified in Figma — "*Feedback" (2678:35528) names both
+  columns and all four controls:
+
+  - Left (`.page-footer__vote`, 294px): "Was this info useful?" plus a
+    Yes/No vote. No feedback backend exists, so the buttons render
+    `hidden` and are unhidden by src/js/07-feedback.ts, same "a control
+    with no handler must not render" rule as theme-toggle.hbs / the ToC
+    toggle — JS-off, the question renders with no dead buttons under it.
+
+  - Right (`.page-footer__contribute`): "Help us make these docs great!"
+    plus two ghost buttons. "how to contribute" has no equivalent in the
+    Antora page model — `site.keys.contributeUrl` is a new playbook-level
+    key, same convention as `site.keys.repoUrl` (repo-link.hbs) and
+    `site.keys.productLogo` (nav-brand.hbs): absent, the button doesn't
+    render rather than pointing nowhere. "Propose a change" is the design's
+    name for the existing edit-this-page link — folded in as
+    edit-this-page.hbs, not duplicated here.
+--}}
+{{!--
+  Page footer (GH-16), Figma "Page footer" (2678:35589).
+
+  Navigation (`.page-footer__nav`): the dashed-rule row — pagination.hbs
+  owns its own grid, columns and content-max-width cap (see its own
+  comment), this wrapper only supplies the full-bleed dashed top+bottom
+  rule (footer.css) — same `repeating-linear-gradient` technique as
+  header.css / side-menu.css, named here as the third consumer both of
+  those comments point to.
+
+  Feedback (`.page-footer__feedback`): a single left-aligned block, "Help
+  us make these docs great!" plus two ghost buttons — the design's
+  "*Feedback" (2678:35528) column also has a vote block, dropped here (no
+  feedback backend, and not something this docs site collects) per product
+  decision; the remaining column spans the full 12 columns rather than
+  sharing the row with anything else. "how to contribute" has no
+  equivalent in the Antora page model — `site.keys.contributeUrl` is a new
+  playbook-level key, same convention as `site.keys.repoUrl`
+  (repo-link.hbs) and `site.keys.productLogo` (nav-brand.hbs): absent, the
+  button doesn't render rather than pointing nowhere. "Propose a change" is
+  the design's name for the existing edit-this-page link — folded in as
+  edit-this-page.hbs, not duplicated here.
+--}}
+<footer class="page-footer">
+  <div class="page-footer__nav">
+{{> pagination}}
+  </div>
+  <div class="ids-grid-layout ids-grid-layout--with-margin page-footer__feedback">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-full page-footer__contribute">
+      <div class="page-footer__contribute-copy">
+        <p class="ids-text ids-text--title-s">Help us make these docs great!</p>
+        <p class="ids-text ids-text--body-m">See something that is wrong or unclear? Collaborate with us! Submit a pull request</p>
+      </div>
+      <div class="page-footer__contribute-buttons">
+{{#with site.keys.contributeUrl}}
+        <a class="ids-button ids-button--ghost ids-button--icon-and-label page-footer__how-to-contribute" href="{{{relativize this}}}">
+          <span class="ids-button__content">how to contribute</span>
+        </a>
+{{/with}}
+{{> edit-this-page}}
+      </div>
+    </div>
+  </div>
 </footer>
+

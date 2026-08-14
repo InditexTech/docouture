@@ -77,38 +77,3 @@
   filter: invert(1);
 }
 
-.theme-toggle {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  padding: 0;
-  height: var(--toolbar-height);
-  width: var(--toolbar-height);
-  transition: var(--ids-motion-micro-states);
-}
-
-.theme-toggle:hover {
-  background-color: var(--ids-color-bg-states-hover);
-}
-
-.theme-toggle:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: calc(-1 * var(--ids-size-12));
-}
-
-/* Show the icon for the theme the button switches TO, not the one in use. */
-.theme-toggle-icon--dark,
-.ids-theme-dark .theme-toggle-icon--light {
-  display: block;
-}
-
-.theme-toggle-icon--light,
-.ids-theme-dark .theme-toggle-icon--dark {
-  display: none;
-}
-

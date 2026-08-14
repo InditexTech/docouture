@@ -12,6 +12,12 @@ site:
   # sitemap and for canonical links; leave it out while developing locally.
   # url: https://docs.example.com
   start_page: example::index.adoc
+  # The header toolbar's repo link (see ui-bundle GH issue #7) reads
+  # site.keys.repoUrl — playbook keys are camelCased, so it's authored here as
+  # repo_url. Falls back to the content source's git remote (page.origin.webUrl)
+  # when omitted.
+  # keys:
+  #   repo_url: https://github.com/example/example-docs
 
 content:
   sources:

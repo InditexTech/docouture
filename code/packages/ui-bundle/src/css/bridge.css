@@ -41,22 +41,6 @@
   --scrollbar-thumb-color: var(--ids-color-border-low);
   --scrollbar_hover-thumb-color: var(--ids-color-content-low);
 
-  /*
-   * navbar — upstream shipped a dark bar regardless of theme. The design system
-   * Header is a surface with a hairline bottom border, so it now follows the
-   * theme like everything else.
-   */
-  --navbar-background: var(--ids-color-bg-default);
-  --navbar-font-color: var(--ids-color-content-default);
-  --navbar_hover-background: var(--ids-color-bg-states-hover);
-  --navbar-button-background: var(--ids-color-bg-default);
-  --navbar-button-border-color: var(--ids-color-border-low);
-  --navbar-button-font-color: var(--ids-color-content-default);
-  --navbar-menu-border-color: var(--ids-color-border-low);
-  --navbar-menu-background: var(--ids-color-bg-default);
-  --navbar-menu-font-color: var(--ids-color-content-default);
-  --navbar-menu_hover-background: var(--ids-color-bg-states-hover);
-
   /* nav */
   --nav-background: var(--ids-color-bg-low);
   --nav-border-color: var(--ids-color-border-low);

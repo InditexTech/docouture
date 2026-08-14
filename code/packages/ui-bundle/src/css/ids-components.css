@@ -282,6 +282,266 @@
   }
 }
 
+/* @inditex/sewingiopdsweb-react-components/button/button.css */
+.ids-button {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  min-height: var(--ids-size-250);
+  padding-inline-end: var(--ids-size-150);
+  padding-bottom: var(--ids-size-50);
+  padding-top: var(--ids-size-50);
+  padding-inline-start: var(--ids-size-150);
+  position: relative;
+  transition: var(--ids-motion-micro-states),outline 0s,outline-offset 0s
+}
+.ids-button.ids-button--large {
+  min-height: var(--ids-size-350)
+}
+.ids-button.ids-button--icon-icon {
+  padding-inline-start: var(--ids-size-125)
+}
+.ids-button.ids-button--icon-action {
+  padding-inline-end: var(--ids-size-125)
+}
+.ids-button:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: 1px
+}
+.ids-button.ids-button--full-width {
+  justify-content: center;
+  width: 100%
+}
+.ids-button.ids-button--icon-and-label .ids-button__icon {
+  width: var(--ids-size-125)
+}
+.ids-button.ids-button--icon-and-label .ids-button__icon-icon {
+  margin-inline-end: var(--ids-size-25)
+}
+.ids-button.ids-button--icon-and-label .ids-button__icon-action {
+  margin-inline-start: var(--ids-size-25)
+}
+.ids-button.ids-button--icon-only {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--ids-size-0);
+  justify-content: center;
+  padding: 0;
+  width: var(--ids-size-250)
+}
+.ids-button.ids-button--icon-only.ids-button--large {
+  width: var(--ids-size-350)
+}
+.ids-button.ids-button--icon-only.ids-button--ghost {
+  width: var(--ids-size-125)
+}
+.ids-button.ids-button--loading {
+  pointer-events: none
+}
+.ids-button.ids-button--loading .ids-button__loader {
+  margin: 0 auto;
+  position: absolute
+}
+.ids-button.ids-button--loading .ids-button__content {
+  visibility: hidden
+}
+.ids-button:disabled {
+  background-color: transparent;
+  border: none;
+  color: var(--ids-color-content-states-disabled);
+  cursor: default
+}
+.ids-button:disabled .ids-button__loader {
+  display: none
+}
+.ids-button:disabled .ids-button__content {
+  visibility: visible
+}
+.ids-button__content {
+  align-items: center;
+  display: inline-flex;
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  overflow-wrap: break-word;
+  position: relative;
+  text-transform: var(--ids-typo-label-l-text-transform)
+}
+.ids-button__content .ids-button__icon {
+  display: inline-flex
+}
+.ids-button__content .ids-badge {
+  inset-inline-start: calc(100% - var(--ids-size-50));
+  position: absolute;
+  top: calc(var(--ids-size-50)*-1)
+}
+.ids-button.ids-button--primary {
+  background-color: var(--ids-comp-button-primary-default);
+  color: var(--ids-color-content-inverse)
+}
+.ids-button.ids-button--primary.ids-button--danger {
+  background-color: var(--ids-color-alt-red-high)
+}
+@media (hover:hover) {
+  .ids-button.ids-button--primary:hover {
+    background-color: var(--ids-comp-button-primary-hover)
+  }
+  .ids-button.ids-button--primary:hover.ids-button--danger {
+    background-color: var(--ids-comp-button-danger-hover)
+  }
+}
+.ids-button.ids-button--primary:focus-visible {
+  background-color: var(--ids-comp-button-primary-hover)
+}
+.ids-button.ids-button--primary:focus-visible.ids-button--danger {
+  background-color: var(--ids-comp-button-danger-hover)
+}
+.ids-button.ids-button--primary.ids-button--loading,.ids-button.ids-button--primary:active {
+  background-color: var(--ids-comp-button-primary-pressed)
+}
+.ids-button.ids-button--primary.ids-button--loading.ids-button--danger,.ids-button.ids-button--primary:active.ids-button--danger {
+  background-color: var(--ids-comp-button-danger-pressed)
+}
+.ids-button.ids-button--primary:disabled {
+  background-color: var(--ids-color-bg-states-disabled);
+  border: none;
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-button.ids-button--secondary {
+  background-color: transparent;
+  border: var(--ids-size-border-default) solid var(--ids-color-border-default);
+  box-sizing: border-box;
+  color: var(--ids-color-content-default)
+}
+.ids-button.ids-button--secondary.ids-button--danger {
+  border-color: var(--ids-color-alt-red-high);
+  color: var(--ids-color-alt-red-high)
+}
+@media (hover:hover) {
+  .ids-button.ids-button--secondary:hover {
+    border-color: var(--ids-color-border-states-hover);
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-button.ids-button--secondary:hover.ids-button--danger {
+    border-color: var(--ids-comp-button-danger-hover);
+    color: var(--ids-comp-button-danger-hover)
+  }
+}
+.ids-button.ids-button--secondary:focus-visible {
+  border-color: var(--ids-color-border-states-hover);
+  color: var(--ids-color-content-states-hover)
+}
+.ids-button.ids-button--secondary:focus-visible.ids-button--danger {
+  border-color: var(--ids-comp-button-danger-hover);
+  color: var(--ids-comp-button-danger-hover)
+}
+.ids-button.ids-button--secondary.ids-button--loading,.ids-button.ids-button--secondary:active {
+  border-color: var(--ids-color-border-states-pressed);
+  color: var(--ids-color-content-states-pressed)
+}
+.ids-button.ids-button--secondary.ids-button--loading.ids-button--danger,.ids-button.ids-button--secondary:active.ids-button--danger {
+  border-color: var(--ids-comp-button-danger-pressed);
+  color: var(--ids-comp-button-danger-pressed)
+}
+.ids-button.ids-button--secondary:disabled {
+  background-color: transparent;
+  border-color: var(--ids-color-border-states-disabled);
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-button.ids-button--ghost {
+  background-color: transparent;
+  color: var(--ids-color-content-default);
+  padding-inline: var(--ids-size-0)
+}
+.ids-button.ids-button--ghost.ids-button--danger {
+  color: var(--ids-color-alt-red-high)
+}
+@media (hover:hover) {
+  .ids-button.ids-button--ghost:hover {
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-button.ids-button--ghost:hover.ids-button--danger {
+    color: var(--ids-comp-button-danger-hover)
+  }
+}
+.ids-button.ids-button--ghost:focus-visible {
+  color: var(--ids-color-content-states-hover)
+}
+.ids-button.ids-button--ghost:focus-visible.ids-button--danger {
+  color: var(--ids-comp-button-danger-hover)
+}
+.ids-button.ids-button--ghost.ids-button--loading,.ids-button.ids-button--ghost:active {
+  color: var(--ids-color-content-states-pressed)
+}
+.ids-button.ids-button--ghost.ids-button--loading.ids-button--danger,.ids-button.ids-button--ghost:active.ids-button--danger {
+  color: var(--ids-comp-button-danger-pressed)
+}
+.ids-button.ids-button--ghost:disabled {
+  background-color: transparent;
+  border: none;
+  color: var(--ids-color-content-states-disabled)
+}
+
+/* @inditex/sewingiopdsweb-react-components/tag/tag.css */
+.ids-tag {
+  background: transparent;
+  display: inline-flex;
+  padding: var(--ids-size-25) var(--ids-size-0)
+}
+.ids-tag__label {
+  color: var(--ids-color-content-default);
+  display: inline-block;
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform)
+}
+.ids-tag__icon--interactive {
+  border-radius: var(--ids-size-25);
+  cursor: pointer
+}
+.ids-tag__icon--interactive:focus-visible {
+  outline: 1px solid var(--ids-color-border-states-focus)
+}
+.ids-tag--solid {
+  background-color: var(--ids-color-bg-low);
+  padding-inline: var(--ids-size-50)
+}
+.ids-tag--solid:has(.ids-tag__icon) {
+  padding-inline-end: var(--ids-size-25)
+}
+.ids-tag--selected .ids-tag__label {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-transform: var(--ids-typo-label-l-high-text-transform)
+}
+.ids-tag--read-only.ids-tag--solid {
+  background-color: var(--ids-color-bg-states-disabled)
+}
+.ids-tag--disabled .ids-tag__icon,.ids-tag--disabled .ids-tag__label {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-tag--disabled.ids-tag--solid {
+  background-color: var(--ids-color-bg-states-disabled)
+}
+@media (hover:hover) {
+  .ids-tag:hover:not(.ids-tag--read-only):not(.ids-tag--disabled) {
+    cursor: pointer
+  }
+  .ids-tag:hover:not(.ids-tag--read-only):not(.ids-tag--disabled) .ids-tag__icon,.ids-tag:hover:not(.ids-tag--read-only):not(.ids-tag--disabled) .ids-tag__label {
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-tag:hover:not(.ids-tag--read-only):not(.ids-tag--disabled).ids-tag--solid {
+    background-color: var(--ids-color-bg-states-hover)
+  }
+}
+.ids-tag:focus-visible {
+  outline: 1px solid var(--ids-color-border-states-focus)
+}
+
 /* @inditex/sewingiopdsweb-react-components/option-picker/option-picker.css */
 .ids-option-picker {
   border: 0;

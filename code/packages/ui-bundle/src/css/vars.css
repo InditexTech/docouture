@@ -33,7 +33,13 @@
   --footer-line-height: var(--doc-line-height);
 
   /* dimensions and positioning */
-  --navbar-height: calc(63 / var(--rem-base) * 1rem);
+  /*
+   * The header toolbar's content is a row of --ids-size-250 (40px) controls
+   * plus its 1px dashed bottom rule — see header.css. Kept as its own
+   * variable, not the literal, because .nav / .toolbar / --toc-top all offset
+   * from it and must move together if the toolbar's height ever changes.
+   */
+  --navbar-height: calc(var(--ids-size-250) + 1px);
   --toolbar-height: calc(45 / var(--rem-base) * 1rem);
   --drawer-height: var(--toolbar-height);
   --body-top: var(--navbar-height);

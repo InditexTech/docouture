@@ -9,7 +9,6 @@
  * Sources: variables/breakpoints.css
  */
 
-@custom-media --ids-breakpoints-xs (max-width: 512px);
 @custom-media --ids-breakpoints-s (min-width: 513px);
 @custom-media --ids-breakpoints-m (min-width: 1024px);
 @custom-media --ids-breakpoints-l (min-width: 1680px);

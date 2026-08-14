@@ -1,0 +1,16 @@
+{{!--
+  Source repo link in the header toolbar (see GH issue #7). Resolved from site
+  or component configuration, never a literal: `site.keys.repoUrl` is the
+  playbook-level override (see antora-playbook.yml's `asciidoc.attributes` /
+  `site.keys` — set under `site.keys.repo_url`); `page.origin.webUrl` is what
+  Antora derives per-component from the content source's git remote when no
+  override is given. Renders nothing, not a dead "#" link, when neither exists.
+--}}
+{{#with (or site.keys.repoUrl page.origin.webUrl)}}
+<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action header-toolbar__repo" href="{{{this}}}" target="_blank" rel="noopener">
+  <span class="ids-button__content">
+    <span class="ids-button__label">repo</span>
+    <span class="ids-button__icon ids-button__icon-action">{{icon "connectivity" "link-external-outlined"}}</span>
+  </span>
+</a>
+{{/with}}

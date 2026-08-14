@@ -1,4 +1,6 @@
 = Introduction
+:description: The smallest complete Antora component, here to be copied rather than read.
+:page-tags: Starter
 
 Welcome. This is the starter site: the smallest complete Antora component,
 here to be copied rather than read.

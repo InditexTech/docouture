@@ -3,13 +3,14 @@ Author Name
 :idprefix:
 :idseparator: -
 :page-pagination:
-:description: Landing test page: the site chrome around a normal doc page — header, toolbar, breadcrumbs, nav tree, page-versions, theme toggle, edit-this-page, pagination and footer — with the toolbar home-link marked current.
+:page-role: -hero
+:description: Landing test page: the site chrome around a normal doc page — header, side menu, page-versions, theme toggle, edit-this-page, pagination and footer — opted out of the hero (`:page-role: -hero`) so this branch gets exercised too; see content.html for the hero on.
 
 [.lead]
 This is the *landing* test page.
-It renders through the same `default` layout as link:content.html[the content test page], so the diff between the two is entirely in `preview-src/ui-model.yml`: this page is `page.home: true`, so the toolbar home-link should show as current and the search field autofocuses.
+It renders through the same `default` layout as link:content.html[the content test page], so the diff between the two is entirely in `preview-src/ui-model.yml` and this page's own `:page-role: -hero`: this page is `page.home: true`, so the header's product-name link should show as current and the search field autofocuses.
 
-Everything else on this page is here to exercise site chrome rather than article content: the header navbar, the toolbar (home-link, breadcrumbs, page-versions dropdown, theme toggle, edit-this-page), the left-hand nav tree, the right-hand table of contents, and the previous/next pagination in the footer.
+Everything else on this page is here to exercise site chrome rather than article content: the header toolbar, the left-hand nav tree, the right-hand table of contents, and the previous/next pagination in the footer.
 
 == Cu solet
 

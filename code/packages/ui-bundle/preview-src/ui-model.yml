@@ -29,6 +29,13 @@ site:
     # absent, so both paths are worth previewing; this fixture exercises the
     # "logo present" one. copyPreviewAssets ships preview-src/*.svg verbatim.
     productLogo: /product-logo.svg
+    # Dark counterpart (GH-9 follow-up): product-logo.svg is a plain black
+    # stroke, invisible against a dark side menu with nothing here to swap
+    # to — see nav-brand.hbs's own comment for why `currentColor` doesn't
+    # save an externally-referenced <img>. This fixture exercises the "both
+    # configured" path; a real site missing this key still gets the light
+    # mark unconditionally rather than losing it in dark mode.
+    productLogoDark: /product-logo-dark.svg
   components:
     - &component
       name: atd

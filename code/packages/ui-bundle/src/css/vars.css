@@ -35,12 +35,10 @@
   /*
    * The header toolbar's content is a row of --ids-size-250 (40px) controls
    * plus its 1px dashed bottom rule — see header.css. Kept as its own
-   * variable, not the literal, because .side-menu / .toolbar / --toc-top all
-   * offset from it and must move together if the toolbar's height ever
-   * changes.
+   * variable, not the literal, because .side-menu / --toc-top both offset
+   * from it and must move together if the toolbar's height ever changes.
    */
   --navbar-height: calc(var(--ids-size-250) + 1px);
-  --toolbar-height: calc(45 / var(--rem-base) * 1rem);
   --body-top: var(--navbar-height);
   /*
    * Side menu (GH-8): fixed, 100dvh, pinned — it never scrolls with the
@@ -90,7 +88,12 @@
   --side-menu-subgroup-gap: calc(12 / var(--rem-base) * 1rem);
   --side-menu-subsubgroup-gap: calc(8 / var(--rem-base) * 1rem);
   --side-menu-tree-indent: calc(8 / var(--rem-base) * 1rem);
-  --toc-top: calc(var(--body-top) + var(--toolbar-height));
+  /*
+   * No secondary toolbar remains below the header (GH-9 removed it), so the
+   * ToC's sticky offset is the header alone. #10 reworks the ToC into a
+   * toggled panel entirely; this keeps it merely correct until then.
+   */
+  --toc-top: var(--body-top);
   --toc-height: calc(100vh - var(--toc-top) - 2.5rem);
   --toc-width: calc(162 / var(--rem-base) * 1rem);
   --toc-width--widescreen: calc(216 / var(--rem-base) * 1rem);
@@ -98,6 +101,31 @@
   --doc-max-width--desktop: calc(828 / var(--rem-base) * 1rem);
   --doc-margin: 0 auto;
   --doc-margin--desktop: 0 2rem;
+
+  /*
+   * Hero (GH-9), Figma node 3615:59150 (l), 2678:35962 (m, node "Content Page
+   * M"), 2686:42080 (s), 2686:57724 (xs). `--hero-space-block-start-*` is the
+   * header-to-content gap the page frame itself draws — its own top-level
+   * gap, 56/72/96/128 at xs/s/m/l respectively (unlike most measures in this
+   * file it does NOT resolve to one of the grid's own gap tokens, so it's
+   * spelled out per breakpoint rather than shared). `--hero-space-block-end`
+   * is the Content frame's own gap, between the hero and the article/
+   * navigation below it — 40 at every breakpoint, hence just one variable.
+   * `--hero-excerpt-max-width` matches the excerpt text node's fixed 597px
+   * width (node 3615:59155/2735:65624/2735:65783 — same across breakpoints
+   * and themes). `--hero-max-width` caps the whole hero row (breadcrumbs,
+   * title, excerpt, tags, actions, right slot) to the content measure — a
+   * later call than Figma's own frame, which lets the hero run the full
+   * grid width; not repeated from --doc-max-width* because the two aren't
+   * the same number (780 here vs. 828 for the article at desktop).
+   */
+  --hero-space-block-start: calc(56 / var(--rem-base) * 1rem);
+  --hero-space-block-start-s: calc(72 / var(--rem-base) * 1rem);
+  --hero-space-block-start-m: calc(96 / var(--rem-base) * 1rem);
+  --hero-space-block-start-l: calc(128 / var(--rem-base) * 1rem);
+  --hero-space-block-end: calc(40 / var(--rem-base) * 1rem);
+  --hero-excerpt-max-width: calc(597 / var(--rem-base) * 1rem);
+  --hero-max-width: calc(780 / var(--rem-base) * 1rem);
 
   /* italics for figure captions; not a design system concern */
   --caption-font-style: italic;

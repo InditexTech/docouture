@@ -1,0 +1,86 @@
+{{!--
+  Page hero (GH-9): breadcrumbs, title, excerpt, tags and actions above every
+  content page — see Figma node 3615:59150 (in the page), 2735:65619 (hero
+  alone, light) and 2735:65779 (hero alone, dark). Every colour below is a
+  design-system token (`.ids-text`, `.ids-breadcrumb-item`, `.ids-label`,
+  `.ids-button`), so nothing here is theme-specific — dark mode falls out of
+  ids-tokens.css's own `.ids-theme-dark` block for free.
+
+  Renders on every default-layout page except when `:page-role: -hero` is
+  set — see main.hbs, which decides once and passes the result down, and
+  the existing `-toc` role (main.css, 02-on-this-page.ts) for the same
+  convention applied to a different part of the chrome. A page that opts
+  out gets its <h1> back in the article instead (article.hbs).
+
+  Authoring surface — every attribute below is optional, page.title is not:
+
+    :description: A sentence or two.        hero excerpt AND <meta name="description">
+    :page-tags: Beta, Internal               comma-separated, one .ids-label--grey each
+    :page-action: Get started                primary button label
+    :page-action-url: getting-started.adoc   its target — a page reference or a literal URL
+    :page-action-secondary: View source       secondary (outlined) button
+    :page-action-secondary-url: https://…
+
+  An action renders only when BOTH its label and url attributes are set — a
+  button that goes nowhere is worse than no button. `*-url` values are
+  resolved through Antora's own `resolvePageURL` helper (registered globally
+  by @antora/page-composer, mirrored by the preview harness — see gulp.d/
+  tasks/build-preview-pages.js) when they resolve to a real page, and used
+  as a literal URL otherwise — it returns undefined rather than throwing for
+  something that isn't a page reference, so `(or (resolvePageURL …) …)` is
+  enough, no custom helper needed.
+
+  Order is primary action first, secondary second: this bundle's own call,
+  not Figma's — the frames (2735:65700/65725) draw the outlined secondary
+  button to the LEFT of the filled primary one; here DOM and visual order
+  both put the primary action first.
+
+  The right-hand slot is intentionally empty here: it belongs to the ToC
+  toggle (GH-10, "On this page as a toggled sidebar"). No space is reserved
+  for it — #10 owns its own layout and disappears at s/xs on its own terms.
+
+  Tags render `.ids-label--grey`, not the `--white` variant Figma's mock
+  shows: `--white`'s background is literally `--ids-color-bg-default`, i.e.
+  the page background itself, so on this page (bg-default surface) it never
+  paints a visible pill in EITHER theme — grey's `--ids-color-bg-low` against
+  `--ids-color-content-default` is the only variant that actually contrasts
+  against the page in both light and dark.
+
+  The whole hero is capped at `--hero-max-width` (780px, vars.css) rather
+  than stretching to the grid's full width.
+--}}
+<div class="hero">
+  <div class="ids-grid-layout ids-grid-layout--with-margin hero__grid">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-full hero__row">
+      <div class="hero__main">
+{{> breadcrumbs}}
+        <h1 class="hero__title ids-text ids-text--title-xl">{{{page.title}}}</h1>
+{{#with page.description}}
+        <p class="hero__excerpt ids-text ids-text--body-l">{{this}}</p>
+{{/with}}
+{{#with (split page.attributes.tags ',')}}
+        <div class="hero__tags">
+        {{#each this}}
+          <div class="ids-label ids-label--grey">
+            <span class="ids-label__content">{{this}}</span>
+          </div>
+        {{/each}}
+        </div>
+        {{/with}}
+{{#if (and page.attributes.action page.attributes.[action-url])}}
+        <div class="hero__actions">
+          <a class="ids-button ids-button--primary ids-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-url]) page.attributes.[action-url])}}}">
+            <span class="ids-button__content">{{page.attributes.action}}</span>
+          </a>
+        {{#if (and page.attributes.[action-secondary] page.attributes.[action-secondary-url])}}
+          <a class="ids-button ids-button--secondary ids-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-secondary-url]) page.attributes.[action-secondary-url])}}}">
+            <span class="ids-button__content">{{page.attributes.[action-secondary]}}</span>
+          </a>
+        {{/if}}
+        </div>
+{{/if}}
+      </div>
+      {{!-- right slot: ToC toggle — see GH-10 --}}
+    </div>
+  </div>
+</div>

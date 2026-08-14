@@ -238,6 +238,26 @@ html.is-side-menu-collapsed {
   width: 24px;
 }
 
+/*
+ * Only present in the markup when site.keys.productLogoDark is configured
+ * (see nav.hbs / nav-brand.hbs) — a bare, unsuffixed .side-menu__header-logo
+ * has no dark counterpart to swap to and stays visible in both themes.
+ * Matches header.css's theme-toggle icon swap: both images render, one
+ * `display: none` by default, the root's `.ids-theme-dark` class (set by
+ * 08-theme.ts) flips which.
+ */
+.side-menu__header-logo--dark {
+  display: none;
+}
+
+.ids-theme-dark .side-menu__header-logo--light {
+  display: none;
+}
+
+.ids-theme-dark .side-menu__header-logo--dark {
+  display: inline-block;
+}
+
 .side-menu__header-title {
   color: var(--ids-color-content-default);
   min-width: 0;
@@ -300,6 +320,19 @@ html.is-side-menu-collapsed {
   height: 40px;
   object-fit: contain;
   width: 40px;
+}
+
+/* Same dark-variant swap as .side-menu__header-logo above. */
+.side-menu__brand-logo--dark {
+  display: none;
+}
+
+.ids-theme-dark .side-menu__brand-logo--light {
+  display: none;
+}
+
+.ids-theme-dark .side-menu__brand-logo--dark {
+  display: inline-block;
 }
 
 .side-menu__brand-title {

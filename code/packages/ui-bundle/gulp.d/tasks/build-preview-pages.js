@@ -169,8 +169,21 @@ function resolvePage(spec) {
   if (spec) return { pub: { url: resolvePageURL(spec) } }
 }
 
+// NOTE the real @antora/page-composer resolvePageURL returns undefined for
+// anything it can't resolve as a page in the content catalog — an absolute
+// URL or a bare `#fragment` included, since those aren't page IDs at all
+// (see GH-9's hero, whose `:page-action-url:` accepts either a page
+// reference or a literal URL and leans on that fallthrough via
+// `(or (resolvePageURL spec) spec)`). This stub has no content catalog to
+// consult, so it emulates the distinction the cheap way: anything that
+// looks like a URL or a fragment is left for the caller's own `or` to fall
+// back on, instead of being blindly mangled into a bogus `.html` path.
+const EXTERNAL_OR_FRAGMENT_RX = /^(?:[a-z][a-z0-9+.-]*:)?\/\/|^#/i
+
 function resolvePageURL(spec) {
-  if (spec) return '/' + (spec = spec.split(':').pop()).slice(0, spec.lastIndexOf('.')) + '.html'
+  if (spec && !EXTERNAL_OR_FRAGMENT_RX.test(spec)) {
+    return '/' + (spec = spec.split(':').pop()).slice(0, spec.lastIndexOf('.')) + '.html'
+  }
 }
 
 function transformHandlebarsError({ message, stack }, layout) {

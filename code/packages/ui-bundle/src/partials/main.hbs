@@ -1,5 +1,15 @@
 <main class="article">
-{{> toolbar}}
+{{!--
+  Page hero (GH-9): every non-404 page unless opted out with
+  `:page-role: -hero` — same convention as the `-toc` role below (see
+  main.css, 02-on-this-page.ts). Lives outside .content: the hero is a
+  full-width row above the toc/article pair, not a sidebar peer of either.
+--}}
+{{#unless (eq page.layout '404')}}
+{{#unless (includes (or page.attributes.role page.role) '-hero')}}
+{{> hero}}
+{{/unless}}
+{{/unless}}
   <div class="content">
 {{#if (eq page.layout '404')}}
 {{> article-404}}

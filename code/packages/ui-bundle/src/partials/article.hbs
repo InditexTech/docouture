@@ -1,7 +1,14 @@
 <article class="doc">
+{{!--
+  The hero (hero.hbs) carries the title normally — this h1 only comes back
+  when a page opts out of it with `:page-role: -hero` (see main.hbs), so an
+  opted-out page still has exactly one <h1>.
+--}}
+{{#if (includes (or page.attributes.role page.role) '-hero')}}
 {{#with page.title}}
 <h1 class="page">{{{this}}}</h1>
 {{/with}}
+{{/if}}
 {{{page.contents}}}
 {{> pagination}}
 </article>

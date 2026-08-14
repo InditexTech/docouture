@@ -24,7 +24,10 @@
   <div class="side-menu__header">
     <div class="side-menu__header-start">
       {{#with site.keys.productLogo}}
-      <img class="side-menu__header-logo" src="{{{relativize this}}}" width="24" height="24" alt="">
+      <img class="side-menu__header-logo{{#if @root.site.keys.productLogoDark}} side-menu__header-logo--light{{/if}}" src="{{{relativize this}}}" width="24" height="24" alt="">
+      {{/with}}
+      {{#with site.keys.productLogoDark}}
+      <img class="side-menu__header-logo side-menu__header-logo--dark" src="{{{relativize this}}}" width="24" height="24" alt="">
       {{/with}}
       <span class="side-menu__header-title ids-text ids-text--title-s">{{or page.component.title site.title}}</span>
     </div>

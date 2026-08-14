@@ -104,11 +104,6 @@
   /* upstream used a white-to-smoke gradient; the design system models surfaces, not gradients */
   --table-footer-background: var(--ids-color-bg-low);
 
-  /* footer */
-  --footer-background: var(--ids-color-bg-low);
-  --footer-font-color: var(--ids-color-content-low);
-  --footer-link-font-color: var(--ids-color-content-default);
-
   /*
    * stacking — upstream used 1..4. Mapped onto the design system scale, which
    * leaves room between layers.

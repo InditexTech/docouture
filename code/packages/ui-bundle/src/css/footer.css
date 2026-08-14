@@ -1,15 +1,167 @@
-footer.footer {
-  background-color: var(--footer-background);
-  color: var(--footer-font-color);
-  font-size: calc(15 / var(--rem-base) * 1rem);
-  line-height: var(--footer-line-height);
-  padding: 1.5rem;
+/*
+ * Page footer (GH-16), Figma "Page footer" (2678:35589). Two stacked
+ * regions (footer-content.hbs): `.page-footer__nav` (previous/next,
+ * dashed rules top AND bottom — pagination.hbs owns its own grid) and
+ * `.page-footer__feedback` (the "help us make these docs great" column,
+ * no rule of its own — the nav row's bottom rule is the only divider the
+ * design draws between the two).
+ *
+ * `margin-left: var(--side-menu-offset)` mirrors `.body` (body.css) and
+ * `.header-toolbar` (header.css): the footer sits outside `.body` in the
+ * DOM (default.hbs) but must still yield to the side menu at breakpoint l
+ * exactly like everything else in the content column, hence the same
+ * variable and the same transition so it moves in step when the menu is
+ * toggled (see vars.css's own note on `--side-menu-motion-duration`).
+ */
+.page-footer {
+  background-color: var(--ids-color-bg-default);
+  margin-left: var(--side-menu-offset);
+  transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
 }
 
-.footer p {
-  margin: 0.5rem 0;
+/*
+ * 1px dashed rule, dash 4/4, top AND bottom — Figma's own
+ * `strokeWeight: "1px 0px"` on the Navigation frame at every breakpoint
+ * (2610:27117 l, 2686:42080 s, 2686:57727 xs). Same
+ * `repeating-linear-gradient` technique as header.css / side-menu.css /
+ * toc.css (`border-style: dashed` cannot control dash length); two
+ * background layers here instead of the header's one, since this row
+ * draws the rule on both edges rather than just its bottom.
+ */
+.page-footer__nav {
+  background-image:
+    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px),
+    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-position: top, bottom;
+  background-repeat: repeat-x, repeat-x;
+  background-size: 8px 1px, 8px 1px;
 }
 
-.footer a {
-  color: var(--footer-link-font-color);
+/*
+ * `.pagination` is the outer container: the full 12-column DS grid
+ * (`ids-grid-layout--with-margin`, pagination.hbs) with a single
+ * `--span-full` item, `.pagination__row`, so it takes the same
+ * per-breakpoint gutter (16/32/56/64px) as the header and hero and
+ * nothing narrower — the row itself carries no flex/max-width of its own.
+ *
+ * `.pagination__buttons` is a dedicated wrapper div directly around the
+ * two buttons — 50%/50% via `flex: 1 1 0` on each, a fixed 40px gap,
+ * `width: 100%` so it actually fills the row up to its cap rather than
+ * shrinking to its content, and `max-width: var(--content-max-width)` so
+ * it never grows past the same 780px measure the article and hero text
+ * use. Left-aligned (block default, no `margin-inline` centring) — this
+ * is the ONE place the cap lives: the container and row above keep their
+ * normal 12-column width and gutter, only this inner div narrows and the
+ * two buttons share whatever width is left inside it.
+ */
+.pagination {
+  align-items: center;
+  min-height: var(--page-footer-nav-height);
 }
+
+.pagination__row {
+  display: flex;
+}
+
+.pagination__buttons {
+  display: flex;
+  max-width: var(--content-max-width);
+  width: 100%;
+}
+
+/*
+ * The 40px gap between the two buttons is fixed (`--ids-size-250`, 40px at
+ * the default density scale) rather than the grid's own responsive gap
+ * (16/24/48/56px) — a deliberate, explicit measure for this row. Applied
+ * from `s` up only; below it the grid's own smaller gap is closer to the
+ * reduced XS (icon + short label) button width.
+ */
+@media screen and (--ids-breakpoints-s) {
+  .pagination__buttons {
+    gap: var(--ids-size-250);
+  }
+}
+
+.pagination a.ids-button {
+  flex: 1 1 0;
+  max-width: 100%;
+  min-width: 0;
+  text-decoration: none;
+}
+
+/*
+ * The DS button centers its content (`.ids-button { justify-content:
+ * center }`, ids-components.css) — overridden here so "Prev" sits flush
+ * at the button's own left edge and "Next" flush at its own right edge,
+ * per the design.
+ */
+.pagination__prev {
+  justify-content: flex-start;
+}
+
+.pagination__next {
+  justify-content: flex-end;
+}
+
+.pagination__prev .ids-button__content,
+.pagination__next .ids-button__content {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pagination__label-full,
+.pagination__label-short {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * Below `s`: Figma's own XS mock (2686:57727) drops to icon-only, but a
+ * bare arrow loses the "this goes to the next/previous page" meaning at
+ * that width — see pagination.hbs's own comment. Swapping the full title
+ * for "Prev"/"Next" here instead is a deliberate deviation from Figma.
+ */
+.pagination__label-full {
+  display: none;
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .pagination__label-full {
+    display: inline;
+  }
+
+  .pagination__label-short {
+    display: none;
+  }
+}
+
+.page-footer__feedback .ids-grid-layout__item {
+  padding-block: var(--page-footer-feedback-padding-block);
+}
+
+.page-footer__contribute {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-100);
+}
+
+.page-footer__contribute-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-50);
+}
+
+.page-footer__contribute-copy p {
+  margin: 0;
+}
+
+.page-footer__contribute-buttons {
+  display: flex;
+  gap: var(--ids-size-150);
+}
+
+.page-footer a.ids-button {
+  text-decoration: none;
+}
+

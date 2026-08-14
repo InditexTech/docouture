@@ -24,6 +24,10 @@ site:
   homeUrl: &home_url /landing.html
   keys:
     repoUrl: https://github.com/InditexTech/atd-docs
+    # Page footer "how to contribute" button (GH-16): a playbook-level key,
+    # same convention as repoUrl above and productLogo below — absent, the
+    # button doesn't render (see footer-content.hbs).
+    contributeUrl: https://github.com/InditexTech/atd-docs/blob/main/CONTRIBUTING.md
     # Side-menu brand symbol (GH-8): a plain placeholder mark, not a design
     # asset — nav-brand.hbs renders the product name alone when this key is
     # absent, so both paths are worth previewing; this fixture exercises the

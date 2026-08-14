@@ -1,21 +1,60 @@
+{{!--
+  Side-menu navigation tree (see GH issue #8), built from `.ids-list` /
+  `.ids-list-item` (list/list.css, list/list-item.css) rather than fixtures —
+  recurses over Antora's real `page.navigation` model.
+
+  Depth conventions (see side-menu.css):
+  - `data-depth` on each <ul> drives group bottom padding (24 for a group's
+    own list, 12 / 8 for anything nested deeper — Figma's "Subpage" frames).
+  - `.ids-list-item--tree--level-N` drives indentation. `--ids-list-item-
+    tree-indent` is overridden to 8px (Figma's fixed nested-row indent)
+    inside `.side-menu__nav`, rather than the DS default 12px/level.
+
+  States are colour and weight only, never a background: the row renders
+  `.ids-list-item` (layout, indent) plus this bundle's own `.side-menu__link`
+  (cursor, focus ring, colour/weight per state) — deliberately without the
+  DS's `--clickable`/`--selected` modifiers, which paint a background this
+  design doesn't want. See side-menu.css for the four states (normal, hover,
+  active/current, active+hover), all driven by `aria-current` and `:hover`.
+
+  Expand/collapse is real ARIA (`aria-expanded`/`aria-controls`) on a plain
+  toggle button beside the row — src/js/01-nav.ts drives it and everything
+  server-renders expanded, so JavaScript-off degrades correctly per the
+  issue's acceptance criteria.
+
+  A parent entry with no `url` (a pure grouping node — Antora content
+  structure, not this Figma frame, which shows no row for one) renders no
+  row of its own: only its children, at the next depth. One that does have
+  both a url and children is expandable.
+--}}
 {{#if navigation.length}}
-<ul class="nav-list">
+<ul class="ids-list side-menu__list" data-depth="{{or level 0}}">
   {{#each navigation}}
-  <li class="nav-item{{#if (eq ./url @root.page.url)}} is-current-page{{/if}}" data-depth="{{or ../level 0}}">
-    {{#if ./content}}
-    {{#if ./items.length}}
-    <button class="nav-item-toggle"></button>
-    {{/if}}
-    {{#if ./url}}
-    <a class="nav-link" href="
-      {{~#if (eq ./urlType 'internal')}}{{{relativize ./url}}}
-      {{~else}}{{{./url}}}{{~/if}}">{{{./content}}}</a>
-    {{else}}
-    <span class="nav-text">{{{./content}}}</span>
-    {{/if}}
-    {{/if}}
+  {{#unless ./url}}
+  {{#if ./items.length}}
+  <li class="side-menu__item side-menu__item--group">
 {{> nav-tree navigation=./items level=(increment ../level)}}
   </li>
+  {{/if}}
+  {{else}}
+  <li class="side-menu__item{{#if ./items.length}} side-menu__item--branch{{/if}}">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-{{or ../level 0}}"
+        href="
+          {{~#if (eq ./urlType 'internal')}}{{{relativize ./url}}}
+          {{~else}}{{{./url}}}{{~/if}}"
+        {{~#if (eq ./url @root.page.url)}} aria-current="page"{{/if~}}>
+        <span class="ids-list-item__text"><span class="ids-list-item__label">{{{./content}}}</span></span>
+      </a>
+      {{#if ./items.length}}
+      <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle {{detag ./content}}">
+        {{icon "arrows" "chevron-down-outlined"}}
+      </button>
+      {{/if}}
+    </div>
+{{> nav-tree navigation=./items level=(increment ../level)}}
+  </li>
+  {{/unless}}
   {{/each}}
 </ul>
 {{/if}}

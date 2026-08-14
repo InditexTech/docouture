@@ -1,0 +1,30 @@
+{{!--
+  Side-menu brand block (see GH issue #8): 40x40 product symbol above the
+  product name, gap 24, column layout. Distinct from menu/menu.css's
+  `.ids-menu__brand-logo` (row, space-between, border-bottom) which does not
+  match the Figma frame — see the issue's own notes on that deviation.
+
+  The symbol has no equivalent in Antora's page model: `site.keys.productLogo`
+  is a playbook-level override (same convention as `site.keys.repoUrl` in
+  repo-link.hbs), a root-relative or absolute URL to an image. Absent, the
+  block renders the product name alone rather than a placeholder mark.
+
+  Figma only specifies this block at breakpoint l; m/s show it too (icon
+  only — the title is already in the header there, see header-content.hbs)
+  because a persistent product mark in the menu is worth having regardless
+  of what this particular frame drew — see side-menu.css, which hides
+  `.side-menu__brand-title` below l. xs gets its own copy of the icon
+  inside the drawer's header row instead (nav.hbs) since that breakpoint
+  already has its own title + close row; this one stays hidden there.
+
+  One anchor wraps both, not two separate elements, so the link target is
+  never lost at a breakpoint that hides the title text.
+--}}
+<div class="side-menu__brand">
+  <a class="side-menu__brand-link" href="{{{relativize (or page.componentVersion.url site.homeUrl)}}}">
+    {{#with site.keys.productLogo}}
+    <img class="side-menu__brand-logo" src="{{{relativize this}}}" width="40" height="40" alt="">
+    {{/with}}
+    <span class="side-menu__brand-title ids-text ids-text--title-m">{{or page.component.title site.title}}</span>
+  </a>
+</div>

@@ -4,7 +4,7 @@ import type { HelperOptions } from '../../types/ui'
  * `{{icon group name}}` — render an IOP Design System icon.
  *
  *     {{icon "alerts" "information-outlined"}}
- *     {{icon "actions" "search-outlined" class="toolbar__icon"}}
+ *     {{icon "actions" "close-large-outlined" class="toolbar__icon"}}
  *     {{icon "design" "sidebar-outlined" label="On this page"}}
  *
  * Emits a reference into the vendored sprite at `img/ids-icons.svg`, which is

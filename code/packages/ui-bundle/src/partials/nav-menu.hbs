@@ -1,11 +1,10 @@
-{{#with page.navigation}}
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
-    {{#with @root.page.componentVersion}}
-    <h3 class="title"><a href="{{{relativize ./url}}}">{{./title}}</a></h3>
-    {{/with}}
-{{> nav-tree navigation=this}}
-  </nav>
-</div>
-{{/with}}
+{{!--
+  page.navigation is Antora's own array of root menus — in practice always
+  one element, `{ root: true, items: [...] }`, never carrying its own
+  `content` or `url`. nav-tree.hbs treats an item with neither as a
+  transparent wrapper (see its own comment) so real top-level entries land
+  at level 0, not level 1.
+--}}
+{{#each page.navigation}}
+{{> nav-tree navigation=./items level=0}}
+{{/each}}

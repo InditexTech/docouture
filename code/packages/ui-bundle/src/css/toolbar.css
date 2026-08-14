@@ -6,37 +6,18 @@
   display: flex;
   font-size: calc(15 / var(--rem-base) * 1rem);
   height: var(--toolbar-height);
-  justify-content: flex-start;
   position: sticky;
   top: var(--navbar-height);
   z-index: var(--z-index-toolbar);
 }
 
+.toolbar__content {
+  align-items: center;
+  display: flex;
+}
+
 .toolbar a {
   color: inherit;
-}
-
-.nav-toggle {
-  background: url("../img/menu.svg") no-repeat 50% 47.5%;
-  background-size: 49%;
-  border: none;
-  outline: none;
-  line-height: inherit;
-  padding: 0;
-  height: var(--toolbar-height);
-  width: var(--toolbar-height);
-  margin-right: -0.25rem;
-}
-
-@media screen and (--ids-breakpoints-m) {
-  .nav-toggle {
-    display: none;
-  }
-}
-
-.nav-toggle.is-active {
-  background-image: url("../img/back.svg");
-  background-size: 41.5%;
 }
 
 .home-link {
@@ -68,11 +49,10 @@
 }
 
 /*
- * TRANSITIONAL: the toolbar icons are solid-black SVGs, invisible on a dark
- * surface. Inverting them is a stopgap until the chrome moves onto IDS Icon,
- * which draws with currentColor and needs no such trick.
+ * TRANSITIONAL: the home-link icon is a solid-black SVG, invisible on a dark
+ * surface. Inverting it is a stopgap until it moves onto IDS Icon, which
+ * draws with currentColor and needs no such trick.
  */
-.ids-theme-dark .nav-toggle,
 .ids-theme-dark .home-link {
   filter: invert(1);
 }

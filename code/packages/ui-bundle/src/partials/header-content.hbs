@@ -1,26 +1,56 @@
 {{!--
-  Header toolbar — full-width, replaces the inherited antora-ui-default navbar
-  (see GH issue #7). Structure and modifiers mirror the Figma frame linked from
-  the issue; DS component CSS vendored via src/css/ids-components.yml.
+  Header toolbar (see GH issue #7), aligned to the same DS grid container as
+  the breadcrumb toolbar (grid-layout/grid-layout.css, vendored via
+  src/css/ids-components.yml): `.ids-grid-layout--with-margin` gives the
+  correct per-breakpoint gutter (16/32/56/64px). Both halves carry
+  `--span-6` (half of the grid's 12 columns at s and up) *and* `--span-xs-3`
+  (half of its 6 columns at xs) so the row never stacks at any breakpoint —
+  see GH-8's own discussion for why a bare `--span-6` alone would.
 
-  Search is explicitly out of scope: the field below is focusable and styled
-  but carries no name, no form and no JS handler, so it can never submit
-  anywhere. Do not wire it up here.
+  Left group changes shape per breakpoint (header.css), all in one markup
+  tree:
+  - l: "Search" label + placeholder input, no product name (that's the
+    side menu's brand block there), menu toggle rendered but usually
+    collapsed-hidden until JS + GH-8's Home/Default Figma variants decide
+    whether it's shown.
+  - m: menu toggle + product name + placeholder-only input (no "Search"
+    word).
+  - s/xs: menu toggle + product name; the search input is hidden outright
+    (out of scope — see below) rather than shrunk to an icon button.
+
+  The menu toggle (see GH issue #8): `hidden` until src/js/01-nav.ts wires
+  it up, same reasoning as theme-toggle.hbs — a control with no handler
+  must not render.
+
+  Search itself is out of scope (GH-7): the input carries no name, no form
+  and no JS handler, so it can never submit anywhere. Do not wire it up
+  here.
+
+  The version tag (page-versions.hbs) is hidden at s/xs — GH-8's Figma
+  frames for those breakpoints move it into the side-menu drawer instead
+  (see nav.hbs, side-menu.css). Repo becomes icon-only there too, since the
+  full "AMIGA FRAMEWORK WEB" + "repo" + theme toggle no longer fits a
+  390px bar alongside the menu button — not something Figma specifies, a
+  call made for this breakpoint.
 --}}
 <header class="header-toolbar">
-  <div class="header-toolbar__search">
-    <div class="ids-search-field-minimal">
-      <div class="ids-search-field-minimal__input-container">
-        <div class="ids-search-field-minimal__icon-start" aria-hidden="true">{{icon "actions" "search-outlined"}}</div>
-        <div class="ids-search-field-minimal__input-wrapper">
-          <input type="search" class="ids-search-field-minimal__input" placeholder="type here..." aria-label="Search the docs" tabindex="0">
-        </div>
+  <div class="ids-grid-layout ids-grid-layout--with-margin header-toolbar__grid">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__left">
+      <button class="ids-button ids-button--ghost ids-button--icon-only side-menu-toggle" type="button" aria-controls="side-menu" hidden>
+        <span class="ids-button__content">
+          <span class="ids-button__icon ids-button__icon-icon">{{icon "design" "menu-tab-outlined"}}</span>
+        </span>
+      </button>
+      <a class="header-toolbar__product-name ids-text ids-text--label-l-high" href="{{{relativize (or page.componentVersion.url site.homeUrl)}}}">{{or page.component.title site.title}}</a>
+      <div class="header-toolbar__search">
+        <span class="ids-text ids-text--label-l header-toolbar__search-label">Search</span>
+        <input type="search" class="header-toolbar__search-input" placeholder="type here..." aria-label="Search the docs" tabindex="0">
       </div>
     </div>
-  </div>
-  <div class="header-toolbar__actions">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__actions">
 {{> page-versions}}
 {{> repo-link}}
 {{> theme-toggle}}
+    </div>
   </div>
 </header>

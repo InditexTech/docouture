@@ -24,6 +24,11 @@ site:
   homeUrl: &home_url /landing.html
   keys:
     repoUrl: https://github.com/InditexTech/atd-docs
+    # Side-menu brand symbol (GH-8): a plain placeholder mark, not a design
+    # asset — nav-brand.hbs renders the product name alone when this key is
+    # absent, so both paths are worth previewing; this fixture exercises the
+    # "logo present" one. copyPreviewAssets ships preview-src/*.svg verbatim.
+    productLogo: /product-logo.svg
   components:
     - &component
       name: atd
@@ -93,10 +98,22 @@ page:
       displayVersion: '2023.2'
       missing: true
       url: '#'
-  # Mirrors the Figma side menu (see GH issue #8): top-level entries plus one
-  # nested branch under "Components", so nav-tree recursion and the
-  # `.ids-list-item--tree--level-N` indentation both get exercised without
-  # the fixture needing a rewrite on every design tweak.
+  # Mirrors the Figma side menu (see GH issue #8): top-level entries, one of
+  # which ("Features") has its own nested branch — both a `url` and `items`,
+  # so it renders expandable with a chevron, like any real page with
+  # sub-pages in its own nav.adoc — plus one entry two levels deep ("Virtual
+  # Threads" also has its own subpage) so nav-tree recursion, `--tree--
+  # level-N` indentation and the expand/collapse toggle all get exercised
+  # without the fixture needing a rewrite on every design tweak.
+  #
+  # An earlier version of this fixture put these under a separate, url-less
+  # "Components" wrapper node (Antora's model does allow one, and nav-tree.hbs
+  # still renders it correctly — no row, just its children) rather than
+  # under Features directly. Visually that looked identical modulo one
+  # thing: no chevron on Features, because structurally the sub-items
+  # weren't Features' own. That's backwards from what any real "Features"
+  # page with sub-pages would produce, so it's fixed here instead of left
+  # for the sake of covering the wrapper case.
   navigation:
     - root: true
       items:
@@ -109,7 +126,6 @@ page:
         - content: Features
           url: '#features'
           urlType: fragment
-        - content: Components
           items:
             - content: Architecture overview
               url: '#architecture-overview'
@@ -123,6 +139,10 @@ page:
             - content: Virtual Threads
               url: '#virtual-threads'
               urlType: fragment
+              items:
+                - content: Subpage
+                  url: '#virtual-threads-subpage'
+                  urlType: fragment
             - content: Resilience
               url: '#resilience'
               urlType: fragment

@@ -28,7 +28,6 @@
    * reflow at any zoom level, so documentation body copy keeps ratios.
    */
   --doc-line-height: 1.6;
-  --nav-line-height: 1.35;
   --toc-line-height: 1.2;
   --footer-line-height: var(--doc-line-height);
 
@@ -36,19 +35,61 @@
   /*
    * The header toolbar's content is a row of --ids-size-250 (40px) controls
    * plus its 1px dashed bottom rule — see header.css. Kept as its own
-   * variable, not the literal, because .nav / .toolbar / --toc-top all offset
-   * from it and must move together if the toolbar's height ever changes.
+   * variable, not the literal, because .side-menu / .toolbar / --toc-top all
+   * offset from it and must move together if the toolbar's height ever
+   * changes.
    */
   --navbar-height: calc(var(--ids-size-250) + 1px);
   --toolbar-height: calc(45 / var(--rem-base) * 1rem);
-  --drawer-height: var(--toolbar-height);
   --body-top: var(--navbar-height);
-  --body-min-height: calc(100vh - var(--body-top));
-  --nav-height: calc(var(--body-min-height) - var(--toolbar-height));
-  --nav-height--desktop: var(--body-min-height);
-  --nav-panel-menu-height: calc(100% - var(--drawer-height));
-  --nav-panel-explore-height: calc(50% + var(--drawer-height));
-  --nav-width: calc(270 / var(--rem-base) * 1rem);
+  /*
+   * Side menu (GH-8): fixed, 100dvh, pinned — it never scrolls with the
+   * page. Only breakpoint l (>=1680) pushes the layout over: `--side-menu-
+   * offset` is how much of the panel's width the header and `.body` yield,
+   * 0 by default (m/s/xs: an overlay drawer, nothing to push) and back to
+   * 0 when collapsed — see side-menu.css, the only file that writes to it.
+   * `--side-menu-tree-indent` overrides list-item.css's default 12px/level
+   * — the design's nested rows use a fixed 8px regardless of depth.
+   */
+  --side-menu-offset: 0px;
+  /*
+   * Shared by side-menu.css, header.css and body.css so the sidebar, the
+   * header offset and the content margin all move in the same 0.5s beat
+   * when the menu is toggled — see 01-nav.ts. Explicit duration + easing,
+   * not the DS's --ids-motion-macro-structure token: that token's value is
+   * `all <duration> <easing>`, which would also put the same 0.5s fade on
+   * every colour change (e.g. the theme toggle). The two tokens it's built
+   * from are used directly instead, so reduced-motion is still inherited
+   * for free — both collapse to ~0 under prefers-reduced-motion in
+   * ids-tokens.css.
+   */
+  --side-menu-motion-duration: var(--ids-motion-duration-l);
+  --side-menu-motion-easing: var(--ids-motion-easing-standard-4);
+  --nav-width: calc(320 / var(--rem-base) * 1rem);
+  /*
+   * Per-breakpoint panel geometry (Figma frames linked from GH-8's own
+   * discussion — node-id=2678-35962 (m), 2686-47629 (s), 2686-60497 (xs)).
+   * l alone keeps the asymmetric 40/32/20 padding and the 40px gap below;
+   * m/s/xs use equal padding on every side. Widths for m/s are the DS
+   * sidebar's own 256px content slot plus that padding on both sides
+   * (m: 256 + 24×2 = 304, s: 256 + 20×2 = 296); xs is a full-width drawer.
+   */
+  --side-menu-padding-block-start: calc(40 / var(--rem-base) * 1rem);
+  --side-menu-padding-inline: calc(32 / var(--rem-base) * 1rem);
+  --side-menu-padding-block-end: calc(20 / var(--rem-base) * 1rem);
+  --side-menu-gap: calc(40 / var(--rem-base) * 1rem);
+  --side-menu-padding-xs: calc(16 / var(--rem-base) * 1rem);
+  --side-menu-padding-s: calc(20 / var(--rem-base) * 1rem);
+  --side-menu-padding-m: calc(24 / var(--rem-base) * 1rem);
+  --side-menu-gap-xs: calc(16 / var(--rem-base) * 1rem);
+  --side-menu-gap-s: calc(24 / var(--rem-base) * 1rem);
+  --side-menu-gap-m: calc(16 / var(--rem-base) * 1rem);
+  --side-menu-width-s: calc(296 / var(--rem-base) * 1rem);
+  --side-menu-width-m: calc(304 / var(--rem-base) * 1rem);
+  --side-menu-group-gap: calc(24 / var(--rem-base) * 1rem);
+  --side-menu-subgroup-gap: calc(12 / var(--rem-base) * 1rem);
+  --side-menu-subsubgroup-gap: calc(8 / var(--rem-base) * 1rem);
+  --side-menu-tree-indent: calc(8 / var(--rem-base) * 1rem);
   --toc-top: calc(var(--body-top) + var(--toolbar-height));
   --toc-height: calc(100vh - var(--toc-top) - 2.5rem);
   --toc-width: calc(162 / var(--rem-base) * 1rem);

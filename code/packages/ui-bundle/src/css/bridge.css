@@ -41,14 +41,6 @@
   --scrollbar-thumb-color: var(--ids-color-border-low);
   --scrollbar_hover-thumb-color: var(--ids-color-content-low);
 
-  /* nav */
-  --nav-background: var(--ids-color-bg-low);
-  --nav-border-color: var(--ids-color-border-low);
-  --nav-heading-font-color: var(--ids-color-content-default);
-  --nav-muted-color: var(--ids-color-content-low);
-  --nav-panel-divider-color: var(--ids-color-border-low);
-  --nav-secondary-background: var(--ids-color-bg-default);
-
   /* toolbar */
   --toolbar-background: var(--ids-color-bg-default);
   --toolbar-border-color: var(--ids-color-border-low);
@@ -124,11 +116,20 @@
 
   /*
    * stacking — upstream used 1..4. Mapped onto the design system scale, which
-   * leaves room between layers. The version dropdown now sits above the navbar
-   * rather than below it, which is the correct behaviour for a dropdown.
+   * leaves room between layers.
+   *
+   * The side menu is a full-screen overlay only at xs (GH-8) — m/s's drawer
+   * and its scrim both start below the header (side-menu.css), so they
+   * never actually compete with it for the same pixels there. At xs the
+   * menu's own header row replaces the main one entirely. Either way the
+   * side menu sits above the navbar, the reverse of upstream's ordering,
+   * so it's never covered at xs. The version dropdown keeps the highest
+   * token of all (--ids-z-dropdown) since it can be triggered with the
+   * menu still open.
    */
-  --z-index-nav: var(--ids-z-base);
   --z-index-toolbar: var(--ids-z-sticky);
-  --z-index-navbar: var(--ids-z-modal-drawer);
+  --z-index-navbar: var(--ids-z-sticky);
+  --z-index-nav-scrim: var(--ids-z-modal-drawer);
+  --z-index-nav: var(--ids-z-dropdown);
   --z-index-page-version-menu: var(--ids-z-dropdown);
 }

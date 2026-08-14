@@ -17,13 +17,18 @@
 components:
   text:
     - text.css # .ids-text--* typography utilities, chrome copy only (not doc prose — see vars.css)
-  search-field:
-    - search-field.minimal.css # .ids-search-field-minimal — only search-field stylesheet that exists, see iop-ds-components skill
   button:
-    - button.css # .ids-button--ghost/--icon-only — header toolbar actions (GH-7)
+    - button.css # .ids-button--ghost/--icon-only — header toolbar actions (GH-7, GH-8)
   tag:
     - tag.css # .ids-tag--solid/--selected — header toolbar version tag (GH-7)
   option-picker:
     - option-picker.css # .ids-option-picker — group wrapper
     - option-picker-item.css # .ids-option-picker-item — per-option outline/selection state
     - option-picker-button.css # .ids-option-picker-button — the clickable control itself
+  list:
+    - list.css # .ids-list — nav <ul> reset (GH-8)
+    - list-item.css # .ids-list-item[--tree--level-N] (GH-8) — layout/indent only, no --clickable/--selected (state colours are ours, see side-menu.css)
+  logo:
+    - logo.css # .ids-logo — product symbol fill (GH-8)
+  grid-layout:
+    - grid-layout.css # .ids-grid-layout[--with-margin]/__item[--span-N] — header/toolbar container (GH-8)

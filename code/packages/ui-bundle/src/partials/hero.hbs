@@ -8,7 +8,7 @@
 
   Renders on every default-layout page except when `:page-role: -hero` is
   set — see main.hbs, which decides once and passes the result down, and
-  the existing `-toc` role (main.css, 02-on-this-page.ts) for the same
+  the existing `-toc` role (toc.css, 02-on-this-page.ts) for the same
   convention applied to a different part of the chrome. A page that opts
   out gets its <h1> back in the article instead (article.hbs).
 
@@ -35,9 +35,14 @@
   button to the LEFT of the filled primary one; here DOM and visual order
   both put the primary action first.
 
-  The right-hand slot is intentionally empty here: it belongs to the ToC
-  toggle (GH-10, "On this page as a toggled sidebar"). No space is reserved
-  for it — #10 owns its own layout and disappears at s/xs on its own terms.
+  The right-hand slot carries the ToC toggle (GH-10): a
+  `.ids-button--ghost .ids-button--icon-only` with `design/sidebar-outlined`
+  (Figma frame 3615:59159), `hidden` until src/js/02-on-this-page.ts decides
+  there is a ToC to control — same reasoning as theme-toggle.hbs and the
+  side-menu toggle, a control with no handler must not render. Hidden
+  outright below breakpoint m (hero.css / header.css's own per-breakpoint
+  hiding of the version tag and search input is the precedent) — the ToC
+  sits above the article there instead of beside it, with nothing to toggle.
 
   Tags render `.ids-label--grey`, not the `--white` variant Figma's mock
   shows: `--white`'s background is literally `--ids-color-bg-default`, i.e.
@@ -46,8 +51,11 @@
   `--ids-color-content-default` is the only variant that actually contrasts
   against the page in both light and dark.
 
-  The whole hero is capped at `--hero-max-width` (780px, vars.css) rather
-  than stretching to the grid's full width.
+  The hero's left column (`.hero__main`) is capped at `--content-max-width`
+  (780px, vars.css) — the same measure the article below shares (doc.css,
+  GH-10) — while `.hero__row` itself spans the grid's full width so the
+  ToC toggle above sits flush in the gutter rather than at the text
+  measure's edge (Figma frame 3615:59159).
 --}}
 <div class="hero">
   <div class="ids-grid-layout ids-grid-layout--with-margin hero__grid">
@@ -80,7 +88,13 @@
         </div>
 {{/if}}
       </div>
-      {{!-- right slot: ToC toggle — see GH-10 --}}
+      <div class="hero__aside">
+        <button class="ids-button ids-button--ghost ids-button--icon-only toc-toggle" type="button" aria-controls="on-this-page" aria-expanded="true" hidden>
+          <span class="ids-button__content">
+            <span class="ids-button__icon ids-button__icon-icon">{{icon "design" "sidebar-outlined"}}</span>
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

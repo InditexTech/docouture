@@ -25,10 +25,11 @@
   /*
    * Unitless line heights. The design system pairs each font size with a fixed
    * px line height, which is right for UI chrome and wrong for prose that must
-   * reflow at any zoom level, so documentation body copy keeps ratios.
+   * reflow at any zoom level, so documentation body copy keeps ratios. (The
+   * ToC no longer needs one of these — GH-10 moved its typography onto
+   * `--ids-typo-*` shorthands, which already carry a line-height.)
    */
   --doc-line-height: 1.6;
-  --toc-line-height: 1.2;
   --footer-line-height: var(--doc-line-height);
 
   /* dimensions and positioning */
@@ -40,6 +41,13 @@
    */
   --navbar-height: calc(var(--ids-size-250) + 1px);
   --body-top: var(--navbar-height);
+  /*
+   * Extra breathing room between the fixed header and whatever an in-page
+   * jump (a ToC link, a copy-link anchor, a `#fragment` on load) scrolls
+   * to — read by 03-fragment-jumper.ts, added on top of the header's own
+   * height so a heading never lands flush against its bottom edge.
+   */
+  --anchor-scroll-margin: calc(24 / var(--rem-base) * 1rem);
   /*
    * Side menu (GH-8): fixed, 100dvh, pinned — it never scrolls with the
    * page. Only breakpoint l (>=1680) pushes the layout over: `--side-menu-
@@ -89,18 +97,30 @@
   --side-menu-subsubgroup-gap: calc(8 / var(--rem-base) * 1rem);
   --side-menu-tree-indent: calc(8 / var(--rem-base) * 1rem);
   /*
-   * No secondary toolbar remains below the header (GH-9 removed it), so the
-   * ToC's sticky offset is the header alone. #10 reworks the ToC into a
-   * toggled panel entirely; this keeps it merely correct until then.
+   * ToC panel (GH-10, Figma node 2610:27801/2686:47569). No secondary
+   * toolbar remains below the header (GH-9 removed it), so the sticky
+   * offset is the header alone. `--toc-gap-*` are the panel's own internal
+   * gaps (heading-to-list 16, list 12, item 8 — Figma's `2610:27801`/
+   * `2631:31637`); `--toc-indent-*` are its per-level indents (H1..H4: 0,
+   * 12, 24, 40 — components `2686:47561..64`). The panel carries no width
+   * of its own — it is one of the two grid tracks below — so there is no
+   * `--toc-width` here any more (see doc.css, main.hbs).
+   *
+   * `--toc-height` sizes the internal scrollable list (toc.css's own
+   * `.toc-menu ul`), so it starts from the same point `.toc-menu`'s own
+   * sticky `top` does (`--toc-top` PLUS the panel's `--ids-size-150`
+   * padding, not `--toc-top` alone) — otherwise the list could run past
+   * the viewport's bottom edge by that same padding.
    */
   --toc-top: var(--body-top);
-  --toc-height: calc(100vh - var(--toc-top) - 2.5rem);
-  --toc-width: calc(162 / var(--rem-base) * 1rem);
-  --toc-width--widescreen: calc(216 / var(--rem-base) * 1rem);
-  --doc-max-width: calc(720 / var(--rem-base) * 1rem);
-  --doc-max-width--desktop: calc(828 / var(--rem-base) * 1rem);
-  --doc-margin: 0 auto;
-  --doc-margin--desktop: 0 2rem;
+  --toc-height: calc(100vh - var(--toc-top) - var(--ids-size-150) - 2.5rem);
+  --toc-gap-heading: var(--ids-size-100);
+  --toc-gap-list: var(--ids-size-75);
+  --toc-gap-item: var(--ids-size-50);
+  --toc-indent-1: var(--ids-size-0);
+  --toc-indent-2: var(--ids-size-75);
+  --toc-indent-3: var(--ids-size-150);
+  --toc-indent-4: var(--ids-size-250);
 
   /*
    * Hero (GH-9), Figma node 3615:59150 (l), 2678:35962 (m, node "Content Page
@@ -113,11 +133,15 @@
    * navigation below it — 40 at every breakpoint, hence just one variable.
    * `--hero-excerpt-max-width` matches the excerpt text node's fixed 597px
    * width (node 3615:59155/2735:65624/2735:65783 — same across breakpoints
-   * and themes). `--hero-max-width` caps the whole hero row (breadcrumbs,
-   * title, excerpt, tags, actions, right slot) to the content measure — a
-   * later call than Figma's own frame, which lets the hero run the full
-   * grid width; not repeated from --doc-max-width* because the two aren't
-   * the same number (780 here vs. 828 for the article at desktop).
+   * and themes).
+   *
+   * `--content-max-width` (GH-10) is the one text measure shared by the
+   * hero's left column (`.hero__main`, hero.css) and the article
+   * (`.doc`, doc.css) — the same 780px number, so a page's title, lead and
+   * prose all wrap at the same line length. Named for what it caps, not
+   * for the hero alone, now that the article sits in a grid track rather
+   * than centring itself: see doc.css and main.hbs for the 9/3 (l) /
+   * 8/4 (m) content/ToC split this measure lives inside.
    */
   --hero-space-block-start: calc(56 / var(--rem-base) * 1rem);
   --hero-space-block-start-s: calc(72 / var(--rem-base) * 1rem);
@@ -125,7 +149,7 @@
   --hero-space-block-start-l: calc(128 / var(--rem-base) * 1rem);
   --hero-space-block-end: calc(40 / var(--rem-base) * 1rem);
   --hero-excerpt-max-width: calc(597 / var(--rem-base) * 1rem);
-  --hero-max-width: calc(780 / var(--rem-base) * 1rem);
+  --content-max-width: calc(780 / var(--rem-base) * 1rem);
 
   /* italics for figure captions; not a design system concern */
   --caption-font-style: italic;

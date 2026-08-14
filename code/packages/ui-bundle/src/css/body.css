@@ -10,8 +10,29 @@
   transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
 }
 
+@media screen and (--ids-breakpoints-xs-s) {
+  main > .content {
+    overflow-x: auto;
+  }
+}
+
 @media screen and (--ids-breakpoints-m) {
   .body {
     display: flex;
+  }
+
+  /*
+   * The side menu is `position: fixed` (side-menu.css), so it never
+   * actually participates in this flex row — `main` is `.body`'s only
+   * flex item either way. Kept explicit (rather than relying on that being
+   * main's only child) so main still grows correctly if a second flex
+   * sibling is ever added here, and so it can shrink below its content's
+   * intrinsic width — required for the grid inside it (main.hbs, GH-10)
+   * to constrain overflowing code blocks and tables rather than stretching
+   * the row.
+   */
+  main {
+    flex: auto;
+    min-width: 0;
   }
 }

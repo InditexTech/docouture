@@ -43,3 +43,23 @@
         if (collapsed) document.documentElement.classList.add('is-side-menu-collapsed')
       })()
     </script>
+    <script>
+      /*
+       * ToC collapse bootstrap (GH-10). Runs before first paint so a closed
+       * choice never flashes open for an instant. Keep it in sync with
+       * src/js/02-on-this-page.ts, which owns the same storage key and class
+       * name.
+       *
+       * Deliberately does NOT add `has-toc` — only 02-on-this-page.ts knows
+       * whether this page actually has a usable ToC (headings found, page
+       * not `-toc`), and every effect of the class added here is itself
+       * gated behind `has-toc` in toc.css, so there is nothing to flash
+       * either way before that script runs. This one exists only so a
+       * *closed* choice is already in place the moment it does.
+       */
+      (function () {
+        var stored
+        try { stored = localStorage.getItem('pdocs-toc') } catch (e) {}
+        if (stored === 'closed') document.documentElement.classList.add('is-toc-closed')
+      })()
+    </script>

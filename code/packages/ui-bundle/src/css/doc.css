@@ -1,20 +1,62 @@
+/*
+ * Grid placement (GH-10): `.doc` is a track in the same `.ids-grid-layout`
+ * `main.hbs` gives `.content`, sharing its container with the ToC
+ * (toc.css) — full width by default (both `.content`'s grid and no ToC
+ * column reserved), narrowing to 8 of 12 columns at m / 9 of 12 at l only
+ * once `html.has-toc` says the ToC is real (02-on-this-page.ts). See
+ * toc.css's own header comment for why this is plain `grid-column` rather
+ * than the DS's `.ids-grid-layout__item--span-*` utility classes — those
+ * are static, and this split is not.
+ *
+ * `grid-row: 1` at m/l is required, not decorative: both `.doc` and `.toc`
+ * have a fully definite `grid-column` (start AND end) but no row, and
+ * `.toc` comes FIRST in the DOM (it has to, for the stacked s/xs layout
+ * below). CSS Grid's auto-placement cursor only moves forward — placing
+ * `.toc` at columns 9-12 first advances it past column 8, so `.doc`
+ * (columns 1-8, appearing second) gets pushed to a fresh row instead of
+ * sharing this one. Pinning both to row 1 explicitly removes the ambiguity
+ * rather than fighting the cursor.
+ *
+ * `min-width: 0` is required at every breakpoint, not just m+: a grid
+ * item's automatic minimum size is `auto` (roughly its content's intrinsic
+ * width), which is what lets a wide code block or table overflow its own
+ * column instead of scrolling inside it — see the `pre`/table rules below.
+ *
+ * `max-width` is `--content-max-width` (vars.css) — the same 780px measure
+ * the hero's title/lead column caps itself to (hero.css), so a page's type
+ * never runs wider once the grid itself has room to spare.
+ */
 .doc {
   color: var(--doc-font-color);
   font-size: var(--doc-font-size);
+  grid-column: span 6;
   hyphens: auto;
   line-height: var(--doc-line-height);
-  margin: var(--doc-margin);
-  max-width: var(--doc-max-width);
-  padding: 0 1rem 4rem;
+  max-width: var(--content-max-width);
+  min-width: 0;
+  padding-bottom: 4rem;
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .doc {
+    grid-column: span 12;
+  }
 }
 
 @media screen and (--ids-breakpoints-m) {
   .doc {
-    flex: auto;
     font-size: var(--doc-font-size--desktop);
-    margin: var(--doc-margin--desktop);
-    max-width: var(--doc-max-width--desktop);
-    min-width: 0;
+  }
+
+  html.has-toc .doc {
+    grid-column: 1 / span 8;
+    grid-row: 1;
+  }
+}
+
+@media screen and (--ids-breakpoints-l) {
+  html.has-toc .doc {
+    grid-column: 1 / span 9;
   }
 }
 
@@ -40,10 +82,6 @@
   .doc > h1.page:first-child {
     margin-top: 2.5rem;
   }
-}
-
-.doc > h1.page:first-child + aside.toc.embedded {
-  margin-top: -0.5rem;
 }
 
 .doc > h2#name + .sectionbody {

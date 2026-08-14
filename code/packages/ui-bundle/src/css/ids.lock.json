@@ -157,10 +157,5 @@
     "--ids-z-modal-drawer",
     "--ids-z-sticky"
   ],
-  "emittedBreakpoints": [
-    "--ids-breakpoints-l",
-    "--ids-breakpoints-m",
-    "--ids-breakpoints-s",
-    "--ids-breakpoints-xs-s"
-  ]
+  "emittedBreakpoints": ["--ids-breakpoints-l", "--ids-breakpoints-m", "--ids-breakpoints-s", "--ids-breakpoints-xs-s"]
 }

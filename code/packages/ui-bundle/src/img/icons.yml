@@ -25,10 +25,10 @@ icons:
     - add-outlined
     - back-outlined
     - check-circle-outlined # admonition: tip / important
+    - close-large-outlined # side-menu drawer close (GH-8, breakpoint xs)
     - copy-outlined
     - full-screen-enter-outlined
     - full-screen-exit-outlined
-    - search-outlined
   alerts:
     - information-outlined # admonition: note
     - warning-outlined # admonition: warning / caution
@@ -37,16 +37,13 @@ icons:
     - arrow-right-outlined # pagination: next
     - chevron-down-outlined
     - chevron-up-outlined
-  business:
-    - user-outlined
   connectivity:
     - link-outlined # section anchor / copy link
     - link-external-outlined
   controls:
     - play-circle-outlined
   design:
-    - grid-outlined
-    - menu-outlined
+    - menu-tab-outlined # side-menu toggle (GH-8)
     - sidebar-outlined # "on this page" toggle
   others:
     - home-outlined

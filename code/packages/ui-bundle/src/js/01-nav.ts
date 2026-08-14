@@ -1,76 +1,138 @@
 ;(function () {
   'use strict'
 
+  var STORAGE_KEY = 'pdocs-side-menu'
   var SECT_CLASS_RX = /^sect(\d)$/
 
-  var navContainer = document.querySelector<HTMLElement>('.nav-container')
-  var navToggle = document.querySelector<HTMLElement>('.nav-toggle')
-  if (!navContainer && (!navToggle || (navToggle.hidden = true))) return
-  var nav = navContainer.querySelector<HTMLElement>('.nav')
-  var navMenuToggle = navContainer.querySelector<HTMLElement>('.nav-menu-toggle')
+  var root = document.documentElement
+  var sideMenu = document.getElementById('side-menu')
+  var toggle = document.querySelector<HTMLButtonElement>('.side-menu-toggle')
+  if (!sideMenu || !toggle) return
 
-  navToggle.addEventListener('click', showNav)
-  navContainer.addEventListener('click', trapEvent)
+  var nav = sideMenu.querySelector<HTMLElement>('.side-menu__nav')
+  var closeButton = sideMenu.querySelector<HTMLButtonElement>('.side-menu__close')
+  // Only breakpoint l (>=1680) pushes the layout; m/s/xs are all overlay
+  // drawers — see side-menu.css's own breakpoint-by-breakpoint comment.
+  var pushQuery = window.matchMedia('(min-width: 1680px)')
 
-  var menuPanel = navContainer.querySelector('[data-panel=menu]')
-  if (!menuPanel) return
-  var explorePanel = navContainer.querySelector('[data-panel=explore]')
+  // The control does nothing without JavaScript, so it is hidden until wired
+  // up rather than shipped as a dead button — see theme-toggle's 08-theme.ts.
+  toggle.hidden = false
+  labelToggle()
+  toggle.addEventListener('click', onToggleClick)
+  if (closeButton) closeButton.addEventListener('click', onCloseClick)
 
-  var currentPageItem = menuPanel.querySelector('.is-current-page')
-  var originalPageItem = currentPageItem
-  if (currentPageItem) {
-    activateCurrentPath(currentPageItem)
-    scrollItemToMidpoint(menuPanel, currentPageItem.querySelector('.nav-link'))
-  } else {
-    menuPanel.scrollTop = 0
+  function isCollapsed () {
+    // Below l the menu's own CSS default is closed, with no class needed to
+    // say so (see side-menu.css) — `.is-active` is the only signal there.
+    // At or above it, default is open and `is-side-menu-collapsed` is the
+    // override, set either by the pre-paint bootstrap (head-prelude.hbs) or
+    // by a previous click here.
+    return pushQuery.matches ? root.classList.contains('is-side-menu-collapsed') : !sideMenu.classList.contains('is-active')
   }
 
-  find(menuPanel, '.nav-item-toggle').forEach(function (btn) {
-    var li = btn.parentElement
-    btn.addEventListener('click', toggleActive.bind(li))
-    var navItemSpan = findNextElement(btn, '.nav-text')
-    if (navItemSpan) {
-      navItemSpan.style.cursor = 'pointer'
-      navItemSpan.addEventListener('click', toggleActive.bind(li))
+  function labelToggle () {
+    var collapsed = isCollapsed()
+    toggle.setAttribute('aria-expanded', String(!collapsed))
+    toggle.setAttribute(
+      'aria-label',
+      pushQuery.matches ? (collapsed ? 'Show navigation' : 'Hide navigation') : collapsed ? 'Open navigation' : 'Close navigation'
+    )
+  }
+
+  // One mechanism drives every breakpoint: `is-side-menu-collapsed` on
+  // <html> forces the menu shut at l (default there is open); `.is-active`
+  // on the menu itself forces it open below l (default there is closed) —
+  // see side-menu.css. Toggling both together, unconditionally, is harmless:
+  // each class only has an effect at the breakpoint it targets, courtesy of
+  // that CSS. Below l only, the toggle additionally locks page scroll and
+  // closes on an outside click (the scrim, at m/s, or anywhere at xs).
+  function onToggleClick (e: MouseEvent) {
+    e.stopPropagation()
+    var opening = isCollapsed()
+    setOpen(opening)
+    if (!pushQuery.matches) {
+      if (opening) document.addEventListener('click', onDocumentClick)
+      else document.removeEventListener('click', onDocumentClick)
     }
-  })
-
-  if (navMenuToggle && menuPanel.querySelector('.nav-item-toggle')) {
-    navMenuToggle.style.display = ''
-    navMenuToggle.addEventListener('click', function () {
-      var collapse = !this.classList.toggle('is-active')
-      find(menuPanel, '.nav-item > .nav-item-toggle').forEach(function (btn) {
-        collapse ? btn.parentElement.classList.remove('is-active') : btn.parentElement.classList.add('is-active')
-      })
-      if (currentPageItem) {
-        if (collapse) activateCurrentPath(currentPageItem)
-        scrollItemToMidpoint(menuPanel, currentPageItem.querySelector('.nav-link'))
-      } else {
-        menuPanel.scrollTop = 0
-      }
-    })
   }
 
-  if (explorePanel) {
-    explorePanel.querySelector('.context').addEventListener('click', function () {
-      // NOTE logic assumes there are only two panels
-      find(nav, '[data-panel]').forEach(function (panel) {
-        panel.classList.toggle('is-active')
-      })
-    })
+  function onCloseClick (e: MouseEvent) {
+    e.stopPropagation()
+    setOpen(false)
+    document.removeEventListener('click', onDocumentClick)
   }
 
-  // NOTE prevent text from being selected by double click
-  menuPanel.addEventListener('mousedown', function (e: MouseEvent) {
-    if (e.detail > 1) e.preventDefault()
+  function setOpen (open: boolean) {
+    root.classList.toggle('is-side-menu-collapsed', !open)
+    sideMenu.classList.toggle('is-active', open)
+    root.classList.toggle('is-clipped--nav', open && !pushQuery.matches)
+    try {
+      localStorage.setItem(STORAGE_KEY, open ? 'open' : 'collapsed')
+    } catch (err) {
+      // private browsing, or storage disabled: the choice simply does not persist
+    }
+    labelToggle()
+  }
+
+  function onDocumentClick (e: MouseEvent) {
+    if (sideMenu.contains(e.target as Node)) return
+    setOpen(false)
+    document.removeEventListener('click', onDocumentClick)
+  }
+
+  if (!nav) return
+
+  // Every branch server-renders expanded (aria-expanded="true"), so
+  // JavaScript-disabled degrades to fully expanded per the issue's
+  // acceptance criteria. With JavaScript, collapse whatever is not on the
+  // current page's path.
+  find(nav, '.side-menu__toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.setAttribute('aria-expanded', String(btn.getAttribute('aria-expanded') !== 'true'))
+    })
   })
+
+  // Current page is real state (aria-current), not a class — see
+  // nav-tree.hbs / side-menu.css.
+  var currentItem = nav.querySelector<HTMLElement>('.ids-list-item[aria-current="page"]')
+  var originalItem = currentItem
+  if (currentItem) {
+    activateCurrentPath(currentItem)
+    scrollItemToMidpoint(nav, currentItem)
+  }
+
+  function activateCurrentPath (item: Element) {
+    var li = item.closest('li')
+    while (li) {
+      var toggleBtn = li.querySelector<HTMLElement>(':scope > .side-menu__row > .side-menu__toggle')
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true')
+      var parentLi = li.parentElement
+      li = parentLi ? parentLi.closest('li') : null
+    }
+    collapseOtherBranches(item)
+  }
+
+  function collapseOtherBranches (item: Element) {
+    var keep: Element[] = []
+    var li = item.closest('li')
+    while (li) {
+      keep.push(li)
+      var parentLi = li.parentElement
+      li = parentLi ? parentLi.closest('li') : null
+    }
+    find(nav, '.side-menu__toggle').forEach(function (btn) {
+      var owner = btn.closest('li')
+      if (owner && keep.indexOf(owner) === -1) btn.setAttribute('aria-expanded', 'false')
+    })
+  }
 
   function onHashChange () {
-    var navLink
+    var navLink: HTMLElement | null = null
     var hash = window.location.hash
     if (hash) {
       if (hash.indexOf('%')) hash = decodeURIComponent(hash)
-      navLink = menuPanel.querySelector('.nav-link[href="' + hash + '"]')
+      navLink = nav.querySelector<HTMLElement>('.ids-list-item[href="' + hash + '"]')
       if (!navLink) {
         var targetNode = document.getElementById(hash.slice(1))
         if (targetNode) {
@@ -80,96 +142,39 @@
             var id = current.id
             // NOTE: look for section heading
             if (!id && SECT_CLASS_RX.test(current.className)) id = current.firstElementChild?.id
-            if (id && (navLink = menuPanel.querySelector('.nav-link[href="#' + id + '"]'))) break
+            if (id && (navLink = nav.querySelector<HTMLElement>('.ids-list-item[href="#' + id + '"]'))) break
           }
         }
       }
     }
-    var navItem
+    var navItem: HTMLElement | null
     if (navLink) {
-      navItem = navLink.parentNode
-    } else if (originalPageItem) {
-      navLink = (navItem = originalPageItem).querySelector('.nav-link')
+      navItem = navLink
+    } else if (originalItem) {
+      navItem = originalItem
     } else {
       return
     }
-    if (navItem === currentPageItem) return
-    find(menuPanel, '.nav-item.is-active').forEach(function (el) {
-      el.classList.remove('is-active', 'is-current-path', 'is-current-page')
-    })
-    navItem.classList.add('is-current-page')
-    currentPageItem = navItem
+    if (navItem === currentItem) return
+    if (currentItem) currentItem.removeAttribute('aria-current')
+    navItem.setAttribute('aria-current', 'page')
+    currentItem = navItem
     activateCurrentPath(navItem)
-    scrollItemToMidpoint(menuPanel, navLink)
+    scrollItemToMidpoint(nav, navItem)
   }
 
-  if (menuPanel.querySelector('.nav-link[href^="#"]')) {
+  if (nav.querySelector('.ids-list-item[href^="#"]')) {
     if (window.location.hash) onHashChange()
     window.addEventListener('hashchange', onHashChange)
   }
 
-  function activateCurrentPath (navItem) {
-    var ancestorClasses
-    var ancestor = navItem.parentNode
-    while (!(ancestorClasses = ancestor.classList).contains('nav-menu')) {
-      if (ancestor.tagName === 'LI' && ancestorClasses.contains('nav-item')) {
-        ancestorClasses.add('is-active', 'is-current-path')
-      }
-      ancestor = ancestor.parentNode
-    }
-    navItem.classList.add('is-active')
-  }
-
-  function toggleActive () {
-    if (this.classList.toggle('is-active')) {
-      var padding = parseFloat(window.getComputedStyle(this).marginTop)
-      var rect = this.getBoundingClientRect()
-      var menuPanelRect = menuPanel.getBoundingClientRect()
-      var overflowY = Math.round(rect.bottom - menuPanelRect.top - menuPanelRect.height + padding)
-      if (overflowY > 0) menuPanel.scrollTop += Math.min(Math.round(rect.top - menuPanelRect.top - padding), overflowY)
-    }
-  }
-
-  function showNav (e) {
-    if (navToggle.classList.contains('is-active')) return hideNav(e)
-    trapEvent(e)
-    var html = document.documentElement
-    html.classList.add('is-clipped--nav')
-    navToggle.classList.add('is-active')
-    navContainer.classList.add('is-active')
-    var bounds = nav.getBoundingClientRect()
-    var expectedHeight = window.innerHeight - Math.round(bounds.top)
-    if (Math.round(bounds.height) !== expectedHeight) nav.style.height = expectedHeight + 'px'
-    html.addEventListener('click', hideNav)
-  }
-
-  function hideNav (e) {
-    trapEvent(e)
-    var html = document.documentElement
-    html.classList.remove('is-clipped--nav')
-    navToggle.classList.remove('is-active')
-    navContainer.classList.remove('is-active')
-    html.removeEventListener('click', hideNav)
-  }
-
-  function trapEvent (e) {
-    e.stopPropagation()
-  }
-
-  function scrollItemToMidpoint (panel, el) {
+  function scrollItemToMidpoint (panel: HTMLElement, el: HTMLElement) {
     var rect = panel.getBoundingClientRect()
     var effectiveHeight = rect.height
-    var navStyle = window.getComputedStyle(nav)
-    if (navStyle.position === 'sticky') effectiveHeight -= rect.top - parseFloat(navStyle.top)
     panel.scrollTop = Math.max(0, (el.getBoundingClientRect().height - effectiveHeight) * 0.5 + el.offsetTop)
   }
 
-  function find (from, selector) {
-    return [].slice.call(from.querySelectorAll(selector))
-  }
-
-  function findNextElement (from, selector) {
-    var el = from.nextElementSibling
-    return el && selector ? el[el.matches ? 'matches' : 'msMatchesSelector'](selector) && el : el
+  function find (from: ParentNode, selector: string) {
+    return [].slice.call(from.querySelectorAll(selector)) as HTMLElement[]
   }
 })()

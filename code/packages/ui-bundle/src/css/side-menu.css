@@ -1,0 +1,463 @@
+/*
+ * Side menu (see GH issue #8): logo, product title and the IDS list
+ * navigation tree. Colours come straight off --ids-* tokens, like
+ * header.css — this is a new DS-composed component, not upstream chrome
+ * threaded through bridge.css aliases.
+ *
+ * Structure: src/partials/nav.hbs, nav-brand.hbs, nav-menu.hbs, nav-tree.hbs.
+ * `.ids-list` and `.ids-list-item` (layout/indent only — see the state
+ * section below) are vendored DS component CSS (src/css/ids-components.yml);
+ * everything with a `.side-menu` prefix is this bundle's own layout on top.
+ *
+ * Fixed, 100dvh, and it never moves with the page at any breakpoint —
+ * `.side-menu__nav` scrolls internally if the tree is taller than the
+ * viewport, the brand/header row stays put. `dvh`, not `vh`: `last 2
+ * versions, not dead` (package.json's browserslist) supports it, and it
+ * accounts for mobile browser chrome that `100vh` doesn't.
+ *
+ * Breakpoint behaviour differs a lot more than geometry (see the Figma
+ * frames linked from the issue's own discussion):
+ * - l (>=1680): persistent column, full 100dvh height including behind the
+ *   header row (they sit side by side once the header is pushed over, so
+ *   there's no overlap to avoid). Toggling it changes --side-menu-offset
+ *   (vars.css), which pushes the header and `.body` over by the same
+ *   amount (header.css, body.css) instead of the menu overlaying them.
+ *   Dashed 1px right rule, brand block (logo + title), no scrim, no
+ *   version tag (that lives in the header there).
+ * - m/s (513-1679): overlay drawer that starts *below* the header, not
+ *   over it — Figma's own frame (node-id=2678-35962) positions the panel
+ *   at y=40, the header's own height, confirmed by --navbar-height here.
+ *   The header stays visible and usable (menu toggle included) while the
+ *   drawer is open. Solid 0.5px right rule in --ids-color-border-low (the
+ *   same grey as l's dashed one, not the DS's near-black border-default),
+ *   no brand block, a white 80% scrim (.side-menu-scrim) behind the panel,
+ *   itself also starting below the header and fading in/out on the same
+ *   timing as the panel's slide. The version tag moves into the drawer at
+ *   s only (m's frame has neither a brand block nor the tag — just the
+ *   nav list).
+ * - xs (<513): overlay drawer, full width AND full height from the very
+ *   top (Figma's frame for this one positions it at y=0, unlike m/s) — its
+ *   own header row (title + close button) replaces the main header while
+ *   open, rather than sitting below it. No scrim (it already covers the
+ *   viewport). Slides up from the bottom (`translateY`) rather than in
+ *   from the side, since it's a full-screen sheet, not a side panel, at
+ *   this width.
+ *
+ * One markup tree serves every breakpoint: nav.hbs always renders the
+ * brand block, the drawer header row and the version-tag slot; this file
+ * shows exactly one of them per breakpoint via display, never server-side
+ * breakpoint logic.
+ */
+
+.side-menu {
+  background: var(--ids-color-bg-default);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--side-menu-gap-xs);
+  height: 100dvh;
+  left: 0;
+  padding: var(--side-menu-padding-xs);
+  position: fixed;
+  top: 0;
+  transform: translateY(100%);
+  transition:
+    transform var(--side-menu-motion-duration) var(--side-menu-motion-easing),
+    visibility 0s linear var(--side-menu-motion-duration);
+  visibility: hidden;
+  width: 100%;
+  z-index: var(--z-index-nav);
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .side-menu {
+    border-right: var(--ids-size-border-default) solid var(--ids-color-border-low);
+    gap: var(--side-menu-gap-s);
+    height: calc(100dvh - var(--navbar-height));
+    padding: var(--side-menu-padding-s);
+    top: var(--navbar-height);
+    transform: translateX(-100%);
+    width: var(--side-menu-width-s);
+  }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .side-menu {
+    gap: var(--side-menu-gap-m);
+    padding: var(--side-menu-padding-m);
+    width: var(--side-menu-width-m);
+  }
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .side-menu {
+    border-right: none;
+    gap: var(--side-menu-gap);
+    height: 100dvh;
+    padding: var(--side-menu-padding-block-start) var(--side-menu-padding-inline) var(--side-menu-padding-block-end);
+    top: 0;
+    transform: translateX(0);
+    transition: transform var(--side-menu-motion-duration) var(--side-menu-motion-easing);
+    visibility: visible;
+    width: var(--nav-width);
+    /*
+     * 1px dashed rule, dash 4/4 — same repeating-linear-gradient technique
+     * as the header toolbar and page footer (see header.css); border-style:
+     * dashed cannot control dash length. l only: m/s use a plain solid
+     * border instead (see above), xs has neither.
+     */
+    background-image: repeating-linear-gradient(to bottom, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+    background-position: right;
+    background-repeat: repeat-y;
+    background-size: 1px 8px;
+  }
+
+  :root {
+    --side-menu-offset: var(--nav-width);
+  }
+
+  /* desktop collapse (GH-8 toggle, see header-content.hbs / 01-nav.ts) */
+  html.is-side-menu-collapsed .side-menu {
+    transform: translateX(-100%);
+    transition:
+      transform var(--side-menu-motion-duration) var(--side-menu-motion-easing),
+      visibility 0s linear var(--side-menu-motion-duration);
+    visibility: hidden;
+  }
+}
+
+/*
+ * Drawer open below l (see 01-nav.ts) — no visibility delay when appearing.
+ * `translateX(0)` is the identity transform regardless of which axis the
+ * closed state used to get there, so this one rule covers both xs's
+ * bottom-up slide (`translateY(100%)` when closed) and s/m's side slide
+ * (`translateX(-100%)`).
+ */
+.side-menu.is-active {
+  transform: translateX(0);
+  transition: transform var(--side-menu-motion-duration) var(--side-menu-motion-easing);
+  visibility: visible;
+}
+
+/*
+ * Collapsed at every breakpoint (higher specificity than the `:root` rule
+ * above, so it wins regardless of media query nesting): the pre-paint
+ * bootstrap in head-prelude.hbs sets this class before the side menu even
+ * exists, so its first computed style is already collapsed and nothing
+ * transitions on load.
+ */
+html.is-side-menu-collapsed {
+  --side-menu-offset: 0px;
+}
+
+/*
+ * White 80% scrim behind the drawer at m/s only (l pushes instead of
+ * overlaying; xs's drawer already covers the viewport, header included).
+ * Starts below the header, same as the panel itself at these breakpoints,
+ * so the header stays visible and clickable while the drawer is open. A
+ * sibling of #side-menu, not a child, so it sits behind the sliding panel
+ * (z-index) while still being outside it for the existing outside-
+ * click-to-close listener in 01-nav.ts — clicking the scrim closes the
+ * drawer with no extra JS.
+ *
+ * Fades in/out on the exact same duration and easing as the panel's own
+ * slide (--side-menu-motion-*), rather than popping with `display`:
+ * `opacity` animates; `visibility` follows it but delayed on the way out
+ * (same trick the panel itself uses) so the fade is actually visible
+ * instead of the scrim vanishing the instant `visibility` flips to
+ * `hidden` — undelayed on the way in, so it appears immediately and fades
+ * up. `pointer-events` rides along with `visibility`, keeping the scrim
+ * out of the hit-test while it's fading out or fully hidden.
+ */
+.side-menu-scrim {
+  display: none;
+}
+
+@media screen and (--ids-breakpoints-s-m) {
+  .side-menu-scrim {
+    background: rgb(255 255 255 / 80%);
+    bottom: 0;
+    display: block;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    top: var(--navbar-height);
+    transition:
+      opacity var(--side-menu-motion-duration) var(--side-menu-motion-easing),
+      visibility 0s linear var(--side-menu-motion-duration);
+    visibility: hidden;
+    z-index: var(--z-index-nav-scrim);
+  }
+
+  #side-menu.is-active + .side-menu-scrim {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity var(--side-menu-motion-duration) var(--side-menu-motion-easing);
+    visibility: visible;
+  }
+}
+
+.side-menu a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.side-menu__header {
+  align-items: center;
+  display: none;
+  flex-shrink: 0;
+  justify-content: space-between;
+}
+
+@media screen and (--ids-breakpoints-xs-s) {
+  .side-menu__header {
+    display: flex;
+  }
+}
+
+@media screen and (--ids-breakpoints-s) {
+  /* only xs shows its own header row; s/m/l all render the brand block or nothing */
+  .side-menu__header {
+    display: none;
+  }
+}
+
+.side-menu__header-start {
+  align-items: center;
+  display: flex;
+  gap: var(--ids-size-100);
+  min-width: 0;
+}
+
+.side-menu__header-logo {
+  flex-shrink: 0;
+  height: 24px;
+  object-fit: contain;
+  width: 24px;
+}
+
+.side-menu__header-title {
+  color: var(--ids-color-content-default);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.side-menu__close {
+  align-items: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  height: var(--ids-size-250);
+  justify-content: center;
+  outline: none;
+  padding: 0;
+  width: var(--ids-size-250);
+}
+
+.side-menu__close .ids-icon {
+  height: var(--ids-size-125);
+  width: var(--ids-size-125);
+}
+
+.side-menu__close:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: calc(var(--ids-size-border-high) * -1);
+}
+
+/*
+ * Visible from s upward (icon only at s/m — Figma's own frames for those
+ * don't show it at all, but a persistent product mark is worth having
+ * regardless; see nav-brand.hbs). xs uses its own copy in the header row
+ * instead (above), so this stays hidden there — same visibility split as
+ * `.side-menu__header`, inverted.
+ */
+.side-menu__brand {
+  display: none;
+  flex-shrink: 0;
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .side-menu__brand {
+    display: flex;
+  }
+}
+
+.side-menu__brand-link {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-150);
+}
+
+.side-menu__brand-logo {
+  height: 40px;
+  object-fit: contain;
+  width: 40px;
+}
+
+.side-menu__brand-title {
+  color: var(--ids-color-content-default);
+  display: none;
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .side-menu__brand-title {
+    display: block;
+  }
+}
+
+.side-menu__nav {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: none;
+}
+
+/*
+ * The version tag lives in the header at l/m (header-content.hbs) and in
+ * the drawer at s/xs (nav.hbs renders page-versions.hbs a second time
+ * here) — never both. See header.css for the header-side half of this.
+ */
+.side-menu__version {
+  display: none;
+  flex-shrink: 0;
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .side-menu__version {
+    display: block;
+  }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .side-menu__version {
+    display: none;
+  }
+}
+
+.side-menu__list[data-depth="1"] {
+  padding-bottom: var(--side-menu-group-gap);
+}
+
+.side-menu__list[data-depth="2"] {
+  padding-bottom: var(--side-menu-subgroup-gap);
+}
+
+.side-menu__list[data-depth="3"],
+.side-menu__list[data-depth="4"] {
+  padding-bottom: var(--side-menu-subsubgroup-gap);
+}
+
+/* Figma's nested rows use a fixed 8px indent, not the DS default 12px/level */
+.side-menu__nav .ids-list-item {
+  --ids-list-item-tree-indent: var(--side-menu-tree-indent);
+}
+
+.side-menu__row {
+  align-items: center;
+  display: flex;
+}
+
+.side-menu__row .ids-list-item {
+  flex: 1;
+  min-width: 0;
+}
+
+/*
+ * Row states — colour and weight only, never a background. `.ids-list-item`
+ * is rendered without the DS's `--clickable`/`--selected` modifiers (see
+ * nav-tree.hbs) specifically to avoid their background-painting states;
+ * `.side-menu__link` is this bundle's own class for the interaction this
+ * design actually wants, still built entirely from DS tokens:
+ *
+ *   normal          content-default,      label/l or body/m
+ *   normal + hover   content-states-hover, same type
+ *   active (current) content-default,      label/l-high or body/m-high
+ *   active + hover   content-states-hover, label/l-high or body/m-high
+ *
+ * Top-level (depth 0) rows read as label/l per Figma node-id=2610-26422;
+ * nested rows keep the DS default body/m already on `.ids-list-item__label`.
+ * `-high` is the DS's own weight for an active menu item (see
+ * `.ids-menu-item--active` in menu/items/item.css) — not just a bare
+ * `font-weight` bump.
+ */
+.side-menu__link {
+  cursor: pointer;
+}
+
+.side-menu__link:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: calc(var(--ids-size-border-high) * -1);
+}
+
+@media (hover: hover) {
+  .side-menu__link:hover .ids-list-item__label {
+    color: var(--ids-color-content-states-hover);
+  }
+}
+
+.side-menu__link[aria-current="page"] .ids-list-item__label {
+  font: var(--ids-typo-body-m-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-body-m-high-letter-spacing);
+  text-transform: var(--ids-typo-body-m-high-text-transform);
+}
+
+.side-menu__list[data-depth="0"] > .side-menu__item > .side-menu__row .side-menu__link .ids-list-item__label {
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform);
+}
+
+.side-menu__list[data-depth="0"] > .side-menu__item > .side-menu__row .side-menu__link[aria-current="page"] .ids-list-item__label {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-transform: var(--ids-typo-label-l-high-text-transform);
+}
+
+/*
+ * Expand/collapse control — a square 40px hit area (row height) around the
+ * unchanged 20px chevron, rotated to point up when expanded.
+ */
+.side-menu__toggle {
+  align-items: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  height: var(--ids-size-250);
+  justify-content: center;
+  outline: none;
+  padding: 0;
+  transition: transform var(--side-menu-motion-duration) var(--side-menu-motion-easing);
+  width: var(--ids-size-250);
+}
+
+.side-menu__toggle:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: calc(var(--ids-size-border-high) * -1);
+}
+
+.side-menu__toggle .ids-icon {
+  height: var(--ids-size-125);
+  width: var(--ids-size-125);
+}
+
+.side-menu__toggle[aria-expanded="false"] {
+  transform: rotate(-90deg);
+}
+
+.side-menu__row:has(> .side-menu__toggle[aria-expanded="false"]) + .ids-list {
+  display: none;
+}

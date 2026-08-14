@@ -1,8 +1,18 @@
+{{!--
+  Breadcrumb toolbar (see GH issue #8): wrapped in the same DS grid
+  container as the header (grid-layout/grid-layout.css, vendored via
+  src/css/ids-components.yml) so both rows share the same per-breakpoint
+  gutter — this row has no 6/6 split to make, so its content is one
+  `--span-full` item, not two `--span-6` halves.
+--}}
 <div class="toolbar" role="navigation">
-{{> nav-toggle}}
-  {{#with site.homeUrl}}
-  <a href="{{{relativize this}}}" class="home-link{{#if @root.page.home}} is-current{{/if}}"></a>
-  {{/with}}
+  <div class="ids-grid-layout ids-grid-layout--with-margin">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-full toolbar__content">
+      {{#with site.homeUrl}}
+      <a href="{{{relativize this}}}" class="home-link{{#if @root.page.home}} is-current{{/if}}"></a>
+      {{/with}}
 {{> breadcrumbs}}
 {{> edit-this-page}}
+    </div>
+  </div>
 </div>

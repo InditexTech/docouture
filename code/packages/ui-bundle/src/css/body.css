@@ -1,3 +1,15 @@
+/*
+ * The content column shrinks when the side menu is visible rather than the
+ * menu overlaying it (see GH issue #8): `margin-left: var(--side-menu-
+ * offset)`, the same variable header.css offsets by. 0 below breakpoint l
+ * (m/s/xs are all overlay drawers there, see side-menu.css) and while the
+ * menu is collapsed, so there's nothing to push there.
+ */
+.body {
+  margin-left: var(--side-menu-offset);
+  transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
+}
+
 @media screen and (--ids-breakpoints-m) {
   .body {
     display: flex;

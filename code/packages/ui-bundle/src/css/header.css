@@ -1,8 +1,12 @@
 /*
- * Header toolbar (see GH issue #7). Full-width, fixed, above the content
- * column and side menu alike — Figma's frame sits inside the content column,
- * but this bundle keeps the header viewport-wide as it always has been; #8
- * owns the side-menu layout, not this issue.
+ * Header toolbar (see GH issue #7), fixed above the content column. Its left
+ * edge follows the side menu (see GH issue #8): `left: var(--side-menu-
+ * offset)` instead of a flat 100% width, so it starts where the content
+ * column starts once the menu is a pushed column — Figma (node-id=2610-26422)
+ * draws the header as a sibling of the side menu, not spanning under it.
+ * `--side-menu-offset` (see vars.css) is 0 below breakpoint l — m/s/xs are
+ * all overlay drawers there (see side-menu.css), so the header stays
+ * full-width at every breakpoint except l.
  *
  * Colours come straight off --ids-* tokens: this is a new DS-composed
  * component, not upstream chrome threaded through bridge.css aliases.
@@ -18,11 +22,11 @@ body {
   color: var(--ids-color-content-default);
   display: flex;
   height: var(--navbar-height);
-  justify-content: space-between;
-  padding: 0 var(--ids-size-400);
+  left: var(--side-menu-offset);
   position: fixed;
+  right: 0;
   top: 0;
-  width: 100%;
+  transition: left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
   z-index: var(--z-index-navbar);
   /*
    * 1px dashed rule, dash 4/4, matching Figma exactly — CSS `border-style:
@@ -39,27 +43,130 @@ body {
   text-decoration: none;
 }
 
+/*
+ * The header's own content sits in the same DS grid container as the
+ * breadcrumb toolbar (see GH issue #8 — grid-layout/grid-layout.css,
+ * vendored via src/css/ids-components.yml, and header-content.hbs):
+ * `.ids-grid-layout--with-margin` for the correct per-breakpoint gutter
+ * instead of a flat padding. Both halves carry `--span-6` *and*
+ * `--span-xs-3` (see header-content.hbs) so the row is 50/50 at every
+ * breakpoint instead of stacking at xs, where the grid itself is 6, not
+ * 12, columns. `.ids-grid-layout` already has its own `width: 100%`;
+ * `.header-toolbar` just needs to centre it vertically.
+ */
+.header-toolbar__grid {
+  align-items: center;
+}
+
+.header-toolbar__left {
+  align-items: center;
+  display: flex;
+  gap: var(--ids-size-150);
+  min-width: 0;
+}
+
+/*
+ * The menu toggle sits ahead of everything else in the left group at
+ * every breakpoint (see nav-tree partials / GH-8). Unhidden and driven by
+ * src/js/01-nav.ts; see header-content.hbs.
+ */
+.side-menu-toggle[hidden] {
+  display: none;
+}
+
+/*
+ * Product name — the side menu's own brand block carries it at l (see
+ * nav-brand.hbs); the header shows it instead at m/s/xs, where the side
+ * menu is a drawer with no brand block (side-menu.css).
+ */
+.header-toolbar__product-name {
+  color: var(--ids-color-content-default);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .header-toolbar__product-name {
+    display: none;
+  }
+}
+
 .header-toolbar__search {
   align-items: center;
   display: flex;
-  gap: var(--ids-size-75);
+  gap: var(--ids-size-100);
+  min-width: 0;
+}
+
+/* out of scope below l — see header-content.hbs */
+@media screen and (--ids-breakpoints-xs-s) {
+  .header-toolbar__search {
+    display: none;
+  }
+}
+
+/* the "Search" word itself is l-only; m keeps just the placeholder */
+.header-toolbar__search-label {
+  flex-shrink: 0;
+}
+
+@media screen and (--ids-breakpoints-xs-m) {
+  .header-toolbar__search-label {
+    display: none;
+  }
 }
 
 /* Figma's placeholder grey (#B3B3B3) is darker than the DS default (#757575). */
-.header-toolbar__search .ids-search-field-minimal {
-  --ids-color-content-low: var(--ids-color-content-states-disabled);
+.header-toolbar__search-input {
+  background: none;
+  border: none;
+  color: var(--ids-color-content-default);
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  min-width: 0;
+  outline: none;
+  padding: 0;
+  text-transform: var(--ids-typo-label-l-text-transform);
+}
+
+.header-toolbar__search-input::placeholder {
+  color: var(--ids-color-content-states-disabled);
 }
 
 .header-toolbar__actions {
   align-items: center;
   display: flex;
   gap: var(--ids-size-100);
+  justify-content: flex-end;
+}
+
+/*
+ * The version tag moves into the side-menu drawer at s (nav.hbs,
+ * side-menu.css) and is dropped altogether at xs; hidden here at both.
+ */
+@media screen and (--ids-breakpoints-xs-s) {
+  .header-toolbar__actions .page-versions {
+    display: none;
+  }
 }
 
 /* Solid tag is grey by default; green only on the component's latest version. */
 .header-toolbar__version--latest {
   --ids-color-bg-low: var(--ids-color-alt-green-low);
   --ids-color-content-default: var(--ids-color-alt-green-high);
+}
+
+/*
+ * Repo becomes icon-only below m: "AMIGA FRAMEWORK WEB" + "repo" + theme
+ * toggle no longer fit a 390px bar alongside the menu button. Not
+ * something Figma specifies for this breakpoint — see header-content.hbs.
+ */
+@media screen and (--ids-breakpoints-xs-s) {
+  .header-toolbar__repo .ids-button__label {
+    display: none;
+  }
 }
 
 /* Ghost button label is black by default; the repo link is AI blue in Figma. */

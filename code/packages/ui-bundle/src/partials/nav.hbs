@@ -4,9 +4,10 @@
     via --side-menu-offset (vars.css). No scrim, no drawer header. Full
     brand block: logo + product name (nav-brand.hbs).
   - m/s (513-1679): overlay drawer, narrower padding/gap, a 0.5px solid
-    right rule instead of l's dashed one, and a white 80% scrim
-    (.side-menu-scrim, a sibling so it can sit behind the panel and still
-    catch the outside-click that closes it — see 01-nav.ts). The version
+    right rule instead of l's dashed one, and a themed 80% scrim
+    (.side-menu-scrim, `--ids-color-bg-overlay` — a sibling so it can sit
+    behind the panel and still catch the outside-click that closes it —
+    see 01-nav.ts). The version
     tag (page-versions.hbs) moves out of the header and into the drawer at
     s only, matching the Figma frame for that breakpoint. Brand block
     renders icon-only here (title hidden) — see nav-brand.hbs's own note on

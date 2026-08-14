@@ -151,14 +151,17 @@ html.is-side-menu-collapsed {
 }
 
 /*
- * White 80% scrim behind the drawer at m/s only (l pushes instead of
- * overlaying; xs's drawer already covers the viewport, header included).
- * Starts below the header, same as the panel itself at these breakpoints,
- * so the header stays visible and clickable while the drawer is open. A
- * sibling of #side-menu, not a child, so it sits behind the sliding panel
- * (z-index) while still being outside it for the existing outside-
- * click-to-close listener in 01-nav.ts — clicking the scrim closes the
- * drawer with no extra JS.
+ * Scrim behind the drawer at m/s only (l pushes instead of overlaying; xs's
+ * drawer already covers the viewport, header included). `--ids-color-bg-
+ * overlay` is a DS token (white 80% in light, black 80% in dark), not a
+ * literal — the dark side wasn't previously themed at all: a hardcoded
+ * `rgb(255 255 255 / 80%)` washed the whole page white-ish over a dark
+ * surface instead of dimming it. Starts below the header, same as the
+ * panel itself at these breakpoints, so the header stays visible and
+ * clickable while the drawer is open. A sibling of #side-menu, not a
+ * child, so it sits behind the sliding panel (z-index) while still being
+ * outside it for the existing outside-click-to-close listener in
+ * 01-nav.ts — clicking the scrim closes the drawer with no extra JS.
  *
  * Fades in/out on the exact same duration and easing as the panel's own
  * slide (--side-menu-motion-*), rather than popping with `display`:
@@ -175,7 +178,7 @@ html.is-side-menu-collapsed {
 
 @media screen and (--ids-breakpoints-s-m) {
   .side-menu-scrim {
-    background: rgb(255 255 255 / 80%);
+    background: var(--ids-color-bg-overlay);
     bottom: 0;
     display: block;
     left: 0;

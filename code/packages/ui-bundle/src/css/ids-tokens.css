@@ -109,6 +109,7 @@
   --ids-color-bg-states-hover: #f7f7f7;
   --ids-color-bg-states-pressed: #ededed;
   --ids-color-bg-states-disabled: #f7f7f7;
+  --ids-color-bg-overlay: #ffffffcc;
   --ids-color-border-default: #000;
   --ids-color-border-low: #e3e3e3;
   --ids-color-border-states-focus: #0170e9;
@@ -151,6 +152,7 @@
   --ids-color-bg-states-hover: #434343;
   --ids-color-bg-states-pressed: #515151;
   --ids-color-bg-states-disabled: #434343;
+  --ids-color-bg-overlay: #000000cc;
   --ids-color-border-default: #fff;
   --ids-color-border-low: #5e5e5e;
   --ids-color-border-states-focus: #0084ff;

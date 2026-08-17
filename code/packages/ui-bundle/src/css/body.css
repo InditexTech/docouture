@@ -12,7 +12,7 @@
 
 @media screen and (--ids-breakpoints-xs-s) {
   main > .content {
-    overflow-x: auto;
+    overflow-x: hidden;
   }
 }
 

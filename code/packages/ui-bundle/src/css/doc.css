@@ -32,9 +32,52 @@
   grid-column: span 6;
   hyphens: auto;
   line-height: var(--doc-line-height);
-  max-width: var(--content-max-width);
   min-width: 0;
   padding-bottom: 4rem;
+}
+
+/*
+ * GH-11 follow-up: the hero/content boundary (Figma 2610:27109) draws a
+ * dashed rule the full width of the page, not just above the ToC panel
+ * (which already had its own top edge, toc.css). Unlike the `h2` band
+ * below, this one needs no gap-bridging trick: it sits on `main > .content`
+ * itself — the actual grid CONTAINER main.hbs builds, not one of the grid
+ * ITEMS (`.doc`/`.toc`) inside it — so its box already spans edge to edge
+ * (`.ids-grid-layout--with-margin`'s own inline padding is the only inset,
+ * matching the header/hero/footer gutter at every breakpoint) with nothing
+ * to bridge. `:not(:empty)` isn't needed: `.content` always has a `.toc`
+ * child (`display: none` when there's nothing to show it, but still
+ * present, see main.hbs) plus `.article-404` or `.doc`, so the rule always
+ * has something to sit above.
+ */
+main > .content {
+  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-position: top;
+  background-repeat: repeat-x;
+  background-size: 8px 1px;
+}
+
+/*
+ * GH-11 (Figma 3615:59166): the 780px measure used to sit on `.doc` itself,
+ * which capped literally everything below it, headings included. The
+ * section band now has to bleed to the grid track's own edge (see `.sect1 >
+ * h2` below), so the cap moves down to `.doc`'s direct children instead —
+ * everything BUT the `.sect1` wrapper div, which carries no width of its
+ * own and exists only to group a heading with its body. `.sectionbody`
+ * (the sibling the heading precedes, holding everything under it including
+ * nested `.sect2`/`.sect3`) re-applies the same cap one level down, so nested
+ * content still wraps at 780px — only the `h2` row it sits beside does not.
+ */
+.doc > * {
+  max-width: var(--content-max-width);
+}
+
+.doc > .sect1 {
+  max-width: none;
+}
+
+.doc > .sect1 > .sectionbody {
+  max-width: var(--content-max-width);
 }
 
 @media screen and (--ids-breakpoints-s) {
@@ -60,6 +103,31 @@
   }
 }
 
+/*
+ * Closing the ToC (hero.hbs's toggle, 02-on-this-page.ts) used to leave
+ * `.doc` at its narrower 8/9-of-12 span with the now-empty track just
+ * sitting there reserved — deliberate at the time (toc.css's own header
+ * comment), reversed here: with the panel gone (`display: none`, toc.css)
+ * there is nothing left to reserve the column for, so `.doc` widens back
+ * to the full 12 columns. Three classes' worth of specificity beats the
+ * two-class rules above regardless of source order, so this applies
+ * cleanly at both m and l without repeating itself per breakpoint.
+ */
+html.has-toc.is-toc-closed .doc {
+  grid-column: 1 / -1;
+}
+
+/*
+ * GH-11 heading scale (Figma 3615:59166, mapped in the issue's own table):
+ * `title-*` sizing, `text-transform` reset back to `none` — see
+ * .opencode/skills/iop-ds-foundations/reference/typography.md's own
+ * "Documentation deviation" section for why article prose keeps every
+ * `title-*` style's weight/size/line-height but not its uppercase default.
+ * Each level is its own rule rather than a shared block plus overrides,
+ * because every `--ids-typo-title-*` token is a distinct `font` shorthand —
+ * there is nothing left in common to factor out once that shorthand is
+ * applied.
+ */
 .doc h1,
 .doc h2,
 .doc h3,
@@ -67,56 +135,68 @@
 .doc h5,
 .doc h6 {
   color: var(--heading-font-color);
-  font-weight: var(--heading-font-weight);
   hyphens: none;
-  line-height: 1.3;
-  margin: 1rem 0 0;
+  margin: var(--doc-space-heading) 0 0;
+  text-transform: none;
+}
+
+.doc > h1.page,
+.doc h2 {
+  font: var(--ids-typo-title-l);
+  letter-spacing: var(--ids-typo-title-l-letter-spacing);
+}
+
+.doc h3 {
+  font: var(--ids-typo-title-m);
+  letter-spacing: var(--ids-typo-title-m-letter-spacing);
+}
+
+.doc h4 {
+  font: var(--ids-typo-title-s);
+  letter-spacing: var(--ids-typo-title-s-letter-spacing);
+}
+
+.doc h5,
+.doc h6 {
+  font: var(--ids-typo-title-xs);
+  letter-spacing: var(--ids-typo-title-xs-letter-spacing);
 }
 
 .doc > h1.page:first-child {
-  font-size: calc(36 / var(--rem-base) * 1rem);
-  margin: 1.5rem 0;
+  margin: var(--doc-space-block) 0;
 }
 
 @media screen and (--ids-breakpoints-s) {
   .doc > h1.page:first-child {
-    margin-top: 2.5rem;
+    margin-top: var(--doc-space-section);
   }
 }
 
 .doc > h2#name + .sectionbody {
-  margin-top: 1rem;
-}
-
-#preamble + .sect1,
-.doc .sect1 + .sect1 {
-  margin-top: 2rem;
+  margin-top: var(--doc-space-block);
 }
 
 .doc h1.sect0 {
   background: var(--abstract-background);
   font-size: 1.8em;
-  margin: 1.5rem -1rem 0;
+  margin: var(--doc-space-block) -1rem 0;
   padding: 0.5rem 1rem;
 }
 
-.doc h2:not(.discrete) {
-  border-bottom: 1px solid var(--section-divider-color);
-  margin-left: -1rem;
-  margin-right: -1rem;
-  padding: 0.4rem 1rem 0.1rem;
-}
-
-.doc h3:not(.discrete),
-.doc h4:not(.discrete) {
-  font-weight: var(--alt-heading-font-weight);
-}
-
+/*
+ * Deep-link permalink below section level, `h1`/`h6` only. GH-11's own
+ * band + copy-icon treatment (below) originally covered `h2` alone — the
+ * one heading rank Figma gives a "Section title" component (2672:47091)
+ * — and has since been extended to `h3`–`h5` too (design review); `h1`
+ * (the rare book-doctype `h1.sect0`) and `h6` still carry a real, working
+ * `sectanchors` anchor from Asciidoctor with no icon of their own, and it
+ * had a hover-revealed `§` before this issue touched the file. Keeping
+ * that same low-key affordance here is what stops those two anchors from
+ * becoming empty, zero-size, purposeless tab stops now that the shared
+ * h1–h6 rule above them is gone — not a design requirement, just not
+ * regressing one.
+ */
 .doc h1 .anchor,
-.doc h2 .anchor,
-.doc h3 .anchor,
-.doc h4 .anchor,
-.doc h5 .anchor,
 .doc h6 .anchor {
   position: absolute;
   text-decoration: none;
@@ -129,21 +209,341 @@
 }
 
 .doc h1 .anchor::before,
-.doc h2 .anchor::before,
-.doc h3 .anchor::before,
-.doc h4 .anchor::before,
-.doc h5 .anchor::before,
 .doc h6 .anchor::before {
   content: "\00a7";
 }
 
 .doc h1:hover .anchor,
-.doc h2:hover .anchor,
-.doc h3:hover .anchor,
-.doc h4:hover .anchor,
-.doc h5:hover .anchor,
-.doc h6:hover .anchor {
+.doc h6:hover .anchor,
+.doc h1:focus-within .anchor,
+.doc h6:focus-within .anchor {
   visibility: visible;
+}
+
+/*
+ * GH-11 section band (Figma 2672:47091/3615:59166): every `h2` — a `.sect1`
+ * heading — becomes a full-bleed row with a dashed rule top and bottom,
+ * `repeating-linear-gradient` rather than `border-style: dashed` for the
+ * same reason header.css/footer.css/side-menu.css/toc.css all use it: the
+ * border shorthand cannot control dash length, and Figma's is 4px on/4px
+ * off. Horizontal padding is 0, not the design's 64px — that's the L
+ * breakpoint's own grid gutter, which `.doc`'s own `.ids-grid-layout--
+ * with-margin` ancestor (main.hbs) already applies, so repeating it here
+ * would double it. `:not(.discrete)` is what keeps a `[discrete]` heading
+ * (content.adoc has one) plain prose with no band and no anchor slot — it
+ * is not a real section, `02-on-this-page.ts` already excludes it from the
+ * ToC on the same basis.
+ *
+ * No `.ids-divider` here despite the issue's own suggestion — the design
+ * system's divider is a solid rule; this one is dashed 4/4, which nothing
+ * in the DS models, so there is no component to compose from (see
+ * .opencode/skills/iop-ds-components/SKILL.md's decision order, step 4).
+ */
+.doc h2:not(.discrete) {
+  background-color: var(--ids-color-bg-default);
+  background-image:
+    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px),
+    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-position: top, bottom;
+  background-repeat: repeat-x, repeat-x;
+  background-size: 8px 1px, 8px 1px;
+  margin: var(--doc-space-section) 0 var(--doc-space-block);
+  padding-block: var(--doc-section-band-padding-block);
+  position: relative;
+  margin-left: calc(-1 * var(--comp-grid-margin-l));
+  padding-left: var(--comp-grid-margin-l);
+  margin-right: 0;
+  padding-right: 0;
+}
+
+html.has-toc.is-toc-closed .doc h2:not(.discrete) {
+  margin-right: calc(-1 * var(--comp-grid-margin-l));
+  padding-right: var(--comp-grid-margin-l);
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .doc h2:not(.discrete) {
+    margin-right: 0;
+    padding-right: 0;
+  }
+
+  html.has-toc.is-toc-closed .doc h2:not(.discrete) {
+    margin-right: calc(-1 * var(--comp-grid-margin-l));
+    padding-right: var(--comp-grid-margin-l);
+  }
+}
+
+@media screen and (--ids-breakpoints-xs-s) {
+  .doc h2:not(.discrete) {
+    margin-right: calc(-1 * var(--comp-grid-margin-l));
+    padding-right: var(--comp-grid-margin-l);
+  }
+}
+
+/*
+ * A `.sect1` opening the article with no preamble before it (no lead-in
+ * paragraph, image, etc.) puts its `h2` flush against `.doc`'s own top —
+ * exactly where the container-level hero/content rule above already sits.
+ * Zeroing the margin here means the two coincide instead of drawing a
+ * second, 80px-lower rule with a gap of bare white above it (Figma
+ * 3615:59166's own first section has no such gap either).
+ */
+.doc > .sect1:first-child > h2:not(.discrete) {
+  margin-top: 0;
+}
+
+/*
+ * GH-11 follow-up (design review, Figma 2610:27109): the band's own dashed
+ * rule needs to reach the ToC panel's left edge too, not stop at `.doc`'s
+ * own narrower column — `html.has-toc` reserves only 8/12 (m) or 9/12 (l)
+ * of the grid for `.doc`, see this file's own header comment — otherwise
+ * the grid's column gap reads as a break in an otherwise continuous line.
+ *
+ * The bridge is a `::after`, not a wider `h2` box: widening `h2` itself
+ * would drag the copy-link icon (`margin-inline-start: auto`, further
+ * down this file) along with it, off to the right of the visible title.
+ * It only needs to know the grid's own `gap` at each breakpoint — a fixed
+ * `--ids-size-*` token (`grid-layout.css`'s own value, mirrored here), not
+ * `.doc`/`.toc`'s fr-based column widths, which plain CSS has no way to
+ * read — so it reaches exactly as far as the gap and lands flush on
+ * `.toc`'s own left edge (toc.css's `grid-column`, the other track this
+ * bridges into). Not drawn at all below breakpoint m: `.toc` stacks above
+ * `.doc` there instead of beside it, so there is no gap to bridge. Not
+ * drawn with the ToC toggled closed either (`html.is-toc-closed`): `.doc`
+ * widens to the full 12 columns there (this file's own header comment
+ * above), so the band's own background already reaches the true right
+ * edge on its own — bridging by a further gap-width would run the line
+ * past the content area's own margin instead of stopping at it.
+ *
+ * `position: relative` for this pseudo is already covered by the base
+ * `h2` rule above (also needed there for the floating copy-link icon),
+ * so nothing further to set here beyond the pseudo itself.
+ */
+@media screen and (--ids-breakpoints-m) {
+  html.has-toc:not(.is-toc-closed) .doc h2:not(.discrete)::after {
+    background-color: var(--ids-color-bg-default);
+    background-image:
+      repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px),
+      repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+    background-position: top, bottom;
+    background-repeat: repeat-x, repeat-x;
+    background-size: 8px 1px, 8px 1px;
+    bottom: 0;
+    content: "";
+    left: 100%;
+    position: absolute;
+    top: 0;
+    width: var(--ids-size-300);
+  }
+}
+
+@media screen and (--ids-breakpoints-l) {
+  html.has-toc:not(.is-toc-closed) .doc h2:not(.discrete)::after {
+    width: var(--ids-size-350);
+  }
+}
+
+.doc h3:not(.discrete),
+.doc h4:not(.discrete) {
+  font-weight: var(--alt-heading-font-weight);
+}
+
+/*
+ * GH-11 copy-link affordance (Figma 3615:59166's "Copy link" slot). The
+ * anchor itself (`<a class="anchor" href="#…">`) is server-rendered by
+ * Asciidoctor's `sectanchors` attribute — every playbook already sets it —
+ * so a page keeps a real, focusable, working fragment link with JavaScript
+ * disabled; only its *upgrade* into an icon button with clipboard feedback
+ * is progressive (09-heading-anchors.ts adds the icon and toast markup,
+ * mirroring 06-copy-to-clipboard.ts's code-block copy button).
+ *
+ * Sized to the design system button's own tap-target height
+ * (`--ids-size-250`, `.ids-button`'s `min-height`, ids-components.css)
+ * rather than the DS's own icon-only-ghost width (`--ids-size-125`,
+ * `.ids-button--icon-only.ids-button--ghost`) — that variant is narrower
+ * than it is tall, fine for a button sitting beside label text, wrong for
+ * a standalone square target here. Not the DS class either way: the DS
+ * button needs `.ids-button__content`/`.ids-button__icon` wrapper spans
+ * this plain `<a>` does not have, and adding the class without them would
+ * be styling for markup that isn't there (see iop-ds-components skill,
+ * "BEM conventions").
+ *
+ * Floats over the band's own left gutter via `position: absolute`,
+ * `right: 100%` (its own right edge pinned to the heading's left edge,
+ * then pushed further left by `margin-right`) — not a flex sibling of
+ * the title text: an in-flow icon, even at `opacity: 0`, still reserves
+ * its own box, which would permanently indent the title text away from
+ * the left margin every prose paragraph below it starts flush against.
+ * Out of flow, the title stays exactly where plain prose puts it, hover
+ * or not, and the icon overlays outside it instead of pushing it aside.
+ * Revealed on hovering anywhere over the heading (not just the icon
+ * itself, which is invisible until then — a `:hover` confined to a
+ * 0-opacity target never fires) or via `:focus-within`, not `visibility:
+ * hidden`, which would pull it out of the tab order and fail this
+ * issue's own keyboard criterion; unconditionally visible on touch/
+ * no-hover input. The ghost-button hover/focus fill is a second,
+ * narrower rule further down, matching only when the pointer is over
+ * the icon itself.
+ *
+ * Fits the grid's own left gutter at m/l (`--comp-grid-margin-{m,l}`, 56
+ * and 64px, against a 52px icon+gap) with room to spare; s/xs (16/32px)
+ * are named out of scope for this epic already (issue #1's own "out of
+ * scope" list), so a tight or clipped fit there is not chased here.
+ *
+ * `h3`–`h5` share every declaration below with `h2` but one: `h2` alone
+ * gets `right: calc(100% - var(--comp-grid-margin-l))` rather than a
+ * bare `100%`, because `h2` alone bleeds `--comp-grid-margin-l` further
+ * left than its visible title (the section band's own negative `margin-
+ * left` offset by an equal `padding-left`, further up this file) — `h3`–
+ * `h5` have no such bleed, so `100%` alone already lands the icon at
+ * their own real left edge without needing to subtract anything.
+ */
+.doc h2:not(.discrete) .anchor,
+.doc h3:not(.discrete) .anchor,
+.doc h4:not(.discrete) .anchor,
+.doc h5:not(.discrete) .anchor {
+  align-items: center;
+  border-radius: var(--ids-size-50);
+  color: var(--ids-color-content-low);
+  display: inline-flex;
+  height: var(--ids-size-250);
+  justify-content: center;
+  margin-right: var(--ids-size-75);
+  opacity: 0;
+  position: absolute;
+  right: 100%;
+  text-decoration: none;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: var(--ids-motion-micro-states);
+  width: var(--ids-size-250);
+}
+
+.doc h2:not(.discrete) .anchor {
+  right: calc(100% - var(--comp-grid-margin-l));
+}
+
+/*
+ * `position: relative` for `h3`–`h5` — `h2` already carries it, needed
+ * there for both this icon and the section band's own ToC-gap bridge
+ * (further up this file); these three need it purely so the icon above
+ * has something to position against.
+ */
+.doc h3:not(.discrete),
+.doc h4:not(.discrete),
+.doc h5:not(.discrete) {
+  position: relative;
+}
+
+/*
+ * Hidden below breakpoint m, not just tight — the floating icon's own
+ * left-gutter fit (this rule's own comment above) assumes `--comp-grid-
+ * margin-{m,l}`; xs/s's 16/32px gutters are well short of the ~52px it
+ * needs, and both are already named out of scope for this epic (issue
+ * #1's own "out of scope" list). `display: none` rather than leaving it
+ * to clip: the anchor itself (`<a href="#…">`) still renders and works
+ * with no icon, same as the plain hover-`§` treatment `h1`/`h6` keep at
+ * every breakpoint.
+ */
+@media screen and (--ids-breakpoints-xs-s) {
+  .doc h2:not(.discrete) .anchor,
+  .doc h3:not(.discrete) .anchor,
+  .doc h4:not(.discrete) .anchor,
+  .doc h5:not(.discrete) .anchor {
+    display: none;
+  }
+}
+
+.doc h2:not(.discrete):hover .anchor,
+.doc h2:not(.discrete):focus-within .anchor,
+.doc h3:not(.discrete):hover .anchor,
+.doc h3:not(.discrete):focus-within .anchor,
+.doc h4:not(.discrete):hover .anchor,
+.doc h4:not(.discrete):focus-within .anchor,
+.doc h5:not(.discrete):hover .anchor,
+.doc h5:not(.discrete):focus-within .anchor {
+  opacity: 1;
+}
+
+.doc h2:not(.discrete) .anchor:hover,
+.doc h2:not(.discrete) .anchor:focus-visible,
+.doc h3:not(.discrete) .anchor:hover,
+.doc h3:not(.discrete) .anchor:focus-visible,
+.doc h4:not(.discrete) .anchor:hover,
+.doc h4:not(.discrete) .anchor:focus-visible,
+.doc h5:not(.discrete) .anchor:hover,
+.doc h5:not(.discrete) .anchor:focus-visible {
+  background-color: var(--ids-color-bg-low);
+}
+
+.doc h2:not(.discrete) .anchor:focus-visible,
+.doc h3:not(.discrete) .anchor:focus-visible,
+.doc h4:not(.discrete) .anchor:focus-visible,
+.doc h5:not(.discrete) .anchor:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: 1px;
+}
+
+@media (hover: none) {
+  .doc h2:not(.discrete) .anchor,
+  .doc h3:not(.discrete) .anchor,
+  .doc h4:not(.discrete) .anchor,
+  .doc h5:not(.discrete) .anchor {
+    opacity: 1;
+  }
+}
+
+.doc h2:not(.discrete) .anchor .ids-icon,
+.doc h3:not(.discrete) .anchor .ids-icon,
+.doc h4:not(.discrete) .anchor .ids-icon,
+.doc h5:not(.discrete) .anchor .ids-icon {
+  height: var(--ids-size-125);
+  width: var(--ids-size-125);
+}
+
+/*
+ * Copy feedback toast — same visual as the code-block copy button's own
+ * `.copy-toast` further down this file, lifted so both callers share one
+ * rule instead of two copies; each caller positions it, this only paints
+ * it. `aria-live="polite"` (09-heading-anchors.ts) is what gives the
+ * keyboard path the same feedback the visual toast gives a mouse.
+ *
+ * Type is `--ids-typo-label-m` (11/16, uppercase) rather than a raw
+ * `font-size` — the full triplet (font + letter-spacing + text-transform)
+ * per the design system's own typography convention, not just the size —
+ * and padding is trimmed to `2px 6px` against that smaller line height so
+ * the pill stays compact instead of inheriting the taller 13px version's
+ * proportions.
+ */
+.doc .copy-toast {
+  background-color: var(--doc-font-color);
+  border-radius: 0;
+  color: var(--color-white);
+  cursor: auto;
+  display: inline-flex;
+  font: var(--ids-typo-label-m);
+  justify-content: center;
+  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  opacity: 0;
+  padding: 2px 6px;
+  position: absolute;
+  text-transform: var(--ids-typo-label-m-text-transform);
+  transition: opacity 0.5s ease 0.5s;
+  white-space: nowrap;
+}
+
+.doc .copy-button.clicked .copy-toast {
+  opacity: 1;
+  transition: none;
+}
+
+.doc h2:not(.discrete) .copy-toast,
+.doc h3:not(.discrete) .copy-toast,
+.doc h4:not(.discrete) .copy-toast,
+.doc h5:not(.discrete) .copy-toast {
+  left: 0;
+  top: 100%;
+  margin-top: var(--ids-size-25);
 }
 
 .doc p,
@@ -253,6 +653,7 @@
 
 .doc .underline {
   text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .doc .line-through {
@@ -276,7 +677,7 @@
 .doc .partintro,
 .doc details,
 .doc hr {
-  margin: 1rem 0 0;
+  margin: var(--doc-space-block) 0 0;
 }
 
 .doc > table.tableblock,
@@ -285,7 +686,7 @@
 .doc .tablecontainer + *,
 .doc :not(.tablecontainer) > table.tableblock,
 .doc :not(.tablecontainer) > table.tableblock + * {
-  margin-top: 1.5rem;
+  margin-top: calc(var(--doc-space-block) * 1.5);
 }
 
 .doc table.tableblock {
@@ -403,7 +804,7 @@
 }
 
 .doc .admonitionblock {
-  margin: 1.4rem 0 0;
+  margin: calc(var(--doc-space-block) * 1.4) 0 0;
 }
 
 .doc .admonitionblock p,
@@ -588,7 +989,7 @@
 .doc ol,
 .doc ul {
   margin: 0;
-  padding: 0 0 0 2rem;
+  padding: 0 0 0 1rem;
 }
 
 .doc ul.checklist,
@@ -658,7 +1059,7 @@
 }
 
 .doc ul.checklist {
-  padding-left: 1rem;
+  padding-left: 0;
 }
 
 .doc ul.checklist p > i.fa-check-square-o:first-child,
@@ -906,19 +1307,17 @@
   fill: currentColor;
 }
 
+/*
+ * Position/tail only — the toast's paint (background, radius, padding,
+ * opacity fade) is `.doc .copy-toast`, shared with the heading anchor's own
+ * toast (GH-11) further up this file; the generic
+ * `.doc .copy-button.clicked .copy-toast` reveal rule there already matches
+ * here too, however many ancestors sit between the two classes.
+ */
 .doc .source-toolbox .copy-toast {
   flex: none;
   position: relative;
-  display: inline-flex;
-  justify-content: center;
   margin-top: 1em;
-  background-color: var(--doc-font-color);
-  border-radius: 0.25em;
-  padding: 0.5em;
-  color: var(--color-white);
-  cursor: auto;
-  opacity: 0;
-  transition: opacity 0.5s ease 0.5s;
 }
 
 .doc .source-toolbox .copy-toast::after {
@@ -931,11 +1330,6 @@
   border-left-color: var(--doc-font-color);
   transform: rotate(-90deg) translateX(50%) translateY(50%);
   transform-origin: left;
-}
-
-.doc .source-toolbox .copy-button.clicked .copy-toast {
-  opacity: 1;
-  transition: none;
 }
 
 .doc .language-console .hljs-meta {

@@ -24,19 +24,23 @@ icons:
   actions:
     - add-outlined
     - back-outlined
-    - check-circle-outlined # admonition: tip / important
+    - check-circle-outlined # copy-to-clipboard success (06-copy-to-clipboard.ts); admonition: important (GH-13)
     - close-large-outlined # side-menu drawer close (GH-8, breakpoint xs)
     - copy-outlined
     - full-screen-enter-outlined
     - full-screen-exit-outlined
   alerts:
-    - information-outlined # admonition: note
-    - warning-outlined # admonition: warning / caution
+    - warning-outlined # admonition: warning (GH-13)
+    - warning-alt-outlined # admonition: caution (GH-13)
   arrows:
     - arrow-left-outlined # pagination: previous
     - arrow-right-outlined # pagination: next
     - chevron-down-outlined
     - chevron-up-outlined
+  business:
+    - sticker-outlined # admonition: note (GH-13)
+  communication:
+    - comment-outlined # admonition: tip (GH-13)
   connectivity:
     - link-outlined # section anchor / copy link
     - link-external-outlined
@@ -49,3 +53,20 @@ icons:
     - home-outlined
   weather:
     - sunny-outlined # theme toggle, light
+
+# Icons that also need a CSS-consumable form (a `--icon-mask-<group>-<name>`
+# custom property, generated into src/css/icon-masks.css), because Asciidoctor
+# with `icons: font` (both playbooks) gives admonitions fixed markup —
+# `<i class="fa icon-note" title="Note">` — with no room for the `{{icon}}`
+# helper's `<svg><use>`. Every entry here must also be listed under `icons:`
+# above; `just icons-build` fails otherwise. See GH-13.
+masks:
+  actions:
+    - check-circle-outlined
+  alerts:
+    - warning-outlined
+    - warning-alt-outlined
+  business:
+    - sticker-outlined
+  communication:
+    - comment-outlined

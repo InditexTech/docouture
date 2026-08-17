@@ -1,7 +1,7 @@
 {
   "designSystemVersion": "1.28.0",
   "componentsPackageVersion": "1.28.0",
-  "generatedAt": "2026-08-17T09:02:23.366Z",
+  "generatedAt": "2026-08-17T10:17:12.037Z",
   "sources": {
     "variables/index.css": "e4a4d34ec45638533f0029016641d85170294e0e720d42dc2eff63ee5fa00a08",
     "typography.css": "5f6eae209b13452bbeadbe127fedbbf507328088ac3fa6b8980269adbee01883",
@@ -88,6 +88,7 @@
     "--ids-size-300",
     "--ids-size-350",
     "--ids-size-50",
+    "--ids-size-500",
     "--ids-size-75",
     "--ids-size-border-default",
     "--ids-size-border-high",

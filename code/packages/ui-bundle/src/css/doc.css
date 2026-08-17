@@ -831,88 +831,183 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   vertical-align: middle;
 }
 
+/*
+ * GH-13 (Figma 2610:28944, "Admonition" component set 2650:33028) — NOT the
+ * shipped `.ids-notification`: the design stacks a notification-like label
+ * band and a second content band with a 2px gap between them, and overrides
+ * the notification's own `min-height`/`padding-inline`. Vendoring
+ * notification.css would leave half of it unused and fight the other half —
+ * both build from tokens here instead, so the "no IDS declaration overridden"
+ * rule stays true by construction.
+ *
+ * Asciidoctor (`icons: font`, both playbooks) gives this exactly one element
+ * to distinguish icon from label, `<i class="fa icon-<type>" title="<Type>">`
+ * — no room for the `{{icon}}` helper's `<svg><use>`, hence the
+ * `--icon-mask-*` custom properties generated into icon-masks.css (see
+ * src/img/icons.yml's `masks:` section) rather than the sprite.
+ *
+ * Mapping, matching the Figma instances exactly (their own label text, not a
+ * guess): IMPORTANT -> Informative/blue/check-circle, CAUTION -> Danger/red/
+ * warning-alt, WARNING -> Warning/orange/warning, TIP -> Tip/teal/comment,
+ * NOTE -> Note/purple/sticker.
+ */
 .doc .admonitionblock {
   margin: calc(var(--doc-space-block) * 1.4) 0 0;
+  /*
+   * 80px overflow past the text measure (GH-13 follow-up), same mechanism as
+   * the code block below: `width` on an element whose ancestors merely cap
+   * their OWN box (`.doc > *`/`.sectionbody`'s `max-width`, above) overflows
+   * that box rather than being clipped by it. `100cqw` is the same backstop
+   * as the code block's — `.doc`'s own `container-type: inline-size` — so
+   * this can never exceed the grid column regardless of breakpoint or
+   * whether the ToC column is reserved. A `.doc > .admonitionblock` (no
+   * enclosing section) is still capped at `--content-max-width` regardless,
+   * because `.doc > *`'s own `max-width` wins there — same as a top-level
+   * code block, deliberately mirrored rather than special-cased.
+   */
+  width: min(calc(var(--content-max-width) + var(--ids-size-500)), 100cqw);
 }
 
-.doc .admonitionblock p,
-.doc .admonitionblock td.content {
-  font-size: calc(16 / var(--rem-base) * 1rem);
+.doc :is(.exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details)
+  .admonitionblock {
+  width: 100%;
 }
 
-.doc .admonitionblock td.content > :not(.title):first-child,
-.doc .admonitionblock td.content > .title + * {
-  margin-top: 0;
+.doc .admonitionblock.important {
+  --admonition-tint: var(--ids-color-alt-blue-low);
+  --admonition-icon: var(--icon-mask-actions-check-circle-outlined);
 }
 
-.doc .admonitionblock td.content pre {
-  font-size: calc(15 / var(--rem-base) * 1rem);
+.doc .admonitionblock.caution {
+  --admonition-tint: var(--ids-color-alt-red-low);
+  --admonition-icon: var(--icon-mask-alerts-warning-alt-outlined);
 }
 
+.doc .admonitionblock.warning {
+  --admonition-tint: var(--ids-color-alt-orange-low);
+  --admonition-icon: var(--icon-mask-alerts-warning-outlined);
+}
+
+.doc .admonitionblock.tip {
+  --admonition-tint: var(--ids-color-alt-teal-low);
+  --admonition-icon: var(--icon-mask-communication-comment-outlined);
+}
+
+.doc .admonitionblock.note {
+  --admonition-tint: var(--ids-color-alt-purple-low);
+  --admonition-icon: var(--icon-mask-business-sticker-outlined);
+}
+
+/*
+ * The two bands (label, content) are `<td>`s of a single-row `<table>` —
+ * Asciidoctor's own markup, not ours. Collapsing the implicit `tbody`/`tr`
+ * with `display: contents` turns the table into a plain flex column of its
+ * two cells, matching the design's "Admonition" frame (column, gap 2px)
+ * without touching that markup.
+ */
 .doc .admonitionblock > table {
-  table-layout: fixed;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-12);
   width: 100%;
 }
 
-.doc .admonitionblock td.content {
-  padding: 1rem 1rem 0.75rem;
-  background: var(--admonition-background);
-  width: 100%;
-  overflow-wrap: anywhere;
+.doc .admonitionblock > table > tbody,
+.doc .admonitionblock > table > tbody > tr {
+  display: contents;
 }
 
+/*
+ * Label band: icon + type name, e.g. Figma's `layout_a4f4d6ed` (row, padding
+ * 8/12/8/40). Figma's own instance overrides only the padding — `min-height`
+ * isn't in that override, so the band still measures the underlying
+ * `.ids-notification`'s own 56px (`--ids-size-350`) rather than the ~36px its
+ * padding and label line-height alone would hug to; `align-items: center`
+ * (also the real notification's own, not decorative here) is what centres
+ * icon and label in the slack. Verified against a render of the component
+ * set: the label band measures 56px there, matching this exactly.
+ */
 .doc .admonitionblock td.icon {
-  font-size: calc(15 / var(--rem-base) * 1rem);
-  left: 0;
-  line-height: 1;
-  padding: 0;
-  position: absolute;
-  top: 0;
-  transform: translate(-0.5rem, -50%);
+  align-items: center;
+  background: var(--admonition-tint);
+  display: flex;
+  min-height: var(--ids-size-350);
+  padding: var(--ids-size-50) var(--ids-size-75) var(--ids-size-50) var(--ids-size-250);
+  position: relative;
 }
 
 .doc .admonitionblock td.icon i {
-  align-items: center;
-  border-radius: 0.45rem;
-  display: inline-flex;
-  filter: initial;
-  height: 1.25rem;
-  padding: 0 0.5rem;
-  vertical-align: initial;
-  width: fit-content;
+  color: var(--doc-font-color);
+  display: block;
+  font: var(--ids-typo-label-l);
+  font-style: normal;
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform);
+}
+
+.doc .admonitionblock td.icon i::before {
+  background-color: currentColor;
+  content: "";
+  height: var(--ids-size-125);
+  left: var(--ids-size-75);
+  mask-image: var(--admonition-icon);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--ids-size-125);
 }
 
 .doc .admonitionblock td.icon i::after {
   content: attr(title);
-  font-weight: var(--admonition-label-font-weight);
+}
+
+/* Content band, e.g. Figma's `layout_428d4761` (column, padding 20/40, gap 16). */
+.doc .admonitionblock td.content {
+  background: var(--admonition-tint);
+  color: var(--doc-font-color);
+  font: var(--ids-typo-body-l);
+  letter-spacing: var(--ids-typo-body-l-letter-spacing);
+  overflow-wrap: anywhere;
+  padding: var(--ids-size-125) var(--ids-size-250);
+  text-transform: var(--ids-typo-body-l-text-transform);
+  width: 100%;
+}
+
+.doc .admonitionblock td.content > * + * {
+  margin-top: var(--ids-size-100);
+}
+
+/*
+ * A delimited admonition's content (`====`, e.g. NOTE/WARNING/CAUTION/
+ * IMPORTANT in preview-src/content.adoc) wraps its prose in Asciidoctor's own
+ * `<div class="paragraph">`, which carries a top margin unconditionally
+ * (`.doc .paragraph`, above — the generic block-spacing rule every top-level
+ * block gets). `> * + *` above only ever zeroes gaps BETWEEN siblings, so
+ * that div's own margin still lands on the band's first (and often only)
+ * child, reading as if a title had reserved space above it when none exists.
+ * A single-line admonition (no `====`, e.g. the first TIP) has no such
+ * wrapping div and was never affected — this brings the rest in line with it.
+ */
+.doc .admonitionblock td.content > :first-child {
+  margin-top: 0;
+}
+
+/*
+ * The block's optional `.Title` (e.g. `preview-src/content.adoc:369`) renders
+ * INSIDE `td.content`, before its first paragraph — this is Figma's
+ * `body/l-high` line (`EL-a80e9037`), not the caption styling shared by
+ * example/image/table titles elsewhere in this file, so it is deliberately
+ * left out of that shared rule and styled on its own here instead.
+ */
+.doc .admonitionblock td.content > .title {
+  color: var(--doc-font-color);
+  font: var(--ids-typo-body-l-high);
   font-style: normal;
-  text-transform: uppercase;
-}
-
-.doc .admonitionblock td.icon i.icon-caution {
-  background-color: var(--caution-color);
-  color: var(--caution-on-color);
-}
-
-.doc .admonitionblock td.icon i.icon-important {
-  background-color: var(--important-color);
-  color: var(--important-on-color);
-}
-
-.doc .admonitionblock td.icon i.icon-note {
-  background-color: var(--note-color);
-  color: var(--note-on-color);
-}
-
-.doc .admonitionblock td.icon i.icon-tip {
-  background-color: var(--tip-color);
-  color: var(--tip-on-color);
-}
-
-.doc .admonitionblock td.icon i.icon-warning {
-  background-color: var(--warning-color);
-  color: var(--warning-on-color);
+  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
+  text-transform: var(--ids-typo-body-l-high-text-transform);
 }
 
 .doc .imageblock,
@@ -1128,7 +1223,6 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   padding: 0;
 }
 
-.doc .admonitionblock .title,
 .doc .exampleblock .title,
 .doc .imageblock .title,
 .doc .literalblock .title,

@@ -85,7 +85,7 @@ Loads of details.
 ====
 
 .Result
-[%collapsible.result]
+[%collapsible]
 ====
 Voila!
 ====

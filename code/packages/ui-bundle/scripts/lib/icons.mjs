@@ -29,6 +29,8 @@ export const paths = {
   manifest: join(packageRoot, 'src/img/icons.yml'),
   lock: join(packageRoot, 'icons.lock.json'),
   sprite: join(packageRoot, 'src/img/ids-icons.svg'),
+  /** Generated `--icon-mask-<group>-<name>` custom properties — see loadMasks(). */
+  masks: join(packageRoot, 'src/css/icon-masks.css'),
 }
 
 /** Where the design system publishes its sprites. There is no version in the path. */
@@ -114,28 +116,66 @@ export const sha256 = (text) => createHash('sha256').update(text).digest('hex')
 
 // -------------------------------------------------------------- manifest -----
 
+/** Read one `group -> [name, ...]` mapping into a flat, ordered `{ group, name, id }` list. */
+function flatten(mapping, label) {
+  const entries = []
+  for (const [group, names] of Object.entries(mapping)) {
+    if (!GROUPS.includes(group)) {
+      throw new Error(`Unknown icon group "${group}" in ${label}. Known groups: ${GROUPS.join(', ')}`)
+    }
+    if (!Array.isArray(names)) {
+      throw new Error(`${label} entry for group "${group}" must be a list of icon names`)
+    }
+    for (const name of names) entries.push({ group, name, id: `sw-icons-${group}-${name}` })
+  }
+  return entries
+}
+
+let manifestDoc
+
+async function readManifestDoc() {
+  if (!manifestDoc) manifestDoc = yaml.load(await readFile(paths.manifest, 'utf8'))
+  return manifestDoc
+}
+
 /**
- * Read `src/img/icons.yml` into a flat, ordered list of `{ group, name, id }`.
- * Order follows the manifest so the generated sprite has a stable, reviewable
- * diff rather than one that reshuffles on every run.
+ * Read `src/img/icons.yml`'s `icons:` mapping into a flat, ordered list of
+ * `{ group, name, id }`. Order follows the manifest so the generated sprite
+ * has a stable, reviewable diff rather than one that reshuffles on every run.
  */
 export async function loadManifest() {
-  const doc = yaml.load(await readFile(paths.manifest, 'utf8'))
+  const doc = await readManifestDoc()
   const icons = doc?.icons
   if (!icons || typeof icons !== 'object') {
     throw new Error(`${paths.manifest} has no \`icons\` mapping`)
   }
+  return flatten(icons, '`icons:`')
+}
 
-  const entries = []
-  for (const [group, names] of Object.entries(icons)) {
-    if (!GROUPS.includes(group)) {
-      throw new Error(`Unknown icon group "${group}" in the manifest. Known groups: ${GROUPS.join(', ')}`)
-    }
-    if (!Array.isArray(names)) {
-      throw new Error(`Manifest entry for group "${group}" must be a list of icon names`)
-    }
-    for (const name of names) entries.push({ group, name, id: `sw-icons-${group}-${name}` })
+/**
+ * Read `src/img/icons.yml`'s `masks:` mapping — the subset of vendored icons
+ * that also need a CSS-consumable `--icon-mask-<group>-<name>` custom
+ * property, for markup Asciidoctor generates itself (admonitions, GH-13) where
+ * the `{{icon}}` helper's `<svg><use>` has no way in. Every entry must also
+ * appear under `icons:`; that's what makes it safe to resolve against the
+ * same sprite mirror rather than a second index.
+ */
+export async function loadMasks() {
+  const doc = await readManifestDoc()
+  const masks = doc?.masks
+  if (!masks) return []
+  if (typeof masks !== 'object') {
+    throw new Error(`${paths.manifest}'s \`masks\` must be a mapping, like \`icons:\``)
   }
+  const entries = flatten(masks, '`masks:`')
+
+  const vendored = new Set((await loadManifest()).map(({ group, name }) => `${group}/${name}`))
+  const notVendored = entries.filter(({ group, name }) => !vendored.has(`${group}/${name}`))
+  if (notVendored.length) {
+    const refs = notVendored.map(({ group, name }) => `${group}/${name}`).join(', ')
+    throw new Error(`\`masks:\` in ${paths.manifest} lists ${refs}, not present under \`icons:\` — add it there first`)
+  }
+
   return entries
 }
 

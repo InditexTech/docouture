@@ -1,0 +1,21 @@
+code/packages/ui-bundle/src/css/ids-tokens.css
+  s_09ef6ad42c35ee::t_bb9ea4be22f780 26,70,143-145
+code/packages/ui-bundle/src/css/ids.lock.json
+  s_09ef6ad42c35ee::t_10f1f248e65c8c 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b0e1463d64758ed900d8df453aa982c8a6107ac4",
+  "prompts": {},
+  "sessions": {
+    "s_09ef6ad42c35ee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff118efdeffeI4VUttEoLuhOKg",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

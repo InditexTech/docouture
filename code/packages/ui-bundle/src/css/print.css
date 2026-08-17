@@ -75,6 +75,16 @@
     padding-bottom: 2rem;
   }
 
+  /*
+   * GH-11 moved the 780px measure off `.doc` itself onto its direct
+   * children (doc.css) so the section band could bleed full-width on
+   * screen — printed pages have no band to make room for, so the cap
+   * comes back off here too, same as `.doc` above always did.
+   */
+  .doc > * {
+    max-width: none;
+  }
+
   .doc .admonitionblock td.icon {
     print-color-adjust: exact;
   }

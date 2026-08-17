@@ -43,13 +43,15 @@
  * reserve, the panel is simply the first block above the article, and
  * hero.css hides the toggle outright at those widths.
  *
- * At m/l the panel's dashed rule runs along BOTH the top and the left edge
- * (Figma's own frame draws `strokeWeight: 1px 0px 0px 1px` — top and left,
- * not left alone) and, because it shares row 1 with `.doc` under default
- * `align-items: stretch`, the panel's own box is stretched to the row's
- * full height — the same height as the article — so that rule runs the
- * article's entire length, not just the height of the (short) link list
- * inside it.
+ * At m/l the panel's dashed rule runs along the left edge (Figma's own
+ * frame also draws a top rule, `strokeWeight: 1px 0px 0px 1px` — GH-11's
+ * follow-up moved that one to `main > .content` instead, a full-width
+ * hero/content divider on the actual grid container rather than this
+ * panel's own narrower box; see doc.css) and, because it shares row 1
+ * with `.doc` under default `align-items: stretch`, the panel's own box
+ * is stretched to the row's full height — the same height as the
+ * article — so that rule runs the article's entire length, not just the
+ * height of the (short) link list inside it.
  *
  * `position: sticky` sits on `.toc-menu` (the inner list), NOT `.toc`
  * itself: a sticky element needs room to slide within a TALLER static
@@ -69,9 +71,10 @@
   min-width: 0;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--ids-breakpoints-xs-s) {
   .toc {
-    grid-column: span 12;
+    grid-column: span 6;
+    padding-top: var(--ids-size-150);
   }
 }
 
@@ -145,20 +148,20 @@ html.has-toc .toc {
 @media screen and (--ids-breakpoints-m) {
   html.has-toc .toc {
     /*
-     * Two dashed edges, matching Figma's `strokeWeight: 1px 0px 0px 1px`
-     * (top, left) — two background layers, the same repeating-linear-
-     * gradient technique side-menu.css/header.css use for one edge each,
-     * combined here (`background-*` shorthand values are positional
-     * per layer). The horizontal (top) pattern runs along the row axis
-     * (`repeat-x`, an 8×1px tile); the vertical (left) one along the
-     * column axis (`repeat-y`, a 1×8px tile) — same as before.
+     * Left edge only (Figma's own `strokeWeight: 1px 0px 0px 1px` also
+     * draws a top rule, but that one is now redundant: GH-11's follow-up
+     * put a full-width hero/content divider directly on `main > .content`
+     * — the actual grid container, spanning true edge to edge — so this
+     * panel doesn't need its own top rule sitting exactly on top of that
+     * one (doc.css has the full story). `repeating-linear-gradient`
+     * rather than `border-style: dashed` for the same reason header.css/
+     * footer.css/side-menu.css use it: the border shorthand cannot
+     * control dash length, and Figma's is 4px on/4px off.
      */
-    background-image:
-      repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px),
-      repeating-linear-gradient(to bottom, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
-    background-position: top, left;
-    background-repeat: repeat-x, repeat-y;
-    background-size: 8px 1px, 1px 8px;
+    background-image: repeating-linear-gradient(to bottom, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+    background-position: left;
+    background-repeat: repeat-y;
+    background-size: 1px 8px;
     border-bottom: none;
     grid-column: 9 / span 4;
     grid-row: 1;
@@ -198,5 +201,11 @@ html.has-toc .toc {
 @media screen and (--ids-breakpoints-l) {
   html.has-toc .toc {
     grid-column: 10 / span 3;
+  }
+}
+
+@media screen and (--ids-breakpoints-xs-s) {
+  html.has-toc .toc {
+    margin-bottom: 0;
   }
 }

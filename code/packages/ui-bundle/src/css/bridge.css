@@ -29,6 +29,17 @@
   /* fonts */
   --body-font-color: var(--ids-color-content-default);
   --body-font-family: var(--ids-typo-font-family-primary), "Helvetica Neue", arial, sans-serif;
+  /*
+   * GH-11 follow-up (design review): prose was rendering at the browser's
+   * own UA-default weight (400) — nothing had ever pointed a body weight
+   * at a design system token, unlike every `.ids-text--*`/`.ids-button`/
+   * heading rule, which all bundle their own weight into their `font`
+   * shorthand already. Same colour (`--ids-color-content-default`, pure
+   * black) at a heavier weight than the hero's `body/l` excerpt reads as
+   * visibly darker even though the colour itself never differed — this is
+   * what fixes that, matching the design system's own "Light" body text.
+   */
+  --body-font-weight: var(--ids-typo-font-weight-default);
   --body-font-weight-bold: var(--ids-typo-font-weight-high);
   --monospace-font-family: var(--ids-typo-font-family-monospace), ui-monospace, monospace;
   --monospace-font-weight-bold: var(--ids-typo-font-weight-high);

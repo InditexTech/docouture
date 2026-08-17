@@ -12,6 +12,14 @@ Author Name
 :page-action-secondary: View source
 :page-action-secondary-url: https://example.org
 :description: Content test page: exercises the hero, article, TOC and pagination templates against long-form AsciiDoc.
+// GH-11: the fixture goes as deep as h5 (`===== `) to exercise the full
+// heading scale — `toclevels` defaults to 2 (h2/h3 only, toc.hbs), which
+// would otherwise hide that deeper nesting from "On this page" entirely.
+// Must be `page-toclevels`, not the bare Asciidoctor attribute: Antora's
+// page-composer only copies `page-*`-prefixed attributes onto
+// `page.attributes` (stripping the prefix) — see @antora/page-composer's
+// own build-ui-model.js. A plain `:toclevels:` is invisible to toc.hbs.
+:page-toclevels: 4
 
 [.lead]
 You are looking at the content test page for the Antora default UI.
@@ -75,11 +83,6 @@ Details.
 
 Loads of details.
 ====
-
-[,asciidoc]
-----
-Voila!
-----
 
 .Result
 [%collapsible.result]
@@ -167,6 +170,16 @@ Here we just have some plain text.
 ----
 plain text
 ----
+
+==== A nested subsection
+
+Nested one level under _Some Code_ — exercises the `h4` step of the GH-11 heading
+scale (`title/s`, Figma 3615:59166).
+
+===== And one level deeper still
+
+The `h5` step (`title/xs`) — the last one the design defines a distinct size for;
+`h6` shares it.
 
 [.rolename]
 === Liber recusabo

@@ -20,7 +20,15 @@
   --body-font-size--print: 0.9375em; /* 15px */
   --body-line-height: 1.15;
   --doc-font-size: inherit;
-  --doc-font-size--desktop: calc(17 / var(--rem-base) * 1rem);
+  /*
+   * GH-11 (Figma 3615:59166): prose is the design system's own `body/l` size
+   * (16px at `.ids-scale-medium`), not the bundle's pre-existing 17px — this
+   * is the one spot doc type borrows a raw `--ids-typo-*` scale value rather
+   * than a full text-style token, because the *ratio* below is ours, not the
+   * design system's fixed 24px line-height (see the comment on
+   * `--doc-line-height`).
+   */
+  --doc-font-size--desktop: var(--ids-typo-font-size-16);
 
   /*
    * Unitless line heights. The design system pairs each font size with a fixed
@@ -28,8 +36,23 @@
    * reflow at any zoom level, so documentation body copy keeps ratios. (The
    * ToC no longer needs one of these — GH-10 moved its typography onto
    * `--ids-typo-*` shorthands, which already carry a line-height.)
+   *
+   * 1.5 matches `body/l`'s own 16/24 ratio (GH-11, Figma 3615:59166) rather
+   * than being picked independently.
    */
-  --doc-line-height: 1.6;
+  --doc-line-height: 1.5;
+
+  /*
+   * GH-11 prose rhythm (Figma 3615:59166/59300): the section band's own
+   * block padding, the gap above a mid-document heading, and the gap above
+   * a new `h2` band. Plain block spacing (paragraphs, lists, admonitions,
+   * …) reuses `--doc-space-block` — see doc.css. All three are `--ids-
+   * size-*` tokens, not literals, per vars.css's own rule above.
+   */
+  --doc-space-block: var(--ids-size-150);
+  --doc-space-heading: var(--ids-size-250);
+  --doc-space-section: calc(var(--ids-size-250) * 2);
+  --doc-section-band-padding-block: var(--ids-size-50);
 
   /* dimensions and positioning */
   /*
@@ -148,7 +171,7 @@
   --hero-space-block-start-l: calc(128 / var(--rem-base) * 1rem);
   --hero-space-block-end: calc(40 / var(--rem-base) * 1rem);
   --hero-excerpt-max-width: calc(597 / var(--rem-base) * 1rem);
-  --content-max-width: calc(780 / var(--rem-base) * 1rem);
+  --content-max-width: calc(820 / var(--rem-base) * 1rem);
 
   /* italics for figure captions; not a design system concern */
   --caption-font-style: italic;

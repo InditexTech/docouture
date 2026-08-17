@@ -85,7 +85,18 @@
     max-width: none;
   }
 
-  .doc .admonitionblock td.icon {
+  /*
+   * GH-13: the screen rule grows an admonition 80px past the text measure
+   * (doc.css); a printed page has no grid column to bleed into, so it comes
+   * back to the page's own text width, same as the code block's `width`
+   * would if GH-12 also reset it here (it doesn't yet — separate defect).
+   */
+  .doc .admonitionblock {
+    width: auto;
+  }
+
+  .doc .admonitionblock td.icon,
+  .doc .admonitionblock td.content {
     print-color-adjust: exact;
   }
 

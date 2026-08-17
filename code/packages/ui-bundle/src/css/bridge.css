@@ -60,26 +60,6 @@
   --page-version-menu-background: var(--ids-color-bg-default);
   --page-version-missing-font-color: var(--ids-color-content-states-disabled);
 
-  /*
-   * admonitions — the design system has no success/warning/error colour family;
-   * status meaning is carried by the `alt` hues, matching IDS Banner. CAUTION
-   * and WARNING both mean "be careful", so both take orange.
-   *
-   * *-on-color is the text drawn on the hue. --ids-color-content-inverse is
-   * white in light mode and black in dark, which is exactly the contrast the
-   * alt-*-high colours need in each theme.
-   */
-  --note-color: var(--ids-color-alt-blue-high);
-  --note-on-color: var(--ids-color-content-inverse);
-  --tip-color: var(--ids-color-alt-green-high);
-  --tip-on-color: var(--ids-color-content-inverse);
-  --important-color: var(--ids-color-alt-red-high);
-  --important-on-color: var(--ids-color-content-inverse);
-  --warning-color: var(--ids-color-alt-orange-high);
-  --warning-on-color: var(--ids-color-content-inverse);
-  --caution-color: var(--ids-color-alt-orange-high);
-  --caution-on-color: var(--ids-color-content-inverse);
-
   /* doc */
   --doc-font-color: var(--ids-color-content-default);
   --heading-font-color: var(--ids-color-content-default);
@@ -92,8 +72,6 @@
   --abstract-background: var(--ids-color-bg-low);
   --abstract-font-color: var(--ids-color-content-default);
   --abstract-border-color: var(--ids-color-border-low);
-  --admonition-background: var(--ids-color-bg-low);
-  --admonition-label-font-weight: var(--ids-typo-font-weight-high);
   --caption-font-color: var(--ids-color-content-low);
   --caption-font-weight: var(--ids-typo-font-weight-high);
   --code-background: var(--ids-color-bg-low);

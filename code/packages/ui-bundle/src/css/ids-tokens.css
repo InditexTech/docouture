@@ -21,6 +21,7 @@
   --ids-size-250: 40px;
   --ids-size-300: 48px;
   --ids-size-350: 56px;
+  --ids-size-500: 80px;
   --ids-typo-font-family-primary: Helvetica Now Text SW10;
   --ids-typo-font-family-monospace: NotoSansMono;
   --ids-typo-font-size-16: 16px;
@@ -65,6 +66,7 @@
   --ids-size-250: 50px;
   --ids-size-300: 64px;
   --ids-size-350: 72px;
+  --ids-size-500: 104px;
   --ids-typo-font-family-primary: Helvetica Now Text SW10;
   --ids-typo-font-family-monospace: NotoSansMono;
   --ids-typo-font-size-16: 21px;

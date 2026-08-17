@@ -62,6 +62,13 @@ in `icons.lock.json`; `scripts/build-sprite.mjs` regenerates the sprite. The
 full catalogue those sprites come from is mirrored into a gitignored `.icons/`
 directory and is deliberately not committed.
 
+`src/css/icon-masks.css` is a second, generated derivative of the same
+INDITEX-licensed sprites: a subset of the icons above, named in
+`src/img/icons.yml`'s `masks:` list, re-cut as `mask-image`-ready data URIs for
+markup Asciidoctor generates itself with no room for an `<svg><use>`
+(admonitions — see doc.css and GH-13). Same source, same licence, same
+regeneration command.
+
 The typefaces referenced by those stylesheets (Helvetica Now Text SW10, Noto
 Sans Mono) are loaded at runtime from https://amgassets.inditex.com and are not
 embedded in this bundle.

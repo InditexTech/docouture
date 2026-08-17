@@ -12,12 +12,26 @@
 # and `is-latest` to light up. Keep every `is-current` / `is-latest` case
 # wired through an anchor, not a value that merely looks equal.
 #
-# Intentionally thin: `site.keys` (beyond `repoUrl`), `page.attributes` and
-# `asciidoc.extensions` are populated per-page by build-preview-pages.js, not
-# here. If you add a partial that reads a branch this fixture doesn't cover,
-# extend it — don't let the gap surface for the first time in a real build.
+# Intentionally thin: `site.keys` (beyond `repoUrl`), `page.attributes` are
+# populated per-page by build-preview-pages.js, not here. If you add a
+# partial that reads a branch this fixture doesn't cover, extend it — don't
+# let the gap surface for the first time in a real build.
+#
+# `asciidoc.extensions` below IS read directly from here (not synthesised
+# per-page) — build-preview-pages.js requires each entry and registers it
+# globally against Asciidoctor 4.0's own registry before converting
+# preview-src/*.adoc, then copies the resulting extensions list onto every
+# version's `asciidoc` — see that file's own header comment.
 #
 antoraVersion: '1.0.0'
+asciidoc:
+  extensions:
+    # GH-14: `label:red[Text]` / `label:[Text]` (grey default) — an IDS
+    # Label inline; `mono:[text]` — plain monospaced text, no code chip.
+    # Requires the ui-bundle devDependency (package.json) so plain
+    # `require()` (not Antora's user-require-helper, unused here)
+    # resolves it.
+    - '@inditextech/pdocs-asciidoc-extensions'
 site:
   url: http://localhost:5252
   title: Atd Docs

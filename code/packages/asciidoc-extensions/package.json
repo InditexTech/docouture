@@ -1,0 +1,14 @@
+{
+  "name": "@inditextech/pdocs-asciidoc-extensions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Asciidoctor extensions shared by pdocs documentation sites — label:/mono: inline macros, table wrapping and nowrap-cols (GH-14)",
+  "license": "MPL-2.0",
+  "main": "index.js",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  }
+}

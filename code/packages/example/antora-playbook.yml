@@ -79,3 +79,8 @@ asciidoc:
     sectanchors: ''
     idprefix: ''
     idseparator: '-'
+  extensions:
+    # GH-14: `label:red[Text]` / `label:[Text]` (grey default) — an IDS
+    # Label inline; `mono:[text]` — plain monospaced text, no code chip.
+    # Both styled by ui-bundle's already-vendored CSS.
+    - '@inditextech/pdocs-asciidoc-extensions'

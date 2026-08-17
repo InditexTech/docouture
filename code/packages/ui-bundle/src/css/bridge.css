@@ -85,10 +85,6 @@
   --quote-font-color: var(--ids-color-content-low);
   --quote-attribution-font-color: var(--ids-color-content-low);
   --sidebar-background: var(--ids-color-bg-low);
-  --table-border-color: var(--ids-color-border-low);
-  --table-stripe-background: var(--ids-color-bg-low);
-  /* upstream used a white-to-smoke gradient; the design system models surfaces, not gradients */
-  --table-footer-background: var(--ids-color-bg-low);
 
   /*
    * stacking — upstream used 1..4. Mapped onto the design system scale, which

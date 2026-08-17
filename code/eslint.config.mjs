@@ -47,6 +47,19 @@ export default tseslint.config(
     },
   },
   {
+    // Asciidoctor extensions (GH-14): CommonJS is the registration contract
+    // both Antora (asciidoc.extensions) and the ui-bundle preview harness
+    // require — see .opencode/skills/asciidoc/reference/extensions.md.
+    files: ['packages/asciidoc-extensions/**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: globals.node,
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
     // Developer scripts: standalone Node programs, ES modules, run by hand or
     // through a package script. Not part of any bundle.
     files: ['scripts/**/*.mjs', 'packages/*/scripts/**/*.mjs', 'tools/*/*.mjs'],

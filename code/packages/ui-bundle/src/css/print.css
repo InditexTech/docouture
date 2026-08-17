@@ -86,13 +86,36 @@
   }
 
   /*
-   * GH-13: the screen rule grows an admonition 80px past the text measure
-   * (doc.css); a printed page has no grid column to bleed into, so it comes
-   * back to the page's own text width, same as the code block's `width`
-   * would if GH-12 also reset it here (it doesn't yet — separate defect).
+   * GH-13/GH-14: the screen rule grows an admonition 80px past the text
+   * measure and a table/code block up to 50% past it (doc.css); a printed
+   * page has no grid column to bleed into, so `width: auto` lets each fall
+   * back to whatever `max-width` its ancestor already caps it to (`.doc >
+   * *`/`.sectionbody`, doc.css) — same mechanism for all four, no separate
+   * `max-width` needed here. GH-12's code block was the one of these still
+   * missing this reset — fixed here alongside the table.
+   *
+   * GH-14 table-sizing follow-up: the table's own budget moved to
+   * `.tableblock-wrap` (table-container.js's postprocessor wrapper), so
+   * that's what gets reset here now instead of `table.tableblock.stretch`/
+   * `.fit-content` directly — those two classes are still `width: 100%`/
+   * `auto` of the wrapper respectively (doc.css), which is already correct
+   * for print once the WRAPPER itself stops capping at 150%.
    */
-  .doc .admonitionblock {
+  .doc .admonitionblock,
+  .doc .listingblock,
+  .doc .literalblock,
+  .doc .tableblock-wrap {
     width: auto;
+  }
+
+  /*
+   * `.tablecontainer` is the screen-only horizontal scrollport (doc.css) —
+   * nothing to scroll on a printed page, and `overflow-x: auto` on an
+   * ancestor would otherwise clip a table wider than the page instead of
+   * letting it break/scale the way print rendering expects.
+   */
+  .doc .tablecontainer {
+    overflow-x: visible;
   }
 
   .doc .admonitionblock td.icon,

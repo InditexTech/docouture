@@ -585,14 +585,29 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   font-style: normal;
 }
 
+/*
+ * Inline code chip (Figma 2610:28934): `code/m` type — same NotoSansMono
+ * 14/20 weight-350 token the code block itself uses (doc.css's GH-12
+ * section) — on the DS's low background, sharp corners (no radius in the
+ * design, unlike the previous rounded chip), horizontal padding only
+ * (`--ids-size-25`, 4px) since the type's own 20px line-height already
+ * gives the chip its vertical breathing room. `--code-background`/
+ * `--code-font-color` (bridge.css) are already `--ids-color-bg-low` /
+ * `--ids-color-content-default`, which is `#F7F7F7` on black in the light
+ * site theme, exactly the design's fill — and flips with the DS's own
+ * light/dark token swap for the dark site theme the same as everything
+ * else, no separate override needed here.
+ */
 .doc p code,
 .doc thead code,
 .doc .colist > table code {
   color: var(--code-font-color);
   background: var(--code-background);
-  border-radius: 0.25em;
-  font-size: 0.95em;
-  padding: 0.125em 0.25em;
+  border-radius: 0;
+  font: var(--ids-typo-code-m);
+  letter-spacing: var(--ids-typo-code-m-letter-spacing);
+  text-transform: var(--ids-typo-code-m-text-transform);
+  padding: 0 var(--ids-size-25);
 }
 
 .doc code,

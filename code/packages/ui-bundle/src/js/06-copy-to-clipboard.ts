@@ -10,14 +10,16 @@
   var supportsCopy = window.navigator.clipboard
   var uiRootPath = (config.uiRootPath == null ? window.uiRootPath : config.uiRootPath) || '.'
 
-  // GH-12 (A6): the action bar is the design's IDS Code Block (Figma
-  // 2610:24218) — a ghost "copy code" button (icon + label) and, where the
-  // Fullscreen API exists, an icon-only ghost fullscreen toggle — replacing
-  // the plain icon-and-toast this bundle shipped before. Both buttons are
-  // real `.ids-button` markup (see button/button.js in the DS sidecar for
-  // the shape this mirrors) so they pick up ids-components.css and the dark
-  // token scope doc.css/ids-tokens.css give `.doc .listingblock > .content`
-  // for free — no bundle-authored button styling here.
+  // GH-12 (A6) follow-up (design review): both action-bar buttons are
+  // icon-only ghost buttons now — no visible "copy code" label — real
+  // `.ids-button` markup (see button/button.js in the DS sidecar for the
+  // shape this mirrors) so they pick up ids-components.css and the dark
+  // token scope doc.css/ids-tokens.css give `.doc .listingblock >
+  // .content` for free. Copy feedback, with no label left to swap, is the
+  // icon itself swapping to a checkmark plus a visually-hidden live
+  // region for screen readers — same split fullscreen's icon+aria-pressed
+  // swap already uses, just with an announcement added since a checkmark
+  // alone says nothing to anyone not looking at it.
   function icon (name: string): SVGSVGElement {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     svg.setAttribute('class', 'ids-icon')
@@ -60,24 +62,24 @@
 
     if (supportsCopy) {
       var copyButton = document.createElement('button')
-      copyButton.className = 'ids-button ids-button--ghost ids-button--icon-and-label'
+      copyButton.className = 'ids-button ids-button--ghost ids-button--icon-only'
       copyButton.type = 'button'
+      copyButton.setAttribute('aria-label', 'Copy code')
       var copyContent = document.createElement('div')
       copyContent.className = 'ids-button__content'
       var copyIconSlot = document.createElement('span')
       copyIconSlot.className = 'ids-button__icon ids-button__icon-icon'
       copyIconSlot.setAttribute('aria-hidden', 'true')
-      copyIconSlot.appendChild(icon('actions-copy-outlined'))
-      var copyLabel = document.createElement('span')
-      copyLabel.className = 'ids-button__label'
-      copyLabel.setAttribute('aria-live', 'polite')
-      var copyLabelText = document.createTextNode('copy code')
-      copyLabel.appendChild(copyLabelText)
+      var copyIcon = icon('actions-copy-outlined')
+      copyIconSlot.appendChild(copyIcon)
       copyContent.appendChild(copyIconSlot)
-      copyContent.appendChild(copyLabel)
       copyButton.appendChild(copyContent)
+      var copyLiveRegion = document.createElement('span')
+      copyLiveRegion.className = 'visually-hidden'
+      copyLiveRegion.setAttribute('aria-live', 'polite')
+      copyButton.appendChild(copyLiveRegion)
       actions.appendChild(copyButton)
-      copyButton.addEventListener('click', writeToClipboard.bind(null, code, copyLabelText))
+      copyButton.addEventListener('click', writeToClipboard.bind(null, code, copyButton, copyIcon, copyLiveRegion))
     }
 
     // requestFullscreen/fullscreenElement is unprefixed in every currently
@@ -117,7 +119,12 @@
       })
     }
 
-    content.appendChild(toolbox)
+    // Prepended, not appended: `.content` is a flex column now (the action
+    // bar is a normal row above the code, not an absolute overlay — see
+    // doc.css), so DOM order is visual order. `pre` is already `.content`'s
+    // only child at this point (server-rendered), so this always puts the
+    // bar first.
+    content.insertBefore(toolbox, content.firstChild)
   })
 
   function extractCommands (text) {
@@ -127,19 +134,18 @@
     return cmds.join(' && ')
   }
 
-  // Feedback is the button's own label swapping to "copied" for a couple of
-  // seconds (aria-live="polite" on the label announces it) rather than the
-  // toast pill heading-anchors still uses — the design's ghost button has no
-  // toast, and this is the one caller left that would still have wanted one.
-  function writeToClipboard (code, labelText) {
+  function writeToClipboard (code, button, iconEl, liveRegion) {
     var text = code.innerText.replace(TRAILING_SPACE_RX, '')
     if (code.dataset.lang === 'console' && text.startsWith('$ ')) text = extractCommands(text)
     window.navigator.clipboard.writeText(text).then(
       function () {
-        var original = labelText.data
-        labelText.data = 'copied'
+        iconEl.querySelector('use').setAttribute('href', uiRootPath + '/img/ids-icons.svg#sw-icons-actions-check-circle-outlined')
+        button.setAttribute('aria-label', 'Copied to clipboard')
+        liveRegion.textContent = 'Copied to clipboard'
         setTimeout(function () {
-          labelText.data = original
+          iconEl.querySelector('use').setAttribute('href', uiRootPath + '/img/ids-icons.svg#sw-icons-actions-copy-outlined')
+          button.setAttribute('aria-label', 'Copy code')
+          liveRegion.textContent = ''
         }, 2000)
       },
       function () {}

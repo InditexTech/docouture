@@ -107,7 +107,6 @@
   .doc .listingblock > .content,
   .doc .literalblock > .content {
     background: none;
-    border: none;
     color: inherit;
   }
 

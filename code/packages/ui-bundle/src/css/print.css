@@ -93,6 +93,27 @@
     display: block;
   }
 
+  /*
+   * GH-12: the code surface is always dark on screen — `.doc
+   * .listingblock > .content` is one of the selectors
+   * tools/ids/sync.mjs widens `.ids-theme-dark`'s own token values onto
+   * (see ids-tokens.css), unconditionally, so it is unaffected by the
+   * `html.ids-theme-dark` override above and needs its own reset here:
+   * without it, printed code would render white-on-black regardless of
+   * site theme, wasting ink and failing contrast on paper. The action bar
+   * (copy/fullscreen) has no printed equivalent — hidden outright, same as
+   * the chrome hidden above.
+   */
+  .doc .listingblock > .content,
+  .doc .literalblock > .content {
+    background: none;
+    color: inherit;
+  }
+
+  .doc .source-toolbox {
+    display: none;
+  }
+
   footer.footer {
     background: none;
     border-top: 1px solid var(--panel-border-color);

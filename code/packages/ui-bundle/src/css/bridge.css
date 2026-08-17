@@ -102,9 +102,6 @@
   --example-border-color: var(--ids-color-border-low);
   --kbd-background: var(--ids-color-bg-low);
   --kbd-border-color: var(--ids-color-border-low);
-  --pre-background: var(--ids-color-bg-low);
-  --pre-border-color: var(--ids-color-border-low);
-  --pre-annotation-font-color: var(--ids-color-content-low);
   --quote-background: var(--ids-color-bg-low);
   --quote-border-color: var(--ids-color-content-low);
   --quote-font-color: var(--ids-color-content-low);

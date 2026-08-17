@@ -34,6 +34,19 @@
   line-height: var(--doc-line-height);
   min-width: 0;
   padding-bottom: 4rem;
+  /*
+   * GH-12 follow-up: query-container context for the code block's own width
+   * rule further down (`100cqw`) — `.doc` is the actual grid column a code
+   * block must never grow past, which is wider than the 780/820px text
+   * measure any of its ancestors (`.sectionbody`, `.doc > *`) cap
+   * themselves to. A container query unit resolves against the nearest
+   * ancestor with `container-type` set, skipping past those narrower
+   * boxes entirely, which a percentage never could (a child's `%` always
+   * resolves against its immediate containing block). Declaring it here
+   * costs nothing else in this rule — inline-size containment doesn't
+   * affect grid placement or block layout.
+   */
+  container-type: inline-size;
 }
 
 /*
@@ -572,14 +585,29 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   font-style: normal;
 }
 
+/*
+ * Inline code chip (Figma 2610:28934): `code/m` type — same NotoSansMono
+ * 14/20 weight-350 token the code block itself uses (doc.css's GH-12
+ * section) — on the DS's low background, sharp corners (no radius in the
+ * design, unlike the previous rounded chip), horizontal padding only
+ * (`--ids-size-25`, 4px) since the type's own 20px line-height already
+ * gives the chip its vertical breathing room. `--code-background`/
+ * `--code-font-color` (bridge.css) are already `--ids-color-bg-low` /
+ * `--ids-color-content-default`, which is `#F7F7F7` on black in the light
+ * site theme, exactly the design's fill — and flips with the DS's own
+ * light/dark token swap for the dark site theme the same as everything
+ * else, no separate override needed here.
+ */
 .doc p code,
 .doc thead code,
 .doc .colist > table code {
   color: var(--code-font-color);
   background: var(--code-background);
-  border-radius: 0.25em;
-  font-size: 0.95em;
-  padding: 0.125em 0.25em;
+  border-radius: 0;
+  font: var(--ids-typo-code-m);
+  letter-spacing: var(--ids-typo-code-m-letter-spacing);
+  text-transform: var(--ids-typo-code-m-text-transform);
+  padding: 0 var(--ids-size-25);
 }
 
 .doc code,
@@ -1234,102 +1262,152 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   white-space: pre-wrap;
 }
 
-.doc pre.highlight > code,
-.doc .listingblock pre:not(.highlight),
-.doc .literalblock pre {
-  background: var(--pre-background);
-  box-shadow: inset 0 0 1.75px var(--pre-border-color);
-  display: block;
-  overflow-x: auto;
-  padding: 0.875em;
+/*
+ * GH-12 (A6) follow-up (design review): the code surface — IDS Code Block,
+ * Figma 2610:24218 — revised from the first pass:
+ *
+ *   - No padding on the container itself. The action bar is a normal row
+ *     above the code (not an absolute overlay reserving space for itself
+ *     via the container's own top padding); the code text gets its own
+ *     padding instead. Nothing needs to reserve space for anything else.
+ *   - Background follows the SITE theme rather than being fixed black:
+ *     `--ids-color-bg-default` (#000) in the light site theme,
+ *     `--ids-color-bg-low` (#363636) once `.ids-theme-dark` is active.
+ *     Both already resolve through the same widened `.ids-theme-dark`
+ *     bucket tools/ids/sync.mjs gives this selector (see that file's own
+ *     header) — just two different tokens out of it, so still no literal
+ *     colour of our own and no separate dark-mode override block needed.
+ *   - Width can grow up to 50% past the article's own text measure
+ *     (`--content-max-width`) — code commonly runs to longer lines than
+ *     prose — but never past `.doc`'s own grid column, via the `100cqw`
+ *     container query unit set up on `.doc` above.
+ *
+ *     Growth is on a bare `.doc .listingblock`/`.literalblock` (any
+ *     nesting depth), NOT scoped to a `.sectionbody`-parent allowlist —
+ *     an earlier revision tried that and missed every code block under an
+ *     h3+ subsection, because only the OUTERMOST section level
+ *     (`.sect1`, directly under `h2`) gets a `.sectionbody` wrapper;
+ *     `.sect2`/`.sect3`/… (h3/h4/…) nest their content straight inside the
+ *     `.sectN` div with no such wrapper, so `.sectionbody > .listingblock`
+ *     silently never matched there. The exclusion list right below is
+ *     what keeps this from ALSO widening a code block genuinely nested
+ *     inside a list, admonition, example, sidebar, quote, table cell or
+ *     collapsible block — those get put back to 100% explicitly, at
+ *     higher specificity than the growth rule regardless of source order
+ *     (an `:is(...)` argument counts as one class for specificity, so two
+ *     compound selectors beats the growth rule's one).
+ *
+ * The action bar's ghost buttons (06-copy-to-clipboard.ts) still invert
+ * for free from the same widened dark-theme scope — no separate override
+ * needed for `.ids-button--ghost` either.
+ */
+.doc .listingblock,
+.doc .literalblock {
+  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
 }
 
-.doc .listingblock > .content {
+.doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details) .listingblock,
+.doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details) .literalblock {
+  width: 100%;
+}
+
+.doc .listingblock > .content,
+.doc .literalblock > .content {
+  display: flex;
+  flex-direction: column;
+  background: var(--ids-color-bg-default);
+  color: var(--ids-color-content-default);
   position: relative;
+  width: 100%;
 }
 
+.ids-theme-dark .doc .listingblock > .content,
+.ids-theme-dark .doc .literalblock > .content {
+  background: var(--ids-color-bg-low);
+}
+
+.doc .listingblock > .content pre,
+.doc .literalblock > .content pre {
+  background: none;
+  box-shadow: none;
+  display: block;
+  margin: 0;
+  padding: var(--ids-size-100) var(--ids-size-100) var(--ids-size-150);
+  overflow-x: auto;
+  font: var(--ids-typo-code-m);
+  letter-spacing: var(--ids-typo-code-m-letter-spacing);
+  text-transform: var(--ids-typo-code-m-text-transform);
+}
+
+/*
+ * Fullscreen (06-copy-to-clipboard.ts calls requestFullscreen() on
+ * `.content`). The Fullscreen API's own UA styles stretch the element to
+ * fill the viewport and centre it — colour above already carries over
+ * unchanged; only vertical scrolling needs adding back, since `pre`'s own
+ * `overflow-x: auto` alone would clip a block taller than the viewport.
+ */
+.doc .listingblock > .content:fullscreen,
+.doc .literalblock > .content:fullscreen {
+  overflow-y: auto;
+}
+
+/*
+ * Action bar — a normal row at the top of `.content` (see the header
+ * comment above for why it no longer overlays), height set by the ghost
+ * buttons' own `.ids-button` sizing, gap between them from the design
+ * (Figma 2610:24218's "Action bar" frame: 8px). `.source-actions` always
+ * sits at the row's trailing edge via `margin-left: auto` — not
+ * `justify-content: space-between` on the row itself, which only works
+ * with two flex children; when there's no language chip (no `.source-lang`
+ * sibling), `.source-actions` would be the row's only child and
+ * `space-between` puts a lone flex child at the START, not the end.
+ * `margin-left: auto` gets the right answer regardless of whether the
+ * chip is there.
+ */
 .doc .source-toolbox {
   display: flex;
-  visibility: hidden;
-  position: absolute;
-  top: 0.25rem;
-  right: 0.5rem;
-  color: var(--pre-annotation-font-color);
+  align-items: center;
+  gap: var(--ids-size-50);
+  padding: var(--ids-size-50) var(--ids-size-100) 0;
+  color: var(--ids-color-content-low);
   font-family: var(--body-font-family);
   font-size: calc(13 / var(--rem-base) * 1rem);
   line-height: 1;
   user-select: none;
   white-space: nowrap;
-  z-index: 1;
-}
-
-.doc .listingblock:hover .source-toolbox {
-  visibility: visible;
 }
 
 .doc .source-toolbox .source-lang {
   text-transform: uppercase;
   letter-spacing: 0.075em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.doc .source-toolbox > :not(:last-child)::after {
-  content: "|";
-  letter-spacing: 0;
-  padding: 0 1ch;
-}
-
-.doc .source-toolbox .copy-button {
+.doc .source-toolbox .source-actions {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  background: none;
-  border: none;
-  color: inherit;
-  outline: none;
-  padding: 0;
-  font-size: inherit;
-  line-height: inherit;
-  width: 1em;
-  height: 1em;
-}
-
-.doc .source-toolbox .copy-icon {
-  flex: none;
-  width: inherit;
-  height: inherit;
-}
-
-.doc .source-toolbox img.copy-icon {
-  filter: invert(50.2%);
-}
-
-.doc .source-toolbox svg.copy-icon {
-  fill: currentColor;
+  gap: var(--ids-size-50);
+  margin-left: auto;
 }
 
 /*
- * Position/tail only — the toast's paint (background, radius, padding,
- * opacity fade) is `.doc .copy-toast`, shared with the heading anchor's own
- * toast (GH-11) further up this file; the generic
- * `.doc .copy-button.clicked .copy-toast` reveal rule there already matches
- * here too, however many ancestors sit between the two classes.
+ * Screen-reader-only feedback for the (icon-only, no visible label) copy
+ * button — 06-copy-to-clipboard.ts's `copyLiveRegion`. Standard clip-based
+ * hiding: `display: none`/`visibility: hidden` would pull it out of the
+ * accessibility tree too, silencing the very `aria-live` announcement it
+ * exists for.
  */
-.doc .source-toolbox .copy-toast {
-  flex: none;
-  position: relative;
-  margin-top: 1em;
-}
-
-.doc .source-toolbox .copy-toast::after {
-  content: "";
+.doc .visually-hidden {
   position: absolute;
-  top: 0;
-  width: 1em;
-  height: 1em;
-  border: 0.55em solid transparent;
-  border-left-color: var(--doc-font-color);
-  transform: rotate(-90deg) translateX(50%) translateY(50%);
-  transform-origin: left;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .doc .language-console .hljs-meta {

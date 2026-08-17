@@ -10,6 +10,18 @@ pipeline (gulp 5, esbuild, svgo, TypeScript sources) and the upgrade from
 highlight.js 9 to 11. The Handlebars templates and stylesheets remain
 substantially upstream's work.
 
+The syntax-highlighting palette is highlight.js's own bundled themes, "GitHub
+Dark" and "GitHub Dark Dimmed" (highlight.js/styles/github-dark(-dimmed).css),
+imported as-is from the highlight.js package already listed as a dependency
+below and scoped to this bundle's two site themes by
+gulp.d/lib/hljs-theme-scope.js at build time — see src/css/site.css's own
+comment. Covered by the same BSD-3-Clause licence as highlight.js itself:
+
+  highlight.js
+  https://github.com/highlightjs/highlight.js
+  Copyright (c) 2006, Ivan Sagalaev
+  Licensed under the BSD 3-Clause License (see node_modules/highlight.js/LICENSE)
+
 --------------------------------------------------------------------------------
 
 This bundle embeds a small amount of CSS derived from the IOP Design System, which

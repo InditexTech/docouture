@@ -38,5 +38,26 @@
 @import url("doc.css");
 @import url("header.css");
 @import url("footer.css");
-@import url("highlight.css");
+
+/*
+ * Syntax highlighting themes — highlight.js's own "GitHub Dark" and "GitHub
+ * Dark Dimmed", imported unmodified from the highlight.js package
+ * (BSD-3-Clause; see NOTICE) rather than a hand-authored mapping onto design
+ * system tokens.
+ * gulp.d/lib/hljs-theme-scope.js (wired into the build's PostCSS pipeline)
+ * scopes each to one of this bundle's own site themes and drops both
+ * themes' own code-surface rules (`.hljs`, `pre code.hljs`, `code.hljs`) —
+ * the surface itself (background, padding, type) is doc.css's, matching the
+ * design; only each theme's `.hljs-*` scope colours survive.
+ *
+ *   github-dark         -> "light" site theme
+ *   github-dark-dimmed  -> "dark" site theme
+ *
+ * Order doesn't matter to the scoping (each rule keeps its own source file),
+ * but both come after doc.css so a resolved `.hljs-*` colour always wins
+ * over the surface's own `pre > code` colour, same as an unscoped
+ * highlight.css always did.
+ */
+@import url("highlight.js/styles/github-dark.css");
+@import url("highlight.js/styles/github-dark-dimmed.css");
 @import url("print.css");

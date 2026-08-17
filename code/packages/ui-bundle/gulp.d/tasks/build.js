@@ -4,6 +4,7 @@ const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const esbuild = require('esbuild')
 const fs = require('fs-extra')
+const hljsThemeScope = require('../lib/hljs-theme-scope')
 const idsCustomMedia = require('../lib/ids-custom-media')
 const merge = require('../lib/concat-streams')
 const ospath = require('path')
@@ -42,6 +43,12 @@ module.exports = (src, dest, preview) => async () => {
   // object and calling it throws.
   const postcssPlugins = [
     postcssImport,
+    // GH-12: scope highlight.js's own github-dark/github-dark-dimmed theme
+    // stylesheets (bare-imported from site.css) to this bundle's two site
+    // themes. Must run after postcssImport, which is what merges those
+    // themes' rules into this root in the first place — see the plugin's
+    // own header for how source-file scoping works across that merge.
+    hljsThemeScope(),
     trackImportedStylesheetMtimes,
     // Prepend this bundle's own @custom-media breakpoint declarations
     // (generated from the design system into src/css/ids-breakpoints.css) to

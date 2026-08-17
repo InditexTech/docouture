@@ -44,7 +44,13 @@
   tr,
   img,
   object,
-  svg {
+  svg,
+  .doc .exampleblock,
+  .doc .imageblock,
+  .doc .videoblock,
+  .doc .sidebarblock,
+  .doc .quoteblock,
+  .doc .verseblock {
     break-inside: avoid;
   }
 
@@ -86,11 +92,12 @@
   }
 
   /*
-   * GH-13/GH-14: the screen rule grows an admonition 80px past the text
-   * measure and a table/code block up to 50% past it (doc.css); a printed
-   * page has no grid column to bleed into, so `width: auto` lets each fall
-   * back to whatever `max-width` its ancestor already caps it to (`.doc >
-   * *`/`.sectionbody`, doc.css) — same mechanism for all four, no separate
+   * GH-13/GH-14/GH-15: the screen rule grows an admonition (and now an
+   * example block, same 80px budget) past the text measure and a
+   * table/code block up to 50% past it (doc.css); a printed page has no
+   * grid column to bleed into, so `width: auto` lets each fall back to
+   * whatever `max-width` its ancestor already caps it to (`.doc > *`/
+   * `.sectionbody`, doc.css) — same mechanism for all five, no separate
    * `max-width` needed here. GH-12's code block was the one of these still
    * missing this reset — fixed here alongside the table.
    *
@@ -100,11 +107,27 @@
    * `.fit-content` directly — those two classes are still `width: 100%`/
    * `auto` of the wrapper respectively (doc.css), which is already correct
    * for print once the WRAPPER itself stops capping at 150%.
+   *
+   * GH-15 follow-up: `.imageblock`/`.videoblock` grow up to 25% past the
+   * text measure on screen (doc.css) — `.videoblock` capped back by the
+   * author's own `--video-max-width` custom property (video-size.js),
+   * which is still meaningful on paper (an author-requested size), so only
+   * the GROWTH resets here, via `max-width: none` rather than `width:
+   * auto`, leaving `--video-max-width` (if set) in force. `.imageblock`
+   * has no such author cap, so a plain `width: auto` is enough for it.
    */
   .doc .admonitionblock,
+  .doc .exampleblock,
+  .doc .imageblock,
   .doc .listingblock,
   .doc .literalblock,
   .doc .tableblock-wrap {
+    width: auto;
+  }
+
+  .doc .videoblock {
+    margin-inline: 0;
+    max-width: var(--video-max-width, none);
     width: auto;
   }
 
@@ -151,7 +174,7 @@
   footer.footer {
     background: none;
     border-top: 1px solid var(--panel-border-color);
-    color: var(--quote-attribution-font-color);
+    color: var(--caption-font-color);
     padding: 0.25rem 0.5rem 0;
   }
 

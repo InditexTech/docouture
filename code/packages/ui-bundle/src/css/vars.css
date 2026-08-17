@@ -173,9 +173,6 @@
   --hero-excerpt-max-width: calc(597 / var(--rem-base) * 1rem);
   --content-max-width: calc(820 / var(--rem-base) * 1rem);
 
-  /* italics for figure captions; not a design system concern */
-  --caption-font-style: italic;
-
   /*
    * Page footer (GH-16), Figma node 3615:59424. `--page-footer-nav-height`
    * is the navigation row's fixed 40px (`--ids-size-250`, matching the

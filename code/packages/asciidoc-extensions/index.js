@@ -5,6 +5,7 @@ const registerMonoMacro = require('./lib/mono-macro')
 const registerTableWidth = require('./lib/table-width')
 const registerTableContainer = require('./lib/table-container')
 const registerNowrapCols = require('./lib/nowrap-cols')
+const registerVideoSize = require('./lib/video-size')
 
 function registerAll(target) {
   registerLabelMacro(target)
@@ -18,6 +19,7 @@ function registerAll(target) {
   registerTableWidth(target)
   registerTableContainer(target)
   registerNowrapCols(target)
+  registerVideoSize(target)
 }
 
 /**

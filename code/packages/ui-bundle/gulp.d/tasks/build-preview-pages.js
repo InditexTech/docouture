@@ -159,8 +159,14 @@ function copyPreviewAssets(src, dest) {
   // preview.css styles the preview-only layouts (hub, icons) and is never
   // staged into public/_, so it can never end up in the published UI bundle —
   // only src/css/site.css (built by build.js) reaches build/ui-bundle.zip.
+  //
+  // `jpg`/`jpeg`/`gif` joined `png`/`svg` here for GH-15's own raster image
+  // examples (`content.adoc`'s "real size, capped" fixture) — this glob is
+  // the only thing that copies `preview-src/*` into the served `public/`
+  // root at all, so a format missing from it 404s silently (the `<img>`
+  // still renders, with `naturalWidth: 0`, no console error of its own).
   return vfs
-    .src('**/*.{png,svg,css}', { base: src, cwd: src, encoding: false, removeBOM: false })
+    .src('**/*.{png,jpg,jpeg,gif,svg,css}', { base: src, cwd: src, encoding: false, removeBOM: false })
     .pipe(vfs.dest(dest))
     .pipe(map((file, enc, next) => next()))
 }

@@ -1,0 +1,32 @@
+code/packages/ui-bundle/preview-src/content.adoc
+  h_c93d154c7c7074 15-22,174-183
+code/packages/ui-bundle/src/css/base.css
+  h_c93d154c7c7074 34,47
+code/packages/ui-bundle/src/css/body.css
+  h_c93d154c7c7074 15
+code/packages/ui-bundle/src/css/bridge.css
+  h_c93d154c7c7074 32-42
+code/packages/ui-bundle/src/css/doc.css
+  h_c93d154c7c7074 39-82,106-130,139-162,166,171,176,182,186-198,217-219,223-548,656,680,689,807,992,1062,1310-1316
+code/packages/ui-bundle/src/css/print.css
+  h_c93d154c7c7074 78-87
+code/packages/ui-bundle/src/css/toc.css
+  h_c93d154c7c7074 46-54,74,76-77,151-159,161-164,206-211
+code/packages/ui-bundle/src/css/vars.css
+  h_c93d154c7c7074 23-31,39-50,52-55,174
+code/packages/ui-bundle/src/js/09-heading-anchors.ts
+  h_c93d154c7c7074 1-64
+code/packages/ui-bundle/src/js/index.ts
+  h_c93d154c7c7074 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8d442f35882561d4ff8e69659b6c91b06a137a7e",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

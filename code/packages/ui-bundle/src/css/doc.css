@@ -1234,27 +1234,81 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   white-space: pre-wrap;
 }
 
-.doc pre.highlight > code,
-.doc .listingblock pre:not(.highlight),
-.doc .literalblock pre {
-  background: var(--pre-background);
-  box-shadow: inset 0 0 1.75px var(--pre-border-color);
-  display: block;
-  overflow-x: auto;
-  padding: 0.875em;
-}
-
-.doc .listingblock > .content {
+/*
+ * GH-12 (A6): the code surface — IDS Code Block, Figma 2610:24218. Always
+ * dark, whichever site theme is active: `.doc .listingblock > .content` and
+ * `.doc .literalblock > .content` are widened into the design system's own
+ * `.ids-theme-dark` selector by tools/ids/sync.mjs (see THEME_SCOPES there),
+ * so every --ids-color-* referenced below resolves to the dark ramp with no
+ * literal colour of our own. `.ids-theme-dark .doc … > .content` further
+ * down adds a hairline border — the dark *site* theme's own background is
+ * the same #000, and without it the block has no visible edge at all; out
+ * of scope for the light site theme, where the page background is white.
+ *
+ * The action bar's ghost buttons (06-copy-to-clipboard.ts) invert for free
+ * from the same widened scope — no separate dark-mode override needed for
+ * `.ids-button--ghost` either.
+ */
+.doc .listingblock > .content,
+.doc .literalblock > .content {
+  background: var(--ids-color-bg-default);
+  color: var(--ids-color-content-default);
+  padding: var(--ids-size-250) var(--ids-size-100) var(--ids-size-150);
   position: relative;
+  width: 100%;
+  overflow-x: auto;
 }
 
+.ids-theme-dark .doc .listingblock > .content,
+.ids-theme-dark .doc .literalblock > .content {
+  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+}
+
+.doc .listingblock > .content pre,
+.doc .literalblock > .content pre {
+  background: none;
+  box-shadow: none;
+  display: block;
+  margin: 0;
+  padding: 0;
+  font: var(--ids-typo-code-m);
+  letter-spacing: var(--ids-typo-code-m-letter-spacing);
+  text-transform: var(--ids-typo-code-m-text-transform);
+}
+
+/*
+ * Fullscreen (06-copy-to-clipboard.ts calls requestFullscreen() on
+ * `.content`). The Fullscreen API's own UA styles stretch the element to
+ * fill the viewport and centre it — colour and padding above already carry
+ * over unchanged; only scrolling needs adding back, since `overflow-x: auto`
+ * alone would clip a block taller than the viewport.
+ */
+.doc .listingblock > .content:fullscreen,
+.doc .literalblock > .content:fullscreen {
+  overflow-y: auto;
+}
+
+/*
+ * Action bar — absolutely positioned over the `.content` padding box set
+ * above. The block's own top padding (--ids-size-250, 40px) is exactly the
+ * bar's own height, reserving the space it overlays (Figma 2610:24218's
+ * "Action bar" frame: absolute, x/y = 16/0, 40px tall, 8px gap between the
+ * copy and fullscreen buttons). Always visible; the previous hover-reveal
+ * (`.listingblock:hover`) is gone with the design's language chip + ghost
+ * buttons replacing the plain hover-only `.source-toolbox` this bundle
+ * shipped before.
+ */
 .doc .source-toolbox {
   display: flex;
-  visibility: hidden;
   position: absolute;
-  top: 0.25rem;
-  right: 0.5rem;
-  color: var(--pre-annotation-font-color);
+  top: 0;
+  left: var(--ids-size-100);
+  right: var(--ids-size-100);
+  height: var(--ids-size-250);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ids-size-50);
+  color: var(--ids-color-content-low);
   font-family: var(--body-font-family);
   font-size: calc(13 / var(--rem-base) * 1rem);
   line-height: 1;
@@ -1263,73 +1317,17 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   z-index: 1;
 }
 
-.doc .listingblock:hover .source-toolbox {
-  visibility: visible;
-}
-
 .doc .source-toolbox .source-lang {
   text-transform: uppercase;
   letter-spacing: 0.075em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.doc .source-toolbox > :not(:last-child)::after {
-  content: "|";
-  letter-spacing: 0;
-  padding: 0 1ch;
-}
-
-.doc .source-toolbox .copy-button {
+.doc .source-toolbox .source-actions {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  background: none;
-  border: none;
-  color: inherit;
-  outline: none;
-  padding: 0;
-  font-size: inherit;
-  line-height: inherit;
-  width: 1em;
-  height: 1em;
-}
-
-.doc .source-toolbox .copy-icon {
-  flex: none;
-  width: inherit;
-  height: inherit;
-}
-
-.doc .source-toolbox img.copy-icon {
-  filter: invert(50.2%);
-}
-
-.doc .source-toolbox svg.copy-icon {
-  fill: currentColor;
-}
-
-/*
- * Position/tail only — the toast's paint (background, radius, padding,
- * opacity fade) is `.doc .copy-toast`, shared with the heading anchor's own
- * toast (GH-11) further up this file; the generic
- * `.doc .copy-button.clicked .copy-toast` reveal rule there already matches
- * here too, however many ancestors sit between the two classes.
- */
-.doc .source-toolbox .copy-toast {
-  flex: none;
-  position: relative;
-  margin-top: 1em;
-}
-
-.doc .source-toolbox .copy-toast::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 1em;
-  height: 1em;
-  border: 0.55em solid transparent;
-  border-left-color: var(--doc-font-color);
-  transform: rotate(-90deg) translateX(50%) translateY(50%);
-  transform-origin: left;
+  gap: var(--ids-size-50);
 }
 
 .doc .language-console .hljs-meta {

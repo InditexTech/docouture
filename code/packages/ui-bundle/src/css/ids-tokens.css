@@ -23,6 +23,7 @@
   --ids-size-350: 56px;
   --ids-typo-font-family-primary: Helvetica Now Text SW10;
   --ids-typo-font-family-monospace: NotoSansMono;
+  --ids-typo-font-size-16: 16px;
   --comp-grid-margin-xs: 16px;
   --comp-grid-margin-s: 32px;
   --comp-grid-margin-m: 56px;
@@ -42,7 +43,6 @@
   --ids-typo-font-size-12: 12px;
   --ids-typo-font-size-13: 13px;
   --ids-typo-font-size-14: 14px;
-  --ids-typo-font-size-16: 16px;
   --ids-typo-font-size-20: 20px;
   --ids-typo-font-size-24: 24px;
   --ids-typo-font-size-32: 32px;
@@ -67,6 +67,7 @@
   --ids-size-350: 72px;
   --ids-typo-font-family-primary: Helvetica Now Text SW10;
   --ids-typo-font-family-monospace: NotoSansMono;
+  --ids-typo-font-size-16: 21px;
   --comp-grid-margin-xs: 16px;
   --comp-grid-margin-s: 32px;
   --comp-grid-margin-m: 56px;
@@ -86,7 +87,6 @@
   --ids-typo-font-size-12: 16px;
   --ids-typo-font-size-13: 17px;
   --ids-typo-font-size-14: 18px;
-  --ids-typo-font-size-16: 21px;
   --ids-typo-font-size-20: 26px;
   --ids-typo-font-size-24: 31px;
   --ids-typo-font-size-32: 42px;
@@ -140,7 +140,9 @@
   --ids-color-viz-item-1-level-03: #438fff;
 }
 
-.ids-theme-dark,:host(.ids-theme-dark) {
+.ids-theme-dark,:host(.ids-theme-dark),
+.doc .listingblock > .content,
+.doc .literalblock > .content {
   --ids-color-content-default: #fff;
   --ids-color-content-low: #c4c4c4;
   --ids-color-content-inverse: #000;

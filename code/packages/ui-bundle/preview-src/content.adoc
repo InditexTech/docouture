@@ -94,6 +94,36 @@ Voila!
 
 How about some code?
 
+.Avatar usage
+[,js]
+----
+import * as React from "react";
+import Avatar from "@amiga-fwk-web/components-content/avatar";
+
+render(
+  <div style={{ display: "flex", justifyContent: "space-between", width: 200, height: 110 }}>
+    <Avatar color={controls.color} initials="JG" onClick={() => controls.log("click small")} />
+    <Avatar color={controls.color} initials="JG" onClick={() => controls.log("click medium")} size="medium" />
+    <Avatar color={controls.color} initials="JG" onClick={() => controls.log("click large")} size="large" />
+  </div>,
+);
+----
+
+A source block with no language annotated at all — still gets the surface, action bar and copy button; just no syntax colour.
+
+[source]
+----
+No language is set on this block, so it renders as plain text — no
+`.hljs-*` scope colour, just the code surface and the copy button.
+----
+
+And one with a single line too long to fit, to check the surface scrolls horizontally instead of wrapping or breaking the article's own width.
+
+[,js]
+----
+const veryLongLine = { alpha: 1, beta: 2, gamma: 3, delta: 4, epsilon: 5, zeta: 6, eta: 7, theta: 8, iota: 9, kappa: 10 }
+----
+
 [,js]
 ----
 vfs

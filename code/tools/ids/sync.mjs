@@ -333,6 +333,41 @@ function applyBreakpointOverrides(lines) {
   })
 }
 
+// GH-12 (A6, code blocks): the code surface is always rendered dark, per the
+// design — it never follows the page's own light/dark toggle. There is no
+// markup hook to put `.ids-theme-dark` on (Asciidoctor renders `.listingblock`
+// unconditionally, and JavaScript may be off), so instead the selector that
+// already carries the dark token values is widened to include the surface's
+// own selectors. This makes `.doc .listingblock > .content` and its literal-
+// block counterpart resolve `--ids-color-bg-default`, `--ids-color-content-*`
+// etc. to the dark ramp unconditionally, with no literal colour and no drift
+// from the design system's own dark values — the same guarantee every other
+// --ids-* consumer in this bundle gets.
+//
+// Keyed by the exact selector text extractTokens emits for that theme bucket
+// (`.ids-theme-dark,:host(.ids-theme-dark)` in the installed DS version) so a
+// version bump that changes the selector fails loudly here rather than
+// silently stops widening it.
+const THEME_SCOPES = {
+  '.ids-theme-dark,:host(.ids-theme-dark)': ['.doc .listingblock > .content', '.doc .literalblock > .content'],
+}
+
+function applyThemeScopes(emittedBySelector) {
+  const missing = new Set(Object.keys(THEME_SCOPES))
+  for (const bucket of emittedBySelector.values()) {
+    const extra = THEME_SCOPES[bucket.selector]
+    if (!extra) continue
+    missing.delete(bucket.selector)
+    bucket.selector = [bucket.selector, ...extra].join(',\n')
+  }
+  if (missing.size) {
+    throw new Error(
+      `sync.mjs: theme scope selector(s) not found among emitted token buckets — the design system's own selector ` +
+        `changed, update THEME_SCOPES: ${[...missing].join(', ')}`
+    )
+  }
+}
+
 async function main() {
   const check = process.argv.includes('--check')
 
@@ -351,6 +386,13 @@ async function main() {
   const breakpointsSource = await readSource(BREAKPOINTS_SOURCE)
 
   const emitted = extractTokens(tokenSources, wantedTokens)
+  try {
+    applyThemeScopes(emitted)
+  } catch (err) {
+    console.error(err.message)
+    process.exitCode = 1
+    return
+  }
   const tokensCss = HEADER(TOKEN_SOURCES) + '\n' + renderTokens(emitted)
 
   const breakpointLines = extractBreakpoints(breakpointsSource.content, wantedBreakpoints)

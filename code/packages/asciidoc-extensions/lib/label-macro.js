@@ -69,11 +69,7 @@ module.exports = function registerLabelMacro(registry) {
       // without a second escaping pass.
       const text = firstPositional(attrs) || ''
       const html =
-        '<span class="ids-label ids-label--' +
-        variant +
-        '"><span class="ids-label__content">' +
-        text +
-        '</span></span>'
+        '<span class="ids-label ids-label--' + variant + '"><span class="ids-label__content">' + text + '</span></span>'
       return self.createInline(parent, 'quoted', html)
     })
   })

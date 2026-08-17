@@ -1,0 +1,16 @@
+code/packages/ui-bundle/src/css/doc.css
+  h_c93d154c7c7074 37-49,1251-1252,1254-1287,1289-1298,1301-1302,1311,1320-1321,1330-1332,1340-1350,1356,1376-1395
+code/packages/ui-bundle/src/js/06-copy-to-clipboard.ts
+  h_c93d154c7c7074 13-22,65,67,73-74,77-80,82,122-127,137,142-144,146-148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7b93618b04031f93e5610a20c84f9c2395ad7651",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

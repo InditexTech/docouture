@@ -180,11 +180,19 @@ src/
 
 Eu mea munere vituperata constituam.
 
-[%autowidth]
+// GH-14 (A8)/GH-14 table-sizing fix showcase — three of Asciidoctor's own
+// width forms side by side: the unmarked default (`.stretch`, fills the
+// 150%-capped budget) on THIS table and "Library dependencies" below;
+// `[width=]` (an author-chosen percentage of that same budget, no
+// Asciidoctor width class at all) on "Library dependencies" (50%) and
+// "Supported runtimes" (25%); `[%autowidth]` (`.fit-content` — shrinks to
+// the content's own intrinsic width) on the small fixture just below this
+// one.
+[cols="1,1,1"]
 |===
 |Input | Output | Example
 
-m|"foo\nbar"
+m|foo\nbar
 l|foo
 bar
 a|
@@ -192,6 +200,14 @@ a|
 ----
 puts "foo\nbar"
 ----
+|===
+
+.Autowidth (shrinks to content, capped at 150%/the grid column same as the others)
+[%autowidth]
+|===
+|Status |Value
+|Build |passing
+|Coverage |92%
 |===
 
 Here we just have some plain text.
@@ -282,49 +298,132 @@ agam graeci
 
 At ornatus splendide sed.
 
-.Library dependencies
-[#dependencies%autowidth%footer,stripes=hover]
+.Library dependencies (width=50%)
+[width=50%,stripes=hover,cols="2,>2"]
 |===
 |Library |Version
 
 |eslint
-|^1.7.3
+|mono:[^1.7.3]
 
 |eslint-config-gulp
-|^2.0.0
+|mono:[^2.0.0]
 
 |expect
-|^1.20.2
+|mono:[^1.20.2]
 
 |istanbul
-|^0.4.3
+|mono:[^0.4.3]
 
 |istanbul-coveralls
-|^1.0.3
+|mono:[^1.0.3]
 
 |jscs
-|^2.3.5
+|mono:[^2.3.5]
 
-h|Total
-|6
 |===
 
-.Configuration properties
-[.properties%autowidth,cols="1,1,2"]
+.Configuration properties (nowrap-cols=1 — property tokens never break)
+[cols="2,^1,2",nowrap-cols="1"]
 |===
 |Property |Default |Description
 
-|`retry.max-attempts`
+|mono:[retry.max-attempts]
 |`3`
 |Number of times a failed request is retried before it is reported as failed.
 
-|`retry.backoff`
+|mono:[retry.backoff]
 |`200ms`
 |Base delay between retries; doubles on each subsequent attempt.
 
-|`timeout.connect`
+|mono:[timeout.connect]
 |`5s`
 |Maximum time to wait for a connection to be established.
+|===
+
+
+
+// GH-14 (A8) fixtures — the trio above already exercises the three width
+// classes, header/no-header and stripes/footer; these cover what they
+// don't: `.compact`'s detail/m scale, `grid=cols` verticals, `%noheader`,
+// the `mono:`/`label:` macros mixed with prose and inline code (Figma
+// 2735:55589), and enough columns/content to force horizontal scroll —
+// both the guaranteed case below breakpoint m and a table wide enough to
+// need it even at l.
+
+.Avatar props (default width, compact)
+[.compact,cols="1,^2,^2"]
+|===
+|Name |Type |Default
+
+|size
+|small \| medium \| large
+|medium
+
+|type
+|circle \| square
+|circle
+
+|color
+|light \| dark
+|light
+|===
+
+.Supported runtimes (no header row)
+[%noheader,width=25%,cols="2,>2"]
+|===
+|Node.js |`>= 24`
+|pnpm |`>= 10`
+|Antora |`~3.1`
+|===
+
+.Component props
+[cols="1,3,1"]
+|===
+|Name |Description |Values
+
+|mono:[className]
+|Additional CSS to be applied to the component
+|label:[String]
+
+|mono:[onClick]
+|Function which will be called when clicking on the component. Fires after `pointerup`.
+|label:[Function]
+
+|mono:[size]
+|Shape
+|label:[small] label:[medium] label:[large]
+
+|mono:[status]
+|Read-only once mounted.
+|label:red[deprecated] label:green[stable] label:blue[beta]
+|===
+
+.Wide reference table (forces horizontal scroll below breakpoint m; nowrap-cols=all)
+[cols="7*",nowrap-cols="1,2,3,4,5,6,7"]
+|===
+|Region |Zone |Instance |vCPU |Memory |Storage |Network
+
+|eu-west
+|1a
+a|m6i.large +
+with some large text to test this 
+|2
+|8 GiB
+|EBS
+|Up to 10 Gbps
+|eu-west |1b |m6i.xlarge |4 |16 GiB |EBS |Up to 10 Gbps
+|us-east |1a |m6i.2xlarge |8 |32 GiB |EBS |Up to 12.5 Gbps
+|===
+
+.Super-wide reference table (11 columns — needs its own scroll even at breakpoint l, past the 150% cap)
+[table-width=2000px,cols="11*",nowrap-cols="1,2,3,4,5,6,7,8,9,10,11"]
+|===
+|Region |Zone |Instance |vCPU |Memory |Storage |Network |IOPS |Bandwidth |Price/hr |SLA
+
+|eu-west-1 |1a |m6i.2xlarge |8 |32 GiB |EBS gp3 |Up to 12.5 Gbps |6000 |250 MB/s |mono:[$0.4032] |99.99%
+|eu-west-1 |1b |m6i.4xlarge |16 |64 GiB |EBS gp3 |Up to 12.5 Gbps |9000 |400 MB/s |mono:[$0.8064] |99.99%
+|us-east-1 |1a |m6i.8xlarge |32 |128 GiB |EBS gp3 |12.5 Gbps |12000 |750 MB/s |mono:[$1.6128] |99.95%
 |===
 
 Cum dicat putant ne.

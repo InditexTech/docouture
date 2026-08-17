@@ -610,6 +610,22 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   padding: 0 var(--ids-size-25);
 }
 
+/*
+ * GH-14 follow-up: `mono:[text]` (asciidoc-extensions) — plain monospaced
+ * text with none of the chip above. Every inline `` `code` `` gets that
+ * chip unconditionally (there is no reliable CSS-only way to tell "the
+ * whole cell is code" apart from "code sitting in a sentence", see the
+ * `td.tableblock` comment further down) — this is the deliberate opt-out
+ * for a property/reference table column where EVERY cell is a bare token
+ * and a chip on every one of them is noise, not signal. Higher specificity
+ * than the chip rule above (two classes vs. one) wins regardless of source
+ * order.
+ */
+.doc code.ids-mono {
+  background: none;
+  padding: 0;
+}
+
 .doc code,
 .doc pre {
   hyphens: none;
@@ -708,17 +724,86 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   margin: var(--doc-space-block) 0 0;
 }
 
-.doc > table.tableblock,
-.doc > table.tableblock + *,
-.doc .tablecontainer,
-.doc .tablecontainer + *,
-.doc :not(.tablecontainer) > table.tableblock,
-.doc :not(.tablecontainer) > table.tableblock + * {
-  margin-top: calc(var(--doc-space-block) * 1.5);
+/*
+ * GH-14 follow-up: `.doc > table.tableblock` (direct-child only) never
+ * matched a table nested under a `.sect1 > .sectionbody` — which is most
+ * of them — so nested tables got no top margin from their previous
+ * sibling at all. Same descendant-selector fix as the admonition rule
+ * above, same magnitude (`* 1.4`) so the two block types read as one
+ * family of spacing.
+ *
+ * GH-14 table-sizing follow-up: the margin moved from the table itself to
+ * its `.tableblock-wrap` (table-container.js's own postprocessor wrapper) —
+ * spacing belongs to the block as a whole, title included, not to the
+ * `<table>` element specifically now that there's a wrapper to hold it.
+ *
+ * The width budget lives here too, folded into the same rule: up to 50%
+ * past the article's own text measure (mirrors the GH-12 code block), but
+ * never past `.doc`'s own grid column (the `100cqw` backstop, `.doc`'s
+ * `container-type` set at the top of this file). `.fit-content`
+ * (`%autowidth`, below) shrinks the wrapper to the table's own intrinsic
+ * width instead.
+ */
+.doc .tableblock-wrap {
+  margin-top: calc(var(--doc-space-block) * 1.4);
+  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
 }
 
+
+
+/*
+ * GH-14 (A8, Figma 2735:55589 light / 2735:56362 dark) — there is no
+ * `.ids-table`: Datagrid is React-driven (per-cell components keyed on
+ * `--ids-comp-datagrid-*` and a `.ids-theme-datagrid-*` root class) and
+ * cannot be produced from Asciidoctor's own `<table>` markup. Instead this
+ * styles Asciidoctor's table onto the same cell tokens Datagrid's own cells
+ * use — `.IDS Datagrid / Cells` (Figma component set 2629:29623/2610:24786)
+ * — so the result reads as one family without importing the component.
+ *
+ * Both Figma frames measure identically against `--ids-color-border-*` /
+ * `--ids-color-bg-default`: light is `#000`/`#e3e3e3`/`#fff`, dark is
+ * `#fff`/`#5e5e5e`/`#000` — exactly those tokens in the dark bucket
+ * (ids-tokens.css). No `.ids-theme-dark` override needed anywhere below.
+ *
+ * Cell padding is `--ids-size-25` (4px) left and right, matching the
+ * Datagrid cell's own "Content" inner frame (`0px 4px`, Figma component
+ * `.IDS Datagrid / Cells` — the `EL-db3e06f5`/basic-cell templates both
+ * carry it) rather than the outer cell's own zero-left-padding — that
+ * outer padding only exists so a decorative 4px "First" spacer rectangle
+ * can sit ahead of the FIRST column in the design, chrome this plain
+ * `<table>` has no equivalent for and doesn't need.
+ *
+ * Three deviations from Asciidoctor's own default table styling, all
+ * deliberate:
+ *
+ * 1. Vertical rules and the outer frame are gone by default. Asciidoctor
+ *    emits `frame-all grid-all` on a table with no explicit `frame`/`grid`
+ *    attribute — indistinguishable from an author writing them — but every
+ *    Datagrid cell in the design draws a bottom rule only, no verticals, no
+ *    frame. So the design wins for the unmarked case: `frame-*` becomes a
+ *    permanent no-op (never referenced below) and only `grid=cols`/
+ *    `grid=none` remain meaningful opt-ins/outs from the horizontal-only
+ *    default.
+ * 2. Width is the author's choice, not fixed — see the `.stretch`/
+ *    `.fit-content` rules below, the same two classes Asciidoctor already
+ *    emits for a plain table vs. `[%autowidth]`.
+ * 3. Body text is `body/m` — the canonical Datagrid cell type — with a
+ *    `.compact` role opt-in to `detail/m` for a denser feature-matrix table
+ *    (Figma 3615:59305, which uses that smaller scale). Header cells are
+ *    always `label/m` (uppercase), matching every Datagrid header cell
+ *    regardless of body scale.
+ */
 .doc table.tableblock {
-  font-size: calc(15 / var(--rem-base) * 1rem);
+  font: var(--ids-typo-body-m);
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  text-transform: var(--ids-typo-body-m-text-transform);
+  border: 0;
+}
+
+.doc table.tableblock.compact {
+  font: var(--ids-typo-detail-m);
+  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
+  text-transform: var(--ids-typo-detail-m-text-transform);
 }
 
 .doc p.tableblock + p.tableblock {
@@ -737,75 +822,191 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   margin-top: 0;
 }
 
+/*
+ * GH-14 follow-up: a mono cell (Asciidoctor's `m|` style, e.g. the
+ * design's `className` column) renders identically to a paragraph
+ * consisting of nothing BUT `` `inline code` `` — literally the same
+ * markup, `<p class="tableblock"><code>…</code></p>`, no distinguishing
+ * class on either the cell or the code (checked against the installed
+ * html5 converter: `cell_class_attribute` is hardcoded to
+ * `tableblock halign-* valign-*`, no room for a per-cell role). Worse,
+ * `:only-child` cannot tell "the whole cell is code" apart from "one code
+ * span sitting in a longer sentence" either — it counts element siblings
+ * only, and text nodes either side of a lone `<code>` don't count as
+ * siblings for it (verified: `` Fires after `pointerup`. `` still matches
+ * `:only-child` because it's the paragraph's only ELEMENT child). So the
+ * GH-12 chip (`.doc p code`, above) is left applying uniformly to every
+ * inline code in a table cell, `m|` included — consistent with every
+ * other code span in the article rather than a special, unreliable case.
+ */
 .doc table.tableblock th,
 .doc table.tableblock td {
-  padding: 0.5rem;
+  border: 0 solid var(--ids-color-border-low);
+  border-bottom-width: var(--ids-size-border-default);
+  height: var(--ids-size-250);
+  padding: var(--ids-size-50) var(--ids-size-25);
 }
 
-.doc table.tableblock,
-.doc table.tableblock > * > tr > * {
-  border: 0 solid var(--table-border-color);
+.doc table.tableblock th {
+  font: var(--ids-typo-label-m);
+  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  text-transform: var(--ids-typo-label-m-text-transform);
+  background: var(--ids-color-bg-default);
+  border-bottom-color: var(--ids-color-border-default);
+  vertical-align: middle;
 }
 
-.doc table.grid-all > * > tr > * {
-  border-width: 1px;
+.doc table.grid-cols > * > tr > :not(:last-child) {
+  border-right-width: var(--ids-size-border-default);
 }
 
-.doc table.grid-cols > * > tr > * {
-  border-width: 0 1px;
-}
-
-.doc table.grid-rows > * > tr > * {
-  border-width: 1px 0;
-}
-
-.doc table.grid-all > thead th,
-.doc table.grid-rows > thead th {
-  border-bottom-width: 2.5px;
-}
-
-.doc table.frame-all {
-  border-width: 1px;
-}
-
-.doc table.frame-ends {
-  border-width: 1px 0;
-}
-
-.doc table.frame-sides {
-  border-width: 0 1px;
-}
-
-.doc table.frame-none > colgroup + * > :first-child > *,
-.doc table.frame-sides > colgroup + * > :first-child > * {
-  border-top-width: 0;
-}
-
-/* NOTE let the grid win in case of frame-none */
-.doc table.frame-sides > :last-child > :last-child > * {
+.doc table.grid-none > * > tr > * {
   border-bottom-width: 0;
-}
-
-.doc table.frame-none > * > tr > :first-child,
-.doc table.frame-ends > * > tr > :first-child {
-  border-left-width: 0;
-}
-
-.doc table.frame-none > * > tr > :last-child,
-.doc table.frame-ends > * > tr > :last-child {
-  border-right-width: 0;
 }
 
 .doc table.stripes-all > tbody > tr,
 .doc table.stripes-odd > tbody > tr:nth-of-type(odd),
 .doc table.stripes-even > tbody > tr:nth-of-type(even),
 .doc table.stripes-hover > tbody > tr:hover {
-  background: var(--table-stripe-background);
+  background: var(--ids-color-bg-low);
 }
 
 .doc table.tableblock > tfoot {
-  background: var(--table-footer-background);
+  background: var(--ids-color-bg-low);
 }
+
+/*
+ * `[cols=…,nowrap-cols="1,3"]` (nowrap-cols.js, asciidoc-extensions, a tree
+ * processor) — pins `white-space: nowrap` to specific columns, e.g. a
+ * mono-token column that should never break mid-value. `nth-child` is the
+ * only hook available: the html5 converter hardcodes cell class to
+ * `tableblock halign-* valign-*` (see the `td.tableblock` comment above),
+ * with no room for a per-column marker on the cell itself, so the class
+ * goes on the TABLE and this reaches into each row's Nth cell instead.
+ * A `colspan`'d row shifts which cell is Nth — accepted, same tradeoff
+ * `nth-child` always has.
+ *
+ * Ceiling of 12 matches nowrap-cols.js's own validation range; a document
+ * needing more columns than that is better served by `%nowrap` (every
+ * column) below.
+ */
+.doc table.nowrap > * > tr > * {
+  white-space: nowrap;
+}
+
+.doc table.nowrap-1 > * > tr > :nth-child(1),
+.doc table.nowrap-2 > * > tr > :nth-child(2),
+.doc table.nowrap-3 > * > tr > :nth-child(3),
+.doc table.nowrap-4 > * > tr > :nth-child(4),
+.doc table.nowrap-5 > * > tr > :nth-child(5),
+.doc table.nowrap-6 > * > tr > :nth-child(6),
+.doc table.nowrap-7 > * > tr > :nth-child(7),
+.doc table.nowrap-8 > * > tr > :nth-child(8),
+.doc table.nowrap-9 > * > tr > :nth-child(9),
+.doc table.nowrap-10 > * > tr > :nth-child(10),
+.doc table.nowrap-11 > * > tr > :nth-child(11),
+.doc table.nowrap-12 > * > tr > :nth-child(12) {
+  white-space: nowrap;
+}
+
+/*
+ * GH-14 table-sizing fix — width is the author's call, taken from the two
+ * classes Asciidoctor already emits, same as before. What changed is WHERE
+ * the width lives: `display: block` on `table.tableblock` (the previous
+ * mechanism, further down) sizes the table's own BLOCK BOX, but a native
+ * table lays out an unselectable anonymous table box inside that box with
+ * `width: auto` (shrink-to-fit) — completely ignoring the block box's own
+ * `width`/`max-width`. Verified: `.stretch`'s `width: min(150%, 100cqw)`
+ * rendered a full-width empty block with the visible table still sized to
+ * its content underneath. `[width=]`'s own presentational attribute or
+ * inline style (Asciidoctor version-dependent — 2.2 emits `style`, 4.0 a
+ * literal `width` attribute) is a bare `<table>` attribute, and a bare
+ * `<table>` DOES size to its own `width` — but that attribute's percentage
+ * resolves against the table's containing block, which used to be
+ * `.sectionbody` (capped at `--content-max-width`, 780/820px), giving
+ * `[width=50%]` half of the TEXT MEASURE, not half of the 150% budget.
+ *
+ * `table-container.js` (asciidoc-extensions, a postprocessor) now wraps
+ * every table in `.tableblock-wrap > .tablecontainer > table`, so the
+ * budget lives on `.tableblock-wrap` (below) — a real, selectable block box
+ * — and the three width forms this rule cares about split cleanly:
+ *
+ *   - no width, no `%autowidth` → `.stretch`, `width: 100%` of the wrapper.
+ *   - `[%autowidth]` → `.fit-content`, `width: auto` (a `display: table`
+ *     element genuinely shrinks to its own content, unlike a block box).
+ *   - `[width=60%]` → deliberately no rule at all here: the table's own
+ *     `width`/`style` attribute now resolves against `.tableblock-wrap`
+ *     (the 150% budget), not the narrower text measure.
+ *   - `[table-width=2000px]` (a custom attribute, table-width.js +
+ *     table-container.js, asciidoc-extensions) → also no rule needed:
+ *     Asciidoctor's own `width=` is percentage-only and HARD-CLAMPS
+ *     anything outside 1-100 back to 100 (verified against
+ *     `@asciidoctor/core`'s table.js — there is no core AsciiDoc syntax for
+ *     a literal width), so this is a separate mechanism that sets an
+ *     inline `style="width:…"` on the table directly. An inline style
+ *     always wins over `.stretch`/`.fit-content` regardless of
+ *     specificity, so no rule is needed to defer to it either — same
+ *     reasoning as `[width=]` above, one mechanism lower.
+ */
+.doc table.tableblock.stretch {
+  width: 100%;
+}
+
+.doc table.tableblock.fit-content {
+  width: auto;
+}
+
+
+.doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, details, td) .tableblock-wrap {
+  width: 100%;
+  max-width: 100%;
+}
+
+/*
+ * `:has()` reaches into the table it wraps for `.fit-content` (`%autowidth`
+ * shrinks the wrapper down to the table's own intrinsic width instead of
+ * the budget above) — the class that decides this lives one level down, on
+ * the `<table>` element table-container.js placed inside the wrapper.
+ */
+.doc .tableblock-wrap:has(> * > table.fit-content) {
+  width: auto;
+}
+
+/*
+ * `.tablecontainer` (table-container.js's inner wrapper) is the actual
+ * scroll port: `display: block` is what makes `overflow-x` apply to a box
+ * at all — a native `table-layout: auto` table otherwise treats its own
+ * `width`/`max-width` as advisory and silently GROWS past either to fit a
+ * column's forced `min-width` (verified: with `display: table` still in
+ * effect, a table given `max-width: 1230px` and columns forced to 220px
+ * each rendered at 1540px anyway, `max-width` completely ignored). Putting
+ * `display: block` + the scroll properties on the WRAPPER rather than the
+ * table itself (the previous mechanism) is what lets the table underneath
+ * go back to being a genuine `display: table` — required for `.fit-content`
+ * to shrink-to-fit rather than fill its container like any other block box.
+ *
+ * This applies at every breakpoint, not just below `m`: a table wide
+ * enough on its own — many columns, or `[cols=]`-forced widths — scrolls
+ * inside its own 150%-capped box even at `l`, the same way an overlong code
+ * line does. Below `m` an EXTRA per-cell `min-width` guarantees the same is
+ * true even for an otherwise-modest table that would happily fit if its
+ * columns were allowed to compress to nothing — trade-off: `colgroup`
+ * percentage widths stop resolving against a column at that size,
+ * content-sized columns instead.
+ */
+.doc .tablecontainer {
+  display: block;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+@media screen and (--ids-breakpoints-xs-s) {
+  .doc table.tableblock th,
+  .doc table.tableblock td {
+    min-width: var(--ids-size-500);
+  }
+}
+
 
 .doc .halign-left {
   text-align: left;
@@ -1223,25 +1424,47 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   padding: 0;
 }
 
+/*
+ * GH-14 follow-up: table/code-block titles move to `label/l` — the
+ * Datagrid header cell's own scale, one step up from the `label/m` header
+ * row itself — with a fixed `--ids-size-75` (12px) gap to the block that
+ * follows, replacing the old ad hoc 16px/0.075rem caption style. This is
+ * the one shared title rule (doc.css), so every block title moves
+ * together, table title included.
+ *
+ * GH-14 table-sizing follow-up: a table's title is no longer the
+ * `<caption>` Asciidoctor emits inside the `<table>` itself — table-
+ * container.js (asciidoc-extensions, a postprocessor) hoists it out to a
+ * plain `.title` div as `.tableblock-wrap`'s first child, sized against the
+ * WRAPPER (the 150%-capped budget) instead of the table's own, possibly far
+ * narrower, box (`[width=30%]`, `%autowidth`). A caption laid out as part
+ * of the table it titles has no such freedom — it wraps at the table's own
+ * width regardless of anything set on it directly, which is exactly the
+ * behaviour a `[width=30%]` table's title should NOT have.
+ */
 .doc .exampleblock .title,
 .doc .imageblock .title,
 .doc .literalblock .title,
 .doc .listingblock .title,
 .doc .openblock .title,
 .doc .videoblock .title,
-.doc table.tableblock caption {
+.doc .tableblock-wrap > .title {
   color: var(--caption-font-color);
-  font-size: calc(16 / var(--rem-base) * 1rem);
-  font-style: var(--caption-font-style);
-  font-weight: var(--caption-font-weight);
+  font: var(--ids-typo-label-l);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform);
   hyphens: none;
-  letter-spacing: 0.01em;
-  padding-bottom: 0.075rem;
+  padding-bottom: var(--ids-size-75);
 }
 
-.doc table.tableblock caption {
+.doc .tableblock-wrap > .title {
   text-align: left;
+  /* `.tableblock-wrap` itself may be `fit-content` (`%autowidth`) — pin the
+   * title to fill whatever width that resolves to rather than letting its
+   * own shrink-to-fit content narrow the wrapper down further. */
+  max-width: var(--content-max-width);
 }
+
 
 .doc .olist .title,
 .doc .ulist .title {

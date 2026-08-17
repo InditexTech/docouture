@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@asciidoctor/core": "~4.0.8",
+    "@inditextech/pdocs-asciidoc-extensions": "workspace:*",
     "@vscode/gulp-vinyl-zip": "~2.6.0",
     "autoprefixer": "~10.5.4",
     "cssnano": "~8.0.5",

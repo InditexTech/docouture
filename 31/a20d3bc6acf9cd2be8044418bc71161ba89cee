@@ -1,0 +1,14 @@
+code/packages/ui-bundle/src/css/doc.css
+  h_c93d154c7c7074 588-600,606-610
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "31a20d3bc6acf9cd2be8044418bc71161ba89cee",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

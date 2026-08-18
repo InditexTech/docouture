@@ -851,7 +851,6 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   font: var(--ids-typo-label-m);
   letter-spacing: var(--ids-typo-label-m-letter-spacing);
   text-transform: var(--ids-typo-label-m-text-transform);
-  background: var(--ids-color-bg-default);
   border-bottom-color: var(--ids-color-border-default);
   vertical-align: middle;
 }
@@ -1211,34 +1210,85 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   text-transform: var(--ids-typo-body-l-high-text-transform);
 }
 
+/*
+ * GH-15 (A9, Figma 3615:59412/59416/59420) — the "Image" frame: grey field,
+ * 40px padding, hugging the image's own intrinsic (or macro-specified)
+ * width rather than stretching to the article's full measure — the design
+ * shows three distinct widths (landscape/square/portrait) side by side,
+ * which only reads correctly if the frame sizes to its content. `.content`
+ * no longer carries `align-self: stretch`/`text-align: center` for this
+ * reason: an unstretched flex item already sizes to its own content, and
+ * centring only matters when a box is wider than what it holds. The
+ * block's own placement on the page (default centred, `.text-left`/
+ * `.text-right` roles) is unchanged — still driven by `align-items` on
+ * `.imageblock` itself, one level up from the frame (`.videoblock` no
+ * longer shares this — see below, it aligns itself instead).
+ *
+ * Width budget: an image grows to its own real size — the intrinsic pixel
+ * dimensions of the file, or whatever the macro's own `width`/`height`
+ * attributes say — capped at 25% past the article's own text measure,
+ * never beyond it. `.imageblock` needs a LITERAL `width` for this (not
+ * `width: fit-content`, tried and reverted): `.sect1 > .sectionbody`
+ * already caps ITSELF at the plain text measure (`.doc > *`, this file's
+ * own header comment), so by the time layout reaches `.imageblock` its
+ * own containing block is already only 820px wide — `fit-content`'s own
+ * sizing algorithm bounds a box to the AVAILABLE SPACE of its containing
+ * block, so it can never bleed past that 820px even with a wider
+ * `max-width` set alongside it (verified empirically: a 900px photo
+ * capped at 820, not the intended 1025). A literal computed length (this
+ * `width:`, using the `100cqw` container query against `.doc` itself, not
+ * `.sectionbody`) is what every other bleeding block in this file relies
+ * on instead (code, table, admonition, example) — a definite `width` is
+ * allowed to overflow its own containing block, `fit-content` is not.
+ *
+ * The "real size" half still holds with a literal width here: `.content`
+ * (an unstretched flex item, `align-items` below is never `stretch`)
+ * sizes to its own shrink-to-fit width — the img's real pixel size —
+ * bounded by `.imageblock`'s own (now correctly bled) available cross
+ * space, not by `.sectionbody`'s narrower box. A small photo still
+ * renders at its own real size with room to spare either side; a large
+ * one shrinks to fit exactly at the budget, not past it. Never past the
+ * container when NESTED, though (a list, admonition, example, sidebar,
+ * quote, table cell or collapsible — `:is(...)` reset further down):
+ * there, the image's real size is capped at the container's own width,
+ * full stop, no 25% growth of its own to bleed with.
+ *
+ * Video does NOT hug like image — design review: a video embed defaults to
+ * full width rather than the tiny intrinsic size an `<iframe>`/`<video>`
+ * tag would otherwise report, with the author able to cap it back down via
+ * the macro's own `width`/`height` (`video-size.js`, asciidoc-extensions,
+ * turns those into `--video-max-width`/`--video-aspect-ratio` custom
+ * properties on the block — see that file's own header for why a
+ * postprocessor is the only way to get both a cap and a correct ratio out
+ * of attributes a browser doesn't derive `aspect-ratio` from itself).
+ */
 .doc .imageblock,
 .doc .videoblock {
+  width: min(calc(var(--content-max-width) * 1.25), 100cqw);
+}
+
+.doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details)
+  :is(.imageblock, .videoblock) {
+  width: 100%;
+}
+
+.doc .imageblock {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.doc .imageblock .content {
-  align-self: stretch;
-  text-align: center;
-}
-
-.doc .imageblock.text-left,
-.doc .videoblock.text-left {
+.doc .imageblock.text-left {
   align-items: flex-start;
 }
 
-.doc .imageblock.text-left .content {
-  text-align: left;
-}
-
-.doc .imageblock.text-right,
-.doc .videoblock.text-right {
+.doc .imageblock.text-right {
   align-items: flex-end;
 }
 
-.doc .imageblock.text-right .content {
-  text-align: right;
+.doc .imageblock .content {
+  background: var(--ids-color-bg-low);
+  padding: var(--ids-size-250);
 }
 
 .doc .imageblock img,
@@ -1257,52 +1307,122 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   margin-top: -0.2em;
 }
 
+.doc .videoblock {
+  display: flex;
+  flex-direction: column;
+  margin-inline: auto;
+  max-width: var(--video-max-width, none);
+}
+
+/*
+ * Unlike the image frame (which hugs its own content and is centred/
+ * aligned via `align-items` on a flex ANCESTOR), `.videoblock` IS the sized
+ * box here — its own `width`/`max-width` above is what the author's cap
+ * shrinks, so centring/left/right needs to move onto its own inline
+ * margins instead. Centred (`margin-inline: auto`, above) is the default
+ * only because it is harmless once uncapped — a block already filling its
+ * available width ignores `margin: auto` either way.
+ */
+.doc .videoblock.text-left {
+  margin-inline: 0 auto;
+}
+
+.doc .videoblock.text-right {
+  margin-inline: auto 0;
+}
+
+/*
+ * Caption below the embed, same as image (design call, issue discussion) —
+ * Asciidoctor emits `.videoblock`'s own `.title` BEFORE `.content`
+ * (opposite of an image block, which emits it after), so this is a visual
+ * reorder on the existing flex column rather than a restyle: the shared
+ * `detail/m` caption rule (further down) already gives it the right type,
+ * colour and left alignment. A screen reader still reads DOM order (title
+ * first) — harmless for a caption, and far cheaper than a postprocessor
+ * that physically moves the node to match.
+ */
+.doc .videoblock > .title {
+  order: 1;
+}
+
+.doc .videoblock .content {
+  background: var(--ids-color-bg-low);
+  padding: var(--ids-size-250);
+}
+
 .doc .videoblock iframe,
 .doc .videoblock video {
-  max-width: 100%;
+  aspect-ratio: var(--video-aspect-ratio, 16 / 9);
+  height: auto;
   vertical-align: middle;
+  width: 100%;
 }
 
+
+/*
+ * GH-15 (A9) panel surface — the one visual family every "block on a grey
+ * field" construct shares: example blocks/collapsible results (below),
+ * the preamble's abstract and sidebars. None of these has a DS component
+ * of its own (no `.ids-sidebar` content block, `.ids-example` — see
+ * .opencode/skills/iop-ds-components/SKILL.md's decision order, step 4),
+ * so every one of them is built from `--ids-color-bg-low` +
+ * `--ids-size-250` (40px) padding here instead — nothing in the design
+ * gives any of them a border or a radius, unlike antora-ui-default's own
+ * 5px-rule/rounded-corner defaults they replace. `.quoteblock`/
+ * `.verseblock` split off this family (design review) — see below.
+ */
 #preamble .abstract blockquote {
   background: var(--abstract-background);
-  border-left: 5px solid var(--abstract-border-color);
-  color: var(--abstract-font-color);
-  font-size: calc(16 / var(--rem-base) * 1rem);
-  padding: 0.75em 1em;
+  color: var(--doc-font-color);
+  font: var(--ids-typo-body-l);
+  letter-spacing: var(--ids-typo-body-l-letter-spacing);
+  padding: var(--ids-size-250);
 }
 
+.doc .sidebarblock {
+  background: var(--ids-color-bg-low);
+  padding: var(--ids-size-250);
+}
+
+/*
+ * GH-15 (A9) follow-up (design review): a quote — and verse alongside it,
+ * same treatment — is a rule, not a fill: no background, a 4px rule down
+ * the left edge only, padding on the left alone (nothing above/below/
+ * right) rather than the panel's even 40px on every side.
+ * `--ids-color-border-low` (not `--ids-color-bg-low`, the panel fill every
+ * other block in this family uses) is the closest DS token to "the same
+ * colour, as a border": the full IDS border ramp is only six tokens
+ * (`--ids-color-border-{default,low,inverse,states-*}`, `.opencode/skills`
+ * catalogue), nothing sits at the panel's own `#f7f7f7`, and `border-low`
+ * is what the header/footer/section-band/ToC dashed rules already use —
+ * also the one that actually reads in dark theme (`#5e5e5e` against
+ * `#000`; the panel fill itself, `#363636`, would barely show as a 4px
+ * rule there).
+ */
 .doc .quoteblock,
 .doc .verseblock {
-  background: var(--quote-background);
-  border-left: 5px solid var(--quote-border-color);
-  color: var(--quote-font-color);
-}
-
-.doc .quoteblock {
-  padding: 0.25rem 2rem 1.25rem;
+  border-left: var(--ids-size-25) solid var(--ids-color-border-low);
+  padding: 0 0 0 var(--ids-size-250);
 }
 
 .doc .quoteblock .attribution {
-  color: var(--quote-attribution-font-color);
-  font-size: calc(15 / var(--rem-base) * 1rem);
-  margin-top: 0.75rem;
+  color: var(--caption-font-color);
+  font: var(--ids-typo-detail-m);
+  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
+  margin-top: var(--ids-size-100);
 }
 
 .doc .quoteblock blockquote {
-  margin-top: 1rem;
+  margin-top: 0;
 }
 
 .doc .quoteblock .paragraph {
-  font-style: italic;
+  font: var(--ids-typo-body-l);
+  letter-spacing: var(--ids-typo-body-l-letter-spacing);
 }
 
 .doc .quoteblock cite {
   padding-left: 1em;
-}
-
-.doc .verseblock {
-  font-size: 1.15em;
-  padding: 1rem 2rem;
 }
 
 .doc .verseblock pre {
@@ -1313,7 +1433,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc ol,
 .doc ul {
   margin: 0;
-  padding: 0 0 0 1rem;
+  padding: 0 0 0 var(--ids-size-100);
 }
 
 .doc ul.checklist,
@@ -1328,7 +1448,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 
 .doc ul.no-bullet,
 .doc ol.unnumbered {
-  padding-left: 1.25rem;
+  padding-left: var(--ids-size-125);
 }
 
 .doc ul.unstyled,
@@ -1410,12 +1530,12 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .ulist .dlist,
 .doc .ulist .olist,
 .doc .ulist .ulist {
-  margin-top: 0.5rem;
+  margin-top: var(--ids-size-50);
 }
 
 .doc .olist li + li,
 .doc .ulist li + li {
-  margin-top: 0.5rem;
+  margin-top: var(--ids-size-50);
 }
 
 .doc .ulist .listingblock,
@@ -1442,12 +1562,9 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * width regardless of anything set on it directly, which is exactly the
  * behaviour a `[width=30%]` table's title should NOT have.
  */
-.doc .exampleblock .title,
-.doc .imageblock .title,
 .doc .literalblock .title,
 .doc .listingblock .title,
 .doc .openblock .title,
-.doc .videoblock .title,
 .doc .tableblock-wrap > .title {
   color: var(--caption-font-color);
   font: var(--ids-typo-label-l);
@@ -1466,28 +1583,47 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 
-.doc .olist .title,
-.doc .ulist .title {
-  font-style: var(--caption-font-style);
-  font-weight: var(--caption-font-weight);
-  margin-bottom: 0.25rem;
-}
-
+/*
+ * GH-15 (A9, Figma 3615:59415/59419/59423) — the image/video caption is
+ * NOT the `label/l` block-title style every other caption in this file
+ * shares (table/code/example/open) — it is smaller, grey `detail/m`,
+ * always left-aligned regardless of the frame's own centred/left/right
+ * placement, and sits below the frame with a 12px gap (Asciidoctor
+ * already emits `.title` after `.content` for both block types, so no DOM
+ * reordering is needed).
+ */
 .doc .imageblock .title,
 .doc .videoblock .title {
-  margin-top: 0.5rem;
+  color: var(--caption-font-color);
+  font: var(--ids-typo-detail-m);
+  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
+  text-align: left;
+  hyphens: none;
+  margin-top: var(--ids-size-75);
   padding-bottom: 0;
 }
 
-.doc details {
-  margin-left: 1rem;
-}
-
+/*
+ * GH-15 follow-up — collapsible marker: the DS's own Accordion toggle
+ * (`accordion/accordion.css`, `.ids-accordion__toggle-icon`) uses
+ * `chevron-down-outlined`, rotated 180° open, eased by
+ * `--ids-motion-micro-appear` — copied here rather than reinvented, even
+ * though `<details>`/`<summary>` isn't the DS component (no
+ * `.ids-accordion` markup/JS, no expand/collapse-all, no divider between
+ * items — that's a separate piece of future work). `summary` becomes a
+ * flex row (icon + text) instead of `display: block` with the marker
+ * absolutely positioned in a negative left margin — simpler, and it means
+ * `.doc details` no longer needs the `margin-left: 1rem` gutter the old
+ * marker sat in, nor does `.doc details.result > .content` need to negate
+ * it back out. `::-webkit-details-marker` stays hidden for Safari, which
+ * still renders its own disclosure triangle alongside a flex `<summary>`.
+ */
 .doc details > summary {
-  display: block;
-  position: relative;
+  align-items: flex-start;
+  display: flex;
+  gap: var(--ids-size-50);
   line-height: var(--doc-line-height);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--ids-size-50);
 }
 
 .doc details > summary::-webkit-details-marker {
@@ -1495,58 +1631,85 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 .doc details > summary::before {
+  background: currentColor;
   content: "";
-  border: solid transparent;
-  border-left-color: currentColor;
-  border-width: 0.3em 0 0.3em 0.5em;
-  position: absolute;
-  top: calc((var(--doc-line-height) * 0.5 - 0.3) * 1em);
-  left: -1rem;
-  transform: translateX(15%);
+  flex: none;
+  height: var(--ids-size-125);
+  mask-image: var(--icon-mask-arrows-chevron-down-outlined);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  transition: var(--ids-motion-micro-appear);
+  width: var(--ids-size-125);
 }
 
 .doc details[open] > summary::before {
-  border-color: currentColor transparent transparent;
-  border-width: 0.5rem 0.3rem 0;
-  transform: translateY(15%);
+  transform: rotate(180deg);
 }
 
-.doc details > summary::after {
-  content: "";
-  width: 1rem;
-  height: 1em;
-  position: absolute;
-  top: calc((var(--doc-line-height) * 0.5 - 0.5) * 1em);
-  left: -1rem;
+/*
+ * GH-15 follow-up: a run of collapsibles (`content.adoc`'s own "Summary"/
+ * "Result" pair) previously double-spaced — every `<details>` gets the
+ * generic top-level block margin (`.doc details`, further up this file)
+ * regardless of what precedes it. Zeroed between two adjacent ones so they
+ * stack as a group; the FIRST of a run still gets the normal block gap
+ * from whatever came before it.
+ */
+.doc details + details {
+  margin-top: 0;
 }
 
 .doc details.result {
-  margin-top: 0.25rem;
+  margin-top: var(--ids-size-25);
 }
 
 .doc details.result > summary {
   color: var(--caption-font-color);
-  font-style: italic;
+  font: var(--ids-typo-detail-m);
+  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
   margin-bottom: 0;
 }
 
-.doc details.result > .content {
-  margin-left: -1rem;
+/*
+ * GH-15 (A9, Figma 3615:59355) — the "Example" panel: grey field, 40px
+ * padding, 16px gap between its own children (title/body/nested content),
+ * `align-items: stretch` so a nested image or table fills the panel's
+ * width rather than hugging its own. No border, no radius — the panel
+ * IS the surface, unlike antora-ui-default's bordered/rounded default it
+ * replaces. `details.result` (a `[%collapsible]` block's own content) is
+ * the same panel by construction — Asciidoctor gives it identical markup,
+ * one `<div class="content">`, no separate case needed.
+ *
+ * The outer `.title` above this panel is NOT the shared grey `label/l`
+ * caption every other block title in this file uses (table/code/open/
+ * literal, below) — Figma's "Example title" instance is `label/l` at full
+ * `--ids-color-content-default` black, the one deliberate deviation from
+ * that shared rule, per design. A list's own title (`.olist`/`.ulist`/
+ * `.dlist > .title`) joins it too (follow-up request) — same treatment, a
+ * heading FOR the block that follows rather than a caption describing one
+ * that already rendered.
+ */
+.doc .exampleblock > .title,
+.doc .olist > .title,
+.doc .ulist > .title,
+.doc .dlist > .title {
+  color: var(--doc-font-color);
+  font: var(--ids-typo-label-l);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform);
+  hyphens: none;
+  padding-bottom: var(--ids-size-75);
 }
+
 
 .doc .exampleblock > .content,
 .doc details.result > .content {
-  background: var(--example-background);
-  border: 0.25rem solid var(--example-border-color);
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-}
-
-.doc .exampleblock > .content::after,
-.doc details.result > .content::after {
-  content: "";
-  display: table;
-  clear: both;
+  background: var(--ids-color-bg-low);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--ids-size-100);
+  padding: var(--ids-size-250);
 }
 
 .doc .exampleblock > .content > :first-child,
@@ -1554,18 +1717,66 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   margin-top: 0;
 }
 
-.doc .sidebarblock {
-  background: var(--sidebar-background);
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.5rem;
+/*
+ * GH-15 follow-up: an OPEN collapsible's own content needs clear space
+ * before whatever follows — without it, the block's own bottom edge sits
+ * flush against the next paragraph/heading/details, unlike every other
+ * top-level block in this file (`.doc .paragraph`, etc., all get the same
+ * `--doc-space-block` gap from their own top margin instead). A closed
+ * `<details>` never renders `.content` at all, so this only ever applies
+ * to a block that is actually taking up visible space.
+ */
+.doc details > .content {
+  margin-left: calc(20px + var(--ids-size-50));
+  margin-top: var(--doc-space-block);
+  margin-bottom: var(--doc-space-block);
 }
 
+/*
+ * A titled block nested INSIDE the panel (Figma 3615:59358, "Optional
+ * title") is not the block's own outer caption (`label/l` black, above) —
+ * it is prose content living in the panel, `body/l-high`, black.
+ */
+.doc .exampleblock > .content .title {
+  color: var(--doc-font-color);
+  font: var(--ids-typo-body-l-high);
+  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
+  text-transform: var(--ids-typo-body-l-high-text-transform);
+  padding-bottom: 0;
+}
+
+/*
+ * GH-15 width budget — the admonition's own (80px past the text measure,
+ * `--ids-size-500`, doc.css's GH-13 section above), not the code/table
+ * family's 50%: Figma's own example panel (963px) against its 707px text
+ * column is +256px, closer to the admonition's flat overflow than a
+ * percentage growth would give at this measure. Same `100cqw` backstop,
+ * same nesting reset as every other block that grows past `.doc > *`.
+ */
+.doc .exampleblock {
+  width: min(calc(var(--content-max-width) + var(--ids-size-500)), 100cqw);
+}
+
+.doc :is(.admonitionblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details)
+  .exampleblock {
+  width: 100%;
+}
+
+/*
+ * GH-15 (A9) — sidebar joins the panel surface (bg-low + 40px padding,
+ * set above alongside quote/verse). Its own title drops the old 22.5px
+ * centred heading for the same `body/l-high` treatment the example
+ * panel's inner title uses (design gives no distinct sidebar-title case
+ * of its own — this is the closest analogue, "a heading for prose sitting
+ * on the same grey field").
+ */
 .doc .sidebarblock > .content > .title {
-  font-size: calc(22.5 / var(--rem-base) * 1rem);
-  font-weight: var(--alt-heading-font-weight);
-  line-height: 1.3;
-  margin-bottom: 0.5rem;
-  text-align: center;
+  color: var(--doc-font-color);
+  font: var(--ids-typo-body-l-high);
+  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
+  text-transform: var(--ids-typo-body-l-high-text-transform);
+  margin-bottom: var(--ids-size-50);
+  text-align: left;
 }
 
 .doc .sidebarblock > .content > .title + *,
@@ -1732,21 +1943,23 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 .doc .dlist dt {
-  font-style: italic;
+  font: var(--ids-typo-body-l-high);
+  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
+  text-transform: var(--ids-typo-body-l-high-text-transform);
 }
 
 .doc .dlist dd {
-  margin: 0 0 0 1.5rem;
+  margin: 0 0 0 var(--ids-size-150);
 }
 
 .doc .dlist dd + dt,
 .doc .dlist dd > p:first-child {
-  margin-top: 0.5rem;
+  margin-top: var(--ids-size-50);
 }
 
 .doc td.hdlist1,
 .doc td.hdlist2 {
-  padding: 0.5rem 0 0;
+  padding: var(--ids-size-50) 0 0;
   vertical-align: top;
 }
 
@@ -1757,11 +1970,11 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 
 .doc td.hdlist1 {
   font-weight: var(--body-font-weight-bold);
-  padding-right: 0.25rem;
+  padding-right: var(--ids-size-25);
 }
 
 .doc td.hdlist2 {
-  padding-left: 0.25rem;
+  padding-left: var(--ids-size-25);
 }
 
 .doc .colist {
@@ -1785,7 +1998,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   border-radius: 100%;
   display: inline-block;
   font-family: var(--body-font-family);
-  font-size: calc(13.5 / var(--rem-base) * 1rem);
+  font-size: var(--ids-typo-font-size-13);
   font-style: normal;
   line-height: 1.2;
   text-align: center;
@@ -1804,48 +2017,61 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 .doc hr {
-  border: solid var(--section-divider-color);
-  border-width: 2px 0 0;
-  height: 0;
+  background-image: repeating-linear-gradient(to right, var(--section-divider-color) 0 4px, transparent 4px 8px);
+  background-position: top;
+  background-repeat: repeat-x;
+  background-size: 8px 1px;
+  border: 0;
+  height: 1px;
 }
 
+/*
+ * GH-15 (A9) — `btn:[]` (Asciidoctor's UI-button macro, `content.adoc:234`)
+ * had no design system input, so it follows the recommendation taken in
+ * the issue's own discussion: the same token-chip geometry as the inline
+ * code chip (`.doc p code`, above) rather than antora-ui-default's literal
+ * `[…]` bracket pseudo-elements — `label/m` uppercase, matching a
+ * Datagrid header cell's own scale, one step down from the code chip's
+ * `code/m`, since a button label reads as a short discrete token the same
+ * way a table header cell does.
+ */
 .doc b.button {
+  background: var(--code-background);
+  border-radius: 0;
+  color: var(--code-font-color);
+  font: var(--ids-typo-label-m);
+  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  text-transform: var(--ids-typo-label-m-text-transform);
+  padding: 0 var(--ids-size-25);
   white-space: nowrap; /* effectively ignores hyphens setting */
 }
 
-.doc b.button::before {
-  content: "[";
-  padding-right: 0.25em;
-}
-
-.doc b.button::after {
-  content: "]";
-  padding-left: 0.25em;
-}
-
+/*
+ * `kbd:[]` (keyboard macro) — same chip geometry again, `code/m` type
+ * (matching a literal keystroke's monospace convention) rather than the
+ * previous rounded keycap with an inset drop-shadow, which the design
+ * models nowhere.
+ */
 .doc kbd {
+  background: var(--code-background);
+  border-radius: 0;
+  color: var(--code-font-color);
   display: inline-block;
-  font-size: calc(12 / var(--rem-base) * 1rem);
-  background: var(--kbd-background);
-  border: 1px solid var(--kbd-border-color);
-  border-radius: 0.25em;
-  box-shadow: 0 1px 0 var(--kbd-border-color), 0 0 0 0.1em var(--body-background) inset;
-  padding: 0.25em 0.5em;
+  font: var(--ids-typo-code-m);
+  letter-spacing: var(--ids-typo-code-m-letter-spacing);
+  text-transform: var(--ids-typo-code-m-text-transform);
+  padding: 0 var(--ids-size-25);
   vertical-align: text-bottom;
   white-space: nowrap; /* effectively ignores hyphens setting */
 }
 
 .doc kbd,
 .doc .keyseq {
-  line-height: 1;
-}
-
-.doc .keyseq {
-  font-size: calc(16 / var(--rem-base) * 1rem);
+  line-height: var(--ids-typo-line-height-20);
 }
 
 .doc .keyseq kbd {
-  margin: 0 0.125em;
+  margin: 0 var(--ids-size-12);
 }
 
 .doc .keyseq kbd:first-child {
@@ -1881,33 +2107,38 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   white-space: pre-wrap;
 }
 
+/*
+ * GH-15 (A9) — footnotes have no design input of their own; `detail/m` +
+ * `--caption-font-color` (the same grey/scale every other caption in this
+ * file uses) is the closest analogue for "small print below the article".
+ */
 #footnotes {
-  font-size: 0.85em;
-  line-height: 1.5;
-  margin: 2rem -0.5rem 0;
+  color: var(--caption-font-color);
+  font: var(--ids-typo-detail-m);
+  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
+  margin: var(--doc-space-block) calc(-1 * var(--ids-size-50)) 0;
 }
 
 .doc td.tableblock > .content #footnotes {
-  margin: 2rem 0 0;
+  margin: var(--doc-space-block) 0 0;
 }
 
 #footnotes hr {
-  border-top-width: 1px;
   margin-top: 0;
   width: 20%;
 }
 
 #footnotes .footnote {
-  margin: 0.5em 0 0 1em;
+  margin: var(--ids-size-50) 0 0 var(--ids-size-100);
 }
 
 #footnotes .footnote + .footnote {
-  margin-top: 0.25em;
+  margin-top: var(--ids-size-25);
 }
 
 #footnotes .footnote > a:first-of-type {
   display: inline-block;
-  margin-left: -2em;
+  margin-left: calc(-2 * var(--ids-size-100));
   text-align: right;
-  width: 1.5em;
+  width: var(--ids-size-125);
 }

@@ -24,17 +24,6 @@ Author Name
 [.lead]
 You are looking at the content test page for the Antora default UI.
 
-[.float-group]
---
-image:multirepo-ssg.svg[Multirepo SSG,180,135,float=right,role=float-gap]
-Platonem complectitur mediocritatem ea eos.
-Ei nonumy deseruisse ius.
-Mel id omnes verear.
-Vis no velit audiam, sonet <<dependencies,praesent>> eum ne.
-*Prompta eripuit* nec ad.
-Integer diam enim, dignissim eget eros et, ultricies mattis odio.
---
-
 Vestibulum consectetur nec urna a luctus.
 Quisque pharetra tristique arcu fringilla dapibus.
 https://example.org[Curabitur,role=unresolved] ut massa aliquam, cursus enim et, accumsan lectus.
@@ -76,12 +65,49 @@ This is an example paragraph.
 [example]
 This is an example paragraph.
 
+.Example title
+====
+.Optional title
+A documentation site with at least, one documentation component that has at least, one documentation module.
+====
+
+.Example title
+====
+A short summary can sit above supporting media, same panel either way.
+
+image::multirepo-ssg.svg[Multirepo SSG,400,align=center]
+====
+
+.Example title
+====
+.Optional title
+A table nested in a panel fills the panel's own width rather than hugging its own.
+
+[cols="1,3,1"]
+|===
+|Name |Description |Values
+
+|size
+|Shape
+|`"small"` \| `"medium"` \| `"large"`
+|===
+====
+
 .Summary *Spoiler Alert!*
 [%collapsible]
 ====
 Details.
 
 Loads of details.
+
+[cols="1,3,1"]
+|===
+|Name |Description |Values
+
+|size
+|Shape
+|`"small"` \| `"medium"` \| `"large"`
+|===
 ====
 
 .Result
@@ -491,18 +517,22 @@ Est in reque homero principes, meis deleniti mediocrem ad has.
 Ex nam suas nemore dignissim, vel apeirian democritum et.
 
 .Antora is a multi-repo documentation site generator
-image::multirepo-ssg.svg[Multirepo SSG,3000,opts=interactive]
+image::multirepo-ssg.svg[Multirepo SSG]
 
-.Let's see that again, but a little smaller
-image::multirepo-ssg.svg[Multirepo SSG,300,role=text-left]
+.A raster photo narrower than the text measure — renders at its own real size, no cropping
+image::photo-small.jpg[A small photo]
 
-Make the switch today!
+.A raster photo wider than the text measure but inside the +25% cap — still its own real size
+image::photo-medium.png[A medium photo]
 
-.Full Circle with Jake Blauvelt
-video::300817511[vimeo,640,360,align=left]
+.A raster photo well past the +25% cap — clamped down to the budget
+image::photo-large.gif[A large photo]
+
+.A raster photo fixed to 400px wide, no matter what the text measure is and aligned to the left
+image::photo-large.gif[A large photo,400,align=left]
 
 .Naturally with Jake Blauvelt
-video::fUvDykQUgMk[youtube,640,360,align=center]
+video::fUvDykQUgMk[youtube,align=left]
 
 [#english+中文]
 == English + 中文

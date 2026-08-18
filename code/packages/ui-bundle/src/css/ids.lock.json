@@ -1,7 +1,7 @@
 {
   "designSystemVersion": "1.28.0",
   "componentsPackageVersion": "1.28.0",
-  "generatedAt": "2026-08-17T10:17:12.037Z",
+  "generatedAt": "2026-08-17T14:19:06.249Z",
   "sources": {
     "variables/index.css": "e4a4d34ec45638533f0029016641d85170294e0e720d42dc2eff63ee5fa00a08",
     "typography.css": "5f6eae209b13452bbeadbe127fedbbf507328088ac3fa6b8980269adbee01883",
@@ -74,9 +74,12 @@
     "--ids-list-item-label-line-clamp",
     "--ids-list-item-tree-indent",
     "--ids-motion-duration-l",
+    "--ids-motion-duration-m",
     "--ids-motion-duration-s",
     "--ids-motion-easing-standard-1",
+    "--ids-motion-easing-standard-2",
     "--ids-motion-easing-standard-4",
+    "--ids-motion-micro-appear",
     "--ids-motion-micro-states",
     "--ids-size-0",
     "--ids-size-100",

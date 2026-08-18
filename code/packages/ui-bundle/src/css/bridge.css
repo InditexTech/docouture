@@ -70,21 +70,10 @@
   --link_hover-font-color: var(--ids-color-alt-blue-mid);
   --link_unresolved-font-color: var(--ids-color-alt-red-high);
   --abstract-background: var(--ids-color-bg-low);
-  --abstract-font-color: var(--ids-color-content-default);
-  --abstract-border-color: var(--ids-color-border-low);
   --caption-font-color: var(--ids-color-content-low);
   --caption-font-weight: var(--ids-typo-font-weight-high);
   --code-background: var(--ids-color-bg-low);
   --code-font-color: var(--ids-color-content-default);
-  --example-background: var(--ids-color-bg-default);
-  --example-border-color: var(--ids-color-border-low);
-  --kbd-background: var(--ids-color-bg-low);
-  --kbd-border-color: var(--ids-color-border-low);
-  --quote-background: var(--ids-color-bg-low);
-  --quote-border-color: var(--ids-color-content-low);
-  --quote-font-color: var(--ids-color-content-low);
-  --quote-attribution-font-color: var(--ids-color-content-low);
-  --sidebar-background: var(--ids-color-bg-low);
 
   /*
    * stacking — upstream used 1..4. Mapped onto the design system scale, which

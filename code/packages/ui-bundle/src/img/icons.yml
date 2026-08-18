@@ -66,6 +66,8 @@ masks:
   alerts:
     - warning-outlined
     - warning-alt-outlined
+  arrows:
+    - chevron-down-outlined # collapsible marker (GH-15)
   business:
     - sticker-outlined
   communication:

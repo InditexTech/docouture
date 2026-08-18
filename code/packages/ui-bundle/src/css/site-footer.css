@@ -9,11 +9,15 @@
  * sits outside `.body` in the DOM, so it needs the same variable and the same
  * transition to move in step when the side menu is toggled.
  *
- * No background of its own, unlike `.page-footer`: the landing's decorative
- * wash (home.css) runs the height of the page, and an opaque band across the
- * bottom would cut it off for no reason the design asks for.
+ * An opaque surface of its own: `--ids-color-bg-default`, which is white
+ * under the light theme and black under the dark one, so the landing's
+ * decorative artwork (home.css) stops at the footer rather than running
+ * behind it. The token, not a literal `#fff`, is what makes the second half
+ * of that true — a hardcoded white footer would be a bright band across the
+ * bottom of a dark page.
  */
 .site-footer {
+  background-color: var(--ids-color-bg-default);
   margin-left: var(--side-menu-offset);
   transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
 }

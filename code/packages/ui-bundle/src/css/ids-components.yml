@@ -18,7 +18,7 @@ components:
   text:
     - text.css # .ids-text--* typography utilities, chrome copy only (not doc prose — see vars.css)
   button:
-    - button.css # .ids-button--ghost/--icon-only — header toolbar actions (GH-7, GH-8)
+    - button.css # .ids-button--ghost/--icon-only — header toolbar actions (GH-7, GH-8); also the [card] call to action (GH-20)
   tag:
     - tag.css # .ids-tag--solid/--selected — header toolbar version tag (GH-7)
   option-picker:
@@ -48,9 +48,9 @@ components:
     - breadcrumb.css # .ids-breadcrumbs — flex row container
     - breadcrumb-item.css # .ids-breadcrumb-item[--link/--active] + its divider
   label:
-    - label.css # .ids-label--white — hero page tags (GH-9)
+    - label.css # .ids-label--white — hero page tags (GH-9); .ids-label--grey — [card,labels=…] meta chips (GH-20)
   card:
-    - card.css # .ids-card--vertical — Weave.js migration Phase 2, [cards] block (asciidoc-extensions/lib/card-grid.js)
+    - card.css # .ids-card--vertical/__image/__content — the ATD Card behind the [cards] block (GH-20, asciidoc-extensions/lib/card-grid.js); its own hover state and surface are what make that block theme-agnostic
   timeline:
     - timeline.css # .ids-timeline — flex column wrapper
     - timeline-item.css # .ids-timeline-item[--completed] — Weave.js migration Phase 2, [steps] block (asciidoc-extensions/lib/steps.js)

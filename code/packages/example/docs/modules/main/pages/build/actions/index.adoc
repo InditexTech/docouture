@@ -69,76 +69,152 @@ the canvas to build visual collaborative applications. This are the actions:
 
 [cards]
 ====
-xref:main:build/actions/eraser-tool.adoc[Eraser Tool]:: Allows users to erase (delete) elements of the canvas. When enabled the user can click on an element and it will be erased.
-xref:main:build/actions/move-tool.adoc[Move Tool]:: Allows users to enable/disable the panning of canvas. When enabled the user can pan the canvas at its will.
-xref:main:build/actions/selection-tool.adoc[Selection Tool]:: Allows users to enable/disable the selection mode of the canvas. When enabled the users can select nodes, move then, resize them, etc.
+[card]
+.xref:main:build/actions/eraser-tool.adoc[Eraser Tool]
+Allows users to erase (delete) elements of the canvas. When enabled the user can click on an element and it will be erased.
+
+[card]
+.xref:main:build/actions/move-tool.adoc[Move Tool]
+Allows users to enable/disable the panning of canvas. When enabled the user can pan the canvas at its will.
+
+[card]
+.xref:main:build/actions/selection-tool.adoc[Selection Tool]
+Allows users to enable/disable the selection mode of the canvas. When enabled the users can select nodes, move then, resize them, etc.
 ====
 
 === Collaboration Tools
 
 [cards]
 ====
-xref:main:build/actions/comment-tool.adoc[Comment Tool]:: Enables users to add comments on top of the stage, helpful to make collaborative work seamless.
+[card]
+.xref:main:build/actions/comment-tool.adoc[Comment Tool]
+Enables users to add comments on top of the stage, helpful to make collaborative work seamless.
 ====
 
 === Nodes Tools
 
 [cards]
 ====
-xref:main:build/actions/brush-tool.adoc[Brush Tool]:: Enables users to paint freeform strokes on the canvas, similar to a digital brush.
-xref:main:build/actions/connector-tool.adoc[Connector Tool]:: Enables users to add new connector nodes to the canvas by clicking between two nodes anchor points.
-xref:main:build/actions/ellipse-tool.adoc[Ellipse Tool]:: Enables users to create new ellipse nodes on the canvas.
-xref:main:build/actions/image-tool.adoc[Image Tool]:: Enables users to add and image to the canvas by selecting a file, drag & drop from your application, drag & drop external file or when copying from an external source.
-xref:main:build/actions/images-tool.adoc[Images Tool]:: Enables users to add multiple images to the canvas by selecting files, drag & drop files from your application, or drag & drop external files.
-xref:main:build/actions/measure-tool.adoc[Measure Tool]:: Enables users to add new measure nodes to the canvas by clicking or touching on it.
-xref:main:build/actions/rectangle-tool.adoc[Rectangle Tool]:: Enables users to create new rectangle nodes on the canvas.
-xref:main:build/actions/polygon-tool.adoc[Polygon Tool]:: Enables users to place a polygon node on the canvas using a preset shape (triangle, diamond, pentagon, hexagon, octagon or decagon).
-xref:main:build/actions/star-tool.adoc[Star Tool]:: Enables users to add new star nodes to the canvas by clicking or touching on it.
-xref:main:build/actions/stroke-tool.adoc[Stroke Tool]:: Enables users to create a single-stroke line on the canvas. With the possibility to define the stoke tips format.
-xref:main:build/actions/text-tool.adoc[Text Tool]:: Enables users to add new text nodes to the canvas by clicking or touching on it.
-xref:main:build/actions/video-tool.adoc[Video Tool]:: Enables users to add videos to the canvas by selecting a file.
+[card]
+.xref:main:build/actions/brush-tool.adoc[Brush Tool]
+Enables users to paint freeform strokes on the canvas, similar to a digital brush.
+
+[card]
+.xref:main:build/actions/connector-tool.adoc[Connector Tool]
+Enables users to add new connector nodes to the canvas by clicking between two nodes anchor points.
+
+[card]
+.xref:main:build/actions/ellipse-tool.adoc[Ellipse Tool]
+Enables users to create new ellipse nodes on the canvas.
+
+[card]
+.xref:main:build/actions/image-tool.adoc[Image Tool]
+Enables users to add and image to the canvas by selecting a file, drag & drop from your application, drag & drop external file or when copying from an external source.
+
+[card]
+.xref:main:build/actions/images-tool.adoc[Images Tool]
+Enables users to add multiple images to the canvas by selecting files, drag & drop files from your application, or drag & drop external files.
+
+[card]
+.xref:main:build/actions/measure-tool.adoc[Measure Tool]
+Enables users to add new measure nodes to the canvas by clicking or touching on it.
+
+[card]
+.xref:main:build/actions/rectangle-tool.adoc[Rectangle Tool]
+Enables users to create new rectangle nodes on the canvas.
+
+[card]
+.xref:main:build/actions/polygon-tool.adoc[Polygon Tool]
+Enables users to place a polygon node on the canvas using a preset shape (triangle, diamond, pentagon, hexagon, octagon or decagon).
+
+[card]
+.xref:main:build/actions/star-tool.adoc[Star Tool]
+Enables users to add new star nodes to the canvas by clicking or touching on it.
+
+[card]
+.xref:main:build/actions/stroke-tool.adoc[Stroke Tool]
+Enables users to create a single-stroke line on the canvas. With the possibility to define the stoke tips format.
+
+[card]
+.xref:main:build/actions/text-tool.adoc[Text Tool]
+Enables users to add new text nodes to the canvas by clicking or touching on it.
+
+[card]
+.xref:main:build/actions/video-tool.adoc[Video Tool]
+Enables users to add videos to the canvas by selecting a file.
 ====
 
 ==== Deprecated
 
 [cards]
 ====
-xref:main:build/actions/arrow-tool.adoc[Arrow Tool (deprecated)]:: Enables users to add new arrow nodes to the canvas by clicking or touching on it.
-xref:main:build/actions/line-tool.adoc[Line Tool (deprecated)]:: Enables users to create a simple line on the canvas.
-xref:main:build/actions/pen-tool.adoc[Pen Tool (deprecated)]:: Enables users to create continuos lines on the canvas with N segments on the canvas.
-xref:main:build/actions/regular-polygon-tool.adoc[Regular Polygon Tool (deprecated)]:: Enables users to create new regular polygons nodes on the canvas.
+[card]
+.xref:main:build/actions/arrow-tool.adoc[Arrow Tool (deprecated)]
+Enables users to add new arrow nodes to the canvas by clicking or touching on it.
+
+[card]
+.xref:main:build/actions/line-tool.adoc[Line Tool (deprecated)]
+Enables users to create a simple line on the canvas.
+
+[card]
+.xref:main:build/actions/pen-tool.adoc[Pen Tool (deprecated)]
+Enables users to create continuos lines on the canvas with N segments on the canvas.
+
+[card]
+.xref:main:build/actions/regular-polygon-tool.adoc[Regular Polygon Tool (deprecated)]
+Enables users to create new regular polygons nodes on the canvas.
 ====
 
 === Grouping Tools
 
 [cards]
 ====
-xref:main:build/actions/frame-tool.adoc[Frame Tool]:: Enables users to create frame nodes by clicking on the canvas.
+[card]
+.xref:main:build/actions/frame-tool.adoc[Frame Tool]
+Enables users to create frame nodes by clicking on the canvas.
 ====
 
 === Alignment Tools
 
 [cards]
 ====
-xref:main:build/actions/align-nodes-tool.adoc[Align Nodes Tool]:: Allows users to users to align selected nodes vertically or horizontally.
+[card]
+.xref:main:build/actions/align-nodes-tool.adoc[Align Nodes Tool]
+Allows users to users to align selected nodes vertically or horizontally.
 ====
 
 === Zooming Tools
 
 [cards]
 ====
-xref:main:build/actions/fit-to-screen-tool.adoc[Fit to Screen Tool]:: Automatically adjusts the zoom and position of the canvas to ensure all visible nodes fit neatly within the viewport.
-xref:main:build/actions/fit-to-selection-tool.adoc[Fit to Selection Tool]:: Automatically adjusts the zoom and position of the canvas to ensure all selected nodes fit neatly within the viewport.
-xref:main:build/actions/zoom-in-tool.adoc[Zoom In Tool]:: Enables users to incrementally zoom into the canvas, providing a more detailed view of content.
-xref:main:build/actions/zoom-out-tool.adoc[Zoom Out Tool]:: Enables users to incrementally zoom out the canvas, providing a more general view of content.
+[card]
+.xref:main:build/actions/fit-to-screen-tool.adoc[Fit to Screen Tool]
+Automatically adjusts the zoom and position of the canvas to ensure all visible nodes fit neatly within the viewport.
+
+[card]
+.xref:main:build/actions/fit-to-selection-tool.adoc[Fit to Selection Tool]
+Automatically adjusts the zoom and position of the canvas to ensure all selected nodes fit neatly within the viewport.
+
+[card]
+.xref:main:build/actions/zoom-in-tool.adoc[Zoom In Tool]
+Enables users to incrementally zoom into the canvas, providing a more detailed view of content.
+
+[card]
+.xref:main:build/actions/zoom-out-tool.adoc[Zoom Out Tool]
+Enables users to incrementally zoom out the canvas, providing a more general view of content.
 ====
 
 === Export Tools
 
 [cards]
 ====
-xref:main:build/actions/export-node-tool.adoc[Export Node Tool]:: Automatically adjusts the zoom and position of the canvas to ensure all selected nodes fit neatly within the viewport, and then proceeds to export the viewport as an image.
-xref:main:build/actions/export-stage-tool.adoc[Export Stage Tool]:: Automatically adjusts the zoom and position of the canvas to ensure all visible nodes fit neatly within the viewport, and then proceeds to export the viewport as an image.
+[card]
+.xref:main:build/actions/export-node-tool.adoc[Export Node Tool]
+Automatically adjusts the zoom and position of the canvas to ensure all selected nodes fit neatly within the viewport, and then proceeds to export the viewport as an image.
+
+[card]
+.xref:main:build/actions/export-stage-tool.adoc[Export Stage Tool]
+Automatically adjusts the zoom and position of the canvas to ensure all visible nodes fit neatly within the viewport, and then proceeds to export the viewport as an image.
 ====
 
 == Custom Actions

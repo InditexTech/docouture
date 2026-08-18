@@ -43,10 +43,11 @@ site:
   homeUrl: /home.html
   keys:
     # The landing's decorative background (GH-18, head-styles.hbs → home.css).
-    # A placeholder gradient, not a design asset; copyPreviewAssets ships
-    # preview-src/*.svg verbatim. Absent, the landing renders on a plain
-    # surface, which is also worth previewing — comment this out to see it.
-    homeBackground: /home-background.svg
+    # The design's own artwork, exported from Figma node 2696:54670;
+    # copyPreviewAssets ships preview-src/*.jpg verbatim. Absent, the landing
+    # renders on a plain surface, which is also worth previewing — comment
+    # this out to see it.
+    homeBackground: /home-background.jpg
     repoUrl: https://github.com/InditexTech/atd-docs
     # Page footer "how to contribute" button (GH-16): a playbook-level key,
     # same convention as repoUrl above and productLogo below — absent, the

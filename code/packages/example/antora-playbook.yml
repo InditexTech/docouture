@@ -32,6 +32,13 @@ site:
     # not the site root, hence the `/_/` prefix.
     product_logo: /_/product-logo.png
 
+    # The landing's decorative background (home.css). Same supplemental-file
+    # route and the same `/_/` prefix as the logo above. The artwork is the
+    # design's own, exported from Figma node 2696:54670; home.css paints it
+    # full-bleed and fixed, and inverts it under the dark theme rather than
+    # asking a site for a second asset.
+    home_background: /_/home-background.jpg
+
 content:
   sources:
     # This entry reads the AsciiDoc content that lives alongside this playbook.

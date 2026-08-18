@@ -9,10 +9,21 @@ features or entire applications. *Weave.js* provides a set of well-defined build
 
 [cards]
 ====
-xref:main:build/nodes/index.adoc[Nodes]:: Nodes are the fundamental visual building blocks in Weave.js. They are primarily based on Konva.js primitives (shapes and groups) and represent everything rendered on the canvas.
-xref:main:build/plugins/index.adoc[Plugins]:: Plugins extend and enhance Weave.js's core functionality. Whether it's selection handling, canvas panning, zooming, or custom behaviors, plugins allow you to modular add or override features without cluttering the core logic.
-xref:main:build/actions/index.adoc[Actions]:: Actions are how user interactions are interpreted and executed within Weave.js. From adding new Nodes to the canvas to triggering selection or transformation, Actions provide a clean and consistent way to handle event-driven logic.
-xref:main:build/stores/index.adoc[Stores]:: Stores are responsible for managing the shared-state, persist it and the real-time communication between peers. A Store on the backend, manages the application's shared-state, real-time synchronization and persistence, on the frontend, a client is provided to connect to the backend.
+[card]
+.xref:main:build/nodes/index.adoc[Nodes]
+Nodes are the fundamental visual building blocks in Weave.js. They are primarily based on Konva.js primitives (shapes and groups) and represent everything rendered on the canvas.
+
+[card]
+.xref:main:build/plugins/index.adoc[Plugins]
+Plugins extend and enhance Weave.js's core functionality. Whether it's selection handling, canvas panning, zooming, or custom behaviors, plugins allow you to modular add or override features without cluttering the core logic.
+
+[card]
+.xref:main:build/actions/index.adoc[Actions]
+Actions are how user interactions are interpreted and executed within Weave.js. From adding new Nodes to the canvas to triggering selection or transformation, Actions provide a clean and consistent way to handle event-driven logic.
+
+[card]
+.xref:main:build/stores/index.adoc[Stores]
+Stores are responsible for managing the shared-state, persist it and the real-time communication between peers. A Store on the backend, manages the application's shared-state, real-time synchronization and persistence, on the frontend, a client is provided to connect to the backend.
 ====
 
 == Example of building blocks

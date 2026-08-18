@@ -65,40 +65,84 @@ build visual collaborative applications. This are the plugins:
 
 [cards]
 ====
-xref:main:build/plugins/connected-users.adoc[Connected Users]:: Gives the list of users currently active in a collaborative session. Ideal as source information to paint the user list on the UI.
-xref:main:build/plugins/users-pointers.adoc[Users Pointers]:: Displays real-time cursors or pointers for all connected users on the canvas.
-xref:main:build/plugins/users-presence.adoc[Users Presence]:: Displays what users are doing on the canvas. For example when dragging or transforming an element.
-xref:main:build/plugins/users-selector.adoc[Users Selector]:: Displays real-time the user selection for all connected users on the canvas.
+[card]
+.xref:main:build/plugins/connected-users.adoc[Connected Users]
+Gives the list of users currently active in a collaborative session. Ideal as source information to paint the user list on the UI.
+
+[card]
+.xref:main:build/plugins/users-pointers.adoc[Users Pointers]
+Displays real-time cursors or pointers for all connected users on the canvas.
+
+[card]
+.xref:main:build/plugins/users-presence.adoc[Users Presence]
+Displays what users are doing on the canvas. For example when dragging or transforming an element.
+
+[card]
+.xref:main:build/plugins/users-selector.adoc[Users Selector]
+Displays real-time the user selection for all connected users on the canvas.
 ====
 
 === Collaboration
 
 [cards]
 ====
-xref:main:build/plugins/comments-renderer.adoc[Comments Renderer]:: Renders the provided comments on a special layer in order to enable interactivity.
+[card]
+.xref:main:build/plugins/comments-renderer.adoc[Comments Renderer]
+Renders the provided comments on a special layer in order to enable interactivity.
 ====
 
 === UX
 
 [cards]
 ====
-xref:main:build/plugins/context-menu.adoc[Context Menu]:: Adds custom right-click menus to the canvas, enabling users to access context-specific actions
-xref:main:build/plugins/copy-paste-nodes.adoc[Copy & Paste Nodes]:: Enables users to copy & paste selected nodes using familiar keyboard shortcuts like Ctrl/Cmd + C and Ctrl/Cmd + V or through actions on the context menu.
-xref:main:build/plugins/nodes-selection.adoc[Nodes Selection]:: Enables users to select one or multiple nodes on the canvas through clicks, shift-clicks, or drag-selection (marquee).
-xref:main:build/plugins/nodes-multi-selection-feedback.adoc[Nodes Multi-Selection]:: Enables more feedback to end-users when multi-selecting.
-xref:main:build/plugins/nodes-snapping.adoc[Nodes Snapping]:: Adds smart alignment assistance by enabling nodes to snap to guides or other nodes as they are moved or resized. Also allows the support to create custom horizontal and vertical guides onto containers.
+[card]
+.xref:main:build/plugins/context-menu.adoc[Context Menu]
+Adds custom right-click menus to the canvas, enabling users to access context-specific actions
+
+[card]
+.xref:main:build/plugins/copy-paste-nodes.adoc[Copy & Paste Nodes]
+Enables users to copy & paste selected nodes using familiar keyboard shortcuts like Ctrl/Cmd + C and Ctrl/Cmd + V or through actions on the context menu.
+
+[card]
+.xref:main:build/plugins/nodes-selection.adoc[Nodes Selection]
+Enables users to select one or multiple nodes on the canvas through clicks, shift-clicks, or drag-selection (marquee).
+
+[card]
+.xref:main:build/plugins/nodes-multi-selection-feedback.adoc[Nodes Multi-Selection]
+Enables more feedback to end-users when multi-selecting.
+
+[card]
+.xref:main:build/plugins/nodes-snapping.adoc[Nodes Snapping]
+Adds smart alignment assistance by enabling nodes to snap to guides or other nodes as they are moved or resized. Also allows the support to create custom horizontal and vertical guides onto containers.
 ====
 
 === Stage
 
 [cards]
 ====
-xref:main:build/plugins/stage-drop-area.adoc[Stage Drop Area]:: Enables drag-and-drop support on the canvas, allowing users to drop elements—such as shapes, files, or custom components—directly onto the canvas.
-xref:main:build/plugins/stage-grid.adoc[Stage Grid]:: Adds a visual background grid to the canvas stage, helping users align and position elements more precisely.
-xref:main:build/plugins/stage-keyboard-move.adoc[Stage Keyboard Move]:: Enables to move selected nodes by a delta when pressing shift + keyboard arrows.
-xref:main:build/plugins/stage-panning.adoc[Stage Panning]:: Enables users to navigate the canvas by dragging to move around the Stage.
-xref:main:build/plugins/stage-resize.adoc[Stage Resize]:: Automatically adjusts the canvas size to fit its container or the browser window, ensuring a responsive and adaptive user experience.
-xref:main:build/plugins/stage-zoom.adoc[Stage Zoom]:: Enables smooth zooming in and out of the canvas, allowing users to focus on details or get an overview of the entire workspace.
+[card]
+.xref:main:build/plugins/stage-drop-area.adoc[Stage Drop Area]
+Enables drag-and-drop support on the canvas, allowing users to drop elements—such as shapes, files, or custom components—directly onto the canvas.
+
+[card]
+.xref:main:build/plugins/stage-grid.adoc[Stage Grid]
+Adds a visual background grid to the canvas stage, helping users align and position elements more precisely.
+
+[card]
+.xref:main:build/plugins/stage-keyboard-move.adoc[Stage Keyboard Move]
+Enables to move selected nodes by a delta when pressing shift + keyboard arrows.
+
+[card]
+.xref:main:build/plugins/stage-panning.adoc[Stage Panning]
+Enables users to navigate the canvas by dragging to move around the Stage.
+
+[card]
+.xref:main:build/plugins/stage-resize.adoc[Stage Resize]
+Automatically adjusts the canvas size to fit its container or the browser window, ensuring a responsive and adaptive user experience.
+
+[card]
+.xref:main:build/plugins/stage-zoom.adoc[Stage Zoom]
+Enables smooth zooming in and out of the canvas, allowing users to focus on details or get an overview of the entire workspace.
 ====
 
 == Custom Plugins

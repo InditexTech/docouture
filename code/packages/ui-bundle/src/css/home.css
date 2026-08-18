@@ -48,27 +48,87 @@
 }
 
 /*
- * Decorative full-bleed background, fixed so it does not scroll with the
- * page, behind everything including the side menu — the frames draw it that
- * way. No image ships with the bundle: a site supplies one with the
- * `home_background` playbook key (head-styles.hbs), and without one this is
- * an inert white wash that costs nothing.
+ * Stops the landing's background from being sized against the VIEWPORT.
+ *
+ * `<body>`'s background normally propagates to the canvas, and when it does,
+ * the spec sizes and positions it against the ROOT element's box rather than
+ * the body's. base.css sets `html { height: 100% }` — exactly one viewport —
+ * so the scrim below resolved its `100% 100%` to one screenful and the
+ * artwork its `200%` to twice one screenful. Scroll a long landing and both
+ * simply stopped: the gradient ran out and the image broke off mid-page.
+ *
+ * Giving the root a background of its own (any value but `none`) suppresses
+ * that propagation, so the body's background is painted as the body's own,
+ * against the body's box — which is the height of the whole document. The
+ * value is `--body-background`, the very thing base.css puts on the body, so
+ * the canvas beyond the body still paints the same surface it always did and
+ * nothing changes visually except the geometry this exists to fix.
+ *
+ * Scoped with `:has()` so it applies only to the landing (the doc view has no
+ * background image and must keep the plain propagated body background);
+ * `:has()` is already relied on in doc.css and side-menu.css.
+ */
+html:has(> .home-page) {
+  background: var(--body-background);
+}
+
+/*
+ * Decorative full-bleed background. No image ships with the bundle: a site
+ * supplies one with the `home_background` playbook key (head-styles.hbs), and
+ * without one this is inert and costs nothing.
  *
  * Declared on the body itself rather than a pseudo-element: a `::before` would
  * need a negative z-index to sit behind the page's content, and that also puts
  * it behind its own parent's background, which is opaque (base.css).
  *
- * The 90% white overlay is the design's, and it is a light-theme value: over
- * a dark surface it washes the page out rather than dimming the image. Dark
- * theme for the landing is deliberately out of scope here (GH-28) — when it
- * is taken on, this overlay is the first thing to theme.
+ * It SCROLLS with the page (the default `scroll`, stated for the record
+ * because this used to be `fixed`) and is anchored to the top at 200%, so the
+ * artwork reads as part of the document rather than as a pane the content
+ * slides over.
+ *
+ * THE SCRIM. The frame's background node (2696:54670) carries two fills,
+ * `[rgba(255,255,255,0.9), IMAGE]`, and Figma lists fills topmost-first — so
+ * the 90% white sits OVER the artwork, which is why the rendered frame shows
+ * only a faint ghost of it rather than the photograph. That is the effect
+ * reproduced here, and it needs the doubled-stop `linear-gradient` because a
+ * `background-color` layer always paints UNDER every image layer, never over
+ * one.
+ *
+ * The two layers are sized independently: the artwork is 200% and anchored
+ * top, while the scrim is `100% 100%` of the whole page. Both depend on the
+ * root-background rule above to make "the whole page" mean the document
+ * rather than one viewport.
+ *
+ * The scrim is a variable, and that is the bug it exists to fix: it used to
+ * be a hardcoded white, which meant the landing painted a 90% WHITE sheet
+ * over itself under the dark theme — the page read as light grey, and
+ * anything with a dark surface of its own sat on it as a black slab. Themed,
+ * the scrim inverts with the page: 90% black over the same artwork leaves the
+ * ghost reading light-on-dark, the mirror of light-on-white.
+ *
+ * It also stays correct with no image at all, which is why it can be declared
+ * unconditionally: 90% white over the light surface, or 90% black over the
+ * dark one, is invisible in both cases.
  */
 .home-page {
-  background-attachment: fixed;
-  background-image: linear-gradient(rgb(255 255 255 / 90%), rgb(255 255 255 / 90%)), var(--home-background-image, none);
-  background-position: center;
+  --home-background-scrim: rgb(255 255 255 / 90%);
+
+  background-image: linear-gradient(var(--home-background-scrim), var(--home-background-scrim)),
+    var(--home-background-image, none);
+  background-position: top;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%, 200%;
+}
+
+/*
+ * Dark theme, as a stopgap: the design has no dark landing yet (GH-28), so
+ * rather than ask a site for a second asset this inverts the relationship
+ * between scrim and artwork. Good enough for a light, low-saturation still;
+ * a photographic or strongly coloured background would want a real
+ * `home_background_dark` key instead.
+ */
+.ids-theme-dark .home-page {
+  --home-background-scrim: rgb(0 0 0 / 90%);
 }
 
 /* ------------------------------------------------------------ hero ------- */
@@ -117,18 +177,24 @@
  * rhythm) are set here.
  */
 .home__main {
+  /*
+   * The query container a block body measures itself against when it opts out
+   * of the reading measure — `[cards,width=container]` resolves `100cqw` here
+   * (card-grid.css). `.doc` declares the same thing, at the top of doc.css,
+   * for the same reason and against the same unit: the element that IS the
+   * grid column is the only honest answer to "how wide can this get", and it
+   * is not the capped `.sectionbody` between them.
+   */
   display: flex;
   flex-direction: column;
-  font: var(--ids-typo-body-l);
   gap: var(--ids-size-350); /* 56 */
-  grid-column-end: span 6;
-  letter-spacing: var(--ids-typo-body-l-letter-spacing);
-  min-width: 0;
+  /*
+   * `auto /`, not a bare `grid-column-end`: `.doc` sets the `grid-column`
+   * SHORTHAND (doc.css), whose start longhand would otherwise survive here
+   * and place the column against the wrong line.
+   */
+  grid-column: auto / span 6;
   padding-block-end: var(--ids-size-500); /* 80 */
-}
-
-.home__main p {
-  margin: 0;
 }
 
 /*
@@ -150,33 +216,39 @@
  * wide block (a card grid, a table) pushes the column past its track instead
  * of staying inside it.
  */
-.home__main > * {
-  max-width: var(--content-max-width);
-}
-
+/*
+ * `max-width: none` because these are bare grouping wrappers carrying no width
+ * of their own (see the note above), and a flex column because each block and
+ * the preamble hold the design's single gap between a heading and its body.
+ *
+ * That gap stops at the body's edge. INSIDE the body, spacing is the article
+ * view's, not a second copy of this one: `.sectionbody` used to be a flex
+ * column with the same 32px gap, which pushed every paragraph, list and card
+ * grid 32 apart — noticeably looser than the same content one click away on a
+ * doc page, and looser than anything the frames draw. A landing block's body
+ * is ordinary documentation content and should read like it.
+ */
 .home__main > .sect1,
 .home__main > #preamble {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ids-size-150) + var(--ids-size-50)); /* 32 */
   max-width: none;
 }
 
-.home__main > .sect1 > .sectionbody,
 .home__main > #preamble > .sectionbody {
   max-width: var(--content-max-width);
 }
 
 /*
- * Blocks and the preamble (the lead-in above the first `==` heading, which
- * Asciidoctor wraps in `#preamble`) are columns of their own: the design
- * gives each a single gap between its heading and its body, and between the
- * elements of that body.
+ * Block-level rhythm inside a block's body is doc.css's, unchanged — every
+ * block type there already carries `margin-top: var(--doc-space-block)`. Only
+ * the FIRST block needs saying: on an article that top margin is the gap under
+ * the section band, while here the gap between a heading and its body is the
+ * flex `gap` above, and keeping both would add the two together.
  */
-.home__main > .sect1,
-.home__main > #preamble,
-.home__main > .sect1 > .sectionbody,
-.home__main > #preamble > .sectionbody {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--ids-size-150) + var(--ids-size-50)); /* 32 */
+.home__main .sectionbody > :first-child {
+  margin-block-start: 0;
 }
 
 /*
@@ -221,6 +293,21 @@
 .home__main > .sect1 > h2 {
   --home-block-bleed: var(--comp-grid-margin-xs);
 
+  /*
+   * Three of these exist to undo `.doc h2:not(.discrete)`, which the column
+   * now inherits along with the rest of doc.css. The article's section band is
+   * a filled row ruled top AND bottom, inset by its own gutter padding; the
+   * landing's is a bare row with one rule under it, over the page's artwork.
+   * Same idea, two layouts, and the differences are stated rather than left to
+   * whichever stylesheet happens to load last:
+   *
+   *   background-color  the band's fill would hide the landing background
+   *   background-*      one dashed rule at the bottom, not two
+   *   padding-inline    the band's gutter inset does not apply here
+   *
+   * The margin shorthand below already overrides the band's own margins.
+   */
+  background-color: transparent;
   background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
   background-position: bottom;
   background-repeat: repeat-x;
@@ -230,6 +317,7 @@
   letter-spacing: var(--ids-typo-title-m-letter-spacing);
   margin: 0 calc(-1 * var(--home-block-bleed)) 0 0;
   padding-block: var(--ids-size-25); /* 4 */
+  padding-inline: 0;
   text-transform: var(--ids-typo-title-m-text-transform);
 }
 
@@ -263,14 +351,14 @@
 @media screen and (--ids-breakpoints-s) {
   .home__main {
     gap: calc(var(--ids-size-300) + var(--ids-size-100)); /* 64 */
-    grid-column-end: span 12;
+    grid-column: auto / span 12;
   }
 }
 
 @media screen and (--ids-breakpoints-m) {
   .home__main {
     gap: calc(var(--ids-size-300) + var(--ids-size-150)); /* 72 */
-    grid-column-end: span 7;
+    grid-column: auto / span 7;
     /* 160: the m/l frames drop the content column below the hero's first line. */
     padding-block-start: calc(var(--ids-size-500) * 2);
   }

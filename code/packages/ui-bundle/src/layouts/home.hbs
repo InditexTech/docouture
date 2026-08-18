@@ -43,7 +43,16 @@
           document itself (GH-19). See home-hero.hbs for the attributes.
         --}}
         <aside class="home__hero">{{> home-hero}}</aside>
-        <div class="home__main">{{{page.contents}}}</div>
+        {{!--
+          The content column carries `doc` as well as `home__main`: a landing
+          block's body is ordinary documentation content — paragraphs, lists,
+          admonitions, code, tables, images — and it should be governed by the
+          one stylesheet that already describes all of it (doc.css) rather than
+          by a second, partial copy in home.css. What home.css keeps is only
+          what the landing genuinely differs on: the column's own placement and
+          the block heading's single dashed rule.
+        --}}
+        <div class="home__main doc">{{{page.contents}}}</div>
       </main>
     </div>
 {{!--

@@ -149,15 +149,63 @@ Finally, call it from a button or any other UI element:
 
 === Card grid
 
-Weave.js migration Phase 2 — see `asciidoc-extensions/lib/card-grid.js`.
+The ATD Card — see `asciidoc-extensions/lib/card-grid.js`. Default shape: no
+image, three per row from `m`, capped at the reading measure. The whole card is
+the link — there is no button, and clicking anywhere on it navigates.
 
 [cards]
 ====
-https://example.org[WeaveAction]:: The abstract class that defines the blueprint of an action in Weave.js.
+[card]
+.https://example.org[WeaveAction]
+The abstract class that defines the blueprint of an action in Weave.js.
 
-https://example.org[WeaveCommentToolAction]:: Enables users to directly comment and give feedback on the stage.
+[card,subheader="Tooling",labels="canvas, feedback"]
+.link:content.html[WeaveCommentToolAction]
+Enables users to directly comment and give feedback on the stage. This one
+carries a subheader and label chips.
 
-https://example.org[WeaveEraserToolAction]:: Allows users to erase elements of the canvas by clicking on them.
+[card,icon="actions/code-block-outlined"]
+.link:content.html[WeaveEraserToolAction]
+Allows users to erase elements of the canvas by clicking on them. This one
+carries a header icon.
+====
+
+Four columns, images in the square aspect, and the row let out of the reading
+measure to the full content column — `[cards,type=image-square,columns="2 s:4",width=container]`.
+
+[cards,type=image-square,columns="2 s:4",width=container]
+====
+[card,subheader="Aspect"]
+.link:content.html[First]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+Every card in a block shares one aspect ratio — it is a block attribute, not a per-card one.
+--
+
+[card,subheader="Crop"]
+.link:content.html[Second]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The image is cropped to fill, never letterboxed.
+--
+
+[card,subheader="Measure"]
+.link:content.html[Third]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+`width=container` lets the row out of the 820px reading measure.
+--
+
+[card,subheader="Hover"]
+.link:content.html[Fourth]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+Hovering rules the card's edges, per the design; the title never changes colour.
+--
 ====
 
 === Some Code

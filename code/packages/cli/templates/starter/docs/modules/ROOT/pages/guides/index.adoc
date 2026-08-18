@@ -1,32 +1,5 @@
-// =============================================================================
-// AUTHORING GUIDE — Guides (section overview)
-//
-// PURPOSE: Route the reader to the how-to guide that matches their task.
-// This section holds one page per common task ("How to ..."). Identify the
-// 3-7 most common tasks users perform with the project and create one guide
-// for each, registering it in nav.adoc under Guides.
-//
-// EACH GUIDE PAGE must follow this shape:
-//   = <Verb> <object>            (e.g., "Deploy behind a proxy")
-//   Goal — one sentence: what the reader achieves.
-//   Prerequisites — what must already be in place.
-//   Steps — numbered; one action per step; copy-pasteable commands/code.
-//   Result — how to confirm it worked.
-//   Related — links to reference pages and other guides.
-//
-// RULES:
-// - Guides are task-oriented: they help a user who is already working get
-//   one concrete thing done. Concepts belong in Architecture; exhaustive
-//   options belong in Reference.
-// - Title every guide with a verb phrase describing the user's goal.
-//
-// QUALITY BAR (Definition of Done):
-// - [ ] Every common task discovered in the codebase/examples has a guide.
-// - [ ] Every guide listed below exists and is linked from nav.adoc.
-// =============================================================================
 = Guides
 
 Step-by-step instructions for common tasks with __PDOCS_TITLE__.
 
-// One bullet per guide: xref + one-line description of the task.
 * ...

@@ -1,33 +1,5 @@
-// =============================================================================
-// AUTHORING GUIDE — Reference (section overview)
-//
-// PURPOSE: Route the reader to complete, factual descriptions of the
-// project's public surface. Reference is for looking things up, not for
-// learning; keep explanations in Architecture and tasks in Guides.
-//
-// WHAT BELONGS HERE (create one page per applicable area, register each in
-// nav.adoc under Reference):
-// - API reference: every public class/function/endpoint with signature,
-//   parameters, return values, errors, and a minimal example.
-// - CLI reference: every command with synopsis, options, and exit codes.
-// - Configuration reference: every option with type, default, allowed
-//   values, and effect.
-//
-// RULES:
-// - Completeness over narrative: cover 100% of the public surface, in the
-//   same order and naming as the code.
-// - Use tables for options/parameters; use consistent entry structure
-//   throughout so readers can scan.
-// - Mark deprecated items and say what replaces them.
-//
-// QUALITY BAR (Definition of Done):
-// - [ ] Every public API/command/option present in the code appears here.
-// - [ ] Every entry states types, defaults, and constraints.
-// - [ ] Every reference page below exists and is linked from nav.adoc.
-// =============================================================================
 = Reference
 
 Complete reference documentation for __PDOCS_TITLE__.
 
-// One bullet per reference page: xref + what surface it covers.
 * ...

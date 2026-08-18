@@ -1,46 +1,13 @@
-// =============================================================================
-// AUTHORING GUIDE — Getting started
-//
-// PURPOSE: Take the reader from nothing to a first visible success in under
-// 10 minutes. This page decides whether people adopt the project.
-// AUDIENCE: A developer who just decided to try the project. Assume zero
-// knowledge of the project; do not assume zero knowledge of their platform.
-//
-// RULES:
-// - One happy path only. Alternatives (other package managers, OSes,
-//   advanced setups) belong in Guides.
-// - Every command must be copy-pasteable and every code sample must run
-//   exactly as written.
-// - End with a visible result the user can verify ("you should see ...").
-// - Prefer presenting the quickstart as a small realistic scenario rather
-//   than abstract instructions — readers relate to it and follow it better.
-// - Structure the steps either in sequential order (must be done in order)
-//   or as a series of tasks (any order, all required); pick what fits the
-//   project and be consistent.
-// - Visuals (screenshots, diagrams) are welcome when they remove ambiguity.
-//
-// QUALITY BAR (Definition of Done):
-// - [ ] Prerequisites list exact versions/tools required, nothing more.
-// - [ ] A newcomer reaches the "verify it works" step without leaving the page.
-// - [ ] The quickstart produces an observable result, not just an install.
-// - [ ] Next steps link to at least one guide.
-// =============================================================================
 = Getting started
 
-// One sentence stating what the reader will have accomplished by the end.
 This page shows you how to install __PDOCS_TITLE__ and ...
 
 == Prerequisites
 
-// [MANDATORY] Only what is strictly required, with minimum versions. Link to
-// official install pages instead of explaining how to install third-party
-// tools.
 * ...
 
 == Installation
 
-// [MANDATORY] The single recommended installation method, as a
-// copy-pasteable block.
 [,console]
 ----
 $ ...
@@ -48,26 +15,13 @@ $ ...
 
 == Quickstart
 
-// [MANDATORY] The smallest complete example that shows the project's core
-// value, framed as a realistic scenario. Numbered steps; each step = one
-// action + the expected outcome.
 . ...
 
 == Verify it works
 
-// [MANDATORY] Tell the reader exactly what they should see if everything
-// went well, and the single most common failure with its fix.
 You should see ...
 
-== Known issues
-
-// [IF APPLIES] Acknowledge known issues the user may hit when following this
-// page, or link to where they are tracked (e.g., GitHub issues/discussions).
-// Delete this section if there are none.
-
 == Next steps
-// [MANDATORY] After the quickstart, where should the reader go next to keep
-// diving into the project?
 
 * xref:guides/index.adoc[Guides] — accomplish common tasks step by step.
 * xref:reference/index.adoc[Reference] — the complete API and configuration.

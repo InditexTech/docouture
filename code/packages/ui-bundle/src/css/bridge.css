@@ -93,4 +93,11 @@
   --z-index-nav-scrim: var(--ids-z-modal-drawer);
   --z-index-nav: var(--ids-z-dropdown);
   --z-index-page-version-menu: var(--ids-z-dropdown);
+  /*
+   * The module switcher's popover (nav-switcher.css) opens INSIDE the side
+   * menu, so it only ever has to beat the menu's own scrolling nav list —
+   * `--ids-z-dropdown` again, matching the version menu, since both are the
+   * same kind of thing and neither is ever open over the other.
+   */
+  --z-index-nav-switcher-menu: var(--ids-z-dropdown);
 }

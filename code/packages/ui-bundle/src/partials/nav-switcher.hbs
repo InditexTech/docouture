@@ -1,0 +1,65 @@
+{{!--
+  Module switcher — the side menu shows one module's navigation at a time
+  (nav-menu.hbs), and this is what moves between them. It stands in for what
+  Fumadocs rendered as a `RootToggle` in its sidebar's banner slot, and sits
+  in the same place: below the brand block, above the tree.
+
+  Only renders for a component that actually has several annotated modules.
+  `page.navigation.[1]` is the "more than one root menu" test (the same
+  `.[1]` trick page-versions.hbs uses for "more than one version"), and the
+  `module` check is "…and something annotated them", i.e.
+  @inditextech/pdocs-antora-extensions is registered and the descriptor
+  declares `nav_modules`. A single-nav-file site — starter, the CLI template —
+  fails both and renders nothing at all here.
+
+  `title`, `description`, `icon` and `startUrl` are all stamped onto the tree
+  by that extension; Antora's own navigation model has no notion of any of
+  them. `icon` is a `<group>/<name>` reference into the vendored sprite, split
+  here because the {{icon}} helper takes the two separately.
+
+  The trigger is a button, not a link: it opens the panel, and the panel is
+  what navigates. Its label is the ACTIVE module, so the control reads as
+  "you are in X, pick another" rather than as an unlabelled menu.
+--}}
+{{#if (and page.navigation.[1] page.navigation.[0].module)}}
+<div class="nav-switcher">
+  {{#each page.navigation}}
+  {{#if (eq ./module @root.page.module)}}
+  <button class="nav-switcher__toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Switch module, currently {{detag ./title}}">
+    {{#with (split ./icon '/')}}
+    <span class="nav-switcher__icon">{{icon this.[0] this.[1]}}</span>
+    {{/with}}
+    <span class="nav-switcher__label">
+      <span class="nav-switcher__title ids-text ids-text--body-m-high">{{{./title}}}</span>
+      {{#with ./description}}
+      <span class="nav-switcher__description ids-text ids-text--detail-m">{{{this}}}</span>
+      {{/with}}
+    </span>
+    <span class="nav-switcher__chevron">{{icon "arrows" "chevron-down-outlined"}}</span>
+  </button>
+  {{/if}}
+  {{/each}}
+  <div class="nav-switcher__menu" hidden>
+    <ul class="ids-list nav-switcher__list">
+      {{#each page.navigation}}
+      {{#if ./startUrl}}
+      <li class="nav-switcher__item">
+        <a class="nav-switcher__option" href="{{{relativize ./startUrl}}}"
+          {{~#if (eq ./module @root.page.module)}} aria-current="true"{{/if~}}>
+          {{#with (split ./icon '/')}}
+          <span class="nav-switcher__icon">{{icon this.[0] this.[1]}}</span>
+          {{/with}}
+          <span class="nav-switcher__label">
+            <span class="nav-switcher__title ids-text ids-text--body-m-high">{{{./title}}}</span>
+            {{#with ./description}}
+            <span class="nav-switcher__description ids-text ids-text--detail-m">{{{this}}}</span>
+            {{/with}}
+          </span>
+        </a>
+      </li>
+      {{/if}}
+      {{/each}}
+    </ul>
+  </div>
+</div>
+{{/if}}

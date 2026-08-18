@@ -140,9 +140,26 @@ page:
   # page with sub-pages would produce, so it's fixed here instead of left
   # for the sake of covering the wrapper case.
   navigation:
+    # `module`, `title`, `description`, `icon` and `startUrl` are not Antora's:
+    # @inditextech/pdocs-antora-extensions stamps them onto each root menu from
+    # the component descriptor's own `nav_modules` key. Two modules here, not
+    # one, so the preview actually renders nav-switcher.hbs — nav-menu.hbs
+    # shows only the tree whose `module` matches `page.module` above, and the
+    # second exists purely to give the switcher something to switch to. A
+    # single-module fixture would leave both code paths uncovered.
     - root: true
+      module: ROOT
+      title: Platform
+      description: The platform documentation
+      icon: design/grid-outlined
+      startUrl: *home_url
       items:
+        # A `content` with neither `url` nor `items` is a section label — the
+        # shape Fumadocs' `"---Label---"` separators converted to. Two of them,
+        # so the preview shows both the first-child case (no space above it)
+        # and a mid-list one (which gets --side-menu-label-gap).
         - content: Overview
+        - content: Introduction
           url: *home_url
           urlType: internal
         - content: Getting started
@@ -177,6 +194,7 @@ page:
             - content: Tasks and notifications
               url: '#tasks-and-notifications'
               urlType: fragment
+        - content: Administration
         - content: Roles and Permissions
           url: '#roles-and-permissions'
           urlType: fragment
@@ -189,3 +207,16 @@ page:
         - content: Additional Information
           url: '#additional-information'
           urlType: fragment
+    - root: true
+      module: sdk
+      title: SDK
+      description: The headless client library
+      icon: actions/code-block-outlined
+      startUrl: *home_url
+      items:
+        - content: Introduction
+          module: sdk
+        - content: Overview
+          url: '#'
+          urlType: internal
+          module: sdk

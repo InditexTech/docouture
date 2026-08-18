@@ -26,6 +26,7 @@ icons:
     - back-outlined
     - check-circle-outlined # copy-to-clipboard success (06-copy-to-clipboard.ts); admonition: important (GH-13)
     - close-large-outlined # side-menu drawer close (GH-8, breakpoint xs)
+    - code-block-outlined # nav switcher: the SDK module
     - copy-outlined
     - full-screen-enter-outlined
     - full-screen-exit-outlined
@@ -38,19 +39,25 @@ icons:
     - chevron-down-outlined
     - chevron-up-outlined
   business:
+    - file-outlined # nav switcher: the TypeScript Types module
     - sticker-outlined # admonition: note (GH-13)
   communication:
     - comment-outlined # admonition: tip (GH-13)
   connectivity:
+    - cloud-outlined # nav switcher: the Azure Web PubSub Store module
     - link-outlined # section anchor / copy link
     - link-external-outlined
+    - wifi-outlined # nav switcher: the Websockets Store module
   controls:
     - play-circle-outlined
   design:
+    - grid-outlined # nav switcher: the Framework module
     - menu-tab-outlined # side-menu toggle (GH-8)
     - sidebar-outlined # "on this page" toggle
+    - tool-outlined # nav switcher: the React Helper module
   others:
     - home-outlined
+    - server-outlined # nav switcher: the Standalone Store module
   weather:
     - sunny-outlined # theme toggle, light
 

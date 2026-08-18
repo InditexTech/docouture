@@ -60,6 +60,20 @@ export default tseslint.config(
     },
   },
   {
+    // Antora pipeline extensions: CommonJS for the same reason as the
+    // Asciidoctor ones above — `require`d by Antora itself, out of the
+    // playbook's own directory, never bundled or transpiled. Different
+    // lifecycle, different playbook key (`antora.extensions`), same contract.
+    files: ['packages/antora-extensions/**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: globals.node,
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
     // Developer scripts: standalone Node programs, ES modules, run by hand or
     // through a package script. Not part of any bundle.
     files: ['scripts/**/*.mjs', 'packages/*/scripts/**/*.mjs', 'tools/*/*.mjs'],

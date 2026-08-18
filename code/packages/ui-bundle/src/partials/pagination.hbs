@@ -31,6 +31,18 @@
   same `.ids-button__content` label typography as the full title) stands in
   for it instead of nothing — a deliberate deviation from Figma's XS icon-
   only mock, not an oversight.
+
+  Both sides are additionally clamped to the CURRENT MODULE. Antora computes
+  `page.previous`/`page.next` by walking the component's whole navigation set
+  (page-composer's findNavItem), so on a multi-module component they run
+  straight off the end of one module and into the next — past the boundary
+  the side menu itself draws, into pages the reader cannot even see listed.
+  `module` is stamped onto every navigation item by
+  @inditextech/pdocs-antora-extensions; when it is absent (single-module site,
+  or the extension not registered) nothing is clamped and this behaves exactly
+  as it always did. The last page of a module therefore has no "next" and the
+  first has no "previous", and the wrapper above already hides the whole
+  block when that leaves nothing on either side.
 --}}
 {{#unless (eq page.attributes.pagination undefined)}}
 {{#if (or page.previous page.next)}}
@@ -39,6 +51,7 @@
     <div class="pagination__buttons">
     {{#if (ne page.attributes.pagination 'next')}}
     {{#with page.previous}}
+    {{#if (or (not ./module) (eq ./module @root.page.module))}}
     <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-icon pagination__prev" href="{{{relativize ./url}}}">
       <span class="ids-button__content">
         <span class="ids-button__icon ids-button__icon-icon">{{icon "arrows" "arrow-left-outlined"}}</span>
@@ -46,10 +59,12 @@
         <span class="pagination__label-short">Prev</span>
       </span>
     </a>
+    {{/if}}
     {{/with}}
     {{/if}}
     {{#if (ne page.attributes.pagination 'prev')}}
     {{#with page.next}}
+    {{#if (or (not ./module) (eq ./module @root.page.module))}}
     <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action pagination__next" href="{{{relativize ./url}}}">
       <span class="ids-button__content">
         <span class="pagination__label-full">{{{./content}}}</span>
@@ -57,6 +72,7 @@
         <span class="ids-button__icon ids-button__icon-action">{{icon "arrows" "arrow-right-outlined"}}</span>
       </span>
     </a>
+    {{/if}}
     {{/with}}
     {{/if}}
     </div>

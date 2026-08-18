@@ -413,13 +413,16 @@ html.is-side-menu-collapsed {
  * `.side-menu__link` is this bundle's own class for the interaction this
  * design actually wants, still built entirely from DS tokens:
  *
- *   normal          content-default,      label/l or body/m
- *   normal + hover   content-states-hover, same type
- *   active (current) content-default,      label/l-high or body/m-high
- *   active + hover   content-states-hover, label/l-high or body/m-high
+ *   normal          content-default,      body/m
+ *   normal + hover   content-states-hover, body/m
+ *   active (current) content-default,      body/m-high
+ *   active + hover   content-states-hover, body/m-high
  *
- * Top-level (depth 0) rows read as label/l per Figma node-id=2610-26422;
- * nested rows keep the DS default body/m already on `.ids-list-item__label`.
+ * One type ramp at every depth: body/m is already the DS default on
+ * `.ids-list-item__label`, so only the active weight is set below. Top-level
+ * rows were briefly given a label/l of their own (Figma node-id=2610-26422)
+ * and then a body/l; both made the first level louder than the tree it heads,
+ * and the indentation already says what depth a row is. Nothing to reinstate.
  * `-high` is the DS's own weight for an active menu item (see
  * `.ids-menu-item--active` in menu/items/item.css) — not just a bare
  * `font-weight` bump.
@@ -446,20 +449,6 @@ html.is-side-menu-collapsed {
   text-transform: var(--ids-typo-body-m-high-text-transform);
 }
 
-.side-menu__list[data-depth="0"] > .side-menu__item > .side-menu__row .side-menu__link .ids-list-item__label {
-  font: var(--ids-typo-label-l);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-l-letter-spacing);
-  text-transform: var(--ids-typo-label-l-text-transform);
-}
-
-.side-menu__list[data-depth="0"] > .side-menu__item > .side-menu__row .side-menu__link[aria-current="page"] .ids-list-item__label {
-  font: var(--ids-typo-label-l-high);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
-  text-transform: var(--ids-typo-label-l-high-text-transform);
-}
-
 /*
  * A non-interactive category label (nav-tree.hbs's own comment: a leaf nav
  * entry with `content` but no `url` — Fumadocs' `"---Label---"` separator,
@@ -471,6 +460,39 @@ html.is-side-menu-collapsed {
  */
 .side-menu__link--label .ids-list-item__label {
   color: var(--ids-color-content-low);
+  /*
+   * label/l-high applied WHOLE, `text-transform: uppercase` and its 0.4px
+   * tracking included — the one type token in the side menu still used at
+   * full strength. Both parts earn their place here: the links these labels
+   * introduce are sentence-case body/m, so capitals plus the heavier weight
+   * are what separate a section heading from an entry, and the tracking is
+   * drawn for exactly the capitals this sets.
+   */
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-transform: var(--ids-typo-label-l-high-text-transform);
+}
+
+/*
+ * Left at `.ids-list-item`'s own 40px min-height and 8px block padding —
+ * the same box a link gets — so a label sits on the tree's vertical rhythm
+ * rather than on one of its own. It was briefly tightened on the grounds
+ * that nothing here is tappable, which made labels sit closer to the entries
+ * below them but put every row after a label half a step out of alignment
+ * with the rows above it. The space that sets a section apart is carried by
+ * the margin below instead, where it doesn't disturb that rhythm.
+ */
+.side-menu__item--label {
+  margin-block-start: var(--side-menu-label-gap);
+}
+
+/*
+ * A list that opens with a label needs no gap above it — the panel's own
+ * padding (or the parent entry it hangs off) already provides one.
+ */
+.side-menu__item--label:first-child {
+  margin-block-start: 0;
 }
 
 /*

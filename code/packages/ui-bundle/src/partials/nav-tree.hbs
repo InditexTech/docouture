@@ -37,7 +37,10 @@
   `.ids-list-item` layout/indent as a real link, no `<a>` (nothing to
   navigate to), `.side-menu__link--label` in place of `.side-menu__link`
   for genuinely different states (see side-menu.css: no cursor, no hover/
-  focus ring — there's nothing to click).
+  focus ring — there's nothing to click). The `<li>` carries a modifier of
+  its own too, `--label`: the blank space that sets a section apart from the
+  entries above it belongs to the row, not to the text inside it, so it
+  can't hang off `.side-menu__link--label`.
 --}}
 {{#if navigation.length}}
 <ul class="ids-list side-menu__list" data-depth="{{or level 0}}">
@@ -49,7 +52,7 @@
   </li>
   {{else}}
   {{#if ./content}}
-  <li class="side-menu__item">
+  <li class="side-menu__item side-menu__item--label">
     <div class="side-menu__row">
       <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-{{or ../level 0}}">
         <span class="ids-list-item__text"><span class="ids-list-item__label">{{{./content}}}</span></span>

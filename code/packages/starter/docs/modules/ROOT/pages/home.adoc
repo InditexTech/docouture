@@ -1,6 +1,9 @@
 = Documentation
 :page-layout: home
 :description: The starter site's landing page, rendered through the UI bundle's `home` layout.
+:page-tags: starter, antora
+:page-action: Get started
+:page-action-url: getting-started.adoc
 
 This is the landing page: `docs/modules/ROOT/pages/home.adoc`, selected by
 `:page-layout: home` and pointed at by `start_page` in `antora-playbook.yml`.
@@ -18,5 +21,9 @@ xref:getting-started.adoc[Getting started]:: Build the site and make the first e
 == How this page works
 
 Each `==` heading opens a block: the heading row and its dashed rule come from
-the layout, the block's body is ordinary AsciiDoc. The column beside this one
-is the hero, and it is empty until the hero block lands.
+the layout, the block's body is ordinary AsciiDoc. The column beside this one is
+the hero — the name comes from this page's own title, and the chips and buttons
+from the `:page-tags:` and `:page-action*:` attributes at the top of this file.
+Set `product_logo` under `site.keys` in `antora-playbook.yml` to put a product
+mark above the name, and add `:page-hero-image:` (or `:page-hero-video:`) to put
+a still or a video below them.

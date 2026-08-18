@@ -33,14 +33,23 @@
 }
 
 /*
- * Three of twelve columns each at m and l, full width and stacked below —
- * six of six at xs, where the design system's grid is six columns wide.
+ * Three of twelve columns each at m and l. At s the four columns fold into
+ * three rows — 12 / 6 + 6 / 12: the brand and the copyright line take a row
+ * each, and the two link columns share one, since a list of short links has
+ * no need of the full width and stacking all four makes the footer taller
+ * than the block it closes. At xs everything is full width again, six of six,
+ * where the design system's grid is six columns wide.
  *
  * Declared here rather than with the grid's own `--span-*` utility classes,
  * for the reason home.css states at length: those classes carry the design
  * system package's breakpoints, whose `m` starts at 1024px, while this project
  * overrides `m` to 1240px (ids-breakpoints.css). A footer that went four-up at
  * 1024 would do it across the whole of this project's `s` band.
+ *
+ * Each breakpoint sets both selectors rather than letting one fall through to
+ * the other: `.site-footer__col` and `.site-footer__links` have the same
+ * specificity, so a partial override would resolve on source order alone,
+ * which is not a thing to leave load-bearing.
  */
 .site-footer__col {
   grid-column-end: span 6;
@@ -50,10 +59,15 @@
   .site-footer__col {
     grid-column-end: span 12;
   }
+
+  .site-footer__links {
+    grid-column-end: span 6;
+  }
 }
 
 @media screen and (--ids-breakpoints-m) {
-  .site-footer__col {
+  .site-footer__col,
+  .site-footer__links {
     grid-column-end: span 3;
   }
 }

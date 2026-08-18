@@ -38,12 +38,11 @@
 {{> nav}}
       <main class="home ids-grid-layout ids-grid-layout--with-margin">
         {{!--
-          Hero column (GH-19 fills it). Empty here on purpose: this issue
-          ships the shell, and an empty aside is a visible, correct
-          intermediate state rather than a placeholder that has to be
-          remembered and removed.
+          Hero column: the product mark, name, labels and calls to action,
+          plus an optional media panel — all of it authored on the landing
+          document itself (GH-19). See home-hero.hbs for the attributes.
         --}}
-        <aside class="home__hero"></aside>
+        <aside class="home__hero">{{> home-hero}}</aside>
         <div class="home__main">{{{page.contents}}}</div>
       </main>
     </div>

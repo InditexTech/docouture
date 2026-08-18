@@ -123,11 +123,45 @@
   gap: var(--ids-size-350); /* 56 */
   grid-column-end: span 6;
   letter-spacing: var(--ids-typo-body-l-letter-spacing);
+  min-width: 0;
   padding-block-end: var(--ids-size-500); /* 80 */
 }
 
 .home__main p {
   margin: 0;
+}
+
+/*
+ * Text measure, the same one the article view uses (`--content-max-width`,
+ * vars.css) and applied with the same three-rule shape doc.css settled on
+ * (see its own note): the cap sits on the column's CHILDREN rather than on
+ * the column, `.sect1` and `#preamble` opt out of it because they are bare
+ * grouping wrappers carrying no width of their own, and `.sectionbody`
+ * re-applies it one level down.
+ *
+ * The effect is that a block's body wraps at the reading measure while its
+ * heading row — and the dashed rule under it — runs the full width of the
+ * column, 7 grid columns at m and l, 12 at s and xs. That is what the frames
+ * draw, and it is the same relationship a doc page's `h2` band has with the
+ * prose beneath it, so the two views agree.
+ *
+ * `min-width: 0` for the same reason doc.css sets it: a grid item's
+ * automatic minimum size is its content's intrinsic width, so without it a
+ * wide block (a card grid, a table) pushes the column past its track instead
+ * of staying inside it.
+ */
+.home__main > * {
+  max-width: var(--content-max-width);
+}
+
+.home__main > .sect1,
+.home__main > #preamble {
+  max-width: none;
+}
+
+.home__main > .sect1 > .sectionbody,
+.home__main > #preamble > .sectionbody {
+  max-width: var(--content-max-width);
 }
 
 /*
@@ -149,20 +183,81 @@
  * Block heading: `title/m` on a row with a 1px dashed 4/4 bottom rule. Same
  * repeating-linear-gradient technique as the header toolbar, side menu and
  * page footer (see header.css) — `border-style: dashed` cannot control dash
- * length. Full black here, not the toolbar's `--ids-color-border-low`: the
- * frames draw this one as a content rule, not chrome.
+ * length.
+ *
+ * `--ids-color-border-low`, the same colour the article view's own section
+ * band uses (doc.css's `.doc h2:not(.discrete)`), not the full black the
+ * frames draw: a landing block's heading rule and a doc page's section rule
+ * are the same thing seen in two layouts, and they should not disagree.
+ *
+ * The rule runs past the column to the viewport edge. The only thing between
+ * the column's edge and the viewport is the grid container's own inline
+ * padding (`.ids-grid-layout--with-margin`), so a negative margin of exactly
+ * that cancels it. It bleeds right at every breakpoint; it also bleeds LEFT
+ * at s and xs, where the hero and content stack into one full-width column
+ * and the heading's left edge is likewise the container's, with no side menu
+ * beside it (`.body` only becomes a flex row at m — body.css). At m and l the
+ * left edge stays put, against the hero column.
+ *
+ * No matching padding is needed on the right — this heading paints a bottom
+ * rule, not a filled surface, and its text is flush left, so growing the box
+ * rightwards moves nothing. The left bleed DOES need one, the same
+ * negative-margin-plus-equal-padding pair doc.css's band uses: without it the
+ * heading text would be dragged out to the viewport edge along with the rule,
+ * while the stacked frames (2696:95593) draw the row full-bleed with its text
+ * still inset by the gutter.
+ *
+ * The amount is one variable, tiered once and consumed by both sides. Note
+ * which breakpoints it follows: the gutter being cancelled is the DESIGN
+ * SYSTEM'S, applied at the design system's own thresholds (513/1024/1680,
+ * see ids-components.css), while this project overrides `m` to 1240
+ * (ids-breakpoints.css). Between 1024 and 1239 the container is already on
+ * `--comp-grid-margin-m` though `--ids-breakpoints-m` has not yet matched, so
+ * tiering by the project's own `m` would leave the rule 24px short across
+ * that whole band. Hence the raw `1024px` query below: not a stray literal,
+ * the design system's threshold, and it has to stay in step with the padding
+ * it exists to undo.
  */
 .home__main > .sect1 > h2 {
-  background-image: repeating-linear-gradient(to right, var(--ids-color-border-default) 0 4px, transparent 4px 8px);
+  --home-block-bleed: var(--comp-grid-margin-xs);
+
+  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
   background-position: bottom;
   background-repeat: repeat-x;
   background-size: 8px 1px;
   color: var(--ids-color-content-default);
   font: var(--ids-typo-title-m);
   letter-spacing: var(--ids-typo-title-m-letter-spacing);
-  margin: 0;
+  margin: 0 calc(-1 * var(--home-block-bleed)) 0 0;
   padding-block: var(--ids-size-25); /* 4 */
   text-transform: var(--ids-typo-title-m-text-transform);
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .home__main > .sect1 > h2 {
+    --home-block-bleed: var(--comp-grid-margin-s);
+  }
+}
+
+/* The design system's own `m` threshold, not this project's — see above. */
+@media screen and (min-width: 1024px) {
+  .home__main > .sect1 > h2 {
+    --home-block-bleed: var(--comp-grid-margin-m);
+  }
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .home__main > .sect1 > h2 {
+    --home-block-bleed: var(--comp-grid-margin-l);
+  }
+}
+
+/* Stacked breakpoints only: the heading's left edge is the container's too. */
+@media screen and (--ids-breakpoints-xs-s) {
+  .home__main > .sect1 > h2 {
+    margin-inline-start: calc(-1 * var(--home-block-bleed));
+    padding-inline-start: var(--home-block-bleed);
+  }
 }
 
 @media screen and (--ids-breakpoints-s) {
@@ -176,22 +271,12 @@
   .home__main {
     gap: calc(var(--ids-size-300) + var(--ids-size-150)); /* 72 */
     grid-column-end: span 7;
-    /*
-     * The frames inset the content column from the right by one grid margin
-     * on top of the container's own, so a block never runs to the page edge
-     * the way the hero runs to the menu.
-     */
-    padding-inline-end: var(--comp-grid-margin-m);
     /* 160: the m/l frames drop the content column below the hero's first line. */
     padding-block-start: calc(var(--ids-size-500) * 2);
   }
 }
 
 @media screen and (--ids-breakpoints-l) {
-  .home__main {
-    padding-inline-end: var(--comp-grid-margin-l);
-  }
-
   .home__main > .sect1,
   .home__main > #preamble,
   .home__main > .sect1 > .sectionbody,

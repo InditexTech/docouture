@@ -1,0 +1,142 @@
+/*
+ * Landing hero (GH-19), Figma 2696:54674 (l), 2696:92457 (m), 2696:94199 (s),
+ * 2696:95574 (xs) — home-hero.hbs, inside the `.home__hero` aside home.css
+ * already sizes, sticks and pads.
+ *
+ * Only what the design system does not already give: the chips
+ * (`.ids-label--grey`), the buttons (`.ids-button--primary/--secondary`) and
+ * their type are DS components used as-is, so nothing below restates a
+ * colour, a padding or a label typeface — the frames' `8px 24px` button
+ * padding and `label/l` label ARE button.css's own, and their `#F7F7F7` chip
+ * background IS `--ids-color-bg-low`. What is left is the column's rhythm,
+ * the title, and the media slot.
+ *
+ * Every length is a design system size token or a sum of them, as in
+ * home.css, so the hero follows `.ids-scale-large` along with the rest of
+ * the page.
+ */
+
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  /*
+   * 40 between the text group and the media slot. The issue body describes
+   * the whole column as "gap 40"; the frames nest it differently — this outer
+   * gap is 40, the gaps inside the group are 24 (below). Frames win.
+   */
+  gap: var(--ids-size-250);
+}
+
+/*
+ * Logo, title, chips and actions: one column, gap 24 throughout, per the
+ * frames' `Header` frame (2696:54676) — which puts the same 24 between the
+ * mark and the title as between the title and the chips, so this is one
+ * column rather than nested ones.
+ */
+.home-hero__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-150);
+}
+
+/*
+ * 40x40 product mark, and its dark counterpart swapped off the same
+ * `.ids-theme-dark` root class 08-theme.ts sets — identical mechanism to the
+ * side menu's own brand mark (side-menu.css), and see nav-brand.hbs for why
+ * an externally-referenced image needs a second file at all. Only the pair
+ * is swapped: a site with no `productLogoDark` renders its single mark in
+ * both themes rather than losing it in one.
+ */
+.home-hero__logo {
+  height: 40px;
+  object-fit: contain;
+  width: 40px;
+}
+
+.home-hero__logo--dark {
+  display: none;
+}
+
+.ids-theme-dark .home-hero__logo--light {
+  display: none;
+}
+
+.ids-theme-dark .home-hero__logo--dark {
+  display: inline-block;
+}
+
+/*
+ * `display/l` (64/72), and the reason this is a bundle-owned class rather
+ * than a `.ids-text--display-l` utility: that utility does not ship. The
+ * design system's own text.css stops at `--display-m` even though the
+ * `--ids-typo-display-l` token and the `ids-display-l` mixin both exist
+ * upstream — an upstream gap, noted in GH-4 when the DS stylesheets were
+ * wired in and still true. The token itself is real and generated into
+ * ids-tokens.css, so this consumes it the same way text.css would.
+ *
+ * Stepped down to `display/m` (48/56) below breakpoint m, which the xs frame
+ * (2696:95578) draws: 64px type in a column 358px wide breaks a product name
+ * of any length. This is the one piece of below-l behaviour this issue takes
+ * on rather than deferring to GH-27 — the difference is not polish, it is
+ * whether the landing is readable on a phone at all.
+ */
+.home-hero__title {
+  color: var(--ids-color-content-default);
+  font: var(--ids-typo-display-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-display-m-letter-spacing);
+  margin: 0;
+  text-transform: var(--ids-typo-display-m-text-transform);
+}
+
+/*
+ * Chips and actions wrap: the hero column is 5 of 12 at l and narrower still
+ * at m, and neither three chips nor two buttons are guaranteed to fit on one
+ * line at every zoom level and product name. The frames draw single rows
+ * because their content happens to fit.
+ */
+.home-hero__labels,
+.home-hero__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ids-size-75); /* 12 */
+}
+
+/*
+ * The actions are anchors, not buttons, so they arrive with base.css's own
+ * link underline — the same correction hero.css makes for the same reason.
+ */
+.home-hero a.ids-button {
+  text-decoration: none;
+}
+
+/*
+ * Media slot: a still or a video, whichever the page authored, at the width
+ * of the hero column and in its own intrinsic proportions.
+ *
+ * Deliberately unstyled beyond that. The frames draw the media inside a 6px
+ * black frame with a 10px radius and a centred play mark, but a frame here
+ * would stack with whatever the supplied asset already carries — product
+ * screenshots very often come with their own bezel — and a fixed ratio would
+ * crop an asset that does not share it. So the bundle provides the slot and
+ * the page provides the framing, rather than the bundle imposing one on
+ * every landing sight unseen. A site that wants the drawn frame can add it
+ * to its own image.
+ *
+ * A video's play control is the browser's own (`controls`) — see
+ * home-hero.hbs's note on why not the frames' ghost button.
+ */
+.home-hero__media {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .home-hero__title {
+    font: var(--ids-typo-display-l);
+    letter-spacing: var(--ids-typo-display-l-letter-spacing);
+    text-transform: var(--ids-typo-display-l-text-transform);
+  }
+}

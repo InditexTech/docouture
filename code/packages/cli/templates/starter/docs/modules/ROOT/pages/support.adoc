@@ -1,0 +1,38 @@
+// =============================================================================
+// AUTHORING GUIDE — Support and community
+//
+// PURPOSE: Tell users where to get help, how to report problems, and how
+// the project evolves (versioning and releases).
+// AUDIENCE: Any user who is stuck, found a bug, or wants to know whether
+// the project is alive and maintained.
+//
+// RULES:
+// - Every channel listed must be real and monitored; a dead link here costs
+//   more trust than no link.
+// - State the versioning scheme (e.g., SemVer) and where release notes live.
+//
+// QUALITY BAR (Definition of Done):
+// - [ ] A stuck user knows exactly where to ask, and what to include.
+// - [ ] Bug reports and security issues have distinct, correct channels.
+// - [ ] The release/versioning policy is stated in one sentence.
+// =============================================================================
+= Support and community
+
+== Getting help
+
+// Ordered list of channels: docs search, discussions/forum, chat. For each:
+// what it is for and what to include when asking.
+* ...
+
+== Reporting issues
+
+// Link to the issue tracker + the minimum a good report needs (version,
+// reproduction, expected vs. actual). Point security reports to the
+// project's security policy, never the public tracker.
+* ...
+
+== Releases and versioning
+
+// Versioning scheme, release cadence if any, and where the changelog or
+// release notes are published.
+__PDOCS_TITLE__ follows ...

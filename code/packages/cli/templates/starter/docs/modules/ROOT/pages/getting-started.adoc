@@ -1,38 +1,56 @@
+// =============================================================================
+// AUTHORING GUIDE — Getting started
+//
+// PURPOSE: Take the reader from nothing to a first visible success in under
+// 10 minutes. This page decides whether people adopt the project.
+// AUDIENCE: A developer who just decided to try the project. Assume zero
+// knowledge of the project; do not assume zero knowledge of their platform.
+//
+// RULES:
+// - One happy path only. Alternatives (other package managers, OSes,
+//   advanced setups) belong in Guides.
+// - Every command must be copy-pasteable and every code sample must run
+//   exactly as written.
+// - End with a visible result the user can verify ("you should see ...").
+//
+// QUALITY BAR (Definition of Done):
+// - [ ] Prerequisites list exact versions/tools required, nothing more.
+// - [ ] A newcomer reaches the "verify it works" step without leaving the page.
+// - [ ] The quickstart produces an observable result, not just an install.
+// - [ ] Next steps link to at least one guide.
+// =============================================================================
 = Getting started
 
-== Add a page
+// One sentence stating what the reader will have accomplished by the end.
+This page shows you how to install __PDOCS_TITLE__ and ...
 
-Create an AsciiDoc file under `modules/ROOT/pages/`, then add it to
-`modules/ROOT/nav.adoc` so it appears in the navigation:
+== Prerequisites
 
-[,asciidoc]
-----
-* xref:my-new-page.adoc[My new page]
-----
+// Only what is strictly required, with minimum versions. Link to official
+// install pages instead of explaining how to install third-party tools.
+* ...
 
-A page that is not listed in the navigation is still published; it just cannot
-be reached by browsing.
+== Installation
 
-== Build the site
-
+// The single recommended installation method, as a copy-pasteable block.
 [,console]
 ----
-$ npm install
-$ npm run build
+$ ...
 ----
 
-The generated site is written to `build/site`.
+== Quickstart
 
-== Set the version
+// The smallest complete example that shows the project's core value.
+// Numbered steps; each step = one action + the expected outcome.
+. ...
 
-If this site's version needs to move — for example when it starts tracking a
-release — use `pdocs version`:
+== Verify it works
 
-[,console]
-----
-$ pdocs version 1.0.0
-$ pdocs version 1.1.0-rc.0 --prerelease
-----
+// Tell the reader exactly what they should see if everything went well,
+// and the single most common failure with its fix.
+You should see ...
 
-It rewrites `docs/antora.yml` in place and leaves everything else in this
-directory untouched.
+== Next steps
+
+* xref:guides/index.adoc[Guides] — accomplish common tasks step by step.
+* xref:reference/index.adoc[Reference] — the complete API and configuration.

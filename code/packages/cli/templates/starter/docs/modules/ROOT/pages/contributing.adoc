@@ -1,0 +1,42 @@
+// =============================================================================
+// AUTHORING GUIDE — Contributing
+//
+// PURPOSE: Lower the barrier for a first-time contributor: how to set up a
+// development environment, make a change, and get it merged.
+// AUDIENCE: A developer who wants to fix a bug or add a feature.
+//
+// RULES:
+// - Do not duplicate the repository's CONTRIBUTING.md, CODE_OF_CONDUCT.md,
+//   or LICENSE — summarize and link to them.
+// - The development setup must be copy-pasteable, from clone to green tests.
+//
+// QUALITY BAR (Definition of Done):
+// - [ ] A newcomer can go from `git clone` to passing tests using only this
+//       page.
+// - [ ] Links to CONTRIBUTING.md, the issue tracker, and good-first-issue
+//       label all resolve.
+// =============================================================================
+= Contributing
+
+// One short paragraph welcoming contributions + link to CONTRIBUTING.md in
+// the repository as the authoritative process document.
+Contributions to __PDOCS_TITLE__ are welcome. ...
+
+== Development setup
+
+// Clone, install, build, test — copy-pasteable, in order.
+[,console]
+----
+$ ...
+----
+
+== Making a change
+
+// The expected flow: branch, code, test, PR. Mention conventions that CI
+// enforces (commit format, linting) so the first PR passes.
+. ...
+
+== Where to start
+
+// Point to good first issues and the areas where help is most valuable.
+* ...

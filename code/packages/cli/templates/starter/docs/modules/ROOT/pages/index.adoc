@@ -1,12 +1,48 @@
+// =============================================================================
+// AUTHORING GUIDE — Introduction (home page)
+//
+// PURPOSE: Convince a first-time visitor, in under a minute, that they
+// understand what this project is, whether it is for them, and what to do next.
+// AUDIENCE: Someone who has never seen this project before.
+//
+// Write every section below following its inline guidance, then delete the
+// guidance comments (lines starting with //). See docs/AGENTS.md for the
+// style guide and the quality checklist for this page.
+//
+// QUALITY BAR (Definition of Done):
+// - [ ] A newcomer can explain what the project does after reading only the
+//       first paragraph.
+// - [ ] The value proposition says what problem it solves, not just what it is.
+// - [ ] "Is this for you" makes the intended use cases (and non-goals) clear.
+// - [ ] Every next step is a working xref or link.
+// =============================================================================
 = Introduction
 
-Welcome. This is __PDOCS_TITLE__, scaffolded by `pdocs new`.
+// One or two sentences. Formula: "<PROJECT> is a <category> that <what it
+// does> for <who>." No marketing adjectives; be concrete. Example:
+// "Weave.js is a TypeScript framework for building real-time collaborative
+// whiteboard applications."
+__PDOCS_TITLE__ is ...
 
-== What is here
+== Why __PDOCS_TITLE__
 
-* `antora-playbook.yml` — build configuration; start editing there.
-* `docs/antora.yml` — declares this component's name and version.
-* `docs/modules/ROOT/nav.adoc` — the navigation tree.
-* `docs/modules/ROOT/pages/` — the pages themselves.
+// 3-5 bullets. Each bullet = one problem the user has, and how the project
+// solves it. Lead with the user's pain, not with the feature name.
+// Bad:  "Plugin architecture."
+// Good: "Extend every layer without forking: stores, actions, and UI are
+//        replaceable plugins."
+* ...
 
-Continue to xref:getting-started.adoc[Getting started].
+== Is this for you
+
+// Be honest and specific: intended use cases, supported platforms/languages,
+// and explicit non-goals. Saving the wrong users time builds trust.
+Use __PDOCS_TITLE__ if ...
+
+__PDOCS_TITLE__ is *not* intended for ...
+
+== Next steps
+
+* xref:getting-started.adoc[Getting started] — install and run it in minutes.
+* xref:guides/index.adoc[Guides] — step-by-step instructions for common tasks.
+* xref:architecture.adoc[Architecture] — how it works under the hood.

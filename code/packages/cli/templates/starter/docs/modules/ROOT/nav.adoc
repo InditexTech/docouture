@@ -1,2 +1,14 @@
+// Universal minimal navigation for Inditex Tech open source projects.
+// Each page answers one user question. Keep this order — it mirrors the
+// user journey: discover -> try -> use -> master -> contribute.
+// Add pages under Guides and Reference as the project grows; avoid removing
+// top-level entries unless a section truly does not apply to the project.
 * xref:index.adoc[Introduction]
 * xref:getting-started.adoc[Getting started]
+* Guides
+** xref:guides/index.adoc[Overview]
+* Reference
+** xref:reference/index.adoc[Overview]
+* xref:architecture.adoc[Architecture]
+* xref:contributing.adoc[Contributing]
+* xref:support.adoc[Support and community]

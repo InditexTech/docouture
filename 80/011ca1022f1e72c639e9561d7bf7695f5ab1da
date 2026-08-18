@@ -1,0 +1,23 @@
+code/packages/asciidoc-extensions/README.md
+  s_2e40869b985dd1::t_ea78e3b6d8720a 1-191
+code/packages/asciidoc-extensions/package.json
+  s_2e40869b985dd1::t_bbc468aa8fd1a4 5,12-18
+code/pnpm-lock.yaml
+  s_2e40869b985dd1::t_e19e0cebf6e319 47-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "80011ca1022f1e72c639e9561d7bf7695f5ab1da",
+  "prompts": {},
+  "sessions": {
+    "s_2e40869b985dd1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_febb8732cffe5uN6F1qujg6gHw",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

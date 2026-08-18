@@ -34,21 +34,49 @@ landing lives in `ROOT`, which has no navigation of its own, and
 
 == Quicklinks
 
-[cards]
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
 ====
-link:content.html[Content test page]:: The long-form doc kitchen sink, rendered through the `default` layout.
-link:landing.html[Landing test page]:: Site chrome around a normal doc page, hero opted out.
-link:icons.html[Icons catalog]:: Every icon in the vendored sprite.
-link:404.html[404 page]:: The not-found page.
+[card,subheader="Long form"]
+.link:content.html[Content test page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The long-form doc kitchen sink, rendered through the `default` layout.
+--
+
+[card,subheader="Chrome"]
+.link:landing.html[Landing test page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+Site chrome around a normal doc page, hero opted out.
+--
+
+[card,subheader="Assets"]
+.link:icons.html[Icons catalog]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+Every icon in the vendored sprite.
+--
+
+[card,subheader="Edge case"]
+.link:404.html[404 page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The not-found page.
+--
 ====
 
 == Supported features
 
 Blocks on this page come from Asciidoctor extensions rather than from the
-layout, so a landing stays authored content. Until those extensions land
-(GH-20 through GH-23) any AsciiDoc renders here, which is what this section is
-for: it checks that the block's heading row, its dashed rule and the gaps
-around its body are right regardless of what fills it.
+layout, so a landing stays authored content. The Quicklinks row above is the
+first of them (GH-20, the `[cards]` block); until the rest land (GH-21 through
+GH-23) any AsciiDoc renders here, which is what this section is for: it checks
+that the block's heading row, its dashed rule and the gaps around its body are
+right regardless of what fills it.
 
 * A plain list, to check body rhythm inside a block.
 * A second item.

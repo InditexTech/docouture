@@ -14,8 +14,13 @@ straight to a normal documentation page.
 
 [cards]
 ====
-xref:index.adoc[Introduction]:: What this starter contains and how it fits together.
-xref:getting-started.adoc[Getting started]:: Build the site and make the first edit.
+[card]
+.xref:index.adoc[Introduction]
+What this starter contains and how it fits together.
+
+[card]
+.xref:getting-started.adoc[Getting started]
+Build the site and make the first edit.
 ====
 
 == How this page works

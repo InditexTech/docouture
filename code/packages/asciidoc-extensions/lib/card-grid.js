@@ -1,82 +1,284 @@
 'use strict'
 
 const { chain, chainAll, precomputeSubtree } = require('./async-compat')
+const { escapeHtml } = require('./html')
+const warn = require('./warn')
 
-// Card grid — Fumadocs' `<Cards>`/`<Card>` (see the Weave.js migration's
-// Phase 2 plan: 210 uses across 11 files, all section-landing pages,
-// degraded during Phase 1 to a plain definition list).
+// Card grid — the ATD Card (Figma component set 2669:33855, states and types
+// at 2610:29000 for light and 2669:42541 for dark), rendered as IDS Card
+// (card/card.css) in a CSS grid. It is the block behind the landing's
+// Quicklinks row (GH-20) AND the section-landing card grids the Weave.js
+// migration brought over (Fumadocs' `<Cards>`/`<Card>`, 210 uses across 11
+// files) — one component, one look, doc pages and landings alike.
 //
-// Renders IDS Card (card/card.css) inside IDS Grid Layout
-// (grid-layout/grid-layout.css — already vendored, it backs the
-// header/toolbar/toc; see ids-components.yml). Card ships almost no text
-// styling of its own — it expects a consumer to style its content, normally
-// via the DS's `.ids-text` utilities, which are off limits inside `.doc`
-// prose (see ids-components.yml's own note on text.css: "chrome copy only,
-// not doc prose"). card-grid.css supplies the minimum title/body typography
-// directly instead, the same way the vendored Timeline/Progress-Step
-// components style their own label/detail text in their own stylesheets.
+// The design's card is a slot of three optional groups over an optional
+// image:
 //
-// Syntax — reuses a plain AsciiDoc definition list, parsed exactly as
-// normal (no custom nested syntax to maintain): each `term:: description`
-// pair becomes one card. The term's own inline markup (typically an
-// `xref:`) becomes the card's whole clickable surface via a stretched-link
-// overlay (card-grid.css's `::after`), not a wrapping `<a>` — nesting an
-// anchor around the card would make the xref's own `<a>` invalid HTML.
+//   Header info   a 20x20 icon and a `label/m` subheader
+//   Main info     the title (`title/s`) and description (`body/l`)
+//   Meta          `.ids-label--grey` chips
 //
-//   [cards]
+// The frames' date field is deliberately not modelled, and neither is
+// `Selected`: a documentation card has nothing to select. Nor is there a
+// call to action — the ATD Card catalogue has no button in any of its four
+// types, and the whole card is already the link, so a "Know more" would be a
+// second affordance for the one thing clicking anywhere on the card does.
+// (An earlier Quicklinks frame, 2696:54698, drew a ghost button; the
+// catalogue supersedes it.)
+//
+// Every colour in both theme frames resolves to a semantic IDS token that
+// ids-tokens.css already swaps under `.ids-theme-dark`, so dark theme costs
+// this extension and card-grid.css nothing — see that file's own header.
+//
+// SYNTAX
+//
+// A `[cards]` example block holding one `[card]` per card. A card is either
+// a paragraph — title plus description, which is what the migrated corpus
+// needs — or an open block, when it also carries an image:
+//
+//   [cards,type=image-portrait,columns="1 s:2 m:3",width=container]
 //   ====
-//   xref:sdk:api-reference/actions/action.adoc[WeaveAction]:: The abstract
-//   class that defines the blueprint of an action.
+//   [card,icon="business/file-outlined",subheader="Getting started",labels="java, spring"]
+//   .xref:quickstart.adoc[Quickstart]
+//   --
+//   image::quickstart.svg[Woven cloth, folded]
 //
-//   xref:sdk:api-reference/actions/comment-tool.adoc[WeaveCommentToolAction]::
-//   Enables users to comment on the stage.
+//   Create your first application with AMIGA Framework Java.
+//   --
+//
+//   [card]
+//   .xref:sdk:index.adoc[SDK]
+//   The headless library the canvas is built on.
 //   ====
-function buildCardHtml(title, body) {
+//
+// The block title carries the link, exactly as the dlist term did in this
+// block's first form: Asciidoctor runs inline substitutions over a title, so
+// an `xref:` arrives here already converted to an `<a>`, and Antora's own
+// page resolution is used rather than reimplemented. The image is a real
+// `image::` macro for the same reason — the resource ID resolves through
+// Antora, and alt text is native AsciiDoc rather than a second attribute.
+//
+// Why the open block is required for the image form: `[card]` on an
+// `image::` line is consumed as the BLOCK MACRO's own style and never
+// reaches `getStyle()` (measured: the block reports `style: null` and its
+// first positional attribute is the image's alt text), so an image can never
+// itself be the card marker. An open block keeps the style, keeps the title,
+// and delimits the card explicitly instead of relying on a "blocks until the
+// next marker" heuristic.
+
+const TYPES = ['no-image', 'image-landscape', 'image-square', 'image-portrait']
+const DEFAULT_TYPE = 'no-image'
+
+const WIDTHS = ['content', 'container']
+const DEFAULT_WIDTH = 'content'
+
+// `xs` is the base, unprefixed, so it has no name here — a bare `3` sets the
+// base count. The rest are the PROJECT's breakpoints (ids-breakpoints.css:
+// s 513, m 1240, l 1680), not the design system package's own, and the
+// classes they map to are mobile-first and non-exclusive, like the DS grid's
+// `--span-*` utilities.
+const BREAKPOINTS = ['s', 'm', 'l']
+const DEFAULT_COLUMNS = '1 s:2 m:3'
+const MAX_COLUMNS = 4
+
+const COLUMN_RX = /^(?:([a-z]+):)?([0-9]+)$/
+// `group/name`, both lowercase and hyphen-separated — the shape
+// `icons.yml` uses. Whether that icon is actually MASKED is checked by
+// ui-bundle's own `just icons-build` (scripts/build-sprite.mjs), which owns
+// the manifest; duplicating the list here would be a second source of truth
+// that drifts. An icon that passes the shape check but has no mask falls
+// back to a visible marker in card-grid.css rather than rendering nothing.
+const ICON_RX = /^[a-z0-9]+(?:-[a-z0-9]+)*\/[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+// The first `href` of the converted title, which is the card's own link.
+const HREF_RX = /<a\b[^>]*\bhref="([^"]*)"/i
+// Lifted whole from the converted image block rather than rebuilt from the
+// target: the host converter is what resolves an image URL (Antora's
+// `imagesdir` per page, its own resource resolution), and `getImageUri` does
+// not apply `imagesdir` unless handed the asset key explicitly. Taking the
+// converter's own `<img>` also keeps the alt, width and height it derived.
+const IMG_RX = /<img\b[^>]*>/i
+
+/** `image-portrait` -> `portrait`; `no-image` has no modifier of its own. */
+const typeModifier = (type) => (type === 'no-image' ? '' : ' pdocs-card--' + type.slice('image-'.length))
+
+/**
+ * Parse the `columns` spec into grid classes.
+ *
+ * `"1 s:2 m:3"` -> base 1, from `s` 2, from `m` 3. Anything malformed, out of
+ * range, or naming a breakpoint that does not exist is an authoring error and
+ * fails the build.
+ */
+function parseColumns(spec, parent) {
+  const classes = []
+  for (const token of String(spec).trim().split(/\s+/)) {
+    if (!token) continue
+    const match = COLUMN_RX.exec(token)
+    if (!match) {
+      warn(parent, '[cards,columns="' + spec + '"]', 'cannot read the column "' + token + '"; expected `3` or `m:3`')
+      continue
+    }
+    const [, breakpoint, count] = match
+    if (breakpoint && !BREAKPOINTS.includes(breakpoint)) {
+      warn(parent, '[cards,columns="' + spec + '"]', 'unknown breakpoint "' + breakpoint + '"', BREAKPOINTS)
+      continue
+    }
+    const columns = Number(count)
+    if (columns < 1 || columns > MAX_COLUMNS) {
+      warn(parent, '[cards,columns="' + spec + '"]', columns + ' columns is outside the supported range 1-' + MAX_COLUMNS)
+      continue
+    }
+    classes.push('pdocs-card-grid--cols-' + (breakpoint ? breakpoint + '-' : '') + columns)
+  }
+  return classes
+}
+
+/** The image blocks and the body blocks of one card, whichever form it took. */
+function cardParts(block) {
+  if (block.getContext() !== 'open') return { images: [], bodies: [block] }
+  const images = []
+  const bodies = []
+  for (const child of block.getBlocks()) {
+    if (child.getContext() === 'image') images.push(child)
+    else bodies.push(child)
+  }
+  return { images, bodies }
+}
+
+function renderHeader(icon, subheader, parent) {
+  if (!icon && !subheader) return ''
+  let iconHtml = ''
+  if (icon) {
+    if (ICON_RX.test(icon)) {
+      iconHtml =
+        '<span class="pdocs-card__icon ids-icon-mask--' + escapeHtml(icon.replace('/', '-')) + '" aria-hidden="true"></span>'
+    } else {
+      warn(parent, '[card,icon="' + icon + '"]', 'not an icon reference; expected `group/name`, e.g. `business/file-outlined`')
+    }
+  }
+  const subheaderHtml = subheader ? '<span class="pdocs-card__subheader">' + escapeHtml(subheader) + '</span>' : ''
+  return '<div class="pdocs-card__header">' + iconHtml + subheaderHtml + '</div>'
+}
+
+function renderMeta(labels) {
+  const chips = String(labels || '')
+    .split(',')
+    .map((label) => label.trim())
+    .filter(Boolean)
+  if (!chips.length) return ''
   return (
-    // Mobile-first, non-exclusive breakpoint classes (grid-layout.css):
-    // `--span-s-6` applies from the `s` breakpoint (513px) UPWARD, forever,
-    // unless a wider breakpoint's own class overrides it — `--span-m-4`
-    // (1024px+) is that override, and covers `l` (1680px+) too since
-    // nothing there redefines it again. Omitting `--span-m-4` was a real
-    // bug caught in the preview: without it, 3 cards rendered as 2-per-row
-    // (span-6) all the way from 513px to infinity, `--span-4` never once
-    // taking effect despite being the base class.
-    '<div class="ids-grid-layout__item ids-grid-layout__item--span-4 ids-grid-layout__item--span-s-6 ids-grid-layout__item--span-m-4 ids-grid-layout__item--span-xs-full">' +
-    '<div class="ids-card ids-card--vertical pdocs-card">' +
+    '<div class="pdocs-card__meta">' +
+    chips
+      .map(
+        (label) =>
+          '<span class="ids-label ids-label--grey"><span class="ids-label__content">' +
+          escapeHtml(label) +
+          '</span></span>'
+      )
+      .join('') +
+    '</div>'
+  )
+}
+
+function buildCardHtml({ type, imageHtml, header, title, description, meta }) {
+  return (
+    '<div class="ids-card ids-card--vertical pdocs-card' +
+    typeModifier(type) +
+    '">' +
+    imageHtml +
     '<div class="ids-card__content">' +
+    header +
+    '<div class="pdocs-card__main">' +
     '<div class="pdocs-card__title">' +
     title +
     '</div>' +
-    body +
+    description +
     '</div>' +
+    meta +
     '</div>' +
     '</div>'
   )
 }
 
-function renderCard(term, description) {
-  // NOT escaped, deliberately — `getText()` returns CONVERTED HTML, not text.
-  // A term carrying the `xref:` this block is built around arrives here as
-  // `<a href="...">Label</a>`, so running it through html.js's `escapeHtml`
-  // would render the anchor as visible source and break every card link. See
-  // lib/html.js's header for which strings do need escaping (raw BLOCK
-  // attributes) and which are already safe (inline macros, document
-  // attributes, and anything from `getText()`).
-  const title = term.map((t) => t.getText()).join(', ')
-  if (!description) return buildCardHtml(title, '')
+function renderCard(block, type, parent) {
+  // NOT escaped, deliberately — `getTitle()` returns CONVERTED HTML, not
+  // text. The `xref:` this block is built around arrives as
+  // `<a href="...">Label</a>`, so escaping it would render the anchor as
+  // visible source and break every card link. See lib/html.js's header for
+  // which strings do need escaping (raw block attributes) and which are
+  // already safe.
+  const title = block.getTitle()
+  if (!title) {
+    warn(parent, '[card]', 'a card has no title; give it a `.Title` line carrying the link')
+    return ''
+  }
 
-  const paragraph = description.hasText() ? '<p>' + description.getText() + '</p>' : ''
-  if (!description.hasBlocks()) return buildCardHtml(title, paragraph)
+  const href = (HREF_RX.exec(title) || [])[1]
+  if (!href) {
+    warn(parent, '[card] ' + block.getAttribute('title'), 'a card title carries no link; make it an `xref:` or a `link:`')
+  }
 
-  const blockHtmls = description.getBlocks().map((block) => block.convert())
-  return chainAll(blockHtmls, (bodies) => buildCardHtml(title, paragraph + bodies.join('\n')))
+  const { images, bodies } = cardParts(block)
+  if (type === 'no-image' && images.length) {
+    warn(parent, '[card]', 'this card has an image but the block is `type=' + type + '`', TYPES.slice(1))
+  }
+  if (type !== 'no-image' && !images.length) {
+    warn(parent, '[card]', 'a `type=' + type + '` card needs an `image::` of its own')
+  }
+  if (images.length > 1) {
+    warn(parent, '[card]', 'a card has ' + images.length + ' images; only the first is rendered')
+  }
+  for (const body of bodies) {
+    if (body.getContext() !== 'paragraph') {
+      warn(parent, '[card]', 'a card body holds a ' + body.getContext() + ' block; only paragraphs are supported')
+    }
+  }
+
+  const parts = []
+  parts.push(images.length ? images[0].convert() : '')
+  bodies.forEach((body) => parts.push(body.getContent()))
+
+  return chainAll(parts, ([converted, ...texts]) => {
+    const image = converted ? (IMG_RX.exec(converted) || [])[0] : ''
+    const imageHtml = image ? '<div class="ids-card__image pdocs-card__image">' + image + '</div>' : ''
+    const description = texts
+      .filter(Boolean)
+      .map((text) => '<p>' + text + '</p>')
+      .join('')
+    return buildCardHtml({
+      type,
+      imageHtml,
+      header: renderHeader(block.getAttribute('icon'), block.getAttribute('subheader'), parent),
+      title,
+      description,
+      meta: renderMeta(block.getAttribute('labels')),
+    })
+  })
 }
 
 function finish(parent, wrapper, attrs, self) {
-  const dlist = wrapper.getBlocks().find((block) => block.getContext() === 'dlist')
-  const cardHtmls = dlist ? dlist.getItems().map(([term, description]) => renderCard(term, description)) : []
-  return chainAll(cardHtmls, (cards) => {
-    const html = '<div class="ids-grid-layout ids-grid-layout--gap-m pdocs-card-grid">' + cards.join('') + '</div>'
+  const type = attrs.type || DEFAULT_TYPE
+  if (!TYPES.includes(type)) {
+    warn(parent, '[cards,type=' + attrs.type + ']', 'unknown card type "' + attrs.type + '"', TYPES)
+  }
+
+  const width = attrs.width || DEFAULT_WIDTH
+  if (!WIDTHS.includes(width)) {
+    warn(parent, '[cards,width=' + attrs.width + ']', 'unknown width "' + attrs.width + '"', WIDTHS)
+  }
+
+  const cards = wrapper.getBlocks().filter((block) => block.getStyle() === 'card')
+  if (!cards.length) {
+    warn(parent, '[cards]', 'a cards block with no `[card]` in it')
+  }
+
+  const cardHtmls = cards.map((card) => renderCard(card, TYPES.includes(type) ? type : DEFAULT_TYPE, parent))
+
+  return chainAll(cardHtmls, (rendered) => {
+    const classes = ['pdocs-card-grid']
+      .concat(parseColumns(attrs.columns || DEFAULT_COLUMNS, parent))
+      .concat('pdocs-card-grid--width-' + (WIDTHS.includes(width) ? width : DEFAULT_WIDTH))
+    const html = '<div class="' + classes.join(' ') + '">' + rendered.join('') + '</div>'
     return self.createBlock(parent, 'pass', html, attrs)
   })
 }

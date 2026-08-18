@@ -1,57 +1,350 @@
 /*
- * Weave.js migration Phase 2 — the [cards] Asciidoctor extension
- * (asciidoc-extensions/lib/card-grid.js). Renders IDS Card
- * (ids-components.css, card/card.css) inside IDS Grid Layout
- * (grid-layout.css, already vendored for the header/toolbar/toc — see
- * ids-components.yml's own comment on why `.doc`/`.toc` don't use its
- * `__item--span-N` utility classes for THEIR layout; a card grid is a
- * different, opted-in use of the same utility classes, not a conflict
- * with that note).
+ * The [cards] block — asciidoc-extensions/lib/card-grid.js.
+ *
+ * The ATD Card (Figma component set 2669:33855; types and states at
+ * 2610:29000 light / 2669:42541 dark), rendered as IDS Card
+ * (ids-components.css, card/card.css) in a CSS grid whose column count the
+ * author sets per breakpoint. One block serves both views: the landing's
+ * Quicklinks row (GH-20, 2696:54694) and the section-landing card grids the
+ * Weave.js migration brought over.
+ *
+ * TOKENS ONLY, AND WHY IT MATTERS HERE
+ *
+ * Every colour in BOTH theme frames resolves to a semantic IDS token that
+ * ids-tokens.css already swaps under `.ids-theme-dark`:
+ *
+ *   subheader       #757575 / #C4C4C4   --ids-color-content-low
+ *   title, body     #000    / #FFF      --ids-color-content-default
+ *   content surface #FFF    / #000      --ids-color-bg-default   (card.css's own)
+ *   label chip      #F7F7F7 / #363636   --ids-color-bg-low       (label.css's own)
+ *   hover rule      #757575 / #C4C4C4   --ids-color-border-states-hover (card.css's own)
+ *
+ * So there is no dark-theme rule in this file, and there must not be one: a
+ * literal colour here is a bug that only shows up in one theme. The same goes
+ * for the states — hover is card.css's own inset rule, untouched.
  *
  * Card ships almost no text styling of its own (no `font` rule anywhere in
  * card.css) — it expects a consumer to supply it, normally via the DS's
  * `.ids-text` utilities, which are chrome-only and off limits inside `.doc`
- * prose (see ids-components.yml's own note on text.css). This file supplies
- * the minimum directly, the same way Timeline/Progress-Step's own
- * stylesheets set `font:` on their `-label`/`-detail` slots rather than
- * requiring a `.ids-text` class alongside them.
+ * prose (see ids-components.yml's own note on text.css). This file supplies it
+ * directly, the same way Timeline/Progress-Step's own stylesheets set `font:`
+ * on their `-label`/`-detail` slots.
+ *
+ * Deviations from the frames, recorded rather than silently taken:
+ *
+ * 1. The title does NOT take `--ids-typo-title-s-text-transform`. The token
+ *    says uppercase; the Figma text style for `title/s` carries no `textCase`
+ *    at all, unlike `title/xs` and `title/m`, which both declare `UPPER`. The
+ *    corpus settles it: these titles are API symbol names, and rendering
+ *    `WeaveCommentToolAction` as `WEAVECOMMENTTOOLACTION` destroys the one
+ *    thing the card is naming.
+ * 2. No `Selected` state. The frames draw one (1px `--ids-color-border-default`
+ *    top and bottom, surface `--ids-color-bg-low`), but a documentation card
+ *    has nothing to select — it is a link. `card.css` still ships
+ *    `.ids-card--selected` if that ever changes.
+ * 3. The card's image is a plain `<img>`, not the frames' IDS Image component:
+ *    its loading, error and no-image states are runtime React behaviour with
+ *    no static equivalent, and the overlay badge slots it frames (Top/Bottom,
+ *    12px inset) are not modelled.
+ */
+
+/* ------------------------------------------------------------- the grid ---- */
+
+.pdocs-card-grid {
+  display: grid;
+  gap: var(--ids-size-250); /* 40, both axes */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/*
+ * The article view puts blocks in a normal flow, so a card grid needs the
+ * same top margin every other block gets. The landing's content column is a
+ * flex column with its own gap (home.css), so it needs none — hence `.doc`.
  */
 .doc .pdocs-card-grid {
   margin: var(--doc-space-block) 0 0;
 }
 
-.doc .pdocs-card {
-  /* Anchors the title's stretched-link overlay below — see steps.js's
-   * header comment on why the whole card is not itself an `<a>` (the
-   * xref inside the title already is one; nesting a second would be
-   * invalid HTML). */
+/*
+ * `width=container` — the row is let out of the reading measure by half again,
+ * and capped at the grid column it sits in.
+ *
+ * Exactly the shape doc.css uses for its own wide blocks (see its note): a
+ * `width` on an element whose ancestors merely cap their OWN box
+ * (`.doc > *` / `.sectionbody` / `.home__main > *`, all `max-width`) overflows
+ * that box rather than being clipped by it, and `100cqw` is the backstop that
+ * stops it at the column — `.doc` declares `container-type: inline-size`, and
+ * home.css declares it on `.home__main` for this rule. So the row grows to
+ * 1.5x the measure where there is room for it and to the full column where
+ * there is not, and can never exceed the column at any breakpoint.
+ *
+ * It is deliberately NOT a bare `100cqw`. That made every `width=container`
+ * row span the whole column regardless of how much it needed, which is a
+ * different thing from "let this block be wider than prose".
+ *
+ * `width=content`, the default, needs no rule at all: it is what the enclosing
+ * measure already does. The class is still emitted, so the markup says which
+ * of the two an author chose.
+ */
+.pdocs-card-grid--width-container {
+  max-width: none;
+  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
+}
+
+/*
+ * Column counts. Mobile-first and non-exclusive, like the design system grid's
+ * own `--span-*` utilities: a count applies from its breakpoint UPWARD until a
+ * wider one overrides it, so `columns="1 s:2 m:3"` is 1 below 513, 2 from 513,
+ * 3 from 1240 and still 3 at 1680.
+ *
+ * Written out rather than driven by a custom property the extension sets
+ * inline: the package's contract allows an inline `style` only for a
+ * documented CSS impossibility (video-size.js and `aspect-ratio` from HTML
+ * attributes), and a bounded set of column counts is not one. The range is
+ * 1-4, enforced in card-grid.js, which is why this stops at 4.
+ *
+ * The breakpoints are THIS PROJECT's (ids-breakpoints.css: s 513, m 1240,
+ * l 1680), not the design system package's own — see home.css's note on why
+ * the two differ.
+ */
+.pdocs-card-grid--cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.pdocs-card-grid--cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pdocs-card-grid--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pdocs-card-grid--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media screen and (--ids-breakpoints-s) {
+  .pdocs-card-grid--cols-s-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-s-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-s-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-s-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .pdocs-card-grid--cols-m-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-m-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-m-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-m-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .pdocs-card-grid--cols-l-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-l-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-l-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pdocs-card-grid--cols-l-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ------------------------------------------------------------- the card ---- */
+
+/*
+ * `position: relative` anchors the title's stretched-link overlay below. The
+ * card is not itself an `<a>`: the title already contains one (the author's
+ * own `xref:`), and nesting anchors is invalid HTML.
+ *
+ * No border, no padding, no surface here — `.ids-card` sets its own 8px block
+ * padding and `.ids-card__content` its own 16px and background, which is
+ * exactly what the frames draw.
+ */
+.pdocs-card {
   position: relative;
-  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
 }
 
-.doc .pdocs-card__title {
-  font: var(--ids-typo-label-l-high);
+/*
+ * Keyboard focus lands on the title's anchor, which is text-sized, while the
+ * hit area is the whole card — so the ring goes on the card. `:focus-within`
+ * rather than `:has(:focus-visible)`: the card holds exactly one focusable
+ * element, so the two mean the same thing here, and this needs no `:has`.
+ */
+.pdocs-card:focus-within {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: var(--ids-size-25);
+}
+
+/*
+ * The design's slot: a column of Header info / Main info / Meta, 16 apart.
+ * `card.css` gives `__content` its padding but no layout of its own — it
+ * expects the consumer to lay the slot out, which is what this adds rather
+ * than overrides.
+ *
+ * The background IS an override, and a deliberate one. `card.css` paints
+ * `__content` with `--ids-color-bg-default`, which the component catalogue
+ * frames agree with (2610:29000's Content is `#FFFFFF`, 2669:42541's `#000`).
+ * The landing disagrees: in the Quicklinks frame the ATD Home Card's own
+ * Content frame carries an EMPTY fill list, so the page shows through. That
+ * is the behaviour that matters, because the landing is the only place the
+ * two differ — it is the only surface with artwork behind it, and an opaque
+ * card punches four white holes in it. Everywhere else the card sits directly
+ * on `--ids-color-bg-default` anyway, so transparent renders identically and
+ * one rule serves both.
+ */
+.pdocs-card .ids-card__content {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-100); /* 16 */
+  /*
+   * The second override, and the reason the whole card is clickable at all.
+   *
+   * `card.css` sets `position: relative` here, for its own `__alert-slot` —
+   * markup this block never emits. That made `__content` the containing block
+   * for the title's stretched-link `::after`, so the overlay stopped at the
+   * text and the image above it was dead: no pointer cursor, no click.
+   * Measured — `elementFromPoint` over the image returned the `<img>` with
+   * `cursor: auto`, not the anchor.
+   *
+   * `static` hands the containing block back to `.pdocs-card`, which is
+   * `position: relative` for exactly this purpose. The overlay then covers the
+   * card edge to edge, image included, and still paints above the image:
+   * both are positioned with `z-index: auto`, and the overlay comes later in
+   * tree order.
+   */
+  position: static;
+}
+
+/* ------------------------------------------------------------ the image ---- */
+
+/*
+ * `card.css` gives `.ids-card__image` `flex-basis: 50%` (38% from 1024px) and
+ * `flex-grow: 1`, sized for the HORIZONTAL card where those are widths. In the
+ * vertical card the main axis is the block axis, so both apply to HEIGHT and
+ * the image stretches. `flex: none` puts the sizing back on `aspect-ratio`,
+ * which is what the frames specify per type.
+ */
+.pdocs-card__image {
+  flex: none;
+  overflow: hidden;
+}
+
+.pdocs-card__image img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.pdocs-card--landscape .pdocs-card__image {
+  aspect-ratio: 16 / 9;
+}
+
+.pdocs-card--square .pdocs-card__image {
+  aspect-ratio: 1 / 1;
+}
+
+.pdocs-card--portrait .pdocs-card__image {
+  aspect-ratio: 2 / 3;
+}
+
+/* ----------------------------------------------------------- the header ---- */
+
+.pdocs-card__header {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-50); /* 8 */
+}
+
+/*
+ * The icon is a mask, not an `<svg><use>`: the extension that emits this
+ * markup runs at conversion time with no `uiRootPath`, so it cannot address
+ * the sprite. `icon-masks.css` carries one `.ids-icon-mask--<group>-<name>`
+ * utility per entry in icons.yml's `masks:`.
+ *
+ * The `mask-image` below is a FALLBACK for an icon that has no mask, wrapped
+ * in `:where()` so it carries zero specificity and any real utility class
+ * wins — regardless of source order, and icon-masks.css is imported first
+ * (site.css). In this repository `just icons-build` fails before it gets
+ * here; downstream sites have no such check, so an unmasked icon shows a
+ * warning glyph rather than an empty box.
+ */
+:where(.pdocs-card__icon) {
+  mask-image: var(--icon-mask-alerts-warning-outlined);
+}
+
+.pdocs-card__icon {
+  background: currentColor;
+  block-size: var(--ids-size-125); /* 20 */
+  inline-size: var(--ids-size-125);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.pdocs-card__subheader {
+  color: var(--ids-color-content-low);
+  font: var(--ids-typo-label-m);
   font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
-  padding: 0 var(--ids-size-100);
+  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  text-transform: var(--ids-typo-label-m-text-transform);
 }
 
-.doc .pdocs-card__title a {
+/* ------------------------------------------------- title and description ---- */
+
+.pdocs-card__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-75); /* 12 */
+}
+
+.pdocs-card__title {
+  color: var(--ids-color-content-default);
+  font: var(--ids-typo-title-s);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-title-s-letter-spacing);
+}
+
+/*
+ * The card's one link, and its whole clickable surface.
+ *
+ * `:hover` is restated rather than left to the `color: inherit` above because
+ * `.doc a:hover` (doc.css) is a link colour for PROSE links and matches this
+ * anchor too, at equal specificity — measured: a card title on an article page
+ * turned the link-hover blue on hover while the same card on a landing, which
+ * has no `.doc` ancestor, did not. Equal specificity means source order
+ * decides, and card-grid.css is imported after doc.css (site.css), so this
+ * wins. The card's own hover feedback is `.ids-card:hover`'s rule from
+ * card.css — the design changes the card's edges on hover, never its text.
+ */
+.pdocs-card__title a,
+.pdocs-card__title a:hover,
+.pdocs-card__title a:focus {
   color: inherit;
   text-decoration: none;
 }
 
-/* Stretched link: makes the whole card clickable through the title's own
- * `<a>` (an xref the [cards] extension didn't emit itself — see
- * card-grid.js) without wrapping the card in a second, invalid, nested
- * anchor. */
-.doc .pdocs-card__title a::after {
+/*
+ * Stretched link: makes the WHOLE card clickable through the title's own `<a>`
+ * — an anchor this extension did not emit, it came from the author's `xref:`
+ * — without wrapping the card in a second, nested one. This is why the card
+ * carries no button of its own: the affordance is the card.
+ */
+.pdocs-card__title a::after {
   content: '';
-  position: absolute;
   inset: 0;
+  position: absolute;
 }
 
-.doc .pdocs-card p {
-  margin-top: 0;
-  padding: 0 var(--ids-size-100);
+/*
+ * The description takes its type from whatever it sits in rather than
+ * restating it. It used to hardcode `--ids-typo-body-l` (16/24), which is the
+ * design's own body size and matches doc prose at `m` and up — but `.doc`
+ * runs at `--doc-font-size` (17px, the bundle's base) BELOW `m`, stepping to
+ * 16px only at that breakpoint (doc.css). A card in an article was therefore
+ * a point smaller than the paragraphs around it on every narrow viewport.
+ * Inheriting is what actually holds the promise "the same size as the text
+ * around it": `.doc` on an article page, `.home__main`'s own `body/l` on a
+ * landing, and any future context without a third rule here.
+ *
+ * The same argument covers letter-spacing and colour, so neither is restated:
+ * `--doc-font-color` is `--ids-color-content-default` (bridge.css), which is
+ * what this set before.
+ */
+.pdocs-card p {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------- the meta ---- */
+
+.pdocs-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ids-size-25); /* 4 */
 }

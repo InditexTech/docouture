@@ -63,20 +63,35 @@ icons:
     - sunny-outlined # theme toggle, light
 
 # Icons that also need a CSS-consumable form (a `--icon-mask-<group>-<name>`
-# custom property, generated into src/css/icon-masks.css), because Asciidoctor
-# with `icons: font` (both playbooks) gives admonitions fixed markup —
-# `<i class="fa icon-note" title="Note">` — with no room for the `{{icon}}`
-# helper's `<svg><use>`. Every entry here must also be listed under `icons:`
-# above; `just icons-build` fails otherwise. See GH-13.
+# custom property, plus an `.ids-icon-mask--<group>-<name>` utility class, both
+# generated into src/css/icon-masks.css). Two kinds of markup need this:
+#
+#   - markup Asciidoctor generates itself, where the `{{icon}}` helper's
+#     `<svg><use>` has no way in — admonitions with `icons: font` (both
+#     playbooks) are fixed at `<i class="fa icon-note" title="Note">`. See
+#     GH-13.
+#   - markup an Asciidoctor EXTENSION emits, which runs at conversion time with
+#     no `uiRootPath` and so cannot address the sprite at all. The `[card]`
+#     block's `icon=` attribute draws from this list, and `just icons-build`
+#     fails when a page names an icon that is not masked here (GH-20).
+#
+# Every entry must also be listed under `icons:` above; `just icons-build`
+# fails otherwise.
 masks:
   actions:
     - check-circle-outlined
+    - code-block-outlined # [card,icon=…] (GH-20)
   alerts:
     - warning-outlined
     - warning-alt-outlined
   arrows:
     - chevron-down-outlined # collapsible marker (GH-15)
   business:
+    - file-outlined # [card,icon=…] (GH-20)
     - sticker-outlined
   communication:
     - comment-outlined
+  design:
+    - grid-outlined # [card,icon=…] (GH-20)
+  others:
+    - server-outlined # [card,icon=…] (GH-20)

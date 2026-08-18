@@ -10,6 +10,11 @@ Weave.js types package offers definitions for:
 
 [cards]
 ====
-xref:types:api-reference/constants.adoc[Constants]:: Definitions of all the constants used on the Weave.js ecosystem.
-xref:types:api-reference/types.adoc[Types]:: Definitions of all the TypeScript types used on the Weave.js ecosystem.
+[card]
+.xref:types:api-reference/constants.adoc[Constants]
+Definitions of all the constants used on the Weave.js ecosystem.
+
+[card]
+.xref:types:api-reference/types.adoc[Types]
+Definitions of all the TypeScript types used on the Weave.js ecosystem.
 ====

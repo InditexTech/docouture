@@ -27,9 +27,17 @@ This are the stores:
 
 [cards]
 ====
-xref:main:build/stores/websockets-store.adoc[WebSockets Store]:: An store that uses WebSockets as its transport layer.
-xref:main:build/stores/azure-web-pubsub-store.adoc[Azure Web PubSub Store]:: An store that uses Azure Web PubSub as its transport layer.
-xref:main:build/stores/standalone-store.adoc[Standalone Store]:: An store that directly render a room, useful when trying to render a room server-side to export as image.
+[card]
+.xref:main:build/stores/websockets-store.adoc[WebSockets Store]
+An store that uses WebSockets as its transport layer.
+
+[card]
+.xref:main:build/stores/azure-web-pubsub-store.adoc[Azure Web PubSub Store]
+An store that uses Azure Web PubSub as its transport layer.
+
+[card]
+.xref:main:build/stores/standalone-store.adoc[Standalone Store]
+An store that directly render a room, useful when trying to render a room server-side to export as image.
 ====
 
 == Custom Store

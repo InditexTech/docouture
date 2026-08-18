@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-hidden="true">
+  <title>Draped cloth, warm grey</title>
+  <desc>Abstract study of draped cloth. Generated artwork, no photographic source.</desc>
+  <defs>
+    <linearGradient id="ground" x1="0.1" y1="0" x2="0.75" y2="1">
+      <stop offset="0%" stop-color="#f4f1ee"/>
+      <stop offset="45%" stop-color="#d9d2ca"/>
+      <stop offset="100%" stop-color="#a89e93"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="0.32" cy="0.24" r="0.85">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.22"/>
+    </radialGradient>
+    <linearGradient id="fold0" x1="0.05" y1="0" x2="0.95" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="42%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="72%" stop-color="#000000" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.34"/>
+    </linearGradient>
+    <linearGradient id="fold1" x1="0.39999999999999997" y1="0.1" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.38"/>
+      <stop offset="42%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="72%" stop-color="#000000" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.43000000000000005"/>
+    </linearGradient>
+    <linearGradient id="fold2" x1="0.75" y1="0.2" x2="0.44999999999999996" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.26"/>
+      <stop offset="42%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="72%" stop-color="#000000" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.52"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="900" fill="url(#ground)"/>
+  <path d="M -23.9 -12 C 7.3 252 30.1 540 36.1 912 L 109 912 C 102.9 540 109.3 252 89.5 -12 Z" fill="url(#fold0)" opacity="0.3"/>
+  <path d="M 77.7 -12 C 67.5 252 187.6 540 163.4 912 L 232.3 912 C 256.4 540 131.1 252 148.4 -12 Z" fill="url(#fold1)" opacity="0.8"/>
+  <path d="M 166.4 -12 C 201.1 252 280.5 540 277.9 912 L 344 912 C 346.6 540 276.6 252 250.3 -12 Z" fill="url(#fold2)" opacity="0.6"/>
+  <path d="M 247.1 -12 C 287.8 252 388.7 540 384.3 912 L 468.5 912 C 472.9 540 380.5 252 350.1 -12 Z" fill="url(#fold0)" opacity="0.7"/>
+  <path d="M 322.2 -12 C 342.5 252 507.1 540 485 912 L 542 912 C 564 540 414.5 252 402.2 -12 Z" fill="url(#fold1)" opacity="0.7"/>
+  <path d="M 407.8 -12 C 517.1 252 570.3 540 596.4 912 L 650.3 912 C 624.3 540 568.1 252 464.4 -12 Z" fill="url(#fold2)" opacity="0.5"/>
+  <path d="M 496 -12 C 536.3 252 731.1 540 710.3 912 L 749.2 912 C 770.1 540 582.4 252 547.2 -12 Z" fill="url(#fold0)" opacity="0.7"/>
+  <path d="M -6.9 -12 C 7.3 270 31.1 558 41.8 912" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+  <path d="M 179 -12 C 201.1 270 280 558 282.1 912" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+  <path d="M 334.2 -12 C 342.5 270 503.4 558 489 912" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+  <path d="M 503.7 -12 C 536.3 270 727.7 558 712.9 912" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>
+  <rect width="600" height="900" fill="url(#sheen)"/>
+</svg>

@@ -47,6 +47,17 @@ function chainAll(values, fn) {
 // exists). `precomputeSubtree` runs the same precompute pass by hand, once,
 // over everything `parseContent` produced.
 //
+// A Block's own `.getTitle()` has exactly the same problem, for exactly the
+// same reason, and needs `.precomputeTitle()` — measured: a `.Title` line
+// carrying an `xref:` or a `link:` comes back as raw, unsubstituted source
+// (`https://x.com[Label]`) from a block parsed through `parseContent`, and
+// as converted HTML (`<a href="https://x.com">Label</a>`) once precomputed.
+// That is load-bearing for card-grid.js, whose card titles ARE links, and it
+// was a latent bug for steps.js's own `.Title` lines before this was added.
+// 2.2 has no `precomputeTitle` at all and needs none — its `getTitle()` is
+// always already substituted — hence the `typeof` guard, the same one
+// `precomputeText` gets.
+//
 // Recurses through both list shapes the Asciidoctor object model uses:
 // `getBlocks()` for any ordinary block INCLUDING ulist/olist (where each
 // child is a ListItem directly), and a dlist's own `[terms[], description]`
@@ -58,6 +69,7 @@ function precomputeSubtree(node) {
   function visitItem(item) {
     if (!item) return
     if (typeof item.precomputeText === 'function') jobs.push(item.precomputeText())
+    if (typeof item.precomputeTitle === 'function') jobs.push(item.precomputeTitle())
     if (typeof item.getBlocks === 'function') visitChildren(item.getBlocks())
   }
   function visitChildren(blocks) {

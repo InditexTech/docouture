@@ -75,9 +75,16 @@ body {
 }
 
 /*
- * Product name — the side menu's own brand block carries it at l (see
- * nav-brand.hbs); the header shows it instead at m/s/xs, where the side
- * menu is a drawer with no brand block (side-menu.css).
+ * Product name. Previously hidden at `l` on the assumption that the side
+ * menu's own brand block (nav-brand.hbs) always carries it there instead —
+ * true only while the menu is expanded. Collapsed (GH-8 toggle, 01-nav.ts —
+ * translated fully off-canvas at l, side-menu.css) the brand block is gone
+ * too, on any page, not just the landing (which merely starts collapsed by
+ * default, home.hbs's own `data-page-home` hint), so hiding this
+ * unconditionally removed the product name from the page entirely rather
+ * than moving it. Shown at every breakpoint now, expanded menu or not — the
+ * brand block still carries it too when the menu is visible, and a little
+ * duplication is a smaller cost than a page losing its own name.
  */
 .header-toolbar__product-name {
   color: var(--ids-color-content-default);
@@ -86,11 +93,7 @@ body {
   white-space: nowrap;
 }
 
-@media screen and (--ids-breakpoints-l) {
-  .header-toolbar__product-name {
-    display: none;
-  }
-}
+
 
 .header-toolbar__search {
   align-items: center;

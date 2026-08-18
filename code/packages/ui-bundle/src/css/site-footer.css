@@ -32,7 +32,9 @@
   background-position: top;
   background-repeat: repeat-x;
   background-size: 8px 1px;
-  padding-block: var(--ids-size-250); /* 40 */
+  /* 80: was --ids-size-250 (40) — the footer reads as a thin closing line at
+     40, undersized against the 48-80px block rhythm above it (home.css). */
+  padding-block: var(--ids-size-500);
   row-gap: var(--ids-size-250);
 }
 

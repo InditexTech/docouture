@@ -112,24 +112,16 @@ xref:react:index.adoc[Learn more]
 --
 ====
 
-== Stores
+== Free & open source
 
-A store is how a room's state reaches every participant. Pick the transport
-that matches where the application runs.
-
-[cards]
+[cta]
 ====
-[card]
-.xref:store-websockets:index.adoc[Websockets Store]
-WebSockets as transport, client and server.
+Weave.js is actively maintained and open for contributions.
 
-[card]
-.xref:store-azure-web-pubsub:index.adoc[Azure Web PubSub Store]
-Azure Web PubSub as transport, for deployments already on Azure.
+It comes with best-in-class documentation and developer experience.
 
-[card]
-.xref:store-standalone:index.adoc[Standalone Store]
-No transport at all — render a canvas straight from room data.
+[.primary]
+https://github.com/InditexTech/weavejs-frontend/fork[Create a fork]
 ====
 
 == Get started

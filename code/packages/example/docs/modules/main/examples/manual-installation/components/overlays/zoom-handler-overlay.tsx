@@ -1,56 +1,48 @@
-"use client";
+'use client'
 
-import React from "react";
-import { ToolbarButton } from "./toolbar-button";
-import {
-  Fullscreen,
-  Maximize,
-  ZoomIn,
-  ZoomOut,
-  Braces,
-  Undo,
-  Redo,
-} from "lucide-react";
-import { useWeave } from "@inditextech/weave-react";
-import { useCollaborationRoom } from "@/store/store";
+import React from 'react'
+import { ToolbarButton } from './toolbar-button'
+import { Fullscreen, Maximize, ZoomIn, ZoomOut, Braces, Undo, Redo } from 'lucide-react'
+import { useWeave } from '@inditextech/weave-react'
+import { useCollaborationRoom } from '@/store/store'
 
 export function ZoomHandlerOverlay() {
-  const instance = useWeave((state) => state.instance);
-  const actualAction = useWeave((state) => state.actions.actual);
-  const selectedNodes = useWeave((state) => state.selection.nodes);
-  const canUndo = useWeave((state) => state.undoRedo.canUndo);
-  const canRedo = useWeave((state) => state.undoRedo.canRedo);
+  const instance = useWeave((state) => state.instance)
+  const actualAction = useWeave((state) => state.actions.actual)
+  const selectedNodes = useWeave((state) => state.selection.nodes)
+  const canUndo = useWeave((state) => state.undoRedo.canUndo)
+  const canRedo = useWeave((state) => state.undoRedo.canRedo)
 
-  const zoomValue = useWeave((state) => state.zoom.value);
-  const canZoomIn = useWeave((state) => state.zoom.canZoomIn);
-  const canZoomOut = useWeave((state) => state.zoom.canZoomOut);
+  const zoomValue = useWeave((state) => state.zoom.value)
+  const canZoomIn = useWeave((state) => state.zoom.canZoomIn)
+  const canZoomOut = useWeave((state) => state.zoom.canZoomOut)
 
-  const showUI = useCollaborationRoom((state) => state.ui.show);
+  const showUI = useCollaborationRoom((state) => state.ui.show)
 
   const handleTriggerActionWithParams = React.useCallback(
     (actionName: string, params: unknown) => {
       if (instance) {
-        const triggerSelection = actualAction === "selectionTool";
-        instance.triggerAction(actionName, params);
+        const triggerSelection = actualAction === 'selectionTool'
+        instance.triggerAction(actionName, params)
         if (triggerSelection) {
-          instance.triggerAction("selectionTool");
+          instance.triggerAction('selectionTool')
         }
       }
     },
     [instance, actualAction]
-  );
+  )
 
   const handlePrintToConsoleState = React.useCallback(() => {
     if (instance) {
       // eslint-disable-next-line no-console
       console.log({
         appState: JSON.parse(JSON.stringify(instance.getStore().getState())),
-      });
+      })
     }
-  }, [instance]);
+  }, [instance])
 
   if (!showUI) {
-    return null;
+    return null
   }
 
   return (
@@ -64,8 +56,8 @@ export function ZoomHandlerOverlay() {
                 disabled={!canUndo}
                 onClick={() => {
                   if (instance) {
-                    const actualStore = instance.getStore();
-                    actualStore.undoStateStep();
+                    const actualStore = instance.getStore()
+                    actualStore.undoStateStep()
                   }
                 }}
                 label={
@@ -81,8 +73,8 @@ export function ZoomHandlerOverlay() {
                 disabled={!canRedo}
                 onClick={() => {
                   if (instance) {
-                    const actualStore = instance.getStore();
-                    actualStore.redoStateStep();
+                    const actualStore = instance.getStore()
+                    actualStore.redoStateStep()
                   }
                 }}
                 label={
@@ -122,13 +114,13 @@ export function ZoomHandlerOverlay() {
                 icon={<ZoomIn />}
                 disabled={!canZoomIn}
                 onClick={() => {
-                  handleTriggerActionWithParams("zoomInTool", {
+                  handleTriggerActionWithParams('zoomInTool', {
                     previousAction: actualAction,
-                  });
+                  })
                 }}
                 label={
                   <div className="flex flex-col gap-2 justify-start items-end">
-                    {" "}
+                    {' '}
                     <p>Zoom in</p>
                   </div>
                 }
@@ -139,9 +131,9 @@ export function ZoomHandlerOverlay() {
                 icon={<ZoomOut />}
                 disabled={!canZoomOut}
                 onClick={() => {
-                  handleTriggerActionWithParams("zoomOutTool", {
+                  handleTriggerActionWithParams('zoomOutTool', {
                     previousAction: actualAction,
-                  });
+                  })
                 }}
                 label={
                   <div className="flex flex-col gap-2 justify-start items-end">
@@ -154,9 +146,9 @@ export function ZoomHandlerOverlay() {
               <ToolbarButton
                 icon={<Maximize />}
                 onClick={() => {
-                  handleTriggerActionWithParams("fitToScreenTool", {
+                  handleTriggerActionWithParams('fitToScreenTool', {
                     previousAction: actualAction,
-                  });
+                  })
                 }}
                 label={
                   <div className="flex flex-col gap-2 justify-start items-end">
@@ -170,9 +162,9 @@ export function ZoomHandlerOverlay() {
                 icon={<Fullscreen />}
                 disabled={selectedNodes.length === 0}
                 onClick={() => {
-                  handleTriggerActionWithParams("fitToSelectionTool", {
+                  handleTriggerActionWithParams('fitToSelectionTool', {
                     previousAction: actualAction,
-                  });
+                  })
                 }}
                 label={
                   <div className="flex flex-col gap-2 justify-start items-end">
@@ -190,5 +182,5 @@ export function ZoomHandlerOverlay() {
         </div>
       </div>
     </div>
-  );
+  )
 }

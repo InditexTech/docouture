@@ -1,20 +1,20 @@
-import { fileURLToPath } from "url";
-import path from "path";
-import fs from "fs/promises";
-import express from "express";
-import { WeaveWebsocketsServer } from "@inditextech/weave-store-websockets/server"; // <1>
+import { fileURLToPath } from 'url'
+import path from 'path'
+import fs from 'fs/promises'
+import express from 'express'
+import { WeaveWebsocketsServer } from '@inditextech/weave-store-websockets/server' // <1>
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(import.meta.url)
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(__filename)
 
-const VALID_ROOM_WEBSOCKET_URL = /\/sync\/rooms\/(.*)/;
+const VALID_ROOM_WEBSOCKET_URL = /\/sync\/rooms\/(.*)/
 
-const host = process.env.HOST || "localhost";
-const port = parseInt(process.env.PORT || "1234");
+const host = process.env.HOST || 'localhost'
+const port = parseInt(process.env.PORT || '1234')
 
-const app = express();
+const app = express()
 
 // prettier-ignore
 const server = app.listen(port, host, (err: Error | undefined) => { // <2>
@@ -22,7 +22,7 @@ const server = app.listen(port, host, (err: Error | undefined) => { // <2>
 
   // eslint-disable-next-line no-console
   console.log(`Server started: http://${host}:${port}\n`);
-});
+})
 
 // prettier-ignore
 const wss = new WeaveWebsocketsServer({ // <3>
@@ -71,6 +71,6 @@ const wss = new WeaveWebsocketsServer({ // <3>
       console.error(ex);
     }
   }, // <7>
-});
+})
 
-wss.handleUpgrade(server); // <8>
+wss.handleUpgrade(server) // <8>

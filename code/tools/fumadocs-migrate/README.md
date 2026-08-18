@@ -108,8 +108,8 @@ build rather than only ever appearing in this script's own console output.
 
 Fumadocs' `"---Label---"` separator has no equivalent in this UI bundle by
 default: `nav-tree.hbs` originally rendered no row at all for any nav entry
-with no `url`, including a linkless *leaf* (a label with no children) — only
-a linkless *parent with children* is meant to render invisibly (a pure
+with no `url`, including a linkless _leaf_ (a label with no children) — only
+a linkless _parent with children_ is meant to render invisibly (a pure
 grouping wrapper). Fixed in `code/packages/ui-bundle` itself
 (`nav-tree.hbs` + a small `side-menu.css` rule) rather than dropped from
 `nav.adoc`, since it's a real, generally useful sidebar capability, not a
@@ -118,7 +118,7 @@ migration that also carries category-only nav labels.
 
 ## What it can't catch
 
-Nothing here re-validates the *content* of what it converts — only whether
+Nothing here re-validates the _content_ of what it converts — only whether
 its own transforms ran without throwing. A handful of pre-existing bugs in
 the Fumadocs source were found this way — by inspection for the two below,
 and by an actual full Antora build (not just this tool's own warnings) for
@@ -134,11 +134,11 @@ the rest — and none of them is something the converter should silently fix:
   of these (rather than dropping the link) specifically so Antora's own
   `runtime.log.failure_level: warn` catches them structurally
 - a malformed code fence in `main/manual-installation/index.mdx` (a stray
-  two-backtick `` `` `` instead of a closing triple-backtick) that produces
+  two-backtick ` ` `` instead of a closing triple-backtick) that produces
   syntactically-valid-but-wrong AsciiDoc output — no warning fires because
   nothing throws; only caught by reading the rendered page
 
-Every warning the converter *does* detect (unhandled component, unresolved
+Every warning the converter _does_ detect (unhandled component, unresolved
 link, failed `TypeTable`/`Mermaid` expression eval) prints in a summary at
 the end of a run — 6 for the full corpus as of Phase 3, all in the list
 above. Treat that list as the Phase 5 manual-review starting point, not as
@@ -146,7 +146,7 @@ exhaustive: a full build is still the real check (see below).
 
 ## Verifying against a real build
 
-This tool's own warning summary only catches what it *notices* going wrong
+This tool's own warning summary only catches what it _notices_ going wrong
 (an unhandled node type, a failed eval). It does NOT catch bad AsciiDoc
 syntax, broken cross-references, or structurally invalid section nesting —
 several real bugs during Phase 3 were only caught by actually building the

@@ -93,7 +93,7 @@ function cardsBlock() {
     // ui-bundle preview harness) — chain() handles either without making
     // this function `async` unconditionally.
     return chain(this.parseContent(wrapper, reader.getLines()), () =>
-      chain(precomputeSubtree(wrapper), () => finish(parent, wrapper, attrs, self)),
+      chain(precomputeSubtree(wrapper), () => finish(parent, wrapper, attrs, self))
     )
   })
 }

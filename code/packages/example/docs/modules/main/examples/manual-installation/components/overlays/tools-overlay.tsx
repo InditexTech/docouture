@@ -1,33 +1,33 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Square, MousePointer, Hand } from "lucide-react";
-import { useWeave } from "@inditextech/weave-react";
-import { ToolbarButton } from "./toolbar-button";
-import { Toolbar } from "./toolbar";
-import { useCollaborationRoom } from "@/store/store";
+import React from 'react'
+import { Square, MousePointer, Hand } from 'lucide-react'
+import { useWeave } from '@inditextech/weave-react'
+import { ToolbarButton } from './toolbar-button'
+import { Toolbar } from './toolbar'
+import { useCollaborationRoom } from '@/store/store'
 
 export function ToolsOverlay() {
-  const instance = useWeave((state) => state.instance);
-  const actualAction = useWeave((state) => state.actions.actual);
+  const instance = useWeave((state) => state.instance)
+  const actualAction = useWeave((state) => state.actions.actual)
 
-  const showUI = useCollaborationRoom((state) => state.ui.show);
+  const showUI = useCollaborationRoom((state) => state.ui.show)
 
   const triggerTool = React.useCallback(
     (toolName: string) => {
       if (instance && actualAction !== toolName) {
-        instance.triggerAction(toolName);
-        return;
+        instance.triggerAction(toolName)
+        return
       }
       if (instance && actualAction === toolName) {
-        instance.cancelAction(toolName);
+        instance.cancelAction(toolName)
       }
     },
     [instance, actualAction]
-  );
+  )
 
   if (!showUI) {
-    return null;
+    return null
   }
 
   return (
@@ -35,8 +35,8 @@ export function ToolsOverlay() {
       <Toolbar>
         <ToolbarButton
           icon={<Hand />}
-          active={actualAction === "moveTool"}
-          onClick={() => triggerTool("moveTool")}
+          active={actualAction === 'moveTool'}
+          onClick={() => triggerTool('moveTool')}
           label={
             <div className="flex gap-3 justify-start items-center">
               <p>Move</p>
@@ -45,8 +45,8 @@ export function ToolsOverlay() {
         />
         <ToolbarButton
           icon={<MousePointer />}
-          active={actualAction === "selectionTool"}
-          onClick={() => triggerTool("selectionTool")}
+          active={actualAction === 'selectionTool'}
+          onClick={() => triggerTool('selectionTool')}
           label={
             <div className="flex gap-3 justify-start items-center">
               <p>Selection</p>
@@ -55,8 +55,8 @@ export function ToolsOverlay() {
         />
         <ToolbarButton
           icon={<Square />}
-          active={actualAction === "rectangleTool"}
-          onClick={() => triggerTool("rectangleTool")}
+          active={actualAction === 'rectangleTool'}
+          onClick={() => triggerTool('rectangleTool')}
           label={
             <div className="flex gap-3 justify-start items-center">
               <p>Add a rectangle</p>
@@ -65,5 +65,5 @@ export function ToolsOverlay() {
         />
       </Toolbar>
     </div>
-  );
+  )
 }

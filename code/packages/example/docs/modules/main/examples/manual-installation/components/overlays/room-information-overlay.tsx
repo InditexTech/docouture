@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import React from "react";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { useWeave } from "@inditextech/weave-react";
-import { useCollaborationRoom } from "@/store/store";
+import React from 'react'
+import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { useWeave } from '@inditextech/weave-react'
+import { useCollaborationRoom } from '@/store/store'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
 
 import {
   LogOut,
@@ -22,76 +22,66 @@ import {
   Grid3X3Icon,
   GripIcon,
   CheckIcon,
-} from "lucide-react";
-import {
-  WEAVE_GRID_TYPES,
-  WeaveStageGridPlugin,
-  WeaveStageGridType,
-} from "@inditextech/weave-sdk";
-import { ConnectionStatus } from "./connection-status";
-import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+} from 'lucide-react'
+import { WEAVE_GRID_TYPES, WeaveStageGridPlugin, WeaveStageGridType } from '@inditextech/weave-sdk'
+import { ConnectionStatus } from './connection-status'
+import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 
 export function RoomInformationOverlay() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const instance = useWeave((state) => state.instance);
-  const weaveConnectionStatus = useWeave((state) => state.connection.status);
+  const instance = useWeave((state) => state.instance)
+  const weaveConnectionStatus = useWeave((state) => state.connection.status)
 
-  const showUI = useCollaborationRoom((state) => state.ui.show);
-  const room = useCollaborationRoom((state) => state.room);
+  const showUI = useCollaborationRoom((state) => state.ui.show)
+  const room = useCollaborationRoom((state) => state.room)
 
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const [gridEnabled, setGridEnabled] = React.useState(true);
-  const [gridType, setGridType] = React.useState<WeaveStageGridType>(
-    WEAVE_GRID_TYPES.LINES
-  );
+  const [menuOpen, setMenuOpen] = React.useState(false)
+  const [gridEnabled, setGridEnabled] = React.useState(true)
+  const [gridType, setGridType] = React.useState<WeaveStageGridType>(WEAVE_GRID_TYPES.LINES)
 
   const handleToggleGrid = React.useCallback(() => {
-    if (instance && instance.isPluginEnabled("stageGrid")) {
-      instance.disablePlugin("stageGrid");
-      setGridEnabled(instance.isPluginEnabled("stageGrid"));
-      return;
+    if (instance && instance.isPluginEnabled('stageGrid')) {
+      instance.disablePlugin('stageGrid')
+      setGridEnabled(instance.isPluginEnabled('stageGrid'))
+      return
     }
-    if (instance && !instance.isPluginEnabled("stageGrid")) {
-      instance.enablePlugin("stageGrid");
-      setGridEnabled(instance.isPluginEnabled("stageGrid"));
-      return;
+    if (instance && !instance.isPluginEnabled('stageGrid')) {
+      instance.enablePlugin('stageGrid')
+      setGridEnabled(instance.isPluginEnabled('stageGrid'))
+      return
     }
-  }, [instance]);
+  }, [instance])
 
   const handleSetGridType = React.useCallback(
     (type: WeaveStageGridType) => {
       if (instance) {
-        (instance.getPlugin("stageGrid") as WeaveStageGridPlugin)?.setType(
-          type
-        );
-        setGridType(type);
+        ;(instance.getPlugin('stageGrid') as WeaveStageGridPlugin)?.setType(type)
+        setGridType(type)
       }
     },
     [instance]
-  );
+  )
 
   React.useEffect(() => {
     if (instance) {
-      setGridEnabled(instance.isPluginEnabled("stageGrid"));
+      setGridEnabled(instance.isPluginEnabled('stageGrid'))
     }
-  }, [instance]);
+  }, [instance])
 
   React.useEffect(() => {
     if (instance) {
-      const stageGridPlugin = instance.getPlugin(
-        "stageGrid"
-      ) as WeaveStageGridPlugin;
-      setGridType(stageGridPlugin?.getType());
+      const stageGridPlugin = instance.getPlugin('stageGrid') as WeaveStageGridPlugin
+      setGridType(stageGridPlugin?.getType())
     }
-  }, [instance]);
+  }, [instance])
 
   const handleExitRoom = React.useCallback(() => {
-    router.push("/");
-  }, [router]);
+    router.push('/')
+  }, [router])
 
   if (!showUI) {
-    return null;
+    return null
   }
 
   return (
@@ -101,17 +91,15 @@ export function RoomInformationOverlay() {
           <DropdownMenu onOpenChange={(open: boolean) => setMenuOpen(open)}>
             <DropdownMenuTrigger
               className={cn(
-                "pointer-events-auto rounded-none cursor-pointer p-1 px-3 hover:bg-accent focus:outline-none",
+                'pointer-events-auto rounded-none cursor-pointer p-1 px-3 hover:bg-accent focus:outline-none',
                 {
-                  ["bg-accent"]: menuOpen,
-                  ["bg-white"]: !menuOpen,
+                  ['bg-accent']: menuOpen,
+                  ['bg-white']: !menuOpen,
                 }
               )}
             >
               <div className="flex justify-start items-center gap-2 font-noto-sans-mono text-foreground !normal-case min-h-[32px]">
-                <div className="font-noto-sans text-lg font-extralight">
-                  {room}
-                </div>
+                <div className="font-noto-sans text-lg font-extralight">{room}</div>
                 {menuOpen ? <ChevronUp /> : <ChevronDown />}
               </div>
             </DropdownMenuTrigger>
@@ -122,9 +110,7 @@ export function RoomInformationOverlay() {
               sideOffset={4}
               className="font-noto-sans-mono rounded-none"
             >
-              <DropdownMenuLabel className="px-2 py-1 pt-2 text-zinc-600 text-xs">
-                Grid Visibility
-              </DropdownMenuLabel>
+              <DropdownMenuLabel className="px-2 py-1 pt-2 text-zinc-600 text-xs">Grid Visibility</DropdownMenuLabel>
               <DropdownMenuItem
                 className="text-foreground cursor-pointer hover:rounded-none"
                 onClick={handleToggleGrid}
@@ -140,17 +126,12 @@ export function RoomInformationOverlay() {
                   </>
                 )}
               </DropdownMenuItem>
-              <DropdownMenuLabel className="px-2 py-1 pt-2 text-zinc-600 text-xs">
-                Grid Kind
-              </DropdownMenuLabel>
+              <DropdownMenuLabel className="px-2 py-1 pt-2 text-zinc-600 text-xs">Grid Kind</DropdownMenuLabel>
               <DropdownMenuItem
-                disabled={
-                  !gridEnabled ||
-                  (gridEnabled && gridType === WEAVE_GRID_TYPES.DOTS)
-                }
+                disabled={!gridEnabled || (gridEnabled && gridType === WEAVE_GRID_TYPES.DOTS)}
                 className="text-foreground cursor-pointer hover:rounded-none"
                 onClick={() => {
-                  handleSetGridType(WEAVE_GRID_TYPES.DOTS);
+                  handleSetGridType(WEAVE_GRID_TYPES.DOTS)
                 }}
               >
                 <div className="w-full flex justify-between items-center">
@@ -161,13 +142,10 @@ export function RoomInformationOverlay() {
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem
-                disabled={
-                  !gridEnabled ||
-                  (gridEnabled && gridType === WEAVE_GRID_TYPES.LINES)
-                }
+                disabled={!gridEnabled || (gridEnabled && gridType === WEAVE_GRID_TYPES.LINES)}
                 className="text-foreground cursor-pointer hover:rounded-none"
                 onClick={() => {
-                  handleSetGridType(WEAVE_GRID_TYPES.LINES);
+                  handleSetGridType(WEAVE_GRID_TYPES.LINES)
                 }}
               >
                 <div className="w-full flex justify-between items-center">
@@ -178,14 +156,9 @@ export function RoomInformationOverlay() {
                 </div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel className="px-2 py-1 pt-2 text-zinc-600 text-xs">
-                Exporting
-              </DropdownMenuLabel>
+              <DropdownMenuLabel className="px-2 py-1 pt-2 text-zinc-600 text-xs">Exporting</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-foreground cursor-pointer hover:rounded-none"
-                onClick={handleExitRoom}
-              >
+              <DropdownMenuItem className="text-foreground cursor-pointer hover:rounded-none" onClick={handleExitRoom}>
                 <LogOut /> Exit room
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -194,5 +167,5 @@ export function RoomInformationOverlay() {
         </div>
       </div>
     </div>
-  );
+  )
 }

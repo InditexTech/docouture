@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  experimental: { serverComponentsExternalPackages: ["yjs"] },
-};
+  experimental: { serverComponentsExternalPackages: ['yjs'] },
+}
 
-export default nextConfig;
+export default nextConfig

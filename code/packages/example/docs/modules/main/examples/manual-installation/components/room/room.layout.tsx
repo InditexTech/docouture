@@ -1,29 +1,25 @@
-"use client";
+'use client'
 
-import React from "react";
-import { WEAVE_INSTANCE_STATUS } from "@inditextech/weave-types";
-import { useWeave, useWeaveEvents } from "@inditextech/weave-react";
-import { RoomInformationOverlay } from "@/components/overlays/room-information-overlay";
-import { RoomUsersOverlay } from "@/components/overlays/room-users-overlay";
-import { ToolsOverlay } from "@/components/overlays/tools-overlay";
-import { ZoomHandlerOverlay } from "@/components/overlays/zoom-handler-overlay";
+import React from 'react'
+import { WEAVE_INSTANCE_STATUS } from '@inditextech/weave-types'
+import { useWeave, useWeaveEvents } from '@inditextech/weave-react'
+import { RoomInformationOverlay } from '@/components/overlays/room-information-overlay'
+import { RoomUsersOverlay } from '@/components/overlays/room-users-overlay'
+import { ToolsOverlay } from '@/components/overlays/tools-overlay'
+import { ZoomHandlerOverlay } from '@/components/overlays/zoom-handler-overlay'
 
 export const RoomLayout = () => {
-  useWeaveEvents();
+  useWeaveEvents()
 
-  const instance = useWeave((state) => state.instance);
-  const actualAction = useWeave((state) => state.actions.actual);
-  const status = useWeave((state) => state.status);
+  const instance = useWeave((state) => state.instance)
+  const actualAction = useWeave((state) => state.actions.actual)
+  const status = useWeave((state) => state.status)
 
   React.useEffect(() => {
-    if (
-      instance &&
-      status === WEAVE_INSTANCE_STATUS.RUNNING &&
-      actualAction !== "selectionTool"
-    ) {
-      instance.triggerAction("selectionTool");
+    if (instance && status === WEAVE_INSTANCE_STATUS.RUNNING && actualAction !== 'selectionTool') {
+      instance.triggerAction('selectionTool')
     }
-  }, [instance, status]);
+  }, [instance, status])
 
   return (
     <div className="w-full h-full relative flex outline-transparent">
@@ -39,5 +35,5 @@ export const RoomLayout = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}

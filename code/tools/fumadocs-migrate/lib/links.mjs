@@ -1,5 +1,5 @@
-import { dirname, resolve, join } from 'node:path';
-import { existsSync } from 'node:fs';
+import { dirname, resolve, join } from 'node:path'
+import { existsSync } from 'node:fs'
 
 // The Antora modules this migration created (Phase 0) — deliberately named
 // to match each Fumadocs "root" segment 1:1, so a `/docs/<root>/<rest>` URL
@@ -13,7 +13,7 @@ export const MODULES = [
   'store-websockets',
   'store-azure-web-pubsub',
   'store-standalone',
-];
+]
 
 // `/docs/sdk/api-reference/actions/rectangle-tool` -> { resourceId:
 // "sdk:api-reference/actions/rectangle-tool.adoc" }. Root landing pages
@@ -67,7 +67,7 @@ const LINK_FIXES = new Map([
   // side of this) — both drop the "s" from the real file,
   // export-nodes-tool.mdx.
   ['/docs/sdk/api-reference/actions/export-node-tool', '/docs/sdk/api-reference/actions/export-nodes-tool'],
-]);
+])
 
 // One link with no valid target anywhere in the corpus at all — not a
 // typo, main/changelog/index.mdx's own "0.77.2" bullet, for a prerelease
@@ -76,7 +76,7 @@ const LINK_FIXES = new Map([
 // SKIP_SLUGS for the nav side of the same gap). Degraded to plain text by
 // the caller rather than emitted as a dead xref: unlike LINK_FIXES above,
 // there is no correct target this migration could point at instead.
-const DEAD_LINKS = new Set(['/docs/main/changelog/prerelease/0.77.2']);
+const DEAD_LINKS = new Set(['/docs/main/changelog/prerelease/0.77.2'])
 
 // A handful of other links point at a root/slug that was never real in
 // Fumadocs either — pre-existing content bugs, not converter bugs, but
@@ -86,21 +86,21 @@ const DEAD_LINKS = new Set(['/docs/main/changelog/prerelease/0.77.2']);
 // (so Antora's own `failure_level: warn` catches it structurally) and
 // also returns `unresolved: true` so the caller can log it.
 export function rewriteDocLink(url, contentDocsRoot) {
-  if (!url.startsWith('/docs/')) return null;
-  const fixedUrl = LINK_FIXES.get(url) || url;
-  if (DEAD_LINKS.has(fixedUrl)) return { dead: true };
+  if (!url.startsWith('/docs/')) return null
+  const fixedUrl = LINK_FIXES.get(url) || url
+  if (DEAD_LINKS.has(fixedUrl)) return { dead: true }
 
-  const withoutPrefix = fixedUrl.slice('/docs/'.length);
-  const [pathPart, hash] = withoutPrefix.split('#');
-  const segments = pathPart.split('/').filter(Boolean);
-  const root = segments[0];
-  const rest = segments.slice(1);
+  const withoutPrefix = fixedUrl.slice('/docs/'.length)
+  const [pathPart, hash] = withoutPrefix.split('#')
+  const segments = pathPart.split('/').filter(Boolean)
+  const root = segments[0]
+  const rest = segments.slice(1)
 
-  let page = rest.length > 0 ? rest.join('/') : 'index';
+  let page = rest.length > 0 ? rest.join('/') : 'index'
   if (rest.length > 0 && contentDocsRoot) {
-    const indexFile = join(contentDocsRoot, root, page, 'index.mdx');
+    const indexFile = join(contentDocsRoot, root, page, 'index.mdx')
     if (existsSync(indexFile)) {
-      page = `${page}/index`;
+      page = `${page}/index`
     }
   }
 
@@ -108,7 +108,7 @@ export function rewriteDocLink(url, contentDocsRoot) {
     resourceId: `${root}:${page}.adoc`,
     hash,
     unresolved: !MODULES.includes(root),
-  };
+  }
 }
 
 // `/images/actions/rectangle-tool.gif` -> `actions/rectangle-tool.gif`,
@@ -116,8 +116,8 @@ export function rewriteDocLink(url, contentDocsRoot) {
 // module's `images` family. All 65 image references in the corpus are under
 // `main` (verified against the source tree), so callers pass a fixed module.
 export function imageSubpath(url) {
-  if (!url.startsWith('/images/')) return null;
-  return url.slice('/images/'.length);
+  if (!url.startsWith('/images/')) return null
+  return url.slice('/images/'.length)
 }
 
 // Resolves an `<include>` target (a path relative to the .mdx file) to an
@@ -128,16 +128,16 @@ export function imageSubpath(url) {
 // content/docs, addressed with a chain of `../`. Anything else is unexpected
 // and falls back to the basename alone, flagged for manual review.
 export function resolveIncludeTarget(rawPath, mdxAbsPath, docsRoot) {
-  const absTarget = resolve(dirname(mdxAbsPath), rawPath.trim());
-  const examplesAnchor = `${docsRoot}/content/docs/examples/`;
-  const manualAnchor = `${docsRoot}/manual-installation/`;
-  let relPath;
+  const absTarget = resolve(dirname(mdxAbsPath), rawPath.trim())
+  const examplesAnchor = `${docsRoot}/content/docs/examples/`
+  const manualAnchor = `${docsRoot}/manual-installation/`
+  let relPath
   if (absTarget.startsWith(examplesAnchor)) {
-    relPath = absTarget.slice(examplesAnchor.length);
+    relPath = absTarget.slice(examplesAnchor.length)
   } else if (absTarget.startsWith(manualAnchor)) {
-    relPath = `manual-installation/${absTarget.slice(manualAnchor.length)}`;
+    relPath = `manual-installation/${absTarget.slice(manualAnchor.length)}`
   } else {
-    relPath = null;
+    relPath = null
   }
-  return { absTarget, relPath };
+  return { absTarget, relPath }
 }

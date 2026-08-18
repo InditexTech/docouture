@@ -39,51 +39,51 @@
 //     generated colist line — the simple, common case (e.g.
 //     rectangle-tool.mdx), unaffected by any of the above.
 export function annotateCode(text) {
-  const lines = text.split('\n');
-  const parsed = lines.map(parseTrailingMarker);
+  const lines = text.split('\n')
+  const parsed = lines.map(parseTrailingMarker)
 
-  const explicitNums = parsed.filter((p) => p && p.num !== null).map((p) => p.num);
-  const mode = explicitNums.length > 0 ? 'explicit' : 'auto';
+  const explicitNums = parsed.filter((p) => p && p.num !== null).map((p) => p.num)
+  const mode = explicitNums.length > 0 ? 'explicit' : 'auto'
 
-  const colist = [];
-  let mergedCount = 0;
+  const colist = []
+  let mergedCount = 0
 
   const outLines = lines.map((line, i) => {
-    const p = parsed[i];
-    if (!p) return line;
+    const p = parsed[i]
+    if (!p) return line
 
     if (p.num !== null) {
-      if (p.kind) mergedCount += 1; // combined "(N) [!code ++]" — number wins, see header comment
-      return line.slice(0, p.matchStart) + `// <${p.num}>`;
+      if (p.kind) mergedCount += 1 // combined "(N) [!code ++]" — number wins, see header comment
+      return line.slice(0, p.matchStart) + `// <${p.num}>`
     }
 
     if (p.kind) {
       if (mode === 'explicit') {
         // No explanation of its own — strip the marker, keep the code plain.
-        return line.slice(0, p.matchStart).replace(/\s+$/, '');
+        return line.slice(0, p.matchStart).replace(/\s+$/, '')
       }
-      const label = p.kind === 'added' ? 'Added' : 'Removed';
-      colist.push(`<.> ${label} in this step.`);
-      return line.slice(0, p.matchStart) + '// <.>';
+      const label = p.kind === 'added' ? 'Added' : 'Removed'
+      colist.push(`<.> ${label} in this step.`)
+      return line.slice(0, p.matchStart) + '// <.>'
     }
 
-    return line;
-  });
+    return line
+  })
 
-  return { code: outLines.join('\n'), colist, mergedCount };
+  return { code: outLines.join('\n'), colist, mergedCount }
 }
 
 // Matches a trailing `// (N)`, `// [!code ++]`/`// [!code --]`, or both
 // together, anchored to end-of-line. Returns null for an ordinary trailing
 // comment (including a bare `//`) so normal code is never touched.
 function parseTrailingMarker(line) {
-  const m = line.match(/\/\/\s*(\(\d+\))?\s*(\[!code\s+(?:\+\+|--)\])?\s*$/);
-  if (!m) return null;
-  const [, explicitPart, codePart] = m;
-  if (!explicitPart && !codePart) return null;
+  const m = line.match(/\/\/\s*(\(\d+\))?\s*(\[!code\s+(?:\+\+|--)\])?\s*$/)
+  if (!m) return null
+  const [, explicitPart, codePart] = m
+  if (!explicitPart && !codePart) return null
   return {
     num: explicitPart ? Number.parseInt(explicitPart.slice(1, -1), 10) : null,
     kind: codePart ? (codePart.includes('++') ? 'added' : 'removed') : null,
     matchStart: m.index,
-  };
+  }
 }

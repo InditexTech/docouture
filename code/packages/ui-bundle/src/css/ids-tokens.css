@@ -48,6 +48,7 @@
   --ids-typo-font-size-24: 24px;
   --ids-typo-font-size-32: 32px;
   --ids-typo-font-size-48: 48px;
+  --ids-typo-font-size-64: 64px;
   --ids-typo-text-transform-none: none;
   --ids-typo-text-transform-uppercase: uppercase;
   --ids-typo-letter-spacing-none: 0px;
@@ -93,6 +94,7 @@
   --ids-typo-font-size-24: 31px;
   --ids-typo-font-size-32: 42px;
   --ids-typo-font-size-48: 62px;
+  --ids-typo-font-size-64: 83px;
   --ids-typo-text-transform-none: none;
   --ids-typo-text-transform-uppercase: uppercase;
   --ids-typo-letter-spacing-none: 0px;
@@ -248,6 +250,9 @@
   --ids-typo-display-m: var(--ids-typo-font-weight-default) var(--ids-typo-font-size-48) /var(--ids-typo-line-height-56) var(--ids-typo-font-family-primary);
   --ids-typo-display-m-letter-spacing: -2px;
   --ids-typo-display-m-text-transform: var(--ids-typo-text-transform-none);
+  --ids-typo-display-l: var(--ids-typo-font-weight-default) var(--ids-typo-font-size-64) /var(--ids-typo-line-height-72) var(--ids-typo-font-family-primary);
+  --ids-typo-display-l-letter-spacing: -2px;
+  --ids-typo-display-l-text-transform: var(--ids-typo-text-transform-none);
   --ids-motion-duration-m: 0.35s;
   --ids-motion-duration-l: 0.5s;
   --ids-motion-easing-standard-2: cubic-bezier(0.42,0,1,1);

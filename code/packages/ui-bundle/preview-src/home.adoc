@@ -2,14 +2,30 @@
 :page-layout: home
 :page-nav-module: sdk
 :description: Landing view test page (GH-18) — the home layout's shell: header toolbar in its Home state, side menu, hero column slot, content blocks and the site footer.
+:page-tags: efficiency, speed, support
+:page-action: Go to tool
+:page-action-url: https://github.com/InditexTech/atd-docs
+:page-action-secondary: Quickstart
+:page-action-secondary-url: content.adoc
+:page-hero-image: /photo-medium.png
+:page-hero-image-alt: Placeholder still standing in for the product screenshot the design frames.
 
 The landing's content column starts with a preamble: everything above the first
 `==` heading. The design uses it for a short lead-in, and it is the one block on
 the page with no heading row of its own.
 
-The hero column beside it is empty on purpose — the shell ships first (GH-18),
-the hero block fills it (GH-19). At `m` and `l` it sticks while this column
-scrolls past it; at `s` and `xs` the two stack.
+The hero column beside it is authored on this page (GH-19): the product mark
+comes from `site.keys.productLogo`, the name from this document's own title,
+and the chips, actions and media slot from the `:page-*:` attributes above.
+The two actions cover both branches of the external-link rule — the primary
+points off-site and gets the `link-external` icon, the secondary resolves to a
+page here and does not. At `m` and `l` the column sticks while this one scrolls
+past it; at `s` and `xs` the two stack, and the product name steps down from
+`display/l` to `display/m`.
+
+Swap `:page-hero-image:` for `:page-hero-video:` (with an optional
+`:page-hero-video-poster:`) to preview the video branch of the media slot,
+which renders a native `<video controls>` rather than a still.
 
 The side menu shows the SDK module's navigation, not this page's own: the
 landing lives in `ROOT`, which has no navigation of its own, and

@@ -1,7 +1,7 @@
 {
   "designSystemVersion": "1.28.0",
   "componentsPackageVersion": "1.28.0",
-  "generatedAt": "2026-08-18T09:39:51.797Z",
+  "generatedAt": "2026-08-18T11:52:02.959Z",
   "sources": {
     "variables/index.css": "e4a4d34ec45638533f0029016641d85170294e0e720d42dc2eff63ee5fa00a08",
     "typography.css": "5f6eae209b13452bbeadbe127fedbbf507328088ac3fa6b8980269adbee01883",
@@ -119,6 +119,9 @@
     "--ids-typo-detail-m-high-text-transform",
     "--ids-typo-detail-m-letter-spacing",
     "--ids-typo-detail-m-text-transform",
+    "--ids-typo-display-l",
+    "--ids-typo-display-l-letter-spacing",
+    "--ids-typo-display-l-text-transform",
     "--ids-typo-display-m",
     "--ids-typo-display-m-letter-spacing",
     "--ids-typo-display-m-text-transform",
@@ -136,6 +139,7 @@
     "--ids-typo-font-size-24",
     "--ids-typo-font-size-32",
     "--ids-typo-font-size-48",
+    "--ids-typo-font-size-64",
     "--ids-typo-font-variant-numeric",
     "--ids-typo-font-weight-default",
     "--ids-typo-font-weight-high",

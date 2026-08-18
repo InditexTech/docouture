@@ -1,0 +1,16 @@
+code/packages/asciidoc-extensions/lib/card-grid.js
+  h_c93d154c7c7074 128-132,158-160,162-166,228-232
+code/packages/ui-bundle/scripts/build-sprite.mjs
+  h_c93d154c7c7074 161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4addee35b26f09642d6a10b53f8e0df5853971d5",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

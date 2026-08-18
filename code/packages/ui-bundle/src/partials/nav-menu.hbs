@@ -18,9 +18,24 @@
   key. When it is absent — no extension, or a site that never declared any —
   every tree renders, which is exactly what a single-nav-file site did
   before any of this existed.
+
+  `:page-nav-module:` lets a page borrow another module's navigation instead
+  of its own (GH-18). The landing is why: it lives in ROOT, which usually has
+  no nav file of its own, so without this the side menu on the site's front
+  page renders empty. Two ways to give it one, both explicit:
+
+    - `:page-nav-module: main` — show that module's tree, and let the switcher
+      read as though the reader were in it;
+    - give ROOT its own `nav.adoc` and declare it in `nav_modules` with
+      `switcher: false` — a menu that belongs to no module, rendered on the
+      landing alone and never offered as somewhere to switch to.
+
+  There is deliberately no fallback to "the first tree" when neither is set:
+  an empty menu is a missing attribute, and silently showing some other
+  module's navigation would hide that.
 --}}
 {{#each page.navigation}}
-{{#if (or (not ./module) (eq ./module @root.page.module))}}
+{{#if (or (not ./module) (eq ./module (or @root.page.attributes.[nav-module] @root.page.module)))}}
 {{> nav-tree navigation=./items level=0}}
 {{/if}}
 {{/each}}

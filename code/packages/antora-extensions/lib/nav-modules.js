@@ -1,5 +1,7 @@
 'use strict'
 
+const resolveUrl = require('./resolve-url')
+
 // `modules/<module>/nav.adoc` — the shape of every entry in a component
 // descriptor's own `nav` list. Anything else (a nav file outside modules/,
 // which Antora does allow) simply has no module to attach metadata to.
@@ -41,6 +43,21 @@ const MODULE_NAV_PATH_RX = /^modules\/([^/]+)\//
  *         title: Framework
  *         description: The visual collaborative apps framework
  *         icon: design/menu-tab-outlined
+ *
+ * Two optional keys beyond the ones the switcher draws:
+ *
+ *   - `switcher: false` annotates a tree without offering it as a module to
+ *     switch to. That is what a LANDING page's own navigation is: a menu that
+ *     belongs to no module (`modules/ROOT/nav.adoc`, rendered only on the
+ *     landing — see the UI's `page-nav-module` attribute), which should not
+ *     appear beside the real modules in the switcher. Declaring it is also
+ *     what stops the "no nav_modules entry" warning below from failing a build
+ *     whose playbook sets `failure_level: warn`.
+ *   - `start_page` overrides where the switcher and the site footer send
+ *     someone who picks this module. It is a page ID — the same string you
+ *     would write inside `xref:...[]` — resolved against this component.
+ *     Without it, the target is the first internal page in the module's own
+ *     navigation, which for a conventionally laid out module is its index.
  *
  * The list is load-bearing. @antora/content-aggregator runs the whole
  * descriptor through `camelCaseKeys`, which recurses into nested objects and
@@ -84,7 +101,7 @@ module.exports = function registerNavModules(context) {
     for (const component of contentCatalog.getComponents()) {
       for (const componentVersion of component.versions) {
         const descriptor = descriptors.get(componentVersion.version + '@' + componentVersion.name)
-        if (descriptor) annotate(componentVersion, descriptor, logger)
+        if (descriptor) annotate(componentVersion, descriptor, contentCatalog, logger)
       }
     }
   })
@@ -109,7 +126,7 @@ function findFirstInternalUrl(items) {
   }
 }
 
-function annotate(componentVersion, { nav, navModules }, logger) {
+function annotate(componentVersion, { nav, navModules }, contentCatalog, logger) {
   const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
 
   if (!Array.isArray(navModules)) {
@@ -163,12 +180,42 @@ function annotate(componentVersion, { nav, navModules }, logger) {
     if (meta.description) tree.description = meta.description
     if (meta.icon) tree.icon = meta.icon
 
-    // Where the switcher should send someone who picks this module. Computed
-    // here rather than in the template because finding it means a depth-first
-    // walk, which Handlebars has no way to express. Named `startUrl`, not
-    // `url`, on purpose: a nav node WITH a `url` is a link as far as
-    // nav-tree.hbs is concerned, and a root menu is not one.
-    const startUrl = findFirstInternalUrl(tree.items)
+    // `switcher: false` — annotated, but not a module anyone can switch TO.
+    // A landing page's own navigation is the case this exists for; see this
+    // file's header. The UI keys "offer this in the switcher" off `startUrl`,
+    // so withholding it is the whole implementation, and it is also why the
+    // flag has to skip the "no page to link to" warning below rather than
+    // fall through to it.
+    if (meta.switcher === false) {
+      tree.switcher = false
+      continue
+    }
+
+    // Where the switcher and the site footer should send someone who picks
+    // this module. `start_page` is the authored override, a page ID resolved
+    // against this component; absent one, it is the first internal page in
+    // the module's own navigation, found here rather than in the template
+    // because finding it means a depth-first walk, which Handlebars has no
+    // way to express. Named `startUrl`, not `url`, on purpose: a nav node
+    // WITH a `url` is a link as far as nav-tree.hbs is concerned, and a root
+    // menu is not one.
+    let startUrl
+    if (meta.startPage) {
+      startUrl = resolveUrl(meta.startPage, contentCatalog, {
+        component: componentVersion.name,
+        version: componentVersion.version,
+        module: module_,
+      })
+      if (!startUrl) {
+        logger.warn(
+          'nav_modules start_page %s for module %s in %s resolves to no page; falling back to the navigation',
+          meta.startPage,
+          module_,
+          where
+        )
+      }
+    }
+    if (!startUrl) startUrl = findFirstInternalUrl(tree.items)
     if (startUrl) {
       tree.startUrl = startUrl
     } else {

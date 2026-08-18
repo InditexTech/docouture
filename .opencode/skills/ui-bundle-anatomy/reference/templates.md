@@ -9,12 +9,19 @@ registered from `partials/`. Registration is by basename — there is no manifes
 | layout | used for |
 | --- | --- |
 | `default.hbs` | every page |
+| `home.hbs` | the landing page (`:page-layout: home`) |
 | `404.hbs` | the not-found page |
 
 A page selects one with the `page-layout` AsciiDoc attribute; the default is `default`.
-Both layouts are the same shell — doctype, `<head>` via the `head` partial, then
-`header` / `body` / `footer` — differing in the `<body>` class (`article` vs `status-404`)
-and the `defaultPageTitle` hash argument passed to `head`.
+`default.hbs` and `404.hbs` are the same shell — doctype, `<head>` via the `head` partial,
+then `header` / `body` / `footer` — differing in the `<body>` class (`article` vs
+`status-404`) and the `defaultPageTitle` hash argument passed to `head`.
+
+`home.hbs` shares the `head`, `header` (in its `variant='home'` state) and side menu with
+the doc view, and replaces everything below them: no hero, no ToC, no `.doc` article and no
+page footer. Its `main` is a design system grid holding a sticky hero column and a content
+column into which `page.contents` is dropped whole — see `src/css/home.css`. Its footer is
+`site-footer`, not `footer`.
 
 `default.hbs` also puts `page.attributes.role` (or `page.role`) on the body element, which
 is how a page opts into per-page styling.
@@ -57,6 +64,21 @@ default.hbs
 
 `main.hbs` branches on `(eq page.layout '404')` to choose between `article-404` and
 `toc` + `article`.
+
+`home.hbs`'s own tree is `head` + `header` (`variant='home'`) + `nav` + `home` (the two
+grid columns) + `site-footer` + `footer-scripts`. `site-footer.hbs` is four columns —
+brand, authored links, module links, copyright — where the two link columns come from
+`page.componentVersion.footer`, attached by `@inditextech/pdocs-antora-extensions` from the
+`footer` key in `antora.yml` (the playbook's `site.keys` is a flat primitive map and cannot
+carry a list). The modules column lists every navigation tree that has a `startUrl`, and
+falls back to the second authored group when the component has fewer than two of them.
+
+`nav-menu.hbs` and `nav-switcher.hbs` both key off
+`(or page.attributes.[nav-module] page.module)`, so a page can borrow another module's
+navigation with `:page-nav-module:`. The landing needs it: it lives in `ROOT`, which
+usually has no navigation of its own. The alternative is giving `ROOT` a `nav.adoc` and
+declaring it `switcher: false` in `nav_modules` — a menu that belongs to no module. There
+is deliberately no implicit fallback to "the first tree".
 
 `footer-scripts.hbs` references a `search-scripts` partial when `env.SITE_SEARCH_PROVIDER`
 is set. **That partial does not exist in this bundle** — setting the variable without

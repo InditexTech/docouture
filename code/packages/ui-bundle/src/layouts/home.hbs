@@ -1,0 +1,59 @@
+{{!--
+  Landing layout (GH-18, Figma 2696:54669 / 92452 / 94194 / 95558), selected
+  with `:page-layout: home` on the page itself or `ui.default_layout` in the
+  playbook.
+
+  A shell only: every block on the page comes from the AsciiDoc document, so
+  `page.contents` is dropped straight into the content column and the layout
+  itself renders no landing content of its own. The blocks that have no
+  AsciiDoc equivalent (card grids, feature tables, the CTA) arrive as
+  Asciidoctor block extensions — see @inditextech/pdocs-asciidoc-extensions.
+
+  What it shares with `default.hbs`: head, the header toolbar (in its Home
+  state — see header-content.hbs's `variant`), the side menu, and the site
+  scripts. What it drops: the page hero (hero.hbs), the "On this page" ToC and
+  the `.doc` article surface, none of which the design's landing has, plus the
+  page footer's previous/next and feedback rows — a landing is not a page in a
+  reading sequence. `site-footer.hbs` takes their place, home-only for now.
+
+  The two columns are items in the design system's own 12-column grid rather
+  than a bespoke flex row, so their gutters and gaps match the header toolbar
+  and every doc page above them. Their spans live in home.css, not in the
+  grid's `--span-*` utility classes — see that file's own note on why.
+
+  `data-page-home` is the side menu's pre-paint collapse hint (head-prelude.hbs,
+  01-nav.ts): the landing starts with the menu collapsed unless the reader has
+  already chosen otherwise. It is set from `page.home`, which Antora derives
+  from the playbook's `site.start_page`, so a landing that is not the site's
+  start page keeps the menu open.
+--}}
+<!DOCTYPE html>
+<html lang="en"{{#if page.home}} data-page-home{{/if}}>
+  <head>
+{{> head defaultPageTitle='Home'}}
+  </head>
+  <body class="home-page{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
+{{> header variant='home'}}
+    <div class="body">
+{{> nav}}
+      <main class="home ids-grid-layout ids-grid-layout--with-margin">
+        {{!--
+          Hero column (GH-19 fills it). Empty here on purpose: this issue
+          ships the shell, and an empty aside is a visible, correct
+          intermediate state rather than a placeholder that has to be
+          remembered and removed.
+        --}}
+        <aside class="home__hero"></aside>
+        <div class="home__main">{{{page.contents}}}</div>
+      </main>
+    </div>
+{{!--
+  Outside `.body`, like the doc view's page footer (default.hbs): `.body` is a
+  flex row at m and up (body.css) whose only item is `main`, so a footer nested
+  in it would sit beside the content rather than below it. It yields to the side
+  menu through its own `--side-menu-offset` margin instead — see site-footer.css.
+--}}
+{{> site-footer}}
+{{> footer-scripts}}
+  </body>
+</html>

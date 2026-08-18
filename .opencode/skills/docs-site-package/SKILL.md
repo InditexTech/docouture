@@ -38,7 +38,7 @@ A site builds to zero pages, or dies on "start page not found", when these drift
 
 | value | lives in | must match |
 | --- | --- | --- |
-| component name (`example`) | `docs/antora.yml` → `name` | the `<component>::` prefix of `site.start_page` |
+| component name (`example`) | `docs/antora.yml` → `name` | the `<component>::` prefix of `site.start_page`. It is also the site's **first URL segment** — `weavejs` in `/weavejs/main/…` — and has nothing to do with the `docs/` directory |
 | start page (`index.adoc`) | playbook → `site.start_page` | a real file under `modules/ROOT/pages/` |
 | content path | playbook → `content.sources[].start_path` | the directory holding `docs/antora.yml`, **relative to the repository root** |
 | package name (`pdocs-<site>`) | `package.json` → `name` | the directory name — `just dev <site>` interpolates both |
@@ -58,6 +58,7 @@ A site builds to zero pages, or dies on "start page not found", when these drift
 | `ui.bundle.url` | `../ui-bundle/build/ui-bundle.zip` | the sibling package's unversioned copy |
 | `ui.bundle.snapshot` | `true` | local build, changes constantly — do not cache it |
 | `output.dir` | `build/site` | matches the Nx `outputs` glob; changing it breaks caching |
+| `output.clean` | `true` | Antora otherwise leaves whatever is already in the output directory, so a renamed component or a deleted page keeps being served from a previous build |
 | `runtime.log.failure_level` | `warn` | a broken xref fails the build instead of shipping a gap |
 | `asciidoc.attributes` | `experimental`, `icons: font`, `sectanchors`, `idprefix: ''`, `idseparator: '-'` | see `asciidoc` skill for what each enables |
 
@@ -68,6 +69,28 @@ playbook sits. In a repository where the playbook is at the root, the source col
 
 Full key-by-key map, including the keys neither site sets yet (multiple sources, versioned
 branches, extensions, `urls.*`): `reference/playbook.md`.
+
+## Descriptor keys that are not Antora's
+
+`site.keys` in the playbook is declared `primitive-map` — flat primitives only — and convict
+rejects any playbook key outside its schema, so anything structured a site needs is authored
+in `docs/antora.yml` and read by `@inditextech/pdocs-antora-extensions` (registered under
+`antora.extensions`). Antora itself drops these keys; the extension reads them from the raw
+aggregate before it does.
+
+| key | what it does |
+| --- | --- |
+| `nav_modules` | per-module title, description and sprite icon for the side menu's module switcher. A **list**, never a map: `camelCaseKeys` rewrites nested keys and would rename every kebab-case module |
+| `nav_modules[].switcher: false` | annotate a navigation tree without offering it as a module to switch to — what a landing page's own `modules/ROOT/nav.adoc` is |
+| `nav_modules[].start_page` | where the switcher and the footer send someone who picks that module; a page ID. Defaults to the first internal page in its navigation |
+| `footer` | the site footer's authored link groups: `footer.groups[].links[].{text,url}`. Group 1 is the footer's links column; group 2 is used for the modules column only on a site with fewer than two navigable modules |
+
+`url` in a footer link is either a page ID — the same string you would write inside
+`xref:…[]`, resolved against that component — or a literal URL. A page ID that resolves to
+nothing is dropped with a warning rather than rendered as a dead link.
+
+A page can also borrow another module's navigation with `:page-nav-module:`, which is how a
+landing in `ROOT` gets a side menu at all. See the `ui-bundle-anatomy` skill.
 
 ## Constraints that fail silently
 

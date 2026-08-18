@@ -5,3 +5,34 @@ title: Starter
 version: ~
 nav:
   - modules/ROOT/nav.adoc
+
+# Site footer link groups (ui-bundle GH issue #18), read by
+# @inditextech/pdocs-antora-extensions and attached to this component version
+# as `footer`, where the UI's `site-footer` partial finds them. They are
+# authored here rather than in the playbook because `site.keys` is a flat
+# primitive map and cannot carry a list.
+#
+# `url` is either a page ID — the same string you would write inside
+# `xref:...[]`, resolved against this component — or a literal URL. A page ID
+# that resolves to nothing is dropped with a warning rather than rendered as a
+# dead link.
+#
+# The footer has two authored columns:
+#
+#   - the first group is always the links column;
+#   - the second is used for the modules column, but only on a site with fewer
+#     than two navigable modules. This one has a single module, so its second
+#     group is what renders there. A multi-module site lists its modules
+#     automatically instead and can drop the second group.
+footer:
+  groups:
+    - links:
+        - text: Home
+          url: home.adoc
+        - text: Repository
+          url: https://github.com/example/example
+    - links:
+        - text: Introduction
+          url: index.adoc
+        - text: Getting started
+          url: getting-started.adoc

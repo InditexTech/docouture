@@ -1,0 +1,98 @@
+/*
+ * Site footer (GH-18) — site-footer.hbs. Four columns on the design system
+ * grid, one dashed rule above them, nothing else: the landing's blocks carry
+ * the page's weight and the footer is a closing line, not a second navigation
+ * surface.
+ *
+ * `margin-left: var(--side-menu-offset)` mirrors `.body` (body.css),
+ * `.header-toolbar` (header.css) and `.page-footer` (footer.css): the footer
+ * sits outside `.body` in the DOM, so it needs the same variable and the same
+ * transition to move in step when the side menu is toggled.
+ *
+ * No background of its own, unlike `.page-footer`: the landing's decorative
+ * wash (home.css) runs the height of the page, and an opaque band across the
+ * bottom would cut it off for no reason the design asks for.
+ */
+.site-footer {
+  margin-left: var(--side-menu-offset);
+  transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
+}
+
+/*
+ * 1px dashed rule, dash 4/4 — the same repeating-linear-gradient technique as
+ * header.css, side-menu.css and footer.css (`border-style: dashed` cannot
+ * control dash length), on the top edge only.
+ */
+.site-footer__grid {
+  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-position: top;
+  background-repeat: repeat-x;
+  background-size: 8px 1px;
+  padding-block: var(--ids-size-250); /* 40 */
+  row-gap: var(--ids-size-250);
+}
+
+/*
+ * Three of twelve columns each at m and l, full width and stacked below —
+ * six of six at xs, where the design system's grid is six columns wide.
+ *
+ * Declared here rather than with the grid's own `--span-*` utility classes,
+ * for the reason home.css states at length: those classes carry the design
+ * system package's breakpoints, whose `m` starts at 1024px, while this project
+ * overrides `m` to 1240px (ids-breakpoints.css). A footer that went four-up at
+ * 1024 would do it across the whole of this project's `s` band.
+ */
+.site-footer__col {
+  grid-column-end: span 6;
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .site-footer__col {
+    grid-column-end: span 12;
+  }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .site-footer__col {
+    grid-column-end: span 3;
+  }
+}
+
+.site-footer__brand-link {
+  align-items: center;
+  color: var(--ids-color-content-default);
+  display: flex;
+  gap: var(--ids-size-75); /* 12 */
+}
+
+/*
+ * Two logos, one shown per theme — the same swap nav-brand.hbs / side-menu.css
+ * make, and for the same reason: these are external images, which do not
+ * inherit the page's colours.
+ */
+.site-footer__logo--light {
+  display: inline-block;
+}
+
+.site-footer__logo--dark,
+.ids-theme-dark .site-footer__logo--light {
+  display: none;
+}
+
+.ids-theme-dark .site-footer__logo--dark {
+  display: inline-block;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-50); /* 8 */
+}
+
+.site-footer__link {
+  color: var(--ids-color-content-default);
+}
+
+.site-footer__legal {
+  color: var(--ids-color-content-low);
+}

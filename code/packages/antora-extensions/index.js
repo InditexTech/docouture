@@ -1,5 +1,6 @@
 'use strict'
 
+const registerFooter = require('./lib/footer')
 const registerNavModules = require('./lib/nav-modules')
 
 /**
@@ -24,4 +25,5 @@ const registerNavModules = require('./lib/nav-modules')
  */
 module.exports.register = function () {
   registerNavModules(this)
+  registerFooter(this)
 }

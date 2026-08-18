@@ -80,6 +80,9 @@ importers:
 
   packages/starter:
     dependencies:
+      '@inditextech/pdocs-antora-extensions':
+        specifier: workspace:*
+        version: link:../antora-extensions
       '@inditextech/pdocs-asciidoc-extensions':
         specifier: workspace:*
         version: link:../asciidoc-extensions

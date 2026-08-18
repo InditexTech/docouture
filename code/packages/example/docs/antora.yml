@@ -1,12 +1,22 @@
-name: docs
+# The component name is the site's first URL segment: pages live at
+# /weavejs/<module>/<page>, and this component's ROOT pages — the landing —
+# directly at /weavejs/. It has nothing to do with the `docs/` directory this
+# file sits in, which Antora never puts in a URL.
+name: weavejs
 title: Weave.js
 version: ~
-# Without this, Antora can't tell main/index.adoc IS the component's start
-# page (there's no ROOT module here to imply it), so it fabricates a
-# synthetic `/docs/` "previous" URL for the first nav entry — a page that
-# doesn't exist — breaking the pagination footer's "previous" link on the
-# very first page of the site.
-start_page: main:index.adoc
+# The site's landing page (GH-18): `modules/ROOT/pages/index.adoc`, rendered
+# through the UI bundle's `home` layout. A ROOT module index is what Antora
+# treats as a component's start page by default, but naming it here is what
+# stops it fabricating a synthetic component-root "previous" URL for the first
+# nav entry — a page that doesn't exist — which broke the pagination footer's
+# "previous" link on the very first page of the site.
+#
+# ROOT is deliberately absent from the `nav` list below: the landing is reached
+# from the header's product name and the side menu's brand block, not as a row
+# in the navigation tree, and it borrows `main`'s navigation for its own side
+# menu (`:page-nav-module:` in that page's own header).
+start_page: ROOT:index.adoc
 nav:
   - modules/main/nav.adoc
   - modules/sdk/nav.adoc
@@ -65,3 +75,26 @@ nav_modules:
     description: Package that contains the TypeScript types definitions
     icon: business/file-outlined
 # --- end generated
+
+# Site footer link groups (ui-bundle GH issue #18), read by
+# @inditextech/pdocs-antora-extensions and attached to this component version
+# as `footer`. Authored here rather than in the playbook because `site.keys`
+# is a flat primitive map and cannot carry a list — see that extension's own
+# header for the full reasoning, which is the same one `nav_modules` above
+# rests on.
+#
+# Group 1 fills the footer's links column. Group 2 is used for the modules
+# column only when a component has fewer than two switchable modules, which
+# this one does not — it is here as documentation of the fallback rather than
+# because this site needs it.
+#
+# `url` is either a page ID — the same string you would write inside
+# `xref:...[]`, resolved against this component — or a literal URL. One that
+# resolves to no page is dropped with a warning rather than rendered dead.
+footer:
+  groups:
+    - links:
+        - text: Home
+          url: ROOT:index.adoc
+        - text: Repository
+          url: https://github.com/InditexTech/weavejs

@@ -23,12 +23,56 @@
 import { createServer } from 'node:http'
 import { spawn } from 'node:child_process'
 import { readFile, stat, watch as watchDir } from 'node:fs/promises'
-import { createReadStream, existsSync } from 'node:fs'
+import { createReadStream, existsSync, readFileSync } from 'node:fs'
 import { extname, join, normalize, resolve, sep } from 'node:path'
 
 const siteDir = process.cwd()
 const root = resolve(process.argv[2] ?? 'build/site')
 const port = Number(process.argv[3] ?? process.env.PORT ?? 5000)
+
+// Antora's `site.url` may carry a path (`/weavejs`, or an absolute URL ending
+// in one). That path is the site's public root: Antora records it as
+// `site.path` and uses it as the root path for pages that have no relative one
+// of their own — the 404 page — while every other page links relatively, so
+// nothing is written into a `weavejs/` directory on disk. Serving `build/site`
+// at `/` would therefore work, and lie: the URLs would not be the deployed
+// ones, and the 404 page's own asset links would point at a prefix this server
+// doesn't answer on. So the prefix is honoured here instead, the way the
+// reverse proxy in front of the deployed site does.
+const basePath = readSiteBasePath()
+
+// Deliberately not a YAML parser — this script has no dependencies (see the
+// header) and needs exactly one scalar. Scans the top-level `site:` block for
+// its `url:` key and stops at the next top-level key, so a `url:` belonging to
+// a content source or the UI bundle can never be picked up by mistake.
+function readSiteBasePath() {
+  let source
+  try {
+    source = readFileSync(join(siteDir, 'antora-playbook.yml'), 'utf8')
+  } catch {
+    return ''
+  }
+  let inSite = false
+  let url
+  for (const line of source.split('\n')) {
+    if (/^\s*(?:#|$)/.test(line)) continue
+    if (/^\S/.test(line)) {
+      if (inSite) break
+      inSite = /^site:/.test(line)
+      continue
+    }
+    if (!inSite) continue
+    const match = /^\s+url:\s*(.+?)\s*$/.exec(line)
+    if (match) {
+      url = match[1].replace(/^['"]|['"]$/g, '')
+      break
+    }
+  }
+  if (!url || url === '/') return ''
+  const path = url.startsWith('/') ? url : URL.parse(url)?.pathname
+  if (!path || path === '/') return ''
+  return path.replace(/\/+$/, '')
+}
 
 const uiDir = resolve(siteDir, '../ui-bundle')
 const antoraBin = resolve(siteDir, 'node_modules/.bin/antora')
@@ -129,7 +173,28 @@ const server = createServer(async (req, res) => {
     return
   }
 
-  const target = await resolveTarget(url)
+  // The reload channel above stays at the server root, not under `basePath`:
+  // the snippet injected into each page references it absolutely, and it is
+  // this script's own endpoint rather than part of the site being served.
+  //
+  // Everything else lives under the prefix. `/` redirects into it rather than
+  // 404ing, so `http://localhost:5000` still opens the site.
+  let sitePath = url
+  if (basePath) {
+    if (url === '/' || url === basePath) {
+      res.writeHead(302, { location: `${basePath}/` })
+      res.end()
+      return
+    }
+    if (!url.startsWith(`${basePath}/`)) {
+      res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
+      res.end(`404 Not Found — this site is served under ${basePath}/`)
+      return
+    }
+    sitePath = url.slice(basePath.length)
+  }
+
+  const target = await resolveTarget(sitePath)
   if (!target) {
     res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
     res.end('404 Not Found')
@@ -259,7 +324,7 @@ server.on('error', (err) => {
 
 server.listen(port, () => {
   log(`serving ${root}`)
-  log(`  http://localhost:${port}`)
+  log(`  http://localhost:${port}${basePath}/`)
 })
 
 watchPath(join(siteDir, 'docs'), 'content')

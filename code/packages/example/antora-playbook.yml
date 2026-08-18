@@ -10,8 +10,15 @@ site:
   title: Weave.js
   # Set this to the public URL of the deployed site. It is required for the
   # sitemap and for canonical links; leave it out while developing locally.
+  # A path on it (`https://example.com/docs`) publishes the site under that
+  # prefix: Antora records it as `site.path`, and `scripts/dev.mjs` serves the
+  # site there so local URLs are the deployed ones. The site's own first
+  # segment — /weavejs — is the component name (docs/antora.yml), not this.
+  #
+  # The docs workflow passes `--url` when `vars.DOCS_SITE_URL` is set, which
+  # overrides whatever is here.
   # url: https://docs.example.com
-  start_page: docs:main:index.adoc
+  start_page: weavejs:ROOT:index.adoc
   # The header toolbar's repo link (see ui-bundle GH issue #7) reads
   # site.keys.repoUrl — playbook keys are camelCased, so it's authored here as
   # repo_url. Falls back to the content source's git remote (page.origin.webUrl)
@@ -77,6 +84,11 @@ ui:
 
 output:
   dir: build/site
+  # Remove the output directory before writing to it. Antora leaves whatever
+  # is already there, so a page that has been renamed, moved to another module
+  # or (as when this site's component was renamed) reachable under an entirely
+  # different first URL segment keeps being served from a previous build.
+  clean: true
 
 urls:
   # Fumadocs served extensionless routes (/docs/sdk/...); indexify emits

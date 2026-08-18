@@ -11,3 +11,22 @@
     <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/zara-helvetica-now/zara-helvetica-now-sw10.css">
     <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/noto-sans-mono/noto-sans-mono.css">
     <link rel="stylesheet" href="{{{uiRootPath}}}/css/site.css">
+{{#with site.keys.homeBackground}}
+    {{!--
+      The landing's decorative background (GH-18, home.css). A per-site image
+      that the bundle cannot ship, and a URL, so it arrives as a custom
+      property rather than a stylesheet rule — declared here, in one place, so
+      no element carries an inline `style` attribute. Set it in the playbook as
+      `site.keys.home_background`; without it home.css falls back to `none` and
+      the landing renders on a plain surface.
+
+      Written from the site root (`site.path` + the key) rather than through
+      `relativize`, which every other asset URL in this bundle uses. A relative
+      URL would be wrong here: a `url()` inside a custom property is resolved
+      against the stylesheet that *substitutes* it, which is site.css under the
+      UI output directory, not this document. Root-absolute is the one form
+      that means the same thing from both, and `site.path` carries the subpath
+      when the site is published under one.
+    --}}
+    <style>:root { --home-background-image: url("{{@root.site.path}}{{this}}") }</style>
+{{/with}}

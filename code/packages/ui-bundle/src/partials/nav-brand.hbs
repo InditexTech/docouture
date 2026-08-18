@@ -32,9 +32,17 @@
 
   One anchor wraps both, not two separate elements, so the link target is
   never lost at a breakpoint that hides the title text.
+
+  It points at `site.homeUrl` — the site's start page (GH-18's landing, where
+  one exists) — not at the current component's own landing page. A brand mark
+  goes home, everywhere; the component's index is a normal entry in the tree
+  below it, and on a single-component site the two were the same URL anyway.
+  The component version's own URL stays as the fallback for a playbook with no
+  `site.start_page`, where Antora leaves `homeUrl` unset: better a link to the
+  component index than the `#` relativize yields for an empty URL.
 --}}
 <div class="side-menu__brand">
-  <a class="side-menu__brand-link" href="{{{relativize (or page.componentVersion.url site.homeUrl)}}}">
+  <a class="side-menu__brand-link" href="{{{relativize (or site.homeUrl page.componentVersion.url)}}}"{{#if page.home}} aria-current="page"{{/if}}>
     {{#with site.keys.productLogo}}
     <img class="side-menu__brand-logo{{#if @root.site.keys.productLogoDark}} side-menu__brand-logo--light{{/if}}" src="{{{relativize this}}}" width="40" height="40" alt="">
     {{/with}}

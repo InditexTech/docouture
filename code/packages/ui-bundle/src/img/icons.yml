@@ -30,6 +30,7 @@ icons:
     - copy-outlined
     - full-screen-enter-outlined
     - full-screen-exit-outlined
+    - search-outlined # header toolbar searcher, Home state (GH-18)
   alerts:
     - warning-outlined # admonition: warning (GH-13)
     - warning-alt-outlined # admonition: caution (GH-13)

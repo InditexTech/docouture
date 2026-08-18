@@ -1,0 +1,25 @@
+code/packages/example/docs/antora.yml
+  s_36866e393aae64::t_6af00fa1bb49c7 18-67
+code/packages/ui-bundle/src/css/ids-tokens.css
+  s_36866e393aae64::t_d270c45dbd81d3 27,29,72,74,251,253
+code/packages/ui-bundle/src/css/ids.lock.json
+  s_36866e393aae64::t_1b0a61399a03bf 4
+code/tools/fumadocs-migrate/build-nav.mjs
+  s_36866e393aae64::t_6714e373cbfe65 38-63,258-320
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c1ffe9da7513bdfc7c75af7ba45970baad6bb2a4",
+  "prompts": {},
+  "sessions": {
+    "s_36866e393aae64": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fec1463e5ffe2bvgWOutiNhaWt",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

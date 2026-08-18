@@ -119,6 +119,37 @@
   --side-menu-subsubgroup-gap: calc(8 / var(--rem-base) * 1rem);
   --side-menu-tree-indent: calc(8 / var(--rem-base) * 1rem);
   /*
+   * Blank space above a section label (nav-tree.hbs's `--label` row) — the
+   * migrated Fumadocs navigation is a flat run of links broken up by these,
+   * with no nesting to separate one section from the next, so this gap is
+   * the only thing that makes them read as sections at all. Sized between
+   * the subgroup and group gaps above: bigger than the space inside a
+   * group, smaller than the space between two whole branches.
+   */
+  --side-menu-label-gap: calc(16 / var(--rem-base) * 1rem);
+  /*
+   * Module switcher popover (nav-switcher.css). Built from the same pair the
+   * DS's own `--ids-motion-micro-appear` is — duration/m and easing/standard-2
+   * — but declared as two names rather than used through that token, which is
+   * shorthand for `all <duration> <easing>` and would animate every property
+   * on the panel, background and border included. Both collapse to ~0 under
+   * prefers-reduced-motion in ids-tokens.css, so that comes for free.
+   */
+  --nav-switcher-motion-duration: var(--ids-motion-duration-m);
+  --nav-switcher-motion-easing: var(--ids-motion-easing-standard-2);
+  /*
+   * One switcher row, derived rather than measured: block padding and border
+   * on both edges, the title's line box, the gap under it, and a description
+   * fixed at exactly two lines (see `__description` in nav-switcher.css).
+   * Every row is this tall at every breakpoint, which is what lets the panel
+   * cap itself at a whole number of rows. Built from tokens so it follows
+   * `.ids-scale-large`, where the line heights grow.
+   */
+  --nav-switcher-row-height: calc(
+    2 * var(--ids-size-75) + 2 * var(--ids-size-border-default) + var(--ids-typo-line-height-22) +
+      var(--ids-size-25) + 2 * var(--ids-typo-line-height-18)
+  );
+  /*
    * ToC panel (GH-10, Figma node 2610:27801/2686:47569). No secondary
    * toolbar remains below the header (GH-9 removed it), so the sticky
    * offset is the header alone. `--toc-gap-*` are the panel's own internal

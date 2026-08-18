@@ -1,10 +1,26 @@
 {{!--
-  page.navigation is Antora's own array of root menus — in practice always
-  one element, `{ root: true, items: [...] }`, never carrying its own
-  `content` or `url`. nav-tree.hbs treats an item with neither as a
-  transparent wrapper (see its own comment) so real top-level entries land
-  at level 0, not level 1.
+  page.navigation is Antora's own array of root menus — one per unordered
+  list per nav file listed in the component descriptor's `nav` key, in that
+  same order. A component with a single nav file therefore has exactly one,
+  `{ root: true, items: [...] }`, carrying neither `content` nor `url`;
+  nav-tree.hbs treats an item with neither as a transparent wrapper (see its
+  own comment) so real top-level entries land at level 0, not level 1.
+
+  A component with SEVERAL nav files has one root menu per module, and this
+  renders only the one the current page belongs to — the side menu shows a
+  single module at a time, with nav-switcher.hbs moving between them. That
+  is the same shape Fumadocs had, where each module's meta.json declared
+  `"root": true` and the sidebar rendered only the innermost root folder on
+  the current path.
+
+  `module` is not Antora's: it is stamped onto each tree by
+  @inditextech/pdocs-antora-extensions from the descriptor's `nav_modules`
+  key. When it is absent — no extension, or a site that never declared any —
+  every tree renders, which is exactly what a single-nav-file site did
+  before any of this existed.
 --}}
 {{#each page.navigation}}
+{{#if (or (not ./module) (eq ./module @root.page.module))}}
 {{> nav-tree navigation=./items level=0}}
+{{/if}}
 {{/each}}

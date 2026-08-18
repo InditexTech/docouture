@@ -1,0 +1,272 @@
+/*
+ * Module switcher (nav-switcher.hbs) — the control at the top of the side
+ * menu that moves between one module's navigation and another's, standing in
+ * for Fumadocs' own sidebar `RootToggle`. Only rendered for a component with
+ * several annotated modules; a single-module site has no markup here at all.
+ * See GH-48.
+ *
+ * Structurally a trigger plus an absolutely positioned panel, the same shape
+ * as the version menu (page-versions.css) and positioned against the same
+ * kind of `position: relative` wrapper. The panel is the width of the trigger
+ * and sits below it with a gap, so the two read as a control and its menu
+ * rather than as one continuous surface. Nothing here is rounded — the side
+ * menu has no other rounded surface.
+ *
+ * No DS component models "pick one of several sibling documentation sets",
+ * so this is composed from tokens directly, like the side menu itself —
+ * fills, edges and motion from `--ids-*`, never a hand-picked value.
+ */
+
+.nav-switcher {
+  position: relative;
+}
+
+/*
+ * The trigger and a panel row share their layout: an icon column, a label of
+ * a fixed two lines, and (on the trigger alone) a chevron. They share their
+ * states too — the trigger is drawn as the selected row it stands for — and
+ * differ only in inline padding, since a row is inset by the list around it.
+ *
+ * `flex-start`, not `center`: the icon lines up with the TITLE, not with the
+ * midpoint of the title + description block. See `__icon` below.
+ */
+.nav-switcher__toggle,
+.nav-switcher__option {
+  align-items: flex-start;
+  box-sizing: border-box;
+  color: var(--ids-color-content-default);
+  display: flex;
+  gap: var(--ids-size-50);
+  padding-block: var(--ids-size-75);
+  text-align: start;
+  width: 100%;
+}
+
+/*
+ * Styled as its own selected row: the trigger's job is to say which module
+ * you are in, so it carries the same outline the current row carries inside
+ * the panel (see `[aria-current]` at the foot of this file), over the side
+ * menu's own background rather than a fill of its own. Opening the panel then
+ * shows the same treatment twice, once in each place, which is the point.
+ *
+ * Because it rests transparent rather than on `bg-low`, hover can use the
+ * hover token honestly — `--ids-color-bg-states-hover` and
+ * `--ids-color-bg-low` are the same colour in the light theme (#f7f7f7,
+ * ids-tokens.css), which is exactly the collision a filled trigger used to
+ * run into. The open state takes the same fill; the chevron's rotation is
+ * what distinguishes open from merely hovered.
+ */
+.nav-switcher__toggle {
+  background: none;
+  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  cursor: pointer;
+  padding-inline: var(--ids-size-100);
+}
+
+@media (hover: hover) {
+  .nav-switcher__toggle:hover {
+    background: var(--ids-color-bg-states-hover);
+  }
+}
+
+.nav-switcher__toggle[aria-expanded="true"] {
+  background: var(--ids-color-bg-states-hover);
+}
+
+.nav-switcher__toggle:focus-visible,
+.nav-switcher__option:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: calc(var(--ids-size-border-high) * -1);
+}
+
+/*
+ * The label column must be allowed to shrink below its content width, or a
+ * long description (the stores' are full sentences) forces the row wider
+ * than the panel it lives in.
+ */
+.nav-switcher__label {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--ids-size-25);
+  min-width: 0;
+}
+
+.nav-switcher__title {
+  overflow-wrap: break-word;
+}
+
+/*
+ * Exactly two lines, always — `height` as well as `line-clamp`, so a short
+ * description still occupies two lines and a long one ellipsises rather than
+ * running on. This is what makes every row the same height regardless of its
+ * content or the breakpoint, which in turn is what lets the panel cap itself
+ * at a whole number of rows (see `__menu`). Without it a row is 2–4 lines
+ * depending on the module and the menu width, and no fixed cap can land
+ * cleanly on the fourth.
+ *
+ * The cost is visible and deliberate: the longest description here (the
+ * standalone store's) loses its last line, and on the xs drawer — where the
+ * panel is wide enough for one-line descriptions — every row carries an
+ * empty second line.
+ */
+.nav-switcher__description {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--ids-color-content-low);
+  display: -webkit-box;
+  height: calc(2 * var(--ids-typo-line-height-18));
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+/*
+ * Height is the TITLE's own line box (`body/m-high` is 14/22), so the 20px
+ * glyph centres on the first line of the label instead of on the title +
+ * description block as a whole — which is what `align-items: center` on the
+ * row used to do, leaving the icon floating opposite the gap between the two
+ * lines.
+ *
+ * The token, never a literal 22px: `.ids-scale-large` redefines
+ * `--ids-typo-line-height-22` to 29px (ids-tokens.css), and a hardcoded
+ * value would silently drift out of alignment under that scale.
+ */
+.nav-switcher__icon,
+.nav-switcher__chevron {
+  align-items: center;
+  color: var(--ids-color-content-low);
+  display: flex;
+  flex-shrink: 0;
+  height: var(--ids-typo-line-height-22);
+}
+
+.nav-switcher__icon .ids-icon,
+.nav-switcher__chevron .ids-icon {
+  height: var(--ids-size-125);
+  width: var(--ids-size-125);
+}
+
+.nav-switcher__chevron {
+  transition: transform var(--side-menu-motion-duration) var(--side-menu-motion-easing);
+}
+
+.nav-switcher__toggle[aria-expanded="true"] .nav-switcher__chevron {
+  transform: rotate(180deg);
+}
+
+/*
+ * Overlays the tree rather than pushing it down, so opening the switcher
+ * never reflows the navigation underneath it. The trigger's own width, offset
+ * below it by one step of the spacing scale.
+ *
+ * `hidden` (toggled in 05-nav-modules.ts) remains the single source of truth
+ * for open/closed — it is what keeps the panel genuinely hidden from
+ * assistive technology and what makes the closed state survive with
+ * JavaScript off. The animation below hangs off that attribute rather than
+ * replacing it.
+ */
+.nav-switcher__menu {
+  background: var(--ids-color-bg-default);
+  /*
+   * The DS ships no elevation/shadow token (ids-tokens.css has none), so the
+   * panel separates itself from the tree underneath with a real border
+   * rather than an invented shadow — the same grey the side menu's own right
+   * rule and the dashed header/footer rules use.
+   */
+  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  box-sizing: border-box;
+  display: block;
+  left: 0;
+  /*
+   * Three whole rows and two fifths of a fourth, so the panel always shows
+   * that it continues past its own bottom edge — with seven modules it
+   * always does. Uniform row heights (see `__description`) are what make
+   * this land in the same place at every breakpoint.
+   *
+   * `min()` with a viewport bound as well: this is absolutely positioned
+   * inside a fixed, 100dvh menu, so on a short viewport the row-derived
+   * height alone would run off the bottom of the screen and the last entries
+   * would be unreachable.
+   */
+  max-height: min(
+    calc(var(--ids-size-50) + 3.4 * var(--nav-switcher-row-height) + 3 * var(--ids-size-50)),
+    60dvh
+  );
+  opacity: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--ids-size-50));
+  /*
+   * `display` is in the transition — with `allow-discrete` — so the panel
+   * stays rendered for the length of the exit and the close animates too;
+   * without it `hidden` would snap the panel away on the first frame and
+   * only the opening would ever be seen.
+   */
+  transition:
+    opacity var(--nav-switcher-motion-duration) var(--nav-switcher-motion-easing),
+    translate var(--nav-switcher-motion-duration) var(--nav-switcher-motion-easing),
+    display var(--nav-switcher-motion-duration) allow-discrete;
+  translate: 0 0;
+  z-index: var(--z-index-nav-switcher-menu);
+}
+
+.nav-switcher__menu[hidden] {
+  /*
+   * Declared rather than left to the UA stylesheet's own `[hidden]` rule, so
+   * that it is this transition's end state rather than an untransitionable
+   * jump.
+   */
+  display: none;
+  opacity: 0;
+  translate: 0 calc(var(--ids-size-25) * -1);
+}
+
+/* The entry side of the same two properties. */
+@starting-style {
+  .nav-switcher__menu:not([hidden]) {
+    opacity: 0;
+    translate: 0 calc(var(--ids-size-25) * -1);
+  }
+}
+
+.nav-switcher__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-50);
+  padding: var(--ids-size-50);
+}
+
+/*
+ * Inline padding is half of the trigger's, because the list around it
+ * supplies the other half: row text lands on the same vertical as the
+ * trigger's text above it, while the selected row's outline still sits
+ * inset from the panel border instead of colliding with it.
+ *
+ * The transparent border is carried by every row so that marking one
+ * selected changes only a colour — a border appearing on one row would
+ * otherwise make it 2px taller than its neighbours.
+ */
+.nav-switcher__option {
+  border: var(--ids-size-border-default) solid transparent;
+  padding-inline: var(--ids-size-50);
+}
+
+@media (hover: hover) {
+  .nav-switcher__option:hover {
+    background: var(--ids-color-bg-states-hover);
+  }
+}
+
+/*
+ * The current module is a line, not a fill — a fill would compete with the
+ * hover state above, and this way a hovered selected row can still show its
+ * hover without the two fighting. The same light grey the panel's own border
+ * and the trigger use: the row is inset from that border by the list's
+ * padding, so the two never meet and the repetition reads as one family of
+ * edges rather than as chrome bleeding into content.
+ */
+.nav-switcher__option[aria-current="true"] {
+  border-color: var(--ids-color-border-low);
+}

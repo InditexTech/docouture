@@ -16,12 +16,17 @@
     viewport). Its own header row replaces the brand block: product icon +
     title + a close button, all hidden at every other breakpoint.
 
+  When the component has several annotated modules, nav-switcher.hbs sits
+  between the brand block and the tree — the side menu then shows one
+  module's navigation at a time (nav-menu.hbs) and that control moves
+  between them. It renders nothing for a single-module site.
+
   nav-brand.hbs and the drawer header row are both always rendered;
   side-menu.css shows exactly one per breakpoint via display, not
   server-side breakpoint logic, since this bundle emits one markup tree for
   every screen size.
 --}}
-<div id="side-menu" class="side-menu"{{#if page.component}} data-component="{{page.component.name}}" data-version="{{page.version}}"{{/if}}>
+<div id="side-menu" class="side-menu"{{#if page.component}} data-component="{{page.component.name}}" data-version="{{page.version}}"{{#if page.module}} data-module="{{page.module}}"{{/if}}{{/if}}>
   <div class="side-menu__header">
     <div class="side-menu__header-start">
       {{#with site.keys.productLogo}}
@@ -35,6 +40,7 @@
     <button class="side-menu__close" type="button" aria-label="Close navigation">{{icon "actions" "close-large-outlined"}}</button>
   </div>
 {{> nav-brand}}
+{{> nav-switcher}}
   <nav class="side-menu__nav" aria-label="Site navigation">
 {{> nav-menu}}
   </nav>

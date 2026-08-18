@@ -6,6 +6,8 @@ const registerTableWidth = require('./lib/table-width')
 const registerTableContainer = require('./lib/table-container')
 const registerNowrapCols = require('./lib/nowrap-cols')
 const registerVideoSize = require('./lib/video-size')
+const registerSteps = require('./lib/steps')
+const registerCardGrid = require('./lib/card-grid')
 
 function registerAll(target) {
   registerLabelMacro(target)
@@ -20,6 +22,10 @@ function registerAll(target) {
   registerTableContainer(target)
   registerNowrapCols(target)
   registerVideoSize(target)
+  // [steps] / [cards] — Weave.js migration Phase 2, see each file's own
+  // header comment for the DS components behind them and why.
+  registerSteps(target)
+  registerCardGrid(target)
 }
 
 /**

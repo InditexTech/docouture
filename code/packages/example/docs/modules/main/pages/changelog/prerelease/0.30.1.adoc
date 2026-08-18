@@ -1,0 +1,11 @@
+= v0.30.1
+:description: Text node bugfixes
+
+== Metadata
+
+* *Release date*: 2025-06-20
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/430[#430] The fontStyle property is not applied to the textarea while writing a text node
+* https://github.com/InditexTech/weavejs/issues/431[#431] Editing a rotated text looks broken

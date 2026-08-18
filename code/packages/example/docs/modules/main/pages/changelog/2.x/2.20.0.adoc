@@ -1,0 +1,14 @@
+= v2.20.0
+:description: Allow to define the pixel ratio when images cache is enabled and minor fix on brush tool
+
+== Metadata
+
+* *Release date*: 2026-02-12
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/906[#906] When using image cache, allow a config to set cached images pixel-ratio
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/907[#907] When using brush tool and cancel tool via escape the brush is still active drawing strokes

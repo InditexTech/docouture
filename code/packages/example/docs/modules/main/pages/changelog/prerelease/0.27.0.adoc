@@ -1,0 +1,14 @@
+= v0.27.0
+:description: Text node edition mode fix
+
+== Metadata
+
+* *Release date*: 2025-06-16
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/400[#400] Allow styles customizations on Frame title
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/398[#398] Sometimes when adding text on the Text node, it wraps without need to

@@ -1,0 +1,10 @@
+= v3.2.5
+:description: Minor issue with loading cursor on the Image node
+
+== Metadata
+
+* *Release date*: 2026-03-18
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/987[#987] If no cursor defined on Image Node, cursor for loading is nor showed

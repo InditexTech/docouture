@@ -1,0 +1,10 @@
+= v0.54.0
+:description: Internal (from own app) Copy / paste behavior changed.
+
+== Metadata
+
+* *Release date*: 2025-08-07
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/574[#574] Copying and pasting an image within the canvas

@@ -1,0 +1,10 @@
+= v2.9.1
+:description: Avoid race condition with usage of globalThis
+
+== Metadata
+
+* *Release date*: 2025-12-04
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/837[#837] Avoid race condition when using globalThis

@@ -1,0 +1,10 @@
+= v2.4.0
+:description: New simple line action
+
+== Metadata
+
+* *Release date*: 2025-11-19
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/789[#789] Support a simpler line drawing tool

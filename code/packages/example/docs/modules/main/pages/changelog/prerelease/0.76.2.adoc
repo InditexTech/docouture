@@ -1,0 +1,11 @@
+= v0.76.2
+:description: Fixed bugs related to cropped images and copy / paste nodes
+
+== Metadata
+
+* *Release date*: 2025-10-15
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/716[#716] Cropped image fails to mantain correct cropping when moved between layers
+* https://github.com/InditexTech/weavejs/issues/718[#718] Copy / paste not triggering when Caps Lock is active

@@ -1,0 +1,12 @@
+= v5.2.1
+:description: Bug fixes for selection, image cropping, and ungrouped elements.
+
+== Metadata
+
+* *Release date*: 2026-08-06
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/1137[#1137] Rectangle resize handle not working when placed on top of an image — drag moves the image instead of resizing the rectangle
+* https://github.com/InditexTech/weavejs/issues/1138[#1138] Crop mode does not show the resize cursor when Ctrl is pressed while the pointer is already over a crop anchor
+* https://github.com/InditexTech/weavejs/issues/1145[#1145] Elements cannot be resized after ungrouping until a multi-selection is made

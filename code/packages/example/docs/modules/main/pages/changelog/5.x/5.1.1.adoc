@@ -1,0 +1,12 @@
+= v5.1.1
+:description: Security bugfixes for WebSockets and Azure Web Pubsub stores
+
+== Metadata
+
+* *Release date*: 2026-06-22
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/1114[#1114] Security: verify Azure Web PubSub `ce-signature` HMAC-SHA256 and enforce `allowedEndpoints` on incoming CloudEvents POST requests (`store-azure-web-pubsub`)
+* https://github.com/InditexTech/weavejs/issues/1116[#1116] A single WebSocket close can disable room persistence
+* https://github.com/InditexTech/weavejs/issues/1118[#1118] Denied WebSocket upgrades return without closing sockets

@@ -1,0 +1,10 @@
+= v1.0.0
+:description: Support for Konva 10 and removed support for CommonJS
+
+== Metadata
+
+* *Release date*: 2025-10-17
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/722[#722] Update to Konva 10 and removal of CommonJS support

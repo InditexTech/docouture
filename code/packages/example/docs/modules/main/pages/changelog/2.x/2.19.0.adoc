@@ -1,0 +1,10 @@
+= v2.19.0
+:description: Improved image handling by supporting image node caching via Konva utilities
+
+== Metadata
+
+* *Release date*: 2026-02-11
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/903[#903] Improve Image node by enabling caching

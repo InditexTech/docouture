@@ -1,0 +1,10 @@
+= v0.39.1
+:description: Cleanup of console.log statements
+
+== Metadata
+
+* *Release date*: 2025-07-17
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/502[#502] Remove unnecessary console.log statements

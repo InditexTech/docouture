@@ -1,0 +1,10 @@
+= v2.0.1
+:description: Make the default initial room transactional
+
+== Metadata
+
+* *Release date*: 2025-10-30
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/767[#767] Default state must be transacted

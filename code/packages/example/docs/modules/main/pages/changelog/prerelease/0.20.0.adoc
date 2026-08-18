@@ -1,0 +1,23 @@
+= v0.20.0
+:description: Selection & grouping bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-30
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/305[#305] Don't allow to transform when more than one element is selected
+* https://github.com/InditexTech/weavejs/issues/308[#308] Allow to configure transformer configuration per node
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/219[#219] Improve frame
+* https://github.com/InditexTech/weavejs/issues/302[#302] Update create-app frontend
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/291[#291] Group of elements moving not maintaining position (all layers)
+* https://github.com/InditexTech/weavejs/issues/300[#300] Un-grouping elements are unordered
+* https://github.com/InditexTech/weavejs/issues/310[#310] Fix zoom in / out stepping before fitting
+* https://github.com/InditexTech/weavejs/issues/311[#311] Fix fit stage / selection plugin to fit correctly with the specified padding

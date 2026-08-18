@@ -1,0 +1,10 @@
+= v0.13.1
+:description: Documentation UI refactor
+
+== Metadata
+
+* *Release date*: 2025-05-19
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/227[#227] Update documentation landing to new UI

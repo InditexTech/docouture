@@ -1,0 +1,10 @@
+= v0.76.3
+:description: Bug fixing related to Text nodes on server-side rendering
+
+== Metadata
+
+* *Release date*: 2025-10-16
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/721[#721] Patch Text auto-layout, to give more space towards render ok on server side

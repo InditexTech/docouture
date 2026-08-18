@@ -1,0 +1,12 @@
+= v0.38.0
+:description: Apple Pencil support, Bring to front or send to back multiple nodes and Zoom inertia and bring to front / back multi-node API
+
+== Metadata
+
+* *Release date*: 2025-07-14
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/272[#272] Apple Pencil support
+* https://github.com/InditexTech/weavejs/issues/488[#488] Make zoom sensitivity configurable from the client and support inertia
+* https://github.com/InditexTech/weavejs/issues/489[#489] Support multiple nodes API for bringToFront / bringToBack utilities

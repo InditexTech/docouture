@@ -1,0 +1,10 @@
+= v0.39.2
+:description: Panning and zooming improvements
+
+== Metadata
+
+* *Release date*: 2025-07-18
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/504[#504] Improved panning and avoid long press on zooming

@@ -1,0 +1,16 @@
+= v3.7.0
+:description: Add Pages Support to enable multi-page canvas documents, expand export on client API and bugfixes
+
+== Metadata
+
+* *Release date*: 2026-04-17
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/993[#993] Add Pages Support to enable multi-page canvas documents
+* https://github.com/InditexTech/weavejs/issues/1016[#1016] Client-side rendering with multiple output formats (Image, Blob, Canvas, DataURL)
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/1015[#1015] Frames occlude unrelated elements when rendering to image
+* https://github.com/InditexTech/weavejs/issues/1017[#1017] `Ctrl/Cmd + Tab` breaks modifier key state and blocks selection

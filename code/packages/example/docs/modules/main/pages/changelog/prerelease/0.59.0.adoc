@@ -1,0 +1,10 @@
+= v0.59.0
+:description: Let user configure nodes dbl-click event
+
+== Metadata
+
+* *Release date*: 2025-08-19
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/614[#614] Make image double-click crop optional

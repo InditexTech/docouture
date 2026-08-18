@@ -1,0 +1,12 @@
+= v0.1.1
+:description: Pre-release fixes
+
+== Metadata
+
+* *Release date*: 2025-04-25
+
+== Changes
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/113[#113] Fix CLI create-backend room connection controller issue on azure-web-pubsub flavor

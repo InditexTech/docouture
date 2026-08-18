@@ -1,0 +1,11 @@
+= v0.55.1
+:description: Several bugfixes
+
+== Metadata
+
+* *Release date*: 2025-08-08
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/583[#583] Frames can be rotated (they shouldn't)
+* https://github.com/InditexTech/weavejs/issues/585[#585] Canvas becomes unusable after drag original star shape into frame

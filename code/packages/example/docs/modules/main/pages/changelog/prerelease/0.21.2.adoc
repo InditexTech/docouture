@@ -1,0 +1,11 @@
+= v0.21.2
+:description: Image initialization fixes
+
+== Metadata
+
+* *Release date*: 2025-06-04
+
+### Fixed
+
+* https://github.com/InditexTech/weavejs/issues/342[#342] Fix image initialization
+* https://github.com/InditexTech/weavejs/issues/343[#343] Update create-app frontend

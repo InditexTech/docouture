@@ -1,0 +1,56 @@
+= v0.1.0
+:description: Initial pre-release of Weave.js
+
+== Metadata
+
+* *Release date*: 2025-04-25
+
+== Changes
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/109[#109] CLI to generate app from templates to quickstart an app
+* https://github.com/InditexTech/weavejs/issues/107[#107] Set Weave instance as reference on the React helper package
+* https://github.com/InditexTech/weavejs/issues/105[#105] Fix store packages external depdendencies
+* https://github.com/InditexTech/weavejs/issues/103[#103] Fix externalized dependencies on store packages
+* https://github.com/InditexTech/weavejs/issues/101[#101] Fix missing `emittery` dependency package on the `@inditextech/weavejs-store-azure-web-pubsub` package
+* https://github.com/InditexTech/weavejs/issues/99[#99] Fix proxyPolicy is not supported in browser environment on `@inditextech/weavejs-store-azure-web-pubsub` package
+* https://github.com/InditexTech/weavejs/issues/95[#95] Refactor server part for websockets store
+* https://github.com/InditexTech/weavejs/issues/97[#97] Refactor server part for Azure web pubsub store
+* https://github.com/InditexTech/weavejs/issues/83[#83] Improve move tool
+* https://github.com/InditexTech/weavejs/issues/81[#81] Support for mobile devices (iOS & Android)
+* https://github.com/InditexTech/weavejs/issues/77[#77] Copy/paste between rooms in different tabs
+* https://github.com/InditexTech/weavejs/issues/76[#76] Drag & Drop images from local computer
+* https://github.com/InditexTech/weavejs/issues/74[#74] Improve grid plugin performance
+* https://github.com/InditexTech/weavejs/issues/71[#71] Grid plugin, define two types: lines and dots
+* https://github.com/InditexTech/weavejs/issues/72[#72] API to enable or disable plugins
+* https://github.com/InditexTech/weavejs/issues/68[#68] Pan the stage with the mouse
+* https://github.com/InditexTech/weavejs/issues/53[#63] Separate types on its own package
+* https://github.com/InditexTech/weavejs/issues/58[#58] Pass fetch client in azure web pubsub client
+* https://github.com/InditexTech/weavejs/issues/56[#56] Pass fetch client params in azure web pubsub client
+* https://github.com/InditexTech/weavejs/issues/52[#52] CommonJS support
+* https://github.com/InditexTech/weavejs/issues/50[#50] Text node updates
+* https://github.com/InditexTech/weavejs/issues/48[#48] Copy/Paste improvements
+* https://github.com/InditexTech/weavejs/issues/46[#46] Added select all and unselect all to nodes selection plugin, added toggle state to hide users pointers and improve export nodes and stage tools.
+* https://github.com/InditexTech/weavejs/issues/44[#44] Improve crop images
+* https://github.com/InditexTech/weavejs/issues/42[#42] Improve Frame node selection
+* https://github.com/InditexTech/weavejs/issues/40[#40] Frame node and create action
+* https://github.com/InditexTech/weavejs/issues/38[#38] Nodes snapping plugin
+* https://github.com/InditexTech/weavejs/issues/34[#34] Perform undo / redo by user
+* https://github.com/InditexTech/weavejs/issues/32[#32] Define an API to allow elements to set properties previous to create the element
+* https://github.com/InditexTech/weavejs/issues/30[#30] Allow seeing what other users are doing like when they are creating rectangles, lines, etc.
+* https://github.com/InditexTech/weavejs/issues/28[#28] Add an action to allow interactions
+* https://github.com/InditexTech/weavejs/issues/26[#26] Improve awareness and disconnection of user for store-azure-web-pubsub
+* https://github.com/InditexTech/weavejs/issues/15[#15] Avoid use weave.js packages internally as peer-dependencies and setup author and maintainers properties on packages
+* https://github.com/InditexTech/weavejs/issues/12[#12] Automatic changelog generation
+* https://github.com/InditexTech/weavejs/issues/10[#10] Fix packages names to be on @inditextech scope
+* https://github.com/InditexTech/weavejs/issues/8[#8] ESLint OSS rules
+* https://github.com/InditexTech/weavejs/issues/2[#2] Improve rendering handling
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/65[#65] Azure Web PubSub package errors with missing imports
+* https://github.com/InditexTech/weavejs/issues/60[#60] Missing params propagation on store-azure-web-pubsub client
+* https://github.com/InditexTech/weavejs/issues/36[#36] Fix add scope to undoManager
+* https://github.com/InditexTech/weavejs/issues/24[#24] Bug when loading rooms with text or images
+* https://github.com/InditexTech/weavejs/issues/18[#18] Fix awareness not working on store-azure-web-pubsub

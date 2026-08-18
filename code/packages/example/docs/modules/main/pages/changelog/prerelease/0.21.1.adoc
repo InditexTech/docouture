@@ -1,0 +1,11 @@
+= v0.21.1
+:description: Image resizing fixes
+
+== Metadata
+
+* *Release date*: 2025-06-04
+
+### Fixed
+
+* https://github.com/InditexTech/weavejs/issues/339[#339] Image resizing issue
+* https://github.com/InditexTech/weavejs/issues/340[#340] Frames resizing when interacting with them

@@ -1,0 +1,11 @@
+= v0.14.1
+:description: Several bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-20
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/235[#235] Frame copy / paste not cloning internal nodes
+* https://github.com/InditexTech/weavejs/issues/240[#240] Fix text node quirks

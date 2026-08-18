@@ -186,10 +186,28 @@ dev site='example' port='5000': (_hdr "dev " + site)
     # depends on. Its progress output is noise in front of a server you are
     # about to watch: on a cache hit it is twenty lines describing 90ms. Hold it
     # and print it only if the build fails, when it is the whole story.
-    if ! out=$({{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static 2>&1); then
+    #
+    # `--log-failure-level=none` overrides the playbook's own `warn` (see
+    # antora-playbook.yml's runtime.log.failure_level comment) for this recipe
+    # only. That setting is deliberately strict everywhere else — it is this
+    # migration's regression test for broken xrefs — but `example`'s corpus
+    # still carries 22 known, pre-existing Fumadocs content bugs (broken
+    # links, meta.json typos) unrelated to whatever page you're actually
+    # editing. Left at the playbook default, `just dev example` could never
+    # start a server at all. Antora still exits non-zero (and this recipe
+    # still surfaces the output and stops) on a genuine crash — a malformed
+    # playbook, a missing UI bundle — since that's a thrown exception, not a
+    # logged-message-count check; only the warn/error-level tolerance is
+    # relaxed here.
+    if ! out=$({{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static -- --log-failure-level=none 2>&1); then
       printf '%s\n' "$out"
       exit 1
     fi
+    # Still surface Antora's own content warnings — real signal, not Nx/gulp
+    # noise — just without the surrounding wrapper chatter a cache hit would
+    # otherwise print on every single save.
+    printf '%s\n' "$out" | grep -E '"level":"(warn|error)"' || true
+
 
     # The server itself does not go through Nx: there is nothing left to
     # orchestrate, and running the script directly keeps a task runner from

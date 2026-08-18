@@ -1,0 +1,10 @@
+= v2.13.1
+:description: Avoid trigger context menu when element(s) is(are) locked
+
+== Metadata
+
+* *Release date*: 2026-01-14
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/865[#865] Avoid trigger context menu when element(s) is(are) locked

@@ -1,5 +1,17 @@
-name: example
-title: Example
+name: docs
+title: Weave.js
 version: ~
+# Without this, Antora can't tell main/index.adoc IS the component's start
+# page (there's no ROOT module here to imply it), so it fabricates a
+# synthetic `/docs/` "previous" URL for the first nav entry — a page that
+# doesn't exist — breaking the pagination footer's "previous" link on the
+# very first page of the site.
+start_page: main:index.adoc
 nav:
-  - modules/ROOT/nav.adoc
+  - modules/main/nav.adoc
+  - modules/sdk/nav.adoc
+  - modules/react/nav.adoc
+  - modules/store-websockets/nav.adoc
+  - modules/store-azure-web-pubsub/nav.adoc
+  - modules/store-standalone/nav.adoc
+  - modules/types/nav.adoc

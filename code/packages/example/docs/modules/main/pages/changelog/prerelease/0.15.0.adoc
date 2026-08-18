@@ -1,0 +1,15 @@
+= v0.15.0
+:description: Documentation changes, create-app UI changes and some bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-21
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/255[#255] Update documentation images and favicon
+* https://github.com/InditexTech/weavejs/issues/260[#260] Update create-app frontend
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/257[#257] Fix loading errors on React provider

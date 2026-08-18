@@ -1,0 +1,10 @@
+= v0.40.0
+:description: Fix nodes synchronization issues
+
+== Metadata
+
+* *Release date*: 2025-07-23
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/514[#514] Logs to validate performance issues

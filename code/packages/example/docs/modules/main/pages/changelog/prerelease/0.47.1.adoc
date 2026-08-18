@@ -1,0 +1,10 @@
+= v0.47.1
+:description: Move tool behavior change
+
+== Metadata
+
+* *Release date*: 2025-07-30
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/542[#542] Adjust moveTool to be similar to the one in Figma

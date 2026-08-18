@@ -1,0 +1,10 @@
+= v0.16.1
+:description: Awareness plugins bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-26
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/283[#283] Improve pointers and selectors rendering

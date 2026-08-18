@@ -1,0 +1,10 @@
+= v2.8.0
+:description: Improve performance on some plugins
+
+== Metadata
+
+* *Release date*: 2025-11-27
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/818[#818] Performance improvements

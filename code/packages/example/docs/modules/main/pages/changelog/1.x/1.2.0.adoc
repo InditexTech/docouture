@@ -1,0 +1,10 @@
+= v1.2.0
+:description: Improved packaging for server-side exporting
+
+== Metadata
+
+* *Release date*: 2025-10-22
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/751[#751] Improve server-side export packaging

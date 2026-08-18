@@ -1,0 +1,10 @@
+= v0.18.0
+:description: Improvements to Azure Web PubSub store
+
+== Metadata
+
+* *Release date*: 2025-05-27
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/292[#292] Improve Azure Web PubSub to allow EventHandler options

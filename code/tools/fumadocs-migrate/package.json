@@ -1,0 +1,20 @@
+{
+  "name": "@inditextech/pdocs-fumadocs-migrate",
+  "version": "0.0.0",
+  "private": true,
+  "description": "One-off converter: Weave.js's Fumadocs MDX content -> AsciiDoc for code/packages/example. Deliberately outside the pnpm workspace (see README.md) — same reasoning as tools/ids.",
+  "license": "MPL-2.0",
+  "type": "module",
+  "scripts": {
+    "migrate": "node migrate.mjs"
+  },
+  "dependencies": {
+    "js-yaml": "~4.3.1",
+    "mdast-util-to-string": "~4.0.0",
+    "remark-frontmatter": "~5.0.0",
+    "remark-gfm": "~4.0.1",
+    "remark-mdx": "~3.1.1",
+    "remark-parse": "~11.0.0",
+    "unified": "~11.0.5"
+  }
+}

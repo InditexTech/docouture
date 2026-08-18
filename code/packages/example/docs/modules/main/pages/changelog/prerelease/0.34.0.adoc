@@ -1,0 +1,12 @@
+= v0.34.0
+:description: API to support nodes lock / unlock, Tool to align nodes and API to know if room has content
+
+== Metadata
+
+* *Release date*: 2025-07-03
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/168[#168] Tool to align nodes in the middle, top or bottom both vertically or horizontally
+* https://github.com/InditexTech/weavejs/issues/472[#472] Expose whether the content is empty
+* https://github.com/InditexTech/weavejs/issues/477[#477] Allow users to lock nodes (groups or individual elements)

@@ -1,0 +1,15 @@
+= v0.56.0
+:description: Several important updates
+
+== Metadata
+
+* *Release date*: 2025-08-11
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/582[#582] Brush tool looks choppy
+* https://github.com/InditexTech/weavejs/issues/591[#591] Apply downsizing on export to avoid browsers hard-cap
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/593[#593] "Send to Back" inside frame does not reorder correctly

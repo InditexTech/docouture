@@ -1,0 +1,16 @@
+= v0.58.0
+:description: Nodes selection plugin fixes and improvements, and minor bugfix on Edges and Distance plugin (for elements on frames)
+
+== Metadata
+
+* *Release date*: 2025-08-13
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/607[#607] Allow to pan when selecting by area close to screen edges
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/604[#604] Selection region stops working after pressing space key
+* https://github.com/InditexTech/weavejs/issues/608[#608] When adding a Text node that contains spaces (used the space key) selection stops working
+* https://github.com/InditexTech/weavejs/issues/612[#612] Panning tool doesn't work on touch devices

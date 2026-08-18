@@ -1,0 +1,18 @@
+= v0.14.0
+:description: Several Improvements
+
+== Metadata
+
+* *Release date*: 2025-05-20
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/205[#205] Transformer resize change size and not scale
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/233[#233] Update create-app frontend UI
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/236[#236] Missing class `WeaveStoreAzureWebPubSubSyncHost` on package `@inditextech/weave-store-azure-web-pubsub`

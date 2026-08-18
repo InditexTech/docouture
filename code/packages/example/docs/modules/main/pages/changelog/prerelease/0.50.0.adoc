@@ -1,0 +1,10 @@
+= v0.50.0
+:description: Support to paste files copied from the file system (Chrome only)
+
+== Metadata
+
+* *Release date*: 2025-08-01
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/551[#551] Add support for images copied from the file explorer

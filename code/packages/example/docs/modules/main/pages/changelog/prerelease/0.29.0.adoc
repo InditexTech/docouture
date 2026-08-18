@@ -1,0 +1,18 @@
+= v0.29.0
+:description: Improved touch devices support, export nodes to image fix and nodes style defaults changed
+
+== Metadata
+
+* *Release date*: 2025-06-18
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/306[#306] Improve touch devices support
+
+### Fixed
+
+* https://github.com/InditexTech/weavejs/issues/420[#420] Nodes export to image is wrong
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/419[#419] Nodes, fill white and stroke black by default

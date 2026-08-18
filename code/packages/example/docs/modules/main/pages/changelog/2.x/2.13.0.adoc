@@ -1,0 +1,11 @@
+= v2.13.0
+:description: Avoid collisions on mutually exclusive operations and the new Users presence plugin
+
+== Metadata
+
+* *Release date*: 2026-01-14
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/861[#861] Mechanism to avoid clashes when users handle / edit the same element (mutex)
+* https://github.com/InditexTech/weavejs/issues/863[#863] Users presence plugin

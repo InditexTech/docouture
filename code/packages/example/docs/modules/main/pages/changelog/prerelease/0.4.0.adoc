@@ -1,0 +1,11 @@
+= v0.4.0
+:description: Improvements over frames UX
+
+== Metadata
+
+* *Release date*: 2025-05-05
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/133[#133] Moving elements to a frame or out of a frame when dragging
+* https://github.com/InditexTech/weavejs/issues/134[#134] Give feedback to the user if the element will be dropped on a Frame

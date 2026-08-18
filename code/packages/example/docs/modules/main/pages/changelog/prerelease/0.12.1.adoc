@@ -1,0 +1,12 @@
+= v0.12.1
+:description: Improvement on UX and bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-19
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/217[#217] Fix rectangle creation when click and drag-and-drop
+* https://github.com/InditexTech/weavejs/issues/218[#218] Fix drag selection to frame
+* https://github.com/InditexTech/weavejs/issues/224[#224] Frame visual issues

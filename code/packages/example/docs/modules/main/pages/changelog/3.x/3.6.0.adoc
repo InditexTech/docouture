@@ -1,0 +1,10 @@
+= v3.6.0
+:description: Support to export an area of the canvas
+
+== Metadata
+
+* *Release date*: 2026-04-07
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/1011[#1011] Support to export an area of the canvas

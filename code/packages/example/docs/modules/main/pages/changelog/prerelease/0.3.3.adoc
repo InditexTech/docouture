@@ -1,0 +1,12 @@
+= v0.3.3
+:description: Patch to fix peerDependency of internal packages
+
+== Metadata
+
+* *Release date*: 2025-04-30
+
+== Changes
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/130[#130] Fix sdk peerDependency on packages

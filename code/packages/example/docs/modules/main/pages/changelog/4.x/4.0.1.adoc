@@ -1,0 +1,15 @@
+= v4.0.1
+:description: Minor bugfixes to avoid console.log errors output
+
+== Metadata
+
+* *Release date*: 2026-05-18
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/1064[#1064] Fix unnecessary console.log type errors / undefined errors in SDK
+* https://github.com/InditexTech/weavejs/issues/1065[#1065] Fix error cannot set properties of undefined (setting 'dragStatus'), avoid console.log imprint
+* https://github.com/InditexTech/weavejs/issues/1066[#1066] Fix error failed to execute 'drawImage' on 'CanvasRenderingContext2D', when the image provided is in the 'broken' state
+* https://github.com/InditexTech/weavejs/issues/1067[#1067] Avoid console.log error `Cannot read properties of undefined (reading 'previousAction')` in zoom / fit actions
+* https://github.com/InditexTech/weavejs/issues/1068[#1068] Avoid console.log errors from: canDrag is not a function
+* https://github.com/InditexTech/weavejs/issues/1069[#1069] Avoid console.log error `defineMousePointer is not a function`

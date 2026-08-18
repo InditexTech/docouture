@@ -1,0 +1,12 @@
+= v0.14.3
+:description: Several bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-21
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/248[#248] Mouse wheel panning only when over stage
+* https://github.com/InditexTech/weavejs/issues/250[#250] Copy / paste on frame doesn't set copied element on it
+* https://github.com/InditexTech/weavejs/issues/253[#253] Selected nodes not triggering snapping lines

@@ -1,0 +1,10 @@
+= v0.20.3
+:description: Fix module augmentation issues
+
+== Metadata
+
+* *Release date*: 2025-06-03
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/320[#320] Fix module augmentation exports

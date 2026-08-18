@@ -1,0 +1,10 @@
+= v0.9.0
+:description: Improve frame node styling configuration
+
+== Metadata
+
+* *Release date*: 2025-05-09
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/155[#155] Frame node configuration improvements

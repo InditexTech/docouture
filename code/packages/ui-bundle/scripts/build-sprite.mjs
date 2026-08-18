@@ -158,9 +158,7 @@ function renderMasks(entries, index) {
       continue
     }
     props.push(`  --icon-mask-${group}-${name}: ${maskDataUri(markup)};`)
-    utilities.push(
-      `.ids-icon-mask--${group}-${name} {\n  mask-image: var(--icon-mask-${group}-${name});\n}`
-    )
+    utilities.push(`.ids-icon-mask--${group}-${name} {\n  mask-image: var(--icon-mask-${group}-${name});\n}`)
   }
 
   if (missing.length) {

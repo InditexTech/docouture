@@ -125,7 +125,11 @@ function parseColumns(spec, parent) {
     }
     const columns = Number(count)
     if (columns < 1 || columns > MAX_COLUMNS) {
-      warn(parent, '[cards,columns="' + spec + '"]', columns + ' columns is outside the supported range 1-' + MAX_COLUMNS)
+      warn(
+        parent,
+        '[cards,columns="' + spec + '"]',
+        columns + ' columns is outside the supported range 1-' + MAX_COLUMNS
+      )
       continue
     }
     classes.push('pdocs-card-grid--cols-' + (breakpoint ? breakpoint + '-' : '') + columns)
@@ -151,9 +155,15 @@ function renderHeader(icon, subheader, parent) {
   if (icon) {
     if (ICON_RX.test(icon)) {
       iconHtml =
-        '<span class="pdocs-card__icon ids-icon-mask--' + escapeHtml(icon.replace('/', '-')) + '" aria-hidden="true"></span>'
+        '<span class="pdocs-card__icon ids-icon-mask--' +
+        escapeHtml(icon.replace('/', '-')) +
+        '" aria-hidden="true"></span>'
     } else {
-      warn(parent, '[card,icon="' + icon + '"]', 'not an icon reference; expected `group/name`, e.g. `business/file-outlined`')
+      warn(
+        parent,
+        '[card,icon="' + icon + '"]',
+        'not an icon reference; expected `group/name`, e.g. `business/file-outlined`'
+      )
     }
   }
   const subheaderHtml = subheader ? '<span class="pdocs-card__subheader">' + escapeHtml(subheader) + '</span>' : ''
@@ -215,7 +225,11 @@ function renderCard(block, type, parent) {
 
   const href = (HREF_RX.exec(title) || [])[1]
   if (!href) {
-    warn(parent, '[card] ' + block.getAttribute('title'), 'a card title carries no link; make it an `xref:` or a `link:`')
+    warn(
+      parent,
+      '[card] ' + block.getAttribute('title'),
+      'a card title carries no link; make it an `xref:` or a `link:`'
+    )
   }
 
   const { images, bodies } = cardParts(block)

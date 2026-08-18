@@ -1,6 +1,7 @@
 'use strict'
 
 const firstPositional = require('./first-positional')
+const warn = require('./warn')
 
 // IDS Label variants shipped in `label.css` (@inditex/sewingiopdsweb-react-
 // components), already vendored into ui-bundle's ids-components.css — see
@@ -50,23 +51,15 @@ module.exports = function registerLabelMacro(registry) {
     self.process(function (parent, target, attrs) {
       const variant = target || DEFAULT_VARIANT
       if (VARIANTS.indexOf(variant) === -1) {
-        parent
-          .getDocument()
-          .getLogger()
-          .warn(
-            'label:' +
-              target +
-              '[] — unknown IDS Label variant "' +
-              variant +
-              '"; expected one of ' +
-              VARIANTS.join(', ')
-          )
+        warn(parent, 'label:' + target + '[]', 'unknown IDS Label variant "' + variant + '"', VARIANTS)
       }
       // The bracket content has already been through Asciidoctor's own
       // `specialcharacters` substitution by the time macros run (verified:
       // `label:[A & B <x>]` arrives here as `A &amp; B &lt;x&gt;`, both
       // Asciidoctor versions), so it is already safe to place inside HTML
-      // without a second escaping pass.
+      // without a second escaping pass. See lib/html.js's own header for the
+      // full inline-vs-block table this is one row of — an inline macro's
+      // attributes are substituted, a BLOCK's are not.
       const text = firstPositional(attrs) || ''
       const html =
         '<span class="ids-label ids-label--' + variant + '"><span class="ids-label__content">' + text + '</span></span>'

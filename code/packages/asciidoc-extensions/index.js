@@ -1,5 +1,10 @@
 'use strict'
 
+// Every extension in lib/ is registered here, and only here — see README.md
+// for the contract each one keeps. Note that lib/ also holds modules that
+// register nothing and are absent from this list on purpose: async-compat.js,
+// first-positional.js, html.js, unique-id.js and warn.js are shared helpers
+// the extensions require directly.
 const registerLabelMacro = require('./lib/label-macro')
 const registerMonoMacro = require('./lib/mono-macro')
 const registerTableWidth = require('./lib/table-width')

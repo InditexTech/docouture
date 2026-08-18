@@ -1,0 +1,38 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "lib": ["ES2022"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    // The extensions are plain CommonJS on purpose — see README.md and
+    // eslint.config.mjs. `node16` module resolution (inherited from the base
+    // config) reads that off `package.json`'s absent `"type"` field, so
+    // `require`/`module.exports` typecheck as CommonJS without an override
+    // here.
+    //
+    // These two are OFF, and only these two. Measured against the package as
+    // it stands: full `strict` reports 107 errors, every one of them an
+    // implicit any or an implicit `this` (TS7006 x78, TS2683 x19, and
+    // TS7005/7034/7031 for the rest) — not one real type error. Turning them
+    // off is therefore a statement about annotation coverage, not about type
+    // safety: everything else in `strict` stays on and does catch real
+    // mistakes (bad `require`s, wrong arity, wrong property on a value that
+    // does have a type).
+    //
+    // The 19 implicit `this` cases are inherent to the Asciidoctor extension
+    // DSL, which rebinds `this` twice — once to the processor being
+    // configured, once again inside `process` to the runtime context — so
+    // annotating them means a `@this` tag per callback, not a one-line fix.
+    //
+    // Retiring these: every NEW extension is written fully annotated against
+    // `@asciidoctor/core`'s own `types/extensions.d.ts` (see lib/html.js,
+    // lib/unique-id.js and lib/warn.js for the shape). Existing files get
+    // annotated as they are next touched. When the count reaches zero, delete
+    // these two lines — nothing else has to change.
+    "noImplicitAny": false,
+    "noImplicitThis": false
+  },
+  "include": ["index.js", "lib/**/*.js"]
+}

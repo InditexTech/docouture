@@ -14,6 +14,7 @@ const registerVideoSize = require('./lib/video-size')
 const registerSteps = require('./lib/steps')
 const registerCardGrid = require('./lib/card-grid')
 const registerFeatureTabs = require('./lib/feature-tabs')
+const registerCta = require('./lib/cta')
 
 function registerAll(target) {
   registerLabelMacro(target)
@@ -37,6 +38,10 @@ function registerAll(target) {
   // why the tab ARIA is applied by ui-bundle's 07-feature-tabs.ts rather
   // than emitted from here.
   registerFeatureTabs(target)
+  // [cta] — the landing's call to action (GH-23), styled after Fumadocs'
+  // "Free & Open Source" block rather than a Figma frame; see its own header
+  // for why it deviates from GH-23's original macro sketch.
+  registerCta(target)
 }
 
 /**

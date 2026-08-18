@@ -73,14 +73,37 @@ The not-found page.
 
 Blocks on this page come from Asciidoctor extensions rather than from the
 layout, so a landing stays authored content. The Quicklinks row above is the
-first of them (GH-20, the `[cards]` block); until the rest land (GH-21, GH-23)
-any AsciiDoc renders here, which is what this section is for: it checks that
-the block's heading row, its dashed rule and the gaps around its body are
-right regardless of what fills it.
+first of them (GH-20, the `[cards]` block); until GH-21 lands any AsciiDoc
+renders here, which is what this section is for: it checks that the block's
+heading row, its dashed rule and the gaps around its body are right
+regardless of what fills it.
 
 * A plain list, to check body rhythm inside a block.
 * A second item.
 * A third.
+
+== Free & open source
+
+The `[cta]` block (GH-23) is its own section, like every other landing
+block, rather than trailing content of the one above it — the same
+dashed-rule heading band every `==` here gets, home.css's own rule, not a
+second title inside the block. Styled after Fumadocs' "Free & Open Source"
+block on the Weave.js docs home rather than a Figma frame (this block has
+none). A flat `--ids-color-bg-low` band rather than an inverse one: see
+cta.js and cta.css for why. The mark reuses the site's own product logo
+pair, one image per theme, exactly as the hero does.
+
+[cta]
+====
+image::product-logo.svg[ATD Framework mark]
+image::product-logo-dark.svg[role=dark]
+
+ATD Framework is actively maintained and open for contributions. It comes
+with best-in-class documentation and developer experience.
+
+[.primary]
+https://github.com/InditexTech/atd-docs[Create a fork]
+====
 
 == Key features
 

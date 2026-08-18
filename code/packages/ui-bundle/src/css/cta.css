@@ -1,0 +1,202 @@
+/*
+ * The [cta] block — asciidoc-extensions/lib/cta.js.
+ *
+ * The landing's call to action (GH-23), styled after Fumadocs' "Free & Open
+ * Source" block on the Weave.js docs home (`app/(home)/page.tsx`'s
+ * `OpenSource()`) rather than a Figma frame — see cta.js's own header for why
+ * this deviates from GH-23's original sketch. A flat band: title, prose, an
+ * optional light/dark mark, and one or two DS buttons, all centred by
+ * default.
+ *
+ * WHY --ids-color-bg-low AND NOT AN INVERSE BAND
+ *
+ * GH-23 proposed `--ids-color-bg-inverse` + `--ids-color-content-inverse`.
+ * The DS ships no inverse BUTTON variant, so a plain `.ids-button--primary`
+ * on that surface resolves black-on-black in light theme
+ * (`--ids-comp-button-primary-default` is black). Fixing that would mean
+ * widening `tools/ids/sync.mjs`'s THEME_SCOPES the way the dark code-block
+ * surface already does. `--ids-color-bg-low` needs none of it: it is a
+ * step OFF the page surface in both themes already, and every DS component
+ * placed on it (buttons, the mark) already resolves correctly — which is
+ * also the surface `[feature-tabs]`'s own media panel sits on, so the two
+ * blocks read as the same family.
+ */
+
+.pdocs-cta {
+  align-items: center;
+  background-color: var(--ids-color-bg-low);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-150); /* 24 */
+  padding: var(--ids-size-300); /* 48 */
+  text-align: center;
+  /*
+   * Wider than prose, capped at the column — the same shape and the same
+   * reason `[cards,width=container]` (card-grid.css) and `[feature-tabs]`
+   * (feature-tabs.css) both use: a `width` on an element whose ancestors
+   * merely cap their own box overflows it, and `100cqw` is the backstop that
+   * stops this one at the grid column instead of the viewport.
+   */
+  max-width: none;
+  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
+}
+
+/* `align=start`: the reference's own default is centred; this is the escape. */
+.pdocs-cta--start {
+  align-items: flex-start;
+  text-align: start;
+}
+
+/*
+ * The article view puts blocks in a normal flow, so the block needs the top
+ * margin every other block gets there; the landing's content column is a
+ * flex column with its own gap (home.css), so it needs none — same split,
+ * and same `.doc`-scoped rule, as card-grid.css and feature-tabs.css.
+ */
+.doc .pdocs-cta {
+  margin: var(--doc-space-block) 0 0;
+}
+
+/* ------------------------------------------------------------- body ------- */
+
+/*
+ * Title and lead, capped at the reading measure even though the band itself
+ * is wider — the same "wider band, prose-width text" relationship the
+ * reference draws (its own `max-w-[800px]` inside a full-bleed section).
+ */
+.pdocs-cta__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-150); /* 24 */
+  max-width: var(--content-max-width);
+}
+
+/*
+ * `discrete` (Asciidoctor's own opt-out class, doc.css's `.doc h2:not(.discrete)`)
+ * keeps this h2 out of the section band — the full-width dashed-rule surface
+ * every REAL `==` heading gets — since this is a short blurb inside a
+ * block, not a document section.
+ *
+ * The margin still needs resetting: `.doc h1..h6` (doc.css, unconditional,
+ * not `:not(.discrete)`-guarded) sets `margin: var(--doc-space-heading) 0 0`
+ * regardless, and this band's own flex `gap` already spaces title from lead.
+ * Qualified two classes deep so it wins: `.doc h2` is (0,1,1), this is
+ * (0,2,0) — the same specificity trick feature-tabs.css's own heading
+ * override uses, for the same reason.
+ */
+.pdocs-cta .pdocs-cta__title {
+  margin: 0;
+}
+
+.pdocs-cta__lead {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------- mark ------ */
+
+/*
+ * The mark: capped at 40px, matching the reference's own GitHub logo size.
+ * Two images, one per theme, rather than a CSS filter (the reference's own
+ * `dark:invert`) — an externally-referenced `<img>` does not inherit CSS
+ * from the page embedding it, the same reason the hero's product mark and
+ * `[feature-tabs]`'s media stills both take this shape (home-hero.hbs,
+ * feature-tabs.js).
+ */
+.pdocs-cta__mark-image {
+  height: auto;
+  max-height: var(--ids-size-250); /* 40 */
+  width: auto;
+}
+
+/* Themed pair: CSS shows one per theme; an untthemed mark (light only) is unclassed and shows in both. */
+.pdocs-cta__mark-image--light {
+  display: block;
+}
+
+.ids-theme-dark .pdocs-cta__mark-image--light {
+  display: none;
+}
+
+.pdocs-cta__mark-image--dark {
+  display: none;
+}
+
+.ids-theme-dark .pdocs-cta__mark-image--dark {
+  display: block;
+}
+
+/* ----------------------------------------------------------- actions ------ */
+
+.pdocs-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ids-size-100); /* 16 */
+  justify-content: center;
+}
+
+.pdocs-cta--start .pdocs-cta__actions {
+  justify-content: flex-start;
+}
+
+/*
+ * Icon sizing, shared by any action icon this block emits (currently only
+ * the GitHub mark below) — background/mask plumbing only; the mask image
+ * itself comes from the modifier class paired with this one.
+ */
+.pdocs-cta__action-icon {
+  background: currentColor;
+  block-size: var(--ids-size-125); /* 20 */
+  inline-size: var(--ids-size-125);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+/*
+ * GitHub's own "mark-github" Octicon (MIT-licensed, github/octicons), 16x16 —
+ * the one hand-authored mask in this package. It has no place in
+ * icon-masks.css: that file is generated exclusively from the design
+ * system's own icon mirror (its own header states "Do not edit by hand"),
+ * and this is a brand mark GitHub itself defines, not a DS icon. cta.js
+ * derives its use from the action's own href (a github.com target), never
+ * an authored flag.
+ */
+:root {
+  --icon-mask-brand-github: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z' shape-rendering='geometricPrecision'/%3E%3C/svg%3E");
+}
+
+.pdocs-cta__action-icon--github {
+  mask-image: var(--icon-mask-brand-github);
+}
+
+/*
+ * More air than the DS's own leading-icon gap (`.ids-button--icon-and-label
+ * .ids-button__icon-icon`, button.css: `margin-inline-end: --ids-size-25`,
+ * 4px) — tight enough at that size to read as touching the label rather
+ * than sitting beside it. Ties that rule's specificity exactly (three
+ * classes each) and wins on load order alone: `ids-components.css` (the
+ * DS's own button.css) imports near the top of site.css, this file after
+ * `feature-tabs.css`, near the bottom.
+ */
+.pdocs-cta__action.ids-button--icon-and-label .ids-button__icon-icon {
+  margin-inline-end: var(--ids-size-75); /* 12 */
+}
+
+/*
+ * Hover/focus colour fix. `.doc a:hover` (doc.css) sets a link-blue `color`
+ * at specificity (0,2,1); the DS's OWN primary-button rule only changes
+ * `background-color` on hover (button.css — `.ids-button.ids-button--
+ * primary:hover`), never restating `color`, because normally nothing else
+ * competes for it. Here something does: with no explicit hover colour of
+ * its own, the button's base `color` (`--ids-color-content-inverse`,
+ * (0,2,0)) loses to `.doc a:hover` on tag-count alone even though both tie
+ * on class count — the DS never had to plan for that collision because a
+ * bare `.doc a` was never meant to double as a button. Secondary and ghost
+ * don't need this: the DS sets their OWN hover `color` at (0,3,0), which
+ * already outranks `.doc a:hover` outright.
+ */
+.doc .pdocs-cta__action.ids-button--primary:hover,
+.doc .pdocs-cta__action.ids-button--primary:focus {
+  color: var(--ids-color-content-inverse);
+  text-decoration: none;
+}

@@ -321,6 +321,29 @@ html:has(> .home-page) {
   text-transform: var(--ids-typo-title-m-text-transform);
 }
 
+/*
+ * The copy-link icon (GH-11, doc.css's `.doc h2:not(.discrete) .anchor`) is
+ * hidden here rather than repositioned. It floats in the space the
+ * ARTICLE's own h2 frees up with its negative `margin-left` (undone above,
+ * for this heading, along with the rest of the band), positioned by
+ * subtracting the article's own left gutter (`--comp-grid-margin-l`) from
+ * `right: 100%` — math that assumes that gutter exists to be subtracted
+ * from. It does not here: at m/l this heading's left edge sits directly
+ * against the grid's own column gap, with the sticky hero column beyond it
+ * and no reserved space for a floating 40px icon, so the unmodified rule
+ * lands it ON TOP of the heading text instead of beside it (measured).
+ *
+ * A landing block heading is not an article section either way — the
+ * landing already opts out of the ToC, the previous/next footer and the
+ * `.doc` article surface itself (home.hbs's own header), all for the same
+ * reason: it is a different view sharing one stylesheet, not the same view.
+ * The heading's `id` (and so its `#fragment` URL) is untouched — only the
+ * floating copy-button chrome is unavailable here.
+ */
+.home__main > .sect1 > h2 .anchor {
+  display: none;
+}
+
 @media screen and (--ids-breakpoints-s) {
   .home__main > .sect1 > h2 {
     --home-block-bleed: var(--comp-grid-margin-s);

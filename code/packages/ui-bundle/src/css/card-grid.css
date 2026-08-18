@@ -1,0 +1,57 @@
+/*
+ * Weave.js migration Phase 2 — the [cards] Asciidoctor extension
+ * (asciidoc-extensions/lib/card-grid.js). Renders IDS Card
+ * (ids-components.css, card/card.css) inside IDS Grid Layout
+ * (grid-layout.css, already vendored for the header/toolbar/toc — see
+ * ids-components.yml's own comment on why `.doc`/`.toc` don't use its
+ * `__item--span-N` utility classes for THEIR layout; a card grid is a
+ * different, opted-in use of the same utility classes, not a conflict
+ * with that note).
+ *
+ * Card ships almost no text styling of its own (no `font` rule anywhere in
+ * card.css) — it expects a consumer to supply it, normally via the DS's
+ * `.ids-text` utilities, which are chrome-only and off limits inside `.doc`
+ * prose (see ids-components.yml's own note on text.css). This file supplies
+ * the minimum directly, the same way Timeline/Progress-Step's own
+ * stylesheets set `font:` on their `-label`/`-detail` slots rather than
+ * requiring a `.ids-text` class alongside them.
+ */
+.doc .pdocs-card-grid {
+  margin: var(--doc-space-block) 0 0;
+}
+
+.doc .pdocs-card {
+  /* Anchors the title's stretched-link overlay below — see steps.js's
+   * header comment on why the whole card is not itself an `<a>` (the
+   * xref inside the title already is one; nesting a second would be
+   * invalid HTML). */
+  position: relative;
+  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+}
+
+.doc .pdocs-card__title {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  padding: 0 var(--ids-size-100);
+}
+
+.doc .pdocs-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretched link: makes the whole card clickable through the title's own
+ * `<a>` (an xref the [cards] extension didn't emit itself — see
+ * card-grid.js) without wrapping the card in a second, invalid, nested
+ * anchor. */
+.doc .pdocs-card__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.doc .pdocs-card p {
+  margin-top: 0;
+  padding: 0 var(--ids-size-100);
+}

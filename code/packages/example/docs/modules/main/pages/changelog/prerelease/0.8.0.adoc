@@ -1,0 +1,10 @@
+= v0.8.0
+:description: Fix issue with snapping when using corner anchors
+
+== Metadata
+
+* *Release date*: 2025-05-07
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/144[#144] Improve users connection / disconnection feedback on Azure Web PubSub store

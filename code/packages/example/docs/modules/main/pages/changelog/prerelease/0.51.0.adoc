@@ -1,0 +1,10 @@
+= v0.51.0
+:description: Reference guides for distances (when same among peers compared to target next peers).
+
+== Metadata
+
+* *Release date*: 2025-08-01
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/167[#167] Plugin that render reference guides when distance of target node among closest peers is similar to those between nodes intersected vertically or horizontally

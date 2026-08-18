@@ -1895,3 +1895,284 @@
 .ids-label--teal .ids-label__icon svg * {
   fill: var(--ids-color-alt-teal-high)
 }
+
+/* @inditex/sewingiopdsweb-react-components/card/card.css */
+.ids-card__alert-slot {
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: var(--ids-z-sticky)
+}
+.ids-card {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  padding-bottom: var(--ids-size-50);
+  padding-top: var(--ids-size-50);
+  position: relative
+}
+.ids-card:hover {
+  box-shadow: inset 0 var(--ids-size-border-default) 0 0 var(--ids-color-border-states-hover),inset 0 calc(var(--ids-size-border-default)*-1) 0 0 var(--ids-color-border-states-hover)
+}
+.ids-card:focus-visible {
+  border: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline: none
+}
+.ids-card--selected {
+  box-shadow: inset 0 var(--ids-size-border-high) 0 0 var(--ids-color-border-default),inset 0 calc(var(--ids-size-border-high)*-1) 0 0 var(--ids-color-border-default)
+}
+.ids-card__image {
+  display: flex;
+  flex-basis: 50%;
+  flex-grow: 1;
+  position: relative
+}
+@media (min-width:1024px) {
+  .ids-card__image {
+    flex-basis: 38%
+  }
+}
+.ids-card__image__slots-row {
+  display: flex;
+  left: 0;
+  padding-left: var(--ids-size-75);
+  padding-right: var(--ids-size-75);
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  z-index: calc(var(--ids-z-sticky) - 1)
+}
+.ids-card__image__slots-row-top {
+  top: var(--ids-size-75)
+}
+.ids-card__image__slots-row-bottom {
+  bottom: var(--ids-size-75)
+}
+.ids-card__image__slot {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  pointer-events: auto
+}
+.ids-card__image__slot-content {
+  max-width: 100%;
+  min-width: 0;
+  width: 100%
+}
+.ids-card__image__slot-top-left {
+  justify-content: flex-start
+}
+.ids-card__image__slot-top-right {
+  justify-content: flex-end
+}
+.ids-card__image__slot-bottom-left {
+  justify-content: flex-start
+}
+.ids-card__image__slot-bottom-right {
+  justify-content: flex-end
+}
+.ids-card__content {
+  background-color: var(--ids-color-bg-default);
+  flex-basis: 100%;
+  flex-grow: 1;
+  padding-bottom: var(--ids-size-100);
+  padding-top: var(--ids-size-100);
+  position: relative
+}
+.ids-card__carousel {
+  flex-basis: 50%;
+  flex-grow: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%
+}
+.ids-card--vertical {
+  display: flex;
+  flex-direction: column
+}
+.ids-card--horizontal {
+  display: flex;
+  gap: var(--ids-size-150)
+}
+
+/* @inditex/sewingiopdsweb-react-components/timeline/timeline.css */
+.ids-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-25)
+}
+
+/* @inditex/sewingiopdsweb-react-components/timeline/timeline-item.css */
+.ids-timeline-item {
+  display: flex;
+  min-height: var(--ids-size-350);
+  position: relative;
+  transition: var(--ids-motion-micro-states)
+}
+.ids-timeline-item-indicator {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-inline-end: var(--ids-size-75);
+  min-width: var(--ids-size-50);
+  width: var(--ids-size-50)
+}
+.ids-timeline-item-marker {
+  border: var(--ids-size-border-high) solid var(--ids-color-border-low);
+  box-sizing: border-box;
+  height: var(--ids-size-50);
+  min-height: var(--ids-size-50);
+  width: var(--ids-size-50)
+}
+.ids-timeline-item-connector {
+  background-color: var(--ids-color-border-low);
+  flex-grow: 1;
+  margin-bottom: var(--ids-size-0);
+  margin-top: var(--ids-size-25);
+  width: var(--ids-size-border-high)
+}
+.ids-timeline-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-25);
+  margin-top: -6px;
+  width: 100%
+}
+.ids-timeline-item-content:focus-visible {
+  outline: var(--ids-size-border-default) solid var(--ids-color-border-states-focus);
+  outline-offset: var(--ids-size-12)
+}
+.ids-timeline-item-label {
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform)
+}
+.ids-timeline-item-detail,.ids-timeline-item-label {
+  color: var(--ids-color-content-default);
+  overflow-wrap: break-word
+}
+.ids-timeline-item-detail {
+  font: var(--ids-typo-detail-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
+  margin-top: var(--ids-size-25);
+  text-transform: var(--ids-typo-detail-m-text-transform)
+}
+.ids-timeline-item--completed .ids-timeline-item-marker {
+  border-color: var(--ids-color-border-default)
+}
+.ids-timeline-item--completed .ids-timeline-item-connector {
+  background-color: var(--ids-color-border-default)
+}
+.ids-timeline-item--incompleted .ids-timeline-item-marker {
+  border-color: var(--ids-color-border-low)
+}
+.ids-timeline-item--incompleted .ids-timeline-item-connector {
+  background-color: var(--ids-color-border-low)
+}
+.ids-timeline-item--current .ids-timeline-item-marker {
+  background-color: var(--ids-color-content-default);
+  border-color: var(--ids-color-content-default)
+}
+.ids-timeline-item--current .ids-timeline-item-connector {
+  background-color: var(--ids-color-border-low)
+}
+.ids-timeline-item--current .ids-timeline-item-label {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-transform: var(--ids-typo-label-l-high-text-transform)
+}
+.ids-timeline-item--current:hover .ids-timeline-item-marker {
+  background-color: var(--ids-color-content-states-hover)
+}
+.ids-timeline-item--completed.ids-timeline-item--current .ids-timeline-item-connector {
+  background-color: var(--ids-color-border-default)
+}
+.ids-timeline-item--error .ids-timeline-item-marker {
+  border-color: var(--ids-color-alt-red-high)
+}
+.ids-timeline-item--error .ids-timeline-item-connector,.ids-timeline-item--error.ids-timeline-item--current .ids-timeline-item-marker {
+  background-color: var(--ids-color-alt-red-high)
+}
+.ids-timeline-item:hover {
+  color: var(--ids-color-content-states-hover)
+}
+.ids-timeline-item:hover .ids-timeline-item-marker {
+  border-color: var(--ids-color-border-states-hover)
+}
+.ids-timeline-item:hover .ids-timeline-item-detail,.ids-timeline-item:hover .ids-timeline-item-label {
+  color: var(--ids-color-content-states-hover)
+}
+.ids-timeline-item--clickable .ids-timeline-item-content {
+  cursor: pointer
+}
+.ids-timeline-item--expandable .ids-accordion {
+  width: 100%
+}
+.ids-timeline-item--expandable .ids-accordion__toggle {
+  height: var(--ids-size-125);
+  min-height: var(--ids-size-125)
+}
+.ids-timeline-item--expandable .ids-timeline-item-detail {
+  margin-top: 0
+}
+.ids-timeline-item--expandable.ids-timeline-item--current .ids-accordion__toggle-label {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-transform: var(--ids-typo-label-l-high-text-transform)
+}
+.ids-timeline-item--secondary .ids-timeline-item-marker {
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  justify-content: center
+}
+.ids-timeline-item--secondary .ids-timeline-item-marker:after {
+  border: var(--ids-size-border-high) solid var(--ids-color-border-low);
+  box-sizing: border-box;
+  content: "";
+  height: var(--ids-size-25);
+  width: var(--ids-size-25)
+}
+.ids-timeline-item--secondary.ids-timeline-item--completed .ids-timeline-item-marker:after {
+  border-color: var(--ids-color-border-default)
+}
+.ids-timeline-item--secondary.ids-timeline-item--incompleted .ids-timeline-item-marker:after {
+  border-color: var(--ids-color-border-low)
+}
+.ids-timeline-item--secondary.ids-timeline-item--current .ids-timeline-item-marker {
+  background-color: transparent
+}
+.ids-timeline-item--secondary.ids-timeline-item--current .ids-timeline-item-marker:after {
+  background-color: var(--ids-color-content-default);
+  border-color: var(--ids-color-content-default)
+}
+.ids-timeline-item--secondary.ids-timeline-item--error .ids-timeline-item-marker:after {
+  border-color: var(--ids-color-alt-red-high)
+}
+.ids-timeline-item--secondary.ids-timeline-item--error.ids-timeline-item--current .ids-timeline-item-marker {
+  background-color: transparent
+}
+.ids-timeline-item--secondary.ids-timeline-item--error.ids-timeline-item--current .ids-timeline-item-marker:after {
+  background-color: var(--ids-color-alt-red-high)
+}
+.ids-timeline-item--secondary:hover .ids-timeline-item-marker {
+  border-color: transparent
+}
+.ids-timeline-item--secondary:hover .ids-timeline-item-marker:after {
+  border-color: var(--ids-color-border-states-hover)
+}
+.ids-timeline-item--secondary.ids-timeline-item--current:hover .ids-timeline-item-marker {
+  background-color: transparent
+}
+.ids-timeline-item--secondary.ids-timeline-item--current:hover .ids-timeline-item-marker:after {
+  background-color: var(--ids-color-content-states-hover)
+}
+.ids-timeline-item:last-child .ids-timeline-item-connector {
+  visibility: hidden
+}

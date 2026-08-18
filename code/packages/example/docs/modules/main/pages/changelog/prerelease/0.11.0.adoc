@@ -1,0 +1,18 @@
+= v0.11.0
+:description: Improvements and bugfixes reported
+
+== Metadata
+
+* *Release date*: 2025-05-15
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/209[#209] Improve copy / paste on context menu
+* https://github.com/InditexTech/weavejs/issues/187[#187] Improve the showcase of other users pointer logic
+* https://github.com/InditexTech/weavejs/issues/185[#185] Support to zoom in and zoom out with ctrl / cmd + wheel mouse
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/188[#188] Text node edition state issues
+* https://github.com/InditexTech/weavejs/issues/200[#200] Movement with mouse wheel breaks the grid movement
+* https://github.com/InditexTech/weavejs/issues/186[#186] Fix copy / paste events not triggering after click outside canvas

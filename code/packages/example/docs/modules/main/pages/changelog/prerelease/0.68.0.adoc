@@ -1,0 +1,10 @@
+= v0.68.0
+:description: Throttle awareness events of WeaveUsersPointersPlugin
+
+== Metadata
+
+* *Release date*: 2025-09-07
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/654[#654] Throttle awareness events of WeaveUsersPointersPlugin

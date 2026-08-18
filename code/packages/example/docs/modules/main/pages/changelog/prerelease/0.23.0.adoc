@@ -1,0 +1,10 @@
+= v0.23.0
+:description: Regular polygon node & action
+
+== Metadata
+
+* *Release date*: 2025-06-06
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/324[#353] Regular polygon node & action

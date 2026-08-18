@@ -1,0 +1,11 @@
+= v0.10.0
+:description: API to remove selected nodes programmatically and some bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-13
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/165[#165] Sort dependencies and devDependencies alphabetically on create-app generated code
+* https://github.com/InditexTech/weavejs/issues/161[#161] API to remove selected nodes programmatically

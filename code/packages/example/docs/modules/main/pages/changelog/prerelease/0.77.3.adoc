@@ -1,0 +1,10 @@
+= v0.77.3
+:description: Preset images uncroppedImage information
+
+== Metadata
+
+* *Release date*: 2025-10-21
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/745[#745] Preset uncroppedImage information on image load

@@ -1,0 +1,20 @@
+= v0.16.0
+:description: Awareness improvements & other minor improvements and bugfixes
+
+== Metadata
+
+* *Release date*: 2025-05-23
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/264[#264] User selection awareness events plugin
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/263[#263] Awareness cursor UI improvements
+* https://github.com/InditexTech/weavejs/issues/274[#274] Update create-app frontend
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/238[#238] Crop image resizing and after-cropping position issues
+* https://github.com/InditexTech/weavejs/issues/245[#245] Frames drag-and-drop quirks when frames overlap

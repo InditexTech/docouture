@@ -1,0 +1,10 @@
+= v0.10.2
+:description: UI updates to create-app frontend
+
+== Metadata
+
+* *Release date*: 2025-05-13
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/174[#174] Improve UI with create-app frontend template

@@ -1,0 +1,16 @@
+= v0.21.0
+:description: Performance updates
+
+== Metadata
+
+* *Release date*: 2025-06-04
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/330[#330] Performance improvements
+* https://github.com/InditexTech/weavejs/issues/333[#333] Update create-app frontend
+
+### Fixed
+
+* https://github.com/InditexTech/weavejs/issues/329[#329] Fix initial state of images when cropping
+* https://github.com/InditexTech/weavejs/issues/334[#334] Don't include d.ts as ts files on bundle

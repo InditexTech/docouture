@@ -1,0 +1,10 @@
+= v0.27.1
+:description: Text node edition mode fix
+
+== Metadata
+
+* *Release date*: 2025-06-16
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/403[#403] Fix text jump when editing Text node

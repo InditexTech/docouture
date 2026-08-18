@@ -1,0 +1,11 @@
+= v0.52.2
+:description: Crop image tool & Panning tool fixes
+
+== Metadata
+
+* *Release date*: 2025-08-05
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/562[#562] Crop image tool fixes
+* https://github.com/InditexTech/weavejs/issues/564[#564] While enter pressed user should be able to pan the canvas

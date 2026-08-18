@@ -1,0 +1,10 @@
+= v0.29.1
+:description: Fix mouse / trackpad zoom and pan events
+
+== Metadata
+
+* *Release date*: 2025-06-19
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/424[#424] Fix zoom with wheel mouse

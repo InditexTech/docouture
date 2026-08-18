@@ -1,0 +1,11 @@
+= v0.44.0
+:description: UX improvements
+
+== Metadata
+
+* *Release date*: 2025-07-28
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/512[#512] borderStrokeWidth is ignored when passed via WeaveNodesSelectionPlugin config
+* https://github.com/InditexTech/weavejs/issues/528[#528] Improve Frame Selection UX

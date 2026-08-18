@@ -1,0 +1,11 @@
+= v0.74.1
+:description: Minor bugfixes
+
+== Metadata
+
+* *Release date*: 2025-10-10
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/701[#701] Fix Video node TS types issues and rotation
+* https://github.com/InditexTech/weavejs/issues/705[#705] When ctrl + alt and drag, original node is moved a delta, but when reload its OK

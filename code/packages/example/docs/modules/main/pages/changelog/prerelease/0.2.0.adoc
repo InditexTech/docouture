@@ -1,0 +1,12 @@
+= v0.2.0
+:description: Bundler switch to tsdown
+
+== Metadata
+
+* *Release date*: 2025-04-30
+
+== Changes
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/117[#117] Switch to https://tsdown.dev/[tsdown]

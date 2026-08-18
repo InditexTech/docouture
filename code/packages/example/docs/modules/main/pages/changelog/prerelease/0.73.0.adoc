@@ -1,0 +1,10 @@
+= v0.73.0
+:description: New video node
+
+== Metadata
+
+* *Release date*: 2025-10-08
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/681[#681] Video node

@@ -1,0 +1,14 @@
+= v0.60.0
+:description: New Comments tool, node and plugin, also some improvements to mouse cursor handling on tools
+
+== Metadata
+
+* *Release date*: 2025-08-28
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/617[#617] Comment tool, node and render plugin
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/616[#616] Improve mouse cursor handling on tools

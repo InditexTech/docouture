@@ -1,0 +1,18 @@
+= v0.28.0
+:description: Presence feedback when moving, create app frontend updates and snapping lines transforming fix
+
+== Metadata
+
+* *Release date*: 2025-06-18
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/332[#332] Presence feedback when moving
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/416[#416] Update create app frontend
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/411[#411] Snapping lines when transforming taking into account transformed node

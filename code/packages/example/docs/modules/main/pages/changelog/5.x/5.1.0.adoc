@@ -1,0 +1,10 @@
+= v5.1.0
+:description: When grouping preserve the nodes ids
+
+== Metadata
+
+* *Release date*: 2026-06-19
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/1112[#1112] Preserve Node IDs When Grouping Nodes

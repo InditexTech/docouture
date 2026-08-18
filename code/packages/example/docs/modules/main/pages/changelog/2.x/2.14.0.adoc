@@ -1,0 +1,15 @@
+= v2.14.0
+:description: Change log level per child loggers, fix remove selection when users disconnects and fix look with the locking mechanism
+
+== Metadata
+
+* *Release date*: 2026-01-15
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/870[#870] Change log level per child logger
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/867[#867] Sometimes the app gets blocked (relative to mutex operations)
+* https://github.com/InditexTech/weavejs/issues/868[#868] Cleanup correctly the selection when users disconnect or reconnect

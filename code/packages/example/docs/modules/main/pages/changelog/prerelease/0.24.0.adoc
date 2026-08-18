@@ -1,0 +1,16 @@
+= v0.24.0
+:description: UX improvements, and bugfixes
+
+== Metadata
+
+* *Release date*: 2025-06-10
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/357[#357] On cursor position perform paste
+* https://github.com/InditexTech/weavejs/issues/365[#365] Improved drag & drop elements
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/364[#364] User pointer not disappearing on disconnection
+* https://github.com/InditexTech/weavejs/issues/371[#371] Images not appearing on library when copy/pasted from other place (external)

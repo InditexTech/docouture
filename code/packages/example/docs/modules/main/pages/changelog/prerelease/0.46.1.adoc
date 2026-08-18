@@ -1,0 +1,10 @@
+= v0.46.1
+:description: Improved pinch-zoom and panning
+
+== Metadata
+
+* *Release date*: 2025-07-30
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/534[#534] Pinch zoom breaks on Safari iPad (Zoom becomes NaN)

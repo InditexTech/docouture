@@ -1,0 +1,10 @@
+= v0.9.3
+:description: Fix create-app issues
+
+== Metadata
+
+* *Release date*: 2025-05-13
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/161[#161] Fix create-app issues with Node 18 and missing dependencies

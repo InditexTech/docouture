@@ -1,0 +1,12 @@
+= v2.21.0
+:description: Unified stroke and stroke tool that supports single stroke and defining tips, support to crop via anchor + cmd / ctrl click and allow to move by locking axes when shift is pressed
+
+== Metadata
+
+* *Release date*: 2026-02-24
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/905[#905] Unified stroke tool with single stroke and customizable tips
+* https://github.com/InditexTech/weavejs/issues/923[#923] Constrain node dragging to horizontal/vertical axes when holding “Shift” key
+* https://github.com/InditexTech/weavejs/issues/925[#925] Allow to crop image by pressing cmd/ctrl on anchors

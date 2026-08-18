@@ -49,3 +49,8 @@ components:
     - breadcrumb-item.css # .ids-breadcrumb-item[--link/--active] + its divider
   label:
     - label.css # .ids-label--white — hero page tags (GH-9)
+  card:
+    - card.css # .ids-card--vertical — Weave.js migration Phase 2, [cards] block (asciidoc-extensions/lib/card-grid.js)
+  timeline:
+    - timeline.css # .ids-timeline — flex column wrapper
+    - timeline-item.css # .ids-timeline-item[--completed] — Weave.js migration Phase 2, [steps] block (asciidoc-extensions/lib/steps.js)

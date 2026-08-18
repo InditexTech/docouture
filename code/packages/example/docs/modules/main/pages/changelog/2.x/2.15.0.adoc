@@ -1,0 +1,10 @@
+= v2.15.0
+:description: Expose event to send atomic events of changes performed by instance user
+
+== Metadata
+
+* *Release date*: 2026-01-19
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/874[#874] Expose an event that send atomic changes performed by the user instance

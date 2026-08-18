@@ -1,0 +1,10 @@
+= v0.54.1
+:description: Fix copy / paste from other tab (outside app)
+
+== Metadata
+
+* *Release date*: 2025-08-07
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/576[#576] Images copied from the browser cannot be pasted

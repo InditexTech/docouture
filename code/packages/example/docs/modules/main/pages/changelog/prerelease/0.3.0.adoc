@@ -1,0 +1,14 @@
+= v0.3.0
+:description: Refactoring of nodes, plugins and actions API
+
+== Metadata
+
+* *Release date*: 2025-04-30
+
+== Changes
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/123[#123] Refactor action methods names
+* https://github.com/InditexTech/weavejs/issues/116[#116] Refactor plugin methods names
+* https://github.com/InditexTech/weavejs/issues/115[#115] Refactor nodes to simplify the API

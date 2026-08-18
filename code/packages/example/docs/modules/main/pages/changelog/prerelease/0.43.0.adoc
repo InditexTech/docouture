@@ -1,0 +1,11 @@
+= v0.43.0
+:description: Check tools to avoid multiple pointers, also determine if tool allows to zoom and pan
+
+== Metadata
+
+* *Release date*: 2025-07-24
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/552620[#526] Remaining tools movement on touch devices
+* https://github.com/InditexTech/weavejs/issues/552620[#508] Check tools to avoid multiple pointers, also determine if tool allows to zoom and pan

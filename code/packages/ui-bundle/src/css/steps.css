@@ -1,0 +1,40 @@
+/*
+ * Weave.js migration Phase 2 — the [steps] Asciidoctor extension
+ * (asciidoc-extensions/lib/steps.js). Renders IDS Timeline
+ * (ids-components.css, timeline/timeline.css + timeline-item.css); this file
+ * supplies only what a doc-content usage needs and Timeline's own
+ * stylesheet doesn't already provide:
+ *
+ *   - vertical rhythm consistent with the rest of `.doc` (Timeline ships
+ *     with none of its own — a React consumer normally supplies spacing via
+ *     layout, same gap issue grid-layout.css's own `.doc`/`.toc` note
+ *     describes for that component)
+ *   - styling the step's own block `.title` div (Asciidoctor's standard
+ *     title rendering, not a custom label element — see steps.js's header
+ *     comment) as the step's heading, since Timeline's stylesheet has no
+ *     opinion on what lives inside `.ids-timeline-item-content` beyond its
+ *     own `-label`/`-detail` slots, neither of which this extension emits
+ */
+.doc .pdocs-steps {
+  margin: var(--doc-space-block) 0 0;
+}
+
+.doc .pdocs-steps .ids-timeline-item-content {
+  gap: var(--doc-space-block);
+  padding-bottom: var(--doc-space-block);
+}
+
+.doc .pdocs-steps .ids-timeline-item-content > .title {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+}
+
+/* Every child of a step's content after the title is ordinary `.doc` prose
+ * (paragraphs, code blocks, lists) — reset the block-level top margin
+ * `.doc`'s own rule would otherwise add (see doc.css's own `.paragraph,
+ * .listingblock, …` rule), since `.ids-timeline-item-content`'s flex `gap`
+ * above already spaces them. */
+.doc .pdocs-steps .ids-timeline-item-content > * {
+  margin-top: 0;
+}

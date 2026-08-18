@@ -1,0 +1,10 @@
+= v0.41.0
+:description: More visibility on Azure Web Pubsub store
+
+== Metadata
+
+* *Release date*: 2025-07-23
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/518[#518] Added more loggin on azure web pubsub store

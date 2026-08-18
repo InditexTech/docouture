@@ -1,0 +1,10 @@
+= v2.17.0
+:description: New API to get the document of a room from the store
+
+== Metadata
+
+* *Release date*: 2026-02-05
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/895[#895] API to get the document of a store

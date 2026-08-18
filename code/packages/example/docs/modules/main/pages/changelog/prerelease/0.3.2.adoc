@@ -1,0 +1,12 @@
+= v0.3.2
+:description: Patch for issues on CLI templates
+
+== Metadata
+
+* *Release date*: 2025-04-30
+
+== Changes
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/128[#128] Fix CLI templates issues

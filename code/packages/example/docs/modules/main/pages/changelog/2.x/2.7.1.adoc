@@ -1,0 +1,10 @@
+= v2.7.1
+:description: Fix issue when moving elements along z-index
+
+== Metadata
+
+* *Release date*: 2025-11-27
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/814[#814] Images disappear after repeated layer reorder operations inside a frame

@@ -1,0 +1,16 @@
+= v0.22.0
+:description: Ellipse, Star and Arrow nodes & actions
+
+== Metadata
+
+* *Release date*: 2025-06-05
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/324[#324] Arrow node & action
+* https://github.com/InditexTech/weavejs/issues/325[#325] Ellipse node & action
+* https://github.com/InditexTech/weavejs/issues/326[#326] Star node & action
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/349[#349] Fix zoom issues

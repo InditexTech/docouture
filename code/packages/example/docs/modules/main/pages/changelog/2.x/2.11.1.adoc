@@ -1,0 +1,10 @@
+= v2.11.1
+:description: Allow customize measure node tool style
+
+== Metadata
+
+* *Release date*: 2025-12-16
+
+### Changed
+
+* https://github.com/InditexTech/weavejs/issues/855[#855] Measure node style customization

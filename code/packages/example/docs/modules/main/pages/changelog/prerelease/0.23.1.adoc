@@ -1,0 +1,10 @@
+= v0.23.1
+:description: Documentation issues
+
+== Metadata
+
+* *Release date*: 2025-06-06
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/360[#360] Documentation issues

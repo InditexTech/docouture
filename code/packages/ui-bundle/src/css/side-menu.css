@@ -461,6 +461,19 @@ html.is-side-menu-collapsed {
 }
 
 /*
+ * A non-interactive category label (nav-tree.hbs's own comment: a leaf nav
+ * entry with `content` but no `url` — Fumadocs' `"---Label---"` separator,
+ * preserved by the Weave.js migration's nav generator). Deliberately not
+ * `.side-menu__link`: nothing here is clickable, so no cursor, no hover
+ * colour shift, no focus ring — `content-low` (already used throughout
+ * this bundle for muted chrome text — toolbar, ToC) is the only signal
+ * that distinguishes it from a real entry.
+ */
+.side-menu__link--label .ids-list-item__label {
+  color: var(--ids-color-content-low);
+}
+
+/*
  * Expand/collapse control — a square 40px hit area (row height) around the
  * unchanged 20px chevron, rotated to point up when expanded.
  */

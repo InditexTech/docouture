@@ -1,0 +1,10 @@
+= v0.9.1
+:description: Improve the UI of the frontend create-app
+
+== Metadata
+
+* *Release date*: 2025-05-09
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/157[#157] Update frontend create-app

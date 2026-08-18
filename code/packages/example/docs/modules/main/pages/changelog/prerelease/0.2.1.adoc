@@ -1,0 +1,12 @@
+= v0.2.1
+:description: CLI templates patch
+
+== Metadata
+
+* *Release date*: 2025-04-30
+
+== Changes
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/119[#119] Fix missing dependencies on CLI starter templates

@@ -116,6 +116,50 @@ Loads of details.
 Voila!
 ====
 
+=== Steps
+
+Weave.js migration Phase 2 — see `asciidoc-extensions/lib/steps.js`.
+
+[steps]
+====
+.Import the Action
+Start by importing the action:
+
+[,ts]
+----
+import { WeaveRectangleToolAction } from "@inditextech/weave-sdk";
+----
+
+.Register the Action
+Then register it on the `Weave` instance:
+
+[,ts]
+----
+const instance = new Weave({
+  actions: [new WeaveRectangleToolAction()],
+});
+----
+
+.Trigger the action
+Finally, call it from a button or any other UI element:
+
+* *Click* on the canvas to create a rectangle with a default size.
+* *Click & drag* to create a rectangle and define its size.
+====
+
+=== Card grid
+
+Weave.js migration Phase 2 — see `asciidoc-extensions/lib/card-grid.js`.
+
+[cards]
+====
+https://example.org[WeaveAction]:: The abstract class that defines the blueprint of an action in Weave.js.
+
+https://example.org[WeaveCommentToolAction]:: Enables users to directly comment and give feedback on the stage.
+
+https://example.org[WeaveEraserToolAction]:: Allows users to erase elements of the canvas by clicking on them.
+====
+
 === Some Code
 
 How about some code?

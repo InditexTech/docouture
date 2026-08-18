@@ -1,0 +1,10 @@
+= v0.57.0
+:description: Improved stroke tool (pressure support)
+
+== Metadata
+
+* *Release date*: 2025-08-12
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/600[#600] Improved stroke tool (pressure support)

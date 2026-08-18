@@ -1,0 +1,14 @@
+= v0.20.4
+:description: Image cropping issues & improvements to create-app frontend
+
+== Metadata
+
+* *Release date*: 2025-06-03
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/322[#322] Update create-app frontend
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/327[#327] Fix missing uncroppedImage property on image

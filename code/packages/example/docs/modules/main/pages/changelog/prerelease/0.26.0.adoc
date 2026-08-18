@@ -1,0 +1,18 @@
+= v0.26.0
+:description: Stores connectivity improvements, trigger image crop and image first load border issue.
+
+== Metadata
+
+* *Release date*: 2025-06-12
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/388[#388] Allow the image tool to receive a specific event to trigger the crop mode
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/304[#304] Improve stores connectivity
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/387[#387] Image border issues on the first render

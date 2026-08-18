@@ -1,0 +1,10 @@
+= v0.16.2
+:description: Text node editing fix
+
+== Metadata
+
+* *Release date*: 2025-05-26
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/285[#285] Text editing jumps when sidebars are opened

@@ -1,0 +1,10 @@
+= v0.74.2
+:description: Click + alt drag bugfix
+
+== Metadata
+
+* *Release date*: 2025-10-10
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/707[#707] Click + alt and drag sometimes doesn't trigger

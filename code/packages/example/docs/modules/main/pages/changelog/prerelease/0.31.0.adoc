@@ -1,0 +1,16 @@
+= v0.31.0
+:description: Grid plugin behavior improvement, wheel pan now works without pressing space, nodes, actions and plugins API (get) avoid trowing and some minor bugfixes
+
+== Metadata
+
+* *Release date*: 2025-06-28
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/445[#445] Improve the grid behavior
+* https://github.com/InditexTech/weavejs/issues/447[#447] Avoid plugins to throw when not installed
+* https://github.com/InditexTech/weavejs/issues/448[#448] Enable wheel pan without needing to hold the space bar
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/449[#449] Free draw tool incorrectly selects frame and switches cursor to hand when drawing inside a frame

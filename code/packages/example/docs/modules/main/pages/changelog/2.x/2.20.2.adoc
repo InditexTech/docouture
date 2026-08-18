@@ -1,0 +1,11 @@
+= v2.20.2
+:description: Important performance bugfix when using cache with Images node and other small bugfixes
+
+== Metadata
+
+* *Release date*: 2026-02-19
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/917[#917] Avoid cache image onRender method
+* https://github.com/InditexTech/weavejs/issues/918[#918] Clamp fitToScreen and fitToSelection to steps limits on Zoom plugin

@@ -1,0 +1,19 @@
+= v0.30.0
+:description: Get image as base64 from Export Nodes action, Support for ShadowDOM, React Helper now doesn't load any plugin automatically and some bugfixes
+
+== Metadata
+
+* *Release date*: 2025-06-19
+
+### Added
+
+* https://github.com/InditexTech/weavejs/issues/435[#435] Generate base64 image on Export Nodes Action
+* https://github.com/InditexTech/weavejs/issues/437[#437] Add support to ShadowDOM
+
+=== Changed
+
+* https://github.com/InditexTech/weavejs/issues/426[#426] Don't set default plugins on React Helper
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/427[#427] Fix activating area selector when context menu is activated and then cancelled

@@ -1,0 +1,10 @@
+= v0.42.0
+:description: Update store state with references (avoid cloning when possible)
+
+== Metadata
+
+* *Release date*: 2025-07-24
+
+=== Added
+
+* https://github.com/InditexTech/weavejs/issues/520[#520] Avoid merging state without references

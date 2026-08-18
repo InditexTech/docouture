@@ -1,0 +1,12 @@
+= v0.31.1
+:description: Several important bugfixes
+
+== Metadata
+
+* *Release date*: 2025-06-30
+
+=== Fixed
+
+* https://github.com/InditexTech/weavejs/issues/458[#458] Right-click opens context menu but also triggers canvas panning
+* https://github.com/InditexTech/weavejs/issues/459[#459] Panning with wheel event outside stage moves the stage
+* https://github.com/InditexTech/weavejs/issues/460[#460] Export selection doesn't export image on base scale

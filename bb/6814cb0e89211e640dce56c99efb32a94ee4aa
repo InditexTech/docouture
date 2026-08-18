@@ -1,0 +1,37 @@
+.opencode/skills/docs-site-package/SKILL.md
+  s_5b7256204621fb::t_527bf60fc2c30e 41,61,73-94
+.opencode/skills/ui-bundle-anatomy/reference/templates.md
+  s_5b7256204621fb::t_477fd8765b04c2 12,16-24,68-82
+code/packages/example/antora-playbook.yml
+  s_5b7256204621fb::t_dff19ecfff224c 13-19,21,87-91
+code/packages/example/docs/antora.yml
+  s_5b7256204621fb::t_9122b838667af9 1-5,8-19,78-100
+code/packages/starter/antora-playbook.yml
+  s_5b7256204621fb::t_d4c615083c6793 14-18,63-67,90-101
+code/packages/starter/docs/antora.yml
+  s_5b7256204621fb::t_f50620f1530f42 8-38
+code/packages/starter/package.json
+  s_5b7256204621fb::t_db2a3294b3e6fa 16
+code/packages/ui-bundle/src/img/ids-icons.svg
+  s_5b7256204621fb::t_6ffe4a15048608 1
+code/packages/ui-bundle/src/partials/nav-switcher.hbs
+  s_5b7256204621fb::t_569e2079c47bf3 23-32,37,58
+code/pnpm-lock.yaml
+  s_5b7256204621fb::t_e370c94dd78bb0 83-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bb6814cb0e89211e640dce56c99efb32a94ee4aa",
+  "prompts": {},
+  "sessions": {
+    "s_5b7256204621fb": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_feb949ac8ffeidIE6gkmOxCA3m",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

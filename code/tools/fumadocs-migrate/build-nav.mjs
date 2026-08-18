@@ -297,13 +297,7 @@ function writeNavModules() {
   if (begin < 0 || end < 0) {
     throw new Error(`${EXAMPLE_DESCRIPTOR} is missing the generated nav_modules block markers`)
   }
-  const updated =
-    descriptor.slice(0, begin) +
-    GENERATED_BEGIN +
-    '\n' +
-    lines.join('\n') +
-    '\n' +
-    descriptor.slice(end)
+  const updated = descriptor.slice(0, begin) + GENERATED_BEGIN + '\n' + lines.join('\n') + '\n' + descriptor.slice(end)
   writeFileSync(EXAMPLE_DESCRIPTOR, updated)
   console.log(`nav_modules: ${navOrder.length} module(s)`)
 }

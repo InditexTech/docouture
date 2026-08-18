@@ -2,13 +2,19 @@
   "name": "@inditextech/pdocs-asciidoc-extensions",
   "version": "0.1.0",
   "private": true,
-  "description": "Asciidoctor extensions shared by pdocs documentation sites — label:/mono: inline macros, table wrapping and nowrap-cols (GH-14)",
+  "description": "Asciidoctor extensions shared by pdocs documentation sites — authored content that has no AsciiDoc equivalent, rendered as IOP DS markup",
   "license": "MPL-2.0",
   "main": "index.js",
   "engines": {
     "node": ">=24.0.0"
   },
   "scripts": {
-    "lint": "eslint ."
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@asciidoctor/core": "~4.0.8",
+    "typescript": "6.0.3"
   }
 }

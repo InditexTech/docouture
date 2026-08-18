@@ -55,6 +55,13 @@ function buildCardHtml(title, body) {
 }
 
 function renderCard(term, description) {
+  // NOT escaped, deliberately — `getText()` returns CONVERTED HTML, not text.
+  // A term carrying the `xref:` this block is built around arrives here as
+  // `<a href="...">Label</a>`, so running it through html.js's `escapeHtml`
+  // would render the anchor as visible source and break every card link. See
+  // lib/html.js's header for which strings do need escaping (raw BLOCK
+  // attributes) and which are already safe (inline macros, document
+  // attributes, and anything from `getText()`).
   const title = term.map((t) => t.getText()).join(', ')
   if (!description) return buildCardHtml(title, '')
 

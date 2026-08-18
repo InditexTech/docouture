@@ -58,7 +58,11 @@ function sizeVideos(html, sizes = []) {
     if (!declarations.length) continue
 
     result += html.slice(cursor, match.index)
-    const attrs = match[1]
+    // Capture group 1 is not optional in VIDEO_OPEN_RX, so a match always
+    // carries it — but `noUncheckedIndexedAccess` types every group past 0 as
+    // possibly undefined, since it cannot know that. Cast rather than add a
+    // runtime guard for a branch that cannot be reached.
+    const attrs = /** @type {string} */ (match[1])
     const styledAttrs = /\sstyle="/.test(attrs)
       ? attrs.replace(/\sstyle="/, ` style="${declarations.join(';')};`)
       : `${attrs} style="${declarations.join(';')}"`

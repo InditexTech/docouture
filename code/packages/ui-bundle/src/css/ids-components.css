@@ -2176,3 +2176,54 @@
 .ids-timeline-item:last-child .ids-timeline-item-connector {
   visibility: hidden
 }
+
+/* @inditex/sewingiopdsweb-react-components/tabs/tabs-item.css */
+.ids-tabs-item {
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--ids-color-content-default);
+  cursor: pointer;
+  display: flex;
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  gap: var(--ids-size-25);
+  height: var(--ids-size-250);
+  justify-content: center;
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  max-width: 200px;
+  position: relative;
+  text-transform: var(--ids-typo-label-l-text-transform);
+  z-index: var(--ids-z-sticky)
+}
+.ids-tabs-item:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: 1px
+}
+.ids-tabs-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.ids-tabs-item__icon-badge {
+  align-items: center;
+  display: flex;
+  justify-content: center
+}
+.ids-tabs-item--selected {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-transform: var(--ids-typo-label-l-high-text-transform)
+}
+@media (hover:hover) {
+  .ids-tabs-item.ids-tabs-item--underlined:hover:not(.ids-tabs-item--disabled) {
+    color: var(--ids-color-content-states-hover)
+  }
+}
+.ids-tabs-item--disabled {
+  color: var(--ids-color-content-states-disabled);
+  cursor: default
+}
+.ids-tabs-item--solid {
+  padding-inline: var(--ids-size-75)
+}

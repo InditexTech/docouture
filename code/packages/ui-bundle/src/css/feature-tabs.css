@@ -1,0 +1,393 @@
+/*
+ * The [feature-tabs] block — asciidoc-extensions/lib/feature-tabs.js.
+ *
+ * The landing's "Key features" switcher: a column of labels beside a panel,
+ * where the panel is one slide (media still, prose, optional call to action)
+ * and selecting a label swaps it. Figma 2696:54801 (l), 2696:92583 (m),
+ * 2696:94328 (s), 2696:95691 (xs).
+ *
+ * TWO STATES, AND WHICH ONE THIS FILE ASSUMES
+ *
+ * The extension emits a plain, complete section: every panel present and
+ * visible under its own heading, with the label column as in-page anchors to
+ * them. That is what renders with JavaScript off, and it is the DEFAULT here —
+ * nothing in this file hides a panel or collapses the stack until
+ * `07-feature-tabs.ts` has added `is-enhanced`. Every rule that only makes
+ * sense once a tab widget exists is nested under that class, so the two states
+ * cannot drift apart by accident.
+ *
+ * WHAT COMES FROM THE DESIGN SYSTEM
+ *
+ * The labels are IDS Tabs' own item (ids-components.css, tabs/tabs-item.css):
+ * `.ids-tabs-item` is `label/l`, `.ids-tabs-item--selected` is `label/l-high`,
+ * which is exactly the pair the frames draw, and it carries the DS's own
+ * focus ring with it. What that stylesheet assumes is a HORIZONTAL strip —
+ * `height: 40px`, `max-width: 200px`, centred content — so this file re-lays
+ * the item out for a vertical, right-aligned, 254px column. Those overrides
+ * are the only ones, and they are listed at the rule itself.
+ *
+ * Its hover colour is not reused: tabs-item.css scopes hover to
+ * `.ids-tabs-item--underlined`, a variant with an indicator bar this block does
+ * not render, so the rule below applies the same token to the unselected items
+ * directly rather than adding a class that would also claim an indicator.
+ *
+ * COLOURS ARE TOKENS, SO THERE IS NO DARK-THEME RULE FOR THE BLOCK ITSELF
+ *
+ * The frame's `#F7F7F7` media surface is `--ids-color-bg-low`, which
+ * ids-tokens.css already swaps under `.ids-theme-dark`, and the label and body
+ * colours come from the DS item and from `.doc`. The one thing that cannot
+ * adapt on its own is a raster still, which is why a slide may carry a second
+ * `role=dark` image and why the only theme-conditional rules here are the two
+ * that swap between them.
+ */
+
+/* ------------------------------------------------------------ the block ---- */
+
+/*
+ * Stacked by default: label column above the panel at m, s and xs, and the
+ * unenhanced state at every width. The frames disagree with themselves here —
+ * the m frame (2696:92583) puts the label list above the panel, s and xs
+ * (2696:94328, 2696:95691) put it below — and above is what this implements at
+ * all three. A tablist rendered after the panels it controls is wrong to read
+ * and wrong to tab through, and "fixing" that visually with `order` would put
+ * focus order and visual order permanently out of step, which is a worse bug
+ * than the 32px it would save.
+ *
+ * `align-items: flex-end` is the frames' own: the label column is right-aligned
+ * against the content column at every breakpoint, stacked or not.
+ */
+.pdocs-feature-tabs {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ids-size-150) + var(--ids-size-50)); /* 32 */
+  /*
+   * Wider than prose, capped at the column. A slide is a media panel with a
+   * label column beside it, not a paragraph — held to the 820px reading measure
+   * the still is small enough to lose the thing it is showing, and at l the
+   * labels take 254 of those 820 before the panel gets any.
+   *
+   * Exactly the shape `[cards,width=container]` uses (card-grid.css, which
+   * explains it at length) and for the same reason: a `width` on an element
+   * whose ancestors merely cap their OWN box (`.doc > *`, `.sectionbody`, all
+   * `max-width`) overflows that box rather than being clipped by it, and
+   * `100cqw` is the backstop that stops it at the grid column. `.doc` declares
+   * `container-type: inline-size`, and home.css declares it on `.home__main`,
+   * so the unit resolves in both views.
+   *
+   * Not a bare `100cqw`: "let this block be wider than prose" is not the same
+   * request as "make it as wide as the page", and on a wide screen the second
+   * one strands the labels 900px from the panel they belong to.
+   */
+  max-width: none;
+  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
+}
+
+/*
+ * The article view puts blocks in a normal flow, so the block needs the top
+ * margin every other block gets there; the landing's content column is a flex
+ * column with its own gap (home.css), so it needs none — same split, and same
+ * `.doc`-scoped rule, as card-grid.css and steps.css.
+ */
+.doc .pdocs-feature-tabs {
+  margin: var(--doc-space-block) 0 0;
+}
+
+/*
+ * Side by side at l only, which is the one band where it fits.
+ *
+ * Not at the project's `m` (1240): even let out to 1.5x the measure, the block
+ * can never be wider than the column it sits in, and at m that column is around
+ * 720px. Taking 254 + 56 for the labels out of that leaves a panel of roughly
+ * 410 — the frames draw the labels beside the panel only where the panel is
+ * still the wider of the two, and the design's own "M" frame agrees: at 1024 it
+ * stacks this block for exactly that reason.
+ */
+@media screen and (--ids-breakpoints-l) {
+  .pdocs-feature-tabs {
+    align-items: flex-end;
+    flex-direction: row;
+    gap: var(--ids-size-350); /* 56 */
+  }
+}
+
+/* ------------------------------------------------------- the label list ---- */
+
+/*
+ * 254px, right-aligned, 12 apart — the frames' own, at every breakpoint. The
+ * width is a design literal rather than a token sum: there is no 254 in the
+ * size scale, and rounding it to 250 or 256 would change where the labels sit
+ * against the panel.
+ *
+ * `max-inline-size: 100%` keeps it inside the column at xs (358px of content
+ * at 390 viewport), where 254 fits but leaves little room.
+ */
+.pdocs-feature-tabs__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-75); /* 12 */
+  inline-size: 254px;
+  list-style: none;
+  margin: 0;
+  max-inline-size: 100%;
+  padding: 0;
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .pdocs-feature-tabs__list {
+    flex: none;
+  }
+}
+
+/*
+ * The DS item, re-laid-out for a vertical column. Four overrides, all of them
+ * undoing an assumption that only holds for a horizontal strip:
+ *
+ *   height       40px fixed — a label here wraps to two lines at xs
+ *   max-width    200px — the column is 254
+ *   justify      centred — the frames right-align these
+ *   text-align   inherited from the column, which is left
+ *
+ * Everything else — the type, the two weights, the focus ring — is the DS's.
+ */
+.pdocs-feature-tabs__tab {
+  block-size: auto;
+  display: block;
+  max-inline-size: none;
+  min-block-size: var(--ids-size-125); /* 20, the frames' line box */
+  text-align: right;
+}
+
+/*
+ * `.doc a` (doc.css) is a link colour for PROSE, and it matches these anchors
+ * too — they are real anchors, deliberately, since with script off they are
+ * what makes every panel reachable. Left alone they render as blue body links.
+ *
+ * Beaten on specificity rather than by source order: `.doc a` is (0,1,1), so a
+ * single class here would lose to it no matter which file is imported last.
+ * Qualifying with the list — which is where these anchors always live — makes
+ * it (0,2,0), the same shape card-grid.css uses for a card's title anchor.
+ */
+.pdocs-feature-tabs__list .pdocs-feature-tabs__tab,
+.pdocs-feature-tabs__list .pdocs-feature-tabs__tab:hover,
+.pdocs-feature-tabs__list .pdocs-feature-tabs__tab:focus {
+  color: var(--ids-color-content-default);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .pdocs-feature-tabs__list .pdocs-feature-tabs__tab:not(.ids-tabs-item--selected):hover {
+    color: var(--ids-color-content-states-hover);
+  }
+}
+
+/* ----------------------------------------------------------- the panels ---- */
+
+/*
+ * Unenhanced, the panels are an ordinary stack: one after another, each under
+ * its own heading, spaced like the blocks in a doc page. Enhanced, they become
+ * one grid cell that every panel shares — which is what lets the cross-fade
+ * happen in place, with the outgoing and incoming slides overlapping instead
+ * of the block collapsing to nothing between them.
+ */
+.pdocs-feature-tabs__panels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--doc-space-block);
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.is-enhanced .pdocs-feature-tabs__panels {
+  display: grid;
+}
+
+.pdocs-feature-tabs__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-100); /* 16 */
+  min-inline-size: 0;
+}
+
+/*
+ * Every panel in the same cell, so the block is as tall as its tallest slide
+ * and switching tabs moves nothing on the page below it. Paying for the
+ * tallest slide's height on every slide is the deliberate trade: the
+ * alternative — a block that grows and shrinks as the reader clicks through
+ * it — reflows the footer under the cursor.
+ *
+ * The rest of this rule is the cross-fade's resting state. Only the enhanced
+ * state has anything to fade, and only a panel that is not selected is hidden —
+ * with script off nothing here matches, so nothing can be hidden without a way
+ * to bring it back.
+ *
+ * `visibility` rather than `display` or `hidden`: it animates (as a discrete
+ * step at the end of the transition), and it keeps the panels that are away out
+ * of both the accessibility tree and the tab order, which `opacity: 0` alone
+ * would not do.
+ */
+.is-enhanced .pdocs-feature-tabs__panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: var(--ids-motion-micro-appear); /* all 0.35s */
+  transform: translateY(var(--ids-size-25)); /* 4 */
+  visibility: hidden;
+}
+
+.is-enhanced .pdocs-feature-tabs__panel.is-selected {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+}
+
+/*
+ * The motion is decoration — the panel swap is the information, and it happens
+ * either way.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .is-enhanced .pdocs-feature-tabs__panel {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------- the heading ---- */
+
+/*
+ * `title/s`, and no heading margin: the panel is a flex column with the frames'
+ * own 16px gap, so `.doc h3`'s margin would add to it.
+ *
+ * Qualified with the panel for the same reason the tab colour is qualified with
+ * the list — `.doc h3` is (0,1,1) and sets both the type scale (`title/m`) and
+ * that margin, so a single class here would lose to it.
+ */
+.pdocs-feature-tabs__panel .pdocs-feature-tabs__heading {
+  color: var(--ids-color-content-default);
+  font: var(--ids-typo-title-s);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-title-s-letter-spacing);
+  margin: 0;
+}
+
+/*
+ * A slide with no `label=` of its own has a heading that says exactly what its
+ * tab says (the design's own copy works this way — its labels ARE the
+ * headings). Enhanced, that would print the same words twice, so the heading is
+ * hidden — from the eye only. Clip-based hiding, the same shape doc.css uses
+ * for the copy button's live region: it stays in the accessibility tree, so the
+ * panel's `aria-labelledby` still resolves and the section is still named.
+ *
+ * Unenhanced it is simply a visible heading, which is what makes the stacked
+ * document readable.
+ *
+ * Qualified up to (0,3,0) so `position` actually lands: `.doc h3:not(.discrete)`
+ * (doc.css) is (0,2,1) and sets `position: relative` for the section anchor it
+ * carries — left to fight at equal weight, the heading stayed in flow while
+ * every other property of this rule applied, which is the one property the
+ * pattern cannot do without.
+ */
+.is-enhanced .pdocs-feature-tabs__panel .pdocs-feature-tabs__heading--redundant {
+  block-size: 1px;
+  border: 0;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ the media ---- */
+
+/*
+ * One aspect box, fluid at every width. The frames all draw the same ratio —
+ * 566x280 at l, and fill x 213.71 / 225.58 / 177.1 at m / s / xs, every one of
+ * them 2.021 — so the still is `width: 100%` with that ratio rather than four
+ * fixed sizes. The l frame's own 566 inside a wider panel is the one place the
+ * mock does not stretch it; it is treated as an artefact of the mock, not as a
+ * cap, so the still fills its column there too.
+ *
+ * `contain`, not `cover`: these are diagrams and product shots, and cropping
+ * one to fill the box loses the thing it was drawn to show. The surface behind
+ * the letterboxing is the frame's own `#F7F7F7` = `--ids-color-bg-low`, and the
+ * 20px inset keeps the artwork off that surface's edges — `border-box` sizing
+ * so the padding comes out of the aspect box rather than growing it.
+ */
+.pdocs-feature-tabs__media {
+  aspect-ratio: 566 / 280;
+  background-color: var(--ids-color-bg-low);
+  box-sizing: border-box;
+  inline-size: 100%;
+  overflow: hidden;
+  padding: var(--ids-size-125); /* 20 */
+}
+
+.pdocs-feature-tabs__image {
+  block-size: 100%;
+  display: block;
+  inline-size: 100%;
+  object-fit: contain;
+}
+
+/*
+ * The themed pair. Only ever emitted together (feature-tabs.js), so a slide
+ * with one still carries neither class and is shown in both themes.
+ */
+.pdocs-feature-tabs__image--dark,
+.ids-theme-dark .pdocs-feature-tabs__image--light {
+  display: none;
+}
+
+.ids-theme-dark .pdocs-feature-tabs__image--dark {
+  display: block;
+}
+
+/* ------------------------------------------------------------- the body ---- */
+
+/*
+ * `body/l` is what the frames specify, and it is what `.doc` prose already is
+ * at m and up — so, exactly as card-grid.css argues for a card's description,
+ * the body inherits rather than restating a size that would be a point off the
+ * surrounding text below m.
+ *
+ * The panel's flex `gap` does the spacing, so the block-level top margin
+ * doc.css gives every block is reset on the first child only — the rest keep
+ * the article view's own rhythm, which is what a slide's prose should read
+ * like.
+ */
+.pdocs-feature-tabs__body > :first-child {
+  margin-block-start: 0;
+}
+
+/* -------------------------------------------------------------- the CTA ---- */
+
+/*
+ * IDS Button, ghost, sized by its own stylesheet. `align-self: flex-start`
+ * because the panel is a stretch-aligned flex column and a button that spans
+ * the panel is not what any frame draws.
+ */
+.pdocs-feature-tabs__cta {
+  align-self: flex-start;
+}
+
+.doc .pdocs-feature-tabs__cta,
+.doc .pdocs-feature-tabs__cta:hover,
+.doc .pdocs-feature-tabs__cta:focus {
+  text-decoration: none;
+}
+
+/*
+ * The external-link icon is a mask, not an `<svg><use>`: the extension that
+ * emits this markup runs at conversion time with no `uiRootPath`, so it cannot
+ * address the sprite (icon-masks.css's own header states the same rule for
+ * `[card]`).
+ */
+.pdocs-feature-tabs__cta-icon {
+  background: currentColor;
+  block-size: var(--ids-size-125); /* 20 */
+  inline-size: var(--ids-size-125);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}

@@ -91,6 +91,8 @@ masks:
     - sticker-outlined
   communication:
     - comment-outlined
+  connectivity:
+    - link-external-outlined # [feature-tabs] call to action, external targets (GH-22)
   design:
     - grid-outlined # [card,icon=…] (GH-20)
   others:

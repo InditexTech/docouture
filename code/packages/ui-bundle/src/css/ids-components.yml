@@ -54,3 +54,19 @@ components:
   timeline:
     - timeline.css # .ids-timeline — flex column wrapper
     - timeline-item.css # .ids-timeline-item[--completed] — Weave.js migration Phase 2, [steps] block (asciidoc-extensions/lib/steps.js)
+  tabs:
+    # Deliberately 1 of the directory's 2 files — the same judgement the
+    # breadcrumbs entry above records, and for the same reason: tabs.css styles
+    # markup this bundle never renders. It is the `.ids-tabs__list` flex ROW and
+    # the sliding `.ids-tabs__indicator` (a React-measured element: Tabs.tsx
+    # positions it from the selected item's offsetLeft/offsetWidth), plus the
+    # overflow-wrapper hooks. The landing's Key features switcher (GH-22, Figma
+    # 2696:54801) draws neither — its labels are a right-aligned COLUMN with no
+    # indicator at all, laid out in feature-tabs.css.
+    #
+    # What is vendored is the item itself, which is an exact match rather than
+    # an approximation: `.ids-tabs-item` is `label/l` and
+    # `.ids-tabs-item--selected` is `label/l-high`, which is precisely the two
+    # states the frames draw, and it brings the DS's own `:focus-visible` ring
+    # and hover colour with it.
+    - tabs-item.css # .ids-tabs-item[--selected] — [feature-tabs] labels (asciidoc-extensions/lib/feature-tabs.js)

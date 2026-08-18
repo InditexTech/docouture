@@ -18,7 +18,7 @@ Weave.js abstracts the complexity of building real-time, collaborative apps from
 - *Real-time shared state synchronization*. Built-in mechanisms for syncing shared-state across clients using atomic diffs and pluggable transport layers.
 - *Rendering and interactions (User Interface)*. A decoupled rendering and interaction layer with a simple API to handle shared state changes, user interactions, and custom behaviors. A headless solution (in terms of UI).
 
-== Quicklinks
+== Get started
 
 [cards,type=image-square,columns="1 s:2 m:4",width=container]
 ====
@@ -52,6 +52,63 @@ Components for integrating Weave.js into a React application.
 image::cloth-stores.svg["Abstract study of draped cloth, slate"]
 
 How a room's state reaches every participant, and which transport to pick.
+--
+====
+
+== Build collaborative whiteboard applications
+
+[feature-tabs]
+====
+[feature,label="UI-agnostic"]
+--
+image::feature-1.png[A Weave.js canvas rendered through several UI frameworks]
+image::feature-1-dark.png[role=dark]
+
+Change the UI using our included primitives or build a new one. With Weave.js,
+you get a unified system that includes a high-performance, fully customizable
+whiteboard so you can focus on building the product.
+
+[.cta]
+xref:main:architecture.adoc[Learn more]
+--
+
+[feature,label="Powerful abstractions"]
+--
+image::feature-2.png[The store, node, plugin and action layers of a Weave.js room]
+image::feature-2-dark.png[role=dark]
+
+Keep what you need, discard the rest, and build your own. Stores handle the
+real-time sync complexity while nodes, plugins, and actions allow for
+selection, drawing, erasing, creating geometric shapes, and perfect freehand
+drawing to smooth development.
+
+[.cta]
+xref:main:build/index.adoc[Learn more]
+--
+
+[feature,label="React Helper library"]
+--
+image::feature-3.png[Weave.js components rendered inside a React application]
+image::feature-3-dark.png[role=dark]
+
+Our React Helper library provides all the necessary components to easily
+integrate Weave.js on top of React projects.
+
+[.cta]
+xref:react:index.adoc[Learn more]
+--
+
+[feature,label="Light & well-built"]
+--
+image::feature-4.png[Atomic diffs travelling between two clients of a room]
+image::feature-4-dark.png[role=dark]
+
+Weave.js only syncs minimal state changes — not the full tree. It uses a custom
+React Reconciler under the hood to detect and transmit mutations with maximum
+efficiency. Lower overhead, higher performance for live collaboration.
+
+[.cta]
+xref:react:index.adoc[Learn more]
 --
 ====
 

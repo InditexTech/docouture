@@ -73,9 +73,9 @@ The not-found page.
 
 Blocks on this page come from Asciidoctor extensions rather than from the
 layout, so a landing stays authored content. The Quicklinks row above is the
-first of them (GH-20, the `[cards]` block); until the rest land (GH-21 through
-GH-23) any AsciiDoc renders here, which is what this section is for: it checks
-that the block's heading row, its dashed rule and the gaps around its body are
+first of them (GH-20, the `[cards]` block); until the rest land (GH-21, GH-23)
+any AsciiDoc renders here, which is what this section is for: it checks that
+the block's heading row, its dashed rule and the gaps around its body are
 right regardless of what fills it.
 
 * A plain list, to check body rhythm inside a block.
@@ -84,9 +84,69 @@ right regardless of what fills it.
 
 == Key features
 
-Each `==` section is one block: a heading row in `title/m` over a dashed 4/4
-rule, then the block's body. The gap between blocks is 72 at `l` and `m`, 64 at
-`s` and 56 at `xs`; the gap inside one is 40 at `l` and 32 everywhere else.
+The `[feature-tabs]` block (GH-22) — the landing's one interactive block, and
+the one to check with JavaScript disabled: every slide should render in
+sequence under its own heading, with the labels above them as working in-page
+anchors. With script on it is a vertical tablist: click a label, or focus one
+and arrow through them.
+
+The four slides below cover every branch the block has. The first carries an
+explicit `label=` beside its heading, so the tabs say the short thing and the
+panel the long one; the middle two have a heading only, so their heading and
+their label are the same words and the heading is hidden once the tabs exist;
+the last has a label only and no heading at all, which is what the frames draw.
+The first two have a call to action — one leaving the site, which derives the
+external-link icon, one staying in it, which does not; the last two have none.
+
+[feature-tabs]
+====
+[feature,label="UI-agnostic"]
+.Integrates with the UI framework of your choice
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+A slide is a media still, this prose, and an optional call to action, in that
+order however they were authored. The still is fluid at every breakpoint and
+letterboxed on `--ids-color-bg-low` rather than cropped, since these are
+diagrams as often as photographs.
+
+[.cta]
+https://github.com/InditexTech/atd-docs[Know more]
+--
+
+[feature]
+.Powerful abstractions
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+This slide's label and heading say the same thing, which is what the design's
+own copy does — so with the tabs running, the heading is hidden from the eye
+and kept for assistive technology, and with them off it is an ordinary visible
+heading.
+
+[.cta]
+link:content.html[Read the long form]
+--
+
+[feature]
+.Optimized for real-time
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+No call to action on this slide: it is optional, and a slide without one should
+end at its prose rather than at an empty row.
+--
+
+[feature,label="Format and style for your code"]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The fourth slide has no `.Title` at all — a heading is optional, and this is
+what the design's own slides look like: media, prose, nothing above them. It
+also checks that the label column wraps a long label to two lines inside its
+254px without disturbing the 12px rhythm between labels.
+--
+====
 
 == Get started
 

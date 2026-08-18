@@ -1,39 +1,4 @@
 {{!--
-  Page footer (GH-16), Figma node 3615:59424. Two stacked regions, both in
-  the same DS grid container the header toolbar and hero use
-  (`.ids-grid-layout--with-margin`) so the footer's left/right edges line
-  up with everything above it at every breakpoint instead of a flat 64px
-  (see header.css's own precedent, hero.hbs's own comment on the same
-  choice for GH-9).
-
-  Navigation (`.page-footer__nav`): previous/next, unchanged data source —
-  see pagination.hbs, which still owns the real rendering and the
-  `page.attributes.pagination` opt-in/opt-out. This wrapper only supplies
-  the grid and the dashed top+bottom rule (footer.css) — same
-  `repeating-linear-gradient` technique as header.css / side-menu.css,
-  named here as the third consumer both of those comments point to.
-
-  Feedback (`.page-footer__feedback`): the design's two content columns,
-  not specified further by the issue itself (GH-16's own "open question")
-  but fully specified in Figma — "*Feedback" (2678:35528) names both
-  columns and all four controls:
-
-  - Left (`.page-footer__vote`, 294px): "Was this info useful?" plus a
-    Yes/No vote. No feedback backend exists, so the buttons render
-    `hidden` and are unhidden by src/js/07-feedback.ts, same "a control
-    with no handler must not render" rule as theme-toggle.hbs / the ToC
-    toggle — JS-off, the question renders with no dead buttons under it.
-
-  - Right (`.page-footer__contribute`): "Help us make these docs great!"
-    plus two ghost buttons. "how to contribute" has no equivalent in the
-    Antora page model — `site.keys.contributeUrl` is a new playbook-level
-    key, same convention as `site.keys.repoUrl` (repo-link.hbs) and
-    `site.keys.productLogo` (nav-brand.hbs): absent, the button doesn't
-    render rather than pointing nowhere. "Propose a change" is the design's
-    name for the existing edit-this-page link — folded in as
-    edit-this-page.hbs, not duplicated here.
---}}
-{{!--
   Page footer (GH-16), Figma "Page footer" (2678:35589).
 
   Navigation (`.page-footer__nav`): the dashed-rule row — pagination.hbs

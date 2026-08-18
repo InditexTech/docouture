@@ -13,6 +13,7 @@ const registerNowrapCols = require('./lib/nowrap-cols')
 const registerVideoSize = require('./lib/video-size')
 const registerSteps = require('./lib/steps')
 const registerCardGrid = require('./lib/card-grid')
+const registerFeatureTabs = require('./lib/feature-tabs')
 
 function registerAll(target) {
   registerLabelMacro(target)
@@ -31,6 +32,11 @@ function registerAll(target) {
   // header comment for the DS components behind them and why.
   registerSteps(target)
   registerCardGrid(target)
+  // [feature-tabs] — the landing's Key features switcher (GH-22). The only
+  // block here with behaviour layered on top of it; see its own header for
+  // why the tab ARIA is applied by ui-bundle's 07-feature-tabs.ts rather
+  // than emitted from here.
+  registerFeatureTabs(target)
 }
 
 /**

@@ -29,6 +29,7 @@
   --icon-mask-business-file-outlined: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M12.136 2H3v16h14.118V6.982zM3.941 17.059V2.94h7.53v4.706h4.706v9.412zm11.57-10.353-3.1-3.1v3.1z' clip-rule='evenodd'/%3E%3C/svg%3E");
   --icon-mask-business-sticker-outlined: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M17.5 2.5h-15v15h7.707l7.293-7.293zm-14 14v-13h13v6h-7v7zm7-.707 5.293-5.293H10.5z' clip-rule='evenodd'/%3E%3C/svg%3E");
   --icon-mask-communication-comment-outlined: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M2 2h15.483v10.93h-5.755L5.643 18v-5.07H2zm.91.91v9.109h3.644v4.036l4.844-4.036h5.174V2.91z' clip-rule='evenodd' shape-rendering='geometricPrecision'/%3E%3C/svg%3E");
+  --icon-mask-connectivity-link-external-outlined: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M13.293 6H7V5h8v8h-1V6.707L5.707 15 5 14.293z' shape-rendering='geometricPrecision'/%3E%3C/svg%3E");
   --icon-mask-design-grid-outlined: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M9.059 2H2v6.588h7.059zM2.94 7.647V2.941h5.177v4.706zM18 2h-7.059v6.588H18zm-6.118 5.647V2.941h5.177v4.706zM2 10.47h7.059v6.589H2zm.941.942v4.706h5.177v-4.706zM18 10.47h-7.059v6.589H18zm-6.118 5.648v-4.706h5.177v4.706z' clip-rule='evenodd' shape-rendering='geometricPrecision'/%3E%3C/svg%3E");
   --icon-mask-others-server-outlined: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6.353 4.824h.941v-.942h-.941zM7.294 9.53h-.941v-.942h.941zM6.353 14.235h.941v-.94h-.941z' shape-rendering='geometricPrecision'/%3E%3Cpath fill-rule='evenodd' d='M16.235 2H4v16h12.235zM4.941 6.706V2.94h10.353v3.765zm0 .941v3.765h10.353V7.647zm0 9.412v-4.706h10.353v4.706z' clip-rule='evenodd' shape-rendering='geometricPrecision'/%3E%3C/svg%3E");
 }
@@ -63,6 +64,10 @@
 
 .ids-icon-mask--communication-comment-outlined {
   mask-image: var(--icon-mask-communication-comment-outlined);
+}
+
+.ids-icon-mask--connectivity-link-external-outlined {
+  mask-image: var(--icon-mask-connectivity-link-external-outlined);
 }
 
 .ids-icon-mask--design-grid-outlined {

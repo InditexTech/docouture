@@ -13,6 +13,9 @@
 // - Define each core concept once, with the exact name used in the code and
 //   the rest of the docs.
 // - Explain the "why" behind non-obvious design decisions and trade-offs.
+// - If any H2 section grows large enough to overwhelm the page, split it
+//   into its own page nested under Architecture in nav.adoc, keeping the
+//   overview and diagram here.
 //
 // QUALITY BAR (Definition of Done):
 // - [ ] Contains one overview diagram of components and their interactions.
@@ -27,19 +30,30 @@
 
 == Overview
 
-// Diagram of major components and their interactions. Prefer a text-based
-// diagram source (PlantUML/Mermaid) committed next to the docs so it can
-// evolve with the code.
+// [MANDATORY] Diagram of major components and their interactions. Prefer a
+// text-based diagram source (PlantUML/Mermaid) committed next to the docs so
+// it can evolve with the code.
+// Do not simply provide the diagram: explain it too. Walk through the flow
+// stages and how the pieces communicate and work together. The audience has
+// a technical background — do not be afraid to go into detail.
+...
+
+== Project structure
+
+// [ADVISED] How the repository/artifacts are organized: what each package,
+// module, or artifact is for. Helps users navigate the code and contributors
+// find their way. Delete if the project is a single small module.
 ...
 
 == Core concepts
 
-// One subsection per concept: what it is, what it is responsible for, and
-// how it relates to the other concepts. Match code naming exactly.
+// [MANDATORY] One subsection per concept: what it is, what it is responsible
+// for, and how it relates to the other concepts. Match code naming exactly.
 === ...
 
 == Design decisions
 
-// The non-obvious choices and their trade-offs: why X over Y. This is what
-// experienced users and contributors look for.
+// [ADVISED] The non-obvious choices and their trade-offs: why X over Y. This
+// is what experienced users and contributors look for. It doubles as
+// technical validation of the design.
 * ...

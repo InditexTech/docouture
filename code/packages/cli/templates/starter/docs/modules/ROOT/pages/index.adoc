@@ -7,7 +7,12 @@
 //
 // Write every section below following its inline guidance, then delete the
 // guidance comments (lines starting with //). See docs/AGENTS.md for the
-// style guide and the quality checklist for this page.
+// style guide, the section requirement levels (MANDATORY, ADVISED,
+// IF APPLIES, OPTIONAL), and the quality checklist for this page.
+//
+// AUDIENCE DETAIL: two kinds of readers land here — someone with no prior
+// knowledge of the product, and someone actively deciding whether it fits
+// their needs. Write for both: describe first, help them decide second.
 //
 // QUALITY BAR (Definition of Done):
 // - [ ] A newcomer can explain what the project does after reading only the
@@ -18,30 +23,36 @@
 // =============================================================================
 = Introduction
 
-// One or two sentences. Formula: "<PROJECT> is a <category> that <what it
-// does> for <who>." No marketing adjectives; be concrete. Example:
+// [MANDATORY] One or two sentences. Formula: "<PROJECT> is a <category> that
+// <what it does> for <who>." No marketing adjectives; be concrete. Example:
 // "Weave.js is a TypeScript framework for building real-time collaborative
 // whiteboard applications."
+// If useful, add: how it roughly works, its current status/maturity, and
+// whether it is based on or adapted from an existing technology.
 __PDOCS_TITLE__ is ...
 
 == Why __PDOCS_TITLE__
 
-// 3-5 bullets. Each bullet = one problem the user has, and how the project
-// solves it. Lead with the user's pain, not with the feature name.
+// [MANDATORY] 3-5 bullets. Formula per bullet: "*<Benefit>:* how and why
+// (value proposition)" — each bullet = one problem the user has and how the
+// project solves it, compared to the alternatives or the previous situation.
+// Lead with the user's pain, not with the feature name.
 // Bad:  "Plugin architecture."
-// Good: "Extend every layer without forking: stores, actions, and UI are
+// Good: "*Extensible without forking:* stores, actions, and UI are
 //        replaceable plugins."
 * ...
 
 == Is this for you
 
-// Be honest and specific: intended use cases, supported platforms/languages,
-// and explicit non-goals. Saving the wrong users time builds trust.
+// [MANDATORY] Be honest and specific: intended use cases, supported
+// platforms/languages, and explicit non-goals. Saving the wrong users time
+// builds trust. This is the section fit-deciders read.
 Use __PDOCS_TITLE__ if ...
 
 __PDOCS_TITLE__ is *not* intended for ...
 
 == Next steps
+// [MANDATORY] Working xrefs only.
 
 * xref:getting-started.adoc[Getting started] — install and run it in minutes.
 * xref:guides/index.adoc[Guides] — step-by-step instructions for common tasks.

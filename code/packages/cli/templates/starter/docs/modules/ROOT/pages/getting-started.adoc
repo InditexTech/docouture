@@ -12,6 +12,12 @@
 // - Every command must be copy-pasteable and every code sample must run
 //   exactly as written.
 // - End with a visible result the user can verify ("you should see ...").
+// - Prefer presenting the quickstart as a small realistic scenario rather
+//   than abstract instructions — readers relate to it and follow it better.
+// - Structure the steps either in sequential order (must be done in order)
+//   or as a series of tasks (any order, all required); pick what fits the
+//   project and be consistent.
+// - Visuals (screenshots, diagrams) are welcome when they remove ambiguity.
 //
 // QUALITY BAR (Definition of Done):
 // - [ ] Prerequisites list exact versions/tools required, nothing more.
@@ -26,13 +32,15 @@ This page shows you how to install __PDOCS_TITLE__ and ...
 
 == Prerequisites
 
-// Only what is strictly required, with minimum versions. Link to official
-// install pages instead of explaining how to install third-party tools.
+// [MANDATORY] Only what is strictly required, with minimum versions. Link to
+// official install pages instead of explaining how to install third-party
+// tools.
 * ...
 
 == Installation
 
-// The single recommended installation method, as a copy-pasteable block.
+// [MANDATORY] The single recommended installation method, as a
+// copy-pasteable block.
 [,console]
 ----
 $ ...
@@ -40,17 +48,26 @@ $ ...
 
 == Quickstart
 
-// The smallest complete example that shows the project's core value.
-// Numbered steps; each step = one action + the expected outcome.
+// [MANDATORY] The smallest complete example that shows the project's core
+// value, framed as a realistic scenario. Numbered steps; each step = one
+// action + the expected outcome.
 . ...
 
 == Verify it works
 
-// Tell the reader exactly what they should see if everything went well,
-// and the single most common failure with its fix.
+// [MANDATORY] Tell the reader exactly what they should see if everything
+// went well, and the single most common failure with its fix.
 You should see ...
 
+== Known issues
+
+// [IF APPLIES] Acknowledge known issues the user may hit when following this
+// page, or link to where they are tracked (e.g., GitHub issues/discussions).
+// Delete this section if there are none.
+
 == Next steps
+// [MANDATORY] After the quickstart, where should the reader go next to keep
+// diving into the project?
 
 * xref:guides/index.adoc[Guides] — accomplish common tasks step by step.
 * xref:reference/index.adoc[Reference] — the complete API and configuration.

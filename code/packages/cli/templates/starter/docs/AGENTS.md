@@ -35,6 +35,34 @@ enough that a developer only needs to review and correct it — not rewrite it.
    comments (the lines starting with `//`). Leave the guidance in place for
    any page you could not complete, so a human can finish it.
 
+## Section requirement levels
+
+Guidance comments tag sections with a requirement level. Honor them:
+
+- **[MANDATORY]** — always produce this section. If the codebase does not
+  give you the facts, add a `// TODO(human): ...` instead of omitting it.
+- **[ADVISED]** — produce it whenever the project has meaningful content
+  for it; skip it only for trivial projects.
+- **[IF APPLIES]** — produce it only when the feature exists (e.g., known
+  issues, CLI reference). Delete the section otherwise.
+- **[OPTIONAL]** — nice to have; include only when clearly valuable.
+
+## Growing beyond the minimal structure
+
+The template is the minimal universal structure. As the project matures,
+add these pages when their content exists, and register them in `nav.adoc`:
+
+- **FAQ / known issues** — grow the section in `support.adoc` into its own
+  page when it outgrows the page.
+- **Glossary** — when the project has enough domain terms that readers need
+  a lookup page; keep term names identical to the code.
+- **Release notes / migration guides** — one page per release with breaking
+  changes; link them from "Releases and versioning" in `support.adoc`.
+- **Security** — if the project has a nontrivial security model, document
+  authentication/authorization under Reference or as a dedicated page.
+- Split any page that overwhelms the reader (e.g., Architecture sections)
+  into nested pages, keeping the overview at the parent.
+
 ## Ground rules
 
 - **Never invent facts.** Everything you write must be verifiable in the

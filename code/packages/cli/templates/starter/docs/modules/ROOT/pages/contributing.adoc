@@ -24,7 +24,7 @@ Contributions to __PDOCS_TITLE__ are welcome. ...
 
 == Development setup
 
-// Clone, install, build, test — copy-pasteable, in order.
+// [MANDATORY] Clone, install, build, test — copy-pasteable, in order.
 [,console]
 ----
 $ ...
@@ -32,11 +32,12 @@ $ ...
 
 == Making a change
 
-// The expected flow: branch, code, test, PR. Mention conventions that CI
-// enforces (commit format, linting) so the first PR passes.
+// [MANDATORY] The expected flow: branch, code, test, PR. Mention conventions
+// that CI enforces (commit format, linting) so the first PR passes.
 . ...
 
 == Where to start
 
-// Point to good first issues and the areas where help is most valuable.
+// [ADVISED] Point to good first issues and the areas where help is most
+// valuable.
 * ...

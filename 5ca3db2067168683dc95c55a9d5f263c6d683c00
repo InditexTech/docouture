@@ -1,0 +1,29 @@
+code/packages/cli/templates/starter/docs/AGENTS.md
+  s_50390976742d3a::t_b7e47a81747501 38-65
+code/packages/cli/templates/starter/docs/modules/ROOT/pages/architecture.adoc
+  s_50390976742d3a::t_e88be4404c53d7 16-18,33-45,50-51,56-58
+code/packages/cli/templates/starter/docs/modules/ROOT/pages/contributing.adoc
+  s_50390976742d3a::t_db5913e1b324b0 27,35-36,41-42
+code/packages/cli/templates/starter/docs/modules/ROOT/pages/getting-started.adoc
+  s_50390976742d3a::t_33749b1c83088e 15-20,35-37,42-43,51-53,58-59,62-67,69-70
+code/packages/cli/templates/starter/docs/modules/ROOT/pages/index.adoc
+  s_50390976742d3a::t_94742fc5462ca0 10-15,26-27,30-31,36-39,41,47-49,55
+code/packages/cli/templates/starter/docs/modules/ROOT/pages/support.adoc
+  s_50390976742d3a::t_102680fefaaba0 23-24,27-33,36-38,43-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "5ca3db2067168683dc95c55a9d5f263c6d683c00",
+  "prompts": {},
+  "sessions": {
+    "s_50390976742d3a": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "f1452dcf-9c6e-44a2-9e58-99b0213b758c",
+        "model": "unknown"
+      },
+      "human_author": "Sabela Cereijo Vázquez <sabelacv@ext.inditex.com>"
+    }
+  }
+}

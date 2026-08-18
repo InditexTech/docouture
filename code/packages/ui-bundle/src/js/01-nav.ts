@@ -100,6 +100,14 @@
   if (currentItem) {
     activateCurrentPath(currentItem)
     scrollItemToMidpoint(nav, currentItem)
+  } else {
+    // No entry in this tree is the current page, so there is no path to
+    // reveal and everything server-rendered open should shut. Two ways to get
+    // here: a page that simply isn't in the navigation, and the landing (GH-18),
+    // which borrows another module's tree with `:page-nav-module:` and can
+    // never match it. Leaving it as rendered means the landing opens with
+    // every branch of somebody else's module expanded.
+    collapseOtherBranches(null)
   }
 
   function activateCurrentPath (item: Element) {
@@ -113,9 +121,11 @@
     collapseOtherBranches(item)
   }
 
-  function collapseOtherBranches (item: Element) {
+  // `item` null means "keep nothing open", which is what a tree with no
+  // current page wants.
+  function collapseOtherBranches (item: Element | null) {
     var keep: Element[] = []
-    var li = item.closest('li')
+    var li = item ? item.closest('li') : null
     while (li) {
       keep.push(li)
       var parentLi = li.parentElement

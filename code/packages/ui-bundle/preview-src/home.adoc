@@ -1,0 +1,52 @@
+= ATD Framework
+:page-layout: home
+:page-nav-module: sdk
+:description: Landing view test page (GH-18) — the home layout's shell: header toolbar in its Home state, side menu, hero column slot, content blocks and the site footer.
+
+The landing's content column starts with a preamble: everything above the first
+`==` heading. The design uses it for a short lead-in, and it is the one block on
+the page with no heading row of its own.
+
+The hero column beside it is empty on purpose — the shell ships first (GH-18),
+the hero block fills it (GH-19). At `m` and `l` it sticks while this column
+scrolls past it; at `s` and `xs` the two stack.
+
+The side menu shows the SDK module's navigation, not this page's own: the
+landing lives in `ROOT`, which has no navigation of its own, and
+`:page-nav-module: sdk` is what borrows another module's. The switcher reads
+"SDK" for the same reason.
+
+== Quicklinks
+
+[cards]
+====
+link:content.html[Content test page]:: The long-form doc kitchen sink, rendered through the `default` layout.
+link:landing.html[Landing test page]:: Site chrome around a normal doc page, hero opted out.
+link:icons.html[Icons catalog]:: Every icon in the vendored sprite.
+link:404.html[404 page]:: The not-found page.
+====
+
+== Supported features
+
+Blocks on this page come from Asciidoctor extensions rather than from the
+layout, so a landing stays authored content. Until those extensions land
+(GH-20 through GH-23) any AsciiDoc renders here, which is what this section is
+for: it checks that the block's heading row, its dashed rule and the gaps
+around its body are right regardless of what fills it.
+
+* A plain list, to check body rhythm inside a block.
+* A second item.
+* A third.
+
+== Key features
+
+Each `==` section is one block: a heading row in `title/m` over a dashed 4/4
+rule, then the block's body. The gap between blocks is 72 at `l` and `m`, 64 at
+`s` and 56 at `xs`; the gap inside one is 40 at `l` and 32 everywhere else.
+
+== Get started
+
+The final block sits 80 above the site footer at every breakpoint. The footer
+itself is the landing's own — four columns, dashed rule above, no
+previous/next and no feedback row, since a landing is not a page in a reading
+sequence.

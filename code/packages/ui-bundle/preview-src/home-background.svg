@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice" role="presentation">
+  <!--
+    Preview placeholder for the landing's decorative background
+    (site.keys.homeBackground → head-styles.hbs → home.css). Not a design
+    asset: home.css washes whatever a site supplies with 90% white, and this
+    exists only so that wash has something under it while previewing.
+  -->
+  <defs>
+    <radialGradient id="a" cx="20%" cy="15%" r="70%">
+      <stop offset="0%" stop-color="#0170e9"/>
+      <stop offset="100%" stop-color="#0170e9" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b" cx="85%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#00a2a2"/>
+      <stop offset="100%" stop-color="#00a2a2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="c" cx="50%" cy="95%" r="75%">
+      <stop offset="0%" stop-color="#b36bff"/>
+      <stop offset="100%" stop-color="#b36bff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="#fff"/>
+  <rect width="1200" height="1200" fill="url(#a)"/>
+  <rect width="1200" height="1200" fill="url(#b)"/>
+  <rect width="1200" height="1200" fill="url(#c)"/>
+</svg>

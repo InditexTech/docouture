@@ -32,6 +32,16 @@
   full "AMIGA FRAMEWORK WEB" + "repo" + theme toggle no longer fits a
   390px bar alongside the menu button — not something Figma specifies, a
   call made for this breakpoint.
+
+  `variant` (GH-18): the toolbar's Figma "State" property. `home` is the
+  landing's own state (home.hbs passes it; every other layout leaves it
+  unset, which is "Default"). The only difference the design draws is a
+  leading ghost icon button in the searcher, so that is the only difference
+  here — one partial in two states rather than a second, near-identical
+  copy for the landing. It is decorative in the same sense the input beside
+  it is: search is still out of scope, so the button carries no handler and
+  no form, and it is `aria-hidden` with no accessible name rather than
+  announcing a control that does nothing.
 --}}
 <header class="header-toolbar">
   <div class="ids-grid-layout ids-grid-layout--with-margin header-toolbar__grid">
@@ -41,8 +51,15 @@
           <span class="ids-button__icon ids-button__icon-icon">{{icon "design" "menu-tab-outlined"}}</span>
         </span>
       </button>
-      <a class="header-toolbar__product-name ids-text ids-text--label-l-high" href="{{{relativize (or page.componentVersion.url site.homeUrl)}}}">{{or page.component.title site.title}}</a>
+      <a class="header-toolbar__product-name ids-text ids-text--label-l-high" href="{{{relativize (or site.homeUrl page.componentVersion.url)}}}"{{#if page.home}} aria-current="page"{{/if}}>{{or page.component.title site.title}}</a>
       <div class="header-toolbar__search">
+{{#if (eq variant 'home')}}
+        <span class="ids-button ids-button--ghost ids-button--icon-only header-toolbar__search-icon" aria-hidden="true">
+          <span class="ids-button__content">
+            <span class="ids-button__icon ids-button__icon-icon">{{icon "actions" "search-outlined"}}</span>
+          </span>
+        </span>
+{{/if}}
         <span class="ids-text ids-text--label-l header-toolbar__search-label">Search</span>
         <input type="search" class="header-toolbar__search-input" placeholder="type here..." aria-label="Search the docs" tabindex="0">
       </div>

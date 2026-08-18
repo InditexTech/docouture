@@ -30,7 +30,7 @@ This skill covers the package itself. For **what CSS to write** read `iop-ds-fou
 | path | what it is |
 | --- | --- |
 | `src/ui.yml` | bundle descriptor. Only declares `static_files` (files copied to the site root verbatim) |
-| `src/layouts/*.hbs` | page shells. `default.hbs`, `404.hbs`. A page picks one via `page-layout` |
+| `src/layouts/*.hbs` | page shells. `default.hbs`, `home.hbs`, `404.hbs`. A page picks one via `page-layout` |
 | `src/partials/*.hbs` | every other template. Registered by basename, included as `{{> stem}}` |
 | `src/helpers/*.ts` | Handlebars helpers. Filename = helper name. Compiled to CommonJS |
 | `src/js/NN-*.ts` | browser behaviour, bundled into `js/site.js` |

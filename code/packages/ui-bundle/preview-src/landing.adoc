@@ -8,7 +8,8 @@ Author Name
 
 [.lead]
 This is the *landing* test page.
-It renders through the same `default` layout as link:content.html[the content test page], so the diff between the two is entirely in `preview-src/ui-model.yml` and this page's own `:page-role: -hero`: this page is `page.home: true`, so the header's product-name link should show as current and the search field autofocuses.
+It renders through the same `default` layout as link:content.html[the content test page], so the diff between the two is entirely in `preview-src/ui-model.yml` and this page's own `:page-role: -hero`.
+It is the ATD component's own landing page, not the site's home page — that is link:home.html[home.html], which the header's product name and the side menu's brand block both point at.
 
 Everything else on this page is here to exercise site chrome rather than article content: the header toolbar, the left-hand nav tree, the right-hand table of contents, and the previous/next pagination in the footer.
 

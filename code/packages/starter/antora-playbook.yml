@@ -11,7 +11,11 @@ site:
   # Set this to the public URL of the deployed site. It is required for the
   # sitemap and for canonical links; leave it out while developing locally.
   # url: https://docs.example.com
-  start_page: starter::index.adoc
+  # The site's landing page (ui-bundle GH issue #18): `home.adoc` carries
+  # `:page-layout: home`, which selects the UI bundle's landing layout. Point
+  # this at a normal page instead — `starter::index.adoc` — for a site that
+  # does not want one.
+  start_page: starter::home.adoc
 
 content:
   sources:
@@ -56,6 +60,11 @@ ui:
 
 output:
   dir: build/site
+  # Remove the output directory before writing to it. Antora leaves whatever
+  # is already there, so a page that has been renamed, moved to another module
+  # or (as when this site's component was renamed) reachable under an entirely
+  # different first URL segment keeps being served from a previous build.
+  clean: true
 
 runtime:
   # Fail the build on broken xrefs and other content problems rather than
@@ -78,3 +87,15 @@ asciidoc:
     # Label inline; `mono:[text]` — plain monospaced text, no code chip.
     # Both styled by ui-bundle's already-vendored CSS.
     - '@inditextech/pdocs-asciidoc-extensions'
+
+antora:
+  extensions:
+    # Reads the `footer` key out of docs/antora.yml and attaches its link
+    # groups to the component version, where the UI bundle's site footer finds
+    # them. The same extension also reads `nav_modules`, which this
+    # single-module site has no use for. Note this is a different key from
+    # `asciidoc.extensions` above and a different kind of extension: this one
+    # hooks Antora's own pipeline, that one hooks the AsciiDoc processor.
+    # Listing either under the other's key makes Antora log a warning and skip
+    # it.
+    - '@inditextech/pdocs-antora-extensions'

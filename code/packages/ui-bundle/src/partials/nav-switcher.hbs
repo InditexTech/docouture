@@ -20,11 +20,21 @@
   The trigger is a button, not a link: it opens the panel, and the panel is
   what navigates. Its label is the ACTIVE module, so the control reads as
   "you are in X, pick another" rather than as an unlabelled menu.
+
+  "Active" is the module whose tree the side menu is actually showing, which
+  is `:page-nav-module:` where a page sets one — see nav-menu.hbs. A landing
+  borrowing `main`'s navigation therefore reads as being in `main`, rather
+  than labelling itself with a module it does not belong to.
+
+  A tree with no `startUrl` is not offered at all: that is either a module
+  whose navigation has no internal page to link to, or a menu declared
+  `switcher: false` — a landing's own navigation, which is not a module and
+  must not appear beside the real ones.
 --}}
 {{#if (and page.navigation.[1] page.navigation.[0].module)}}
 <div class="nav-switcher">
   {{#each page.navigation}}
-  {{#if (eq ./module @root.page.module)}}
+  {{#if (eq ./module (or @root.page.attributes.[nav-module] @root.page.module))}}
   <button class="nav-switcher__toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Switch module, currently {{detag ./title}}">
     {{#with (split ./icon '/')}}
     <span class="nav-switcher__icon">{{icon this.[0] this.[1]}}</span>
@@ -45,7 +55,7 @@
       {{#if ./startUrl}}
       <li class="nav-switcher__item">
         <a class="nav-switcher__option" href="{{{relativize ./startUrl}}}"
-          {{~#if (eq ./module @root.page.module)}} aria-current="true"{{/if~}}>
+          {{~#if (eq ./module (or @root.page.attributes.[nav-module] @root.page.module))}} aria-current="true"{{/if~}}>
           {{#with (split ./icon '/')}}
           <span class="nav-switcher__icon">{{icon this.[0] this.[1]}}</span>
           {{/with}}

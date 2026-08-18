@@ -1,0 +1,201 @@
+/*
+ * Landing layout (GH-18), Figma 2696:54669 (l), 2696:92452 (m),
+ * 2696:94194 (s), 2696:95558 (xs) — home.hbs.
+ *
+ * Two columns in the design system's own 12-column grid (6 at xs): a hero
+ * that sticks while the content column scrolls past it at m/l, and a content
+ * column of blocks. The side menu, header toolbar and their offsets are
+ * unchanged from the doc view — this file styles only what is inside `main`.
+ *
+ * The spans are declared here rather than with the grid's own
+ * `.ids-grid-layout__item--span-*` utility classes, the same choice doc.css
+ * and toc.css made and for the same reason: those classes carry the design
+ * system package's own breakpoints, whose `m` starts at 1024px, while this
+ * project overrides `m` to 1240px (see ids-breakpoints.css). Spanning 5/7
+ * from 1024 would split the columns across the whole of this project's `s`
+ * band, where the design stacks them.
+ *
+ * Every length is a design system size token, or a sum of them, so the
+ * layout follows `.ids-scale-large` as well; the horizontal gutters come
+ * from `--with-margin` on the container itself (64/56/32/16 per breakpoint,
+ * exactly what the frames draw) and the column gap from the grid's own
+ * per-breakpoint gap (56 at l, 48 at m — again what the frames draw), so
+ * neither is restated here.
+ */
+
+.home {
+  /*
+   * Gap between the stacked columns at s/xs. The grid's own gap is the
+   * column gap the design specifies at m/l, and at s/xs — where the columns
+   * become rows — its 24px is not the 48 the frames draw, so only the row
+   * axis is overridden.
+   */
+  row-gap: var(--ids-size-300);
+  /* 64px: the xs frame's top padding, below the toolbar body already offsets. */
+  padding-block-start: calc(var(--ids-size-300) + var(--ids-size-100));
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .home {
+    padding-block-start: var(--ids-size-500); /* 80 */
+  }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .home {
+    padding-block-start: calc(var(--ids-size-500) + var(--ids-size-300)); /* 128 */
+  }
+}
+
+/*
+ * Decorative full-bleed background, fixed so it does not scroll with the
+ * page, behind everything including the side menu — the frames draw it that
+ * way. No image ships with the bundle: a site supplies one with the
+ * `home_background` playbook key (head-styles.hbs), and without one this is
+ * an inert white wash that costs nothing.
+ *
+ * Declared on the body itself rather than a pseudo-element: a `::before` would
+ * need a negative z-index to sit behind the page's content, and that also puts
+ * it behind its own parent's background, which is opaque (base.css).
+ *
+ * The 90% white overlay is the design's, and it is a light-theme value: over
+ * a dark surface it washes the page out rather than dimming the image. Dark
+ * theme for the landing is deliberately out of scope here (GH-28) — when it
+ * is taken on, this overlay is the first thing to theme.
+ */
+.home-page {
+  background-attachment: fixed;
+  background-image: linear-gradient(rgb(255 255 255 / 90%), rgb(255 255 255 / 90%)), var(--home-background-image, none);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* ------------------------------------------------------------ hero ------- */
+
+.home__hero {
+  grid-column-end: span 6;
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .home__hero {
+    grid-column-end: span 12;
+  }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .home__hero {
+    /*
+     * Sticky at m/l only: at s/xs the hero is a stacked row above the
+     * content, with nothing to stick beside. `align-self: start` is what
+     * makes it sticky at all — a grid item stretches to its row's height by
+     * default, leaving nothing to scroll within.
+     *
+     * It clears the fixed header toolbar (--navbar-height) plus the same
+     * 40px of breathing room the blocks below use as their inner gap.
+     */
+    align-self: start;
+    grid-column-end: span 5;
+    padding-block-end: var(--ids-size-125); /* 20 */
+    position: sticky;
+    top: calc(var(--navbar-height) + var(--ids-size-250));
+  }
+}
+
+/* ---------------------------------------------------------- content ------ */
+
+/*
+ * The content column is a stack of blocks. Each block is a section of the
+ * AsciiDoc document (`.sect1` — an `h2` and its `.sectionbody`), so the
+ * blocks' own chrome is styled here once rather than emitted by each of the
+ * extensions that fill them: an extension ships the body of a block, never
+ * its heading rule.
+ *
+ * Content on the landing arrives outside `.doc`, so none of doc.css applies
+ * to it. That is intentional — a landing is not an article — and it is why
+ * the handful of prose defaults a block body needs (body type, paragraph
+ * rhythm) are set here.
+ */
+.home__main {
+  display: flex;
+  flex-direction: column;
+  font: var(--ids-typo-body-l);
+  gap: var(--ids-size-350); /* 56 */
+  grid-column-end: span 6;
+  letter-spacing: var(--ids-typo-body-l-letter-spacing);
+  padding-block-end: var(--ids-size-500); /* 80 */
+}
+
+.home__main p {
+  margin: 0;
+}
+
+/*
+ * Blocks and the preamble (the lead-in above the first `==` heading, which
+ * Asciidoctor wraps in `#preamble`) are columns of their own: the design
+ * gives each a single gap between its heading and its body, and between the
+ * elements of that body.
+ */
+.home__main > .sect1,
+.home__main > #preamble,
+.home__main > .sect1 > .sectionbody,
+.home__main > #preamble > .sectionbody {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ids-size-150) + var(--ids-size-50)); /* 32 */
+}
+
+/*
+ * Block heading: `title/m` on a row with a 1px dashed 4/4 bottom rule. Same
+ * repeating-linear-gradient technique as the header toolbar, side menu and
+ * page footer (see header.css) — `border-style: dashed` cannot control dash
+ * length. Full black here, not the toolbar's `--ids-color-border-low`: the
+ * frames draw this one as a content rule, not chrome.
+ */
+.home__main > .sect1 > h2 {
+  background-image: repeating-linear-gradient(to right, var(--ids-color-border-default) 0 4px, transparent 4px 8px);
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-size: 8px 1px;
+  color: var(--ids-color-content-default);
+  font: var(--ids-typo-title-m);
+  letter-spacing: var(--ids-typo-title-m-letter-spacing);
+  margin: 0;
+  padding-block: var(--ids-size-25); /* 4 */
+  text-transform: var(--ids-typo-title-m-text-transform);
+}
+
+@media screen and (--ids-breakpoints-s) {
+  .home__main {
+    gap: calc(var(--ids-size-300) + var(--ids-size-100)); /* 64 */
+    grid-column-end: span 12;
+  }
+}
+
+@media screen and (--ids-breakpoints-m) {
+  .home__main {
+    gap: calc(var(--ids-size-300) + var(--ids-size-150)); /* 72 */
+    grid-column-end: span 7;
+    /*
+     * The frames inset the content column from the right by one grid margin
+     * on top of the container's own, so a block never runs to the page edge
+     * the way the hero runs to the menu.
+     */
+    padding-inline-end: var(--comp-grid-margin-m);
+    /* 160: the m/l frames drop the content column below the hero's first line. */
+    padding-block-start: calc(var(--ids-size-500) * 2);
+  }
+}
+
+@media screen and (--ids-breakpoints-l) {
+  .home__main {
+    padding-inline-end: var(--comp-grid-margin-l);
+  }
+
+  .home__main > .sect1,
+  .home__main > #preamble,
+  .home__main > .sect1 > .sectionbody,
+  .home__main > #preamble > .sectionbody {
+    gap: var(--ids-size-250); /* 40 */
+  }
+}

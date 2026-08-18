@@ -1,0 +1,35 @@
+= Weave.js
+:page-layout: home
+:page-nav-module: main
+:description: Weave.js — the framework for building visual collaborative applications.
+
+Weave.js is a framework for building visual collaborative applications: a
+headless canvas engine, a React integration and a choice of transports, so a
+team can draw, edit and reason on the same surface at the same time.
+
+== Quicklinks
+
+[cards]
+====
+xref:main:index.adoc[Framework]:: The visual collaborative apps framework — concepts, setup and the pieces it is made of.
+xref:sdk:index.adoc[SDK]:: The headless library the canvas is built on.
+xref:react:index.adoc[React Helper]:: Components for integrating Weave.js into a React application.
+xref:types:index.adoc[TypeScript Types]:: The shared type and constant definitions used across the ecosystem.
+====
+
+== Stores
+
+A store is how a room's state reaches every participant. Pick the transport
+that matches where the application runs.
+
+[cards]
+====
+xref:store-websockets:index.adoc[Websockets Store]:: WebSockets as transport, client and server.
+xref:store-azure-web-pubsub:index.adoc[Azure Web PubSub Store]:: Azure Web PubSub as transport, for deployments already on Azure.
+xref:store-standalone:index.adoc[Standalone Store]:: No transport at all — render a canvas straight from room data.
+====
+
+== Get started
+
+Start with the xref:main:index.adoc[framework overview], then follow the setup
+guide for the package you are integrating.

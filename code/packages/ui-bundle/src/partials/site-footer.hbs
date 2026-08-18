@@ -1,0 +1,82 @@
+{{!--
+  Site footer (GH-18) — the landing's own footer, in place of the doc view's
+  page footer (footer-content.hbs), whose previous/next row and "was this
+  useful" feedback block both assume a page inside a reading sequence.
+  Rendered only by home.hbs for now; nothing here is landing-specific if it is
+  ever wanted on doc pages too.
+
+  Four columns on the design system's own grid — three of its twelve each at m
+  and l, full width and stacked at s and xs. Composed from design system
+  primitives (`.ids-text--*`) the same way the header toolbar is: the design
+  system has no footer component to consume. No column headings: the design
+  has no footer frame at all, and four labelled columns of two links each read
+  as more chrome than the landing wants.
+
+    1. the product mark and the site title, linking home
+    2. authored links — `footer.groups[0]` in the component descriptor
+    3. one link per module, each to that module's start page; a component with
+       fewer than two switchable modules has no module list worth showing, so
+       the column falls back to `footer.groups[1]`
+    4. the copyright line
+
+  Columns 2 and 3 come from `page.componentVersion.footer`, attached by
+  @inditextech/pdocs-antora-extensions from the `footer` key in antora.yml —
+  the playbook cannot carry them (`site.keys` is a flat primitive map), and
+  that extension's own header explains why the descriptor is the only place
+  left. Their URLs are already resolved there, page IDs included, so nothing
+  here relativizes an authored link twice.
+
+  Every column omits itself when it has nothing to show — the same rule
+  repo-link.hbs and nav-brand.hbs follow, so a site that configures none of
+  this still gets a coherent footer rather than three gaps and a dead link.
+--}}
+<footer class="site-footer">
+  <div class="ids-grid-layout ids-grid-layout--with-margin site-footer__grid">
+    <div class="ids-grid-layout__item site-footer__col site-footer__brand">
+      <a class="site-footer__brand-link" href="{{{relativize (or site.homeUrl page.componentVersion.url)}}}">
+        {{#with site.keys.productLogo}}
+        <img class="site-footer__logo{{#if @root.site.keys.productLogoDark}} site-footer__logo--light{{/if}}" src="{{{relativize this}}}" width="24" height="24" alt="">
+        {{/with}}
+        {{#with site.keys.productLogoDark}}
+        <img class="site-footer__logo site-footer__logo--dark" src="{{{relativize this}}}" width="24" height="24" alt="">
+        {{/with}}
+        <span class="ids-text ids-text--label-l-high">{{site.title}}</span>
+      </a>
+    </div>
+{{#with page.componentVersion.footer.groups.[0]}}
+    <div class="ids-grid-layout__item site-footer__col site-footer__links">
+      {{#each this.links}}
+      <a class="ids-text ids-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
+      {{/each}}
+    </div>
+{{/with}}
+{{!--
+  The modules column. `page.navigation.[1]` is the "more than one root menu"
+  test and `module` is "…and something annotated them", exactly the pair
+  nav-switcher.hbs uses to decide whether switching between modules is a thing
+  this component can do at all. `startUrl` then filters out any tree that is
+  not a switchable module — a landing's own navigation carries `switcher:
+  false` and no start URL, and must not appear here either.
+--}}
+{{#if (and page.navigation.[1] page.navigation.[0].module)}}
+    <div class="ids-grid-layout__item site-footer__col site-footer__links">
+      {{#each page.navigation}}
+      {{#if ./startUrl}}
+      <a class="ids-text ids-text--body-l site-footer__link" href="{{{relativize ./startUrl}}}">{{{./title}}}</a>
+      {{/if}}
+      {{/each}}
+    </div>
+{{else}}
+{{#with page.componentVersion.footer.groups.[1]}}
+    <div class="ids-grid-layout__item site-footer__col site-footer__links">
+      {{#each this.links}}
+      <a class="ids-text ids-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
+      {{/each}}
+    </div>
+{{/with}}
+{{/if}}
+    <div class="ids-grid-layout__item site-footer__col site-footer__legal">
+      <span class="ids-text ids-text--body-l">&#169; {{year}} {{site.title}}</span>
+    </div>
+  </div>
+</footer>

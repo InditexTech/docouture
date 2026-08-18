@@ -35,8 +35,18 @@ asciidoc:
 site:
   url: http://localhost:5252
   title: Atd Docs
-  homeUrl: &home_url /landing.html
+  # The site's start page: home.adoc, the `home` layout's fixture (GH-18).
+  # Distinct from the component landing below on purpose — the header
+  # toolbar's product name and the side menu's brand block both point here,
+  # not at the current component, and only a fixture where the two differ can
+  # show that.
+  homeUrl: /home.html
   keys:
+    # The landing's decorative background (GH-18, head-styles.hbs → home.css).
+    # A placeholder gradient, not a design asset; copyPreviewAssets ships
+    # preview-src/*.svg verbatim. Absent, the landing renders on a plain
+    # surface, which is also worth previewing — comment this out to see it.
+    homeBackground: /home-background.svg
     repoUrl: https://github.com/InditexTech/atd-docs
     # Page footer "how to contribute" button (GH-16): a playbook-level key,
     # same convention as repoUrl above and productLogo below — absent, the
@@ -58,14 +68,31 @@ site:
     - &component
       name: atd
       title: &component_title ATD
-      url: *home_url
+      url: &component_url /landing.html
       versions:
         - &latest_version
           title: *component_title
-          url: *home_url
+          url: *component_url
           version: stable
           displayVersion: Stable
           latest: true
+          # Site footer link groups (GH-18): not Antora's either —
+          # @inditextech/pdocs-antora-extensions reads them from the component
+          # descriptor's own `footer` key and attaches them here, with every
+          # `url` already resolved. The first group is the footer's links
+          # column; the second is only reached on a site with fewer than two
+          # navigable modules, which this fixture is not — see site-footer.hbs.
+          # It is here so the fallback is at least visible in the model.
+          footer:
+            groups:
+              - links:
+                  - text: Home
+                    url: /home.html
+                  - text: Repository
+                    url: https://github.com/InditexTech/atd-docs
+              - links:
+                  - text: Content test page
+                    url: /content.html
         - url: '#'
           version: '2024.1'
           displayVersion: '2024.1'
@@ -80,7 +107,7 @@ site:
           displayVersion: '3.4'
       latestVersion: *platform_version
 page:
-  url: *home_url
+  url: *component_url
   home: true
   title: Hardware and Software Requirements
   component: *component
@@ -109,7 +136,7 @@ page:
       url: '#'
       urlType: fragment
     - content: Hardware and Software Requirements
-      url: *home_url
+      url: *component_url
       urlType: internal
   versions:
     - version: stable
@@ -152,7 +179,7 @@ page:
       title: Platform
       description: The platform documentation
       icon: design/grid-outlined
-      startUrl: *home_url
+      startUrl: *component_url
       items:
         # A `content` with neither `url` nor `items` is a section label — the
         # shape Fumadocs' `"---Label---"` separators converted to. Two of them,
@@ -160,7 +187,7 @@ page:
         # and a mid-list one (which gets --side-menu-label-gap).
         - content: Overview
         - content: Introduction
-          url: *home_url
+          url: *component_url
           urlType: internal
         - content: Getting started
           url: '#getting-started'
@@ -212,7 +239,7 @@ page:
       title: SDK
       description: The headless client library
       icon: actions/code-block-outlined
-      startUrl: *home_url
+      startUrl: *component_url
       items:
         - content: Introduction
           module: sdk

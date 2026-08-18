@@ -42,6 +42,8 @@
 @import url("card-grid.css");
 @import url("header.css");
 @import url("footer.css");
+@import url("home.css");
+@import url("site-footer.css");
 
 /*
  * Syntax highlighting themes — highlight.js's own "GitHub Dark" and "GitHub

@@ -92,8 +92,10 @@ module.exports =
             uiModel.page.contents = Buffer.from(await doc.convert())
             // NOTE the sample ui-model pins `home: true` globally; only the
             // landing page should actually behave like the docs home page
-            // (toolbar home-link current, search autofocused).
-            uiModel.page.home = file.stem === 'landing'
+            // (toolbar and side-menu brand links current, side menu collapsed
+            // by default). That is home.adoc, the `home` layout's own fixture
+            // (GH-18) — it is what `site.homeUrl` points at in ui-model.yml.
+            uiModel.page.home = file.stem === 'home'
             if (uiModel.page.layout === 'icons') uiModel.icons = iconCatalog
           }
           file.extname = '.html'

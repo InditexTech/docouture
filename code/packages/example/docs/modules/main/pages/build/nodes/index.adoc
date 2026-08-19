@@ -19,108 +19,81 @@ In short, if it shows up on the canvas in Weave.js, it's probably a Node.
 Weave.js team maintain a set of *base nodes*, think of them as the minimal nodes to
 build visual collaborative applications. This are the nodes:
 
-=== Structure
-
-[cards]
+[cards,columns="1 s:2 m:4",width=container]
 ====
-[card]
+[card,subheader="Structure"]
 .xref:main:build/nodes/layer.adoc[Layer]
 The Layer node is a logical container within the Stage. It allows you to separate visual elements, for example: background grids, interactive elements, or UI overlays, into distinct rendering layers.
 
-[card]
+[card,subheader="Structure"]
 .xref:main:build/nodes/stage.adoc[Stage]
 The Stage node is the root canvas container in Weave.js. It serves as the entry point for rendering all other visual or layout Nodes and manages the overall coordinate system.
-====
 
-=== Collaboration
-
-[cards]
-====
-[card]
+[card,subheader="Collaboration"]
 .xref:main:build/nodes/comment.adoc[Comment]
 The Comment node provides a way to provide feedback and let know users where on the stage a comment has been added to the room. Also provides a mechanism to render an overlay to manage the comment and the comment replies or actions.
-====
 
-=== Grouping
-
-[cards]
-====
-[card]
+[card,subheader="Grouping"]
 .xref:main:build/nodes/frame.adoc[Frame]
 The Frame node is a container-like visual element used to group and organize other nodes within a pre-defined boundary. It functions as a structured layout region, often used to represent panels, sections, or modular components on the canvas.
 
-[card]
+[card,subheader="Grouping"]
 .xref:main:build/nodes/group.adoc[Group]
 The Group node is a container for organizing multiple nodes into a single, movable and transformable unit. It allows you to nest shapes or other groups together, enabling you to apply transformations like positioning, scaling, rotation,or selection as one unified object.
-====
 
-=== Drawing
-
-[cards]
-====
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/connector.adoc[Connector]
 The Connector node is complex node that draw a line between two nodes anchor points, when the any one of the nodes move, the line is updated, mainly being always sticked to the node anchor point.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/ellipse.adoc[Ellipse]
 The Ellipse node is a simple, versatile primitive shape used to render ellipses (or circles) elements on the canvas. It supports customizable properties such as position, axis radius, fill color, stroke and more.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/image.adoc[Image]
 The Image Node allows you to render images directly onto the canvas. It supports properties like position, scale, opacity, and filters.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/rectangle.adoc[Rectangle]
 The Rectangle node is a simple, versatile primitive shape used to render rectangular elements on the canvas. It supports customizable properties such as position, size, fill color, stroke, corner radius and more.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/polygon.adoc[Polygon]
 The Polygon node is a versatile primitive shape used to render polygon elements on the canvas using a preset shape. It supports customizable properties such as position, fill color, stroke, and an optional inline text label.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/stroke.adoc[Stroke]
 The Stroke node represents a customizable free line on the canvas. It supports features like stroke color, width and dash patterns.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/stroke-single.adoc[Stroke Single]
 The Stroke node represents a customizable single-segment line on the canvas. It supports features like stroke color, width, dash patterns, and the possibility to define the line tips format: arrow, circle and square.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/text.adoc[Text]
 The Text node is used to display editable or static text on the canvas. It supports rich styling options including font size, family, color, alignment, and line height.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/star.adoc[Star]
 The Star node is a simple, versatile primitive shape used to render star elements on the canvas. It supports customizable properties such as position, inner and outer radius, fill color, stroke and more.
 
-[card]
+[card,subheader="Drawing"]
 .xref:main:build/nodes/video.adoc[Video]
 The Video Node allows you to render and play videos directly onto the canvas.
-====
 
-==== Deprecated
-
-[cards]
-====
-[card]
-.xref:main:build/nodes/star.adoc[Arrow (deprecated)]
+[card,subheader="Drawing",labels="deprecated"]
+.xref:main:build/nodes/star.adoc[Arrow]
 The Arrow node is a simple, versatile primitive shape used to render arrow elements on the canvas. It supports customizable properties such as position, several segments, fill color, stroke and more.
 
-[card]
-.xref:main:build/nodes/line.adoc[Line (deprecated)]
+[card,subheader="Drawing",labels="deprecated"]
+.xref:main:build/nodes/line.adoc[Line]
 The Line node represents a customizable straight or curved line on the canvas. It supports features like multiple points, stroke color, width, dash patterns, and smoothing options.
 
-[card]
-.xref:main:build/nodes/regular-polygon.adoc[Regular Polygon (deprecated)]
+[card,subheader="Drawing",labels="deprecated"]
+.xref:main:build/nodes/regular-polygon.adoc[Regular Polygon]
 The Regular Polygon node is a simple, versatile primitive shape used to render regular polygons elements on the canvas. It supports customizable properties such as position, radius, sides, fill color, stroke and more.
-====
 
-=== Support
-
-[cards]
-====
-[card]
+[card,subheader="Support"]
 .xref:main:build/nodes/measure.adoc[Measure]
 The Measure node is complex node that display the distance between two points in the canvas. It needs a reference measure, a measure unit, and a reference distance from the canvas to calculate the scale and set the measures correctly.
 ====

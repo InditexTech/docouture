@@ -109,6 +109,9 @@ importers:
       '@vscode/gulp-vinyl-zip':
         specifier: ~2.6.0
         version: 2.6.0
+      '@zbsearch/highlight':
+        specifier: ~4.0.0
+        version: 4.0.0
       autoprefixer:
         specifier: ~10.5.4
         version: 10.5.4(postcss@8.5.26)
@@ -175,6 +178,9 @@ importers:
       vinyl-fs:
         specifier: ~4.0.2
         version: 4.0.2
+      zbsearch:
+        specifier: ~4.0.0
+        version: 4.0.0
 
 packages:
 
@@ -737,6 +743,9 @@ packages:
 
   '@yarnpkg/lockfile@1.1.0':
     resolution: {integrity: sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==}
+
+  '@zbsearch/highlight@4.0.0':
+    resolution: {integrity: sha512-twJUezijc0mG9psIwINfxxexIP4PuFWKO4BLvXYftI5sEtf5BZoGVBE1qD45RKi7+ABo6mkBj4W8LV8KDT4TFg==}
 
   '@zkochan/js-yaml@0.0.7':
     resolution: {integrity: sha512-nrUSn7hzt7J6JWgWGz78ZYI8wj+gdIJdk0Ynjpp8l+trkn58Uqsf6RYrYkEK+3X18EX+TNdtJI0WxAtc+L84SQ==}
@@ -3165,6 +3174,10 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zbsearch@4.0.0:
+    resolution: {integrity: sha512-gm4zfO31n2ZdruTTRQoWVWO4Q2+zrDt2GlrvIc+5JulRQNAm4IanCxER82vQ7Ug96FYkGqWUJBXFe1kGAcDWaQ==}
+    engines: {node: '>= 20.0.0'}
+
 snapshots:
 
   '@antora/asciidoc-loader@3.1.15':
@@ -3715,6 +3728,8 @@ snapshots:
       - react-native-b4a
 
   '@yarnpkg/lockfile@1.1.0': {}
+
+  '@zbsearch/highlight@4.0.0': {}
 
   '@zkochan/js-yaml@0.0.7':
     dependencies:
@@ -6371,3 +6386,5 @@ snapshots:
       buffer-crc32: 1.0.0
 
   yocto-queue@0.1.0: {}
+
+  zbsearch@4.0.0: {}

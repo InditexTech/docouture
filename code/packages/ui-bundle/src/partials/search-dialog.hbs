@@ -1,10 +1,14 @@
 {{!--
-  GH-66 (S2): the search dialog shell. Static markup, no behaviour — the
-  dialog is a native <dialog>, never `showModal()`'d by anything here, so it
-  renders nothing on a real page unless opened from devtools for review (see
-  the issue's acceptance criteria). GH-67 (S3) adds src/js/12-search.ts:
-  opening it from header-content.hbs's trigger, loading the site's search
-  index (GH-65), and populating/hiding the states below as the reader types.
+  GH-67 (S3): the dialog is wired up by src/js/12-search.ts — opening it from
+  header-content.hbs's trigger, loading the site's search index (GH-65,
+  fetched from `{{uiRootPath}}/search/` + `data-search-index` below), and
+  populating/hiding the states below as the reader types. GH-66 (S2) shipped
+  this shell as static markup only; that's no longer true.
+
+  Guarded by `page.componentVersion.searchIndex` (same attribute
+  header-content.hbs's trigger checks) — a component version with no search
+  index gets no dialog to open, rather than one whose input and close button
+  stay disabled forever.
 
   Included once from header.hbs, so it exists on every page — a dialog is a
   page-level overlay, not something that belongs to the header's own DOM
@@ -21,13 +25,14 @@
   modal`'s own rules apply unmodified.
 
   Content area (`.ids-modal__content--scrollable`) ships empty: which of
-  loading / results / empty-state it should hold depends entirely on a query
-  nothing has run yet, so there is nothing correct to pre-render here. All
-  four states — idle (this), loading, results, empty — are reviewed together,
-  with fixture content, from the dedicated preview page (preview-src/layouts/
-  search-dialog.hbs) rather than guessed at in the shipped partial.
+  loading / results / empty-state it should hold is filled in by
+  12-search.ts as the reader types, never pre-rendered here. All four states
+  — idle (this), loading, results, empty — are reviewed together, with
+  fixture content, from the dedicated preview page (preview-src/layouts/
+  search-dialog.hbs).
 --}}
-<dialog id="search-dialog" class="ids-modal ids-modal--small search-dialog" aria-label="Search">
+{{#if page.componentVersion.searchIndex}}
+<dialog id="search-dialog" class="ids-modal ids-modal--small search-dialog" aria-label="Search" data-search-index="{{page.componentVersion.searchIndex}}">
   <div class="ids-overlay ids-overlay--visible search-dialog__overlay">
     <div class="ids-overlay__content"></div>
   </div>
@@ -53,3 +58,4 @@
     </div>
   </div>
 </dialog>
+{{/if}}

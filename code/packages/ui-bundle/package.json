@@ -49,6 +49,8 @@
     "svgo": "~4.0.2",
     "typescript": "6.0.3",
     "vinyl": "~3.0.1",
-    "vinyl-fs": "~4.0.2"
+    "vinyl-fs": "~4.0.2",
+    "zbsearch": "~4.0.0",
+    "@zbsearch/highlight": "~4.0.0"
   }
 }

@@ -1,0 +1,39 @@
+code/packages/asciidoc-extensions/lib/tabs.js
+  s_c7a32e582feb57::t_ed269a1bc1360b 1-263
+code/packages/example/docs/modules/main/pages/quickstart.adoc
+  s_779f0a13489eec::t_edfb98e335485b 29-32,37,39-40,45,47-48,53-54,66-69,75,77-78,84,86-87,93-94,113-116,121,123-124,129,131-132,137-138,150-153,159,161-162,168,170-171,177-178
+code/packages/ui-bundle/src/css/site.css
+  s_d4d55c789e3321::t_630a9503e06e87 45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ddcaebdd64fa249a232ce8aa86d76daf07ffafb5",
+  "prompts": {},
+  "sessions": {
+    "s_779f0a13489eec": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe6d26b84ffeR6KYWD54OD5hrR",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_c7a32e582feb57": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe6c245b5ffezw3GTFOWGS32mz",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_d4d55c789e3321": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe6c1fcf0ffeqLyCRz0xXiTcRx",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

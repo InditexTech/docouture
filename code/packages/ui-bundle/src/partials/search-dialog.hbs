@@ -30,6 +30,20 @@
   — idle (this), loading, results, empty — are reviewed together, with
   fixture content, from the dedicated preview page (preview-src/layouts/
   search-dialog.hbs).
+
+  GH-68 (S4): `.ids-modal--fullscreen` is added/removed by 12-search.ts
+  (matchMedia against the project's own `m` boundary, the same pattern
+  01-nav.ts uses for its own breakpoint-dependent behaviour), not authored
+  here statically alongside `.ids-modal--small`. The two classes carry the
+  same specificity in ids-components.css and `--fullscreen`'s rule comes
+  later in that file, so it would win unconditionally at every breakpoint —
+  including m/l — if both were simply present together; only one of the two
+  is ever on the element at a time. The floating button below is the xs-only
+  trigger that opens this same dialog, alongside (not instead of)
+  header-content.hbs's own trigger, which hides itself at xs — 12-search.ts
+  wires up whichever of the two exists. Same `page.componentVersion.
+  searchIndex` guard: a component version with no index gets neither
+  trigger.
 --}}
 {{#if page.componentVersion.searchIndex}}
 <dialog id="search-dialog" class="ids-modal ids-modal--small search-dialog" aria-label="Search" data-search-index="{{page.componentVersion.searchIndex}}">
@@ -58,4 +72,11 @@
     </div>
   </div>
 </dialog>
+<div class="ids-floating-button-wrapper ids-floating-button-wrapper--viewport ids-floating-button-wrapper--end search-fab">
+  <button type="button" class="ids-button ids-button--ghost ids-button--icon-only ids-floating-button search-fab__trigger" aria-label="Search" aria-haspopup="dialog" aria-controls="search-dialog">
+    <span class="ids-button__content">
+      <span class="ids-button__icon ids-button__icon-icon">{{icon "actions" "search-outlined"}}</span>
+    </span>
+  </button>
+</div>
 {{/if}}

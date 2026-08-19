@@ -1,11 +1,18 @@
 /*
- * Search dialog (GH-67, S3 of the search epic, #64) — the behaviour half of
- * the static shell GH-66 (S2) shipped: header-content.hbs's trigger and
- * search-dialog.hbs's `<dialog>`, both already carrying every class this
- * file needs, neither wired to anything until now.
+ * Search dialog (GH-67/GH-68, S3/S4 of the search epic, #64) — the behaviour
+ * half of the static shell GH-66 (S2) shipped: header-content.hbs's trigger,
+ * search-dialog.hbs's floating trigger (GH-68, xs only) and its `<dialog>`,
+ * all already carrying every class this file needs, none wired to anything
+ * until now.
+ *
+ * Two triggers, one dialog: the header button (hidden at xs) and the
+ * floating button (shown only at xs, search-dialog.css) are never both
+ * visible at once, but both exist in the DOM on every page that has either,
+ * so this file binds the same open/preload handlers to whichever of the two
+ * is present rather than assuming a single element.
  *
  * Absent trigger/dialog means this component version has no search index at
- * all (search-dialog.hbs and the trigger are both guarded by
+ * all (search-dialog.hbs and both triggers are all guarded by
  * `page.componentVersion.searchIndex` server-side — see antora-extensions/
  * lib/search-index.js, which only sets that attribute when a component
  * version produced at least one record) — nothing to wire up, so this file
@@ -14,27 +21,30 @@
  *
  * The engine (`js/vendor/search.js`, built from vendor/search.bundle.ts) is
  * NOT requested here on page load — only from `preload()`, itself only
- * reachable from a real signal of intent (hover/focus on the trigger, or the
- * first hotkey press), the same "on first intent, not async on every page"
- * split `highlight.bundle.ts` doesn't need to make because syntax
+ * reachable from a real signal of intent (hover/focus on either trigger, or
+ * the first hotkey press), the same "on first intent, not async on every
+ * page" split `highlight.bundle.ts` doesn't need to make because syntax
  * highlighting is needed immediately, and search isn't.
  *
  * `showModal()` gives the top layer, the focus trap, Esc-to-close and the
  * `::backdrop` from the platform — this file only ever calls `showModal()`/
- * `close()` and handles what the platform doesn't: focus restore to the
- * trigger, and everything that happens between those two calls.
+ * `close()` and handles what the platform doesn't: focus restore to
+ * whichever trigger opened the dialog, and everything that happens between
+ * those two calls.
  */
 ;(function () {
   'use strict'
 
-  var trigger = document.querySelector<HTMLButtonElement>('.header-toolbar__search-trigger')
+  var triggers = [].slice.call(
+    document.querySelectorAll<HTMLButtonElement>('.header-toolbar__search-trigger, .search-fab__trigger')
+  ) as HTMLButtonElement[]
   var dialog = document.getElementById('search-dialog') as HTMLDialogElement | null
-  if (!trigger || !dialog) return
+  if (!triggers.length || !dialog) return
 
   var field = dialog.querySelector<HTMLInputElement>('.ids-search-field-minimal__input')
   var closeButton = dialog.querySelector<HTMLButtonElement>('.search-dialog__close')
   var resultsEl = dialog.querySelector<HTMLElement>('.search-dialog__results')
-  var shortcutChip = trigger.querySelector<HTMLElement>('.header-toolbar__search-shortcut')
+  var shortcutChip = triggers[0].querySelector<HTMLElement>('.header-toolbar__search-shortcut')
   if (!field || !closeButton || !resultsEl) return
 
   var indexBasename = dialog.dataset.searchIndex
@@ -47,25 +57,50 @@
 
   correctShortcutChip()
 
-  trigger.setAttribute('aria-haspopup', 'dialog')
-  trigger.setAttribute('aria-controls', 'search-dialog')
+  triggers.forEach(function (trigger) {
+    trigger.setAttribute('aria-haspopup', 'dialog')
+    trigger.setAttribute('aria-controls', 'search-dialog')
+  })
+
+  // GH-68 (S4): fullscreen below the project's own `m` (1240px) — matches
+  // `--ids-breakpoints-xs-s` (ids-breakpoints.css). `.ids-modal--fullscreen`
+  // and `.ids-modal--small` share the same specificity in ids-components.css
+  // with `--fullscreen`'s rule declared later, so it would win unconditionally
+  // at every breakpoint if both classes were simply left on the element
+  // together — this toggles it instead, the same matchMedia pattern
+  // 01-nav.ts uses for its own breakpoint-dependent behaviour.
+  var fullscreenQuery = window.matchMedia('(max-width: 1239.98px)')
+  syncFullscreen()
+  fullscreenQuery.addEventListener('change', syncFullscreen)
+
+  function syncFullscreen () {
+    dialog!.classList.toggle('ids-modal--fullscreen', fullscreenQuery.matches)
+  }
 
   var engineScriptPromise: Promise<void> | null = null
   var searcherPromise: ReturnType<NonNullable<Window['__pdocsSearch']>['load']> | null = null
   var currentAbort: AbortController | null = null
   var rows: HTMLAnchorElement[] = []
   var activeRow = -1
+  // Whichever trigger actually opened the dialog gets focus back on close —
+  // the two are mutually exclusive by breakpoint (search-dialog.css), but
+  // never assume which one that was.
+  var openedFrom: HTMLButtonElement | null = null
 
-  trigger.addEventListener('pointerenter', preload)
-  trigger.addEventListener('focus', preload)
-  trigger.addEventListener('click', open)
+  triggers.forEach(function (trigger) {
+    trigger.addEventListener('pointerenter', preload)
+    trigger.addEventListener('focus', preload)
+    trigger.addEventListener('click', function () {
+      open(trigger)
+    })
+  })
   document.addEventListener('keydown', onGlobalKeydown)
   closeButton.addEventListener('click', function () {
     dialog!.close()
   })
   dialog.addEventListener('close', function () {
     if (currentAbort) currentAbort.abort()
-    trigger!.focus()
+    if (openedFrom) openedFrom.focus()
   })
   dialog.addEventListener('click', function (e) {
     // A native <dialog> has no built-in "click outside closes" — the
@@ -81,7 +116,10 @@
     if (!isHotkey(e)) return
     e.preventDefault()
     preload()
-    open()
+    // A hotkey has no originating trigger element — the currently visible
+    // trigger (if any) gets focus back on close, same as a click would.
+    var visible = triggers.filter(function (t) { return t.offsetParent !== null })
+    open(visible.length ? visible[0] : null)
   }
 
   /** Ignored inside an input/textarea/contenteditable — those keystrokes are text, not shortcuts. */
@@ -104,7 +142,8 @@
       })
   }
 
-  function open () {
+  function open (trigger: HTMLButtonElement | null) {
+    openedFrom = trigger
     field!.disabled = false
     closeButton!.disabled = false
     if (dialog!.open) return

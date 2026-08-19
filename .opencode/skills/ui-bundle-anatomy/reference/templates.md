@@ -32,7 +32,7 @@ is how a page opts into per-page styling.
 default.hbs
 ├── head                    (defaultPageTitle=…)
 │   ├── head-prelude        charset, viewport, inline theme bootstrap
-│   ├── head-title          <title>, from page.title or defaultPageTitle
+│   ├── head-title          <title>: page | site, "|"-separated
 │   ├── head-info           canonical, rel=prev/next, description, keywords, generator
 │   ├── head-styles         IDS webfont CSS from the CDN, then css/site.css
 │   ├── head-meta           empty extension point

@@ -9,9 +9,11 @@
   plain anchors and the media slot is a native element.
 
   Authoring surface — `page.title` is required (it is the document's own `=`
-  title), everything else is optional:
+  title, and Antora needs it), but the hero's `<h1>` itself renders
+  `site.title` (the docs title from the playbook), not the page title —
+  everything else below is optional:
 
-    = AMIGA Framework Java                  the product name, the page's <h1>
+    = AMIGA Framework Java                  required by Antora, not shown
     :page-tags: efficiency, speed, support  one .ids-label--grey chip each
     :page-action: Go to tool                primary call to action
     :page-action-url: https://tool.example  its target — page reference or URL
@@ -75,7 +77,7 @@
 {{#with site.keys.productLogoDark}}
     <img class="home-hero__logo home-hero__logo--dark" src="{{{relativize this}}}" width="40" height="40" alt="">
 {{/with}}
-    <h1 class="home-hero__title">{{{page.title}}}</h1>
+    <h1 class="home-hero__title">{{{site.title}}}</h1>
 {{#with (split page.attributes.tags ',')}}
     <div class="home-hero__labels">
     {{#each this}}

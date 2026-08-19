@@ -40,11 +40,14 @@
 
 /*
  * Three of twelve columns each at m and l. At s the four columns fold into
- * three rows — 12 / 6 + 6 / 12: the brand and the copyright line take a row
- * each, and the two link columns share one, since a list of short links has
- * no need of the full width and stacking all four makes the footer taller
- * than the block it closes. At xs everything is full width again, six of six,
- * where the design system's grid is six columns wide.
+ * three rows — 12 / 6 + 6 / 6 + 6: the brand column takes a row of its own,
+ * the three authored-link columns share the other two, since a list of short
+ * links has no need of the full width and stacking all four makes the footer
+ * taller than the block it closes (GH-77: column 4 used to be the copyright
+ * line alone, span 12 by falling through to `.site-footer__col`'s own
+ * default — now it is a `.site-footer__links` instance like 2 and 3, so it
+ * takes the same span override they do). At xs everything is full width
+ * again, six of six, where the design system's grid is six columns wide.
  *
  * Declared here rather than with the grid's own `--span-*` utility classes,
  * for the reason home.css states at length: those classes carry the design
@@ -78,6 +81,22 @@
   }
 }
 
+/*
+ * GH-77: brand column now also carries the copyright line (moved out of its
+ * own column 4 — see site-footer.hbs). `space-between`, not a `gap`, so the
+ * brand row sits at the top and the copyright at the bottom of the column's
+ * box — the column stretches to the grid row's own height by default (CSS
+ * grid items stretch along the block axis unless told otherwise), which the
+ * link columns beside it, taller once they carry an authored heading, will
+ * usually set. On a short row (nothing else in it) this just puts a small
+ * gap between the two rather than pinning the copyright out of sight.
+ */
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .site-footer__brand-link {
   align-items: center;
   color: var(--ids-color-content-default);
@@ -109,10 +128,22 @@
   gap: var(--ids-size-50); /* 8 */
 }
 
+/*
+ * GH-77: optional per-group heading, authored via `footer.groups[].title` —
+ * `content-low`, the same muted colour every other non-interactive category
+ * label in this bundle uses to read as chrome rather than content (side-menu
+ * tree labels, the ToC, the search-shortcut chip) — `ids-text--label-l`
+ * itself supplies the font (uppercase baked into that token, not set here).
+ */
+.site-footer__heading {
+  color: var(--ids-color-content-low);
+}
+
 .site-footer__link {
   color: var(--ids-color-content-default);
 }
 
+/* GH-77: the copyright line, now inside the brand column (see .site-footer__brand above) */
 .site-footer__legal {
   color: var(--ids-color-content-low);
 }

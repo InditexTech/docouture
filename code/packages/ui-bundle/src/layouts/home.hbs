@@ -10,11 +10,12 @@
   Asciidoctor block extensions — see @inditextech/pdocs-asciidoc-extensions.
 
   What it shares with `default.hbs`: head, the header toolbar, the side menu,
-  and the site scripts. What it drops: the page hero (hero.hbs), the "On this
-  page" ToC and the `.doc` article surface, none of which the design's
-  landing has, plus the page footer's previous/next and feedback rows — a
-  landing is not a page in a reading sequence. `site-footer.hbs` takes their
-  place, home-only for now.
+  the site scripts, and (GH-77) the site footer. What it drops: the page hero
+  (hero.hbs), the "On this page" ToC and the `.doc` article surface, none of
+  which the design's landing has, plus the page footer's previous/next and
+  feedback rows — a landing is not a page in a reading sequence. `site-
+  footer.hbs` takes their place here; `default.hbs` renders both, the page
+  footer first.
 
   The two columns are items in the design system's own 12-column grid rather
   than a bespoke flex row, so their gutters and gaps match the header toolbar

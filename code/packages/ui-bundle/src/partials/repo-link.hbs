@@ -5,12 +5,17 @@
   `site.keys` — set under `site.keys.repo_url`); `page.origin.webUrl` is what
   Antora derives per-component from the content source's git remote when no
   override is given. Renders nothing, not a dead "#" link, when neither exists.
+
+  GH-77: icon-only, GitHub's own mark rather than the generic external-link
+  glyph — same `--icon-mask-brand-github` custom property cta.js's own GitHub
+  action already defines (cta.css), reused here rather than duplicated.
+  Icon-only needs the accessible name on the link itself (no visible label
+  left), same convention as search-fab__trigger.
 --}}
 {{#with (or site.keys.repoUrl page.origin.webUrl)}}
-<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action header-toolbar__repo" href="{{{this}}}" target="_blank" rel="noopener">
+<a class="ids-button ids-button--ghost ids-button--icon-only header-toolbar__repo" href="{{{this}}}" target="_blank" rel="noopener" aria-label="Repository">
   <span class="ids-button__content">
-    <span class="ids-button__label">repo</span>
-    <span class="ids-button__icon ids-button__icon-action">{{icon "connectivity" "link-external-outlined"}}</span>
+    <span class="ids-button__icon ids-button__icon-icon header-toolbar__repo-icon" aria-hidden="true"></span>
   </span>
 </a>
 {{/with}}

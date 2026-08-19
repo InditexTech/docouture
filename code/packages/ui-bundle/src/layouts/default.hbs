@@ -7,5 +7,14 @@
 {{> header}}
 {{> body}}
 {{> footer}}
+{{!--
+  GH-77: the site footer (brand, authored link columns, modules, copyright)
+  now closes every doc page too, not just the landing — sits after the page
+  footer's own previous/next + feedback row, same "outside .body, sibling of
+  it" placement home.hbs already uses (site-footer.css's own margin-left
+  handles the side-menu offset independently of .page-footer's identical
+  rule, so the two stack with no conflict).
+--}}
+{{> site-footer}}
   </body>
 </html>

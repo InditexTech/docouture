@@ -56,12 +56,24 @@
 
   /* dimensions and positioning */
   /*
-   * The header toolbar's content is a row of --ids-size-250 (40px) controls
-   * plus its 1px dashed bottom rule — see header.css. Kept as its own
-   * variable, not the literal, because .side-menu / --toc-top both offset
-   * from it and must move together if the toolbar's height ever changes.
+   * GH-77: matches the IOP DS `.ids-header` component's own ≥513px box
+   * height exactly — `--ids-size-350` already equals its
+   * `padding-block: var(--ids-size-50)` (top+bottom) around the
+   * `--ids-size-250` content row, box-sized, so it's used directly rather
+   * than re-assembled from those two parts. The previous `calc(--ids-size-
+   * 250 + 1px)` both undershot the DS component (40 vs 56 at medium scale)
+   * and compensated for a border that was never actually there:
+   * `.header-toolbar`'s bottom rule (header.css) is a `background-image`
+   * dashed pattern, not a real `border`, so it adds no layout height.
+   * `.ids-scale-large` isn't wired up anywhere in this bundle yet
+   * (head-prelude.hbs hardcodes `ids-scale-medium`), so this resolves to a
+   * flat 56px regardless of breakpoint today — same as the DS component's
+   * own height, which likewise doesn't vary by breakpoint outside its
+   * `--large` modifier. Kept as its own variable, not the literal, because
+   * .side-menu / --toc-top both offset from it and must move together if
+   * the toolbar's height ever changes.
    */
-  --navbar-height: calc(var(--ids-size-250) + 1px);
+  --navbar-height: var(--ids-size-350);
   --body-top: var(--navbar-height);
   /*
    * Extra breathing room between the fixed header and whatever an in-page

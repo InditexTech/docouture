@@ -1,0 +1,14 @@
+code/packages/ui-bundle/src/css/search-dialog.css
+  h_c93d154c7c7074 450
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f5e6f2399d8de3033760c4baa90774cf6c54b99c",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

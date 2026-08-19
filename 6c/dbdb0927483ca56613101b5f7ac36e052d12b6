@@ -1,0 +1,30 @@
+code/packages/example/docs/modules/main/pages/build/actions/index.adoc
+  h_c93d154c7c7074 65,67,71,75,79,83,87,91,95,99,103,107,111,115,119,123,127,131,135,139,143,147,151,155,159,163,167,171,175
+code/packages/example/docs/modules/main/pages/build/plugins/index.adoc
+  h_c93d154c7c7074 64,66,70,74,78,82,86,90,94,98,102,106,110,114,118,122,126
+code/packages/example/docs/modules/main/pages/build/stores/index.adoc
+  h_c93d154c7c7074 28
+code/packages/example/docs/modules/sdk/pages/api-reference/nodes/index.adoc
+  h_c93d154c7c7074 22,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80,84,88-89,92-93,96-97,100
+code/packages/ui-bundle/preview-src/layouts/search-dialog.hbs
+  h_c93d154c7c7074 21-25
+code/packages/ui-bundle/src/css/bridge.css
+  h_c93d154c7c7074 106-114
+code/packages/ui-bundle/src/css/search-dialog.css
+  h_c93d154c7c7074 27-48,92-148
+code/packages/ui-bundle/src/js/12-search.ts
+  h_c93d154c7c7074 2-12,15,24-26,31-33,38-40,42,47,60-78,85-88,90-96,103,119-122,145-146
+code/packages/ui-bundle/src/partials/search-dialog.hbs
+  h_c93d154c7c7074 33-46,75-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6cdbdb0927483ca56613101b5f7ac36e052d12b6",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+[     502ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     503ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     503ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     503ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     503ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     503ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     503ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     503ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[     618ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5000/favicon.ico:0
+[  220244ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  220244ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  220245ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  220245ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  220245ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  220245ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  220245ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  220245ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  233275ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247770ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247770ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247770ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247770ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247770ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247770ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247771ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  247771ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  260264ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  272222ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  285514ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591495ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591495ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591495ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591495ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591495ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591496ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591496ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  591496ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  609852ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626500ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626500ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626500ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626500ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626500ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626500ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626501ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  626501ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631989ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631990ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631990ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631990ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631990ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631990ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631990ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  631990ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Could not find the language 'ts', did you forget to load/include a language module? @ http://localhost:5000/_/js/vendor/highlight.js:0
+[  643297ms] [LOG] WARN: Falling back to no-highlight mode for this block. JSHandle@node @ http://localhost:5000/_/js/vendor/highlight.js:0

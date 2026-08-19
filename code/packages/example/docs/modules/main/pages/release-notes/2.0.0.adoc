@@ -7,7 +7,6 @@
 
 This release improves scalability when using the *Azure Web PubSub store*, enabling applications to handle *very large collaborative rooms* more efficiently.
 
-'''
 
 == Changed
 
@@ -19,7 +18,6 @@ Room data loading has been decoupled from the store implementation, allowing app
 
 https://github.com/InditexTech/weavejs/issues/765[https://github.com/InditexTech/weavejs/issues/765]
 
-'''
 
 == Breaking Changes
 

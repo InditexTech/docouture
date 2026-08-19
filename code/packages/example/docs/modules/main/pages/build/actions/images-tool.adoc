@@ -65,7 +65,6 @@ when the user selects the images, then the tool is called, passing a `images` pr
 files metadata as `WeaveImagesFile`. You also define a function to upload each image separately
 on `uploadImageFunction` that has the following signature: `(file: File) => Promise<string>`.
 
-'''
 
 For example on a button on React:
 
@@ -175,7 +174,6 @@ const MyImagesToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When active the user:
 

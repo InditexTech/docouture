@@ -48,7 +48,6 @@ Setup on a button or any element on the UI the user can interact with on the act
 instance.triggerAction("alignNodesTool");
 ----
 
-'''
 
 For example on a button on React:
 

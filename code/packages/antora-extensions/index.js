@@ -2,6 +2,7 @@
 
 const registerFooter = require('./lib/footer')
 const registerNavModules = require('./lib/nav-modules')
+const registerSearchIndex = require('./lib/search-index')
 
 /**
  * Registers pdocs' Antora pipeline extensions.
@@ -22,8 +23,21 @@ const registerNavModules = require('./lib/nav-modules')
  * playbook or the extension's own `config` block at registration time, so the
  * zero-parameter form is both the simplest and the one furthest from that
  * misdetection.
+ *
+ * REGISTRATION ORDER IS LOAD-BEARING. All three listen on `navigationBuilt`,
+ * and GeneratorContext#notify awaits listeners in registration order (see
+ * nav-modules.js's own header for the citation), not declaration order
+ * within a single file — the order these three calls are made IS that order.
+ * nav-modules MUST run first: it stamps `tree.module` / `tree.title` onto
+ * `componentVersion.navigation`, and search-index reads those same fields
+ * off the same event to build each record's `category`. footer has no such
+ * dependency and could run anywhere after nav-modules, but is kept second to
+ * match this list. Swap nav-modules and search-index and nothing throws —
+ * every search record just falls back to filing itself under the component
+ * title, as if no site declared `nav_modules` at all.
  */
 module.exports.register = function () {
   registerNavModules(this)
   registerFooter(this)
+  registerSearchIndex(this)
 }

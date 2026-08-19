@@ -80,7 +80,6 @@ getPolygonsPresets(): Record<string, WeavePolygonPresetDef>
 Returns all available polygon presets. The built-in presets are:
 `triangle`, `diamond`, `pentagon`, `hexagon`, `octagon`, `decagon`.
 
-'''
 
 === getPolygonPreset
 
@@ -91,7 +90,6 @@ getPolygonPreset(): string
 
 Returns the currently active preset ID.
 
-'''
 
 === setPolygonPreset
 

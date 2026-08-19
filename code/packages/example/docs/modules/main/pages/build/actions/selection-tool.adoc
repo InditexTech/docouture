@@ -48,7 +48,6 @@ Setup on a button or any element on the UI the user can interact with on the act
 instance.triggerAction("selectionTool");
 ----
 
-'''
 
 For example on a button on React:
 
@@ -71,7 +70,6 @@ const MySelectionToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When enabled, it allows users to interactively select nodes using the
 xref:main:build/plugins/nodes-selection.adoc[Nodes Selection] plugin. This action

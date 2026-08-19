@@ -10,7 +10,6 @@ Several internal improvements significantly improve *canvas interaction performa
 
 In addition, some tools were updated to *remove reliance on global browser state* and improve *media handling workflows*.
 
-'''
 
 == Changes
 
@@ -28,7 +27,6 @@ Images can now be inserted and manipulated on the canvas while persistence happe
 
 https://github.com/InditexTech/weavejs/issues/941[https://github.com/InditexTech/weavejs/issues/941]
 
-'''
 
 === Removed global `window.weave` dependency from Video Tool
 
@@ -41,7 +39,6 @@ Video tool configuration must now be passed explicitly instead of relying on glo
 
 https://github.com/InditexTech/weavejs/issues/943[https://github.com/InditexTech/weavejs/issues/943]
 
-'''
 
 === Removed global `window.weave` dependency from Text Tool
 
@@ -54,7 +51,6 @@ This aligns the Text Tool with the architecture used across other tools.
 
 https://github.com/InditexTech/weavejs/issues/944[https://github.com/InditexTech/weavejs/issues/944]
 
-'''
 
 === Improved performance of group / un-group operations
 
@@ -68,7 +64,6 @@ These improvements are especially noticeable when working with *large collaborat
 
 https://github.com/InditexTech/weavejs/issues/948[https://github.com/InditexTech/weavejs/issues/948]
 
-'''
 
 === Improved drag and transform performance
 
@@ -82,7 +77,6 @@ These changes significantly improve usability in *large or complex scenes*.
 
 https://github.com/InditexTech/weavejs/issues/950[https://github.com/InditexTech/weavejs/issues/950]
 
-'''
 
 === Renderer and reconciler architecture refactor
 
@@ -106,7 +100,6 @@ This change enables future integrations beyond the current renderer implementati
 
 https://github.com/InditexTech/weavejs/issues/953[https://github.com/InditexTech/weavejs/issues/953]
 
-'''
 
 ### Removed heartbeat mechanism from Azure Web PubSub store
 
@@ -115,7 +108,6 @@ specially when switching tabs due that `setTimeout` and `setInterval` apis are n
 
 https://github.com/InditexTech/weavejs/issues/956[https://github.com/InditexTech/weavejs/issues/956]
 
-'''
 
 == Breaking Changes
 

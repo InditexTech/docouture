@@ -42,7 +42,6 @@ Setup on a button or any element on the UI the user can interact with on the act
 instance.triggerAction("eraserTool");
 ----
 
-'''
 
 For example on a button on React:
 
@@ -65,7 +64,6 @@ const MyEraserToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When enabled the user can click / touch on an element and it will deleted.
 ====

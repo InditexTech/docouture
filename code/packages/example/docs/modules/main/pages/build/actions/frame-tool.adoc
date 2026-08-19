@@ -59,7 +59,6 @@ You can also optionally pass information to the tool as:
 To lean more check the xref:sdk:api-reference/actions/frame-tool.adoc[WeaveFrameToolAction]
 plugin API.
 
-'''
 
 For example on a button on React:
 
@@ -82,7 +81,6 @@ const MyFrameToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When active the user:
 

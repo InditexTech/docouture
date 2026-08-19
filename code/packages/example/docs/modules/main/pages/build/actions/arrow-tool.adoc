@@ -49,7 +49,6 @@ Setup on a button or any element on the UI the user can interact with on the act
 instance.triggerAction("arrowTool");
 ----
 
-'''
 
 For example on a button on React:
 
@@ -72,7 +71,6 @@ const MyArrowToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When the tool is active the user can:
 

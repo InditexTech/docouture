@@ -50,7 +50,6 @@ Setup on a button or any element on the UI the user can interact with on the act
 instance.triggerAction("fitToSelectionTool");
 ----
 
-'''
 
 For example on a button on React:
 
@@ -73,7 +72,6 @@ const MyFitToSelectionToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When triggered finds the zoom level necessary to fit all the nodes of the canvas in the
 viewport and center on them, so they can be entirely visible.

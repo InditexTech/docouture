@@ -64,7 +64,6 @@ selects an image, the user can select where to put the image on the canvas, and 
 is uploaded asynchronously using the defined `uploadImageFunction` that has the following signature:
 `(file: File) => Promise<string>`.
 
-'''
 
 For example on a button on React:
 
@@ -145,7 +144,6 @@ const MyImageToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When active the user:
 

@@ -7,7 +7,6 @@
 
 This release delivers significant new *diagramming capabilities* — editable groups, inline shape labels, and a full polygon node — alongside an *alpha server-side document API*. On the infrastructure side, store connections are now fully asynchronous, image fallback data is decoupled from the shared document state, and the `@syncedstore/core` dependency has been removed in favour of direct Yjs APIs. The Azure Web PubSub store now uses IndexedDB to render the canvas optimistically before the server connection is established.
 
-'''
 
 == Changes
 
@@ -21,7 +20,6 @@ Users can now *double-click into a group* to edit its individual child elements 
 
 https://github.com/InditexTech/weavejs/issues/1039[https://github.com/InditexTech/weavejs/issues/1039]
 
-'''
 
 === Inline Text Labels on Shape Nodes
 
@@ -33,7 +31,6 @@ https://github.com/InditexTech/weavejs/issues/1039[https://github.com/InditexTec
 
 https://github.com/InditexTech/weavejs/issues/1101[https://github.com/InditexTech/weavejs/issues/1101]
 
-'''
 
 === Polygon Node and Drawing Tool
 
@@ -46,7 +43,6 @@ A new `WeavePolygonNode` and `WeavePolygonToolAction` enable users to draw *arbi
 
 https://github.com/InditexTech/weavejs/issues/1104[https://github.com/InditexTech/weavejs/issues/1104]
 
-'''
 
 === IndexedDB Persistence for Optimistic Render (Azure Web PubSub)
 
@@ -58,7 +54,6 @@ https://github.com/InditexTech/weavejs/issues/1104[https://github.com/InditexTec
 
 https://github.com/InditexTech/weavejs/issues/1106[https://github.com/InditexTech/weavejs/issues/1106]
 
-'''
 
 === [Alpha] Server-Side Document Manipulation API
 
@@ -75,14 +70,12 @@ ____
 
 https://github.com/InditexTech/weavejs/issues/1080[https://github.com/InditexTech/weavejs/issues/1080]
 
-'''
 
 === Bug Fixes
 
 * *Brush tool* — it was no longer possible to draw a dot or very small stroke on the canvas. This is now fixed. (https://github.com/InditexTech/weavejs/issues/1088[#1088])
 * *WeaveTextNode* — the textarea edit overlay was misaligned due to a hardcoded border offset and an inaccurate `scrollHeight` approximation. The overlay now tracks the text node position correctly. (https://github.com/InditexTech/weavejs/issues/1098[#1098])
 
-'''
 
 == Breaking Changes
 
@@ -124,7 +117,6 @@ Also in this change: the Azure Web PubSub store's *maximum WebSocket frame size*
 
 https://github.com/InditexTech/weavejs/issues/1091[https://github.com/InditexTech/weavejs/issues/1091]
 
-'''
 
 === Image fallback data no longer saved in shared document state
 
@@ -157,7 +149,6 @@ const imageNode = new WeaveImageNode({
 
 https://github.com/InditexTech/weavejs/issues/1089[https://github.com/InditexTech/weavejs/issues/1089]
 
-'''
 
 === Font loading API: `fontsConfig` function now receives a helper argument
 
@@ -202,7 +193,6 @@ const instance = new Weave({
 
 Passing a static array of `WeaveFont` objects is unaffected by this change.
 
-'''
 
 === `@syncedstore/core` removed
 
@@ -228,7 +218,6 @@ const yjsMap = yjsDoc.getMap('weave');
 
 https://github.com/InditexTech/weavejs/issues/1090[https://github.com/InditexTech/weavejs/issues/1090]
 
-'''
 
 == Migration Steps
 

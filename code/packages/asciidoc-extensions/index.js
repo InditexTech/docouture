@@ -16,6 +16,7 @@ const registerCardGrid = require('./lib/card-grid')
 const registerFeatureTabs = require('./lib/feature-tabs')
 const registerCta = require('./lib/cta')
 const registerAccordion = require('./lib/accordion')
+const registerTabs = require('./lib/tabs')
 
 function registerAll(target) {
   registerLabelMacro(target)
@@ -48,6 +49,11 @@ function registerAll(target) {
   // those, in ui-bundle/src/css/accordion.css). An OPEN block, not an
   // example block like every entry above it — see its own header for why.
   registerAccordion(target)
+  // [tabs] — GH-45, real tabs for the migrated quickstart's package-manager
+  // code blocks (and any other authored content wanting a switcher). Also
+  // an OPEN block, for the mirror-image reason accordion.js gives — see its
+  // own header.
+  registerTabs(target)
 }
 
 /**

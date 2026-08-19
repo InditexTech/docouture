@@ -3,8 +3,10 @@
 // Every extension in lib/ is registered here, and only here — see README.md
 // for the contract each one keeps. Note that lib/ also holds modules that
 // register nothing and are absent from this list on purpose: async-compat.js,
-// first-positional.js, html.js, unique-id.js and warn.js are shared helpers
-// the extensions require directly.
+// first-positional.js, html.js, unique-id.js, warn.js, shiki-instance.js and
+// shiki-config.js are shared helpers the extensions require directly.
+// shiki-syntax-highlighter.js is the one exception that DOES register
+// something outside `registerAll` — see its own `require(...)` below.
 const registerLabelMacro = require('./lib/label-macro')
 const registerMonoMacro = require('./lib/mono-macro')
 const registerTableWidth = require('./lib/table-width')
@@ -16,6 +18,14 @@ const registerFeatureTabs = require('./lib/feature-tabs')
 const registerCta = require('./lib/cta')
 const registerAccordion = require('./lib/accordion')
 const registerTabs = require('./lib/tabs')
+
+// GH-89: registers Asciidoctor's 'shiki' SyntaxHighlighter adapter. Required
+// here, at module top level, NOT inside `registerAll` below — this is a
+// GLOBAL, one-time registration on the `@asciidoctor/core` module itself
+// (node's require cache is what makes "once" hold), not a per-page
+// `registry` registration like everything else in this file. See that
+// module's own header for the full explanation.
+require('./lib/shiki-syntax-highlighter')
 
 function registerAll(target) {
   registerLabelMacro(target)

@@ -16,5 +16,9 @@
   "devDependencies": {
     "@asciidoctor/core": "~4.0.8",
     "typescript": "6.0.3"
+  },
+  "dependencies": {
+    "asciidoctor-core-2.2": "npm:@asciidoctor/core@~2.2",
+    "shiki": "~4.4.0"
   }
 }

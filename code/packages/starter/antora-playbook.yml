@@ -82,6 +82,13 @@ asciidoc:
     sectanchors: ''
     idprefix: ''
     idseparator: '-'
+    # GH-89: static, build-time syntax highlighting via Shiki instead of
+    # Antora's own default (highlight.js, client-side) — see
+    # @inditextech/pdocs-asciidoc-extensions/lib/shiki-syntax-highlighter.js
+    # for the adapter this name resolves to, and
+    # @inditextech/pdocs-antora-extensions/lib/shiki-prewarm.js (wired below,
+    # under `antora.extensions`) for the async setup it depends on.
+    source-highlighter: shiki
   extensions:
     # GH-14: `label:red[Text]` / `label:[Text]` (grey default) — an IDS
     # Label inline; `mono:[text]` — plain monospaced text, no code chip.

@@ -3,6 +3,7 @@
 const registerFooter = require('./lib/footer')
 const registerNavModules = require('./lib/nav-modules')
 const registerSearchIndex = require('./lib/search-index')
+const registerShikiPrewarm = require('./lib/shiki-prewarm')
 
 /**
  * Registers pdocs' Antora pipeline extensions.
@@ -35,9 +36,16 @@ const registerSearchIndex = require('./lib/search-index')
  * match this list. Swap nav-modules and search-index and nothing throws —
  * every search record just falls back to filing itself under the component
  * title, as if no site declared `nav_modules` at all.
+ *
+ * shiki-prewarm (GH-89) listens on a DIFFERENT event (`contentAggregated`,
+ * not `navigationBuilt`) and touches none of the state the other three
+ * share, so its position in this list is not load-bearing the way theirs is
+ * — it is simply registered here too because this file is the one place
+ * `@antora/site-generator` is told about every pdocs Antora extension.
  */
 module.exports.register = function () {
   registerNavModules(this)
   registerFooter(this)
   registerSearchIndex(this)
+  registerShikiPrewarm(this)
 }

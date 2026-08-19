@@ -119,6 +119,13 @@ asciidoc:
     sectanchors: ''
     idprefix: ''
     idseparator: '-'
+    # GH-89: static, build-time syntax highlighting via Shiki instead of
+    # Antora's own default (highlight.js, client-side) — see
+    # @inditextech/pdocs-asciidoc-extensions/lib/shiki-syntax-highlighter.js
+    # for the adapter this name resolves to, and
+    # @inditextech/pdocs-antora-extensions/lib/shiki-prewarm.js (wired below,
+    # under `antora.extensions`) for the async setup it depends on.
+    source-highlighter: shiki
     # Turn on the ui-bundle's previous/next footer nav (pagination.hbs) for
     # every migrated page — it's opt-in per page there (a design decision,
     # not a bug), and none of the 450+ converted pages set it themselves.

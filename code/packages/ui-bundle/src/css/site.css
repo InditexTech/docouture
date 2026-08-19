@@ -51,24 +51,15 @@
 @import url("site-footer.css");
 
 /*
- * Syntax highlighting themes — highlight.js's own "GitHub Dark" and "GitHub
- * Dark Dimmed", imported unmodified from the highlight.js package
- * (BSD-3-Clause; see NOTICE) rather than a hand-authored mapping onto design
- * system tokens.
- * gulp.d/lib/hljs-theme-scope.js (wired into the build's PostCSS pipeline)
- * scopes each to one of this bundle's own site themes and drops both
- * themes' own code-surface rules (`.hljs`, `pre code.hljs`, `code.hljs`) —
- * the surface itself (background, padding, type) is doc.css's, matching the
- * design; only each theme's `.hljs-*` scope colours survive.
- *
- *   github-dark         -> "light" site theme
- *   github-dark-dimmed  -> "dark" site theme
- *
- * Order doesn't matter to the scoping (each rule keeps its own source file),
- * but both come after doc.css so a resolved `.hljs-*` colour always wins
- * over the surface's own `pre > code` colour, same as an unscoped
- * highlight.css always did.
+ * Syntax highlighting (GH-89): source blocks are highlighted at Antora
+ * build time by Shiki (@inditextech/pdocs-asciidoc-extensions/lib/
+ * shiki-syntax-highlighter.js), which emits `--shiki-light`/`--shiki-dark`
+ * custom properties per token (Shiki's "css variables" dual-theme mode)
+ * instead of a literal colour, so one build output serves both this
+ * bundle's site themes. The colour rules that pick between them live in
+ * doc.css, next to the rest of the code-surface styling, rather than here —
+ * there is no PostCSS scoping step to document at this import site any
+ * more (compare highlight.js's own theme CSS files, scoped by the now-removed
+ * gulp.d/lib/hljs-theme-scope.js): Shiki ships no CSS of its own at all.
  */
-@import url("highlight.js/styles/github-dark.css");
-@import url("highlight.js/styles/github-dark-dimmed.css");
 @import url("print.css");

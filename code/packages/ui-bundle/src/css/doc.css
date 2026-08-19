@@ -1916,6 +1916,26 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   user-select: none;
 }
 
+/*
+ * GH-89: Shiki (Antora build-time syntax highlighting, replacing
+ * highlight.js) emits `--shiki-light`/`--shiki-dark` custom properties per
+ * token instead of a literal colour (its "css variables" dual-theme mode —
+ * see @inditextech/pdocs-asciidoc-extensions/lib/shiki-syntax-highlighter.js).
+ * Every token span, and the outermost wrapper span that function adds in
+ * place of Shiki's own (discarded) `<pre>`, redefines both variables to ITS
+ * OWN token's colour in each theme — so one rule switching which of the two
+ * `color` reads, on `.ids-theme-dark`, is the entire theme switch. No
+ * PostCSS scoping step, unlike hljs's own theme CSS files this replaces
+ * (gulp.d/lib/hljs-theme-scope.js, removed) — Shiki ships no CSS at all.
+ */
+.doc pre.highlight code[data-lang] span {
+  color: var(--shiki-light);
+}
+
+.ids-theme-dark .doc pre.highlight code[data-lang] span {
+  color: var(--shiki-dark);
+}
+
 .doc .dlist dt {
   font: var(--ids-typo-body-l-high);
   letter-spacing: var(--ids-typo-body-l-high-letter-spacing);

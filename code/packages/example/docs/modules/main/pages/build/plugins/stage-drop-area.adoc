@@ -17,9 +17,7 @@ handling.
 
 == Usage
 
-[steps]
-====
-.Import the Plugin
+=== Import the Plugin
 Start by importing the plugin:
 
 [source,ts]
@@ -27,7 +25,7 @@ Start by importing the plugin:
 import { WeaveStageDropAreaPlugin } from "@inditextech/weave-sdk";
 ----
 
-.Register the Plugin
+=== Register the Plugin
 Then register the plugin on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -42,7 +40,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Use the plugin
+=== Use the plugin
 Once the plugin is registered you can add a listener with the xref:sdk:api-reference/weave/index.adoc[Weave]
 instance xref:sdk:api-reference/weave/index.adoc#events[Events API] that listen to the event named `onStageDrop`.
 
@@ -63,4 +61,3 @@ With this callback you can know when the users drops something to the stage, now
 what the user dropped, you can for example, on the `onDragStart` https://developer.mozilla.org/es/docs/Web/API/HTMLElement/dragstart_event[event]
 define on the `window` object (being global) a property with metadata of the element that started
 dragging and retrieve / perform and action / clean it on the callback.
-====

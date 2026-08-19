@@ -15,9 +15,7 @@ Weave.js is UI agnostic so you can instantiate the Weave class on any UI framewo
 
 To use the Weave.js SDK on a UI project just follow this steps:
 
-[steps]
-====
-.Install the dependencies on the project
+=== Install the dependencies on the project
 First lets install the Weave.js dependencies on the project:
 
 [source,shell]
@@ -25,7 +23,7 @@ First lets install the Weave.js dependencies on the project:
 npm install @inditextech/weave-types @inditextech/weave-sdk
 ----
 
-.Instantiate the Weave class
+=== Instantiate the Weave class
 Instantiate the Weave class, for example:
 
 [source,tsx]
@@ -151,6 +149,5 @@ const instance = new Weave(
 );
 ----
 
-.Access the instantiated the Weave class methods
+=== Access the instantiated the Weave class methods
 Now you can call any of the methods of the Weave class.
-====

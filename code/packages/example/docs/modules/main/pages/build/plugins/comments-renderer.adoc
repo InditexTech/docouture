@@ -17,9 +17,7 @@ This will not trigger a re-render of the comments, you need to manually trigger 
 when this actions happens, this is intended in order to decouple Weave internal and make the
 tool headless from all points of view: UI, Backend and Entity model.
 
-[steps]
-====
-.Import the Plugin
+=== Import the Plugin
 Start by importing the plugin:
 
 [source,ts]
@@ -27,7 +25,7 @@ Start by importing the plugin:
 import { WeaveConnectedUsersPlugin } from "@inditextech/weave-sdk";
 ----
 
-.Register the Plugin
+=== Register the Plugin
 Then register the plugin on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -56,9 +54,8 @@ const instance = new Weave({
 <.> Added in this step.
 <.> Added in this step.
 
-.Use the plugin
+=== Use the plugin
 Once the plugin is registered you have an API to control when to render the comments:
 
 * `setComments(comments: T[]): void`: this function sets the comments to render, based on your Entity model.
 * `render(): void`: this function is the one that renders the comments on the room stage, call it whenever the comments changed.
-====

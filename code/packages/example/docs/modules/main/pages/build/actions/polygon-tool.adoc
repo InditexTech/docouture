@@ -14,9 +14,7 @@ This action needs registered on the Weave instance the following element:
 
 == Usage
 
-[steps]
-====
-.Import the Action
+=== Import the Action
 Start by importing the action:
 
 [source,ts]
@@ -24,7 +22,7 @@ Start by importing the action:
 import { WeavePolygonToolAction } from "@inditextech/weave-sdk";
 ----
 
-.Register the Action
+=== Register the Action
 Then register the action on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -48,7 +46,7 @@ new WeavePolygonToolAction("hexagon")
 
 Available preset IDs: `triangle`, `diamond`, `pentagon` (default), `hexagon`, `octagon`, `decagon`.
 
-.Setup the action trigger
+=== Setup the action trigger
 Setup on a button or any element on the UI the user can interact with on the action event:
 
 [source,ts]
@@ -82,7 +80,7 @@ const MyPolygonToolTriggerComponent = () => {
 };
 ----
 
-.Trigger the action
+=== Trigger the action
 Finally a user triggers the UI element that launches the action.
 
 
@@ -94,4 +92,3 @@ When active the user can:
 Once placed, the polygon is added to the canvas as a fully functional node. This action integrates
 seamlessly with Weave.js's real-time state system, ensuring the new element appears instantly for
 all connected users.
-====

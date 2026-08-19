@@ -13,9 +13,7 @@ inline editing.
 
 == Usage
 
-[steps]
-====
-.Import the Node
+=== Import the Node
 Start by importing the node:
 
 [source,ts]
@@ -23,7 +21,7 @@ Start by importing the node:
 import { WeaveTextNode } from "@inditextech/weave-sdk";
 ----
 
-.Register the Node
+=== Register the Node
 Then register the node on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -38,7 +36,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Use the node
+=== Use the node
 Once the node is registered you can use it on xref:main:build/actions/index.adoc[Actions] or
 xref:main:build/plugins/index.adoc[Plugins] or even other xref:main:build/nodes/index.adoc[Nodes].
 
@@ -54,4 +52,3 @@ that it contains.
 * `auto-height`: makes the node auto-adjust its height accordingly to the text that it contains.
 The width is fixed and defined by the end user.
 * `fixed`: makes the node fixed on both its width & height.
-====

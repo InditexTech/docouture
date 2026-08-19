@@ -26,9 +26,7 @@ This action needs also registered on the Weave instance the following:
 
 == Usage
 
-[steps]
-====
-.Import the Action
+=== Import the Action
 Start by importing the action:
 
 [source,ts]
@@ -36,7 +34,7 @@ Start by importing the action:
 import { WeaveImageToolAction } from "@inditextech/weave-sdk";
 ----
 
-.Register the Action
+=== Register the Action
 Then register the action on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -51,7 +49,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Setup the action trigger
+=== Setup the action trigger
 Setup on a button or any element on the UI the user can interact with on the action event:
 
 [source,ts]
@@ -141,7 +139,7 @@ const MyImageToolTriggerComponent = () => {
 };
 ----
 
-.Trigger the action
+=== Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
 
@@ -154,4 +152,3 @@ When active the user:
 Then the image is added to the canvas as a fully functional node—ready.
 This action integrates seamlessly with Weave.js's real-time state system,
 ensuring the new element appears instantly for all connected users.
-====

@@ -32,9 +32,7 @@ This action needs registered on the Weave instance the following elements:
 
 == Usage
 
-[steps]
-====
-.Import the Action
+=== Import the Action
 Start by importing the action:
 
 [source,ts]
@@ -42,7 +40,7 @@ Start by importing the action:
 import { WeaveCommentToolAction } from "@inditextech/weave-sdk";
 ----
 
-.Register the Action
+=== Register the Action
 Then register the action on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -71,7 +69,7 @@ const instance = new Weave({
 <.> Added in this step.
 <.> Added in this step.
 
-.Setup the action trigger
+=== Setup the action trigger
 Setup on a button or any element on the UI the user can interact with on the action event:
 
 [source,ts]
@@ -98,7 +96,7 @@ const MyCommentToolTriggerComponent = () => {
 };
 ----
 
-.Trigger the action
+=== Trigger the action
 When an user triggers the action:
 
 * The mouse pointer is changed, indicating that it can now add comments.
@@ -106,4 +104,3 @@ When an user triggers the action:
 is called so you can render your _create comment UI_.
 * After setting the comment, you can retrieve the comments and render them with the
 xref:main:build/plugins/comments-renderer.adoc[Comments renderer] plugin.
-====

@@ -14,9 +14,7 @@ flow editors, and visual programming interfaces.
 
 == Usage
 
-[steps]
-====
-.Import the Node
+=== Import the Node
 Start by importing the node:
 
 [source,ts]
@@ -24,7 +22,7 @@ Start by importing the node:
 import { WeaveLineNode } from "@inditextech/weave-sdk";
 ----
 
-.Register the Node
+=== Register the Node
 Then register the node on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -39,7 +37,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Use the node
+=== Use the node
 Once the node is registered you can use it on xref:main:build/actions/index.adoc[Actions] or
 xref:main:build/plugins/index.adoc[Plugins] or even other xref:main:build/nodes/index.adoc[Nodes].
 
@@ -50,4 +48,3 @@ to the application by specifying all segments one-by-one (a line is a collection
 and lines are rendered among them).
 * xref:main:build/actions/brush-tool.adoc[Brush Tool] that allows users to add Line nodes,
 to the application by free-hand (mouse or digital pencil).
-====

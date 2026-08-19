@@ -26,9 +26,7 @@ to be shared via the room state mechanism.
 
 == Usage
 
-[steps]
-====
-.Import the Node
+=== Import the Node
 Start by importing the node:
 
 [source,ts]
@@ -36,7 +34,7 @@ Start by importing the node:
 import { WeaveCommentNode } from "@inditextech/weave-sdk";
 ----
 
-.Register the Node
+=== Register the Node
 Then register the node on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -65,12 +63,11 @@ const instance = new Weave({
 <.> Added in this step.
 <.> Added in this step.
 
-.UI configuration
+=== UI configuration
 [NOTE]
 ====
 Check the xref:sdk:api-reference/nodes/comment.adoc[Comment Node] API to know
 how it can be customized.
-====
 
 .Use the node
 Once the node is registered you can use

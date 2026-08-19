@@ -15,9 +15,7 @@ This action needs registered on the Weave instance the following elements:
 
 == Usage
 
-[steps]
-====
-.Import the Action
+=== Import the Action
 Start by importing the action:
 
 [source,ts]
@@ -25,7 +23,7 @@ Start by importing the action:
 import { WeaveAlignNodesToolAction } from "@inditextech/weave-sdk";
 ----
 
-.Register the Action
+=== Register the Action
 Then register the action on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -40,7 +38,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Setup the action trigger
+=== Setup the action trigger
 Setup on a button or any element on the UI the user can interact with on the action event:
 
 [source,ts]
@@ -70,11 +68,10 @@ const MyAlignNodesToolTriggerComponent = () => {
 };
 ----
 
-.Trigger the action
+=== Trigger the action
 Finally a final user:
 
 * Select some elements on the stage.
 * trigger the UI element that launches the action.
 
 When the tool is triggered automatically the selected nodes will be aligned according to the passed params.
-====

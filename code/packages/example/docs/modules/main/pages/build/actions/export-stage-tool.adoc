@@ -17,9 +17,7 @@ This action needs also registered on the Weave instance the following:
 
 == Usage
 
-[steps]
-====
-.Import the Action
+=== Import the Action
 Start by importing the action:
 
 [source,ts]
@@ -27,7 +25,7 @@ Start by importing the action:
 import { WeaveExportStageToolAction } from "@inditextech/weave-sdk";
 ----
 
-.Register the Action
+=== Register the Action
 Then register the action on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -42,7 +40,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Setup the action trigger
+=== Setup the action trigger
 Setup on a button or any element on the UI the user can interact with on the action event:
 
 [source,ts]
@@ -79,10 +77,9 @@ const MyExportStageToolTriggerComponent = () => {
 };
 ----
 
-.Trigger the action
+=== Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
 
 When triggered fit all the nodes of the canvas in the viewport, center on its and then
 proceed to generate an image from it. Allowing to download it.
-====

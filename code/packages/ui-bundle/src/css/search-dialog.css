@@ -82,6 +82,20 @@
   display: none;
 }
 
+/*
+ * GH-67: the category heading `renderResults` (12-search.ts) inserts before
+ * the first entry of each category — only ever present when a query's
+ * results span more than one, so a single-module site never sees it. Not a
+ * DS component of its own (`.ids-list` has no heading-row concept), just
+ * enough to read as a label rather than another clickable row: no
+ * background/hover, `role="presentation"` in the markup itself since an
+ * `<li>` here is layout, not a list semantic worth announcing.
+ */
+.search-dialog__category {
+  color: var(--ids-color-content-low);
+  padding: var(--ids-size-100) var(--ids-size-150) var(--ids-size-50);
+}
+
 .search-dialog__hints kbd {
   background: var(--panel-background);
   border-radius: 0;

@@ -164,9 +164,13 @@
  * `padding-bottom: var(--ids-size-50)`), NOT the `--ids-size-25` a literal
  * reading of the Figma frame might suggest; trusted over that reading since
  * this is the one place the shipped component states its own number.
- * `margin-top` is the Figma item's own `gap: 8px` between its "Header" and
- * "Content Slot" children (`.IDS Accordion / Item`, node 2735:64680) — the
- * breathing room between the toggle row and the content actually opening.
+ * `margin-top`/`margin-bottom` are homologated to the same `--ids-size-50`
+ * (8px) — the Figma item's own `gap: 8px` between its "Header" and "Content
+ * Slot" children (`.IDS Accordion / Item`, node 2735:64680) applied
+ * symmetrically, rather than pairing it on top with `--doc-space-block`
+ * (the generic top-level block gap, 12px) on the bottom: one item's content
+ * sits the same distance from its own header above as from whatever comes
+ * next below, divider included.
  * `.content-wrapper`'s `overflow: hidden` is deliberately not added here —
  * this file adds no animation of its own (no JS in this PR), and hiding
  * overflow ahead of one would risk clipping something visible for no
@@ -178,18 +182,105 @@
  * `.content` used to alias that panel via `details.result`, removed here:
  * nothing in the corpus ever emits `role="result"`, verified against the
  * built site output).
+ *
+ * `transition: all var(--ids-motion-duration-s-high)
+ * var(--ids-motion-easing-standard-3)` does nothing visually by itself
+ * here — nothing on this element changes via a CSS state class — it
+ * exists so `ui-bundle/src/js/10-accordion.ts`'s own height animation (Web
+ * Animations API, not a CSS transition — auto-height content has no
+ * `auto` a CSS transition can animate to/from) reads its duration and
+ * easing off a REAL declaration, `getComputedStyle`'d at animation time,
+ * rather than a value hard-coded into the script. That is also what makes
+ * the animation collapse to ~0 under `prefers-reduced-motion` for free —
+ * both tokens already do that (`ids-tokens.css`), and the script never
+ * overrides them with a duration of its own.
+ *
+ * Deliberately NOT `--ids-motion-micro-appear` (0.35s, `cubic-bezier(0.42,
+ * 0,1,1)` — ease-IN, accelerating): that pairing is what the chevron's own
+ * rotation above uses, correctly — the real component's `AccordionItem`
+ * does not reuse it for the content reveal itself. Its content is wrapped
+ * in `<Visibility animation="expand">` (`animations/visibility/
+ * visibility.js`), whose `ids-expand-in`/`ids-expand-out` keyframes
+ * (`visibility.css`) run on `--ids-motion-duration-s-high` (0.25s) +
+ * `--ids-motion-easing-standard-3` (`cubic-bezier(0,0,0.58,1)` — ease-OUT,
+ * decelerating) — a shorter, decelerating curve genuinely different from
+ * the icon's own, read verbatim off that file rather than reused from
+ * whatever token happened to already be in `ids-tokens.css`. (Neither
+ * token was pulled in before this: nothing this bundle vendors referenced
+ * them — `ids-components.yml` lists `accordion.css`, not `visibility.css`,
+ * since this bundle has no React tree to mount `<Visibility>` into. `just
+ * ids-sync` picks both up the moment this declaration exists, the same way
+ * it already does for every other `var(--ids-...)` in this file.)
+ *
+ * `box-sizing: border-box` is set explicitly, for the same reason
+ * `.doc details > summary` sets it explicitly above — measured, not
+ * assumed: Chromium's own `<details>` UA construct wraps everything after
+ * `<summary>` in an internal shadow node (`::details-content`, the same
+ * mechanism that gives `<details>` its native open/close CSS animation
+ * support), and that wrapper breaks the page's own `box-sizing: inherit`
+ * chain (`site.css`) for `.content` specifically, the same way the
+ * separate `<summary>` shadow construct breaks it for the toggle row —
+ * `.content` computed `content-box` despite its own parent `<details>`
+ * correctly inheriting `border-box`. Uncaught, this was not merely
+ * cosmetic: `box-sizing: inherit` is chained (`*, ::before, ::after` in
+ * `site.css`), so every element NESTED inside `.content` — a paragraph, a
+ * code block, anything the collapsed content actually holds — inherited
+ * the broken `content-box` in turn, silently changing how each one's own
+ * padding sized against its width and, in turn, the whole content block's
+ * total rendered height (measured: a real, three-paragraph fixture
+ * rendered ~17px taller under the broken chain than under `border-box` —
+ * not the couple of stray pixels a rounding difference would produce).
+ * That mismatch is also what made the open/close animation this file's
+ * `transition` backs look wrong before this fix: `10-accordion.ts` reads
+ * `content.scrollHeight` — a real, physical measurement, unaffected by
+ * which `box-sizing` is in effect — and animates the Web Animations API's
+ * own `height` keyframe to that number; a `content-box` element treats
+ * `height` as EXCLUDING its own padding, so the animation's true end state
+ * over/undershot the target by exactly one `padding-bottom` before
+ * snapping to the (differently-sized) natural layout the instant the
+ * unfilled animation ended — a visible double-motion on every toggle,
+ * fixed by giving `height` and `scrollHeight` the same box model to agree
+ * on, not by touching the animation code at all.
  */
 .doc details > .content {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: var(--ids-size-50);
   margin-left: 0;
   margin-top: var(--ids-size-50);
-  margin-bottom: var(--doc-space-block);
+  margin-bottom: var(--ids-size-50);
   padding-bottom: var(--ids-size-50);
+  transition: all var(--ids-motion-duration-s-high) var(--ids-motion-easing-standard-3);
 }
+
 
 .doc details > .content > :first-child {
   margin-top: 0;
 }
+
+/*
+ * `.pdocs-accordion-group` — GH-61 Part 2's `[accordion]` wrapper
+ * (`asciidoc-extensions/lib/accordion.js`). Not a DS class: the real
+ * `Accordion` component's own wrapper `<div>` (`accordion/accordion.js`)
+ * carries no class of its own — see that extension's own header. No fill,
+ * no border, no padding of its own — every visual — divider, spacing —
+ * comes from the items inside, unchanged by being grouped: the rules above
+ * are plain descendant selectors, matching a grouped `<details>` exactly as
+ * they match a standalone one, at any nesting depth.
+ *
+ * The one thing an unstyled wrapper div needs supplying itself is top-level
+ * block spacing — every other block in this file (`.doc .paragraph`, `.doc
+ * details` above) gets `--doc-space-block` from its OWN selector in that
+ * shared list (`doc.css`, line ~707), a list this div's class doesn't
+ * belong in. Deliberately NOT added there — this class lives in
+ * accordion.css, not doc.css, matching the issue's own file split. Set here
+ * instead, and left to collapse with the first grouped item's own identical
+ * top margin (plain block div, no padding/border/overflow between them to
+ * block collapsing) rather than doubling it.
+ */
+.doc .pdocs-accordion-group {
+  margin: var(--doc-space-block) 0 0;
+}
+

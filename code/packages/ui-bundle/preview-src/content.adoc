@@ -116,6 +116,66 @@ Loads of details.
 Voila!
 ====
 
+.Grouped, single-open
+[accordion%single-open,aria-label="Frequently asked questions"]
+--
+.Can I use *Weave.js* with any UI framework?
+[%collapsible]
+====
+Yes — framework-agnostic by design.
+
+While React helpers are included, other frameworks work too, with a bit more
+wiring.
+====
+
+.What about `AMIGA_PROFILE` — does casing survive?
+[%collapsible]
+====
+Yes: this row's own title keeps its identifier casing and its bold word,
+neither uppercased nor split apart by layout — see accordion.css's own
+header for why that used to be a real bug.
+====
+
+.A third item, so Home/End have somewhere to jump
+[%collapsible]
+====
+Arrow-Down/Up moves focus between headers; Home/End jump to the first/last.
+Opening this one closes whichever of the other two was open — that
+exclusivity is the browser's own `<details name>` behaviour, not this
+page's script.
+====
+--
+
+.Grouped, multiple-open
+[accordion,aria-label="Frequently asked questions"]
+--
+.Can I use *Weave.js* with any UI framework?
+[%collapsible]
+====
+Yes — framework-agnostic by design.
+
+While React helpers are included, other frameworks work too, with a bit more
+wiring.
+====
+
+.What about `AMIGA_PROFILE` — does casing survive?
+[%collapsible]
+====
+Yes: this row's own title keeps its identifier casing and its bold word,
+neither uppercased nor split apart by layout — see accordion.css's own
+header for why that used to be a real bug.
+====
+
+.A third item, so Home/End have somewhere to jump
+[%collapsible]
+====
+Arrow-Down/Up moves focus between headers; Home/End jump to the first/last.
+Opening this one closes whichever of the other two was open — that
+exclusivity is the browser's own `<details name>` behaviour, not this
+page's script.
+====
+--
+
 === Steps
 
 Weave.js migration Phase 2 — see `asciidoc-extensions/lib/steps.js`.

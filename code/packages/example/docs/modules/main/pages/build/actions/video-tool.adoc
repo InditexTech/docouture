@@ -64,7 +64,6 @@ On your end upload a video to your backend, probably on the backend extract a fr
 Once you have an URL for the video and the placeholder, call the `finishUploadCallback`, passing as parameter
 the both URLs.
 
-'''
 
 For example on a button on React:
 
@@ -137,7 +136,6 @@ const MyVideoToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When active the user:
 

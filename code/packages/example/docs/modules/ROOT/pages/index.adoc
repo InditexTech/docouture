@@ -25,7 +25,7 @@ Weave.js abstracts the complexity of building real-time, collaborative apps from
 [card,subheader="Start here"]
 .xref:main:quickstart.adoc[Quickstart]
 --
-image::cloth-quickstart.svg["Abstract study of draped cloth, warm grey"]
+image::cloth-quickstart.png["Abstract study of draped cloth, warm grey"]
 
 Set up a room, render a canvas and invite a second participant.
 --
@@ -33,7 +33,7 @@ Set up a room, render a canvas and invite a second participant.
 [card,subheader="Reference"]
 .xref:sdk:index.adoc[SDK]
 --
-image::cloth-sdk.svg["Abstract study of draped cloth, cool grey"]
+image::cloth-sdk.png["Abstract study of draped cloth, cool grey"]
 
 The headless library the canvas is built on.
 --
@@ -41,7 +41,7 @@ The headless library the canvas is built on.
 [card,subheader="Integration"]
 .xref:react:index.adoc[React Helper]
 --
-image::cloth-react.svg["Abstract study of draped cloth, sand"]
+image::cloth-react.png["Abstract study of draped cloth, sand"]
 
 Components for integrating Weave.js into a React application.
 --
@@ -49,7 +49,7 @@ Components for integrating Weave.js into a React application.
 [card,subheader="Transport"]
 .xref:main:build/stores/index.adoc[Stores]
 --
-image::cloth-stores.svg["Abstract study of draped cloth, slate"]
+image::cloth-stores.png["Abstract study of draped cloth, slate"]
 
 How a room's state reaches every participant, and which transport to pick.
 --

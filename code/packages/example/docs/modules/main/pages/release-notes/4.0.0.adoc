@@ -9,7 +9,6 @@ This release focuses on *architectural unification of the snapping system* and t
 
 The two separate snapping plugins from previous versions have been merged into a single, coherent plugin that handles edge snapping, distance indicators, and custom guide lines from one place. This reduces configuration overhead and makes snapping behaviour easier to reason about and extend.
 
-'''
 
 == Changes
 
@@ -24,7 +23,6 @@ The `WeaveNodesEdgeSnappingPlugin` and `WeaveNodesDistanceSnappingPlugin` have b
 
 https://github.com/InditexTech/weavejs/issues/1041[https://github.com/InditexTech/weavejs/issues/1041]
 
-'''
 
 === Custom Guides Support
 
@@ -36,7 +34,6 @@ A new `WeaveGuideToolAction` lets users draw *persistent ruler guides* directly 
 
 https://github.com/InditexTech/weavejs/issues/1041[https://github.com/InditexTech/weavejs/issues/1041]
 
-'''
 
 == Breaking Changes
 
@@ -74,13 +71,11 @@ const instance = new Weave({
 });
 ----
 
-'''
 
 === Snapping metadata stored as plain objects
 
 Snapping guide metadata is now stored in the Yjs document as plain objects instead of serialized JSON strings. If your application reads snapping metadata directly from the Yjs document (e.g. to render custom overlays), update your reading logic accordingly.
 
-'''
 
 === `WeaveGuideToolAction` must be registered to use guides
 
@@ -103,7 +98,6 @@ const instance = new Weave({
 });
 ----
 
-'''
 
 == Migration Steps
 

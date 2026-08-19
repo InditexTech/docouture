@@ -55,7 +55,6 @@ instance.triggerAction("exportStageTool", {
 });
 ----
 
-'''
 
 For example on a button on React:
 
@@ -83,7 +82,6 @@ const MyExportStageToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When triggered fit all the nodes of the canvas in the viewport, center on its and then
 proceed to generate an image from it. Allowing to download it.

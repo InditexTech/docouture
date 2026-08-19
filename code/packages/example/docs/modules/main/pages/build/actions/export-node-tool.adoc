@@ -55,7 +55,6 @@ instance.triggerAction("exportNodeTool", {
 });
 ----
 
-'''
 
 For example on a button on React:
 
@@ -85,7 +84,6 @@ const MyExportNodeToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When triggered the selected node is cloned on a special layer of the canvas, fit zoom to it and
 center on its and then proceed to generate an image from it. Allowing to download it.

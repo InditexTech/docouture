@@ -48,7 +48,6 @@ Setup on a button or any element on the UI the user can interact with on the act
 instance.triggerAction("rectangleTool");
 ----
 
-'''
 
 For example on a button on React:
 
@@ -71,7 +70,6 @@ const MyRectangleToolTriggerComponent = () => {
 .Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
-'''
 
 When active the user can:
 

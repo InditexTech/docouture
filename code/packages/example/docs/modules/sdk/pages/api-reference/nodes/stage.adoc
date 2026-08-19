@@ -43,7 +43,6 @@ new WeaveStageNode();
 
 This Node extends the `Konva.Stage` class to define several functions:
 
-'''
 
 === isFocused
 
@@ -54,7 +53,6 @@ isFocused(): boolean
 
 Function that indicates if the stage is focused or not.
 
-'''
 
 === isMouseWheelPressed
 

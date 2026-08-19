@@ -7,7 +7,6 @@
 
 We’re excited to announce *Weave.js 1.0.0*, the *first stable release* of the library. This milestone marks a major step forward in reliability, performance, and long-term API stability for building canvas-based collaborative experiences.
 
-'''
 
 === Highlights
 
@@ -46,14 +45,12 @@ import { Weave } from "@inditextech/weave";
 
 CommonJS (`require`) is no longer supported.
 
-'''
 
 === Breaking Changes
 
 * *ESM only*: CommonJS environments must migrate to ESM imports.
 * *Konva 10 required*: Older versions of Konva are no longer supported.
 
-'''
 
 === Why This Matters
 
@@ -63,7 +60,6 @@ The *1.0 milestone* establishes a solid foundation for the future of Weave.js:
 * Alignment with modern JavaScript module standards
 * Compatibility with the latest canvas rendering stack
 
-'''
 
 === 🙌 Thank You
 

@@ -306,7 +306,6 @@ failed to load from its remote URL.
 
 This Node extends the `Konva.Node` class to define several functions:
 
-'''
 
 === triggerCrop
 
@@ -317,7 +316,6 @@ triggerCrop(): void
 
 Function that when is called triggers the image cropping.
 
-'''
 
 === dblClick
 
@@ -328,7 +326,6 @@ dblClick(): void
 
 Function that when double click (or tap) is triggered triggers the image cropping.
 
-'''
 
 === closeCrop
 
@@ -342,7 +339,6 @@ Function that when is called closes the image cropping, depending on the `type`:
 * `accept`: accepts the cropping configuration and crops the image.
 * `cancel`: cancel the cropping configuration without changes to the image.
 
-'''
 
 === cropImageWithReference
 
@@ -358,7 +354,6 @@ When calling the method it can raise errors with the following causes:
 * `InvalidImageNode`: if the first argument of the method is not a valid Weave Image node.
 * `RotationNotAligned`: if the image element and the reference element doesn't have the same rotation angle.
 
-'''
 
 === resetCrop
 
@@ -380,7 +375,6 @@ onImageCropStart: WeaveImageOnCropStartEvent;
 
 The `onImageCropStart` event is called when an image enters on the cropping edition mode.
 
-'''
 
 === onImageCropEnd
 

@@ -147,7 +147,6 @@ You can access Weave.js main instance via `this.instance`.
 To create a custom node, create a class that extends the https://github.com/InditexTech/weavejs/blob/main/code/packages/sdk/src/nodes/node.ts[WeaveNode]
 abstract class, and implement the following attributes and methods:
 
-'''
 
 ==== nodeType
 
@@ -160,7 +159,6 @@ nodeType: string;
 
 Which defines the node identity. The `nodeType` attribute must be unique among other nodes.
 
-'''
 
 ==== create
 
@@ -183,7 +181,6 @@ Most times this method is not needed to extend as the implementation on the base
 use cases.
 ====
 
-'''
 
 ==== onRender
 
@@ -195,7 +192,6 @@ onRender(props: WeaveElementAttributes): WeaveElementInstance
 The `onRender` method is the one responsible for rendering the node on the canvas, It's a good place
 to initialize the nodes, events, etc.
 
-'''
 
 ==== onUpdate
 
@@ -210,7 +206,6 @@ onUpdate(
 The `onUpdate` method is called anytime that the nodes needs to update on the canvas, it receives the
 actual canvas instance (Konva element) of the node and the new props.
 
-'''
 
 ==== onDestroy
 
@@ -221,7 +216,6 @@ onDestroy(nodeInstance: WeaveElementInstance): void
 
 The `onDestroy` method is called when the canvas instance needs to be disposed.
 
-'''
 
 ==== serialize
 
@@ -237,7 +231,6 @@ can be sent over the wire for sync with other peers or to persist the model serv
 
 Our xref:sdk:api-reference/nodes/node.adoc[WeaveNode] base class extend the `Konva.Node` class to define several functions:
 
-'''
 
 ==== getTransformerProperties
 
@@ -265,7 +258,6 @@ const DEFAULT_ANCHORS_ENABLED: string[] = [
 ];
 ----
 
-'''
 
 ==== movedToContainer
 
@@ -276,7 +268,6 @@ movedToContainer(): void
 
 Function that is called when the node changes from one container to another.
 
-'''
 
 ==== updatePosition
 

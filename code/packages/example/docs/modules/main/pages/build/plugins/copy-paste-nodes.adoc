@@ -47,7 +47,6 @@ const instance = new Weave({
 Once the plugin is registered final users can now copy & paste nodes freely, but the copy & paste
 mus be triggered using the API provided by the plugin.
 
-'''
 
 ==== Public API
 
@@ -75,7 +74,6 @@ if (copyPastePlugin) {
 To learn more check the xref:sdk:api-reference/plugins/copy-paste-nodes.adoc[WeaveCopyPasteNodesPlugin]
 plugin.
 
-'''
 
 ==== Events
 

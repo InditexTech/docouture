@@ -120,7 +120,6 @@ Define the custom server logic by creating a file named `server.ts` in the proje
 include::example$manual-installation/server.mod-0[]
 ----
 
-'''
 
 ==== Custom server tooling
 
@@ -173,7 +172,6 @@ You need to:
 * Define how to handle the persistence of the shared-state.
 * Instantiate the xref:store-websockets:api-reference/server/weave-websockets-server.adoc[WeaveWebsocketsServer] class from the library `@inditextech/weave-store-websockets` and configure it.
 
-'''
 
 ==== Set up the shared-state persistence handlers
 
@@ -195,7 +193,6 @@ Changes explanation:
 <2> `fetchRoom` function fetches a previously saved shared-state of a room by its ID from the file system.
 <3> `persistRoom` function persists the shared-state of a room by its ID onto the file system.
 
-'''
 
 ==== Set up the Weave.js Websockets store
 

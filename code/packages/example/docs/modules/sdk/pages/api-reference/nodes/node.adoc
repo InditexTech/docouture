@@ -240,7 +240,6 @@ that is handled by this Node definition. It's a serialization from Konva instanc
 
 The WeaveNode extend the `Konva.Node` class to define several functions:
 
-'''
 
 === getTransformerProperties
 
@@ -268,7 +267,6 @@ const DEFAULT_ANCHORS_ENABLED: string[] = [
 ];
 ----
 
-'''
 
 === movedToContainer
 
@@ -279,7 +277,6 @@ movedToContainer(): void
 
 Function that is called when the node changes from one container to another.
 
-'''
 
 === updatePosition
 

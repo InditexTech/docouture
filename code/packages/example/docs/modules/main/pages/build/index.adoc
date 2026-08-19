@@ -7,23 +7,39 @@ A building block is typically a simple, well-defined unit—like a shape, a UI c
 a plugin—that does one thing well. You can mix and match these blocks to assemble more advanced
 features or entire applications. *Weave.js* provides a set of well-defined building blocks:
 
-[cards]
+[cards,type=image-portrait,columns="1 s:2 m:4",width=container]
 ====
-[card]
+[card,icon="shapes/forms-outlined"]
 .xref:main:build/nodes/index.adoc[Nodes]
+--
+image::build/abstract-nodes.png["Abstract study of connected nodes, moss grey"]
+
 Nodes are the fundamental visual building blocks in Weave.js. They are primarily based on Konva.js primitives (shapes and groups) and represent everything rendered on the canvas.
+--
 
-[card]
+[card,icon="actions/code-block-outlined"]
 .xref:main:build/plugins/index.adoc[Plugins]
+--
+image::build/abstract-plugins.png["Abstract study of interlocking blocks, indigo grey"]
+
 Plugins extend and enhance Weave.js's core functionality. Whether it's selection handling, canvas panning, zooming, or custom behaviors, plugins allow you to modular add or override features without cluttering the core logic.
+--
 
-[card]
+[card,icon="others/fire-outlined"]
 .xref:main:build/actions/index.adoc[Actions]
-Actions are how user interactions are interpreted and executed within Weave.js. From adding new Nodes to the canvas to triggering selection or transformation, Actions provide a clean and consistent way to handle event-driven logic.
+--
+image::build/abstract-actions.png["Abstract study of radiating motion, rust"]
 
-[card]
+Actions are how user interactions are interpreted and executed within Weave.js. From adding new Nodes to the canvas to triggering selection or transformation, Actions provide a clean and consistent way to handle event-driven logic.
+--
+
+[card,icon="business/store-outlined"]
 .xref:main:build/stores/index.adoc[Stores]
+--
+image::build/abstract-stores.png["Abstract study of stacked layers, steel blue"]
+
 Stores are responsible for managing the shared-state, persist it and the real-time communication between peers. A Store on the backend, manages the application's shared-state, real-time synchronization and persistence, on the frontend, a client is provided to connect to the backend.
+--
 ====
 
 == Example of building blocks
@@ -63,8 +79,6 @@ one that best suits your project and follow the setup guide to get started in no
 Being more a frontend-heavy application, on the frontend-side you'll need to setup more stuff,
 but it's still pretty simple, so lets get started.
 
-'''
-
 ==== 1. Setup the container element
 
 First you need to setup an `<div />` element on the HTML structure of your application:
@@ -86,8 +100,6 @@ canvas application running in no time.
 
 So lets as you probably guess the next step is to setup the Weave class instance, but no,
 before instantiating the Weave class lets first create the xref:main:build/stores/index.adoc[Store] client.
-
-'''
 
 ==== 2. Setup the Store client
 
@@ -131,8 +143,6 @@ const store = new WeaveStoreWebsockets(
 // Instantiate the renderer
 const renderer = new WeaveKonvaBaseRenderer();
 ----
-
-'''
 
 ==== 3. Instantiate the Weave class
 
@@ -192,8 +202,6 @@ because they are already defined in the Store xref:store-websockets:api-referenc
 This means the application will render, but users will not be able to interact with it yet.
 ====
 
-'''
-
 ==== 4. Start the instance
 
 Finally to get all up-and-running you need to start the instance, this is done by calling the `start()`
@@ -203,8 +211,6 @@ provided API.
 ----
 myWeaveInstance.start();
 ----
-
-'''
 
 ==== Complete example
 

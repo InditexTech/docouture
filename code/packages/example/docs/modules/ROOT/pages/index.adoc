@@ -1,4 +1,4 @@
-= Weave.js
+= Home
 :page-layout: home
 :page-nav-module: main
 :description: Weave.js — the framework for building visual collaborative applications.

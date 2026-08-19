@@ -15,9 +15,8 @@ Before you begin, ensure that you have completed xref:main:manual-installation/f
 
 To set up the Room page in your Next.js project, follow these steps:
 
-[steps]
-====
-.Install the UI building block components
+=== 1. Install the UI building block components
+
 Set up the necessary https://ui.shadcn.com/docs[Shadcn/UI] components for the `Room` page.
 
 Use the https://ui.shadcn.com/docs/cli[Shadcn/UI CLI] and accept the default options.
@@ -43,7 +42,8 @@ npx shadcn@latest add dropdown-menu
 npx shadcn@latest add avatar
 ----
 
-.Define Weave.js Nodes, Actions & Plugins to use
+=== 2. Define Weave.js Nodes, Actions & Plugins to use
+
 Define a set of constants for the *Weave.js* Nodes, Plugins, and Actions.
 
 Follow these steps:
@@ -65,13 +65,12 @@ File explanation:
 ** *`(5)`*: Define the custom plugins used in this example. By default, the xref:react:api-reference/providers/weave-provider.adoc[WeaveProvider]
 predefines a set of plugins. In this case, which can be overridden or extended here.
 
-.Define the page React hooks
+=== 3. Define the page React hooks
+
 Define the hooks with the logic for the *Room* page.
 This separates component logic from UI logic.
 
 To start, create a `hooks` folder in the root directory.
-
-'''
 
 ==== useHandleRouteParams hook
 
@@ -84,8 +83,6 @@ include::example$manual-installation/hooks/use-handle-route-params.ts[]
 ----
 
 This hook handles route parameters in Next.js to extract the `roomId` for the connection.
-
-'''
 
 ==== useGetWebsocketsStore hook
 
@@ -124,13 +121,11 @@ Inside the `[roomId]` folder, add a `route.ts` file with:
 include::example$manual-installation/app/api/rooms/roomId/route.ts[]
 ----
 
-.Define the page React components
+=== 4. Define the page React components
 Set up the following directories to organize our components:
 
 * In the `components` folder, create a `room` folder.
 * In the `components` folder, create an `overlays` folder.
-
-'''
 
 ==== Room
 
@@ -142,8 +137,6 @@ In the `components/room` folder, create a file named `room.tsx` with:
 include::example$manual-installation/components/room/room.tsx[]
 ----
 
-'''
-
 ==== RoomLayout
 
 In the `components/room` folder, create a file named `room.layout.tsx` with:
@@ -153,8 +146,6 @@ In the `components/room` folder, create a file named `room.layout.tsx` with:
 ----
 include::example$manual-installation/components/room/room.layout.tsx[]
 ----
-
-'''
 
 ==== RoomLoader
 
@@ -166,8 +157,6 @@ In the `components/room` folder, create a file named `room.loader.tsx` with:
 include::example$manual-installation/components/room/room.loader.tsx[]
 ----
 
-'''
-
 ==== ConnectedUsers
 
 In the `components/overlays` folder, create a file named `connected-users.tsx` with:
@@ -177,8 +166,6 @@ In the `components/overlays` folder, create a file named `connected-users.tsx` w
 ----
 include::example$manual-installation/components/overlays/connected-users.tsx[]
 ----
-
-'''
 
 ==== ConnectionStatus
 
@@ -190,8 +177,6 @@ In the `components/overlays` folder, create a file named `connection-status.tsx`
 include::example$manual-installation/components/overlays/connection-status.tsx[]
 ----
 
-'''
-
 ==== RoomInformationOverlay
 
 In the `components/overlays` folder, create a file named `room-information-overlay.tsx` with:
@@ -201,8 +186,6 @@ In the `components/overlays` folder, create a file named `room-information-overl
 ----
 include::example$manual-installation/components/overlays/room-information-overlay.tsx[]
 ----
-
-'''
 
 ==== RoomUsersOverlay
 
@@ -214,8 +197,6 @@ In the `components/overlays` folder, create a file named `room-users-overlay.tsx
 include::example$manual-installation/components/overlays/room-users-overlay.tsx[]
 ----
 
-'''
-
 ==== ToolbarButton
 
 In the `components/overlays` folder, create a file named `toolbar-button.tsx` with:
@@ -225,8 +206,6 @@ In the `components/overlays` folder, create a file named `toolbar-button.tsx` wi
 ----
 include::example$manual-installation/components/overlays/toolbar-button.tsx[]
 ----
-
-'''
 
 ==== Toolbar
 
@@ -238,8 +217,6 @@ In the `components/overlays` folder, create a file named `toolbar.tsx` with:
 include::example$manual-installation/components/overlays/toolbar.tsx[]
 ----
 
-'''
-
 ==== ToolsOverlay
 
 In the `components/overlays` folder, create a file named `tools-overlay.tsx` with:
@@ -249,8 +226,6 @@ In the `components/overlays` folder, create a file named `tools-overlay.tsx` wit
 ----
 include::example$manual-installation/components/overlays/tools-overlay.tsx[]
 ----
-
-'''
 
 ==== ZoomHandlerOverlay
 
@@ -274,8 +249,7 @@ To set up the *Room* page component, follow these steps:
 ----
 include::example$manual-installation/app/rooms/roomId/page.tsx[]
 ----
-====
 
 == Next steps
 
-Finally, xref:main:manual-installation/index.adoc#run-the-project[run the project].
+Finally, xref:main:manual-installation/index.adoc#4-run-the-project[run the project].

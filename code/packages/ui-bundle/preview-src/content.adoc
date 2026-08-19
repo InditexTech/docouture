@@ -13,12 +13,14 @@ Author Name
 :page-action-secondary-url: https://example.org
 :description: Content test page: exercises the hero, article, TOC and pagination templates against long-form AsciiDoc.
 // GH-11: the fixture goes as deep as h5 (`===== `) to exercise the full
-// heading scale — `toclevels` defaults to 2 (h2/h3 only, toc.hbs), which
-// would otherwise hide that deeper nesting from "On this page" entirely.
+// heading scale — `toclevels` now defaults to 4 (h2-h5, toc.hbs), so this
+// explicit override is redundant but kept to document the mechanism.
 // Must be `page-toclevels`, not the bare Asciidoctor attribute: Antora's
 // page-composer only copies `page-*`-prefixed attributes onto
 // `page.attributes` (stripping the prefix) — see @antora/page-composer's
 // own build-ui-model.js. A plain `:toclevels:` is invisible to toc.hbs.
+// Set `:page-toclevels: 3` (or lower) on a page to HIDE deeper levels
+// instead of showing them, since h1-h5 now show by default.
 :page-toclevels: 4
 
 [.lead]

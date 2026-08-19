@@ -23,9 +23,8 @@ Before you begin, ensure that you have completed the xref:main:manual-installati
 
 To set up Weave.js frontend over our Next.js project (on a single artifact), follow these steps:
 
-[steps]
-====
-.Install the Weave.js frontend dependencies
+=== 1. Install the Weave.js frontend dependencies
+
 From the project root folder, install the *Weave.js* frontend dependencies:
 
 [source,shell]
@@ -35,7 +34,8 @@ npm install @inditextech/weave-react
 
 This example uses the Weave.js React wrapper.
 
-.Install the additional frontend dependencies
+=== 2. Install the additional frontend dependencies
+
 From the project root, install supporting frontend libraries:
 
 [source,shell]
@@ -50,7 +50,8 @@ These packages provide auxiliary functionality such as:
 * *Icons and avatars:* `lucide-react`, `boring-avatars`
 * *State management:* `@tanstack/react-query`
 
-.Set up a global state store for the UI
+=== 3. Set up a global state store for the UI
+
 Create a global state store to handle the UI state.
 This store manages the current user, room ID, and UI visibility state across the application.
 Use
@@ -70,7 +71,8 @@ npm install zustand
 include::example$manual-installation/store/store.ts[]
 ----
 
-.Configure utility functions
+=== 4. Configure utility functions
+
 Create a `lib/utils.ts` file in the project root folder to provide utility functions used throughout the UI components.
 
 Create the file with the following content:
@@ -87,12 +89,13 @@ This file includes:
 * *`getContrastTextColor` function:* Determines whether white or black text provides better contrast against a given hex color background. It calculates the relative luminance of the color using the W3C standard formula and returns the appropriate text color for readability.
 * *`stringToColor` function:* Generates a consistent hex color from any string input using a hash function. This is useful for creating deterministic color assignments (like avatar backgrounds) based on user names or other identifiers.
 
-.Set up the Enter Room page
+=== 5. Set up the Enter Room page
+
 With the global state store in place, create the xref:main:manual-installation/frontend/enter-room-page.adoc[Enter Room page].
 
-.Set up the Room page
+=== 6. Set up the Room page
+
 Now that the Enter Room page is set up, create the xref:main:manual-installation/frontend/room-page.adoc[Room page].
-====
 
 == Next steps
 

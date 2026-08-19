@@ -1,0 +1,27 @@
+.playwright-mcp/console-2026-08-19T10-56-02-284Z.log
+  s_00f66eedb36d53::t_056361f50fd4d9 98-257
+code/packages/ui-bundle/src/css/ids-breakpoints.css
+  s_00f66eedb36d53::t_d14d3865177b05 13
+code/packages/ui-bundle/src/css/ids-components.css
+  s_00f66eedb36d53::t_f233b39a1b6161 2324-2903
+code/packages/ui-bundle/src/css/ids-tokens.css
+  s_00f66eedb36d53::t_96d76f0011710a 21,26,33,69,74,81,199,271,280,289,299,310
+code/packages/ui-bundle/src/css/ids.lock.json
+  s_00f66eedb36d53::t_d6731b711216d7 4,30-42,44,103-106,112,120,123,213,222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "03bce828e87c63ffcf800492ad08f27aefe3260c",
+  "prompts": {},
+  "sessions": {
+    "s_00f66eedb36d53": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe639fdbfffebQ6aRT9XUsHXO8",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

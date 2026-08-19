@@ -7,13 +7,16 @@
   (half of its 6 columns at xs) so the row never stacks at any breakpoint —
   see GH-8's own discussion for why a bare `--span-6` alone would.
 
-  Left group changes shape per breakpoint (header.css), all in one markup
-  tree:
-  - l: full trigger — icon, "Search" label, ⌘K chip.
-  - m: icon + ⌘K chip, label drops (header.css).
-  - s: icon-only, chip drops too.
-  - xs: hidden outright — GH-68 (S4) replaces it there with a floating
-    button, out of scope here.
+  GH-77: the search trigger lives in the *actions* group, not the left one —
+  first child there, ahead of the version tag/repo link/theme toggle — so it
+  reads right-aligned with the rest of that cluster (`.header-toolbar__actions`'s
+  own `justify-content: flex-end`, unchanged) at every breakpoint instead of
+  sitting apart from it. It changes shape per breakpoint (header.css), all in
+  one markup tree:
+  - l/m: full trigger — icon, "Search" label, ⌘K chip.
+  - s: icon + "Search" label, chip drops.
+  - xs: hidden outright — GH-68 (S4)'s floating button (search-dialog.hbs)
+    is the only trigger there, untouched by this.
 
   The menu toggle (see GH issue #8): `hidden` until src/js/01-nav.ts wires
   it up, same reasoning as theme-toggle.hbs — a control with no handler
@@ -46,6 +49,13 @@
   Home/Default states no longer differ here, and home.hbs no longer passes
   `variant` (see its own history for the prior plumbing, kept in this
   partial's git blame rather than as dead code today).
+
+  The brand link now carries an optional logo (`site.keys.productLogo`/
+  `productLogoDark`) ahead of the product name, same dark-swap convention as
+  nav-brand.hbs/nav.hbs (`{{#with}}` skips the `<img>` entirely when unset,
+  no placeholder mark) — every other spot this bundle shows the mark
+  (side-menu, drawer header) already did; the toolbar itself was text-only
+  until now.
 --}}
 <header class="header-toolbar">
   <div class="ids-grid-layout ids-grid-layout--with-margin header-toolbar__grid">
@@ -55,7 +65,17 @@
           <span class="ids-button__icon ids-button__icon-icon">{{icon "design" "menu-tab-outlined"}}</span>
         </span>
       </button>
-      <a class="header-toolbar__product-name ids-text ids-text--label-l-high" href="{{{relativize (or site.homeUrl page.componentVersion.url)}}}"{{#if page.home}} aria-current="page"{{/if}}>{{or page.component.title site.title}}</a>
+      <a class="header-toolbar__brand" href="{{{relativize (or site.homeUrl page.componentVersion.url)}}}"{{#if page.home}} aria-current="page"{{/if}}>
+{{#with site.keys.productLogo}}
+        <img class="header-toolbar__logo{{#if @root.site.keys.productLogoDark}} header-toolbar__logo--light{{/if}}" src="{{{relativize this}}}" width="24" height="24" alt="">
+{{/with}}
+{{#with site.keys.productLogoDark}}
+        <img class="header-toolbar__logo header-toolbar__logo--dark" src="{{{relativize this}}}" width="24" height="24" alt="">
+{{/with}}
+        <span class="header-toolbar__product-name ids-text ids-text--label-l-high">{{or page.component.title site.title}}</span>
+      </a>
+    </div>
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__actions">
 {{#if page.componentVersion.searchIndex}}
       <button type="button" class="ids-button ids-button--ghost header-toolbar__search-trigger">
         <span class="ids-button__content">
@@ -65,8 +85,6 @@
         </span>
       </button>
 {{/if}}
-    </div>
-    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__actions">
 {{> page-versions}}
 {{> repo-link}}
 {{> theme-toggle}}

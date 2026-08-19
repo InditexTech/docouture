@@ -75,6 +75,40 @@ body {
 }
 
 /*
+ * Brand link (logo + product name). Text-only until now; the logo mirrors
+ * nav-brand.hbs/nav.hbs's own dark-swap convention (a bare, unsuffixed
+ * `.header-toolbar__logo` — no `productLogoDark` configured — has no dark
+ * counterpart to swap to and stays visible in both themes).
+ */
+.header-toolbar__brand {
+  align-items: center;
+  color: inherit;
+  display: flex;
+  gap: var(--ids-size-75);
+  min-width: 0;
+  text-decoration: none;
+}
+
+.header-toolbar__logo {
+  flex-shrink: 0;
+  height: 24px;
+  object-fit: contain;
+  width: 24px;
+}
+
+.header-toolbar__logo--dark {
+  display: none;
+}
+
+.ids-theme-dark .header-toolbar__logo--light {
+  display: none;
+}
+
+.ids-theme-dark .header-toolbar__logo--dark {
+  display: inline-block;
+}
+
+/*
  * Product name. Previously hidden at `l` on the assumption that the side
  * menu's own brand block (nav-brand.hbs) always carries it there instead —
  * true only while the menu is expanded. Collapsed (GH-8 toggle, 01-nav.ts —
@@ -96,13 +130,20 @@ body {
 
 
 /*
- * GH-66 — search trigger (replaces the old dead input, GH-7). Full button
- * (icon, label, ⌘K chip) at l; label drops at m; chip drops too at s
- * (icon-only); hidden outright at xs — GH-68 (S4) replaces it there with a
- * floating button, out of scope here.
+ * GH-66/GH-77 — search trigger (replaces the old dead input, GH-7). First
+ * child of `.header-toolbar__actions` (header-content.hbs), so it sits
+ * right-aligned with the version tag/repo link/theme toggle rather than
+ * apart from them. Full button (icon, label, ⌘K chip) at l/m; label stays
+ * but the chip drops at s; hidden outright at xs — GH-68 (S4)'s floating
+ * button (search-dialog.hbs) is the only trigger left there.
  */
 .header-toolbar__search-trigger {
   flex-shrink: 0;
+}
+
+/* icon/label/⌘K chip need visible separation — `.ids-button__content` sets none by default */
+.header-toolbar__search-trigger .ids-button__content {
+  gap: var(--ids-size-25);
 }
 
 @media screen and (--ids-breakpoints-xs) {
@@ -111,12 +152,12 @@ body {
   }
 }
 
-/* the "Search" word itself is l-only, same rule the old input used */
+/* GH-77: the "Search" word now shows from s upward, only hidden at xs */
 .header-toolbar__search-label {
   flex-shrink: 0;
 }
 
-@media screen and (--ids-breakpoints-xs-m) {
+@media screen and (--ids-breakpoints-xs) {
   .header-toolbar__search-label {
     display: none;
   }
@@ -165,19 +206,22 @@ body {
 }
 
 /*
- * Repo becomes icon-only below m: "AMIGA FRAMEWORK WEB" + "repo" + theme
- * toggle no longer fit a 390px bar alongside the menu button. Not
- * something Figma specifies for this breakpoint — see header-content.hbs.
+ * GH-77: GitHub's own "mark-github" Octicon (MIT-licensed, github/octicons),
+ * masked at `currentColor` so it always matches the button's own text colour
+ * — base, hover, focus and active all fall through to the DS ghost button's
+ * own rules for free, same reason cta.css's own GitHub action needs no
+ * bespoke hover CSS either. `--icon-mask-brand-github` is defined once, at
+ * `:root`, by cta.css (always bundled — see site.css's import order) and
+ * reused here rather than duplicating the data-URI.
  */
-@media screen and (--ids-breakpoints-xs-s) {
-  .header-toolbar__repo .ids-button__label {
-    display: none;
-  }
-}
-
-/* Ghost button label is black by default; the repo link is AI blue in Figma. */
-.header-toolbar__repo {
-  --ids-color-content-default: var(--ids-color-core-ai-high);
+.header-toolbar__repo-icon {
+  background: currentColor;
+  block-size: var(--ids-size-125);
+  inline-size: var(--ids-size-125);
+  mask-image: var(--icon-mask-brand-github);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
 }
 
 /*

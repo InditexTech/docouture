@@ -84,17 +84,32 @@ nav_modules:
 # rests on.
 #
 # Group 1 fills the footer's links column. Group 2 is used for the modules
-# column only when a component has fewer than two switchable modules, which
-# this one does not — it is here as documentation of the fallback rather than
-# because this site needs it.
+# column only when a component has fewer than two switchable modules — this
+# one has seven (`nav_modules` above), so group 2 below is never actually
+# rendered; it still has to be a real, valid group (not omitted) purely to
+# hold that positional slot open, because the extension re-indexes groups
+# after dropping invalid ones (see resolveFooter) — a footer.groups list is
+# positional (index 0 → column 2, 1 → column 3's fallback, 2 → column 4), not
+# keyed. Group 3 (GH-77) fills the footer's 4th column — here, a link out to
+# the org's own portal (placeholder URL, swap for the real one). `title`
+# (GH-77) is optional per group; omit it for a column with no heading.
 #
 # `url` is either a page ID — the same string you would write inside
 # `xref:...[]`, resolved against this component — or a literal URL. One that
 # resolves to no page is dropped with a warning rather than rendered dead.
 footer:
   groups:
-    - links:
+    - title: Resources
+      links:
         - text: Home
           url: ROOT:index.adoc
         - text: Repository
           url: https://github.com/InditexTech/weavejs
+    - title: More
+      links:
+        - text: Repository
+          url: https://github.com/InditexTech/weavejs
+    - title: InditexTech
+      links:
+        - text: Portal
+          url: https://www.google.com

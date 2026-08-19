@@ -26,8 +26,11 @@
  *   version tag (that lives in the header there).
  * - m/s (513-1679): overlay drawer that starts *below* the header, not
  *   over it — Figma's own frame (node-id=2678-35962) positions the panel
- *   at y=40, the header's own height, confirmed by --navbar-height here.
- *   The header stays visible and usable (menu toggle included) while the
+ *   below the header row; --navbar-height here is what that offset is
+ *   built from (GH-77 corrected it to 56px, the DS header's own box
+ *   height, from an earlier 41px measurement — this panel offset moves
+ *   with it automatically). The header stays visible and usable (menu
+ *   toggle included) while the
  *   drawer is open. Solid 0.5px right rule in --ids-color-border-low (the
  *   same grey as l's dashed one, not the DS's near-black border-default),
  *   no brand block, a white 80% scrim (.side-menu-scrim) behind the panel,
@@ -295,11 +298,12 @@ html.is-side-menu-collapsed {
 }
 
 /*
- * Visible from s upward (icon only at s/m — Figma's own frames for those
- * don't show it at all, but a persistent product mark is worth having
- * regardless; see nav-brand.hbs). xs uses its own copy in the header row
- * instead (above), so this stays hidden there — same visibility split as
- * `.side-menu__header`, inverted.
+ * Visible from s upward — logo AND title both, not icon-only (GH-77: the
+ * title used to stay hidden until l via `.side-menu__brand-title`'s own
+ * media query below; removed, title now shows alongside the logo at every
+ * breakpoint this block itself renders at). xs uses its own copy in the
+ * header row instead (above), so this stays hidden there — same visibility
+ * split as `.side-menu__header`, inverted.
  */
 .side-menu__brand {
   display: none;
@@ -340,13 +344,6 @@ html.is-side-menu-collapsed {
 
 .side-menu__brand-title {
   color: var(--ids-color-content-default);
-  display: none;
-}
-
-@media screen and (--ids-breakpoints-l) {
-  .side-menu__brand-title {
-    display: block;
-  }
 }
 
 .side-menu__nav {

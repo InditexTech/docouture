@@ -21,7 +21,8 @@ const resolveUrl = require('./resolve-url')
  *
  *     footer:
  *       groups:
- *         - links:
+ *         - title: Resources          # optional — GH-77, an unlabelled group renders no heading
+ *           links:
  *             - text: Home
  *               url: ROOT:index.adoc
  *             - text: Repository
@@ -111,7 +112,10 @@ function resolveFooter(footer, componentVersion, contentCatalog, logger) {
     }
     // An empty group would render as a blank column; drop it instead, the
     // same way the partial itself omits a column it has no data for.
-    if (links.length) groups.push({ links })
+    // `title` is optional (GH-77) — a group with links but no title still
+    // renders, just without a heading, same "omit what's unauthored" rule
+    // every other bit of this descriptor follows.
+    if (links.length) groups.push({ title: group.title, links })
   }
 
   return groups.length ? { groups } : undefined

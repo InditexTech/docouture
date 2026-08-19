@@ -1,0 +1,20 @@
+.opencode/skills/ui-bundle-anatomy/reference/templates.md
+  h_c93d154c7c7074 35
+code/packages/example/docs/modules/ROOT/pages/index.adoc
+  h_c93d154c7c7074 1
+code/packages/ui-bundle/src/partials/head-title.hbs
+  h_c93d154c7c7074 1
+code/packages/ui-bundle/src/partials/home-hero.hbs
+  h_c93d154c7c7074 12-14,16,80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ce8f0020b65fdbd62d45fecc7a312d9850e81169",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

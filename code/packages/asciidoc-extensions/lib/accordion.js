@@ -90,7 +90,12 @@ const DETAILS_OPEN_RX = /^<details\b/
  * @returns {boolean}
  */
 function hasOption(node, name) {
-  return typeof node.hasOption === 'function' ? node.hasOption(name) : node.isOption(name)
+  if (typeof node.hasOption === 'function') return node.hasOption(name)
+  // 2.2's own JS API (Opal, real Antora builds) — absent from 4.0's
+  // `AbstractNode` type declarations, so a plain property access is a type
+  // error even though it exists at runtime; only reachable when the
+  // `hasOption` branch above is false, i.e. actually running 2.2.
+  return /** @type {{ isOption(name: string): boolean }} */ (/** @type {unknown} */ (node)).isOption(name)
 }
 
 /**

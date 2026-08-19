@@ -15,9 +15,8 @@ Before you begin, ensure that you have completed the xref:main:manual-installati
 
 To set up the *Enter Room* page in your Next.js project, follow these steps:
 
-[steps]
-====
-.Install the UI building block components
+=== 1. Install the UI building block components
+
 Set up the necessary https://ui.shadcn.com/docs[Shadcn/UI] components for the *Enter Room* page.
 
 Use the https://ui.shadcn.com/docs/cli[Shadcn/UI CLI] and accept all the default options.
@@ -37,7 +36,8 @@ npx shadcn@latest add form
 npx shadcn@latest add input
 ----
 
-.Define the base styles
+=== 2. Define the base styles
+
 Adjust the styling of the *Enter Room* page.
 
 Replace the contents of `app/globals.css` with:
@@ -48,10 +48,9 @@ Replace the contents of `app/globals.css` with:
 include::example$manual-installation/app/globals.css[]
 ----
 
-.Set up the page React component
-Create a `home` folder in the `components` folder.
+=== 3. Set up the page React component
 
-'''
+Create a `home` folder in the `components` folder.
 
 ==== Home component
 
@@ -63,8 +62,6 @@ In the `components/home` folder, create a file named `home.tsx` with:
 include::example$manual-installation/components/home/home.tsx[]
 ----
 
-'''
-
 ==== LoginForm component
 
 In the `components/home` folder, create a file named `login-form.tsx` with:
@@ -75,7 +72,8 @@ In the `components/home` folder, create a file named `login-form.tsx` with:
 include::example$manual-installation/components/home/login-form.tsx[]
 ----
 
-.Define the page component
+=== 4. Define the page component
+
 Replace the contents of the file `app/page.tsx` with:
 
 .app/page.tsx
@@ -96,7 +94,6 @@ Navigate to `http://localhost:3000` in a browser.
 You should see the following:
 
 image::enter-room-manual.png[Enter room page]
-====
 
 == Next steps
 

@@ -35,18 +35,70 @@
   min-width: 0;
   padding-bottom: 4rem;
   /*
-   * GH-12 follow-up: query-container context for the code block's own width
-   * rule further down (`100cqw`) — `.doc` is the actual grid column a code
-   * block must never grow past, which is wider than the 780/820px text
-   * measure any of its ancestors (`.sectionbody`, `.doc > *`) cap
-   * themselves to. A container query unit resolves against the nearest
-   * ancestor with `container-type` set, skipping past those narrower
-   * boxes entirely, which a percentage never could (a child's `%` always
-   * resolves against its immediate containing block). Declaring it here
-   * costs nothing else in this rule — inline-size containment doesn't
-   * affect grid placement or block layout.
+   * GH-12 follow-up: query-container context for every "bleeding" block's
+   * own width rule further down (`100cqw`, via `--doc-inset-cap` below) —
+   * `.doc` is the actual grid column such a block must never grow past,
+   * which is wider than the 780/820px text measure any of its ancestors
+   * (`.sectionbody`, `.doc > *`) cap themselves to. A container query unit
+   * resolves against the nearest ancestor with `container-type` set,
+   * skipping past those narrower boxes entirely, which a percentage never
+   * could (a child's `%` always resolves against its immediate containing
+   * block). Declaring it here costs nothing else in this rule —
+   * inline-size containment doesn't affect grid placement or block layout.
    */
   container-type: inline-size;
+  /*
+   * GH-12/13/14/15 unification — every block that is allowed to bleed past
+   * `.doc > *`'s text-measure cap (code, table, admonition, example, image,
+   * video, and the landing blocks in card-grid.css/cta.css/feature-tabs.css)
+   * reads ITS OWN width budget against this ONE property instead of writing
+   * `100cqw` and its own copy of the nesting reset below. Default here is
+   * "no extra clamp beyond the grid column" (`100cqw`); the single reset
+   * list right below narrows it to `100%` for any such block nested inside
+   * a container that already insets its own content (a list, admonition,
+   * example, sidebar, quote, table cell, tab panel, accordion item, step,
+   * blockquote or description list) — so a bleeding block's real cap is
+   * always its OWN immediate containing block's width there, not the far
+   * wider grid column.
+   *
+   * `min(<own budget>, var(--doc-inset-cap))` mixes a `%` (this property,
+   * when reset) with an absolute `calc()` length (the budget) freely: both
+   * resolve to px before `min()` compares them, `%` against wherever the
+   * property is READ (the bleeding block's own containing block), not
+   * wherever it was declared — which is exactly what makes a single
+   * inherited property give every nesting depth the right answer without
+   * a selector list of its own.
+   */
+  --doc-inset-cap: 100cqw;
+}
+
+/*
+ * The single reset for every `--doc-inset-cap` consumer below and in
+ * card-grid.css/cta.css/feature-tabs.css — add a container here, not a new
+ * `:is(...)` list at each width rule, when a future block also insets its
+ * own content.
+ */
+.doc :is(
+  .admonitionblock,
+  .exampleblock,
+  .sidebarblock,
+  .quoteblock,
+  .olist,
+  .ulist,
+  .dlist,
+  .openblock,
+  .colist,
+  .partintro,
+  details,
+  table,
+  td,
+  blockquote,
+  dd,
+  .pdocs-tabs__panel,
+  .pdocs-accordion-group,
+  .ids-timeline-item-content
+) {
+  --doc-inset-cap: 100%;
 }
 
 /*
@@ -739,14 +791,15 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  *
  * The width budget lives here too, folded into the same rule: up to 50%
  * past the article's own text measure (mirrors the GH-12 code block), but
- * never past `.doc`'s own grid column (the `100cqw` backstop, `.doc`'s
- * `container-type` set at the top of this file). `.fit-content`
+ * never past `--doc-inset-cap` (`.doc`'s own grid column via `100cqw`, or
+ * `100%` of the immediate container when nested — see `.doc`'s own header
+ * comment and the single reset list right below it). `.fit-content`
  * (`%autowidth`, below) shrinks the wrapper to the table's own intrinsic
  * width instead.
  */
 .doc .tableblock-wrap {
   margin-top: calc(var(--doc-space-block) * 1.4);
-  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
+  width: min(calc(var(--content-max-width) * 1.5), var(--doc-inset-cap));
 }
 
 
@@ -957,7 +1010,6 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 
 
 .doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, details, td) .tableblock-wrap {
-  width: 100%;
   max-width: 100%;
 }
 
@@ -1057,20 +1109,13 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
    * 80px overflow past the text measure (GH-13 follow-up), same mechanism as
    * the code block below: `width` on an element whose ancestors merely cap
    * their OWN box (`.doc > *`/`.sectionbody`'s `max-width`, above) overflows
-   * that box rather than being clipped by it. `100cqw` is the same backstop
-   * as the code block's — `.doc`'s own `container-type: inline-size` — so
+   * that box rather than being clipped by it. `--doc-inset-cap` (`.doc`'s
+   * own header comment) is the same backstop as the code block's — `100cqw`
+   * when not nested, `100%` of the immediate container when it is — so
    * this can never exceed the grid column regardless of breakpoint or
-   * whether the ToC column is reserved. A `.doc > .admonitionblock` (no
-   * enclosing section) is still capped at `--content-max-width` regardless,
-   * because `.doc > *`'s own `max-width` wins there — same as a top-level
-   * code block, deliberately mirrored rather than special-cased.
+   * whether the ToC column is reserved, nor its own container when nested.
    */
-  width: min(calc(var(--content-max-width) + var(--ids-size-500)), 100cqw);
-}
-
-.doc :is(.exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details)
-  .admonitionblock {
-  width: 100%;
+  width: min(calc(var(--content-max-width) + var(--ids-size-500)), var(--doc-inset-cap));
 }
 
 .doc .admonitionblock.important {
@@ -1219,7 +1264,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * no longer carries `align-self: stretch`/`text-align: center` for this
  * reason: an unstretched flex item already sizes to its own content, and
  * centring only matters when a box is wider than what it holds. The
- * block's own placement on the page (default centred, `.text-left`/
+ * block's own placement on the page (default left-aligned, `.text-center`/
  * `.text-right` roles) is unchanged — still driven by `align-items` on
  * `.imageblock` itself, one level up from the frame (`.videoblock` no
  * longer shares this — see below, it aligns itself instead).
@@ -1264,22 +1309,22 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 .doc .imageblock,
 .doc .videoblock {
-  width: min(calc(var(--content-max-width) * 1.25), 100cqw);
-}
-
-.doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details)
-  :is(.imageblock, .videoblock) {
-  width: 100%;
+  width: min(calc(var(--content-max-width) * 1.25), var(--doc-inset-cap));
 }
 
 .doc .imageblock {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /*
+   * Left by default (no `align` attribute → no `.text-*` class at all,
+   * Asciidoctor only ever emits one when the author sets it) — `.text-left`
+   * is therefore this same value made explicit, not a separate case.
+   */
+  align-items: flex-start;
 }
 
-.doc .imageblock.text-left {
-  align-items: flex-start;
+.doc .imageblock.text-center {
+  align-items: center;
 }
 
 .doc .imageblock.text-right {
@@ -1655,7 +1700,18 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   padding: var(--ids-size-250);
 }
 
-.doc .exampleblock > .content > :first-child {
+/*
+ * The panel's own `gap` above already spaces every child from the second
+ * one on — the generic block-spacing rule (`.doc .paragraph`, `.doc
+ * .listingblock`, … top of this file) still fires on any of those matched
+ * inside here too (it is a bare descendant selector, any nesting depth) and
+ * was stacking its own `margin-top` on top of the gap, doubling the visible
+ * space between children (16px gap + 24px margin = 40px, measured). Reset
+ * ALL children, not just the first, the same fix `.pdocs-steps
+ * .ids-timeline-item-content > *` already applies for the same reason
+ * (steps.css).
+ */
+.doc .exampleblock > .content > * {
   margin-top: 0;
 }
 
@@ -1677,16 +1733,12 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * `--ids-size-500`, doc.css's GH-13 section above), not the code/table
  * family's 50%: Figma's own example panel (963px) against its 707px text
  * column is +256px, closer to the admonition's flat overflow than a
- * percentage growth would give at this measure. Same `100cqw` backstop,
- * same nesting reset as every other block that grows past `.doc > *`.
+ * percentage growth would give at this measure. Same `--doc-inset-cap`
+ * backstop and nesting reset as every other block that grows past
+ * `.doc > *` (`.doc`'s own header comment).
  */
 .doc .exampleblock {
-  width: min(calc(var(--content-max-width) + var(--ids-size-500)), 100cqw);
-}
-
-.doc :is(.admonitionblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details)
-  .exampleblock {
-  width: 100%;
+  width: min(calc(var(--content-max-width) + var(--ids-size-500)), var(--doc-inset-cap));
 }
 
 /*
@@ -1734,8 +1786,9 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  *     colour of our own and no separate dark-mode override block needed.
  *   - Width can grow up to 50% past the article's own text measure
  *     (`--content-max-width`) — code commonly runs to longer lines than
- *     prose — but never past `.doc`'s own grid column, via the `100cqw`
- *     container query unit set up on `.doc` above.
+ *     prose — but never past `--doc-inset-cap` (`.doc`'s own header
+ *     comment): `.doc`'s own grid column via `100cqw` when not nested,
+ *     or `100%` of the immediate container when it is.
  *
  *     Growth is on a bare `.doc .listingblock`/`.literalblock` (any
  *     nesting depth), NOT scoped to a `.sectionbody`-parent allowlist —
@@ -1744,13 +1797,12 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  *     (`.sect1`, directly under `h2`) gets a `.sectionbody` wrapper;
  *     `.sect2`/`.sect3`/… (h3/h4/…) nest their content straight inside the
  *     `.sectN` div with no such wrapper, so `.sectionbody > .listingblock`
- *     silently never matched there. The exclusion list right below is
- *     what keeps this from ALSO widening a code block genuinely nested
- *     inside a list, admonition, example, sidebar, quote, table cell or
- *     collapsible block — those get put back to 100% explicitly, at
- *     higher specificity than the growth rule regardless of source order
- *     (an `:is(...)` argument counts as one class for specificity, so two
- *     compound selectors beats the growth rule's one).
+ *     silently never matched there. `--doc-inset-cap`'s own single reset
+ *     list (`.doc`'s own header comment, top of this file) is what keeps
+ *     this from ALSO widening a code block genuinely nested inside a
+ *     list, admonition, example, sidebar, quote, table cell or
+ *     collapsible block — those read `100%` there instead of `100cqw`,
+ *     with no per-rule `:is(...)` list of their own to drift out of sync.
  *
  * The action bar's ghost buttons (06-copy-to-clipboard.ts) still invert
  * for free from the same widened dark-theme scope — no separate override
@@ -1758,12 +1810,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 .doc .listingblock,
 .doc .literalblock {
-  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
-}
-
-.doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details) .listingblock,
-.doc :is(.admonitionblock, .exampleblock, .sidebarblock, .quoteblock, .olist, .ulist, .dlist, .openblock, .colist, table, details) .literalblock {
-  width: 100%;
+  width: min(calc(var(--content-max-width) * 1.5), var(--doc-inset-cap));
 }
 
 .doc .listingblock > .content,

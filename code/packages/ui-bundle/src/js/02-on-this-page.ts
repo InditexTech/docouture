@@ -7,7 +7,7 @@
   var sidebar = document.getElementById('on-this-page')
   if (!sidebar) return
   if (document.querySelector('body.-toc')) return sidebar.parentNode.removeChild(sidebar)
-  var levels = parseInt(sidebar.dataset.levels || '2', 10)
+  var levels = parseInt(sidebar.dataset.levels || '4', 10)
   if (levels < 0) return
 
   var articleSelector = 'article.doc'

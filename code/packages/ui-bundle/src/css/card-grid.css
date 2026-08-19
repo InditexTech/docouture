@@ -82,13 +82,21 @@
  * row span the whole column regardless of how much it needed, which is a
  * different thing from "let this block be wider than prose".
  *
+ * `var(--doc-inset-cap, 100cqw)` (doc.css's `.doc` header comment) is the
+ * same backstop the article view's own code/table/admonition blocks read —
+ * `100cqw` normally, narrowed to `100%` of the immediate container when
+ * this row is genuinely nested inside something that insets its own
+ * content (a list, admonition, quote cell, …), with no `:is(...)` list of
+ * its own to keep in sync. The `100cqw` fallback covers the landing view
+ * (`.home__main`), which has no `.doc` ancestor to set the property at all.
+ *
  * `width=content`, the default, needs no rule at all: it is what the enclosing
  * measure already does. The class is still emitted, so the markup says which
  * of the two an author chose.
  */
 .pdocs-card-grid--width-container {
   max-width: none;
-  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
+  width: min(calc(var(--content-max-width) * 1.5), var(--doc-inset-cap, 100cqw));
 }
 
 /*

@@ -17,9 +17,7 @@ Before you begin, ensure that you have completed the xref:main:manual-installati
 
 To set up Weave.js backend over our Next.js project (on a single artifact), follow these steps:
 
-[steps]
-====
-=== Install Weave.js SDK
+=== 1. Install Weave.js SDK
 
 From the project root folder, install the *Weave.js SDK* by
 executing the following command:
@@ -29,7 +27,7 @@ executing the following command:
 npm install @inditextech/weave-sdk
 ----
 
-=== Install Weave.js Store
+=== 2. Install Weave.js Store
 
 From the project root folder, install the *Weave.js Store* by
 executing the following command:
@@ -41,7 +39,8 @@ npm install @inditextech/weave-store-websockets ws
 
 This example uses the WebSockets store.
 
-.Set up the Next.js custom server
+=== 3. Set up the Next.js custom server
+
 To have a frontend and backend on the same artifact on top of Next.js you will implement
 a https://nextjs.org/docs/14/pages/building-your-application/configuring/custom-server[custom server]
 on Next.js and the necessary Weave.js backend logic.
@@ -53,8 +52,6 @@ For production environments, you should consider using a separate backend server
 
 For more details, refer to the https://github.com/InditexTech/weavejs-backend[backend showcase implementation].
 ====
-
-'''
 
 ==== Dependencies installation
 
@@ -73,8 +70,6 @@ npm install cross-env express
 ----
 npm install -D tsx nodemon @types/express
 ----
-
-'''
 
 ==== TypeScript configuration
 
@@ -96,8 +91,6 @@ Create a `nodemon.json` file on the project root with:
 include::example$manual-installation/nodemon.json[]
 ----
 
-'''
-
 ==== Next.js configuration
 
 Set up the Next.js configuration:
@@ -109,8 +102,6 @@ Set up the Next.js configuration:
 ----
 include::example$manual-installation/next.config.mjs[]
 ----
-
-'''
 
 ==== Custom server logic
 
@@ -173,7 +164,7 @@ npm run dev
 Navigate to `http://localhost:3000` in a browser.
 You should still see the Next.js default application running and the console should have no errors at all.
 
-.Integrate Weave.js into the backend
+=== 4. Integrate Weave.js into the backend
 Now that the Next.js custom server is completely set up, add the necessary Weave.js backend logic.
 Use the xref:main:build/stores/websockets-store.adoc[Websockets store] library (`@inditextech/weave-store-websockets`).
 
@@ -234,7 +225,7 @@ Changes explanation:
 <11> Instantiate the xref:store-websockets:api-reference/server/weave-websockets-server.adoc[WeaveWebsocketsServer] class.
 <12> Attach the *Weave.js* Websockets server to the HTTP server.
 
-.Verify the backend setup
+=== Verify the backend setup
 Finally, test that the project keeps starting with the changes made to the custom server.
 
 From the project root folder, run the following command:
@@ -247,7 +238,6 @@ npm run dev
 Navigate to `http://localhost:3000` in a browser.
 
 You should still see the Next.js default application running and the console should have no errors at all.
-====
 
 === Next steps
 

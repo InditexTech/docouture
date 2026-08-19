@@ -71,16 +71,17 @@
    * explains it at length) and for the same reason: a `width` on an element
    * whose ancestors merely cap their OWN box (`.doc > *`, `.sectionbody`, all
    * `max-width`) overflows that box rather than being clipped by it, and
-   * `100cqw` is the backstop that stops it at the grid column. `.doc` declares
-   * `container-type: inline-size`, and home.css declares it on `.home__main`,
-   * so the unit resolves in both views.
+   * `var(--doc-inset-cap, 100cqw)` (doc.css's `.doc` header comment) is the
+   * backstop that stops it at the grid column — narrowed to `100%` if ever
+   * nested inside an inset container, `100cqw` falling back for the landing
+   * view's `.home__main`, which has no `.doc` ancestor to set the property.
    *
    * Not a bare `100cqw`: "let this block be wider than prose" is not the same
    * request as "make it as wide as the page", and on a wide screen the second
    * one strands the labels 900px from the panel they belong to.
    */
   max-width: none;
-  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
+  width: min(calc(var(--content-max-width) * 1.5), var(--doc-inset-cap, 100cqw));
 }
 
 /*

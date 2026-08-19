@@ -34,11 +34,15 @@
    * Wider than prose, capped at the column — the same shape and the same
    * reason `[cards,width=container]` (card-grid.css) and `[feature-tabs]`
    * (feature-tabs.css) both use: a `width` on an element whose ancestors
-   * merely cap their own box overflows it, and `100cqw` is the backstop that
-   * stops this one at the grid column instead of the viewport.
+   * merely cap their own box overflows it, and `var(--doc-inset-cap,
+   * 100cqw)` (doc.css's `.doc` header comment) is the backstop that stops
+   * this one at the grid column instead of the viewport — narrowed to
+   * `100%` automatically if ever nested inside an inset container, with
+   * the `100cqw` fallback covering the landing view's `.home__main`,
+   * which has no `.doc` ancestor to set the property.
    */
   max-width: none;
-  width: min(calc(var(--content-max-width) * 1.5), 100cqw);
+  width: min(calc(var(--content-max-width) * 1.5), var(--doc-inset-cap, 100cqw));
 }
 
 /* `align=start`: the reference's own default is centred; this is the escape. */

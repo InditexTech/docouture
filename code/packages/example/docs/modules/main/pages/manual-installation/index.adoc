@@ -29,14 +29,11 @@ this reason, this guide uses *Next.js 14*.
 
 == Step by step
 
-[steps]
-====
-.Set up your project
+=== Set up your project
+
 To have a Weave.js project running, follow these steps:
 
-'''
-
-==== Install Next.js
+==== 1. Install Next.js
 
 If you don't have a Next.js 14 project already, start by creating a new one.
 Run the following command, and when prompted, accept all the default values:
@@ -138,13 +135,16 @@ safely ignore this issue since it is specific to the template and does not
 impact the functionality of Weave.js.
 ====
 
-.Set up the backend
+=== 2. Set up the backend
+
 Follow the steps to xref:main:manual-installation/backend.adoc[set up the backend] of the application.
 
-.Set up the frontend
+=== 3. Set up the frontend
+
 Follow the steps to xref:main:manual-installation/frontend/index.adoc[set up the frontend] of the application.
 
-.Run the project
+=== 4. Run the project
+
 If you have completed all the previous steps, you should have a working project.
 
 To run the project, use the following command:
@@ -175,12 +175,14 @@ Use a different username and the same room name and make some changes.
 In the first tab, you should see the changes made by this new user.
 
 Congratulations! You have a working Weave.js application.
-====
 
 == Next steps
 
 Now that you've completed the quickstart, you're ready to dive deeper into Weave.js and unlock its full potential. Here are some of our recommended next steps:
 
+====
+
+[discrete]
 === Explore the building blocks
 
 To learn how to build modular and interactive tools, explore how Weave.js is structured under the hood and get familiar with core concepts like:
@@ -189,7 +191,14 @@ To learn how to build modular and interactive tools, explore how Weave.js is str
 * xref:main:build/plugins/index.adoc[Plugins]
 * xref:main:build/actions/index.adoc[Actions]
 
+====
+
+=====
+
+[discrete]
 === Review the API Reference
 
 Dive into xref:sdk:index.adoc[API reference] to explore all available methods, utilities, and configuration options.
 This is your go-to resource as you start building more advanced features.
+
+=====

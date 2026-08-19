@@ -447,7 +447,7 @@ body:has(#side-menu.is-active) .search-fab {
   letter-spacing: var(--ids-typo-label-m-high-letter-spacing);
   padding: var(--ids-size-100) var(--ids-size-150) var(--ids-size-50);
   text-transform: var(--ids-typo-label-m-high-text-transform);
-  margin: 0px
+  margin: 0
 }
 
 .search-recents__row {

@@ -26,6 +26,7 @@ icons:
     - back-outlined
     - check-circle-outlined # copy-to-clipboard success (06-copy-to-clipboard.ts); admonition: important (GH-13)
     - close-large-outlined # side-menu drawer close (GH-8, breakpoint xs)
+    - close-small-outlined # recent-search remove (GH-69, 13-search-recents.ts) — close-large-outlined is sized for a header/drawer close, not a per-row control
     - code-block-outlined # nav switcher: the SDK module; [card,icon=…]: build/index.adoc Plugins
     - copy-outlined
     - full-screen-enter-outlined
@@ -63,6 +64,8 @@ icons:
     - fire-outlined # [card,icon=…]: build/index.adoc Actions
   shapes:
     - forms-outlined # [card,icon=…]: build/index.adoc Nodes
+  time:
+    - history-outlined # recent searches heading (GH-69, 13-search-recents.ts)
   weather:
     - sunny-outlined # theme toggle, light
 

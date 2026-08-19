@@ -15,9 +15,10 @@
  *
  * `loadSearcher(url)` is the entire surface: fetch + validate the envelope,
  * build the in-memory index, and hand back one `Searcher` function bound to
- * it — the shape #67 itself specifies:
+ * it — the shape #67 itself specifies, `options` added by #69 (S5) for the
+ * module filter chips' own use (see `SearchOptions` below):
  *
- *     (term: string, signal: AbortSignal) => Promise<SearchHit[]>
+ *     (term: string, signal: AbortSignal, options?: SearchOptions) => Promise<SearchHit[]>
  *
  * A `SearchHit` already carries its own highlight positions (computed here,
  * where `@zbsearch/highlight` is in scope) against a trimmed snippet (also
@@ -65,19 +66,38 @@ export interface HighlightedText {
 
 export interface SearchHit {
   title: HighlightedText
-  section?: string
-  hierarchy: string[]
+  section?: HighlightedText
+  hierarchy: HighlightedText[]
   url: string
   category: string
   snippet: HighlightedText
 }
 
-export type Searcher = (term: string, signal: AbortSignal) => Promise<SearchHit[]>
+// `limit` (GH-69, S5): the module filter chips post-filter hits by
+// `category` client-side — `category` is carried on the record but isn't
+// part of what's tokenized, and this engine's search options expose no
+// server-side `where` on the path we use, so a real filtered query isn't
+// available without a schema change. 12-search.ts instead asks for MORE
+// records up front while a chip is active (see DEFAULT_LIMIT below) and
+// filters what comes back, so the visible count after filtering stays
+// useful instead of being starved by a limit sized for the unfiltered case.
+export interface SearchOptions {
+  limit?: number
+}
+
+export type Searcher = (term: string, signal: AbortSignal, options?: SearchOptions) => Promise<SearchHit[]>
 
 // The snippet window's own length — long enough to give a query's match some
-// surrounding prose, short enough that a list of 12 results doesn't scroll
+// surrounding prose, short enough that a list of results doesn't scroll
 // forever.
 const SNIPPET_LENGTH = 160
+
+// The engine's own default `limit` — must match 12-search.ts's own
+// RESULT_LIMIT (what it actually displays), or the unfiltered path there
+// would cap a display limit against a smaller pool than it could have had.
+// 12-search.ts passes a higher one explicitly while a module filter chip is
+// active (see `SearchOptions` above); every other caller gets this.
+const DEFAULT_LIMIT = 24
 
 var pending = new Map<string, Promise<Searcher>>()
 
@@ -126,14 +146,15 @@ function loadSearcher (url: string): Promise<Searcher> {
 }
 
 function makeSearcher (db: SearchDb): Searcher {
-  return function (term: string, signal: AbortSignal) {
+  return function (term: string, signal: AbortSignal, options?: SearchOptions) {
+    var limit = (options && options.limit) || DEFAULT_LIMIT
     return Promise.resolve(
       zbSearch(db, {
         term: term,
         properties: ['title', 'section', 'hierarchy', 'content'],
         boost: { title: 4, section: 3, hierarchy: 1.5, content: 1 },
         tolerance: 1,
-        limit: 12,
+        limit: limit,
       })
     ).then(function (results) {
       if (signal.aborted) return []
@@ -142,8 +163,13 @@ function makeSearcher (db: SearchDb): Searcher {
         var snippet = snippetAround(doc.content, term)
         return {
           title: highlightText(doc.title, term),
-          section: doc.section,
-          hierarchy: doc.hierarchy,
+          // GH-69 (S5): highlighted the same way title/snippet are — the
+          // breadcrumb built from these (12-search.ts) shows matched terms
+          // too, not just plain text.
+          section: doc.section ? highlightText(doc.section, term) : undefined,
+          hierarchy: doc.hierarchy.map(function (h) {
+            return highlightText(h, term)
+          }),
           url: doc.url,
           category: doc.category,
           snippet: highlightText(snippet, term),

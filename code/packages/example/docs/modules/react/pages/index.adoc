@@ -13,9 +13,7 @@ This helper library includes:
 
 To use this library in a React project just follow this steps:
 
-[steps]
-====
-.Install the dependencies on a React project
+=== Install the dependencies on a React project
 First lets install the Weave dependencies for a React project:
 
 [source,shell]
@@ -23,7 +21,7 @@ First lets install the Weave dependencies for a React project:
 npm install @inditextech/weave-types @inditextech/weave-sdk @inditextech/weave-react
 ----
 
-.Setup the provider
+=== Setup the provider
 Now on the React tree of our app lets instantiate the provider, for example:
 
 [source,tsx]
@@ -153,4 +151,3 @@ const MyApp = () => {
   )
 }
 ----
-====

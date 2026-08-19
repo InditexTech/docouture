@@ -16,9 +16,7 @@ the canvas.
 
 == Usage
 
-[steps]
-====
-.Import the Plugin
+=== Import the Plugin
 Start by importing the plugin:
 
 [source,ts]
@@ -26,7 +24,7 @@ Start by importing the plugin:
 import { WeaveUsersPointersPlugin } from "@inditextech/weave-sdk";
 ----
 
-.Register the Plugin
+=== Register the Plugin
 Then register the plugin on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -81,7 +79,6 @@ const instance = new Weave({
 You can also customize the pointer visual style and font style. For more information check the
 xref:sdk:api-reference/plugins/users-pointers.adoc[WeaveUsersPointersPlugin] plugin API.
 
-.Use the plugin
+=== Use the plugin
 Once the plugin is registered if more than one users are connected to the xref:main:glossary.adoc#room[room],
 the instance user will be able to see the other users pointers, and the others users can see theirs.
-====

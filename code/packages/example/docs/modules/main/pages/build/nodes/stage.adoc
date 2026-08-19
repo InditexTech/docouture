@@ -11,9 +11,7 @@ selection, or snapping—are initialized and managed.
 
 == Usage
 
-[steps]
-====
-.Import the Node
+=== Import the Node
 Start by importing the node:
 
 [source,ts]
@@ -21,7 +19,7 @@ Start by importing the node:
 import { WeaveStageNode } from "@inditextech/weave-sdk";
 ----
 
-.Register the Node
+=== Register the Node
 Then register the node on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -36,11 +34,10 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Use the node
+=== Use the node
 [WARNING]
 ====
 Don't use this node directly.
-====
 
 [WARNING]
 ====

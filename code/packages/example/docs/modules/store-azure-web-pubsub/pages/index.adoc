@@ -16,9 +16,7 @@ shared-state.
 
 Setup the frontend is easy, you just need to follow this steps on your Express-based backend:
 
-[steps]
-====
-.Install the WebSocket Store backend dependencies
+=== Install the WebSocket Store backend dependencies
 First lets install the necessary dependencies on the backend-side:
 
 [source,shell]
@@ -26,7 +24,7 @@ First lets install the necessary dependencies on the backend-side:
 npm install canvas @azure/web-pubsub @azure/web-pubsub-express y-protocols yjs @inditextech/weave-store-azure-web-pubsub
 ----
 
-.Setup the server
+=== Setup the server
 Then setup your server as needed, here you have an example of a simple server, where the persistence
 is handled on the file system:
 
@@ -57,15 +55,12 @@ When an user tries to join a room, it calls the defined route with the room Id w
 want to join, then the `WeaveAzureWebPubsubServer` using the `clientConnect` function, call the Azure Web PubSub
 Hub to extract a secure connection and this URL is passed as response to the client. Then the client connects to
 this URL and the server does the rest: persistence, handling the messages sent over the connection, etc.
-====
 
 == Frontend-side usage
 
 Setup the frontend is easy, you just need to follow this steps:
 
-[steps]
-====
-.Install the WebSocket Store frontend dependency
+=== Install the WebSocket Store frontend dependency
 First lets install the necessary dependencies for the frontend client:
 
 [source,shell]
@@ -73,7 +68,7 @@ First lets install the necessary dependencies for the frontend client:
 npm install @inditextech/weave-store-azure-web-pubsub
 ----
 
-.Setup the client on the Weave instance
+=== Setup the client on the Weave instance
 Then you need to add the Azure Web PubSub store client to the Weave instance in order to handle
 the connection when the user tries to join a room. This is done:
 
@@ -115,4 +110,3 @@ Explanation:
 <6> We set the room Id where we want to connect to.
 <7> Define url where we want to connect and fetch the connection URL to the Azure Web PubSub.
 <8> Set the instantiated store to the Weave instance.
-====

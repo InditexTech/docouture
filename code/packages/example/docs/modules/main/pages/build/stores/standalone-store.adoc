@@ -18,8 +18,6 @@ Check the xref:store-standalone:index.adoc[Standalone store] package API referen
 
 Setup the store server-side for image exporting is pretty easy.
 
-[steps]
-====
 ==== Install dependencies
 
 First lets install the necessary dependencies on the backend-side:
@@ -240,4 +238,3 @@ any node you want.
 <7> Transform it into a buffer.
 <8> Send the buffer back to the main worker, so it can finish for example zip it and
 send it back to the client.
-====

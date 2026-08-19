@@ -39,17 +39,14 @@ state D {
 D --> [*]
 ....
 
-[steps]
-====
-.Weave instance is started
+=== Weave instance is started
 
 
-.Actions are registered
+=== Actions are registered
 The `getName` method is used to identify the action.
 
-.Rendering cycle
+=== Rendering cycle
 After the first render, the `init` method of every action is called.
-====
 
 .Decoupled from the lifecycle
 [NOTE]

@@ -11,7 +11,6 @@ const registerTableWidth = require('./lib/table-width')
 const registerTableContainer = require('./lib/table-container')
 const registerNowrapCols = require('./lib/nowrap-cols')
 const registerVideoSize = require('./lib/video-size')
-const registerSteps = require('./lib/steps')
 const registerCardGrid = require('./lib/card-grid')
 const registerFeatureTabs = require('./lib/feature-tabs')
 const registerCta = require('./lib/cta')
@@ -31,9 +30,8 @@ function registerAll(target) {
   registerTableContainer(target)
   registerNowrapCols(target)
   registerVideoSize(target)
-  // [steps] / [cards] — Weave.js migration Phase 2, see each file's own
-  // header comment for the DS components behind them and why.
-  registerSteps(target)
+  // [cards] — Weave.js migration Phase 2, see its own
+  // header comment for the DS components behind it and why.
   registerCardGrid(target)
   // [feature-tabs] — the landing's Key features switcher (GH-22). The only
   // block here with behaviour layered on top of it; see its own header for

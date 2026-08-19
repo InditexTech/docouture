@@ -9,9 +9,7 @@ move by the define delta each time a shift + keyboard arrow key is pressed.
 
 == Usage
 
-[steps]
-====
-.Import the Plugin
+=== Import the Plugin
 Start by importing the plugin:
 
 [source,ts]
@@ -19,7 +17,7 @@ Start by importing the plugin:
 import { WeaveStageKeyboardMovePlugin } from "@inditextech/weave-sdk";
 ----
 
-.Register the Plugin
+=== Register the Plugin
 Then register the plugin on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -34,7 +32,6 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Use the plugin
+=== Use the plugin
 Once the plugin is registered, select the nodes you want and use shift + keyboard arrows to move
 then by the defined delta (by default 5).
-====

@@ -20,9 +20,7 @@ This action needs registered on the Weave instance the following elements:
 
 == Usage
 
-[steps]
-====
-.Import the Action
+=== Import the Action
 Start by importing the action:
 
 [source,ts]
@@ -30,7 +28,7 @@ Start by importing the action:
 import { WeavePenToolAction } from "@inditextech/weave-sdk";
 ----
 
-.Register the Action
+=== Register the Action
 Then register the action on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -45,7 +43,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Setup the action trigger
+=== Setup the action trigger
 Setup on a button or any element on the UI the user can interact with on the action event:
 
 [source,ts]
@@ -72,7 +70,7 @@ const MyPenToolTriggerComponent = () => {
 };
 ----
 
-.Trigger the action
+=== Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
 
@@ -89,4 +87,3 @@ When the user is satisfied with the line segments:
 Then the line with the N defined segments is added to the canvas as a fully functional
 node—ready. This action integrates seamlessly with Weave.js's real-time state system,
 ensuring the new element appears instantly for all connected users.
-====

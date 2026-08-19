@@ -14,9 +14,7 @@ Features:
 
 Use it to give users a bird’s-eye view of complex or zoomed-in canvases, making navigation more intuitive.
 
-[steps]
-====
-.Import the Plugin
+=== Import the Plugin
 Start by importing the plugin:
 
 [source,ts]
@@ -24,7 +22,7 @@ Start by importing the plugin:
 import { WeaveStageMinimapPlugin } from "@inditextech/weave-sdk";
 ----
 
-.Register the Plugin
+=== Register the Plugin
 Then register the plugin on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -53,6 +51,5 @@ const instance = new Weave({
 <.> Added in this step.
 <.> Added in this step.
 
-.Use the plugin
+=== Use the plugin
 Once the plugin is registered a minimap will be rendered on the provided container.
-====

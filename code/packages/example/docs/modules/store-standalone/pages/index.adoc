@@ -7,8 +7,6 @@ to export, render it, and then use the exporting utilities to generate the image
 
 == Usage
 
-[steps]
-====
 Just use the store on a Weave instance on the server, to render it.
 
 [source,ts]
@@ -38,4 +36,3 @@ Explanation:
 * *`(1)`*: Import the Weave.js store dependencies.
 * *`(2)`*: Define the room data to load (normally a Yjs binary)
 * *`(3)`*: Instantiate the `WeaveStoreStandalone` class.
-====

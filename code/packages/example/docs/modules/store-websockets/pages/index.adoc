@@ -18,9 +18,7 @@ shared-state.
 
 Setup the frontend is easy, you just need to follow this steps on your Express-based backend:
 
-[steps]
-====
-.Install dependencies
+=== Install dependencies
 First lets install the necessary dependencies on the backend-side:
 
 [source,shell]
@@ -28,7 +26,7 @@ First lets install the necessary dependencies on the backend-side:
 npm install canvas ws y-protocols yjs @inditextech/weave-store-websockets
 ----
 
-.Server setup
+=== Server setup
 Then setup your server as needed, here you have an example of a simple Express.js server,
 where we setup the *WeaveWebsocketsServer* class and the persistence is handled on the file system:
 
@@ -60,15 +58,12 @@ want to join, then the `WeaveWebsocketsServer` validate that that URL with the `
 if valid, it performs the HTTP/1.1 protocol upgrade, then a WebSocket connection is performed. Then the
 room Id is extracted using the `extractRoomId` function, and the server uses this information for the rest:
 persistence, handling the messages sent over the websockets connections, etc.
-====
 
 == Frontend-side usage
 
 Setup the frontend is easy, you just need to follow this steps:
 
-[steps]
-====
-.Install dependencies
+=== Install dependencies
 First lets install the necessary dependencies for the frontend client:
 
 [source,shell]
@@ -76,7 +71,7 @@ First lets install the necessary dependencies for the frontend client:
 npm install @inditextech/weave-store-websockets
 ----
 
-.Setup the client on the Weave instance
+=== Setup the client on the Weave instance
 Then you need to add the WebSockets store client to the Weave instance in order to handle
 the connection when the user tries to join a room. This is done:
 
@@ -120,4 +115,3 @@ Explanation:
 <6> We set the room Id where we want to connect to.
 <7> Define server URL where we want to connect on the `serverUrl` parameter.
 <8> Set the instantiated store to the Weave instance.
-====

@@ -21,9 +21,7 @@ This action needs registered on the Weave instance the following element:
 
 == Usage
 
-[steps]
-====
-.Import the Action
+=== Import the Action
 Start by importing the action:
 
 [source,ts]
@@ -31,7 +29,7 @@ Start by importing the action:
 import { WeaveTextToolAction } from "@inditextech/weave-sdk";
 ----
 
-.Register the Action
+=== Register the Action
 Then register the action on the xref:sdk:api-reference/weave/index.adoc[Weave] class instance.
 
 [source,ts]
@@ -46,7 +44,7 @@ const instance = new Weave({
 ----
 <.> Added in this step.
 
-.Setup the action trigger
+=== Setup the action trigger
 Setup on a button or any element on the UI the user can interact with on the action event:
 
 [source,ts]
@@ -73,7 +71,7 @@ const MyTextToolTriggerComponent = () => {
 };
 ----
 
-.Trigger the action
+=== Trigger the action
 Finally a final user trigger the UI element that launches the action.
 
 
@@ -82,4 +80,3 @@ When active the user can:
 * *Click* on the canvas, it will create a new text node.
 
 After the node is added it can be edited by *double-click* or *double-touch* on it.
-====

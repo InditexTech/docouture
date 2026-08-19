@@ -69,14 +69,21 @@ included) and walks the resulting MDAST, emitting AsciiDoc via
   partway through (`## Methods` → `#### connect`, no `###` between). All
   three are real, confirmed by a full Antora build, not by inspection.
 
-Degraded, pending the Mermaid/tabs follow-up issues:
+Degraded, pending the Mermaid follow-up issue:
 
 - `Mermaid` → a literal `[mermaid]` block with the same diagram source a
   future kroki/mermaid extension would consume unchanged (handles both the
   common `chart={` template-literal expression `}` form and the 3 files that
   use a plain quoted `chart="..."` JSX string instead)
-- code fences with `tab="..."` meta → a `.Label` title on each block instead
-  of real tabs (only `main/quickstart.mdx` uses this, 12 blocks)
+
+Handled since GH-45: code fences with `tab="..."` meta (only `main/
+quickstart.mdx` uses this, 12 blocks across 4 groups) are grouped into a real,
+independent `[tabs]` block (`asciidoc-extensions/lib/tabs.js`) instead of each
+fence becoming its own separately titled listing. A lone tab-meta fence with no
+adjacent sibling sharing the convention still gets the old `.Label`-title
+treatment — see `renderTabGroup`'s own comment in `lib/emit.mjs`. `<Tabs>`/
+`<Tab>` JSX (imported but never actually used in `quickstart.mdx`) is still
+unhandled.
 
 ## `build-nav.mjs` (Phase 4)
 

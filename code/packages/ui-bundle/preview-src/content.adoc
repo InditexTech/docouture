@@ -207,6 +207,98 @@ Finally, call it from a button or any other UI element:
 * *Click & drag* to create a rectangle and define its size.
 ====
 
+GH-45 — see `asciidoc-extensions/lib/tabs.js`. Any content, not just code: this
+one holds prose. Every `[tabs]` block is independent — picking a tab here
+does not affect the pair further down this page, or the one nested in the
+step below.
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+Prose works here, not just code — [tabs] holds arbitrary content.
+
+[,bash]
+----
+pnpm create weave-backend-app
+----
+****
+
+[tab,label="npm"]
+****
+[,bash]
+----
+npm create weave-backend-app
+----
+****
+
+[tab,label="yarn"]
+****
+[,bash]
+----
+yarn create weave-backend-app
+----
+****
+--
+
+A second, independent `[tabs]` block — picking a tab here does not change the
+one above it:
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,bash]
+----
+pnpm run dev
+----
+****
+
+[tab,label="npm"]
+****
+[,bash]
+----
+npm run dev
+----
+****
+
+[tab,label="yarn"]
+****
+[,bash]
+----
+yarn run dev
+----
+****
+--
+
+A `[tabs]` nested inside a `[steps]` step — the corpus's actual shape in
+`main/quickstart.adoc`:
+
+[steps]
+====
+.Install dependencies
+Pick a package manager:
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,bash]
+----
+pnpm install
+----
+****
+
+[tab,label="npm"]
+****
+[,bash]
+----
+npm install
+----
+****
+--
+====
+
 === Card grid
 
 The ATD Card — see `asciidoc-extensions/lib/card-grid.js`. Default shape: no

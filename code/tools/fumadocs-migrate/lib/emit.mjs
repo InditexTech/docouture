@@ -46,6 +46,25 @@ function hasCalloutMarks(code) {
   return /\/\/\s*<(?:\d+|\.)>\s*$/m.test(code)
 }
 
+// Fumadocs' fence-meta tab convention (`tab="pnpm"`) — the only tab syntax
+// this corpus uses; `<Tabs>`/`<Tab>` JSX is imported in `main/quickstart.mdx`
+// but never actually used there, so it is deliberately left unhandled (falls
+// through to renderJsxFlow's own "unhandled component" warning). Returns the
+// label, or `undefined` for a fence with no `tab=` meta.
+function tabLabel(node) {
+  const match = (node.meta || '').match(/tab="([^"]+)"/)
+  return match ? match[1] : undefined
+}
+
+// A `label=` value is a block STYLE attribute in the emitted AsciiDoc
+// (`[tab,label="…"]`), which Asciidoctor reads back raw — a literal `"`
+// in the label would otherwise close the attribute early. Only `"` needs
+// escaping here: the labels this corpus produces are package-manager names,
+// but the escape is cheap enough to keep unconditionally rather than assume.
+function escapeAttrValue(value) {
+  return value.replace(/"/g, '\\"')
+}
+
 // ---------------------------------------------------------------------------
 // Inline rendering
 // ---------------------------------------------------------------------------
@@ -166,17 +185,44 @@ function renderJsxInline(node, ctx) {
 // any tighter than that either.
 export function renderBlocks(nodes, ctx) {
   const out = []
-  for (const node of nodes || []) {
+  const list = nodes || []
+  let i = 0
+  while (i < list.length) {
+    const node = list[i]
+    // A run of two or more consecutive fences all carrying `tab="…"` meta
+    // (see tabLabel) is Fumadocs' "pick your package manager once" idiom
+    // (GH-45) — grouped into one real `[tabs]` block instead of each fence
+    // becoming its own separately titled listing. A LONE tab-meta fence (no
+    // adjacent sibling sharing the convention) falls through to renderBlock
+    // below unchanged: renderCode still gives it a `.label` title, which is
+    // the same degraded-but-readable rendering this corpus shipped before
+    // GH-45, and is the right call for a single fence with nothing to
+    // switch between.
+    if (node.type === 'code' && tabLabel(node) !== undefined) {
+      const group = [node]
+      let j = i + 1
+      while (j < list.length && list[j].type === 'code' && tabLabel(list[j]) !== undefined) {
+        group.push(list[j])
+        j++
+      }
+      if (group.length > 1) {
+        out.push(renderTabGroup(group, ctx))
+        i = j
+        continue
+      }
+    }
     if (node.type === 'list') {
       const calloutList = tryRenderCalloutList(node, ctx, ctx.pendingCallouts === true)
       if (calloutList !== null) {
         out.push(calloutList)
         ctx.pendingCallouts = false
+        i++
         continue
       }
     }
     const rendered = renderBlock(node, ctx)
     if (rendered !== null && rendered !== undefined && rendered !== '') out.push(rendered)
+    i++
   }
   return out.join('\n\n')
 }
@@ -295,8 +341,8 @@ function renderListItem(item, ctx, depth, marker) {
 
 function renderCode(node, ctx) {
   const lang = node.lang || ''
-  const tabMatch = (node.meta || '').match(/tab="([^"]+)"/)
-  const title = tabMatch ? `.${tabMatch[1]}\n` : ''
+  const label = tabLabel(node)
+  const title = label ? `.${label}\n` : ''
   const { code, colist, mergedCount } = annotateCode(node.value)
   if (mergedCount > 0) {
     ctx.warn(`${mergedCount} code line(s) had both an explicit (N) and a [!code] marker — kept the explicit number`)
@@ -305,6 +351,35 @@ function renderCode(node, ctx) {
   let out = `${title}[source,${lang}]\n----\n${code}\n----`
   if (colist.length) out += `\n${colist.join('\n')}`
   return out
+}
+
+// A run of `tab="…"` fences (see tabLabel), rendered as one real `[tabs]`
+// block (asciidoc-extensions/lib/tabs.js, GH-45) instead of N separately
+// titled listings. Each group this converts is independent — no `sync=`:
+// the extension deliberately has no cross-block linking (see its own
+// header for why an earlier revision that did was wrong), so the 4 groups
+// `main/quickstart.mdx` produces are 4 separate widgets, each defaulting to
+// its own first tab.
+//
+// Each `[tab]` is a SIDEBAR block (`****`), never `====`: this group always
+// sits inside `renderSteps`' own `[steps]====…====` (the corpus's only real
+// use site), and an example-block child there closes the ENCLOSING steps
+// block the instant Asciidoctor meets its own closing `====` — see
+// tabs.js's own header for the empirical confirmation. `****` never
+// collides with `====` regardless of nesting depth.
+function renderTabGroup(nodes, ctx) {
+  const tabs = nodes.map((node) => {
+    const label = tabLabel(node)
+    const { code, colist, mergedCount } = annotateCode(node.value)
+    if (mergedCount > 0) {
+      ctx.warn(`${mergedCount} code line(s) had both an explicit (N) and a [!code] marker — kept the explicit number`)
+    }
+    ctx.pendingCallouts = hasCalloutMarks(code)
+    let body = `[source,${node.lang || ''}]\n----\n${code}\n----`
+    if (colist.length) body += `\n${colist.join('\n')}`
+    return `[tab,label="${escapeAttrValue(label)}"]\n****\n${body}\n****`
+  })
+  return `[tabs]\n--\n${tabs.join('\n\n')}\n--`
 }
 
 function renderTable(node, ctx) {

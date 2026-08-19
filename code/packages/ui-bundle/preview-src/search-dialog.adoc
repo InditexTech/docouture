@@ -1,0 +1,3 @@
+= Search Dialog States
+:page-layout: search-dialog
+:description: The search dialog's four content states (idle, loading, results, empty) side by side, for visual review (GH-66).

@@ -95,21 +95,23 @@ body {
 
 
 
-.header-toolbar__search {
-  align-items: center;
-  display: flex;
-  gap: var(--ids-size-100);
-  min-width: 0;
+/*
+ * GH-66 — search trigger (replaces the old dead input, GH-7). Full button
+ * (icon, label, ⌘K chip) at l; label drops at m; chip drops too at s
+ * (icon-only); hidden outright at xs — GH-68 (S4) replaces it there with a
+ * floating button, out of scope here.
+ */
+.header-toolbar__search-trigger {
+  flex-shrink: 0;
 }
 
-/* out of scope below l — see header-content.hbs */
-@media screen and (--ids-breakpoints-xs-s) {
-  .header-toolbar__search {
+@media screen and (--ids-breakpoints-xs) {
+  .header-toolbar__search-trigger {
     display: none;
   }
 }
 
-/* the "Search" word itself is l-only; m keeps just the placeholder */
+/* the "Search" word itself is l-only, same rule the old input used */
 .header-toolbar__search-label {
   flex-shrink: 0;
 }
@@ -120,22 +122,23 @@ body {
   }
 }
 
-/* Figma's placeholder grey (#B3B3B3) is darker than the DS default (#757575). */
-.header-toolbar__search-input {
-  background: none;
-  border: none;
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-label-l);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-l-letter-spacing);
-  min-width: 0;
-  outline: none;
-  padding: 0;
-  text-transform: var(--ids-typo-label-l-text-transform);
+/* the ⌘K chip drops below m (s and xs, though xs never gets this far) */
+.header-toolbar__search-shortcut {
+  background: var(--panel-background);
+  border-radius: 0;
+  color: var(--toolbar-muted-color);
+  flex-shrink: 0;
+  font: var(--ids-typo-label-m);
+  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  padding: 0 var(--ids-size-25);
+  text-transform: var(--ids-typo-label-m-text-transform);
+  white-space: nowrap;
 }
 
-.header-toolbar__search-input::placeholder {
-  color: var(--ids-color-content-states-disabled);
+@media screen and (--ids-breakpoints-xs-s) {
+  .header-toolbar__search-shortcut {
+    display: none;
+  }
 }
 
 .header-toolbar__actions {

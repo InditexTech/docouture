@@ -9,12 +9,12 @@
   AsciiDoc equivalent (card grids, feature tables, the CTA) arrive as
   Asciidoctor block extensions — see @inditextech/pdocs-asciidoc-extensions.
 
-  What it shares with `default.hbs`: head, the header toolbar (in its Home
-  state — see header-content.hbs's `variant`), the side menu, and the site
-  scripts. What it drops: the page hero (hero.hbs), the "On this page" ToC and
-  the `.doc` article surface, none of which the design's landing has, plus the
-  page footer's previous/next and feedback rows — a landing is not a page in a
-  reading sequence. `site-footer.hbs` takes their place, home-only for now.
+  What it shares with `default.hbs`: head, the header toolbar, the side menu,
+  and the site scripts. What it drops: the page hero (hero.hbs), the "On this
+  page" ToC and the `.doc` article surface, none of which the design's
+  landing has, plus the page footer's previous/next and feedback rows — a
+  landing is not a page in a reading sequence. `site-footer.hbs` takes their
+  place, home-only for now.
 
   The two columns are items in the design system's own 12-column grid rather
   than a bespoke flex row, so their gutters and gaps match the header toolbar
@@ -33,7 +33,7 @@
 {{> head defaultPageTitle='Home'}}
   </head>
   <body class="home-page{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
-{{> header variant='home'}}
+{{> header}}
     <div class="body">
 {{> nav}}
       <main class="home ids-grid-layout ids-grid-layout--with-margin">

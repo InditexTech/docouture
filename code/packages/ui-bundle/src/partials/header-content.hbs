@@ -9,22 +9,25 @@
 
   Left group changes shape per breakpoint (header.css), all in one markup
   tree:
-  - l: "Search" label + placeholder input, no product name (that's the
-    side menu's brand block there), menu toggle rendered but usually
-    collapsed-hidden until JS + GH-8's Home/Default Figma variants decide
-    whether it's shown.
-  - m: menu toggle + product name + placeholder-only input (no "Search"
-    word).
-  - s/xs: menu toggle + product name; the search input is hidden outright
-    (out of scope — see below) rather than shrunk to an icon button.
+  - l: full trigger — icon, "Search" label, ⌘K chip.
+  - m: icon + ⌘K chip, label drops (header.css).
+  - s: icon-only, chip drops too.
+  - xs: hidden outright — GH-68 (S4) replaces it there with a floating
+    button, out of scope here.
 
   The menu toggle (see GH issue #8): `hidden` until src/js/01-nav.ts wires
   it up, same reasoning as theme-toggle.hbs — a control with no handler
   must not render.
 
-  Search itself is out of scope (GH-7): the input carries no name, no form
-  and no JS handler, so it can never submit anywhere. Do not wire it up
-  here.
+  GH-66 (S2): the search trigger below and search-dialog.hbs (included from
+  header.hbs) are static markup only — no JS handler wires the button to the
+  dialog yet, so clicking it does nothing, and it carries no `aria-haspopup`/
+  `aria-controls` of its own for the same reason: GH-67 (S3) adds those
+  alongside the click handler that makes them true, rather than advertising a
+  popup this button can't yet open. The ⌘K chip always renders the Apple
+  glyph server-side (no way to detect the platform without JS) — GH-67
+  corrects it to "Ctrl" client-side where needed. Showing the wrong modifier
+  to a Linux user for one frame beats a layout shift on every load.
 
   The version tag (page-versions.hbs) is hidden at s/xs — GH-8's Figma
   frames for those breakpoints move it into the side-menu drawer instead
@@ -33,15 +36,13 @@
   390px bar alongside the menu button — not something Figma specifies, a
   call made for this breakpoint.
 
-  `variant` (GH-18): the toolbar's Figma "State" property. `home` is the
-  landing's own state (home.hbs passes it; every other layout leaves it
-  unset, which is "Default"). The only difference the design draws is a
-  leading ghost icon button in the searcher, so that is the only difference
-  here — one partial in two states rather than a second, near-identical
-  copy for the landing. It is decorative in the same sense the input beside
-  it is: search is still out of scope, so the button carries no handler and
-  no form, and it is `aria-hidden` with no accessible name rather than
-  announcing a control that does nothing.
+  `variant='home'` (GH-18) used to make this partial render an extra leading
+  ghost icon ahead of the old dead input, the only difference Figma drew
+  between the toolbar's "Home" and "Default" states. The new trigger (GH-66)
+  always carries its own leading icon, so that distinction is gone — the
+  Home/Default states no longer differ here, and home.hbs no longer passes
+  `variant` (see its own history for the prior plumbing, kept in this
+  partial's git blame rather than as dead code today).
 --}}
 <header class="header-toolbar">
   <div class="ids-grid-layout ids-grid-layout--with-margin header-toolbar__grid">
@@ -52,17 +53,13 @@
         </span>
       </button>
       <a class="header-toolbar__product-name ids-text ids-text--label-l-high" href="{{{relativize (or site.homeUrl page.componentVersion.url)}}}"{{#if page.home}} aria-current="page"{{/if}}>{{or page.component.title site.title}}</a>
-      <div class="header-toolbar__search">
-{{#if (eq variant 'home')}}
-        <span class="ids-button ids-button--ghost ids-button--icon-only header-toolbar__search-icon" aria-hidden="true">
-          <span class="ids-button__content">
-            <span class="ids-button__icon ids-button__icon-icon">{{icon "actions" "search-outlined"}}</span>
-          </span>
+      <button type="button" class="ids-button ids-button--ghost header-toolbar__search-trigger">
+        <span class="ids-button__content">
+          <span class="ids-button__icon ids-button__icon-icon">{{icon "actions" "search-outlined"}}</span>
+          <span class="ids-text ids-text--label-l header-toolbar__search-label">Search</span>
+          <kbd class="header-toolbar__search-shortcut" aria-hidden="true">⌘K</kbd>
         </span>
-{{/if}}
-        <span class="ids-text ids-text--label-l header-toolbar__search-label">Search</span>
-        <input type="search" class="header-toolbar__search-input" placeholder="type here..." aria-label="Search the docs" tabindex="0">
-      </div>
+      </button>
     </div>
     <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__actions">
 {{> page-versions}}

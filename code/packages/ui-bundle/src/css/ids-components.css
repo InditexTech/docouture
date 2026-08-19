@@ -2321,3 +2321,583 @@
 .ids-accordion-toggle-icon--expanded {
   transform: rotate(180deg)
 }
+
+/* @inditex/sewingiopdsweb-react-components/modal/modal.css */
+#ids-modal-root {
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: var(--ids-z-modal)
+}
+.ids-modal {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  pointer-events: none;
+  width: 100%
+}
+.ids-modal__container {
+  max-height: calc(100vh - var(--ids-size-200)*2);
+  max-width: calc(100vw - var(--ids-size-200)*2);
+  min-width: 320px
+}
+.ids-modal.ids-modal--small .ids-modal__container {
+  width: 560px
+}
+.ids-modal.ids-modal--medium .ids-modal__container {
+  width: 800px
+}
+.ids-modal.ids-modal--large .ids-modal__container {
+  width: 1200px
+}
+.ids-modal.ids-modal--draggable .ids-modal__container,.ids-modal.ids-modal--fullscreen .ids-modal__container {
+  height: 100%;
+  max-height: none;
+  max-width: none;
+  min-height: 280px;
+  min-width: 320px;
+  width: 100%
+}
+.ids-modal.ids-modal--fullscreen .ids-modal__container {
+  border: none;
+  padding-inline: var(--comp-grid-margin-xs)
+}
+.ids-modal--resizing {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none
+}
+.ids-modal.ids-modal--anchored {
+  background: transparent;
+  border: none;
+  color: inherit;
+  display: block;
+  height: auto;
+  inset: auto;
+  margin: 0;
+  max-height: none;
+  max-width: none;
+  padding: 0;
+  pointer-events: auto;
+  width: auto
+}
+.ids-modal.ids-modal--anchored .ids-modal__container {
+  height: 100%;
+  max-height: none;
+  max-width: none;
+  min-height: 0;
+  min-width: 0;
+  width: 100%
+}
+@media (max-width:512px) {
+  .ids-modal {
+    align-items: flex-end
+  }
+  .ids-modal__container {
+    border-bottom: none;
+    border-inline: none;
+    max-width: 100%
+  }
+}
+@media (min-width:513px) {
+  .ids-modal.ids-modal--fullscreen .ids-modal__container {
+    padding-inline: var(--comp-grid-margin-s)
+  }
+}
+@media (min-width:1024px) {
+  .ids-modal.ids-modal--fullscreen .ids-modal__container {
+    padding-inline: var(--comp-grid-margin-m)
+  }
+}
+@media (min-width:1680px) {
+  .ids-modal.ids-modal--fullscreen .ids-modal__container {
+    padding-inline: var(--comp-grid-margin-l)
+  }
+}
+
+/* @inditex/sewingiopdsweb-react-components/modal/modal-content.css */
+.ids-modal__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--ids-size-50);
+  min-height: 0;
+  overflow: hidden
+}
+.ids-modal__content--scrollable {
+  overflow: auto
+}
+.ids-modal__content-children {
+  height: 100%;
+  width: 100%
+}
+.ids-modal__content-label {
+  color: var(--ids-color-content-default);
+  font: var(--ids-typo-body-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  text-transform: var(--ids-typo-body-m-text-transform)
+}
+@media (max-width:512px) {
+  .ids-modal__content--scrollable {
+    overscroll-behavior-y: contain
+  }
+}
+
+/* @inditex/sewingiopdsweb-react-components/modal/modal-header.css */
+.ids-modal__header {
+  align-items: center;
+  display: flex;
+  gap: var(--ids-size-100);
+  justify-content: space-between;
+  margin-bottom: var(--ids-size-100)
+}
+.ids-modal__title-container {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  gap: var(--ids-size-50)
+}
+.ids-modal__title {
+  color: var(--ids-color-content-default);
+  flex-grow: 1;
+  font: var(--ids-typo-title-s);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-title-s-letter-spacing);
+  min-height: var(--ids-typo-line-height-32);
+  overflow-wrap: break-word;
+  text-transform: var(--ids-typo-title-s-text-transform)
+}
+.ids-modal__title--ellipsis {
+  display: -webkit-box;
+  line-clamp: var(--modal-title-line-clamp);
+  -webkit-line-clamp: var(--modal-title-line-clamp);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  overflow-wrap: break-word
+}
+.ids-modal__actions {
+  align-items: center;
+  display: flex;
+  gap: var(--ids-size-50)
+}
+
+/* @inditex/sewingiopdsweb-react-components/modal/modal-footer.css */
+.ids-modal__footer {
+  gap: var(--ids-size-50);
+  margin-top: var(--ids-size-100)
+}
+.ids-modal__footer--horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between
+}
+.ids-modal__footer--horizontal .ids-modal__footer-right {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--ids-size-50);
+  justify-content: flex-end
+}
+.ids-modal__footer--vertical,.ids-modal__footer--vertical .ids-modal__footer-left,.ids-modal__footer--vertical .ids-modal__footer-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-50)
+}
+.ids-modal__footer--vertical .ids-button {
+  width: 100%
+}
+
+/* @inditex/sewingiopdsweb-react-components/modal/modal-inline.css */
+.ids-modal__container {
+  background-color: var(--ids-color-bg-default);
+  border: var(--ids-size-border-default) solid var(--ids-color-border-default);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ids-size-0);
+  overflow: hidden;
+  padding: var(--ids-size-150);
+  pointer-events: auto
+}
+.ids-modal__content {
+  flex-grow: 1;
+  min-height: 0
+}
+@media (max-width:512px) {
+  .ids-modal__container {
+    padding: var(--ids-size-100);
+    position: relative;
+    transform: none;
+    transform: var(--ids-sheet-drag-transform,none);
+    transition: transform 0s var(--ids-motion-easing-standard-3);
+    transition: transform var(--ids-sheet-drag-transition-duration,0s) var(--ids-motion-easing-standard-3)
+  }
+}
+
+/* @inditex/sewingiopdsweb-react-components/overlay/overlay.css */
+.ids-overlay {
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: all var(--ids-motion-easing-standard-3) var(--ids-motion-duration-l);
+  visibility: hidden
+}
+.ids-overlay--visible {
+  opacity: 1;
+  pointer-events: none;
+  visibility: visible
+}
+.ids-overlay__content {
+  background-color: var(--ids-color-bg-default);
+  bottom: 0;
+  left: 0;
+  opacity: .8;
+  pointer-events: auto;
+  position: absolute;
+  right: 0;
+  top: 0
+}
+.ids-overlay__content+* {
+  position: relative
+}
+.ids-overlay--transparent .ids-overlay__content {
+  background-color: transparent;
+  opacity: 0
+}
+.ids-viewport-fit-cover .ids-overlay,.ids-viewport-fit-cover .ids-overlay__content {
+  bottom: env(safe-area-inset-bottom);
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
+  top: env(safe-area-inset-top)
+}
+
+/* @inditex/sewingiopdsweb-react-components/search-field/search-field.minimal.css */
+.ids-placeholder-rotation {
+  display: flex;
+  flex-direction: column;
+  will-change: transform
+}
+.ids-placeholder-rotation--animated {
+  transition: transform var(--ids-placeholder-rotation-duration) var(--ids-motion-easing-standard-4)
+}
+.ids-placeholder-rotation__item {
+  flex-shrink: 0;
+  height: var(--ids-placeholder-rotation-line);
+  line-height: var(--ids-placeholder-rotation-line);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.ids-search-field-minimal {
+  --ids-placeholder-rotation-line: var(--ids-typo-line-height-22);
+  --ids-placeholder-rotation-duration: 0.6s;
+  align-items: center;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: var(--ids-size-250);
+  max-width: 100%;
+  min-width: 10px
+}
+.ids-search-field-minimal__hidden-measure {
+  font: var(--ids-typo-body-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  left: -9999px;
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  pointer-events: none;
+  position: absolute;
+  text-transform: var(--ids-typo-body-m-text-transform);
+  top: -9999px;
+  visibility: hidden;
+  white-space: pre
+}
+.ids-search-field-minimal__input-container {
+  align-items: center;
+  background: transparent;
+  border: none;
+  display: flex;
+  outline: none;
+  width: 100%
+}
+.ids-search-field-minimal__icon-start {
+  align-items: center;
+  color: var(--ids-color-content-default);
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  margin-inline-end: var(--ids-size-50)
+}
+.ids-search-field-minimal__input {
+  background: transparent;
+  border: none;
+  caret-color: var(--ids-color-content-default);
+  color: var(--ids-color-content-default);
+  flex: 1;
+  font: var(--ids-typo-body-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  min-width: 0;
+  outline: none;
+  padding: 0;
+  text-transform: var(--ids-typo-body-m-text-transform)
+}
+.ids-search-field-minimal__input::-moz-placeholder {
+  color: var(--ids-color-content-low)
+}
+.ids-search-field-minimal__input::placeholder {
+  color: var(--ids-color-content-low)
+}
+.ids-search-field-minimal__input::-webkit-search-cancel-button {
+  display: none
+}
+.ids-search-field-minimal__input--rotating::-moz-placeholder {
+  color: transparent
+}
+.ids-search-field-minimal__input--rotating::placeholder {
+  color: transparent
+}
+.ids-search-field-minimal__input-wrapper {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  position: relative
+}
+.ids-search-field-minimal__placeholder {
+  color: var(--ids-color-content-low);
+  font: var(--ids-typo-body-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  height: var(--ids-placeholder-rotation-line);
+  inset-inline-start: 0;
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  text-transform: var(--ids-typo-body-m-text-transform);
+  top: 50%;
+  transform: translateY(-50%)
+}
+.ids-search-field-minimal__right-content {
+  align-items: center;
+  display: flex;
+  margin-inline-start: var(--ids-size-50)
+}
+.ids-search-field-minimal__icons {
+  align-items: center;
+  display: flex;
+  gap: var(--ids-size-25)
+}
+.ids-search-field-minimal--disabled {
+  pointer-events: none
+}
+.ids-search-field-minimal--disabled,.ids-search-field-minimal--disabled .ids-search-field-minimal__icon-start,.ids-search-field-minimal--disabled .ids-search-field-minimal__input {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-search-field-minimal--disabled .ids-search-field-minimal__input::-moz-placeholder {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-search-field-minimal--disabled .ids-search-field-minimal__input::placeholder {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-search-field-minimal--readonly .ids-search-field-minimal__input {
+  pointer-events: none
+}
+.ids-search-field-minimal--full-width {
+  flex-shrink: 1;
+  width: 100%
+}
+.ids-search-field-minimal--has-value:not(.ids-search-field-minimal--focused) .ids-search-field-minimal__input {
+  font: var(--ids-typo-body-m-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-body-m-high-letter-spacing);
+  text-transform: var(--ids-typo-body-m-high-text-transform)
+}
+@media (hover:hover) {
+  .ids-search-field-minimal:hover:not(.ids-search-field-minimal--disabled) .ids-search-field-minimal__icon-start {
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-search-field-minimal:hover:not(.ids-search-field-minimal--disabled) .ids-search-field-minimal__input::-moz-placeholder {
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-search-field-minimal:hover:not(.ids-search-field-minimal--disabled) .ids-search-field-minimal__input::placeholder {
+    color: var(--ids-color-content-states-hover)
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .ids-search-field-minimal {
+    --ids-placeholder-rotation-duration: 0.01ms
+  }
+}
+
+/* @inditex/sewingiopdsweb-react-components/highlight/highlight.css */
+.ids-highlight__mark {
+  background-color: inherit;
+  color: var(--ids-color-content-default);
+  font-weight: var(--ids-typo-font-weight-mid)
+}
+
+/* @inditex/sewingiopdsweb-react-components/empty-state/empty-state.css */
+.ids-theme-dark .ids-empty-state img[src*=".svg"] {
+  filter: brightness(0) invert(1)
+}
+.ids-empty-state {
+  align-items: center;
+  color: var(--ids-color-content-default);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: var(--ids-size-100)
+}
+.ids-empty-state__message {
+  align-items: inherit;
+  display: inherit;
+  flex-direction: inherit;
+  row-gap: var(--ids-size-50)
+}
+.ids-empty-state__title {
+  font: var(--ids-typo-label-l-high);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
+  text-align: center;
+  text-transform: var(--ids-typo-label-l-high-text-transform)
+}
+.ids-empty-state__description {
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-align: center;
+  text-transform: var(--ids-typo-label-l-text-transform)
+}
+
+/* @inditex/sewingiopdsweb-react-components/empty-state/empty-state-footer.css */
+.ids-empty-state-footer {
+  display: flex;
+  gap: var(--ids-size-50)
+}
+
+/* @inditex/sewingiopdsweb-react-components/loader/loader.css */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(1turn)
+  }
+}
+.ids-loader {
+  align-items: center;
+  display: flex;
+  flex-direction: column
+}
+.ids-loader__circle {
+  align-items: center;
+  display: flex;
+  justify-content: center
+}
+.ids-loader__circle--large {
+  height: var(--ids-size-500);
+  width: var(--ids-size-500)
+}
+.ids-loader__circle--large>span {
+  height: var(--ids-size-350);
+  width: var(--ids-size-350)
+}
+.ids-loader__circle--medium {
+  height: var(--ids-size-250);
+  width: var(--ids-size-250)
+}
+.ids-loader__circle--medium>span {
+  height: var(--ids-size-150);
+  width: var(--ids-size-150)
+}
+.ids-loader__circle--small {
+  height: var(--ids-size-125);
+  width: var(--ids-size-125)
+}
+.ids-loader__circle--small>span {
+  height: var(--ids-size-100);
+  width: var(--ids-size-100)
+}
+.ids-loader__circle>span {
+  animation: spin 1.3s cubic-bezier(.53,.21,.29,.67) infinite;
+  border: var(--ids-size-border-high) solid var(--ids-color-border-low);
+  border-radius: var(--ids-size-radius-full);
+  border-top-color: var(--ids-color-border-default);
+  box-sizing: border-box;
+  display: block
+}
+.ids-loader__label {
+  color: var(--ids-color-content-default);
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform)
+}
+.ids-loader__circle--large+.ids-loader__label {
+  margin-top: var(--ids-size-75)
+}
+.ids-loader__circle--medium+.ids-loader__label {
+  margin-top: var(--ids-size-50)
+}
+.ids-loader__circle--small+.ids-loader__label {
+  margin-top: var(--ids-size-25)
+}
+
+/* @inditex/sewingiopdsweb-react-components/floating-button/floating-button.css */
+.ids-floating-button-wrapper {
+  align-items: center;
+  backdrop-filter: blur(var(--ids-size-125));
+  background-color: var(--ids-color-bg-default);
+  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  border-radius: var(--ids-size-radius-full);
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  min-height: var(--ids-size-300);
+  min-width: var(--ids-size-300);
+  overflow: hidden;
+  padding: var(--ids-size-25)
+}
+.ids-floating-button-wrapper--viewport {
+  position: fixed
+}
+.ids-floating-button-wrapper--container {
+  position: absolute
+}
+.ids-floating-button-wrapper--start {
+  bottom: var(--ids-size-150);
+  left: var(--ids-size-100)
+}
+@media (min-width:513px) {
+  .ids-floating-button-wrapper--start {
+    left: var(--ids-size-150)
+  }
+}
+.ids-floating-button-wrapper--end {
+  bottom: var(--ids-size-150);
+  right: var(--ids-size-100)
+}
+@media (min-width:513px) {
+  .ids-floating-button-wrapper--end {
+    right: var(--ids-size-150)
+  }
+}
+.ids-floating-button {
+  border-radius: var(--ids-size-radius-full);
+  min-height: var(--ids-size-250);
+  min-width: var(--ids-size-250)
+}
+.ids-floating-button--selected.ids-button--ghost {
+  background-color: var(--ids-color-bg-states-pressed)
+}

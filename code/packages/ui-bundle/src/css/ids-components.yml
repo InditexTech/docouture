@@ -80,3 +80,44 @@ components:
     # this file's real values rather than applying its selectors — see
     # that file's own header.
     - accordion.css
+  modal:
+    # GH-66 — the search dialog shell, native `<dialog>` carrying `.ids-modal`
+    # instead of the DS's own React portal (`#ids-modal-root`): a top-layer
+    # `<dialog>` already gives the stacking, focus trap and Esc-to-close the
+    # portal exists for, so search-dialog.css only resets the UA dialog box
+    # model onto `.ids-modal`'s flex-centering layout — it doesn't reimplement
+    # the portal. `.ids-modal__container` gets its background, border and
+    # padding from modal-inline.css alone; vendoring modal.css without it
+    # renders a transparent, borderless panel.
+    #
+    # Deliberately 5 of the directory's 6 files, not all — modal-draggable.css
+    # is left out, and for once it's not a judgement call about unused markup
+    # (this dialog isn't draggable or resizable — true of modal-header.css too,
+    # vendored anyway below) but a hard failure: its own custom properties are
+    # named with a BEM `__`, e.g. `--ids-modal__resize-handle-corner-size`, and
+    # sync.mjs's DS_VAR_REF_RX (`[a-z0-9-]+`, no underscore) truncates any
+    # `var(...)` reference to it at the first `_`, so the script goes looking
+    # for a bare `--ids-modal` token that exists nowhere and fails loudly. Not
+    # worth teaching the generator a one-off character class for a variant
+    # this dialog never renders.
+    - modal.css # .ids-modal[--small] / __container — panel sizing
+    - modal-content.css # .ids-modal__content[--scrollable] — results area
+    - modal-header.css # .ids-modal__header/__title/__actions — unused today (no header row in the sketch), vendored for completeness per the multi-file rule
+    - modal-footer.css # .ids-modal__footer[--horizontal] — the ↑↓ · ↵ · esc hint row
+    - modal-inline.css # .ids-modal__container's actual background/border/padding
+  overlay:
+    - overlay.css # .ids-overlay/__content — the dialog's backdrop
+  search-field:
+    - search-field.minimal.css # .ids-search-field-minimal — the dialog's input row; also fixes preview-src/layouts/icons.hbs's filter box, unstyled until now (GH-66)
+  highlight:
+    - highlight.css # .ids-highlight__mark — matched-term highlight in results
+  empty-state:
+    - empty-state.css # .ids-empty-state — "no results" state
+    - empty-state-footer.css # .ids-empty-state-footer
+  loader:
+    - loader.css # .ids-loader — index-loading state
+  floating-button:
+    # For GH-68 (S4)'s XS trigger, not rendered by this issue — vendored now
+    # since it's on the same manifest edit and pulls --ids-size-radius-full
+    # into ids-tokens.css automatically via `just ids-sync`.
+    - floating-button.css # .ids-floating-button — XS search trigger (S4)

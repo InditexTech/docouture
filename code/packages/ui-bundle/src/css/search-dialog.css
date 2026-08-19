@@ -24,9 +24,28 @@
  *      (max-width:512px)` rule in modal.css already switches `.ids-modal` to
  *      a bottom sheet (`align-items:flex-end`), which has no such problem.
  *
- *    - The second deviation — modal.css's hardcoded 1024px breakpoint
- *      against this project's own 1240px `m` — belongs to GH-68 (S4), where
- *      the fullscreen variant is introduced. Not addressed here.
+ *    - GH-68 (S4): `.ids-modal--fullscreen` is JS-toggled (12-search.ts)
+ *      below the project's own `m` (1240px), never authored alongside
+ *      `.ids-modal--small` in the markup — the two share the same
+ *      specificity in ids-components.css and `--fullscreen`'s rule comes
+ *      later in that file, so having both classes present together would
+ *      make it win unconditionally at every breakpoint, m/l included. Below
+ *      m, modal.css's own `.ids-modal--fullscreen` padding steps still
+ *      hardcode `@media (min-width:1024px)` — upstream's own M, not this
+ *      project's — so the 1024-1239px zone would use the wrong
+ *      (m-sized) padding step for the roughly 216px of that range where the
+ *      dialog is fullscreen but this project still considers it `s`.
+ *      `tools/ids/sync.mjs`'s BREAKPOINT_OVERRIDES only rewrites the
+ *      `@custom-media` tokens this bundle's own CSS references, not literal
+ *      media queries baked into vendored component bodies, so that zone is
+ *      fixed below instead: re-forcing the `s` padding step across the
+ *      project's entire xs-s range, source order alone winning over the
+ *      vendored rule (same specificity, this file loads after
+ *      ids-components.css) — the same kind of authored deviation as the
+ *      "pinned high" one above, not a change to the sync tool. Once `m`
+ *      genuinely starts (1240px), fullscreen is no longer applied at all
+ *      (12-search.ts), so the DS's own `.ids-modal--small` sizing takes over
+ *      cleanly with no override needed there.
  */
 
 .search-dialog {
@@ -68,6 +87,63 @@
     align-items: flex-start;
     padding-top: var(--ids-size-800);
   }
+}
+
+/*
+ * Deviation 2 (see file header, GH-68): forces modal.css's fullscreen
+ * padding step to `s` across this project's entire xs-s range (≤1239.98px),
+ * undoing the DS's own premature switch to its `m` step at 1024px.
+ * `.ids-modal--fullscreen` is only ever present below the project's real
+ * `m` (12-search.ts), so there's no m+ case to handle here — modal.css's own
+ * rules apply unmodified once the class is gone.
+ */
+@media screen and (--ids-breakpoints-xs-s) {
+  .search-dialog.ids-modal--fullscreen .ids-modal__container {
+    padding-inline: var(--comp-grid-margin-s);
+  }
+}
+
+/*
+ * Footer key hints (`↑↓ navigate · ↵ select · esc close`) assume a physical
+ * keyboard — hidden below `m` (GH-68), where the fullscreen dialog is a
+ * touch surface with no keys to hint at.
+ */
+@media screen and (--ids-breakpoints-xs-s) {
+  .search-dialog__hints {
+    display: none;
+  }
+}
+
+/*
+ * GH-68 — the xs-only floating trigger (search-dialog.hbs), opening the same
+ * dialog as header-content.hbs's own trigger (12-search.ts wires up
+ * whichever exists). `.ids-floating-button-wrapper`/`.ids-floating-button`
+ * are vendored DS CSS (ids-components.yml) supplying the pill shape, border,
+ * blur and shadow; only positioning and visibility are this bundle's own.
+ */
+.search-fab {
+  display: none;
+  position: fixed;
+  z-index: var(--z-index-search-dialog);
+}
+
+@media screen and (--ids-breakpoints-xs) {
+  .search-fab {
+    display: inline-flex;
+  }
+}
+
+/*
+ * Hidden while the side-menu drawer is open (GH-68): the xs drawer covers the
+ * entire viewport, header included (side-menu.css), so a FAB floating over
+ * it would be the only visible chrome and would open a dialog on top of a
+ * drawer. `.search-fab` isn't a sibling of `#side-menu` in the DOM (it's
+ * rendered from header.hbs, the side menu from body.hbs's nav partial) —
+ * `:has()` reaches up to their common ancestor instead, the same technique
+ * already used in home.css, doc.css and side-menu.css itself.
+ */
+body:has(#side-menu.is-active) .search-fab {
+  display: none;
 }
 
 .search-dialog__field {

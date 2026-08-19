@@ -25,7 +25,7 @@ all the real-time sync needed to support a collaborative application.
 
 This are the stores:
 
-[cards]
+[cards,columns="1 s:2 m:4",width=container]
 ====
 [card]
 .xref:main:build/stores/websockets-store.adoc[WebSockets Store]

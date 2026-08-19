@@ -103,13 +103,15 @@
   /*
    * GH-66 — the search dialog is a native <dialog>, so `showModal()` alone
    * puts it in the top layer, above every other z-index here regardless of
-   * this value. This token exists for the trigger and, from GH-68 (S4), the
-   * floating button — both ordinary positioned elements the DS gives
-   * `position: fixed` and no z-index of its own, so they need one from us to
-   * sit above the header/nav they're drawn over. `--ids-z-modal` (also above
-   * `--ids-z-dropdown`) matches what the dialog itself would use if it were
-   * ever rendered without the top layer (e.g. a browser without <dialog>'s
-   * top-layer support painting it in normal flow).
+   * this value. GH-68 (S4) is the actual consumer: `.search-fab`
+   * (search-dialog.css) is an ordinary positioned element — the DS gives
+   * `.ids-floating-button-wrapper` `position: fixed` and no z-index of its
+   * own — so it needs one from us to sit above the header/nav it's drawn
+   * over at xs. `--ids-z-modal` (also above `--ids-z-dropdown`) matches what
+   * the dialog itself would use if it were ever rendered without the top
+   * layer (e.g. a browser without <dialog>'s top-layer support painting it
+   * in normal flow), so the FAB and its own dialog agree on stacking order
+   * even then.
    */
   --z-index-search-dialog: var(--ids-z-modal);
 }

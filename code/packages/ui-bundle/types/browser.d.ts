@@ -10,11 +10,16 @@ declare global {
   /** One search result, already shaped for rendering — see vendor/search.bundle.ts. */
   interface SearchHit {
     title: SearchHighlightedText
-    section?: string
-    hierarchy: string[]
+    section?: SearchHighlightedText
+    hierarchy: SearchHighlightedText[]
     url: string
     category: string
     snippet: SearchHighlightedText
+  }
+
+  /** GH-69 (S5): the module filter chips' own use of `Searcher` — see vendor/search.bundle.ts's `SearchOptions`. */
+  interface SearchOptions {
+    limit?: number
   }
 
   interface Window {
@@ -31,7 +36,20 @@ declare global {
      * first intent rather than on every page.
      */
     __pdocsSearch?: {
-      load: (url: string) => Promise<(term: string, signal: AbortSignal) => Promise<SearchHit[]>>
+      load: (
+        url: string
+      ) => Promise<(term: string, signal: AbortSignal, options?: SearchOptions) => Promise<SearchHit[]>>
+    }
+
+    /**
+     * Recent-searches surface (GH-69), assigned by 13-search-recents.ts —
+     * always present once that file has run (unlike `__pdocsSearch`, it has
+     * no lazy-load split of its own, so 12-search.ts still guards every call
+     * in case that script were ever removed from a page).
+     */
+    __pdocsSearchRecents?: {
+      record: (term: string) => void
+      render: (container: HTMLElement, onSelect: (term: string) => void, onRemove: () => void) => HTMLElement[]
     }
   }
 }

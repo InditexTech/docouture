@@ -2364,7 +2364,8 @@
 }
 .ids-modal.ids-modal--fullscreen .ids-modal__container {
   border: none;
-  padding-inline: var(--comp-grid-margin-xs)
+  padding-block: 0px;
+  padding-inline: 0px
 }
 .ids-modal--resizing {
   -webkit-user-select: none;
@@ -2405,12 +2406,13 @@
 }
 @media (min-width:513px) {
   .ids-modal.ids-modal--fullscreen .ids-modal__container {
-    padding-inline: var(--comp-grid-margin-s)
+    padding-inline: 0px;
+    padding-block: 0px
   }
 }
 @media (min-width:1024px) {
   .ids-modal.ids-modal--fullscreen .ids-modal__container {
-    padding-inline: var(--comp-grid-margin-m)
+    padding-inline: 0px
   }
 }
 @media (min-width:1680px) {
@@ -2490,13 +2492,20 @@
 /* @inditex/sewingiopdsweb-react-components/modal/modal-footer.css */
 .ids-modal__footer {
   gap: var(--ids-size-50);
-  margin-top: var(--ids-size-100)
 }
 .ids-modal__footer--horizontal {
   display: flex;
   flex-wrap: wrap;
+  padding: var(--ids-size-75) var(--ids-size-150);
+  border-top: var(--ids-size-border-default) solid var(--ids-color-border-low);
   justify-content: space-between
 }
+@media screen and (--ids-breakpoints-xs-s) {
+  .ids-modal__footer--horizontal {
+    display: none;
+  }
+}
+
 .ids-modal__footer--horizontal .ids-modal__footer-right {
   display: flex;
   flex: 1;
@@ -2522,7 +2531,7 @@
   flex-direction: column;
   gap: var(--ids-size-0);
   overflow: hidden;
-  padding: var(--ids-size-150);
+  /* padding: var(--ids-size-150); */
   pointer-events: auto
 }
 .ids-modal__content {
@@ -2604,8 +2613,9 @@
   align-items: center;
   display: inline-flex;
   flex-shrink: 0;
-  height: var(--ids-size-250);
   max-width: 100%;
+  padding: var(--ids-size-75) var(--ids-size-150);
+  border-bottom: var(--ids-size-border-default) solid var(--ids-color-border-low);
   min-width: 10px
 }
 .ids-search-field-minimal__hidden-measure {

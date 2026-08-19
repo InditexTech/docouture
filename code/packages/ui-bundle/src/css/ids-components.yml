@@ -70,3 +70,13 @@ components:
     # states the frames draw, and it brings the DS's own `:focus-visible` ring
     # and hover colour with it.
     - tabs-item.css # .ids-tabs-item[--selected] — [feature-tabs] labels (asciidoc-extensions/lib/feature-tabs.js)
+  accordion:
+    # GH-61 — backs the `.ids-accordion*` selectors Timeline's own
+    # `--expandable` variant already ships but left dangling
+    # (ids-components.css:2112-2126, no base `.ids-accordion` rule to
+    # match against). Native `[%collapsible]`/`<details>` can't carry these
+    # BEM classes itself (Asciidoctor owns that markup), so the bundle's
+    # own accordion.css (ui-bundle/src/css) restyles `.doc details` against
+    # this file's real values rather than applying its selectors — see
+    # that file's own header.
+    - accordion.css

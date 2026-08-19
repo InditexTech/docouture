@@ -1604,71 +1604,14 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 /*
- * GH-15 follow-up — collapsible marker: the DS's own Accordion toggle
- * (`accordion/accordion.css`, `.ids-accordion__toggle-icon`) uses
- * `chevron-down-outlined`, rotated 180° open, eased by
- * `--ids-motion-micro-appear` — copied here rather than reinvented, even
- * though `<details>`/`<summary>` isn't the DS component (no
- * `.ids-accordion` markup/JS, no expand/collapse-all, no divider between
- * items — that's a separate piece of future work). `summary` becomes a
- * flex row (icon + text) instead of `display: block` with the marker
- * absolutely positioned in a negative left margin — simpler, and it means
- * `.doc details` no longer needs the `margin-left: 1rem` gutter the old
- * marker sat in, nor does `.doc details.result > .content` need to negate
- * it back out. `::-webkit-details-marker` stays hidden for Safari, which
- * still renders its own disclosure triangle alongside a flex `<summary>`.
+ * The `<details>`/`<summary>` collapsible marker, run-spacing and content
+ * layout used to live here (GH-15 follow-up) — moved to `accordion.css`
+ * and restyled against the real DS `AccordionItem` component (GH-61 Part
+ * 1); see that file's own header. The dead `.doc details.result` rules
+ * (nothing in the corpus ever emits `role="result"` — verified against the
+ * built site output; `content.adoc`'s `.Result` line is a block *title*,
+ * not a role) were removed rather than moved.
  */
-.doc details > summary {
-  align-items: flex-start;
-  display: flex;
-  gap: var(--ids-size-50);
-  line-height: var(--doc-line-height);
-  margin-bottom: var(--ids-size-50);
-}
-
-.doc details > summary::-webkit-details-marker {
-  display: none;
-}
-
-.doc details > summary::before {
-  background: currentColor;
-  content: "";
-  flex: none;
-  height: var(--ids-size-125);
-  mask-image: var(--icon-mask-arrows-chevron-down-outlined);
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  transition: var(--ids-motion-micro-appear);
-  width: var(--ids-size-125);
-}
-
-.doc details[open] > summary::before {
-  transform: rotate(180deg);
-}
-
-/*
- * GH-15 follow-up: a run of collapsibles (`content.adoc`'s own "Summary"/
- * "Result" pair) previously double-spaced — every `<details>` gets the
- * generic top-level block margin (`.doc details`, further up this file)
- * regardless of what precedes it. Zeroed between two adjacent ones so they
- * stack as a group; the FIRST of a run still gets the normal block gap
- * from whatever came before it.
- */
-.doc details + details {
-  margin-top: 0;
-}
-
-.doc details.result {
-  margin-top: var(--ids-size-25);
-}
-
-.doc details.result > summary {
-  color: var(--caption-font-color);
-  font: var(--ids-typo-detail-m);
-  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
-  margin-bottom: 0;
-}
 
 /*
  * GH-15 (A9, Figma 3615:59355) — the "Example" panel: grey field, 40px
@@ -1676,9 +1619,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * `align-items: stretch` so a nested image or table fills the panel's
  * width rather than hugging its own. No border, no radius — the panel
  * IS the surface, unlike antora-ui-default's bordered/rounded default it
- * replaces. `details.result` (a `[%collapsible]` block's own content) is
- * the same panel by construction — Asciidoctor gives it identical markup,
- * one `<div class="content">`, no separate case needed.
+ * replaces. A `[%collapsible]`'s own content used to alias this panel via
+ * `details.result` (identical markup, one `<div class="content">`) — moved
+ * out to `accordion.css` (GH-61 Part 1), which gives it no fill at all: an
+ * accordion item's content is plain content, not a panel.
  *
  * The outer `.title` above this panel is NOT the shared grey `label/l`
  * caption every other block title in this file uses (table/code/open/
@@ -1702,8 +1646,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 
-.doc .exampleblock > .content,
-.doc details.result > .content {
+.doc .exampleblock > .content {
   background: var(--ids-color-bg-low);
   display: flex;
   flex-direction: column;
@@ -1712,24 +1655,8 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   padding: var(--ids-size-250);
 }
 
-.doc .exampleblock > .content > :first-child,
-.doc details > .content > :first-child {
+.doc .exampleblock > .content > :first-child {
   margin-top: 0;
-}
-
-/*
- * GH-15 follow-up: an OPEN collapsible's own content needs clear space
- * before whatever follows — without it, the block's own bottom edge sits
- * flush against the next paragraph/heading/details, unlike every other
- * top-level block in this file (`.doc .paragraph`, etc., all get the same
- * `--doc-space-block` gap from their own top margin instead). A closed
- * `<details>` never renders `.content` at all, so this only ever applies
- * to a block that is actually taking up visible space.
- */
-.doc details > .content {
-  margin-left: calc(20px + var(--ids-size-50));
-  margin-top: var(--doc-space-block);
-  margin-bottom: var(--doc-space-block);
 }
 
 /*

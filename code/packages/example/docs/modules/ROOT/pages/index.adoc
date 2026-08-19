@@ -124,7 +124,67 @@ It comes with best-in-class documentation and developer experience.
 https://github.com/InditexTech/weavejs-frontend/fork[Create a fork]
 ====
 
-== Get started
+== Frequently asked questions
 
-Start with the xref:main:index.adoc[framework overview], then follow the setup
-guide for the package you are integrating.
+Have more questions? Contact us and we'll respond as quickly as possible.
+
+[accordion,aria-label="Frequently asked questions"]
+--
+.What type of applications can I create with Weave.js?
+[%collapsible]
+====
+Weave.js is aimed at developers. It provides a framework with all the
+components, plugins, and tools to build custom whiteboards, canvas, and
+collaborative visual tools for your applications. It provides a set of
+nodes, actions, and plugins you can choose from and extend to your needs,
+so you can easily build the perfect whiteboard solution.
+
+Although we provide a default UI, you can customize it so the visual
+collaborative tool you build has the look & feel of your liking or matches
+your corporate identity.
+====
+
+.Can I use Weave.js in frontend frameworks other than React?
+[%collapsible]
+====
+Yes, you can use Weave.js with any UI framework, but we recommend using it
+with React.
+
+Weave.js is framework-agnostic at its core, meaning the rendering and
+collaboration logic can be integrated into different environments. However,
+we provide and maintain a React utility to make the integration with React
+more seamless.
+
+If you're using another framework (like Vue or Svelte), integration is
+possible, but may require additional setup or custom wrappers not provided
+by Weave.js documentation.
+====
+
+.Is Weave.js free to use and open source?
+[%collapsible]
+====
+Yes, Weave.js is free to use and open source. It is distributed under the
+Apache 2.0 License, which means you can use, modify, and distribute the
+software. When using Weave.js, remember to comply with the license: simply
+provide a copy of the License, include the required notices, and indicate
+any modifications you make to the Weave.js code.
+====
+
+.Can I use Weave.js in a commercial application?
+[%collapsible]
+====
+Yes, you can use Weave.js in a commercial application. The Apache 2.0
+License is a permissive license that allows its use in all types of
+applications.
+====
+
+.How do I request a feature for Weave.js?
+[%collapsible]
+====
+You can find us on https://github.com/InditexTech/weavejs-frontend[GitHub],
+where you can request new features, contribute with your own, find support,
+and open discussions that will help us improve our product further.
+
+If you like it, don't forget to give us a star ;-)
+====
+--

@@ -15,6 +15,7 @@ const registerSteps = require('./lib/steps')
 const registerCardGrid = require('./lib/card-grid')
 const registerFeatureTabs = require('./lib/feature-tabs')
 const registerCta = require('./lib/cta')
+const registerAccordion = require('./lib/accordion')
 
 function registerAll(target) {
   registerLabelMacro(target)
@@ -42,6 +43,11 @@ function registerAll(target) {
   // "Free & Open Source" block rather than a Figma frame; see its own header
   // for why it deviates from GH-23's original macro sketch.
   registerCta(target)
+  // [accordion] — GH-61 Part 2, grouping semantics (role=group, single-open)
+  // over a run of ordinary [%collapsible] blocks (Part 1's own restyle of
+  // those, in ui-bundle/src/css/accordion.css). An OPEN block, not an
+  // example block like every entry above it — see its own header for why.
+  registerAccordion(target)
 }
 
 /**

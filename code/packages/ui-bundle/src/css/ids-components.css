@@ -2227,3 +2227,97 @@
 .ids-tabs-item--solid {
   padding-inline: var(--ids-size-75)
 }
+
+/* @inditex/sewingiopdsweb-react-components/accordion/accordion.css */
+.ids-accordion {
+  display: block
+}
+.ids-accordion__toggle {
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--ids-color-content-default);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  min-height: var(--ids-size-250);
+  text-align: left;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  width: 100%
+}
+.ids-accordion__toggle:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: var(--ids-size-border-high)
+}
+.ids-accordion__toggle-content {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  gap: var(--ids-size-50);
+  justify-content: flex-end;
+  text-transform: none
+}
+.ids-accordion__toggle-detail {
+  color: var(--ids-color-content-low);
+  font: var(--ids-typo-detail-m);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
+  text-transform: var(--ids-typo-detail-m-text-transform)
+}
+.ids-accordion__toggle-icon {
+  margin-left: var(--ids-size-50)
+}
+.ids-accordion__toggle-icon path {
+  fill: var(--ids-color-content-default)
+}
+.ids-accordion__toggle-label {
+  font: var(--ids-typo-label-l);
+  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+  text-transform: var(--ids-typo-label-l-text-transform)
+}
+.ids-accordion__toggle-label--ellipsis {
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical
+}
+.ids-accordion__content-wrapper {
+  overflow: hidden
+}
+.ids-accordion__content {
+  padding-bottom: var(--ids-size-50)
+}
+.ids-accordion:not(.ids-accordion--expanded) .ids-accordion__content-wrapper {
+  display: none
+}
+.ids-accordion__divider {
+  border-bottom: var(--ids-size-border-high) solid var(--ids-color-border-low)
+}
+@media (hover:hover) {
+  .ids-accordion:hover>.ids-accordion__toggle>.ids-accordion__toggle-label {
+    color: var(--ids-color-content-states-hover)
+  }
+  .ids-accordion:hover>.ids-accordion__toggle>.ids-accordion__toggle-icon path {
+    fill: var(--ids-color-content-states-hover)
+  }
+}
+.ids-accordion--disabled .ids-accordion__toggle {
+  cursor: not-allowed
+}
+.ids-accordion--disabled>.ids-accordion__toggle>.ids-accordion__toggle-label {
+  color: var(--ids-color-content-states-disabled)
+}
+.ids-accordion--disabled>.ids-accordion__toggle>.ids-accordion__toggle-icon path {
+  fill: var(--ids-color-content-states-disabled)
+}
+.ids-accordion-toggle-icon {
+  transition: var(--ids-motion-micro-appear)
+}
+.ids-accordion-toggle-icon--expanded {
+  transform: rotate(180deg)
+}

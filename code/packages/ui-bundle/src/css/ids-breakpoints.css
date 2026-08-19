@@ -10,6 +10,7 @@
  */
 /* Project override: M starts at 1240px (not the DS package's own 1024px) — see BREAKPOINT_OVERRIDES in this script. */
 
+@custom-media --ids-breakpoints-xs (max-width: 512px);
 @custom-media --ids-breakpoints-s (min-width: 513px);
 @custom-media --ids-breakpoints-m (min-width: 1240px);
 @custom-media --ids-breakpoints-l (min-width: 1680px);

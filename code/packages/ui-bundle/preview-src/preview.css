@@ -254,3 +254,56 @@ body.icons-page .icons__toast {
 body.icons-page .icons__toast.is-visible {
   opacity: 1;
 }
+
+/* --------------------------------------------------------- search-dialog --- */
+
+body.search-dialog-page .search-dialog-preview {
+  margin: 0 auto;
+  max-width: calc(1400 / 18 * 1rem);
+  padding: 0 var(--ids-size-100, 16px) var(--ids-size-200, 32px);
+}
+
+body.search-dialog-page .search-dialog-preview__back {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  gap: var(--ids-size-25, 4px);
+  margin-bottom: var(--ids-size-150, 24px);
+  opacity: 0.75;
+  text-decoration: none;
+}
+
+body.search-dialog-page .search-dialog-preview__back:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+body.search-dialog-page .search-dialog-preview__grid {
+  display: grid;
+  gap: var(--ids-size-200, 32px);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media screen and (max-width: 900px) {
+  body.search-dialog-page .search-dialog-preview__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.search-dialog-page .search-dialog-preview__title {
+  margin-bottom: var(--ids-size-100, 16px);
+}
+
+/*
+ * `.search-dialog` (src/css/search-dialog.css) is deliberately NOT applied
+ * here — see this layout's own header comment for why a card reuses only
+ * `.ids-modal`/`.ids-modal__container`, not the full-viewport dialog shell.
+ * This just gives `.ids-modal`'s flex-centring rules somewhere sized to
+ * centre within.
+ */
+body.search-dialog-page .search-dialog-preview__panel {
+  background: var(--ids-color-bg-low, #f7f7f7);
+  height: 480px;
+  position: relative;
+}
+

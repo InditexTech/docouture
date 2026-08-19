@@ -1,0 +1,90 @@
+/*
+ * GH-66 — the search dialog shell (search-dialog.hbs). Two things live here:
+ *
+ * 1. Adapting `.ids-modal` (vendored via ids-components.yml) from the DS's
+ *    own React portal onto a native <dialog>. The DS renders `.ids-modal`
+ *    inside `#ids-modal-root`, a fixed, full-viewport, pointer-events:none
+ *    wrapper injected by the portal — we have no portal, so the <dialog>
+ *    itself takes that wrapper's job: reset every UA default box-model
+ *    property `<dialog>` ships (border, padding, background, max-width/
+ *    height, the browser's own centring margin) and take over its position/
+ *    sizing, then let `.ids-modal`'s own flex-centring rules (unmodified)
+ *    lay out `.ids-modal__container` exactly as they would inside the real
+ *    portal. `::backdrop` is suppressed — `.ids-overlay` (also vendored)
+ *    plays that role instead, matching the sketch in the issue.
+ *
+ * 2. Two deliberate deviations from the DS's own modal, both because a
+ *    search palette is not a generic dialog:
+ *
+ *    - `.ids-modal` centres its container vertically. Every command palette
+ *      (and Fumadocs' own `<SearchDialog />`, this feature's reference)
+ *      pins it high instead, because the result list grows downward — a
+ *      vertically centred panel makes the results jump as the reader types.
+ *      Overridden at `m` and up only: below that the DS's own `@media
+ *      (max-width:512px)` rule in modal.css already switches `.ids-modal` to
+ *      a bottom sheet (`align-items:flex-end`), which has no such problem.
+ *
+ *    - The second deviation — modal.css's hardcoded 1024px breakpoint
+ *      against this project's own 1240px `m` — belongs to GH-68 (S4), where
+ *      the fullscreen variant is introduced. Not addressed here.
+ */
+
+.search-dialog {
+  background: none;
+  border: none;
+  color: inherit;
+  height: 100%;
+  inset: 0;
+  margin: 0;
+  max-height: none;
+  max-width: none;
+  padding: 0;
+  width: 100%;
+  z-index: var(--z-index-search-dialog);
+}
+
+/*
+ * The DS's own `.ids-modal` (ids-components.css) sets `display: flex`
+ * unconditionally — it assumes its React portal only ever mounts that markup
+ * while open, so it never needed a closed state of its own. A native
+ * <dialog> instead relies on the UA stylesheet's `dialog:not([open]) {
+ * display: none }` — but that's a UA rule, and *any* author rule beats the
+ * UA sheet regardless of specificity, so `.ids-modal`'s authored
+ * `display: flex` was winning and rendering the dialog open on every page
+ * load. This restates the closed state as an author rule of our own so it
+ * can win back.
+ */
+.search-dialog:not([open]) {
+  display: none;
+}
+
+.search-dialog::backdrop {
+  display: none;
+}
+
+/* Deviation 1 (see file header): pinned high, not vertically centred, at m+. */
+@media screen and (--ids-breakpoints-m) {
+  .search-dialog {
+    align-items: flex-start;
+    padding-top: var(--ids-size-800);
+  }
+}
+
+.search-dialog__field {
+  flex-shrink: 0;
+}
+
+.search-dialog__close {
+  flex-shrink: 0;
+}
+
+.search-dialog__results:empty {
+  display: none;
+}
+
+.search-dialog__hints kbd {
+  background: var(--panel-background);
+  border-radius: 0;
+  font: var(--ids-typo-detail-m);
+  padding: 0 var(--ids-size-25);
+}

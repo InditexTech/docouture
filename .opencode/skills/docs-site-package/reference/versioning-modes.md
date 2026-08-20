@@ -351,12 +351,12 @@ where it already lived after #80/#81: in `pdocs-release.yml` itself.
 Deliberately not built as part of GH #80 — tracked here so a later issue picks up
 from a documented starting point rather than rediscovering the gaps:
 
-- **Mode selection is manual.** `pdocs new` doesn't ask which versioning mode a site wants,
-  or generate the matching `docs/antora.yml` + `antora-playbook.yml` shape. The intended
-  UX: prompt interactively when a `--versioning` flag isn't given, generate the right
-  shape for the chosen mode — `pdocs-release.yml` itself already handles either mode
-  without needing to know which was picked, since it detects that from
-  `docs/antora.yml` at release time.
+- **~~Mode selection is manual.~~ Done (GH #93).** `pdocs new` prompts interactively
+  (in a terminal, unless `--yes` is given) for name, title and versioning mode, and
+  scripting still works non-interactively via `--mode standalone|versioned`. It
+  scaffolds into `docs/` (and `.github/workflows/`) of an **existing** repository —
+  it no longer creates a fresh nested one or runs `git init`/commits anything itself;
+  it requires `docs/` (and each workflow filename) to not already exist.
 - **`pdocs doctor` does not exist.** Should check that a site's `.github/workflows/`
   contains `pdocs-publish.yml`, `pdocs-pr-verify.yml` and `pdocs-release.yml`, and that
   none has drifted from what the currently-installed `@inditextech/pdocs-cli` would

@@ -29,6 +29,14 @@ jobs:
     name: Build and publish
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # `pdocs new` scaffolds this site's package.json, antora-playbook.yml
+    # etc. under docs/ (not the repository root) — see the docs-site-package
+    # skill's reference/versioning-modes.md. Every step below runs from
+    # there; only .github/workflows itself has to live at the true repo
+    # root, since that is the one path GitHub Actions requires.
+    defaults:
+      run:
+        working-directory: docs
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,9 +49,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          # Reads engines.node from package.json — no separate version file
-          # to keep in sync in a standalone scaffolded repo.
-          node-version-file: package.json
+          # Reads engines.node from docs/package.json — no separate version
+          # file to keep in sync.
+          node-version-file: docs/package.json
           cache: npm
 
       - name: Install dependencies

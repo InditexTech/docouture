@@ -1,0 +1,14 @@
+# Component descriptor. Every directory Antora treats as documentation needs
+# one of these. See https://docs.antora.org/antora/latest/component-version/
+name: __PDOCS_NAME__
+title: __PDOCS_TITLE__
+# Mode 2 (Stable + Prerelease) versioning — see the pdocs docs-site-package
+# skill's reference/versioning-modes.md. `main` permanently says
+# `version: prerelease`, `prerelease: true`; only the rolling `stable` tag's
+# own copy of this file (cut by pdocs-release.yml on release) ever says
+# `version: stable`, `prerelease: false`. Until the first release this site
+# has just the one (prerelease) version — that is expected.
+version: prerelease
+prerelease: true
+nav:
+  - modules/ROOT/nav.adoc

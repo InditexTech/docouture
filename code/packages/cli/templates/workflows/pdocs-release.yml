@@ -75,6 +75,17 @@ jobs:
     name: Cut release
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # `pdocs new` scaffolds this site's package.json, antora-playbook.yml,
+    # docs/antora.yml etc. under docs/ (not the repository root) — see the
+    # docs-site-package skill's reference/versioning-modes.md. Every step
+    # below — including the git ones, so `docs/antora.yml` below really
+    # means the descriptor at docs/docs/antora.yml relative to the repo
+    # root — runs from there; only .github/workflows itself has to live at
+    # the true repo root, since that is the one path GitHub Actions
+    # requires.
+    defaults:
+      run:
+        working-directory: docs
     # workflow_dispatch always proceeds (it's already an explicit, deliberate
     # act). The pull_request trigger fires on every close of a PR targeting
     # main* — including ones that were closed unmerged, or merged without
@@ -113,9 +124,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          # Reads engines.node from package.json — no separate version file
-          # to keep in sync in a standalone scaffolded repo.
-          node-version-file: package.json
+          # Reads engines.node from docs/package.json — no separate version
+          # file to keep in sync.
+          node-version-file: docs/package.json
           cache: npm
 
       - name: Install dependencies

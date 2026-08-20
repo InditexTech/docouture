@@ -15,10 +15,21 @@ site:
 
 content:
   sources:
-    # `url: .` points Antora at the enclosing git repository, so `start_path`
-    # is resolved from the repository root.
-    - url: .
-      start_path: docs
+    # Antora resolves a local `url` relative to THIS FILE's own directory, not
+    # the build's cwd — and requires the resolved path to be a git worktree
+    # root itself, not merely nested inside one. This playbook lives at
+    # <repo-root>/docs/antora-playbook.yml, one level below the repository
+    # root `pdocs new` scaffolded into, so `url: ..` is what reaches it —
+    # `url: .` would point at this docs/ directory, which is not itself a
+    # git repository, and the build fails with "Local content source must be
+    # a git repository". (Only a playbook living AT the repository root can
+    # use `url: .` — see the docs-site-package skill.)
+    - url: ..
+      # Repository-root relative, hence `docs/docs`: the whole starter
+      # template — including its own nested `docs/` holding antora.yml — was
+      # copied under this repository's `docs/`, so the descriptor ends up at
+      # `docs/docs/antora.yml`.
+      start_path: docs/docs
       # HEAD means "whatever is checked out", so local edits are picked up
       # without committing them. Antora reads content from git, so the
       # repository needs at least one commit or the site builds with zero

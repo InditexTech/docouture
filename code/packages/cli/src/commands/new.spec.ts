@@ -105,6 +105,18 @@ describe('runNew', () => {
     const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as { name?: string }
     expect(pkg.name).toBe('my-project-docs')
 
+    // Antora resolves a local `url` relative to the PLAYBOOK FILE's own
+    // directory, not the build's cwd, and requires that resolved path to be
+    // a git worktree root itself — this playbook lives one level below the
+    // scaffolded repository's root, so `url: .` fails with "Local content
+    // source must be a git repository" the moment someone actually builds.
+    // `start_path` is then repo-root relative, and lands one level deeper
+    // than a bare `docs` because the whole starter subtree (itself holding
+    // a `docs/`) was copied under this repo's own `docs/`.
+    const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
+    expect(playbook).toContain('url: ..')
+    expect(playbook).toContain('start_path: docs/docs')
+
     // Workflows are peeled out to the true repo root — GitHub Actions never
     // discovers them nested under docs/.
     for (const workflow of ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-pr-verify.yml']) {
@@ -136,6 +148,8 @@ describe('runNew', () => {
     const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
     expect(playbook).toContain("tags: ['stable']")
     expect(playbook).toContain('branches: [main]')
+    expect(playbook).toContain('url: ..')
+    expect(playbook).toContain('start_path: docs/docs')
   })
 
   it('prompts for whatever was not supplied when run against an interactive io', async () => {

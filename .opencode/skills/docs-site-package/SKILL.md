@@ -1,6 +1,6 @@
 ---
 name: docs-site-package
-description: "How a documentation site package in pdocs (code/packages/example, code/packages/starter) is put together — the playbook, the component descriptor, the docs/ tree, the UI bundle link, and the Nx/pnpm wiring that makes `just dev` and `just build-site` work. USE WHEN creating a new site package, editing antora-playbook.yml or docs/antora.yml, changing a site's title, start page, output dir or content source, pointing a site at a different UI bundle, or debugging a site that builds with zero pages, a missing start page or a stale UI. EXAMPLES: 'add a new docs site', 'the site builds but has no pages', 'start page not found', 'my UI change doesn't show up in the site', 'point this site at a published bundle', 'why is the content path repo-root relative', 'just dev says port in use'."
+description: "How a documentation site package in pdocs (code/packages/example, code/packages/starter) is put together — the playbook, the component descriptor, the docs/ tree, the UI bundle link, and the Nx/pnpm wiring that makes `just dev` and `just build-site` work. USE WHEN creating a new site package, editing antora-playbook.yml or docs/antora.yml, changing a site's title, start page, output dir or content source, pointing a site at a different UI bundle, setting up multi-version docs (release tags, a stable/prerelease branch pair, the version dropdown, `urls.latest_version_segment`), or debugging a site that builds with zero pages, a missing start page or a stale UI. EXAMPLES: 'add a new docs site', 'the site builds but has no pages', 'start page not found', 'my UI change doesn't show up in the site', 'point this site at a published bundle', 'why is the content path repo-root relative', 'just dev says port in use', 'set up docs versioning', 'add a stable vs prerelease toggle', 'why does the version dropdown only show one entry'."
 ---
 
 # Documentation site packages
@@ -142,9 +142,21 @@ into HTML responses as they are served — nothing is written into the built sit
 Copy `starter`, rename in four places, install. Exact steps, including the Nx and
 `just dev` conventions the name has to satisfy: `reference/new-site.md`.
 
+## Versioning a site
+
+Neither site package is versioned yet — both build a single, unversioned component
+(`version: ~` in `docs/antora.yml`). When a site needs multiple published versions in the
+`page.versions` dropdown, there are two supported shapes for `content.sources[]` +
+`docs/antora.yml` together: **Mode 1 (Full History)** — a `next` branch plus every release
+tag kept forever — and **Mode 2 (Stable + Prerelease)** — a `main`/`stable` branch pair
+with no history kept. Full guidance, playbook examples and URL-routing notes
+(`urls.latest_version_segment`): `reference/versioning-modes.md`.
+
 ## Reference
 
 - `reference/playbook.md` — every playbook key that matters here, the ones deliberately
   unset, and how to retarget the UI bundle for a real deployment.
 - `reference/new-site.md` — creating a new site package, and extracting one into a
   repository of its own.
+- `reference/versioning-modes.md` — the two docs versioning modes (Mode 1: versioned tags,
+  Mode 2: stable + prerelease), with `antora.yml`/playbook examples for each.

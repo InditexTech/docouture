@@ -140,3 +140,7 @@ migration has to preserve existing links.
 | `html_extension_style` | `indexify` | `page/` (a directory with `index.html`). `default` → `page.html`, `drop` → `page` |
 | `redirect_facility` | `static` | how `page-aliases` are implemented: `static` HTML redirects, or `netlify`/`nginx` config |
 | `latest_version_segment` | unset | a fixed segment such as `latest` aliasing the current version |
+
+Neither site is versioned today (`docs/antora.yml` → `version: ~`, a single unnamed
+version). For `content.sources[].branches`/`tags` and `docs/antora.yml`'s `version`/
+`prerelease` across multiple refs, see `reference/versioning-modes.md`.

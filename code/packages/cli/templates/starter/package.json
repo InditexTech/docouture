@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "antora --fetch antora-playbook.yml",
+    "dev": "pdocs dev --dir ..",
     "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
   },
   "devDependencies": {

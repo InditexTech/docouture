@@ -19,10 +19,18 @@ site:
 
 content:
   sources:
-    # `url: .` points Antora at the enclosing git repository, so `start_path`
-    # is resolved from the repository root.
-    - url: .
-      start_path: docs
+    # Antora resolves a local `url` relative to THIS FILE's own directory, not
+    # the build's cwd — and requires the resolved path to be a git worktree
+    # root itself, not merely nested inside one. This playbook lives at
+    # <repo-root>/docs/antora-playbook.yml, one level below the repository
+    # root `pdocs new` scaffolded into, so `url: ..` is what reaches it — see
+    # the standalone playbook's own comment on this, and the
+    # docs-site-package skill.
+    - url: ..
+      # Repository-root relative, hence `docs/docs` — see the standalone
+      # playbook's comment: the starter template's own nested `docs/` lands
+      # one level below this repository's `docs/`.
+      start_path: docs/docs
       # Mode 2 (Stable + Prerelease): `main` aggregates as the prerelease
       # version — docs/antora.yml on this branch permanently says
       # `version: prerelease`, `prerelease: true`. `stable` is a rolling tag

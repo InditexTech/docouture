@@ -6,11 +6,19 @@ import { join } from 'node:path'
 export interface TemplateValues {
   name: string
   title: string
+  // The exact version of the CLI binary doing the scaffolding (read from its
+  // own package.json — see new.ts) — never a range. A scaffolded site's
+  // devDependency on @inditextech/pdocs-cli must match whatever actually
+  // generated it, snapshot/local-release versions (0.0.0-local.<sha>.<ts>)
+  // included, or npm install has nothing matching to resolve against on a
+  // registry that only ever published that one exact version.
+  cliVersion: string
 }
 
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   __PDOCS_NAME__: 'name',
   __PDOCS_TITLE__: 'title',
+  __PDOCS_CLI_VERSION__: 'cliVersion',
 }
 
 function substitute(text: string, values: TemplateValues): string {
@@ -21,12 +29,15 @@ function substitute(text: string, values: TemplateValues): string {
   return out
 }
 
-// A `.mode2.` marker in a template filename (e.g. `antora.mode2.yml` beside
-// `antora.yml`) is a versioning-mode override — see `writeTemplateFile`,
-// which reads one explicitly to overwrite its standalone counterpart when
-// `pdocs new --mode versioned` is used. It must never be copied under its
-// own literal name by the generic walk below, standalone or not.
-const MODE2_MARKER = '.mode2.'
+// A `.versioned` marker in a template filename (e.g.
+// `antora-playbook.versioned.yml` beside `antora-playbook.yml`, or
+// `release-version.versioned` for a file with no natural extension to hang a
+// mid-name marker off) is a versioning-mode override — see
+// `writeTemplateFile`, which reads one explicitly to lay a versioned-mode
+// file down under its real name when `pdocs new --mode versioned` is used.
+// It must never be copied under its own literal name by the generic walk
+// below, standalone or not.
+const VERSIONED_MARKER = '.versioned'
 
 // Copies every file under `srcDir` into `destDir`, substituting placeholder
 // tokens in each one. Every template file here is plain text (YAML, AsciiDoc,
@@ -39,7 +50,7 @@ export async function copyTemplate(srcDir: string, destDir: string, values: Temp
   await mkdir(destDir, { recursive: true })
 
   for (const entry of entries) {
-    if (entry.name.includes(MODE2_MARKER)) continue
+    if (entry.name.includes(VERSIONED_MARKER)) continue
 
     const from = join(srcDir, entry.name)
     const to = join(destDir, entry.name)
@@ -54,10 +65,13 @@ export async function copyTemplate(srcDir: string, destDir: string, values: Temp
 }
 
 // Overwrites a single already-copied file with a versioning-mode override —
-// used for `docs/antora.yml` and `antora-playbook.yml`, whose Mode 2 shape
-// (see reference/versioning-modes.md) differs from the standalone default
-// copyTemplate above lays down. Same placeholder substitution, just for one
-// file instead of a whole tree.
+// used for `antora-playbook.yml` and `docs/.release-version`, whose
+// versioned-mode shape (see reference/versioning-modes.md) differs from the
+// standalone default copyTemplate above lays down (or, for
+// `.release-version`, does not lay down at all). `docs/antora.yml` is NOT
+// overridden this way — it is identical for both modes (see
+// templates/starter/docs/antora.yml's own comment). Same placeholder
+// substitution, just for one file instead of a whole tree.
 export async function writeTemplateFile(srcFile: string, destFile: string, values: TemplateValues): Promise<void> {
   const content = await readFile(srcFile, 'utf8')
   await writeFile(destFile, substitute(content, values), 'utf8')

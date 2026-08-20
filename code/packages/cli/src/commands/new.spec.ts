@@ -88,7 +88,7 @@ describe('runNew', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing workflow'))
   })
 
-  it('scaffolds docs/ (standalone by default) and .github/workflows/ into an existing repo', async () => {
+  it('scaffolds docs/ (standalone by default, Stable + Prerelease) and .github/workflows/ into an existing repo', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
@@ -100,7 +100,8 @@ describe('runNew', () => {
     const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('name: my-project-docs')
     expect(antoraYml).toContain('title: My Project Docs')
-    expect(antoraYml).toContain('version: ~')
+    expect(antoraYml).toContain('version: prerelease')
+    expect(antoraYml).toContain('prerelease: true')
 
     const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as { name?: string }
     expect(pkg.name).toBe('my-project-docs')
@@ -116,6 +117,8 @@ describe('runNew', () => {
     const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
     expect(playbook).toContain('url: ..')
     expect(playbook).toContain('start_path: docs/docs')
+    expect(playbook).toContain('branches: [main]')
+    expect(playbook).toContain("tags: ['stable']")
 
     // Workflows are peeled out to the true repo root — GitHub Actions never
     // discovers them nested under docs/.
@@ -134,47 +137,92 @@ describe('runNew', () => {
     expect(antoraYml).toContain('title: My Project Docs')
   })
 
-  it('scaffolds Mode 2 (versioned) shape with --mode versioned', async () => {
+  it('scaffolds versioned (Full History) shape with --mode versioned', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
     const code = await runNew(['my-project-docs', '--dir', repo, '--mode', 'versioned'])
     expect(code).toBe(0)
 
+    // docs/antora.yml is identical for both modes — only antora-playbook.yml
+    // and .release-version differ.
     const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('version: prerelease')
     expect(antoraYml).toContain('prerelease: true')
 
+    const releaseVersion = await readFile(join(repo, 'docs', 'docs', '.release-version'), 'utf8')
+    expect(releaseVersion.trim()).toMatch(/^\d+\.\d+\.\d+$/)
+
     const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
-    expect(playbook).toContain("tags: ['stable']")
+    expect(playbook).toContain("tags: ['v*']")
     expect(playbook).toContain('branches: [main]')
     expect(playbook).toContain('url: ..')
     expect(playbook).toContain('start_path: docs/docs')
+  })
+
+  it('pins @inditextech/pdocs-cli and antora to exact versions in the scaffolded package.json', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo])
+    expect(code).toBe(0)
+
+    const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
+      devDependencies?: Record<string, string>
+    }
+    // Exact pins, never a range — see the CLI's own package.json for the
+    // version this must match: a snapshot/local-release build's version
+    // (0.0.0-local.<sha>.<ts>) has to resolve on install exactly as
+    // published, which a ^/~ range around a different number never does.
+    expect(pkg.devDependencies?.['@inditextech/pdocs-cli']).not.toMatch(/[\^~]/)
+    expect(pkg.devDependencies?.antora).toBe('3.1.15')
   })
 
   it('prompts for whatever was not supplied when run against an interactive io', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
-    // A PassThrough fed one line at a time, with a tick between writes —
-    // readline's own `close` fires as soon as its input stream ends, which
-    // would fire immediately (before the sequential question() calls below
-    // have all run) if every answer were written and the stream ended in
-    // one synchronous burst. Never calling .end() sidesteps that: promptWizard
-    // closes the readline interface itself once done (see its `finally`).
+    // @inquirer/prompts renders each prompt asynchronously (several
+    // microtask/setImmediate hops deep inside its own promise chain) before
+    // it starts reading keystrokes — writing answers on a fixed tick schedule
+    // races that and silently drops keystrokes typed before the next
+    // prompt's listener has attached. Waiting for each prompt's own message
+    // to actually appear in the output stream before typing its answer is
+    // the reliable equivalent of a person watching the terminal before
+    // typing.
     const input = new PassThrough()
     const output = new PassThrough()
-    output.resume() // drain the prompts so the stream never backs up
+    let rendered = ''
+    output.on('data', (chunk: Buffer) => {
+      rendered += chunk.toString('utf8')
+    })
+
+    function waitForPrompt(text: string): Promise<void> {
+      return new Promise((resolve, reject) => {
+        const start = Date.now()
+        const check = (): void => {
+          if (rendered.includes(text)) {
+            resolve()
+            return
+          }
+          if (Date.now() - start > 4000) {
+            reject(new Error(`timed out waiting for prompt '${text}' — rendered so far: ${rendered}`))
+            return
+          }
+          setTimeout(check, 5)
+        }
+        check()
+      })
+    }
 
     const resultPromise = runNew(['--dir', repo], { input, output, isTTY: true })
 
-    const tick = () => new Promise((r) => setImmediate(r))
-    await tick()
+    await waitForPrompt('Site / component name')
     input.write('my-wizard-docs\n')
-    await tick()
+    await waitForPrompt('Site title')
     input.write('\n') // Enter — accept the default title
-    await tick()
-    input.write('2\n') // Versioned mode
+    await waitForPrompt('Versioning mode')
+    input.write('2\n') // Versioned mode (second choice)
 
     const code = await resultPromise
     input.end()
@@ -184,6 +232,9 @@ describe('runNew', () => {
     expect(antoraYml).toContain('name: my-wizard-docs')
     expect(antoraYml).toContain('title: My Wizard Docs')
     expect(antoraYml).toContain('version: prerelease')
+
+    const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
+    expect(playbook).toContain("tags: ['v*']")
   })
 
   it('--yes skips the wizard even against an interactive io, using defaults', async () => {
@@ -199,6 +250,6 @@ describe('runNew', () => {
 
     const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('name: my-project-docs')
-    expect(antoraYml).toContain('version: ~')
+    expect(antoraYml).toContain('version: prerelease')
   })
 })

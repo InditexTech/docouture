@@ -141,6 +141,6 @@ migration has to preserve existing links.
 | `redirect_facility` | `static` | how `page-aliases` are implemented: `static` HTML redirects, or `netlify`/`nginx` config |
 | `latest_version_segment` | unset | a fixed segment such as `latest` aliasing the current version |
 
-`example` is versioned under Mode 2 (Stable + Prerelease) — `content.sources[].branches`/
+`example` is versioned under standalone mode (Stable + Prerelease) — `content.sources[].branches`/
 `tags` and `docs/antora.yml`'s `version`/`prerelease` across multiple refs are covered in
-`reference/versioning-modes.md`, along with Mode 1 (versioned tags), guidance-only so far.
+`reference/versioning-modes.md`, along with versioned mode (full history via release tags), guidance-only so far.

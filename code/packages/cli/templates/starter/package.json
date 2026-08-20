@@ -12,7 +12,7 @@
     "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
   },
   "devDependencies": {
-    "@inditextech/pdocs-cli": "^0.1.0",
-    "antora": "~3.1.15"
+    "@inditextech/pdocs-cli": "__PDOCS_CLI_VERSION__",
+    "antora": "3.1.15"
   }
 }

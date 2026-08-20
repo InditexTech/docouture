@@ -9,11 +9,12 @@ name: pdocs-publish
 # anything in this workflow. See the docs-site-package skill's
 # versioning-modes.md, "Follow-up work", for the state of that mechanism.
 #
-# Triggers on both refs either Mode 1 or Mode 2 (see versioning-modes.md) can
-# produce — `tags: ['stable']` (Mode 2's rolling tag) and `tags: ['v*']`
-# (Mode 1's release tags) are both listed unconditionally: a mode that
-# doesn't use one of them just never creates a matching ref, so the trigger
-# is harmless dead weight rather than something that needs picking per mode.
+# Triggers on both refs either versioned or standalone mode (see
+# versioning-modes.md) can produce — `tags: ['stable']` (standalone's
+# rolling tag) and `tags: ['v*']` (versioned's release tags) are both listed
+# unconditionally: a mode that doesn't use one of them just never creates a
+# matching ref, so the trigger is harmless dead weight rather than something
+# that needs picking per mode.
 on:
   push:
     branches: [main]

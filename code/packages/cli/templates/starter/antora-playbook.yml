@@ -5,6 +5,10 @@
 # Build with:  npx antora --fetch antora-playbook.yml
 # Output:      build/site
 #
+# Standalone (default) versioning — see the pdocs docs-site-package skill's
+# reference/versioning-modes.md for the full mechanism this playbook and
+# docs/antora.yml together implement.
+#
 
 site:
   title: __PDOCS_TITLE__
@@ -30,12 +34,15 @@ content:
       # copied under this repository's `docs/`, so the descriptor ends up at
       # `docs/docs/antora.yml`.
       start_path: docs/docs
-      # HEAD means "whatever is checked out", so local edits are picked up
-      # without committing them. Antora reads content from git, so the
-      # repository needs at least one commit or the site builds with zero
-      # pages — `pdocs new` only scaffolds into an existing git repository,
-      # so make sure it has at least one commit before building.
-      branches: HEAD
+      # Standalone: `main` aggregates as the prerelease version —
+      # docs/antora.yml on this branch permanently says `version: prerelease`,
+      # `prerelease: true`. `stable` is a rolling tag that pdocs-release.yml
+      # force-moves to a fresh one-off commit on every release, not a second
+      # long-lived branch. Until the first release, `stable` does not exist
+      # yet and this site builds with just the one (prerelease) version —
+      # that is expected, not an error.
+      branches: [main]
+      tags: ['stable']
 
 ui:
   bundle:

@@ -31,7 +31,7 @@ Then rename in four places. They are the values that have to agree; see the tabl
    and `content.sources[0].start_path: code/packages/mysite/docs`.
 4. The playbook's header comment, which names the build command.
 
-`example` is currently versioned under Mode 2 (`content.sources[].branches`/`tags`,
+`example` is currently versioned under standalone mode (`content.sources[].branches`/`tags`,
 `docs/antora.yml`'s `version`/`prerelease`) — decide whether the new site wants that too,
 or should collapse back to a single unversioned component (`version: ~`,
 `branches: HEAD`, no `tags:`); see `reference/versioning-modes.md`.

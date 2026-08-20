@@ -5,7 +5,7 @@
 # Build with:  npx antora --fetch antora-playbook.yml
 # Output:      build/site
 #
-# Mode 2 (Stable + Prerelease) versioning — see the pdocs docs-site-package
+# Versioned (Full History) versioning — see the pdocs docs-site-package
 # skill's reference/versioning-modes.md for the full mechanism this playbook
 # and docs/antora.yml together implement.
 #
@@ -31,15 +31,16 @@ content:
       # playbook's comment: the starter template's own nested `docs/` lands
       # one level below this repository's `docs/`.
       start_path: docs/docs
-      # Mode 2 (Stable + Prerelease): `main` aggregates as the prerelease
-      # version — docs/antora.yml on this branch permanently says
-      # `version: prerelease`, `prerelease: true`. `stable` is a rolling tag
-      # that pdocs-release.yml force-moves to a fresh one-off commit on every
-      # release, not a second long-lived branch. Until the first release,
-      # `stable` does not exist yet and this site builds with just the one
-      # (prerelease) version — that is expected, not an error.
+      # Versioned (Full History): `main` aggregates as the prerelease
+      # version — docs/antora.yml on this branch says `version: prerelease`,
+      # `prerelease: true`, the same as the standalone mode's shape (this
+      # descriptor is identical for both modes on main — see docs/antora.yml's
+      # own comment). `tags: ['v*']` matches every release tag (v1.2.0,
+      # v2.0.0, ...) pdocs-release.yml cuts, each an immutable version with
+      # its own copy of docs/antora.yml — the version dropdown grows by one
+      # every release and nothing here ever needs editing again.
       branches: [main]
-      tags: ['stable']
+      tags: ['v*']
 
 ui:
   bundle:

@@ -16,8 +16,8 @@ export async function runDev(argv: string[]): Promise<number> {
   const target = await findRepoRoot(startDir)
   const siteRoot = join(target, 'docs')
 
-  if (!(await exists(join(siteRoot, 'antora-playbook.yml')))) {
-    console.error(`no antora-playbook.yml found at '${siteRoot}'`)
+  if (!(await exists(join(siteRoot, 'antora-playbook.local.yml')))) {
+    console.error(`no antora-playbook.local.yml found at '${siteRoot}'`)
     console.error('pass --dir <path> to a component root (the parent of docs/), or run pdocs new first')
     return 1
   }

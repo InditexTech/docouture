@@ -1,0 +1,112 @@
+name: pdocs-release
+
+# THIS IS THE MODE 2 (STABLE + PRERELEASE) VARIANT — see the pdocs
+# docs-site-package skill's versioning-modes.md for the full mechanism this
+# implements, and for Mode 1 (Full History / versioned tags), which needs a
+# differently-shaped release step (a new immutable tag + version entry per
+# release, not a moved rolling tag) and does not use this file as-is.
+#
+# Cuts (or moves) the `stable` docs release under Mode 2. Which mode a site
+# actually uses, and therefore which of the two variants it should have, is
+# presently a manual choice — copy in the right file. Making `pdocs new`
+# (or a dedicated command) prompt for a versioning mode and generate the
+# matching variant automatically is documented follow-up work, not yet built:
+# see versioning-modes.md's "Follow-up work" section.
+#
+# Prerequisite, done once, not by this workflow: this site's own
+# antora-playbook.yml content.sources[] must already match
+# `branches: [main]` + `tags: ['stable']` (not the default `branches: HEAD`),
+# and docs/antora.yml on `main` must permanently say
+# `version: prerelease` / `prerelease: true`. Until both of those are true,
+# running this workflow moves a tag nothing aggregates from.
+#
+# Manual only — cutting a release is a deliberate act, not a side effect of
+# a push.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pdocs-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Cut stable
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Require main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::pdocs-release must run against main (got ${{ github.ref }})"
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history: the `stable` tag already exists somewhere in it and
+          # has to stay reachable so it can be force-moved, not re-created.
+          fetch-depth: 0
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          # Reads engines.node from package.json — no separate version file
+          # to keep in sync in a standalone scaffolded repo.
+          node-version-file: package.json
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # `main`'s own docs/antora.yml is never touched here — it permanently
+      # says version: prerelease, prerelease: true. This step patches a
+      # COMMIT, not main itself: `pdocs version stable` edits the working
+      # tree, that edit is committed on top of main's current tip, and then
+      # main is reset back to that same tip immediately after — so the
+      # commit's only route into the repository's reachable history is
+      # whatever ref points at it next (the `stable` tag, below). It is
+      # deliberately never pushed as part of `main`.
+      - name: Cut stable
+        id: cut
+        run: |
+          base=$(git rev-parse HEAD)
+
+          npx pdocs version stable
+          git add docs/antora.yml
+          git commit -m "chore: docs stable snapshot"
+          sha=$(git rev-parse HEAD)
+
+          # Detach main back to its real tip. The commit just made keeps
+          # existing (git doesn't garbage-collect same-run objects), it's
+          # just no longer what any local branch points at.
+          git reset --hard "$base"
+
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+
+      # A force-push of the tag: `stable` moves to point at the fresh
+      # snapshot commit above, dropping whatever it pointed to before. That
+      # previous commit becomes unreachable and is garbage-collected on the
+      # remote in its own time — expected for a rolling tag, not a leak.
+      - name: Move stable tag
+        run: |
+          git tag -f stable '${{ steps.cut.outputs.sha }}'
+          git push origin refs/tags/stable --force
+
+      # Deliberately no GitHub Release object: `stable` is a rolling pointer
+      # with no changelog value of its own, and Mode 2 keeps no version
+      # history to attach one to (see versioning-modes.md).
+      #
+      # Rebuild/deploy is not triggered from here — pdocs-publish.yml (see
+      # the sibling workflow of that name) triggers on `push: tags: ['stable']`
+      # on its own, so the `git push` above is what kicks off the rebuild,
+      # not an explicit step in this file.

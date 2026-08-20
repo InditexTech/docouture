@@ -1,7 +1,8 @@
 # Docs versioning: Mode 1 (Full History) vs Mode 2 (Stable + Prerelease)
 
-Part of the docs release epic (GH #78). This is guidance only — neither mode is wired up
-in `example` or `starter` yet; that is GH #81 (Mode 1) and GH #80 (Mode 2).
+Part of the docs release epic (GH #78). Mode 2 is wired up and verified on `example`
+(GH #80) — its `docs/antora.yml` and `antora-playbook.yml` show the real, live shape;
+Mode 1 is still guidance only, not yet wired up anywhere (GH #81).
 
 Antora aggregates a component's content from every git ref a content source matches
 (`branches`, `tags`) and stacks the results into one version selector
@@ -74,11 +75,12 @@ Cutting a release under this mode is: tag the commit, bump `docs/antora.yml`'s `
 and flip `prerelease` to `false` on that tag (or have the release process do it as part of
 tagging), rebuild. `main` never needs touching for a release to appear.
 
-## Mode 2 — Stable + Prerelease (Dual-branch)
+## Mode 2 — Stable + Prerelease (Dual-branch or rolling tag)
 
-`main` is the prerelease/preview/work-in-progress docs; a separate `stable` branch (or a
-rolling `stable` tag, moved on each release rather than re-created) holds whatever was
-last published. The selector offers exactly two entries — Stable and Prerelease — never a
+`main` is the prerelease/preview/work-in-progress docs; a second ref holds whatever was
+last published. That second ref can be either a `stable` branch or — what `example`
+actually uses (GH #80) — a rolling `stable` **tag**, force-moved on each release rather
+than re-created. The selector offers exactly two entries — Stable and Prerelease — never a
 long historical list. Appropriate for a product where only "what's out now" and "what's
 coming" matter to a reader, and where a long tag history would be noise.
 
@@ -112,19 +114,38 @@ content:
   sources:
     - url: https://github.com/example/weavejs
       start_path: docs
-      branches: [main, stable]
+      branches: [main]
+      tags: ['stable']
 ```
 
-Two branches, no `tags:` key at all — this mode has nothing to aggregate from tags, so
-leaving that key out (rather than pointing it at a glob that matches nothing) is the
-signal that history is deliberately not being kept.
+One branch and one pinned tag name (not a glob) — this mode has nothing else to
+aggregate from tags, so `tags: ['stable']` matching exactly one literal name is the
+signal that history is deliberately not being kept. (The branch-pair variant — `branches:
+[main, stable]`, no `tags:` key at all — is equivalent in effect; which one a site uses is
+just a question of whether "stable" is a moving branch tip or a moving tag, both driven
+by the same release step.)
 
-Cutting a release under this mode is: fast-forward (or force-push) `stable` to whatever
-commit on `main` is being released. `docs/antora.yml` does not need editing across that
-merge — `stable`'s own copy already says `version: stable`, `prerelease: false`, and stays
-that way; only the content changes. This is the operational difference from Mode 1: there
-"release" means create a new immutable ref (a tag) and a new version *entry*; here it
-means move an existing ref's tip and keep the same two version entries.
+Cutting a release under this mode is: force-move whichever ref (`stable` branch tip, or
+`stable` tag) is being used to whatever commit on `main` is being released, so its own
+`docs/antora.yml` copy at that point says `version: stable`, `prerelease: false`. A site
+scaffolded by `pdocs new` gets a **pdocs-release.yml** workflow for exactly this
+(`.github/workflows/pdocs-release.yml`; the tag variant, matching what `example` is
+*configured* for — `example` itself is a testbed and is never actually released, so
+nothing in the pdocs monorepo's own CI ever runs this): it patches `docs/antora.yml` via
+the `pdocs version` CLI command on a one-off commit built on top of `main`'s current tip,
+then force-moves the `stable` tag to that commit — `main` itself is never advanced or
+touched by the release step; its own `docs/antora.yml` permanently says `version:
+prerelease`, `prerelease: true` from the moment a site opts into Mode 2. This is the
+operational difference from Mode 1: there "release" means create a new immutable ref (a
+tag) and a new version *entry*; here it means move an existing ref's tip (or a tag) and
+keep the same two version entries.
+
+Moving `stable` does trigger a rebuild: the sibling **pdocs-publish.yml** workflow
+(`.github/workflows/pdocs-publish.yml`, also templated by `pdocs new`) triggers on
+`push: tags: ['stable']` (and `branches: [main]`, and Mode 1's `tags: ['v*']`), builds the
+site fresh — Antora re-aggregates every ref `content.sources[]` matches, not just the one
+that changed — and hands off to the CLI to publish it. See "Follow-up work" below for what
+that hand-off does not yet do.
 
 ## URL routing
 
@@ -181,12 +202,38 @@ controlled entirely from `docs/antora.yml`:
 | Version count in selector | grows with every release tag | fixed at two |
 | Cutting a release | new tag + its own `antora.yml` | move `stable`'s ref; `antora.yml` unchanged |
 | Old docs after a release | still served, unchanged, forever | overwritten — no history kept |
-| Playbook `content.sources[]` | `branches: [main]` + `tags: ['v*']` | `branches: [main, stable]`, no `tags:` |
+| Playbook `content.sources[]` | `branches: [main]` + `tags: ['v*']` | `branches: [main]` + `tags: ['stable']` (or `branches: [main, stable]`) |
 
 Both are legitimate; the epic (GH #78) treats them as two supported flows, not a
-recommendation of one over the other. GH #81 verifies Mode 1 and GH #80 verifies Mode 2
-against the `example` site; GH #82 covers whether a CLI should orchestrate any of the
-git/tag mechanics described above rather than leaving them as manual steps.
+recommendation of one over the other. GH #81 verifies Mode 1; GH #80 has wired Mode 2's
+config shape into `example` (never itself cut/released — a testbed only) and shipped the
+`pdocs-release.yml` / `pdocs-publish.yml` workflow templates a real site scaffolded by
+`pdocs new` would actually run.
+
+## Follow-up work
+
+Deliberately not built as part of GH #80 — tracked here so a later issue (or #82) picks up
+from a documented starting point rather than rediscovering the gaps:
+
+- **Mode selection is manual.** `pdocs new` doesn't ask which versioning mode a site wants,
+  or generate the matching config + `pdocs-release.yml` variant. The intended UX: prompt
+  interactively when a `--versioning` flag isn't given, generate the right
+  `docs/antora.yml` + `antora-playbook.yml` shape and the matching `pdocs-release.yml`
+  (Mode 1's variant does not exist yet — the current file is Mode 2 only).
+- **`pdocs doctor` does not exist.** Should check that a site's `.github/workflows/`
+  contains both `pdocs-release.yml` and `pdocs-publish.yml`, and that neither has drifted
+  from what the currently-installed `@inditextech/pdocs-cli` would generate — the same
+  regenerate-in-memory-and-diff idiom this monorepo's own `just ids-check` already uses,
+  rather than a version-marker comment (which drifts from reality the moment a template
+  changes without a version bump, or someone hand-edits the file).
+- **`pdocs publish` does not exist.** `pdocs-publish.yml` already calls `npx pdocs publish`
+  after building, but the command itself, and the pluggable "publish-target
+  antora-extension" mechanism it's meant to dispatch to (GitHub Pages, S3, Azure Static Web
+  Apps, Netlify, ...), are both undesigned. Until it exists, `pdocs-publish.yml` is
+  build-only in effect.
+- **No refresh path for an existing site.** `pdocs new` only scaffolds empty directories.
+  Once `doctor` can detect workflow drift, something needs to be able to fix it in a repo
+  that already exists — a `pdocs sync` / `pdocs workflows update` command, not yet designed.
 
 ## Upstream reference
 

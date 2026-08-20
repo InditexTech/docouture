@@ -52,13 +52,24 @@ content:
     #
     #   - url: .
     #     start_path: docs
-    #     branches: HEAD
+    #     branches: [main]
+    #     tags: ['stable']
     #
+    # GH-80: Mode 2 (Stable + Prerelease) — see versioning-modes.md. `main`
+    # aggregates as the prerelease version (docs/antora.yml there permanently
+    # says version: prerelease, prerelease: true); `tags: ['stable']` is a
+    # single pinned tag name, not a glob — a rolling tag that pdocs-release.yml
+    # force-moves to a fresh one-off commit on every release, rather than a
+    # second long-lived branch. Its own docs/antora.yml (at whatever commit the
+    # tag currently points to) says version: stable, prerelease: false.
+    #
+    # Switching to explicit ref names instead of HEAD means uncommitted local
+    # edits under docs/ are no longer picked up automatically — see this
+    # package's own SKILL.md ("Versions move in lockstep") for that trade-off.
     - url: ../../..
       start_path: code/packages/example/docs
-      # HEAD means "whatever is checked out", so local edits are picked up
-      # without committing them.
-      branches: HEAD
+      branches: [main]
+      tags: ['stable']
 
 ui:
   bundle:

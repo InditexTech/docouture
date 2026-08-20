@@ -12,7 +12,8 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@inditextech/pdocs-asciidoc-extensions": "workspace:*",

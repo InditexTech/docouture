@@ -82,6 +82,21 @@ nav_modules:
     icon: business/file-outlined
 # --- end generated
 
+# llms.txt / llms-full.txt generation (GH-95), read by
+# @inditextech/pdocs-antora-extensions. `summary` becomes the blockquote
+# under the site title in the generated `llms.txt`. `exclude` is a list of
+# page IDs — the same strings `xref:...[]` accepts — left out of both
+# generated files; useful for a page that exists only for internal review
+# and shouldn't be handed to an LLM crawler. Same reasoning as `nav_modules`
+# and `footer` above for why this lives here rather than in the playbook.
+llms:
+  summary: >-
+    Weave.js is a visual collaborative apps framework: a headless,
+    store-agnostic SDK plus React helpers for building real-time
+    collaborative canvases.
+  # exclude:
+  #   - main:some-internal-page.adoc
+
 # Site footer link groups (ui-bundle GH issue #18), read by
 # @inditextech/pdocs-antora-extensions and attached to this component version
 # as `footer`. Authored here rather than in the playbook because `site.keys`

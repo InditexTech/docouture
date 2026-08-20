@@ -213,3 +213,15 @@ jobs:
           # exists on npmjs.com and its trusted-publisher config points at
           # this workflow, drop NODE_AUTH_TOKEN and OIDC takes over on its own.
           npm publish --access public
+
+      # GH-80: pdocs-release.yml (the template shipped to sites scaffolded by
+      # `pdocs new`) shells out to `npx pdocs version` to cut a Mode 2 `stable`
+      # tag — that only resolves once this package is a real, published npm
+      # package rather than `private: true`. Same publish rationale as
+      # ui-bundle above.
+      - name: Publish cli
+        working-directory: code/packages/cli
+        env:
+          NPM_CONFIG_PROVENANCE: "true"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

@@ -1,0 +1,61 @@
+name: pdocs-publish
+
+# Builds — and, once `pdocs publish` exists, deploys — this site. Deliberately
+# platform-agnostic: this file only does generic build mechanics (checkout,
+# install, `antora build`) and then hands off to the CLI. Where the built
+# site actually goes — GitHub Pages, S3, Azure Static Web Apps, Netlify, a
+# plain artifact upload, ... — is decided by whichever pdocs publish-target
+# antora-extension(s) this site's own antora-playbook.yml declares, not by
+# anything in this workflow. See the docs-site-package skill's
+# versioning-modes.md, "Follow-up work", for the state of that mechanism.
+#
+# Triggers on both refs either Mode 1 or Mode 2 (see versioning-modes.md) can
+# produce — `tags: ['stable']` (Mode 2's rolling tag) and `tags: ['v*']`
+# (Mode 1's release tags) are both listed unconditionally: a mode that
+# doesn't use one of them just never creates a matching ref, so the trigger
+# is harmless dead weight rather than something that needs picking per mode.
+on:
+  push:
+    branches: [main]
+    tags: ['stable', 'v*']
+  workflow_dispatch: {}
+
+concurrency:
+  group: pdocs-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Antora aggregates every ref content.sources[] matches into one
+          # build, not just whichever ref triggered this run — a shallow,
+          # single-branch checkout would leave the others unreachable.
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          # Reads engines.node from package.json — no separate version file
+          # to keep in sync in a standalone scaffolded repo.
+          node-version-file: package.json
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # NOT YET IMPLEMENTED: `pdocs publish` does not exist yet — see
+      # versioning-modes.md's "Follow-up work" section. Until it does, this
+      # step has nothing to call and this workflow is build-only in effect;
+      # drop it and upload `build/site` as an artifact yourself (or wire your
+      # own deploy step) in the meantime.
+      - name: Publish
+        run: npx pdocs publish

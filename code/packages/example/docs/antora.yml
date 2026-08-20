@@ -4,7 +4,13 @@
 # file sits in, which Antora never puts in a URL.
 name: weavejs
 title: Weave.js
-version: ~
+# Mode 2 (Stable + Prerelease) — GH-80. `main` is permanently the prerelease
+# channel: this file never toggles back and forth, only the rolling `stable`
+# tag's own one-off copy of this same file (cut by pdocs-release.yml, see
+# templates/starter/.github/workflows/pdocs-release.yml) says version: stable,
+# prerelease: false. See versioning-modes.md for the full mechanism.
+version: prerelease
+prerelease: true
 # The site's landing page (GH-18): `modules/ROOT/pages/index.adoc`, rendered
 # through the UI bundle's `home` layout. A ROOT module index is what Antora
 # treats as a component's start page by default, but naming it here is what

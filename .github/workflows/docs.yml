@@ -20,6 +20,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # GH-80: content.sources[] now matches `tags: ['stable']` in
+          # addition to `branches: [main]` (Mode 2) — the default shallow,
+          # single-branch checkout would leave that tag unreachable when
+          # Antora aggregates from this same local clone.
+          fetch-depth: 0
 
       # Same rationale as pr-verify.yml and release.yml: `ivm-node` / `ivm-pnpm`
       # are asdf plugin names that only resolve on Inditex-provisioned machines.

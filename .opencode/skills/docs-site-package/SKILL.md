@@ -144,13 +144,15 @@ Copy `starter`, rename in four places, install. Exact steps, including the Nx an
 
 ## Versioning a site
 
-Neither site package is versioned yet — both build a single, unversioned component
-(`version: ~` in `docs/antora.yml`). When a site needs multiple published versions in the
-`page.versions` dropdown, there are two supported shapes for `content.sources[]` +
-`docs/antora.yml` together: **Mode 1 (Full History)** — a `next` branch plus every release
-tag kept forever — and **Mode 2 (Stable + Prerelease)** — a `main`/`stable` branch pair
-with no history kept. Full guidance, playbook examples and URL-routing notes
-(`urls.latest_version_segment`): `reference/versioning-modes.md`.
+`starter` still builds a single, unversioned component (`version: ~` in
+`docs/antora.yml`). `example` is versioned under **Mode 2 (Stable + Prerelease)**
+(GH #80): `main` permanently aggregates as the `prerelease` version, and a rolling
+`stable` tag — force-moved to a fresh commit on each release by the
+`pdocs-release.yml` workflow template (`.github/workflows/pdocs-release.yml` in a site
+scaffolded by `pdocs new`) — aggregates as the `stable` version. The other supported
+shape, **Mode 1 (Full History)** — a `next` branch plus every release tag kept forever —
+is not wired up anywhere yet (GH #81). Full guidance, playbook examples and URL-routing
+notes (`urls.latest_version_segment`): `reference/versioning-modes.md`.
 
 ## Reference
 
@@ -159,4 +161,5 @@ with no history kept. Full guidance, playbook examples and URL-routing notes
 - `reference/new-site.md` — creating a new site package, and extracting one into a
   repository of its own.
 - `reference/versioning-modes.md` — the two docs versioning modes (Mode 1: versioned tags,
-  Mode 2: stable + prerelease), with `antora.yml`/playbook examples for each.
+  Mode 2: stable + prerelease), with `antora.yml`/playbook examples for each, and how
+  `pdocs-release.yml` cuts a Mode 2 `stable` release.

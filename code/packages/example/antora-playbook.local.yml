@@ -1,0 +1,68 @@
+#
+# Antora playbook for local development and PR verification.
+#
+# Reference: https://docs.antora.org/antora/latest/playbook/
+#
+# Build with:  pnpm build
+# Output:      build/site
+#
+# Why this exists:
+# In Mode 2 (Stable + Prerelease, GH-80), `antora-playbook.yml` specifies:
+#   branches: [main]
+#   tags: ['stable']
+#
+# When building in CI on pull requests (or in local feature branches),
+# git is on a detached HEAD or a feature branch, so `main` and `stable`
+# are not resolved in the checkout.
+#
+# This playbook points content aggregation at HEAD (the current worktree)
+# so PRs and local runs validate the current docs content without requiring
+# `main` or `stable`. `docs.yml` (push to main / publishing) uses the base
+# `antora-playbook.yml`.
+#
+
+site:
+  title: Weave.js
+  start_page: weavejs:ROOT:index.adoc
+  keys:
+    product_logo: /_/product-logo.png
+    home_background: /_/home-background.jpg
+
+content:
+  sources:
+    - url: ../../..
+      start_path: code/packages/example/docs
+      branches: HEAD
+
+ui:
+  bundle:
+    url: ../ui-bundle/build/ui-bundle.zip
+    snapshot: true
+  supplemental_files: ./supplemental-ui
+
+output:
+  dir: build/site
+  clean: true
+
+urls:
+  html_extension_style: indexify
+
+runtime:
+  log:
+    failure_level: warn
+
+asciidoc:
+  attributes:
+    experimental: ''
+    icons: font
+    sectanchors: ''
+    idprefix: ''
+    idseparator: '-'
+    source-highlighter: shiki
+    page-pagination: '@'
+  extensions:
+    - '@inditextech/pdocs-asciidoc-extensions'
+
+antora:
+  extensions:
+    - '@inditextech/pdocs-antora-extensions'

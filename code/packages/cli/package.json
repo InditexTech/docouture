@@ -1,7 +1,6 @@
 {
   "name": "@inditextech/pdocs-cli",
   "version": "0.1.0",
-  "private": true,
   "description": "Command-line tool for pdocs documentation sites: scaffold a new site and set its Antora version outside the monorepo",
   "license": "MPL-2.0",
   "type": "module",

@@ -11,14 +11,17 @@ follows is how the workspace itself is put together.
 
 ## Packages
 
-| Package              | Purpose                                                                                                                                                                  |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `packages/ui-bundle` | The Antora UI bundle: layouts, styles, browser scripts and Handlebars helpers. Produces `build/ui-bundle-<version>.zip`, plus an unversioned `build/ui-bundle.zip` copy. |
-| `packages/starter`   | The smallest complete Antora site. Copy this when starting a new documentation project.                                                                                  |
-| `packages/example`   | Real-world site; destination of the Fumadocs migration. Currently a stub.                                                                                                |
+| Package              | Purpose                                                                                                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `packages/ui-bundle` | The Antora UI bundle: layouts, styles, browser scripts and Handlebars helpers. Produces `build/ui-bundle-<version>.zip`, plus an unversioned `build/ui-bundle.zip` copy.                               |
+| `packages/example`   | Real-world site; destination of the Fumadocs migration. Currently a stub.                                                                                                                              |
+| `packages/cli`       | `@inditextech/pdocs-cli` — the `pdocs` CLI: scaffolds a standalone site (`pdocs new`, bundling its own `templates/starter`) and sets a site's Antora version (`pdocs version`) outside this workspace. |
 
-`starter` and `example` both consume `ui-bundle` through a `workspace:*`
-dependency, so Nx rebuilds the bundle before either site.
+`example` consumes `ui-bundle` through a `workspace:*` dependency, so Nx rebuilds the
+bundle before it. `packages/cli/templates/starter` — what `pdocs new` scaffolds — does
+not: it is a deliberately dependency-light standalone site (plain Antora default UI, no
+pdocs extensions), since none of `ui-bundle`, `antora-extensions` or
+`asciidoc-extensions` are published to npm yet. See `.opencode/skills/starter-package`.
 
 The versioned zip is the artifact to publish — it is the only thing that records
 which bundle a consumer downloaded. The unversioned copy is a byte-identical
@@ -30,7 +33,7 @@ rebuilt from scratch on each `bundle` run, so stale versions do not accumulate.
 
 There are two, and they answer different questions.
 
-`packages/{starter,example}` have a `dev` target (`just dev <site>`) that serves
+`packages/example` has a `dev` target (`just dev example`) that serves
 `build/site` on :5000, watches `docs/` and `../ui-bundle/src`, re-runs Antora on
 change and reloads the browser. It is the real site, so it is the one to trust —
 but a UI edit costs a bundle rebuild plus a full Antora run, and Antora has no

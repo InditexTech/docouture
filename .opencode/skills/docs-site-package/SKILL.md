@@ -1,14 +1,18 @@
 ---
 name: docs-site-package
-description: "How a documentation site package in pdocs (code/packages/example, code/packages/starter) is put together — the playbook, the component descriptor, the docs/ tree, the UI bundle link, and the Nx/pnpm wiring that makes `just dev` and `just build-site` work. USE WHEN creating a new site package, editing antora-playbook.yml or docs/antora.yml, changing a site's title, start page, output dir or content source, pointing a site at a different UI bundle, setting up multi-version docs (release tags, a stable/prerelease branch pair, the version dropdown, `urls.latest_version_segment`), or debugging a site that builds with zero pages, a missing start page or a stale UI. EXAMPLES: 'add a new docs site', 'the site builds but has no pages', 'start page not found', 'my UI change doesn't show up in the site', 'point this site at a published bundle', 'why is the content path repo-root relative', 'just dev says port in use', 'set up docs versioning', 'add a stable vs prerelease toggle', 'why does the version dropdown only show one entry'."
+description: "How a documentation site package in pdocs (code/packages/example) is put together — the playbook, the component descriptor, the docs/ tree, the UI bundle link, and the Nx/pnpm wiring that makes `just dev` and `just build-site` work. USE WHEN creating a new site package, editing antora-playbook.yml or docs/antora.yml, changing a site's title, start page, output dir or content source, pointing a site at a different UI bundle, setting up multi-version docs (release tags, a stable/prerelease branch pair, the version dropdown, `urls.latest_version_segment`), or debugging a site that builds with zero pages, a missing start page or a stale UI. EXAMPLES: 'add a new docs site', 'the site builds but has no pages', 'start page not found', 'my UI change doesn't show up in the site', 'point this site at a published bundle', 'why is the content path repo-root relative', 'just dev says port in use', 'set up docs versioning', 'add a stable vs prerelease toggle', 'why does the version dropdown only show one entry'."
 ---
 
 # Documentation site packages
 
-`code/packages/starter` and `code/packages/example` are **site packages**: each one is an
-Antora playbook plus the AsciiDoc it builds, wired into the workspace so Nx builds the UI
-bundle first. They are byte-for-byte the same shape — `starter` is the minimal site meant
-to be copied, `example` is the destination of the Fumadocs migration and currently a stub.
+`code/packages/example` is a **site package**: an Antora playbook plus the AsciiDoc it
+builds, wired into the workspace so Nx builds the UI bundle first. It is currently the
+only one — `code/packages/starter`, the minimal site meant to be copied, was removed (its
+`workspace:*` deps have no standalone equivalent; see `reference/new-site.md`). The
+surviving `starter` is `code/packages/cli/templates/starter`, bundled into
+`@inditextech/pdocs-cli` for `pdocs new` to scaffold a site **outside** this monorepo — a
+deliberately simpler, dependency-free shape (plain Antora default UI), not something to
+copy in here.
 
 This skill is the package level: playbook, descriptor, wiring, commands. For **what to
 write inside `docs/`** (pages, nav, xrefs, includes, extensions) read `asciidoc`; for the
@@ -125,13 +129,13 @@ directory.
 | command | does |
 | --- | --- |
 | `just dev example` | Nx build, then serve `build/site` on :5000 with rebuild-and-reload |
-| `just dev starter 5001` | same, second port — two sites side by side |
-| `just build-site starter` | `nx run @inditextech/pdocs-starter:build` |
+| `just dev <site> <port>` | same, with an explicit second port — for a second site package running alongside |
+| `just build-site example` | `nx run @inditextech/pdocs-example:build` |
 | `just build` | every package, UI bundle included |
 | `just preview-ui` | UI-only preview on :5252 — prefer it when content is not what changed |
 | `pnpm -C packages/example run build` | raw Antora run, no Nx, no UI rebuild |
 
-`scripts/dev.mjs` (shared by both sites, dependency-free) watches `docs/`,
+`scripts/dev.mjs` (dependency-free, shared by every site package) watches `docs/`,
 `antora-playbook.yml` and `../ui-bundle/src`. A UI change rebuilds the bundle *and* the
 site; a content change rebuilds the site only. A failed rebuild keeps serving the previous
 output rather than a half-written site. Reload is an SSE stream plus a snippet injected
@@ -139,20 +143,32 @@ into HTML responses as they are served — nothing is written into the built sit
 
 ## Adding a site
 
-Copy `starter`, rename in four places, install. Exact steps, including the Nx and
-`just dev` conventions the name has to satisfy: `reference/new-site.md`.
+No in-workspace template to copy right now — base a new package on `example` and rename in
+four places. Details, and why `starter` isn't that template anymore:
+`reference/new-site.md`.
 
 ## Versioning a site
 
-`starter` still builds a single, unversioned component (`version: ~` in
-`docs/antora.yml`). `example` is versioned under **Mode 2 (Stable + Prerelease)**
-(GH #80): `main` permanently aggregates as the `prerelease` version, and a rolling
-`stable` tag — force-moved to a fresh commit on each release by the
-`pdocs-release.yml` workflow template (`.github/workflows/pdocs-release.yml` in a site
-scaffolded by `pdocs new`) — aggregates as the `stable` version. The other supported
-shape, **Mode 1 (Full History)** — a `next` branch plus every release tag kept forever —
-is not wired up anywhere yet (GH #81). Full guidance, playbook examples and URL-routing
-notes (`urls.latest_version_segment`): `reference/versioning-modes.md`.
+`example` is versioned under **Mode 2 (Stable + Prerelease)** (GH #80): `main` permanently
+aggregates as the `prerelease` version, and a rolling `stable` tag — force-moved to a fresh
+commit on each release by the single `pdocs-release.yml` workflow template
+(`.github/workflows/` in a site scaffolded by `pdocs new`, which detects Mode 1 vs Mode 2
+from `docs/antora.yml`'s `version:` field and branches its steps accordingly) — aggregates
+as the `stable` version. The other supported shape, **Mode 1 (Full History)** — a `next`
+branch plus every release tag kept forever — that same workflow already handles, but is
+not wired up on `example` or anywhere else yet (GH #81). Full guidance, playbook examples
+and URL-routing notes (`urls.latest_version_segment`): `reference/versioning-modes.md`.
+
+Either mode's `content.sources[]` names refs (`main`/`stable`/`v*`) that a PR checkout —
+detached HEAD or a feature branch — doesn't have. A site scaffolded by `pdocs new` gets a
+second playbook, `antora-playbook.pr-verify.yml` (one source, `branches: HEAD`, nothing
+version-specific), and `pdocs-pr-verify.yml` builds with it on every PR instead of the real
+`antora-playbook.yml` — always validating whatever the PR actually changed, regardless of
+which mode (or none) the site has adopted. `example`'s own equivalent is
+`antora-playbook.local.yml`, wired into its `build` script (`package.json`) so `pnpm build`
+— what `pr-verify.yml` runs — never depends on `main`/`stable` either; its
+`antora-playbook.yml` is built explicitly by `docs.yml` and the `build:publish` script
+instead.
 
 ## Reference
 
@@ -161,5 +177,8 @@ notes (`urls.latest_version_segment`): `reference/versioning-modes.md`.
 - `reference/new-site.md` — creating a new site package, and extracting one into a
   repository of its own.
 - `reference/versioning-modes.md` — the two docs versioning modes (Mode 1: versioned tags,
-  Mode 2: stable + prerelease), with `antora.yml`/playbook examples for each, and how
-  `pdocs-release.yml` cuts a Mode 2 `stable` release.
+  Mode 2: stable + prerelease), with `antora.yml`/playbook examples for each, how the
+  single `pdocs-release.yml` detects which mode a site is on and cuts a release either way
+  (manually, or automatically on a `docs/release`/`docs/force-release`-labelled PR merge),
+  the force-republish and `docs/.release-version` auto-bump mechanics, and how
+  `pdocs-pr-verify.yml` / `antora-playbook.pr-verify.yml` keep PR builds mode-agnostic.

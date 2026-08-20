@@ -73,7 +73,10 @@ delete or rename a tag and it drops out of the aggregate on the next build.
 
 Cutting a release under this mode is: tag the commit, bump `docs/antora.yml`'s `version`
 and flip `prerelease` to `false` on that tag (or have the release process do it as part of
-tagging), rebuild. `main` never needs touching for a release to appear.
+tagging), rebuild. `main` never needs touching for a release to appear. A site scaffolded
+by `pdocs new` gets a single **pdocs-release.yml** workflow (`.github/workflows/`) that
+handles this — see "Cutting a release" below for how it tells Mode 1 and Mode 2 apart and
+runs the right steps for each.
 
 ## Mode 2 — Stable + Prerelease (Dual-branch or rolling tag)
 
@@ -127,14 +130,14 @@ by the same release step.)
 
 Cutting a release under this mode is: force-move whichever ref (`stable` branch tip, or
 `stable` tag) is being used to whatever commit on `main` is being released, so its own
-`docs/antora.yml` copy at that point says `version: stable`, `prerelease: false`. A site
-scaffolded by `pdocs new` gets a **pdocs-release.yml** workflow for exactly this
-(`.github/workflows/pdocs-release.yml`; the tag variant, matching what `example` is
-*configured* for — `example` itself is a testbed and is never actually released, so
-nothing in the pdocs monorepo's own CI ever runs this): it patches `docs/antora.yml` via
-the `pdocs version` CLI command on a one-off commit built on top of `main`'s current tip,
-then force-moves the `stable` tag to that commit — `main` itself is never advanced or
-touched by the release step; its own `docs/antora.yml` permanently says `version:
+`docs/antora.yml` copy at that point says `version: stable`, `prerelease: false`. The same
+single **pdocs-release.yml** workflow (`.github/workflows/`, templated by `pdocs new`) that
+handles Mode 1 handles this too — the tag variant, matching what `example` is *configured*
+for (`example` itself is a testbed and is never actually released, so nothing in the pdocs
+monorepo's own CI ever runs this): it patches `docs/antora.yml` via the `pdocs version`
+CLI command on a one-off commit built on top of `main`'s current tip, then force-moves the
+`stable` tag to that commit — `main` itself is never advanced or touched by the release
+step; its own `docs/antora.yml` permanently says `version:
 prerelease`, `prerelease: true` from the moment a site opts into Mode 2. This is the
 operational difference from Mode 1: there "release" means create a new immutable ref (a
 tag) and a new version *entry*; here it means move an existing ref's tip (or a tag) and
@@ -146,6 +149,90 @@ Moving `stable` does trigger a rebuild: the sibling **pdocs-publish.yml** workfl
 site fresh — Antora re-aggregates every ref `content.sources[]` matches, not just the one
 that changed — and hands off to the CLI to publish it. See "Follow-up work" below for what
 that hand-off does not yet do.
+
+## Cutting a release: pdocs-release.yml
+
+One workflow handles both modes — it detects which one a site is on rather than being
+told, and branches its steps accordingly.
+
+**Detection.** After checkout, a `Detect mode` step reads `docs/antora.yml`'s `version:`
+field on `main`: `next` → Mode 1, `prerelease` → Mode 2. That field is exactly the one each
+mode's "Prerequisite" above says never changes on `main`, so it doubles as a permanent,
+self-describing marker — nothing else in the repository has to declare which mode is in
+effect.
+
+**Triggers.** Two, both deliberate acts rather than a side effect of an ordinary push:
+
+- `workflow_dispatch` — run by hand. Its `version` input defaults to `'stable'`. A
+  Mode 1 run must override it with a real version (e.g. `1.2.0`) or the workflow fails
+  before touching anything; a Mode 2 run leaves the default, since Mode 2 always targets
+  `stable` regardless of what's typed there. Its second input, `force`, defaults to
+  `false` — see "Republishing" below.
+- `pull_request`, `types: [closed]`, `branches: ['main*']` — fires automatically when a
+  pull request merges into a branch matching that glob, but only actually proceeds
+  (checked in the job's own `if:`) when `github.event.pull_request.merged == true` **and**
+  the PR carries the `docs/release` or `docs/force-release` label. Any other close of a
+  matching-branch PR — not merged, or merged without either label — is a no-op run, not
+  an error.
+
+**Where Mode 1's version comes from on each trigger** is the one thing that differs by
+trigger rather than by mode: `workflow_dispatch` has a form field for it;
+`pull_request` doesn't, so Mode 1 reads a plain-text file instead —
+**`docs/.release-version`** — committed by the PR being merged, containing just the target
+version (e.g. `1.2.0`). Reviewed as part of that PR's diff like any other change; there is
+no analogous file for Mode 2, since that mode's target is always the literal `stable`. A
+`Resolve version` step picks whichever source applies before a shared `Validate version`
+step checks it: empty on Mode 1 fails with a message naming which of the two ways to
+supply one was missed; `'stable'` on Mode 1 fails too (it's Mode 2's name, not a version);
+Mode 2 with a non-empty value just gets a warning that it's being ignored.
+
+**Nothing clears `docs/.release-version` after a release — it's bumped forward instead.**
+On a genuine forward release (not a forced republish — see below) a final `Bump release
+descriptor` step advances the file to the next patch version and commits that directly to
+`main`, the same idiom `just bump` uses for this workspace's own npm packages: a throwaway
+`package.json` set to the just-released version, `npm version patch --no-git-tag-version`
+to do the semver arithmetic, the result written back to `docs/.release-version`. So the
+file always holds a sane next target rather than a stale, already-released value or
+nothing at all. This step runs on `main` directly — unlike the release commit itself
+(next paragraph), which never advances `main` — and only for Mode 1; Mode 2 has no
+`.release-version` concept.
+
+## Republishing (Mode 1 only)
+
+A tag, once pushed, is immutable by default (see "Push release tag" below) — the same
+version can't just be re-released by merging another PR with the same
+`docs/.release-version` value. That's deliberate: it stops a stale leftover value from
+silently re-tagging something already out. But sometimes a fix genuinely does need to land
+on an already-released version (a docs typo caught after the tag went out, say), which
+needs a way to say "yes, overwrite this one on purpose."
+
+That's what the second label, **`docs/force-release`**, and the `workflow_dispatch`
+`force` input are for — plain `docs/release` (or `force: false`) refuses to move an
+existing tag; either of those two flips a `Resolve force` step's output to `true`, and
+every following step (tag push, GitHub Release) takes the force path instead:
+
+- **Tag**: `git push --force` moves it to the new commit instead of failing.
+- **GitHub Release**: the existing Release object is deleted (`gh release delete`, a
+  no-op if none exists yet) before a fresh one is created, so its notes reflect the new
+  commit rather than erroring against a Release that already exists.
+- **`docs/.release-version` bump**: deliberately **skipped** on a forced run. A forced
+  republish targets a version that's typically already been superseded by whatever
+  `docs/.release-version` currently holds as the next planned target — bumping forward
+  from the old, republished version would clobber that already-planned value instead of
+  protecting it.
+
+**Without force**, hitting an existing tag fails the run outright (`Check for existing
+release` step) with a message naming the label to add. When that run came from a merged
+PR, the same step also leaves a comment on it — `gh pr comment` — pointing at
+`docs/force-release`; a `workflow_dispatch` run has no PR to comment on, so it only gets
+the failing log.
+
+**The rest of the job is genuinely shared, not two paths bolted together**: `Cut release`
+computes `value`/`tag` from the detected mode (`v<version>` + no-force push for Mode 1,
+literal `stable` + force push for Mode 2) and runs the same `pdocs version` +
+commit-then-reset dance either way; `Create GitHub Release` is the one step that only runs
+for Mode 1 (`if: steps.detect.outputs.mode == 'mode1'`), since Mode 2 keeps no version
+history worth a Release object.
 
 ## URL routing
 
@@ -205,10 +292,38 @@ controlled entirely from `docs/antora.yml`:
 | Playbook `content.sources[]` | `branches: [main]` + `tags: ['v*']` | `branches: [main]` + `tags: ['stable']` (or `branches: [main, stable]`) |
 
 Both are legitimate; the epic (GH #78) treats them as two supported flows, not a
-recommendation of one over the other. GH #81 verifies Mode 1; GH #80 has wired Mode 2's
-config shape into `example` (never itself cut/released — a testbed only) and shipped the
-`pdocs-release.yml` / `pdocs-publish.yml` workflow templates a real site scaffolded by
-`pdocs new` would actually run.
+recommendation of one over the other. GH #80 has wired Mode 2's config shape into
+`example` (never itself cut/released — a testbed only) and shipped the single
+`pdocs-release.yml` / `pdocs-publish.yml` workflow templates a real site scaffolded
+by `pdocs new` would actually run. GH #81 extended that same `pdocs-release.yml` to also
+handle Mode 1 (detected, not a separate file — see "Cutting a release" above), but has not
+wired Mode 1's config shape into `example` or any other site — still guidance-only in that
+sense.
+
+## PR verification
+
+Either mode's `content.sources[]` names refs — `main`, `stable`, `v*` — that a pull
+request's own checkout does not have: a PR is built on a detached HEAD or a feature
+branch, neither of which is `main` or a release ref. Building the real
+`antora-playbook.yml` there either fails outright (the named refs aren't reachable from a
+shallow, single-ref checkout) or, worse, silently succeeds while validating fewer versions
+than the site actually has — neither is what "does this PR's docs change build" should
+mean.
+
+A site scaffolded by `pdocs new` gets a second playbook for exactly this,
+`antora-playbook.pr-verify.yml` — one content source, `branches: HEAD`, nothing
+version-specific, so it never has to change shape when a site adopts a mode or cuts a
+release. `pdocs-pr-verify.yml` (`.github/workflows/`) builds with it on every
+`pull_request`, instead of the real playbook — a plain, single-ref checkout is enough,
+`fetch-depth: 0` is never needed here because no other ref is ever read. Publishing
+(`pdocs-publish.yml`) is unaffected — it still builds the real `antora-playbook.yml`.
+
+`example` is not scaffolded by `pdocs new`, so it carries the same idea under its own,
+earlier name: `antora-playbook.local.yml` (`branches: HEAD`, same rationale). It's wired
+into that package's `build` script (`package.json`), which is what `pnpm build` — and
+therefore this monorepo's own root `pr-verify.yml` — runs; the real, versioned
+`antora-playbook.yml` is built explicitly instead, by `docs.yml` and the `build:publish`
+script, neither of which goes through the generic `build` target.
 
 ## Follow-up work
 
@@ -216,16 +331,18 @@ Deliberately not built as part of GH #80 — tracked here so a later issue (or #
 from a documented starting point rather than rediscovering the gaps:
 
 - **Mode selection is manual.** `pdocs new` doesn't ask which versioning mode a site wants,
-  or generate the matching config + `pdocs-release.yml` variant. The intended UX: prompt
-  interactively when a `--versioning` flag isn't given, generate the right
-  `docs/antora.yml` + `antora-playbook.yml` shape and the matching `pdocs-release.yml`
-  (Mode 1's variant does not exist yet — the current file is Mode 2 only).
+  or generate the matching `docs/antora.yml` + `antora-playbook.yml` shape. The intended
+  UX: prompt interactively when a `--versioning` flag isn't given, generate the right
+  shape for the chosen mode — `pdocs-release.yml` itself already handles either mode
+  without needing to know which was picked, since it detects that from
+  `docs/antora.yml` at release time.
 - **`pdocs doctor` does not exist.** Should check that a site's `.github/workflows/`
-  contains both `pdocs-release.yml` and `pdocs-publish.yml`, and that neither has drifted
-  from what the currently-installed `@inditextech/pdocs-cli` would generate — the same
-  regenerate-in-memory-and-diff idiom this monorepo's own `just ids-check` already uses,
-  rather than a version-marker comment (which drifts from reality the moment a template
-  changes without a version bump, or someone hand-edits the file).
+  contains `pdocs-publish.yml`, `pdocs-pr-verify.yml` and `pdocs-release.yml`, and that
+  none has drifted from what the currently-installed `@inditextech/pdocs-cli` would
+  generate — the same regenerate-in-memory-and-diff idiom this monorepo's own
+  `just ids-check` already uses, rather than a version-marker comment (which drifts from
+  reality the moment a template changes without a version bump, or someone hand-edits the
+  file).
 - **`pdocs publish` does not exist.** `pdocs-publish.yml` already calls `npx pdocs publish`
   after building, but the command itself, and the pluggable "publish-target
   antora-extension" mechanism it's meant to dispatch to (GitHub Pages, S3, Azure Static Web

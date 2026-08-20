@@ -169,3 +169,44 @@ export function checkAntoraAvailable(siteRoot: string): CheckResult {
     detail: "run 'npm install' in the site directory",
   }
 }
+
+// Repo-root-relative paths `pdocs new` scaffolds AGENTS.md/the skill
+// directories under — see new.ts's own AGENT_SUPPORT_PATHS, which this
+// mirrors. Kept as a separate literal here rather than imported: doctor-
+// checks.ts is a plain library module with fixture-driven unit tests (see
+// its own spec) and importing from commands/new.ts would pull the wizard
+// (@inquirer/prompts) into that dependency graph for no reason.
+const AGENT_SUPPORT_CHECK_PATHS = [
+  { path: 'AGENTS.md', label: 'AGENTS.md' },
+  { path: join('.opencode', 'skills', 'writing-docs-pages'), label: '.opencode/skills/writing-docs-pages' },
+  { path: join('.opencode', 'skills', 'site-structure'), label: '.opencode/skills/site-structure' },
+  { path: join('.claude', 'skills', 'writing-docs-pages'), label: '.claude/skills/writing-docs-pages' },
+  { path: join('.claude', 'skills', 'site-structure'), label: '.claude/skills/site-structure' },
+]
+
+/**
+ * Whether AGENTS.md and the two platform-mirrored skill directories `pdocs
+ * new` scaffolds are still present at the repository root — advisory only,
+ * this is presence, not a content/drift diff (a site legitimately edits its
+ * own skills after scaffolding), so `commands/doctor.ts` reports these
+ * without folding them into the overall exit code the way the checks above
+ * do. `docs-versioning` is intentionally not checked here: it exists only
+ * under `--mode versioned`, and doctor has no reliable, cheap way to tell
+ * which mode a site is on from this function alone (see
+ * `commands/doctor.ts`'s own mode-detection comment, which reads the
+ * playbook — a concern this function deliberately stays out of).
+ */
+export function checkAgentFilesPresent(repoRoot: string): CheckResult[] {
+  return AGENT_SUPPORT_CHECK_PATHS.map(({ path: relativePath, label }) => {
+    const absolutePath = join(repoRoot, relativePath)
+    const present = existsSync(absolutePath)
+    return present
+      ? { ok: true, label, message: 'present' }
+      : {
+          ok: false,
+          label,
+          message: 'missing',
+          detail: 'run pdocs new again in this repository to regenerate it, or restore it from version control',
+        }
+  })
+}

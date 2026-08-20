@@ -8,6 +8,7 @@ import { exists } from '../lib/copy-template.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { readSourceUrl, readStartPageComponent, readStartPath } from '../lib/playbook-yml.js'
 import {
+  checkAgentFilesPresent,
   checkAntoraAvailable,
   checkGitHasCommit,
   checkNamesAgree,
@@ -41,6 +42,20 @@ function printResult(result: CheckResult, colour: boolean): number {
     console.log(`         ${result.detail}`)
   }
   return result.ok ? 0 : 1
+}
+
+// Same rendering as printResult, but never contributes to the overall exit
+// code — used only for checkAgentFilesPresent, which is presence, not
+// something a build actually depends on (see that function's own comment).
+// 'warn' instead of 'FAIL' so a missing file reads as advisory, not as the
+// same severity as a broken build.
+function printAdvisory(result: CheckResult, colour: boolean): void {
+  const ok = colour ? '\u001b[32m ok \u001b[0m' : ' ok '
+  const warn = colour ? '\u001b[33mwarn\u001b[0m' : 'warn'
+  console.log(`  ${result.ok ? ok : warn}  ${result.label} — ${result.message}`)
+  if (!result.ok && result.detail) {
+    console.log(`         ${result.detail}`)
+  }
 }
 
 export async function runDoctor(argv: string[]): Promise<number> {
@@ -118,6 +133,9 @@ export async function runDoctor(argv: string[]): Promise<number> {
 
   console.log('dependencies')
   status |= printResult(checkAntoraAvailable(siteRoot), colour)
+
+  console.log('agent files')
+  for (const result of checkAgentFilesPresent(target)) printAdvisory(result, colour)
 
   return status === 0 ? 0 : 1
 }

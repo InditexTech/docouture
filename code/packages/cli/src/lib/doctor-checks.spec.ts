@@ -7,7 +7,13 @@ import { join } from 'node:path'
 
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { checkAntoraAvailable, checkGitHasCommit, checkNamesAgree, checkNodeVersion } from './doctor-checks.js'
+import {
+  checkAgentFilesPresent,
+  checkAntoraAvailable,
+  checkGitHasCommit,
+  checkNamesAgree,
+  checkNodeVersion,
+} from './doctor-checks.js'
 
 describe('checkNodeVersion', () => {
   it('passes when no engine range is declared', () => {
@@ -147,5 +153,32 @@ describe('checkAntoraAvailable', () => {
     await mkdir(join(dir, 'node_modules', '.bin'), { recursive: true })
     await writeFile(join(dir, 'node_modules', '.bin', 'antora'), '', 'utf8')
     expect(checkAntoraAvailable(dir).ok).toBe(true)
+  })
+})
+
+describe('checkAgentFilesPresent', () => {
+  let dir: string
+
+  beforeEach(async () => {
+    dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-agent-files-'))
+  })
+
+  it('flags every path missing on a bare directory', () => {
+    const results = checkAgentFilesPresent(dir)
+    expect(results.length).toBeGreaterThan(0)
+    expect(results.every((r) => !r.ok)).toBe(true)
+  })
+
+  it('passes AGENTS.md and each skill once scaffolded', async () => {
+    await writeFile(join(dir, 'AGENTS.md'), '# hi', 'utf8')
+    for (const platform of ['.opencode', '.claude']) {
+      for (const skill of ['writing-docs-pages', 'site-structure']) {
+        await mkdir(join(dir, platform, 'skills', skill), { recursive: true })
+        await writeFile(join(dir, platform, 'skills', skill, 'SKILL.md'), '# skill', 'utf8')
+      }
+    }
+
+    const results = checkAgentFilesPresent(dir)
+    expect(results.every((r) => r.ok)).toBe(true)
   })
 })

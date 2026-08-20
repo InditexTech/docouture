@@ -61,3 +61,13 @@ asciidoc:
     sectanchors: ''
     idprefix: ''
     idseparator: '-'
+  extensions:
+    # Same as the real antora-playbook.yml — see its own comment and the
+    # writing-docs-pages skill's reference/pdocs-blocks.md.
+    - '@inditextech/pdocs-asciidoc-extensions'
+
+antora:
+  extensions:
+    # Same as the real antora-playbook.yml — see its own comment and the
+    # site-structure skill's reference/antora-extensions.md.
+    - '@inditextech/pdocs-antora-extensions'

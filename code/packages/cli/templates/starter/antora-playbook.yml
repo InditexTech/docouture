@@ -83,3 +83,19 @@ asciidoc:
     sectanchors: ''
     idprefix: ''
     idseparator: '-'
+  extensions:
+    # Authoring blocks with no plain AsciiDoc equivalent — [tabs], [cards],
+    # [feature-tabs], [cta], [accordion] grouping, plus the label:[]/mono:[]
+    # inline macros and a few table/video sizing attributes. See the
+    # writing-docs-pages skill's reference/pdocs-blocks.md for the full
+    # syntax of each.
+    - '@inditextech/pdocs-asciidoc-extensions'
+
+antora:
+  extensions:
+    # Antora pipeline extensions (a different key/kind from asciidoc.extensions
+    # above — see the site-structure skill's reference/antora-extensions.md):
+    # nav_modules-driven module switcher, an authored site footer, the search
+    # index the UI bundle's search dialog reads, and llms.txt/llms-full.txt
+    # generation for AI ingestion.
+    - '@inditextech/pdocs-antora-extensions'

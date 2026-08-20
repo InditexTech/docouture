@@ -47,6 +47,9 @@ importers:
 
   packages/antora-extensions:
     dependencies:
+      '@antora/page-composer':
+        specifier: ~3.1.15
+        version: 3.1.15
       '@inditextech/pdocs-asciidoc-extensions':
         specifier: workspace:*
         version: link:../asciidoc-extensions

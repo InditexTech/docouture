@@ -7,7 +7,7 @@
 :page-action-url: https://weavejs.cloud.inditex.com
 :page-action-secondary: Quickstart
 :page-action-secondary-url: main:quickstart.adoc
-:page-hero-image: /weavejs/_images/home-hero.png
+:page-hero-image: home-hero.png
 :page-hero-image-alt: A Weave.js room with a text node selected on the canvas.
 
 Created for developers, Weave.js is an open-source library that provides all the building blocks, plugins, and APIs to develop visual collaborative tools at the speed of light.

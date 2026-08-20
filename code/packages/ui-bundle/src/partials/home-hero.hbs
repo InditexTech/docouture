@@ -19,10 +19,10 @@
     :page-action-url: https://tool.example  its target — page reference or URL
     :page-action-secondary: Quickstart      secondary (outlined) call to action
     :page-action-secondary-url: quickstart.adoc
-    :page-hero-image: _images/hero.png      media slot: a still…
+    :page-hero-image: hero.png              media slot: a still…
     :page-hero-image-alt: A canvas…         …and its alternative text
-    :page-hero-video: _images/hero.mp4      …or a video, with an optional
-    :page-hero-video-poster: _images/hero.png   still shown before it plays
+    :page-hero-video: hero.mp4               …or a video, with an optional
+    :page-hero-video-poster: hero.png        still shown before it plays
 
   The tag and action attributes are deliberately the SAME ones the page hero
   reads (hero.hbs) rather than landing-specific spellings. A page renders one
@@ -108,16 +108,27 @@
     escape hatch for when the guess is wrong. Video wins if a document
     somehow sets both.
 
-    Both are ordinary URLs — site-root-relative or absolute — passed through
-    `relativize`, the same shape and the same treatment as
-    `site.keys.productLogo` above. An AsciiDoc image resource works: point
-    the attribute at its published path.
+    Each value is an AsciiDoc resource ID — `hero.png`, `_images/hero.png`,
+    `main:_images/hero.png`, an absolute URL, whatever `image::` itself would
+    accept — resolved through `resolveResourceURL`, the same idea as
+    `resolvePageURL` above but for a resource rather than a page: it calls
+    Antora's own `ContentCatalog#resolveResource` (family `image`) so the
+    published URL always includes this page's real component/version/module,
+    the way the actual site is laid out, rather than an author hand-typing
+    the site-root-relative path themselves (fragile — the path shifts with
+    the version, and briefly *was* wrong for exactly that reason on the
+    example site's own landing page, GH-103's follow-up). Falls through to the
+    literal attribute value, unresolved, when it doesn't resolve as a
+    resource — an already-absolute external URL — internally, so callers
+    don't need the `(or … this)` fallthrough the `action-url` attributes
+    above spell out explicitly. Only then does the result go through
+    `relativize`, same as `site.keys.productLogo` above.
 --}}
 {{#with page.attributes.[hero-video]}}
-  <video class="home-hero__media" src="{{{relativize this}}}" controls preload="metadata"{{#with @root.page.attributes.[hero-video-poster]}} poster="{{{relativize this}}}"{{/with}}></video>
+  <video class="home-hero__media" src="{{{relativize (resolveResourceURL this)}}}" controls preload="metadata"{{#with @root.page.attributes.[hero-video-poster]}} poster="{{{relativize (resolveResourceURL this)}}}"{{/with}}></video>
 {{else}}
   {{#with page.attributes.[hero-image]}}
-  <img class="home-hero__media" src="{{{relativize this}}}" alt="{{@root.page.attributes.[hero-image-alt]}}">
+  <img class="home-hero__media" src="{{{relativize (resolveResourceURL this)}}}" alt="{{@root.page.attributes.[hero-image-alt]}}">
   {{/with}}
 {{/with}}
 </div>

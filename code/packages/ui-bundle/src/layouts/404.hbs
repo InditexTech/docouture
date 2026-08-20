@@ -1,11 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+{{!--
+  Every relative URL in this page (logo, side-menu links, footer links, the
+  module switcher — anything built with `{{relativize}}`) is computed as if
+  the document lives at `/404.html` (relativize.ts: "a URL relative to the
+  CURRENT page" — page.url on the synthetic 404 file is `/404.html`, see
+  not-found-page.js). That's true for a real page: the browser is actually
+  there. It is never true for a 404 — by definition, whatever URL served this
+  page is NOT /404.html, and could be nested at any depth. Without a fixed
+  base, the browser resolves each of those page-relative hrefs against the
+  actual broken URL instead, and every one of them 404s again.
+
+  `<base>` fixes all of them in one place, instead of hand-rewriting every
+  partial the 404 layout happens to pull in (header, side menu, site footer,
+  and whatever else grows to use `{{relativize}}` later): it retargets what
+  "relative to the current page" MEANS for the rest of this document, to the
+  site root — the one location that's true regardless of which broken URL
+  got here. `site.path` is the site's own root when it's deployed under a
+  path prefix (see relativize.ts's own use of it); empty for a root
+  deployment, giving `/`.
+--}}
+    <base href="{{site.path}}/">
 {{> head defaultPageTitle='Page Not Found'}}
   </head>
   <body class="status-404">
 {{> header}}
 {{> body}}
-{{> footer}}
+{{!--
+  The site footer (brand, authored link columns, modules, copyright), not
+  the page footer (footer.hbs): that one's pagination row assumes a page
+  inside a reading sequence, and its feedback block ("Help us make these
+  docs great!") assumes there is a page to propose a change to — neither is
+  true of a 404. Same footer, and the same reasoning, as home.hbs.
+--}}
+{{> site-footer}}
+{{> footer-scripts}}
   </body>
 </html>

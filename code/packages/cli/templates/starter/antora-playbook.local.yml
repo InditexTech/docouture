@@ -30,6 +30,12 @@
 
 site:
   title: __PDOCS_TITLE__
+  # Set to the dev server's own origin so Antora also generates 404.html
+  # (@antora/page-composer only does this when site.url is set) — pdocs dev
+  # (src/lib/dev-server.ts) then has a real 404 page to serve instead of a
+  # plain-text fallback. Harmless here: this playbook is dev/PR-verify only,
+  # never used for a real publish (see the file header above).
+  url: http://localhost:5000
   start_page: __PDOCS_NAME__::index.adoc
 
 content:

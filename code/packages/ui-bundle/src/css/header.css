@@ -190,8 +190,8 @@ body {
 }
 
 /*
- * The version tag moves into the side-menu drawer at s (nav.hbs,
- * side-menu.css) and is dropped altogether at xs; hidden here at both.
+ * The version tag moves into the side-menu drawer at xs/s (nav.hbs,
+ * side-menu.css); hidden here at both, not dropped.
  */
 @media screen and (--ids-breakpoints-xs-s) {
   .header-toolbar__actions .page-versions {

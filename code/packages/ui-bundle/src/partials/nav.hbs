@@ -9,12 +9,13 @@
     behind the panel and still catch the outside-click that closes it —
     see 01-nav.ts). The version
     tag (page-versions.hbs) moves out of the header and into the drawer at
-    s only, matching the Figma frame for that breakpoint. Brand block
-    renders icon-only here (title hidden) — see nav-brand.hbs's own note on
-    why this isn't literally what Figma drew for m/s.
+    s (and xs, below), matching the Figma frame for that breakpoint. Brand
+    block renders icon-only here (title hidden) — see nav-brand.hbs's own
+    note on why this isn't literally what Figma drew for m/s.
   - xs (<513): overlay drawer, full width, no scrim (it already covers the
     viewport). Its own header row replaces the brand block: product icon +
-    title + a close button, all hidden at every other breakpoint.
+    title + a close button, all hidden at every other breakpoint. The
+    version tag still shows here too, same as s (side-menu.css).
 
   When the component has several annotated modules, nav-switcher.hbs sits
   between the brand block and the tree — the side menu then shows one

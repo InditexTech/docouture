@@ -1,0 +1,16 @@
+code/packages/cli/src/lib/copy-template.ts
+  h_c93d154c7c7074 24-30,32
+code/packages/cli/templates/agent-support/AGENTS.md
+  h_c93d154c7c7074 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a31ea5ff42c3049bb532cf2791cf9e8e776625ce",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

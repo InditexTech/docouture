@@ -7,8 +7,12 @@ import { runVersion } from './commands/version.js'
 const USAGE = `pdocs — tools for pdocs documentation sites
 
 Usage:
-  pdocs new <name> [--dir <path>] [--title <title>]
-      Scaffold a new Antora documentation site.
+  pdocs new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned]
+      Scaffold an Antora documentation site into docs/ (and its workflows into
+      .github/workflows/) of an existing git repository. Must be run from
+      that repository's root, or --dir must point at one. Prompts
+      interactively for anything not given as a flag when run in a terminal
+      (pass --yes to always use defaults instead).
 
   pdocs version <value> [--dir <path>] [--file <path>] [--prerelease | --stable]
       Set the version recorded in docs/antora.yml.

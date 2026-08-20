@@ -230,6 +230,30 @@ build *args: (_hdr "build")
 build-site site: (_hdr "build-site " + site)
     {{ nx }} run @inditextech/pdocs-{{ site }}:build
 
+# ----------------------------------------------------------------- test ------
+
+# Run tests across every package
+[group('test')]
+test *args: (_hdr "test")
+    {{ nx }} run-many -t test {{ args }}
+
+# Run tests for one or more packages (comma-separated short names, e.g. cli or cli,ui-bundle)
+[group('test')]
+[no-exit-message]
+test-package packages *args: (_hdr "test-package " + packages)
+    #!/usr/bin/env bash
+    set -euo pipefail
+    IFS=',' read -ra names <<< "{{ packages }}"
+    projects=()
+    for n in "${names[@]}"; do
+      # strip leading/trailing whitespace
+      n="$(echo "$n" | xargs)"
+      [ -z "$n" ] && continue
+      projects+=("@inditextech/pdocs-$n")
+    done
+    target_projects=$(IFS=,; echo "${projects[*]}")
+    {{ nx }} run-many -t test -p "$target_projects" {{ args }}
+
 # ------------------------------------------------------------------- ids -----
 #
 # The IOP Design System (IDS) is not a dependency of this workspace — see

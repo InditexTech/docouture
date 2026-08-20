@@ -78,6 +78,7 @@ jobs:
           pnpm lint
           pnpm typecheck
           pnpm format:check
+          pnpm nx run-many -t test
 
       - name: Bump version
         id: bump

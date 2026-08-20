@@ -58,6 +58,7 @@ jobs:
           pnpm typecheck
           pnpm format:check
           pnpm nx run-many -t build --exclude=@inditextech/pdocs-example
+          pnpm nx run-many -t test
 
       - name: Build example site (PR HEAD)
         working-directory: code/packages/example

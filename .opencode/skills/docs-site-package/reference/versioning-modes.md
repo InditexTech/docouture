@@ -325,9 +325,30 @@ therefore this monorepo's own root `pr-verify.yml` — runs; the real, versioned
 `antora-playbook.yml` is built explicitly instead, by `docs.yml` and the `build:publish`
 script, neither of which goes through the generic `build` target.
 
+## CLI orchestration: why there is no `pdocs release` command
+
+GH #82 evaluated whether cutting a release should be a dedicated `@inditextech/pdocs-cli`
+command (`pdocs release`, wrapping git tag/branch/push and `gh release` itself) instead of
+the workflow-level orchestration described above. **Decision: keep it in the workflow.**
+`pdocs-release.yml`'s own steps depend on CI-only concerns a portable local CLI command
+would either have to assume or re-implement badly: a `GITHUB_TOKEN` with `contents: write` +
+`pull-requests: write`, reading which label a merged PR carried, `gh pr comment` on failure,
+`gh release create`/`delete`. None of that has a sane local equivalent — a person running
+`pdocs release` on their laptop still couldn't create a GitHub Release or comment on a PR
+without also handing the CLI a token and reimplementing the label-driven trigger logic.
+
+The CLI's release-adjacent surface stays deliberately narrow: `pdocs version` (already
+shipped) is the one piece of actual logic the workflow reuses — patching
+`docs/antora.yml`'s `version:`/`prerelease:` fields — because that part genuinely is
+portable, needed both from CI and by a person testing a mode change locally, and is now
+covered by unit tests (`src/lib/antora-yml.spec.ts`, `src/commands/version.spec.ts`) added
+as part of #82. Everything else — detecting the mode, resolving the target version,
+tagging, force-pushing, creating the Release, bumping `docs/.release-version` — stays exactly
+where it already lived after #80/#81: in `pdocs-release.yml` itself.
+
 ## Follow-up work
 
-Deliberately not built as part of GH #80 — tracked here so a later issue (or #82) picks up
+Deliberately not built as part of GH #80 — tracked here so a later issue picks up
 from a documented starting point rather than rediscovering the gaps:
 
 - **Mode selection is manual.** `pdocs new` doesn't ask which versioning mode a site wants,

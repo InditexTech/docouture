@@ -73,7 +73,20 @@ export async function runNew(argv: string[]): Promise<number> {
     try {
       execFileSync('git', ['init', '--quiet'], { cwd: target, stdio: 'ignore' })
       execFileSync('git', ['add', '-A'], { cwd: target, stdio: 'ignore' })
-      execFileSync('git', ['commit', '--quiet', '-m', 'chore: initial commit'], { cwd: target, stdio: 'ignore' })
+      execFileSync(
+        'git',
+        [
+          '-c',
+          'user.name=pdocs',
+          '-c',
+          'user.email=pdocs@example.com',
+          'commit',
+          '--quiet',
+          '-m',
+          'chore: initial commit',
+        ],
+        { cwd: target, stdio: 'ignore' }
+      )
     } catch {
       console.warn('warning: could not initialise git — Antora needs at least one commit to find content')
     }

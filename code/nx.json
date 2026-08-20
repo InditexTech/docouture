@@ -26,6 +26,10 @@
       "cache": true,
       "inputs": ["default", "^default"]
     },
+    "test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
+    },
     "lint": {
       "cache": true,
       "inputs": ["default"]

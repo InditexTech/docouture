@@ -4,14 +4,16 @@ import { join, resolve } from 'node:path'
 
 import { parseArgs } from '../lib/args.js'
 import { exists } from '../lib/copy-template.js'
+import { findRepoRoot } from '../lib/repo-root.js'
 import { startDevServer } from '../lib/dev-server.js'
 
 export async function runDev(argv: string[]): Promise<number> {
   const { flags } = parseArgs(argv)
 
-  // Mirrors `new`/`version`: --dir is the repository root `pdocs new`
-  // scaffolded into, defaulting to cwd — not the site directory itself.
-  const target = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
+  // --dir (or cwd) can be anywhere inside the repository — findRepoRoot
+  // walks up to the actual repository root, same as `new`/`version`/`doctor`.
+  const startDir = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
+  const target = await findRepoRoot(startDir)
   const siteRoot = join(target, 'docs')
 
   if (!(await exists(join(siteRoot, 'antora-playbook.yml')))) {

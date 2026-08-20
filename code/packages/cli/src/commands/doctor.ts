@@ -5,6 +5,7 @@ import { dirname, join, relative, resolve, sep } from 'node:path'
 
 import { parseArgs } from '../lib/args.js'
 import { exists } from '../lib/copy-template.js'
+import { findRepoRoot } from '../lib/repo-root.js'
 import { readSourceUrl, readStartPageComponent, readStartPath } from '../lib/playbook-yml.js'
 import {
   checkAntoraAvailable,
@@ -44,7 +45,12 @@ function printResult(result: CheckResult, colour: boolean): number {
 
 export async function runDoctor(argv: string[]): Promise<number> {
   const { flags } = parseArgs(argv)
-  const target = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
+  const startDir = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
+  // --dir (or cwd) can be anywhere inside the repository — its root, inside
+  // docs/, wherever — findRepoRoot walks up to find the actual repository
+  // root the same way `git` itself would, so doctor always looks at
+  // <repoRoot>/docs regardless of where it was invoked from.
+  const target = await findRepoRoot(startDir)
   const siteRoot = join(target, 'docs')
   const colour = process.stdout.isTTY === true && !process.env.NO_COLOR
 

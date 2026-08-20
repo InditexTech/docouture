@@ -77,6 +77,13 @@ describe('runDoctor', () => {
     expect(out).not.toContain('FAIL')
   })
 
+  it('works the same when --dir points inside docs/, not the repo root', async () => {
+    await scaffoldGoodSite(repo)
+    const code = await runDoctor(['--dir', join(repo, 'docs')])
+    expect(code).toBe(0)
+    expect(loggedLines()).not.toContain('FAIL')
+  })
+
   it('fails on an uncommitted repository', async () => {
     const siteRoot = join(repo, 'docs')
     await mkdir(join(siteRoot, 'docs'), { recursive: true })

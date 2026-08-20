@@ -1,0 +1,19 @@
+code/packages/cli/templates/starter/.github/workflows/pdocs-publish.yml
+  s_cbc0b0068febde::t_6cf2da279ebdb7 1-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "237cd903c3211e3f9bf56e746b36f776b3a93dee",
+  "prompts": {},
+  "sessions": {
+    "s_cbc0b0068febde": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe2266d3dffeuNg5LPJUkECYwi",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -2,6 +2,17 @@
 # one of these. See https://docs.antora.org/antora/latest/component-version/
 name: __PDOCS_NAME__
 title: __PDOCS_TITLE__
-version: ~
+# This descriptor is identical for BOTH versioning modes — see the pdocs
+# docs-site-package skill's reference/versioning-modes.md. `main` permanently
+# says `version: prerelease`, `prerelease: true`, regardless of whether this
+# site was scaffolded standalone or versioned (`pdocs new --mode versioned`).
+# What differs between the two modes is only antora-playbook.yml's
+# content.sources[] tags (`stable` vs `v*`) and what a release tag's own copy
+# of this file ends up saying: standalone's `stable` tag says
+# `version: stable`, `prerelease: false`; a versioned release tag (v1.2.0,
+# ...) says `version: '1.2.0'`, `prerelease: false`. Until the first release
+# this site has just the one (prerelease) version — that is expected.
+version: prerelease
+prerelease: true
 nav:
   - modules/ROOT/nav.adoc

@@ -17,7 +17,7 @@ async function writeFixtureSite(root: string, opts: { siteUrl?: string } = {}): 
   await mkdir(join(root, 'docs'), { recursive: true })
   const siteBlock = opts.siteUrl ? `site:\n  url: ${opts.siteUrl}\n` : 'site:\n  title: Fixture\n'
   await writeFile(
-    join(root, 'antora-playbook.yml'),
+    join(root, 'antora-playbook.local.yml'),
     `${siteBlock}\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n`,
     'utf8'
   )
@@ -49,7 +49,7 @@ describe('startDevServer', () => {
 
   it('builds once up front when there is no build output yet', async () => {
     await mkdir(join(siteRoot, 'docs'), { recursive: true })
-    await writeFile(join(siteRoot, 'antora-playbook.yml'), 'site:\n  title: Fixture\n', 'utf8')
+    await writeFile(join(siteRoot, 'antora-playbook.local.yml'), 'site:\n  title: Fixture\n', 'utf8')
     const runBuild = vi.fn(async () => {
       await mkdir(join(siteRoot, 'build', 'site'), { recursive: true })
       await writeFile(join(siteRoot, 'build', 'site', 'index.html'), '<html><body>built</body></html>', 'utf8')
@@ -65,7 +65,7 @@ describe('startDevServer', () => {
 
   it('throws when the initial build fails and there is no prior output', async () => {
     await mkdir(join(siteRoot, 'docs'), { recursive: true })
-    await writeFile(join(siteRoot, 'antora-playbook.yml'), 'site:\n  title: Fixture\n', 'utf8')
+    await writeFile(join(siteRoot, 'antora-playbook.local.yml'), 'site:\n  title: Fixture\n', 'utf8')
     const runBuild = vi.fn(async () => false)
 
     await expect(startDevServer({ siteRoot, port: 0, runBuild, log: () => {}, logError: () => {} })).rejects.toThrow(

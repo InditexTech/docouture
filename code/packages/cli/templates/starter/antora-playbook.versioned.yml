@@ -5,7 +5,7 @@
 # Build with:  npx antora --fetch antora-playbook.yml
 # Output:      build/site
 #
-# Mode 2 (Stable + Prerelease) versioning — see the pdocs docs-site-package
+# Versioned (Full History) versioning — see the pdocs docs-site-package
 # skill's reference/versioning-modes.md for the full mechanism this playbook
 # and docs/antora.yml together implement.
 #
@@ -31,26 +31,36 @@ content:
       # playbook's comment: the starter template's own nested `docs/` lands
       # one level below this repository's `docs/`.
       start_path: docs/docs
-      # Mode 2 (Stable + Prerelease): `main` aggregates as the prerelease
-      # version — docs/antora.yml on this branch permanently says
-      # `version: prerelease`, `prerelease: true`. `stable` is a rolling tag
-      # that pdocs-release.yml force-moves to a fresh one-off commit on every
-      # release, not a second long-lived branch. Until the first release,
-      # `stable` does not exist yet and this site builds with just the one
-      # (prerelease) version — that is expected, not an error.
+      # Versioned (Full History): `main` aggregates as the prerelease
+      # version — docs/antora.yml on this branch says `version: prerelease`,
+      # `prerelease: true`, the same as the standalone mode's shape (this
+      # descriptor is identical for both modes on main — see docs/antora.yml's
+      # own comment). `tags: ['v*']` matches every release tag (v1.2.0,
+      # v2.0.0, ...) pdocs-release.yml cuts, each an immutable version with
+      # its own copy of docs/antora.yml — the version dropdown grows by one
+      # every release and nothing here ever needs editing again.
       branches: [main]
-      tags: ['stable']
+      tags: ['v*']
 
 ui:
   bundle:
-    # Antora's own reference UI, so this site builds immediately with no
-    # further setup. Swap in a different bundle once you have one, for
-    # example the pdocs UI bundle:
+    # The pdocs UI bundle, installed as a real npm dependency (see
+    # package.json) rather than fetched from a URL at build time — `npm
+    # install` puts it under node_modules, and Antora reads the zip straight
+    # out of there. Pinned to the exact same version as
+    # @inditextech/pdocs-cli (both packages release in lockstep, one version
+    # per tag), so whatever generated this site is always what it builds
+    # with.
     #
-    #   url: https://example.com/pdocs-ui-bundle/releases/0.1.0/ui-bundle-0.1.0.zip
-    #   snapshot: false
-    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
-    snapshot: true
+    # `build/ui-bundle.zip` (no version in the name) is a stable alias the
+    # published package always carries alongside the versioned
+    # `build/ui-bundle-<version>.zip` — see ui-bundle's own alias.js — so this
+    # path never needs editing on a version bump.
+    #
+    # Swap in a different bundle instead by pointing `url` at its zip
+    # (a URL or another local path) and dropping the devDependency above.
+    url: ./node_modules/@inditextech/pdocs-ui-bundle/build/ui-bundle.zip
+    snapshot: false
 
 output:
   dir: build/site

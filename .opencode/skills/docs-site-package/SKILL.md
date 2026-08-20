@@ -149,14 +149,15 @@ four places. Details, and why `starter` isn't that template anymore:
 
 ## Versioning a site
 
-`example` is versioned under **Mode 2 (Stable + Prerelease)** (GH #80): `main` permanently
+`example` is versioned under **standalone (Stable + Prerelease)** (GH #80): `main` permanently
 aggregates as the `prerelease` version, and a rolling `stable` tag — force-moved to a fresh
 commit on each release by the single `pdocs-release.yml` workflow template
-(`.github/workflows/` in a site scaffolded by `pdocs new`, which detects Mode 1 vs Mode 2
-from `docs/antora.yml`'s `version:` field and branches its steps accordingly) — aggregates
-as the `stable` version. The other supported shape, **Mode 1 (Full History)** — a `next`
-branch plus every release tag kept forever — that same workflow already handles, but is
-not wired up on `example` or anywhere else yet (GH #81). Full guidance, playbook examples
+(`.github/workflows/` in a site scaffolded by `pdocs new`, which detects standalone vs
+versioned from `docs/antora-playbook.yml`'s own `content.sources[]` tags and branches its
+steps accordingly) — aggregates as the `stable` version. The other supported shape,
+**versioned (Full History)** — every release tag kept forever, `main` unchanged — that
+same workflow already handles, but is not wired up on `example` or anywhere else yet
+(GH #81). Full guidance, playbook examples
 and URL-routing notes (`urls.latest_version_segment`): `reference/versioning-modes.md`.
 
 Either mode's `content.sources[]` names refs (`main`/`stable`/`v*`) that a PR checkout —
@@ -176,9 +177,10 @@ instead.
   unset, and how to retarget the UI bundle for a real deployment.
 - `reference/new-site.md` — creating a new site package, and extracting one into a
   repository of its own.
-- `reference/versioning-modes.md` — the two docs versioning modes (Mode 1: versioned tags,
-  Mode 2: stable + prerelease), with `antora.yml`/playbook examples for each, how the
+- `reference/versioning-modes.md` — the two docs versioning modes (versioned: full history
+  via release tags, standalone: stable + prerelease), with `antora.yml`/playbook examples
+  for each, how the
   single `pdocs-release.yml` detects which mode a site is on and cuts a release either way
-  (manually, or automatically on a `docs/release`/`docs/force-release`-labelled PR merge),
+  (manually, or automatically on a `docs/release`-labelled PR merge),
   the force-republish and `docs/.release-version` auto-bump mechanics, and how
   `pdocs-pr-verify.yml` / `antora-playbook.pr-verify.yml` keep PR builds mode-agnostic.

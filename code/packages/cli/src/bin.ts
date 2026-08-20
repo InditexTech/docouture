@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 'use strict'
 
+import pc from 'picocolors'
+
 import { runNew } from './commands/new.js'
 import { runVersion } from './commands/version.js'
 import { runDev } from './commands/dev.js'
 import { runBuild } from './commands/build.js'
 import { runDoctor } from './commands/doctor.js'
+import { readCliInfo } from './lib/cli-info.js'
 
-const USAGE = `pdocs — tools for pdocs documentation sites
-
-Usage:
+const USAGE = `Usage:
   pdocs new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned]
       Scaffold an Antora documentation site into docs/ (and its workflows into
       .github/workflows/) of an existing git repository. Must be run from
@@ -34,16 +35,31 @@ Usage:
       version, the four names that must agree (component name, start page,
       content path, package name), git history, and that antora is
       installed.
+
+  pdocs --version, -v
+      Print the installed @inditextech/pdocs-cli version and exit.
 `
+
+// build/bin.js -> package root, 1 level up — see readCliInfo's own comment.
+async function banner(): Promise<string> {
+  const { name, version } = await readCliInfo(import.meta.url, 1)
+  return `${pc.bold(pc.cyan(name))} ${pc.dim(`v${version}`)}`
+}
 
 async function main(): Promise<number> {
   const [command, ...rest] = process.argv.slice(2)
 
   switch (command) {
+    case '--version':
+    case '-v':
+      console.log(await banner())
+      return 0
     case undefined:
     case '--help':
     case '-h':
     case 'help':
+      console.log(await banner())
+      console.log('')
       console.log(USAGE)
       return command === undefined ? 1 : 0
     case 'new':
@@ -58,6 +74,8 @@ async function main(): Promise<number> {
       return runDoctor(rest)
     default:
       console.error(`unknown command: '${command}'\n`)
+      console.log(await banner())
+      console.log('')
       console.error(USAGE)
       return 1
   }

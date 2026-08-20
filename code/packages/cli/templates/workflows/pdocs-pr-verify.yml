@@ -4,16 +4,16 @@ name: pdocs-pr-verify
 # only the PR's own HEAD — not whichever refs this site's versioning mode
 # (see the docs-site-package skill's versioning-modes.md) publishes from:
 #
-#   - Mode 1 (Full History): not the `next`/prerelease branch, not any
-#     `v*` release tag.
-#   - Mode 2 (Stable + Prerelease): not the `prerelease` branch, not the
+#   - Versioned (Full History): not the prerelease branch, not any `v*`
+#     release tag.
+#   - Standalone (Stable + Prerelease): not the prerelease branch, not the
 #     rolling `stable` tag.
 #
 # A PR checkout is on a detached HEAD or a feature branch — neither of those
 # refs — so building the real `antora-playbook.yml` here would either fail
 # (the refs it names are not reachable from a shallow, single-ref checkout)
-# or silently validate the wrong content. `antora-playbook.pr-verify.yml`
-# (see that file's own header) exists for exactly this: one content source,
+# or silently validate the wrong content. `antora-playbook.local.yml` (see
+# that file's own header) exists for exactly this: one content source,
 # `branches: HEAD`, so this always validates whatever the PR actually
 # changed — no `fetch-depth: 0` needed, since no other ref is ever read.
 on:
@@ -52,4 +52,4 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npx antora --fetch antora-playbook.pr-verify.yml
+        run: npx antora --fetch antora-playbook.local.yml

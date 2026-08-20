@@ -1,11 +1,12 @@
 'use strict'
 
+import { input, select } from '@inquirer/prompts'
 import { execFileSync } from 'node:child_process'
 import { dirname, join, relative, resolve } from 'node:path'
-import { createInterface } from 'node:readline/promises'
 import { fileURLToPath } from 'node:url'
 
 import { parseArgs } from '../lib/args.js'
+import { readCliInfo } from '../lib/cli-info.js'
 import { copyTemplate, exists, isEmptyOrMissing, writeTemplateFile } from '../lib/copy-template.js'
 
 // Matches the rule an npm package name (and, not coincidentally, an Antora
@@ -14,10 +15,19 @@ import { copyTemplate, exists, isEmptyOrMissing, writeTemplateFile } from '../li
 // that makes no sense for a directory name here.
 const NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/
 
-// The only two versioning shapes `pdocs new` can generate today — see the
-// docs-site-package skill's reference/versioning-modes.md. Mode 1 (Full
-// History / versioned tags) is documented there but still guidance-only, not
-// wired into any template, so it has no third value here yet.
+// The only two versioning shapes `pdocs new` scaffolds — both real,
+// releasable configurations handled by the templated pdocs-release.yml — see
+// the docs-site-package skill's reference/versioning-modes.md. 'standalone'
+// (the default): `main` always builds as the prerelease/preview version, and
+// a release just force-moves a rolling `stable` tag — no historical archive,
+// appropriate for a product where only "now" and "what's next" matter.
+// 'versioned': `main` builds as the prerelease version too — docs/antora.yml
+// is identical to the standalone shape on main, for both modes — but every
+// release is instead its own immutable `vX.Y.Z` git tag, kept forever —
+// appropriate for a library/SDK whose consumers pin an old version. (A bare,
+// unversioned checkout — no prerelease/stable split at all — is not offered
+// here: it only ever comes up as an ad-hoc `pdocs dev` preview before a mode
+// is chosen, never as something worth releasing.)
 const MODES = ['standalone', 'versioned'] as const
 type Mode = (typeof MODES)[number]
 
@@ -64,6 +74,31 @@ function defaultIO(): NewIO {
   }
 }
 
+// @inquirer/prompts pipes its own internal stream into whatever output it's
+// given and calls .end() on ours when each individual prompt finishes —
+// harmless against process.stdout (Node refuses to let that be ended,
+// which is why chaining prompts against a real terminal works fine) but
+// fatal against a plain custom stream like a test's PassThrough: it would
+// go dark after the very first of promptWizard's three sequential prompts.
+// Wrapping every method through except a no-op .end() makes any writable
+// stream survive being reused across multiple prompts, the same as stdout
+// already does.
+function keepOutputOpen(output: NodeJS.WritableStream): NodeJS.WritableStream {
+  return new Proxy(output, {
+    get(target, prop, receiver) {
+      if (prop === 'end') {
+        return (...args: unknown[]) => {
+          const cb = typeof args[args.length - 1] === 'function' ? (args.pop() as () => void) : undefined
+          cb?.()
+          return receiver
+        }
+      }
+      const value = Reflect.get(target, prop, target)
+      return typeof value === 'function' ? value.bind(target) : value
+    },
+  })
+}
+
 interface WizardAnswers {
   name: string
   title: string
@@ -73,42 +108,64 @@ interface WizardAnswers {
 // Fills in only whatever `initial` didn't already supply — a flag or
 // positional argument always wins over a prompt, so scripting one piece
 // (say, --mode) while leaving the rest to the wizard works as expected.
+// Each @inquirer/prompts call gets io's streams via its `context` argument
+// rather than touching process.stdin/stdout directly, so tests can hand it
+// a scripted stream pair instead of a real TTY — same substitution point
+// the old hand-rolled readline wizard used.
 async function promptWizard(
   io: NewIO,
   initial: { name?: string; title?: string; mode?: Mode }
 ): Promise<WizardAnswers> {
-  const rl = createInterface({ input: io.input, output: io.output })
-  try {
-    let name = initial.name
-    while (!name || !NAME_PATTERN.test(name)) {
-      if (name) {
-        io.output.write(
-          `invalid name: '${name}' — expected lowercase letters, digits and hyphens, e.g. my-project-docs\n`
-        )
-      }
-      name = (await rl.question('Site / component name: ')).trim()
-    }
+  const context = { input: io.input, output: keepOutputOpen(io.output) }
 
-    let title = initial.title
-    if (!title) {
-      const defaultTitle = titleCase(name)
-      const answer = (await rl.question(`Site title [${defaultTitle}]: `)).trim()
-      title = answer.length > 0 ? answer : defaultTitle
-    }
+  const name = (
+    await input(
+      {
+        message: 'Site / component name:',
+        default: initial.name,
+        validate: (value) =>
+          NAME_PATTERN.test(value.trim()) || "expected lowercase letters, digits and hyphens, e.g. 'my-project-docs'",
+      },
+      context
+    )
+  ).trim()
 
-    let mode = initial.mode
-    if (!mode) {
-      io.output.write('Versioning mode:\n')
-      io.output.write('  1) Standalone / Unversioned (default)\n')
-      io.output.write('  2) Versioned (Mode 2: Stable + Prerelease)\n')
-      const answer = (await rl.question('Choice [1]: ')).trim()
-      mode = answer === '2' ? 'versioned' : 'standalone'
-    }
+  const defaultTitle = titleCase(name)
+  const title = (
+    await input(
+      {
+        message: 'Site title:',
+        default: initial.title ?? defaultTitle,
+      },
+      context
+    )
+  ).trim()
 
-    return { name, title, mode }
-  } finally {
-    rl.close()
-  }
+  const mode =
+    initial.mode ??
+    (await select<Mode>(
+      {
+        message: 'Versioning mode:',
+        default: 'standalone' as Mode,
+        choices: [
+          {
+            name: 'Standalone (Stable + Prerelease)',
+            value: 'standalone',
+            description:
+              "main always builds as the prerelease/preview version; a release moves a rolling 'stable' tag — no historical archive kept.",
+          },
+          {
+            name: 'Versioned (Full History)',
+            value: 'versioned',
+            description:
+              'main always builds as the prerelease/preview version; every release is an immutable vX.Y.Z git tag.',
+          },
+        ],
+      },
+      context
+    ))
+
+  return { name, title: title.length > 0 ? title : defaultTitle, mode }
 }
 
 export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<number> {
@@ -194,7 +251,14 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   const starterDir = join(templatesRoot, 'starter')
   const workflowsTemplateDir = join(templatesRoot, 'workflows')
 
-  const values = { name, title }
+  // build/commands/new.js -> build/ -> package root, 2 levels up — see
+  // readCliInfo's own comment. This is the exact version a scaffolded
+  // site's devDependency on @inditextech/pdocs-cli gets pinned to below, so
+  // it always matches whatever CLI actually generated it, snapshot/local
+  // releases included.
+  const { version: cliVersion } = await readCliInfo(import.meta.url, 2)
+
+  const values = { name, title, cliVersion }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own
   // nested docs/antora.yml — lands under <repo-root>/docs/ as one piece,
@@ -205,8 +269,16 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
 
   if (mode === 'versioned') {
-    await writeTemplateFile(join(starterDir, 'docs', 'antora.mode2.yml'), join(docsDir, 'docs', 'antora.yml'), values)
-    await writeTemplateFile(join(starterDir, 'antora-playbook.mode2.yml'), join(docsDir, 'antora-playbook.yml'), values)
+    await writeTemplateFile(
+      join(starterDir, 'antora-playbook.versioned.yml'),
+      join(docsDir, 'antora-playbook.yml'),
+      values
+    )
+    await writeTemplateFile(
+      join(starterDir, 'docs', 'release-version.versioned'),
+      join(docsDir, 'docs', '.release-version'),
+      values
+    )
   }
 
   console.log(`created ${relative(process.cwd(), docsDir) || 'docs'}`)
@@ -217,14 +289,19 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   console.log('  npm install')
   console.log('  npm run build')
 
+  console.log('')
   if (mode === 'versioned') {
-    console.log('')
-    console.log('this site is on Mode 2 (Stable + Prerelease) versioning — main is the prerelease channel.')
+    console.log('this site is on Versioned (Full History) versioning — main is the prerelease channel.')
+    console.log(
+      'run the pdocs-release workflow (.github/workflows/pdocs-release.yml) to cut your first vX.Y.Z release.'
+    )
+  } else {
+    console.log('this site is on Standalone (Stable + Prerelease) versioning — main is the prerelease channel.')
     console.log(
       'run the pdocs-release workflow (.github/workflows/pdocs-release.yml) to cut your first stable release.'
     )
-    console.log("see the docs-site-package skill's reference/versioning-modes.md for the full mechanism.")
   }
+  console.log("see the docs-site-package skill's reference/versioning-modes.md for the full mechanism.")
 
   return 0
 }

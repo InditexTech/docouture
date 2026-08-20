@@ -51,15 +51,16 @@ const CONTENT_TYPES: Record<string, string> = {
 const IGNORED = /(?:^|[\\/])(?:\.|.*~$)|\.swp$/
 
 export interface DevServerOptions {
-  /** The site root: contains antora-playbook.yml and package.json. */
+  /** The site root: contains antora-playbook.local.yml and package.json. */
   siteRoot: string
   /** 0 picks any free port — used by tests. Defaults to 5000. */
   port?: number
   /**
    * Runs one build, returning whether it succeeded. Defaults to spawning
-   * the site's own local `antora` against `antora-playbook.yml`. Overridable
-   * so a caller (a test, or a future non-Antora build) doesn't need a real
-   * Antora install just to exercise the server/watch/reload plumbing.
+   * the site's own local `antora` against `antora-playbook.local.yml`.
+   * Overridable so a caller (a test, or a future non-Antora build) doesn't
+   * need a real Antora install just to exercise the server/watch/reload
+   * plumbing.
    */
   runBuild?: () => Promise<boolean>
   log?: (msg: string) => void
@@ -81,7 +82,7 @@ function defaultRunBuild(siteRoot: string): () => Promise<boolean> {
     new Promise((resolvePromise) => {
       // No --fetch here: that belongs to the one-off build only — on a
       // watch loop it would re-fetch the content source on every keystroke.
-      execFile(antoraBin, ['antora-playbook.yml'], { cwd: siteRoot }, (err, stdout, stderr) => {
+      execFile(antoraBin, ['antora-playbook.local.yml'], { cwd: siteRoot }, (err, stdout, stderr) => {
         if (err) {
           if (stdout) process.stdout.write(stdout)
           if (stderr) process.stderr.write(stderr)
@@ -94,7 +95,7 @@ function defaultRunBuild(siteRoot: string): () => Promise<boolean> {
 async function readBasePath(siteRoot: string): Promise<string> {
   let source: string
   try {
-    source = await readFile(join(siteRoot, 'antora-playbook.yml'), 'utf8')
+    source = await readFile(join(siteRoot, 'antora-playbook.local.yml'), 'utf8')
   } catch {
     return ''
   }
@@ -266,7 +267,7 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
 
   const watchers = [
     watchPath(join(siteRoot, 'docs')),
-    watchPath(join(siteRoot, 'antora-playbook.yml'), { recursive: false }),
+    watchPath(join(siteRoot, 'antora-playbook.local.yml'), { recursive: false }),
   ]
   void Promise.all(watchers)
 

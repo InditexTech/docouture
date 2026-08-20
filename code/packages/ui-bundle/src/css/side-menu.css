@@ -36,15 +36,17 @@
  *   no brand block, a white 80% scrim (.side-menu-scrim) behind the panel,
  *   itself also starting below the header and fading in/out on the same
  *   timing as the panel's slide. The version tag moves into the drawer at
- *   s only (m's frame has neither a brand block nor the tag — just the
- *   nav list).
+ *   s (m's frame has neither a brand block nor the tag — just the
+ *   nav list; the header shows it there instead — see header.css).
  * - xs (<513): overlay drawer, full width AND full height from the very
  *   top (Figma's frame for this one positions it at y=0, unlike m/s) — its
  *   own header row (title + close button) replaces the main header while
  *   open, rather than sitting below it. No scrim (it already covers the
  *   viewport). Slides up from the bottom (`translateY`) rather than in
  *   from the side, since it's a full-screen sheet, not a side panel, at
- *   this width.
+ *   this width. The version tag shows here too, same as s (below the nav
+ *   list, at the bottom of the sheet) — it has nowhere else to live once
+ *   the header itself is replaced by the drawer's own header row.
  *
  * One markup tree serves every breakpoint: nav.hbs always renders the
  * brand block, the drawer header row and the version-tag slot; this file
@@ -363,7 +365,7 @@ html.is-side-menu-collapsed {
   flex-shrink: 0;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--ids-breakpoints-xs-s) {
   .side-menu__version {
     display: block;
   }

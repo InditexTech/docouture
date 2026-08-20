@@ -1,0 +1,22 @@
+.github/workflows/release.yml
+  h_c93d154c7c7074 147-153,232-248
+code/packages/antora-extensions/package.json
+  h_c93d154c7c7074 7-10
+code/packages/asciidoc-extensions/package.json
+  h_c93d154c7c7074 7-11
+code/packages/ui-bundle/package.json
+  h_c93d154c7c7074 7-12
+justfile
+  h_c93d154c7c7074 432-575
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a5fdf39578e71f4e877bc082fd671b249475103b",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

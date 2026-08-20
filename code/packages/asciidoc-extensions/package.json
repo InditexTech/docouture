@@ -1,10 +1,14 @@
 {
   "name": "@inditextech/pdocs-asciidoc-extensions",
   "version": "0.1.0",
-  "private": true,
   "description": "Asciidoctor extensions shared by pdocs documentation sites — authored content that has no AsciiDoc equivalent, rendered as IOP DS markup",
   "license": "MPL-2.0",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "lib",
+    "README.md"
+  ],
   "engines": {
     "node": ">=24.0.0"
   },

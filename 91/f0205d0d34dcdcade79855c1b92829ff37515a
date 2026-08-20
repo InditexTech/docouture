@@ -1,0 +1,25 @@
+code/packages/ui-bundle/preview-src/page-versions-prerelease-current.adoc
+  s_74828d7299bdbc::t_4802a457e11046 1-16
+code/packages/ui-bundle/preview-src/page-versions-stable-latest.adoc
+  s_74828d7299bdbc::t_8d822667d5dcf1 1-16
+code/packages/ui-bundle/preview-src/page-versions-stable-older.adoc
+  s_74828d7299bdbc::t_8722a0eca6c465 1-16
+code/packages/ui-bundle/preview-src/ui-model.yml
+  s_74828d7299bdbc::t_18c2728197893e 251-371
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "91f0205d0d34dcdcade79855c1b92829ff37515a",
+  "prompts": {},
+  "sessions": {
+    "s_74828d7299bdbc": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe0796e01ffedDM4y0uTGLseK2",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

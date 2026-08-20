@@ -13,6 +13,7 @@
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
     "typecheck": "nx run-many -t typecheck",
+    "test": "nx run-many -t test",
     "clean": "nx run-many -t clean",
     "format": "prettier --write . ../README.md",
     "format:check": "prettier --check . ../README.md"
@@ -28,6 +29,7 @@
     "stylelint": "~17.14.1",
     "stylelint-config-standard": "~40.0.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "~8.67.0"
+    "typescript-eslint": "~8.67.0",
+    "vitest": "~3.2.4"
   }
 }

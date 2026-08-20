@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 # __PDOCS_TITLE__ documentation
 
 This repository's `docs/` directory is an Antora documentation site, scaffolded by

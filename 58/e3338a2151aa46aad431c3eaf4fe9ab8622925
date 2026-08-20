@@ -1,0 +1,26 @@
+code/packages/cli/src/commands/build.ts
+  h_c93d154c7c7074 7,13-16
+code/packages/cli/src/commands/dev.ts
+  h_c93d154c7c7074 7,13-16
+code/packages/cli/src/commands/doctor.spec.ts
+  h_c93d154c7c7074 80-86
+code/packages/cli/src/commands/doctor.ts
+  h_c93d154c7c7074 8,48-53
+code/packages/cli/src/lib/repo-root.spec.ts
+  h_c93d154c7c7074 1-34
+code/packages/cli/src/lib/repo-root.ts
+  h_c93d154c7c7074 1-22
+code/packages/cli/templates/starter/package.json
+  h_c93d154c7c7074 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "58e3338a2151aa46aad431c3eaf4fe9ab8622925",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

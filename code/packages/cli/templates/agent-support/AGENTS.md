@@ -1,4 +1,4 @@
-# **PDOCS_TITLE** documentation
+# __PDOCS_TITLE__ documentation
 
 This repository's `docs/` directory is an Antora documentation site, scaffolded by
 `pdocs new` (`@inditextech/pdocs-cli`). This file is the baseline for any coding agent

@@ -88,6 +88,29 @@ describe('runNew', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing workflow'))
   })
 
+  it('refuses to scaffold when AGENTS.md already exists at the repo root', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await writeFile(join(repo, 'AGENTS.md'), 'existing', 'utf8')
+
+    const code = await runNew(['my-project-docs', '--dir', repo])
+    expect(code).toBe(1)
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing agent file'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('AGENTS.md'))
+  })
+
+  it('refuses to scaffold when a skill directory already exists and is non-empty', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await mkdir(join(repo, '.opencode', 'skills', 'site-structure'), { recursive: true })
+    await writeFile(join(repo, '.opencode', 'skills', 'site-structure', 'SKILL.md'), 'existing', 'utf8')
+
+    const code = await runNew(['my-project-docs', '--dir', repo])
+    expect(code).toBe(1)
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing agent file'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('site-structure'))
+  })
+
   it('scaffolds docs/ (standalone by default, Stable + Prerelease) and .github/workflows/ into an existing repo', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
@@ -126,6 +149,57 @@ describe('runNew', () => {
       const content = await readFile(join(repo, '.github', 'workflows', workflow), 'utf8')
       expect(content.length).toBeGreaterThan(0)
     }
+
+    // asciidoc/antora pdocs extensions are wired into the playbook, and both
+    // packages are pinned as devDependencies alongside ui-bundle/cli.
+    expect(playbook).toContain('@inditextech/pdocs-asciidoc-extensions')
+    expect(playbook).toContain('@inditextech/pdocs-antora-extensions')
+  })
+
+  it('scaffolds AGENTS.md and mirrored .opencode/.claude skills at the repo root', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--title', 'My Project Docs'])
+    expect(code).toBe(0)
+
+    const agentsMd = await readFile(join(repo, 'AGENTS.md'), 'utf8')
+    expect(agentsMd).toContain('My Project Docs')
+
+    for (const platform of ['.opencode', '.claude']) {
+      for (const skill of ['writing-docs-pages', 'site-structure']) {
+        const skillMd = await readFile(join(repo, platform, 'skills', skill, 'SKILL.md'), 'utf8')
+        expect(skillMd).toContain(`name: ${skill}`)
+      }
+    }
+
+    // Standalone mode (the default) does not get the docs-versioning skill.
+    await expect(readFile(join(repo, '.opencode', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')).rejects.toThrow()
+    await expect(readFile(join(repo, '.claude', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')).rejects.toThrow()
+
+    // Both platforms' copies are byte-identical.
+    for (const skill of ['writing-docs-pages', 'site-structure']) {
+      const opencode = await readFile(join(repo, '.opencode', 'skills', skill, 'SKILL.md'), 'utf8')
+      const claude = await readFile(join(repo, '.claude', 'skills', skill, 'SKILL.md'), 'utf8')
+      expect(opencode).toBe(claude)
+    }
+  })
+
+  it('scaffolds the docs-versioning skill only under --mode versioned', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--mode', 'versioned'])
+    expect(code).toBe(0)
+
+    for (const platform of ['.opencode', '.claude']) {
+      const skillMd = await readFile(join(repo, platform, 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')
+      expect(skillMd).toContain('name: docs-versioning')
+    }
+
+    const opencode = await readFile(join(repo, '.opencode', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')
+    const claude = await readFile(join(repo, '.claude', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')
+    expect(opencode).toBe(claude)
   })
 
   it('derives a title-cased default title from the name when --title is omitted', async () => {
@@ -176,6 +250,11 @@ describe('runNew', () => {
     // published, which a ^/~ range around a different number never does.
     expect(pkg.devDependencies?.['@inditextech/pdocs-cli']).not.toMatch(/[\^~]/)
     expect(pkg.devDependencies?.antora).toBe('3.1.15')
+    expect(pkg.devDependencies?.['@inditextech/pdocs-asciidoc-extensions']).not.toMatch(/[\^~]/)
+    expect(pkg.devDependencies?.['@inditextech/pdocs-antora-extensions']).not.toMatch(/[\^~]/)
+    expect(pkg.devDependencies?.['@inditextech/pdocs-asciidoc-extensions']).toBe(
+      pkg.devDependencies?.['@inditextech/pdocs-cli']
+    )
   })
 
   it('prompts for whatever was not supplied when run against an interactive io', async () => {

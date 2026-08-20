@@ -21,8 +21,15 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   __PDOCS_CLI_VERSION__: 'cliVersion',
 }
 
+// `<!-- prettier-ignore -->` directives exist only to stop prettier mangling a
+// placeholder token in the template source (e.g. `__PDOCS_TITLE__` inside a
+// markdown heading, which double-underscore emphasis would otherwise rewrite
+// to `**PDOCS_TITLE**`) — they are not meant to survive into scaffolded
+// output, where the placeholder has already been substituted away.
+const PRETTIER_IGNORE_LINE = /^<!-- prettier-ignore -->\n/m
+
 function substitute(text: string, values: TemplateValues): string {
-  let out = text
+  let out = text.replace(PRETTIER_IGNORE_LINE, '')
   for (const [token, key] of Object.entries(PLACEHOLDERS)) {
     out = out.split(token).join(values[key])
   }

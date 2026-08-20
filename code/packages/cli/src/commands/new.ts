@@ -37,6 +37,21 @@ type Mode = (typeof MODES)[number]
 // overwritten without having to read the template directory to find out.
 const WORKFLOW_NAMES = ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-pr-verify.yml']
 
+// Repo-root-relative paths `templates/agent-support/` lands under (see
+// new.ts's own copyTemplate call below) — kept as a literal list, same
+// reasoning as WORKFLOW_NAMES above, so the pre-flight conflict check can
+// name exactly what would be overwritten. `docs-versioning` is deliberately
+// absent here: it is scaffolded only under `--mode versioned` (see the
+// `.versioned`-marker copy further down), so an existing standalone-mode
+// site with no such directory yet is never blocked by this check on it.
+const AGENT_SUPPORT_PATHS = [
+  'AGENTS.md',
+  join('.opencode', 'skills', 'writing-docs-pages'),
+  join('.opencode', 'skills', 'site-structure'),
+  join('.claude', 'skills', 'writing-docs-pages'),
+  join('.claude', 'skills', 'site-structure'),
+]
+
 function titleCase(name: string): string {
   return name
     .split('-')
@@ -242,14 +257,35 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     return 1
   }
 
-  // build/commands/new.js -> build/templates/{starter,workflows} — see
-  // scripts/copy-templates.mjs, which puts the templates/ directory here at
-  // build time. Resolved from import.meta.url so this works regardless of
-  // the directory pdocs is invoked from.
+  // AGENTS.md and the skill directories land at the repository root, same as
+  // .github/workflows/ above — a non-empty skill directory (or an existing
+  // AGENTS.md) is refused for the same reason a workflow file is: this
+  // command only ever writes into empty space, never merges into whatever a
+  // repository already has.
+  const existingAgentSupport: string[] = []
+  for (const relativePath of AGENT_SUPPORT_PATHS) {
+    const absolutePath = join(target, relativePath)
+    if (relativePath.endsWith('.md')) {
+      if (await exists(absolutePath)) existingAgentSupport.push(relativePath)
+    } else if ((await exists(absolutePath)) && !(await isEmptyOrMissing(absolutePath))) {
+      existingAgentSupport.push(relativePath)
+    }
+  }
+  if (existingAgentSupport.length > 0) {
+    console.error(`refusing to overwrite existing agent file(s)/dir(s) under '${target}':`)
+    console.error(`  ${existingAgentSupport.join(', ')}`)
+    return 1
+  }
+
+  // build/commands/new.js -> build/templates/{starter,workflows,agent-support}
+  // — see scripts/copy-templates.mjs, which puts the templates/ directory
+  // here at build time. Resolved from import.meta.url so this works
+  // regardless of the directory pdocs is invoked from.
   const here = dirname(fileURLToPath(import.meta.url))
   const templatesRoot = join(here, '..', 'templates')
   const starterDir = join(templatesRoot, 'starter')
   const workflowsTemplateDir = join(templatesRoot, 'workflows')
+  const agentSupportDir = join(templatesRoot, 'agent-support')
 
   // build/commands/new.js -> build/ -> package root, 2 levels up — see
   // readCliInfo's own comment. This is the exact version a scaffolded
@@ -268,6 +304,13 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   await copyTemplate(starterDir, docsDir, values)
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
 
+  // AGENTS.md and both platforms' skill directories also land at the true
+  // repo root, same as workflows — an agent reads them from there, not from
+  // inside docs/. copyTemplate's own VERSIONED_MARKER skip (see
+  // copy-template.ts) leaves docs-versioning.versioned untouched here; it is
+  // copied under its real name below, only in versioned mode.
+  await copyTemplate(agentSupportDir, target, values)
+
   if (mode === 'versioned') {
     await writeTemplateFile(
       join(starterDir, 'antora-playbook.versioned.yml'),
@@ -279,10 +322,21 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
       join(docsDir, 'docs', '.release-version'),
       values
     )
+
+    for (const platform of ['.opencode', '.claude']) {
+      await copyTemplate(
+        join(agentSupportDir, platform, 'skills', 'docs-versioning.versioned'),
+        join(target, platform, 'skills', 'docs-versioning'),
+        values
+      )
+    }
   }
 
   console.log(`created ${relative(process.cwd(), docsDir) || 'docs'}`)
   console.log(`created ${relative(process.cwd(), workflowsDir)}`)
+  console.log(`created ${relative(process.cwd(), join(target, 'AGENTS.md'))}`)
+  console.log(`created ${relative(process.cwd(), join(target, '.opencode', 'skills'))}`)
+  console.log(`created ${relative(process.cwd(), join(target, '.claude', 'skills'))}`)
   console.log('')
   console.log('next steps:')
   console.log('  cd docs')
@@ -295,13 +349,14 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     console.log(
       'run the pdocs-release workflow (.github/workflows/pdocs-release.yml) to cut your first vX.Y.Z release.'
     )
+    console.log('see the docs-versioning skill (.opencode/skills, .claude/skills) for the full mechanism.')
   } else {
     console.log('this site is on Standalone (Stable + Prerelease) versioning — main is the prerelease channel.')
     console.log(
       'run the pdocs-release workflow (.github/workflows/pdocs-release.yml) to cut your first stable release.'
     )
   }
-  console.log("see the docs-site-package skill's reference/versioning-modes.md for the full mechanism.")
+  console.log('see the site-structure and writing-docs-pages skills (.opencode/skills, .claude/skills) to get started.')
 
   return 0
 }

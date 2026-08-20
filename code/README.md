@@ -19,9 +19,11 @@ follows is how the workspace itself is put together.
 
 `example` consumes `ui-bundle` through a `workspace:*` dependency, so Nx rebuilds the
 bundle before it. `packages/cli/templates/starter` — what `pdocs new` scaffolds — does
-not: it is a deliberately dependency-light standalone site (plain Antora default UI, no
-pdocs extensions), since none of `ui-bundle`, `antora-extensions` or
-`asciidoc-extensions` are published to npm yet. See `.opencode/skills/starter-package`.
+not: it depends on `ui-bundle`, `antora-extensions` and `asciidoc-extensions` as real npm
+packages (pinned to the exact CLI version that generated it), not workspace links, since
+none of them are published to the real npm registry yet (see `.github/workflows/
+release.yml`'s own comment) — only local/snapshot installs resolve those pins today. See
+`.opencode/skills/starter-package`.
 
 The versioned zip is the artifact to publish — it is the only thing that records
 which bundle a consumer downloaded. The unversioned copy is a byte-identical

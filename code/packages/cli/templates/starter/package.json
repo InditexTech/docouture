@@ -14,6 +14,8 @@
   "devDependencies": {
     "@inditextech/pdocs-cli": "__PDOCS_CLI_VERSION__",
     "@inditextech/pdocs-ui-bundle": "__PDOCS_CLI_VERSION__",
+    "@inditextech/pdocs-asciidoc-extensions": "__PDOCS_CLI_VERSION__",
+    "@inditextech/pdocs-antora-extensions": "__PDOCS_CLI_VERSION__",
     "antora": "3.1.15"
   }
 }

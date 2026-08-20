@@ -16,12 +16,13 @@ package at CLI build time (`scripts/copy-templates.mjs`) and copied out by `pdoc
 into a fresh directory, with `__PDOCS_NAME__`/`__PDOCS_TITLE__`/`__PDOCS_CLI_VERSION__`
 tokens substituted for whatever the invocation was given (`copy-template.ts`).
 
-Of the three, only `@inditextech/pdocs-ui-bundle` made it back into this template — as a
-real npm devDependency, pinned to the exact same version as `@inditextech/pdocs-cli`
-(the packages release in lockstep), with the playbook's `ui.bundle.url` pointing at its
-zip under `node_modules`. `@inditextech/pdocs-antora-extensions` and
-`@inditextech/pdocs-asciidoc-extensions` are still workspace-only — the template has no
-use for them yet, so they stay out.
+All three now made it back into this template — as real npm devDependencies, pinned to
+the exact same version as `@inditextech/pdocs-cli` (the packages release in lockstep),
+with the playbook's `ui.bundle.url`/`asciidoc.extensions`/`antora.extensions` pointing at
+them under `node_modules` (GH-96: this is what lets a scaffolded site actually use the
+custom AsciiDoc blocks — `[tabs]`, `[cards]`, `[accordion]`, … — the `writing-docs-pages`
+skill `pdocs new` also scaffolds documents, and what makes the UI bundle's own search
+dialog have something to search).
 
 For the generic anatomy shared by an in-workspace site package — playbook keys, the
 Nx/pnpm wiring, `scripts/dev.mjs`, the silent-failure list — read `docs-site-package`; that
@@ -32,7 +33,7 @@ about the CLI's bundled template and what `pdocs new` does with it.
 
 ```
 code/packages/cli/templates/starter/
-  package.json                          __PDOCS_NAME__, private, deps: antora + pdocs-ui-bundle
+  package.json                          __PDOCS_NAME__, private, deps: antora + pdocs-ui-bundle + the two pdocs extension packages
   antora-playbook.yml                   heavily commented — pdocs UI bundle via node_modules
   antora-playbook.pr-verify.yml         HEAD-only companion, used by pdocs-pr-verify.yml
   docs/
@@ -73,14 +74,14 @@ UI bundle. Keep them from converging:
 
 - **A change every scaffolded site needs goes in the CLI template** — a playbook key, an
   attribute, a workflow fix.
-- **A change that demonstrates a pdocs-specific feature not yet in the template (custom
-  AsciiDoc blocks, antora extensions) goes in `example`** — those packages are still
-  workspace-only, so the template can't depend on them until they're published too.
-- The UI bundle itself is no longer one of these — it's a real npm devDependency in the
-  template (see the table above). It requires `@inditextech/pdocs-ui-bundle` to actually
-  be resolvable on whatever registry the scaffolded site installs against — the real
-  npmjs registry once `publish-npm` in `release.yml` is turned on, or a local Verdaccio
-  registry via `just release-local` / `just local-registry-start` for testing before that.
+- **A change that demonstrates a pdocs-specific feature not yet in the template goes in
+  `example`** instead — anything genuinely still workspace-only.
+- Neither the UI bundle nor the two extension packages are workspace-only concerns
+  anymore — all three are real npm devDependencies in the template (see the table
+  above). Each requires its package to actually be resolvable on whatever registry the
+  scaffolded site installs against — the real npmjs registry once `publish-npm` in
+  `release.yml` is turned on, or a local Verdaccio registry via `just release-local` /
+  `just local-registry-start` for testing before that.
 
 ## Editing the template
 

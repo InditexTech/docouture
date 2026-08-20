@@ -125,4 +125,30 @@ describe('runDoctor', () => {
     expect(code).toBe(1)
     expect(loggedLines()).toContain('content source url')
   })
+
+  it('warns (without failing) when AGENTS.md/skills are missing, and passes once scaffolded', async () => {
+    await scaffoldGoodSite(repo)
+
+    const codeMissing = await runDoctor(['--dir', repo])
+    expect(codeMissing).toBe(0)
+    const outMissing = loggedLines()
+    expect(outMissing).toContain('agent files')
+    expect(outMissing).toContain('AGENTS.md')
+    expect(outMissing).toContain('warn')
+    expect(outMissing).not.toContain('FAIL')
+
+    await writeFile(join(repo, 'AGENTS.md'), '# hi', 'utf8')
+    for (const platform of ['.opencode', '.claude']) {
+      for (const skill of ['writing-docs-pages', 'site-structure']) {
+        await mkdir(join(repo, platform, 'skills', skill), { recursive: true })
+        await writeFile(join(repo, platform, 'skills', skill, 'SKILL.md'), '# skill', 'utf8')
+      }
+    }
+
+    logSpy.mockClear()
+    const codePresent = await runDoctor(['--dir', repo])
+    expect(codePresent).toBe(0)
+    const outPresent = loggedLines()
+    expect(outPresent).not.toContain('warn')
+  })
 })

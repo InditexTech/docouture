@@ -13,8 +13,9 @@ import { readCliInfo } from './lib/cli-info.js'
 const USAGE = `Usage:
   pdocs new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned]
       Scaffold an Antora documentation site into docs/ (and its workflows into
-      .github/workflows/) of an existing git repository. Must be run from
-      that repository's root, or --dir must point at one. Prompts
+      .github/workflows/), plus AGENTS.md and agent skills (.opencode/skills/,
+      .claude/skills/) into the root of an existing git repository. Must be
+      run from that repository's root, or --dir must point at one. Prompts
       interactively for anything not given as a flag when run in a terminal
       (pass --yes to always use defaults instead).
 
@@ -33,8 +34,9 @@ const USAGE = `Usage:
   pdocs doctor [--dir <path>]
       Check that the environment and site configuration are healthy: Node
       version, the four names that must agree (component name, start page,
-      content path, package name), git history, and that antora is
-      installed.
+      content path, package name), git history, that antora is installed,
+      and (advisory only) whether AGENTS.md and the scaffolded skills are
+      still present.
 
   pdocs --version, -v
       Print the installed @inditextech/pdocs-cli version and exit.

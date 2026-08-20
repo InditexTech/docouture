@@ -4,29 +4,59 @@
   Select Tag component — Select Tag pulls in list/scrollable-panel/search-field
   CSS for a dropdown menu this bundle already renders itself below.
 
-  Green only applies on the component's latest version (`page.componentVersion.latest`,
-  set by Antora's page-composer) — everywhere else it's the DS's default grey
-  solid tag. The label is always the real `displayVersion` Antora computed;
-  nothing here synthesises text.
+  GH-101: gated on `page.componentVersion` (always present for a real page),
+  never on `page.versions` — Antora's page-composer only computes
+  `page.versions` when `component.versions.length > 1`
+  (@antora/page-composer build-ui-model.js); a single-version component (e.g.
+  `main` alone, no `stable` tag yet) gets `page.versions === undefined`, and
+  gating the whole partial on it — the previous behaviour — meant NEITHER
+  branch below ever rendered, not even this one. `page.componentVersion` has
+  no such gap, so it's the one truth source both branches key off.
+
+  Green (`header-toolbar__version--latest`) applies to the dropdown toggle
+  when the page's version IS the component's latest — `(eq page.componentVersion
+  page.component.latest)`, both always populated by Antora. The old
+  `page.componentVersion.latest` this replaced was dead: Antora never sets a
+  `latest` boolean ON a version descriptor, only `component.latest` as an
+  object reference to it (@antora/content-classifier content-catalog.js), so
+  that condition was never true for any build.
+
+  The single-version badge below deliberately does NOT reuse that check.
+  Antora's fallback — a component with only prerelease versions still gets
+  `component.latest` pointed at the sole one (there's no "no latest" state) —
+  means `eq page.componentVersion page.component.latest` is trivially true
+  whenever there's only one version, prerelease or not. Applying `--latest`
+  here would paint a prerelease-only build green, i.e. visually claim
+  "stable" for a preview build. Giving Stable vs Prerelease their own explicit
+  treatment is GH-103's job; until then this stays the DS's plain read-only
+  solid tag.
+
+  `ids-tag--read-only` (DS modifier, tag/tag.css) marks the badge as
+  non-interactive — it isn't a button and does nothing on click, so it must
+  not pick up `.ids-tag`'s generic hover cursor/colour shift, which would
+  otherwise imply an affordance that isn't there. `aria-label` adds the
+  "Version" context the bare displayVersion text doesn't carry on its own.
+  The label is always the real `displayVersion` Antora computed; nothing
+  here synthesises text.
 --}}
-{{#with page.versions}}
+{{#if page.componentVersion}}
 <div class="page-versions">
-  {{#if this.[1]}}
-  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if @root.page.componentVersion.latest}} header-toolbar__version--latest{{/if}} version-menu-toggle" title="Show other versions of page">
-    <span class="ids-tag__label">{{@root.page.componentVersion.displayVersion}}</span>
+  {{#if page.versions.[1]}}
+  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{/if}} version-menu-toggle" title="Show other versions of page">
+    <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
     <span class="ids-tag__icon">{{icon "arrows" "chevron-down-outlined"}}</span>
   </button>
   <div class="version-menu">
-    {{#each this}}
+    {{#each page.versions}}
     <a class="version
       {{~#if (eq ./version @root.page.version)}} is-current{{/if~}}
       {{~#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">{{./displayVersion}}</a>
     {{/each}}
   </div>
   {{else}}
-  <span class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if @root.page.componentVersion.latest}} header-toolbar__version--latest{{/if}}">
-    <span class="ids-tag__label">{{@root.page.componentVersion.displayVersion}}</span>
+  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version" aria-label="Version {{page.componentVersion.displayVersion}}">
+    <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
   </span>
   {{/if}}
 </div>
-{{/with}}
+{{/if}}

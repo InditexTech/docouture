@@ -1,6 +1,7 @@
 'use strict'
 
 const registerFooter = require('./lib/footer')
+const registerLlmsTxt = require('./lib/llms-txt')
 const registerNavModules = require('./lib/nav-modules')
 const registerSearchIndex = require('./lib/search-index')
 const registerShikiPrewarm = require('./lib/shiki-prewarm')
@@ -25,20 +26,21 @@ const registerShikiPrewarm = require('./lib/shiki-prewarm')
  * zero-parameter form is both the simplest and the one furthest from that
  * misdetection.
  *
- * REGISTRATION ORDER IS LOAD-BEARING. All three listen on `navigationBuilt`,
- * and GeneratorContext#notify awaits listeners in registration order (see
- * nav-modules.js's own header for the citation), not declaration order
- * within a single file — the order these three calls are made IS that order.
- * nav-modules MUST run first: it stamps `tree.module` / `tree.title` onto
- * `componentVersion.navigation`, and search-index reads those same fields
- * off the same event to build each record's `category`. footer has no such
- * dependency and could run anywhere after nav-modules, but is kept second to
- * match this list. Swap nav-modules and search-index and nothing throws —
- * every search record just falls back to filing itself under the component
- * title, as if no site declared `nav_modules` at all.
+ * REGISTRATION ORDER IS LOAD-BEARING. footer, search-index and llms-txt all
+ * listen on `navigationBuilt`, and GeneratorContext#notify awaits listeners
+ * in registration order (see nav-modules.js's own header for the citation),
+ * not declaration order within a single file — the order these calls are
+ * made IS that order. nav-modules MUST run first: it stamps `tree.module` /
+ * `tree.title` onto `componentVersion.navigation`, and both search-index and
+ * llms-txt (GH-95) read those same fields off the same event to build each
+ * record's/section's category. footer and llms-txt have no such dependency
+ * on each other and could run in either order after nav-modules; swap either
+ * of them with search-index and nothing throws — records/sections just fall
+ * back to filing themselves under the component title, as if no site
+ * declared `nav_modules` at all.
  *
  * shiki-prewarm (GH-89) listens on a DIFFERENT event (`contentAggregated`,
- * not `navigationBuilt`) and touches none of the state the other three
+ * not `navigationBuilt`) and touches none of the state the other four
  * share, so its position in this list is not load-bearing the way theirs is
  * — it is simply registered here too because this file is the one place
  * `@antora/site-generator` is told about every pdocs Antora extension.
@@ -47,5 +49,6 @@ module.exports.register = function () {
   registerNavModules(this)
   registerFooter(this)
   registerSearchIndex(this)
+  registerLlmsTxt(this)
   registerShikiPrewarm(this)
 }

@@ -1,0 +1,50 @@
+code/packages/cli/src/bin.ts
+  h_c93d154c7c7074 6-8,22-36,53-58
+code/packages/cli/src/commands/build.spec.ts
+  h_c93d154c7c7074 1-57
+code/packages/cli/src/commands/build.ts
+  h_c93d154c7c7074 1-24
+code/packages/cli/src/commands/dev.spec.ts
+  h_c93d154c7c7074 1-47
+code/packages/cli/src/commands/dev.ts
+  h_c93d154c7c7074 1-53
+code/packages/cli/src/commands/doctor.spec.ts
+  h_c93d154c7c7074 1-121
+code/packages/cli/src/commands/doctor.ts
+  h_c93d154c7c7074 1-117
+code/packages/cli/src/commands/new.spec.ts
+  h_c93d154c7c7074 108-119,151-152
+code/packages/cli/src/lib/dev-server.spec.ts
+  h_c93d154c7c7074 1-139
+code/packages/cli/src/lib/dev-server.ts
+  h_c93d154c7c7074 1-284
+code/packages/cli/src/lib/doctor-checks.spec.ts
+  h_c93d154c7c7074 1-151
+code/packages/cli/src/lib/doctor-checks.ts
+  h_c93d154c7c7074 1-171
+code/packages/cli/src/lib/playbook-yml.spec.ts
+  h_c93d154c7c7074 1-74
+code/packages/cli/src/lib/playbook-yml.ts
+  h_c93d154c7c7074 1-85
+code/packages/cli/src/lib/run-script.ts
+  h_c93d154c7c7074 1-29
+code/packages/cli/templates/starter/antora-playbook.mode2.yml
+  h_c93d154c7c7074 22-33
+code/packages/cli/templates/starter/antora-playbook.pr-verify.yml
+  h_c93d154c7c7074 36-39
+code/packages/cli/templates/starter/antora-playbook.yml
+  h_c93d154c7c7074 18-32
+code/packages/cli/templates/starter/package.json
+  h_c93d154c7c7074 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "161a36b39c98ddc8607d6221ec240f8c7c40b9aa",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -23,6 +23,11 @@
 
 site:
   title: Weave.js
+  # See antora-playbook.yml's own comment: needed so Antora generates
+  # 404.html (@antora/page-composer only does this when site.url is set).
+  # This playbook is dev/PR-verify only (see the file header above), so the
+  # dev server's own origin is always the right value here.
+  url: http://localhost:5000
   start_page: weavejs:ROOT:index.adoc
   keys:
     product_logo: /_/product-logo.png

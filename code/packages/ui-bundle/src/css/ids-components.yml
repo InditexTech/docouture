@@ -48,7 +48,7 @@ components:
     - breadcrumb.css # .ids-breadcrumbs — flex row container
     - breadcrumb-item.css # .ids-breadcrumb-item[--link/--active] + its divider
   label:
-    - label.css # .ids-label--white — hero page tags (GH-9); .ids-label--grey — [card,labels=…] meta chips (GH-20)
+    - label.css # .ids-label--white — hero page tags (GH-9); .ids-label--grey — [card,labels=…] meta chips (GH-20); .ids-label--green/--orange — "Latest"/"Prerelease" pill on the version dropdown's current-row (GH-103)
   card:
     - card.css # .ids-card--vertical/__image/__content — the ATD Card behind the [cards] block (GH-20, asciidoc-extensions/lib/card-grid.js); its own hover state and surface are what make that block theme-agnostic
   tabs:

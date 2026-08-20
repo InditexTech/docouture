@@ -248,3 +248,124 @@ page:
           url: '#'
           urlType: internal
           module: sdk
+
+#
+# GH-103 — three entries, one per version-relationship page-versions.hbs
+# actually distinguishes on the dropdown's current row (Latest / older
+# Stable / Prerelease — not the read-only single-version badge branch,
+# which needs no dropdown content to vary and is reviewable off any one of
+# these by just deleting all but its own `versions` entry in devtools),
+# each a real, separate preview page (page-versions-*.adoc,
+# `:page-version-scenario: <key>`) rather than several fake copies of the
+# partial glued into one page: `@root.page.version` — what `{{#each page.
+# versions}}{{#if (eq ./version @root.page.version)}}` in page-versions.hbs
+# actually compares against, to find the current row — is Handlebars' true
+# render root and does not change inside `{{#with}}` or a partial call, so
+# overriding `page` locally to show several variants side by side on one
+# page cannot make `is-current` light up correctly for more than the
+# first. A separate page per scenario, run through the real `default`
+# layout exactly like a real Antora page, doesn't have that problem and
+# additionally makes every other page-chrome concern (breakpoint, dark
+# mode, side-menu drawer position) reviewable per scenario instead of only
+# in a static mockup.
+#
+# build-preview-pages.js reads `page-version-scenario` off each .adoc file
+# and, when it names a key here, shallow-merges that key's fields onto the
+# page's own `page.*` — everything else (navigation, breadcrumbs, component)
+# stays whatever the base fixture above already set.
+#
+pageVersionsScenarios:
+  # Multi-version, current release is Stable AND Antora's `latest` — the
+  # dropdown's current row gets the green "Latest" pill (Figma
+  # 5SAtxqb5sdtIqDQzz70yts#2610-32852); the toggle/badge are
+  # `--stable`-green throughout. Ten rows, one of them a long, real-looking
+  # version string — enough to exercise the menu's own max-height scroll
+  # (GH-103) and confirm long labels don't wrap.
+  stable-latest:
+    componentVersion:
+      displayVersion: v2.4.0
+      prerelease: false
+      latest: true
+    version: v2.4.0
+    displayVersion: v2.4.0
+    versions:
+      - version: v2.4.0
+        displayVersion: v2.4.0
+        latest: true
+        url: '#'
+      - version: v2.3.1
+        displayVersion: v2.3.1
+        url: '#'
+      - version: v2.3.0
+        displayVersion: v2.3.0-rc.1+build.20240315
+        url: '#'
+      - version: v2.2.2
+        displayVersion: v2.2.2
+        url: '#'
+      - version: v2.2.1
+        displayVersion: v2.2.1
+        url: '#'
+      - version: v2.2.0
+        displayVersion: v2.2.0
+        url: '#'
+      - version: v2.1.5
+        displayVersion: v2.1.5
+        url: '#'
+      - version: v2.1.0
+        displayVersion: v2.1.0
+        url: '#'
+      - version: v2.0.1
+        displayVersion: v2.0.1
+        url: '#'
+      - version: v2.0.0
+        displayVersion: v2.0.0
+        missing: true
+        url: '#'
+  # Multi-version, current release is Stable but an OLDER one — a real
+  # newer stable exists (`v2.4.0` below, `latest: true`). The current row
+  # gets no pill at all: "Latest" would be wrong on it, and there is no
+  # dedicated "Stable" pill in the design.
+  stable-older:
+    componentVersion:
+      displayVersion: v2.3.1
+      prerelease: false
+      latest: false
+    version: v2.3.1
+    displayVersion: v2.3.1
+    versions:
+      - version: v2.4.0
+        displayVersion: v2.4.0
+        latest: true
+        url: '#'
+      - version: v2.3.1
+        displayVersion: v2.3.1
+        url: '#'
+      - version: v2.1.5
+        displayVersion: v2.1.5
+        url: '#'
+  # Multi-version, current release is a Prerelease with a Stable/latest
+  # release also published — the common case (a `next`/beta channel next to
+  # a stable line). Current row gets the orange "Prerelease" pill; toggle/
+  # badge are `--prerelease`-orange.
+  prerelease-current:
+    componentVersion:
+      displayVersion: v3.0.0-beta.1
+      prerelease: true
+      latest: false
+    version: v3.0.0-beta.1
+    displayVersion: v3.0.0-beta.1
+    versions:
+      - version: v3.0.0-beta.1
+        displayVersion: v3.0.0-beta.1
+        prerelease: true
+        url: '#'
+      - version: v2.4.0
+        displayVersion: v2.4.0
+        latest: true
+        url: '#'
+      - version: v2.3.1
+        displayVersion: v2.3.1
+        url: '#'
+      - version: v2.1.5
+        displayVersion: v2.1.5
+        url: '#'

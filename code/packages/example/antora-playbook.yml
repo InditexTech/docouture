@@ -9,15 +9,18 @@
 site:
   title: Weave.js
   # Set this to the public URL of the deployed site. It is required for the
-  # sitemap and for canonical links; leave it out while developing locally.
-  # A path on it (`https://example.com/docs`) publishes the site under that
-  # prefix: Antora records it as `site.path`, and `scripts/dev.mjs` serves the
-  # site there so local URLs are the deployed ones. The site's own first
-  # segment — /weavejs — is the component name (docs/antora.yml), not this.
+  # sitemap and for canonical links. A path on it (`https://example.com/docs`)
+  # publishes the site under that prefix: Antora records it as `site.path`,
+  # and `scripts/dev.mjs` serves the site there so local URLs are the
+  # deployed ones. The site's own first segment — /weavejs — is the
+  # component name (docs/antora.yml), not this.
   #
-  # The docs workflow passes `--url` when `vars.DOCS_SITE_URL` is set, which
-  # overrides whatever is here.
-  # url: https://docs.example.com
+  # Set to the local dev server's own origin so Antora also generates
+  # 404.html (@antora/page-composer only does this when site.url is set) —
+  # scripts/dev.mjs then has a real 404 page to serve. The docs workflow
+  # passes `--url` when `vars.DOCS_SITE_URL` is set, which overrides this
+  # with the real deployed URL for a production build.
+  url: http://localhost:5000
   start_page: weavejs:ROOT:index.adoc
   # The header toolbar's repo link (see ui-bundle GH issue #7) reads
   # site.keys.repoUrl — playbook keys are camelCased, so it's authored here as

@@ -82,6 +82,15 @@ nav_modules:
     icon: business/file-outlined
 # --- end generated
 
+# Which module's navigation the generated 404 page's side menu shows,
+# read by @inditextech/pdocs-antora-extensions (not-found-page.js). This
+# component has seven modules (nav_modules above) — with more than one,
+# that extension has no default to fall back to (an empty side menu, not a
+# guess, is what a component-less 404 page gets otherwise) — hand-authored,
+# not generated, since it's a product decision, not a fact build-nav.mjs can
+# derive from the Fumadocs source.
+not_found_module: main
+
 # llms.txt / llms-full.txt generation (GH-95), read by
 # @inditextech/pdocs-antora-extensions. `summary` becomes the blockquote
 # under the site title in the generated `llms.txt`. `exclude` is a list of

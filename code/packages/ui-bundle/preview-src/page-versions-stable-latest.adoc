@@ -1,0 +1,16 @@
+= Page Versions — Stable, Latest
+:page-version-scenario: stable-latest
+:description: Multi-version dropdown, current release is Stable and also Antora's `latest` — green "Latest" pill on the current row, green toggle/badge.
+
+[.lead]
+Multi-version dropdown, current release is Stable and also Antora's `latest` — green "Latest" pill on the current row, green toggle/badge.
+
+This page exists to review the page-versions toggle/dropdown (GH-103) against a real, separate `page.componentVersion` / `page.versions`, run through the actual `default` layout — resize the viewport below the `s` breakpoint (513px) to see the same component move into the side-menu drawer and open upward instead of down.
+
+Other page-versions states:
+
+* link:page-versions-stable-latest.html[Stable — Latest]
+* link:page-versions-stable-older.html[Stable, not latest]
+* link:page-versions-prerelease-current.html[Prerelease]
+
+link:index.html[Back to the UI Preview hub]

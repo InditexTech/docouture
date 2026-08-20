@@ -135,6 +135,26 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
     for (const res of clients) res.write('data: reload\n\n')
   }
 
+  /**
+   * A path that isn't in the site. Antora only writes `404.html` at the
+   * site root when `site.url` is set (@antora/page-composer
+   * create404Page) — when it does, serve it (rewritten for reload, like
+   * any other HTML response) so the dev server's 404 matches the deployed
+   * one instead of a bare plain-text stand-in.
+   */
+  async function respondNotFound(res: import('node:http').ServerResponse): Promise<void> {
+    try {
+      const html = await readFile(join(root, '404.html'), 'utf8')
+      const snippet = `<script src="${CLIENT_PATH}"></script>`
+      const body = html.includes('</body>') ? html.replace('</body>', `${snippet}</body>`) : html + snippet
+      res.writeHead(404, { 'content-type': CONTENT_TYPES['.html']!, 'cache-control': 'no-store' })
+      res.end(body)
+    } catch {
+      res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
+      res.end('404 Not Found')
+    }
+  }
+
   const server: Server = createServer((req, res) => {
     void (async () => {
       const url = req.url ?? '/'
@@ -174,8 +194,7 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
 
       const target = await resolveTarget(sitePath)
       if (!target) {
-        res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
-        res.end('404 Not Found')
+        await respondNotFound(res)
         return
       }
 

@@ -3,6 +3,7 @@
 const registerFooter = require('./lib/footer')
 const registerLlmsTxt = require('./lib/llms-txt')
 const registerNavModules = require('./lib/nav-modules')
+const registerNotFoundPage = require('./lib/not-found-page')
 const registerSearchIndex = require('./lib/search-index')
 const registerShikiPrewarm = require('./lib/shiki-prewarm')
 
@@ -44,6 +45,13 @@ const registerShikiPrewarm = require('./lib/shiki-prewarm')
  * share, so its position in this list is not load-bearing the way theirs is
  * — it is simply registered here too because this file is the one place
  * `@antora/site-generator` is told about every pdocs Antora extension.
+ *
+ * not-found-page also listens on `navigationBuilt`, but only to stash the
+ * `navigationCatalog` reference for later — it reads `tree.module` (which
+ * nav-modules.js stamps during THAT SAME event) only once `pagesComposed`
+ * fires, by which point every `navigationBuilt` listener, regardless of
+ * order, has already run to completion. Its position here is therefore not
+ * load-bearing either.
  */
 module.exports.register = function () {
   registerNavModules(this)
@@ -51,4 +59,5 @@ module.exports.register = function () {
   registerSearchIndex(this)
   registerLlmsTxt(this)
   registerShikiPrewarm(this)
+  registerNotFoundPage(this)
 }

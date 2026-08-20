@@ -90,6 +90,22 @@ module.exports =
             uiModel.page.layout = doc.getAttribute('page-layout', 'default')
             uiModel.page.title = doc.getDocumentTitle()
             uiModel.page.contents = Buffer.from(await doc.convert())
+            // GH-103: `page-version-scenario` names a key under
+            // `pageVersionsScenarios` in ui-model.yml; when present, its
+            // fields are merged onto this page's own `page.*`, replacing the
+            // fixture's default version/dropdown state with the one the
+            // scenario page (page-versions-*.adoc) wants to demonstrate.
+            // Everything else on `page` (navigation, breadcrumbs, component)
+            // stays the shared fixture's — only version data comes from the
+            // scenario. See ui-model.yml's own comment for why this has to
+            // happen per rendered *page*, not by overriding `page` locally
+            // inside a shared one with `{{#with}}`.
+            const versionScenario = doc.getAttribute('page-version-scenario')
+            const scenario = versionScenario && (sampleUiModel.pageVersionsScenarios || {})[versionScenario]
+            if (versionScenario && !scenario) {
+              throw new Error(`page-version-scenario "${versionScenario}" is not defined in ui-model.yml`)
+            }
+            if (scenario) Object.assign(uiModel.page, scenario)
             // NOTE the sample ui-model pins `home: true` globally; only the
             // landing page should actually behave like the docs home page
             // (toolbar and side-menu brand links current, side menu collapsed

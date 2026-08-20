@@ -3,16 +3,56 @@
   position: relative;
 }
 
+/*
+ * GH-103 — the chevron flips to point up while the menu is open, the same
+ * "rotate on expand" convention `.side-menu__toggle` uses (side-menu.css),
+ * driven off `aria-expanded` (04-page-versions.ts sets it alongside
+ * `.is-active` for exactly this) rather than a second, redundant class.
+ * `--ids-motion-micro-states` is the DS's own token for a small interactive
+ * state change like this — already reduced-motion-aware (ids-tokens.css
+ * flattens its duration under `prefers-reduced-motion`), so this needs no
+ * media query of its own.
+ */
+.version-menu-toggle .ids-tag__icon {
+  transition: var(--ids-motion-micro-states);
+}
+
+.version-menu-toggle[aria-expanded="true"] .ids-tag__icon {
+  transform: rotate(180deg);
+}
+
+/*
+ * GH-103 — floats as its own bordered card below the trigger (Figma
+ * 5SAtxqb5sdtIqDQzz70yts#2610-32852's "IDS Select Dropdown" instance: white
+ * fill, 1px solid stroke), with a gap instead of overlapping it — not the
+ * inherited antora-ui-default trick of positioning flush over the trigger
+ * and using top padding to "clear" it, which also made an eventual border
+ * wrap the trigger's own clearance zone rather than just the card.
+ *
+ * `max-height` caps the card at six rows plus half of a seventh — a real
+ * component list (weekly release cadence, several years old) can run to
+ * dozens of versions, and this component has no pagination of its own —
+ * past that it scrolls (`overflow-y`) rather than growing to the point of
+ * running off past the viewport. Six and a half, not a round six, so the
+ * partially-cut row is a visible affordance that there's more to scroll to,
+ * the same reasoning a carousel peeks the next slide. One row's height is
+ * its line-height plus its own top+bottom padding (`.version` below) —
+ * both read back here as the same tokens, not restated as a literal, so
+ * they can't drift out of sync with each other.
+ */
 .page-versions .version-menu {
+  background-color: var(--page-version-menu-background);
+  border: 1px solid var(--ids-color-border-default);
   display: flex;
-  min-width: 100%;
   flex-direction: column;
-  align-items: flex-end;
-  background: linear-gradient(to bottom, var(--page-version-menu-background) 0%, var(--page-version-menu-background) 100%) no-repeat;
-  padding: calc(var(--ids-size-150) + var(--ids-size-25)) var(--ids-size-100) var(--ids-size-50) var(--ids-size-50);
+  margin-top: var(--ids-size-50);
+  max-height: calc((var(--ids-typo-line-height-22) + var(--ids-size-50) * 2) * 6.5);
+  min-width: 100%;
+  overflow-y: auto;
+  padding: var(--ids-size-25);
   position: absolute;
-  top: 0;
   right: 0;
+  top: 100%;
   white-space: nowrap;
   z-index: var(--z-index-page-version-menu);
 }
@@ -21,17 +61,88 @@
   display: none;
 }
 
+/*
+ * GH-103 — every row (the current-version pill row and the plain links
+ * below it) shares one box model so they line up on the same left edge at
+ * the same width, matching Figma 5SAtxqb5sdtIqDQzz70yts#2610-32852: full
+ * width within the card, text/pill vertically centred, pill (if any)
+ * pushed to the far end via `justify-content`. Their own horizontal
+ * padding is what gives the text its inset from the card's edge — the
+ * card itself (`.version-menu`) only carries the uniform 4px reserved for
+ * the gap around every row, not extra padding on top of that. Text colour
+ * is the DS's plain default, not a muted grey — every row's text sample in
+ * that Figma node (current and plain alike) is solid `#000000`; only
+ * `.is-missing` below gets its own, deliberately different colour.
+ */
 .page-versions .version {
-  display: block;
-  padding-top: var(--ids-size-50);
+  align-items: center;
+  color: var(--ids-color-content-default);
+  display: flex;
+  flex-shrink: 0;
+  font: var(--ids-typo-body-m);
+  gap: var(--ids-size-75);
+  justify-content: space-between;
+  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  padding: var(--ids-size-50) var(--ids-size-100);
+  text-transform: var(--ids-typo-body-m-text-transform);
+  white-space: nowrap;
 }
 
+/*
+ * GH-103 — the reader's own version, shown (not hidden — previous
+ * behaviour) as a non-interactive row: just the Figma component's own
+ * "Selected" variant background (`--ids-color-bg-states-pressed`, #ededed
+ * — its "Hover" variant, #f7f7f7/`--ids-color-bg-states-hover`, is what any
+ * row gets on `:hover` below, not this one) plus the Stable/Prerelease pill
+ * the hbs attaches (`.ids-label--green`/`--orange`, label.css, already
+ * vendored — see ids-components.yml). Text colour is inherited from
+ * `.version` above unchanged — every row in the design is the same colour.
+ */
 .page-versions .version.is-current {
-  display: none;
+  background-color: var(--ids-color-bg-states-pressed);
 }
 
 .page-versions .version.is-missing {
   color: var(--page-version-missing-font-color);
   font-style: italic;
   text-decoration: none;
+}
+
+/*
+ * GH-103 — selectable versions had no explicit hover/focus treatment beyond
+ * UA link defaults. Background is the Figma component's own "Hover" variant
+ * (`--ids-color-bg-states-hover`, #f7f7f7 — see `.is-current`'s own comment
+ * above for why that's a different token than the selected row's); text
+ * colour reuses the same content-state token `.ids-tag`'s own hover rule
+ * reads (ids-components.css). `:focus-visible` matches the DS's uniform
+ * focus ring (iop-ds-components skill).
+ */
+.page-versions a.version:hover {
+  background-color: var(--ids-color-bg-states-hover);
+  color: var(--ids-color-content-states-hover);
+}
+
+.page-versions a.version:focus-visible {
+  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline-offset: var(--ids-size-25);
+}
+
+/*
+ * GH-103 — at xs/s the only visible `.page-versions` is the one in the
+ * side-menu drawer (header.css hides the header's own copy there; nav.hbs
+ * renders this partial a second time into `.side-menu__version`). That
+ * copy sits at the *bottom* of the drawer — `.side-menu__nav` is
+ * `flex: 1`, `.side-menu__version` comes after it with `flex-shrink: 0`
+ * (side-menu.css) — so a menu opening downward from `top: 100%` runs off
+ * the bottom of the drawer/viewport instead of being readable. Flipping to
+ * `bottom: 100%` opens it upward instead, same trigger, same rows, same
+ * gap, just the other side of it.
+ */
+@media screen and (--ids-breakpoints-xs-s) {
+  .page-versions .version-menu {
+    bottom: 100%;
+    margin-bottom: var(--ids-size-50);
+    margin-top: 0;
+    top: auto;
+  }
 }

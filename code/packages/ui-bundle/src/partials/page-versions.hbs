@@ -13,23 +13,20 @@
   branch below ever rendered, not even this one. `page.componentVersion` has
   no such gap, so it's the one truth source both branches key off.
 
-  Green (`header-toolbar__version--latest`) applies to the dropdown toggle
-  when the page's version IS the component's latest — `(eq page.componentVersion
-  page.component.latest)`, both always populated by Antora. The old
-  `page.componentVersion.latest` this replaced was dead: Antora never sets a
-  `latest` boolean ON a version descriptor, only `component.latest` as an
-  object reference to it (@antora/content-classifier content-catalog.js), so
-  that condition was never true for any build.
-
-  The single-version badge below deliberately does NOT reuse that check.
-  Antora's fallback — a component with only prerelease versions still gets
-  `component.latest` pointed at the sole one (there's no "no latest" state) —
-  means `eq page.componentVersion page.component.latest` is trivially true
-  whenever there's only one version, prerelease or not. Applying `--latest`
-  here would paint a prerelease-only build green, i.e. visually claim
-  "stable" for a preview build. Giving Stable vs Prerelease their own explicit
-  treatment is GH-103's job; until then this stays the DS's plain read-only
-  solid tag.
+  GH-103: the toggle and the single-version badge both get an explicit
+  Latest/older-Stable/Prerelease modifier (`header-toolbar__version--latest`/
+  `--older`/`--prerelease`, see header.css) — three states, not two: a
+  `page.componentVersion.prerelease` truthy always wins (orange); otherwise
+  `page.componentVersion.latest` decides between "the current release"
+  (green) and "a real, older stable version" (grey) — both real fields
+  Antora sets on the version descriptor itself (@antora/content-classifier
+  content-catalog.js), unlike the `(eq page.componentVersion page.component.
+  latest)` this replaced. That check looked plausible but isn't: Antora's
+  fallback for a component with only prerelease versions still points
+  `component.latest` at the sole one (there's no "no latest" state), so it
+  was trivially true whenever there was only one version, prerelease or
+  not — painting a preview build green, i.e. visually claiming "the current
+  release" for it. `prerelease`/`latest` have no such gap.
 
   `ids-tag--read-only` (DS modifier, tag/tag.css) marks the badge as
   non-interactive — it isn't a button and does nothing on click, so it must
@@ -42,19 +39,41 @@
 {{#if page.componentVersion}}
 <div class="page-versions">
   {{#if page.versions.[1]}}
-  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{/if}} version-menu-toggle" title="Show other versions of page">
+  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if page.componentVersion.latest}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}} version-menu-toggle" title="Show other versions of page" aria-expanded="false">
     <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
     <span class="ids-tag__icon">{{icon "arrows" "chevron-down-outlined"}}</span>
   </button>
   <div class="version-menu">
     {{#each page.versions}}
-    <a class="version
-      {{~#if (eq ./version @root.page.version)}} is-current{{/if~}}
-      {{~#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">{{./displayVersion}}</a>
+    {{#if (eq ./version @root.page.version)}}
+    {{!--
+      GH-103: the reader's own version, shown rather than hidden (previous
+      behaviour) so the dropdown states which version they're already on. A
+      `<span>`, not a link — nothing to navigate to — carrying the same
+      Stable/Prerelease semantics as the toggle above: a "Latest" pill only
+      when this entry is genuinely Antora's newest (`./latest`) AND not a
+      prerelease; a "Prerelease" pill whenever `./prerelease` is set,
+      including a prerelease that also happens to be latest (there being no
+      stable version yet). An older, non-latest stable current version gets
+      no pill at all — "Latest" would be wrong on it, and there is no
+      dedicated "Stable" pill in the design (Figma
+      5SAtxqb5sdtIqDQzz70yts#2610-32852).
+    --}}
+    <span class="version is-current" aria-current="page">
+      <span class="version__label">{{./displayVersion}}</span>
+      {{#if ./prerelease}}
+      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
+      {{else if ./latest}}
+      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
+      {{/if}}
+    </span>
+    {{else}}
+    <a class="version{{#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">{{./displayVersion}}</a>
+    {{/if}}
     {{/each}}
   </div>
   {{else}}
-  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version" aria-label="Version {{page.componentVersion.displayVersion}}">
+  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if page.componentVersion.latest}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}}" aria-label="Version {{page.componentVersion.displayVersion}}">
     <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
   </span>
   {{/if}}

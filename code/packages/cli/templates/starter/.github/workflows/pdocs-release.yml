@@ -1,32 +1,70 @@
 name: pdocs-release
 
-# THIS IS THE MODE 2 (STABLE + PRERELEASE) VARIANT — see the pdocs
-# docs-site-package skill's versioning-modes.md for the full mechanism this
-# implements, and for Mode 1 (Full History / versioned tags), which needs a
-# differently-shaped release step (a new immutable tag + version entry per
-# release, not a moved rolling tag) and does not use this file as-is.
-#
-# Cuts (or moves) the `stable` docs release under Mode 2. Which mode a site
-# actually uses, and therefore which of the two variants it should have, is
-# presently a manual choice — copy in the right file. Making `pdocs new`
-# (or a dedicated command) prompt for a versioning mode and generate the
-# matching variant automatically is documented follow-up work, not yet built:
-# see versioning-modes.md's "Follow-up work" section.
+# Handles BOTH versioning modes — see the pdocs docs-site-package skill's
+# versioning-modes.md for the full mechanism. Which mode a site is on is
+# detected, not asked: `docs/antora.yml` on `main` permanently says
+# `version: next` under Mode 1 (Full History) or `version: prerelease` under
+# Mode 2 (Stable + Prerelease) from the moment a site opts into either — see
+# the `Detect mode` step below. Adopting a mode in the first place (setting
+# that value, and antora-playbook.yml's content.sources[] tags/branches) is
+# still a manual, one-time edit; this workflow only handles cutting releases
+# afterwards.
 #
 # Prerequisite, done once, not by this workflow: this site's own
 # antora-playbook.yml content.sources[] must already match
-# `branches: [main]` + `tags: ['stable']` (not the default `branches: HEAD`),
-# and docs/antora.yml on `main` must permanently say
-# `version: prerelease` / `prerelease: true`. Until both of those are true,
-# running this workflow moves a tag nothing aggregates from.
+# `branches: [main]` + `tags: ['v*']` (Mode 1) or `branches: [main]` +
+# `tags: ['stable']` (Mode 2), and docs/antora.yml on `main` must permanently
+# say `version: next` / `prerelease: true` (Mode 1) or
+# `version: prerelease` / `prerelease: true` (Mode 2). Until that's true,
+# running this workflow creates or moves a tag nothing aggregates from.
 #
-# Manual only — cutting a release is a deliberate act, not a side effect of
-# a push.
+# Two ways to run this, both deliberate acts rather than a side effect of an
+# ordinary push:
+#
+#   1. workflow_dispatch — a person runs it by hand and supplies `version`
+#      (Mode 1) or leaves it as the default (Mode 2), plus `force` if the
+#      target tag has already been released (see "Republishing" below).
+#   2. Automatically, when a pull request carrying the `docs/release` or
+#      `docs/force-release` label is merged into a branch matching `main*`.
+#      This path has no input to type a version into: Mode 2 doesn't need one
+#      (always `stable`); Mode 1 reads it from `docs/.release-version`, a
+#      plain-text file the PR itself commits with the target version —
+#      reviewed as part of that PR's diff, like any other change.
+#
+# Republishing (Mode 1 only): a fix that needs to land on an already-released
+# version has to overwrite that version's tag, which is immutable by default
+# (see "Push release tag" below) — plain `docs/release` refuses to move it.
+# Carrying `docs/force-release` instead (or ticking `force` on a manual
+# dispatch) allows exactly that overwrite. `docs/.release-version` itself is
+# never cleared by hand: after every successful Mode 1 release this workflow
+# bumps it forward to the next patch version on `main` (see "Bump release
+# descriptor" below), so the file always holds a sane next target rather than
+# going stale.
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: >-
+          Target version for a Mode 1 release, e.g. 1.2.0 (becomes tag
+          v1.2.0). Leave as 'stable' for a Mode 2 site — that mode's target
+          is always the 'stable' tag, this input is ignored there.
+        required: true
+        type: string
+        default: 'stable'
+      force:
+        description: >-
+          Overwrite the target tag/Release if it already exists (Mode 1
+          republish). Mode 2 always overwrites 'stable' regardless of this.
+        required: false
+        type: boolean
+        default: false
+  pull_request:
+    types: [closed]
+    branches: ['main*']
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: pdocs-release
@@ -34,12 +72,29 @@ concurrency:
 
 jobs:
   release:
-    name: Cut stable
+    name: Cut release
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # workflow_dispatch always proceeds (it's already an explicit, deliberate
+    # act). The pull_request trigger fires on every close of a PR targeting
+    # main* — including ones that were closed unmerged, or merged without
+    # either label — so it only proceeds when both are true: actually merged,
+    # and carrying `docs/release` or `docs/force-release`. Anything else is a
+    # no-op run, not an error.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+        (contains(github.event.pull_request.labels.*.name, 'docs/release') ||
+          contains(github.event.pull_request.labels.*.name, 'docs/force-release')))
     steps:
       - name: Require main
-        if: github.ref != 'refs/heads/main'
+        # Only meaningful for a manual dispatch: someone could run this
+        # workflow with a non-main branch selected in the "Run workflow" UI.
+        # The pull_request trigger can't have this problem — the `branches:`
+        # filter above already restricted it to main* before the job started,
+        # and by the time a `closed`+`merged` event fires, main already
+        # reflects the merge.
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
         run: |
           echo "::error::pdocs-release must run against main (got ${{ github.ref }})"
           exit 1
@@ -47,8 +102,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Full history: the `stable` tag already exists somewhere in it and
-          # has to stay reachable so it can be force-moved, not re-created.
+          # Mode 2 moves an existing `stable` tag, which has to already be
+          # reachable in history to be force-moved. Mode 1 only ever creates a
+          # brand-new tag on a brand-new commit and doesn't strictly need
+          # this, but the detect step below needs main's tip either way, and
+          # full history is harmless for that case.
           fetch-depth: 0
           ref: main
 
@@ -68,22 +126,127 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # The one signal this workflow trusts: main's own docs/antora.yml
+      # permanently says version: next (Mode 1) or version: prerelease
+      # (Mode 2) from the moment a site opts into that mode — see this
+      # file's header and versioning-modes.md. Anything else there is
+      # treated as misconfiguration, not a third mode.
+      - name: Detect mode
+        id: detect
+        run: |
+          value=$(grep -E '^version:' docs/antora.yml | head -1 | sed -E "s/^version:[[:space:]]*['\"]?([^'\"]*)['\"]?[[:space:]]*$/\1/")
+
+          case "$value" in
+            next) mode=mode1 ;;
+            prerelease) mode=mode2 ;;
+            *)
+              echo "::error::docs/antora.yml on main has version: '${value}' — expected 'next' (Mode 1) or 'prerelease' (Mode 2). See versioning-modes.md's 'Prerequisite' note."
+              exit 1
+              ;;
+          esac
+
+          echo "mode=${mode}" >> "$GITHUB_OUTPUT"
+          echo "Detected ${mode} (docs/antora.yml: version: ${value})"
+
+      # Where the target version comes from depends on how this run started:
+      # a person typed it (workflow_dispatch) or the merged PR committed it
+      # (docs/.release-version). Mode 2 ignores whatever this resolves to
+      # either way — it always targets `stable` — but it's still resolved
+      # uniformly here so later steps don't need to know which trigger fired.
+      - name: Resolve version
+        id: resolve
+        env:
+          EVENT: ${{ github.event_name }}
+          DISPATCH_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            version="$DISPATCH_VERSION"
+            source="workflow_dispatch input"
+          elif [ -f docs/.release-version ]; then
+            version=$(tr -d '[:space:]' < docs/.release-version)
+            source="docs/.release-version"
+          else
+            version=""
+            source="docs/.release-version (missing)"
+          fi
+
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Resolved version '${version}' from ${source}"
+
+      - name: Validate version
+        env:
+          MODE: ${{ steps.detect.outputs.mode }}
+          EVENT: ${{ github.event_name }}
+          VERSION: ${{ steps.resolve.outputs.version }}
+        run: |
+          if [ "$MODE" = "mode1" ] && [ -z "$VERSION" ]; then
+            if [ "$EVENT" = "workflow_dispatch" ]; then
+              echo "::error::Mode 1 requires a real target version — re-run with a 'version' input other than the default 'stable', e.g. 1.2.0."
+            else
+              echo "::error::Mode 1 requires a real target version, and this PR carried no docs/.release-version — add that file with the target version (e.g. 1.2.0) before merging with the docs/release (or docs/force-release) label, or run pdocs-release manually via workflow_dispatch instead."
+            fi
+            exit 1
+          fi
+
+          if [ "$MODE" = "mode1" ] && [ "$VERSION" = "stable" ]; then
+            echo "::error::'stable' is Mode 2's target name, not a valid Mode 1 version — use a real version, e.g. 1.2.0."
+            exit 1
+          fi
+
+          if [ "$MODE" = "mode2" ] && [ -n "$VERSION" ] && [ "$VERSION" != "stable" ]; then
+            echo "::warning::Mode 2 always releases to the 'stable' tag — ignoring provided version '${VERSION}'."
+          fi
+
+      # Single source of truth for "should this run overwrite an already-
+      # released tag/Release" regardless of which trigger fired: a manual
+      # dispatch's own `force` input, or the merged PR's `docs/force-release`
+      # label (as opposed to plain `docs/release`, which refuses to
+      # overwrite). Mode 2 ignores this — it already overwrites `stable`
+      # unconditionally every run — but it's still resolved uniformly here.
+      - name: Resolve force
+        id: force
+        env:
+          EVENT: ${{ github.event_name }}
+          DISPATCH_FORCE: ${{ inputs.force }}
+        run: |
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            force="$DISPATCH_FORCE"
+          elif [ "${{ contains(github.event.pull_request.labels.*.name, 'docs/force-release') }}" = "true" ]; then
+            force="true"
+          else
+            force="false"
+          fi
+
+          echo "force=${force}" >> "$GITHUB_OUTPUT"
+          echo "Resolved force=${force}"
+
       # `main`'s own docs/antora.yml is never touched here — it permanently
-      # says version: prerelease, prerelease: true. This step patches a
-      # COMMIT, not main itself: `pdocs version stable` edits the working
+      # says version: next / prerelease (per mode above). This step patches a
+      # COMMIT, not main itself: `pdocs version <value>` edits the working
       # tree, that edit is committed on top of main's current tip, and then
       # main is reset back to that same tip immediately after — so the
       # commit's only route into the repository's reachable history is
-      # whatever ref points at it next (the `stable` tag, below). It is
+      # whichever tag points at it next (pushed in the following step). It is
       # deliberately never pushed as part of `main`.
-      - name: Cut stable
+      - name: Cut release
         id: cut
+        env:
+          MODE: ${{ steps.detect.outputs.mode }}
+          VERSION: ${{ steps.resolve.outputs.version }}
         run: |
+          if [ "$MODE" = "mode1" ]; then
+            value="$VERSION"
+            tag="v${value}"
+          else
+            value="stable"
+            tag="stable"
+          fi
+
           base=$(git rev-parse HEAD)
 
-          npx pdocs version stable
+          npx pdocs version "$value"
           git add docs/antora.yml
-          git commit -m "chore: docs stable snapshot"
+          git commit -m "chore: docs release ${tag}"
           sha=$(git rev-parse HEAD)
 
           # Detach main back to its real tip. The commit just made keeps
@@ -92,21 +255,116 @@ jobs:
           git reset --hard "$base"
 
           echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
 
-      # A force-push of the tag: `stable` moves to point at the fresh
-      # snapshot commit above, dropping whatever it pointed to before. That
-      # previous commit becomes unreachable and is garbage-collected on the
-      # remote in its own time — expected for a rolling tag, not a leak.
-      - name: Move stable tag
+      # Mode 1 only: a tag that already exists means this exact version was
+      # released before. Without `force` that's refused outright — every
+      # version is meant to be immutable once released — and, when this run
+      # came from a merged PR, a comment is left on it explaining how to
+      # override (a workflow_dispatch run has no PR to comment on, so it only
+      # gets the failing log). With `force` it's let through, and the
+      # following steps overwrite the tag and its Release. Mode 2 has no
+      # equivalent check — `stable` is a rolling pointer and always gets
+      # overwritten, force or not.
+      - name: Check for existing release
+        if: steps.detect.outputs.mode == 'mode1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.cut.outputs.tag }}
+          FORCE: ${{ steps.force.outputs.force }}
+          EVENT: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          git tag -f stable '${{ steps.cut.outputs.sha }}'
-          git push origin refs/tags/stable --force
+          if ! git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "${TAG} is new — nothing to overwrite."
+            exit 0
+          fi
 
-      # Deliberately no GitHub Release object: `stable` is a rolling pointer
-      # with no changelog value of its own, and Mode 2 keeps no version
-      # history to attach one to (see versioning-modes.md).
-      #
+          if [ "$FORCE" = "true" ]; then
+            echo "${TAG} already exists — overwriting (force)."
+            exit 0
+          fi
+
+          message="${TAG} was already released, and this run doesn't carry force — add the 'docs/force-release' label (or tick 'force' on a manual run) to overwrite it. Nothing was pushed."
+          echo "::error::${message}"
+
+          if [ "$EVENT" = "pull_request" ] && [ -n "$PR_NUMBER" ]; then
+            gh pr comment "$PR_NUMBER" --body "⚠️ **pdocs-release**: ${message}"
+          fi
+
+          exit 1
+
+      # Mode 1: no --force unless the "Check for existing release" step above
+      # already confirmed either the tag is new, or this run carries force —
+      # every version is immutable once released, and that's the safety net
+      # for a stale docs/.release-version. Mode 2: --force is the whole
+      # point — `stable` is a rolling pointer, and this is what moves it.
+      - name: Push release tag
+        env:
+          MODE: ${{ steps.detect.outputs.mode }}
+          FORCE: ${{ steps.force.outputs.force }}
+          TAG: ${{ steps.cut.outputs.tag }}
+          SHA: ${{ steps.cut.outputs.sha }}
+        run: |
+          if [ "$MODE" = "mode2" ] || [ "$FORCE" = "true" ]; then
+            git tag -f "$TAG" "$SHA"
+            git push origin "refs/tags/${TAG}" --force
+          else
+            git tag "$TAG" "$SHA"
+            git push origin "refs/tags/${TAG}"
+          fi
+
+      # Mode 1 only: every version is kept forever, so each one gets a real
+      # Release entry. Mode 2 deliberately skips this — `stable` is a rolling
+      # pointer with no changelog value of its own, and that mode keeps no
+      # version history to attach one to (see versioning-modes.md). The
+      # delete-then-create is a no-op the first time a version is released
+      # (nothing to delete); on a forced republish it drops the stale Release
+      # object first so `create` doesn't just fail against one that already
+      # exists.
+      - name: Create GitHub Release
+        if: steps.detect.outputs.mode == 'mode1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.cut.outputs.tag }}
+          SHA: ${{ steps.cut.outputs.sha }}
+        run: |
+          gh release delete "$TAG" --yes 2>/dev/null || true
+          gh release create "$TAG" --title "$TAG" --generate-notes --target "$SHA"
+
+      # Mode 1 only, and only on a genuine forward release (not a forced
+      # republish of an older version — see below): docs/.release-version
+      # needs a sane value again immediately or the next docs/release merge
+      # has nothing to read (see "Validate version" above). Rather than
+      # clearing it, bump it forward one patch version — the same idiom
+      # `just bump` uses for this workspace's own npm packages: let
+      # `npm version` do the semver arithmetic against a throwaway
+      # package.json instead of hand-rolling it, then read the result back
+      # out. This is a real commit directly on `main` (unlike "Cut release"
+      # above, which deliberately never advances main) — it's just
+      # bookkeeping, not a release. Skipped when `force` is set: a forced
+      # republish targets a version that was already superseded by whatever
+      # docs/.release-version currently holds, so bumping forward from it
+      # would clobber that already-planned next target instead of protecting
+      # it.
+      - name: Bump release descriptor
+        if: steps.detect.outputs.mode == 'mode1' && steps.force.outputs.force != 'true'
+        env:
+          VERSION: ${{ steps.resolve.outputs.version }}
+        run: |
+          dir=$(mktemp -d)
+          echo '{"name":"docs-release-version","version":"'"${VERSION}"'"}' > "${dir}/package.json"
+          npm --prefix "${dir}" version patch --no-git-tag-version --loglevel error >/dev/null
+          next=$(node -p "require('${dir}/package.json').version")
+
+          echo "${next}" > docs/.release-version
+          git add docs/.release-version
+          git commit -m "chore: bump docs/.release-version to ${next}"
+          git push origin main
+
+          echo "docs/.release-version: ${VERSION} → ${next}"
+
       # Rebuild/deploy is not triggered from here — pdocs-publish.yml (see
-      # the sibling workflow of that name) triggers on `push: tags: ['stable']`
-      # on its own, so the `git push` above is what kicks off the rebuild,
-      # not an explicit step in this file.
+      # the sibling workflow of that name) triggers on push for both a
+      # `stable` move and a `v*` tag push on its own, so the `git push` above
+      # is what kicks off the rebuild, not an explicit step in this file.

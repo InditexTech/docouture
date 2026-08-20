@@ -1,14 +1,25 @@
 # Creating a site package
 
-`starter` exists to be copied. The whole job is a copy plus four renames — nothing
-generates a site package, and nothing needs to.
+# Creating a site package
+
+There is currently no in-workspace template to copy: `code/packages/starter` was removed
+(it depended on `workspace:*` links to packages — `pdocs-ui-bundle`,
+`pdocs-antora-extensions`, `pdocs-asciidoc-extensions` — none of which are published to
+npm, so it could never be reused outside this monorepo either). The only surviving
+`starter` is `code/packages/cli/templates/starter`, bundled into `@inditextech/pdocs-cli`
+and used exclusively by `pdocs new` to scaffold a **standalone** site outside this
+monorepo — it deliberately does not depend on those unpublished packages (plain Antora
+default UI, no pdocs extensions) and is not meant to be copied into `code/packages/`.
 
 ## In this workspace
 
+Until an in-workspace template exists again, base a new package on `example` — the only
+site package left here — and strip its content down to what the new site needs:
+
 ```console
 $ cd code/packages
-$ cp -R starter mysite
-$ rm -rf mysite/build
+$ cp -R example mysite
+$ rm -rf mysite/build mysite/node_modules
 ```
 
 Then rename in four places. They are the values that have to agree; see the table in
@@ -19,6 +30,11 @@ Then rename in four places. They are the values that have to agree; see the tabl
 3. `mysite/antora-playbook.yml` → `site.title`, `site.start_page: mysite::index.adoc`,
    and `content.sources[0].start_path: code/packages/mysite/docs`.
 4. The playbook's header comment, which names the build command.
+
+`example` is currently versioned under Mode 2 (`content.sources[].branches`/`tags`,
+`docs/antora.yml`'s `version`/`prerelease`) — decide whether the new site wants that too,
+or should collapse back to a single unversioned component (`version: ~`,
+`branches: HEAD`, no `tags:`); see `reference/versioning-modes.md`.
 
 Then install and build:
 

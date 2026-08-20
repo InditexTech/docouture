@@ -1,0 +1,58 @@
+#
+# Antora playbook for local development and PR verification.
+#
+# Reference: https://docs.antora.org/antora/latest/playbook/
+#
+# Build with:  npx antora --fetch antora-playbook.pr-verify.yml
+# Output:      build/site
+#
+# Why this exists:
+# Once this site adopts one of the two documented versioning modes (see the
+# pdocs docs-site-package skill's reference/versioning-modes.md), the real
+# `antora-playbook.yml` aggregates content from more than just whatever is
+# checked out right now — Mode 1 (Full History) matches `branches: [main]` +
+# `tags: ['v*']`, Mode 2 (Stable + Prerelease) matches `branches: [main]` +
+# `tags: ['stable']`. A PR build (or a local build on a feature branch) is on
+# a detached HEAD or a branch that is neither of those, so `main` and the
+# version tag(s) are not resolved in that checkout — the real playbook either
+# fails or silently builds fewer versions than it should.
+#
+# This playbook points content aggregation at HEAD (the current worktree)
+# instead, so `pdocs-pr-verify.yml` (see .github/workflows/) and local runs
+# validate the current docs content without needing `main` or any release
+# ref. It intentionally never changes shape when a site switches versioning
+# mode, or adds a release: there is always exactly one thing to validate,
+# whatever is currently checked out.
+#
+# Publishing (`pdocs-publish.yml`) uses the real `antora-playbook.yml`.
+#
+
+site:
+  title: __PDOCS_TITLE__
+  start_page: __PDOCS_NAME__::index.adoc
+
+content:
+  sources:
+    - url: .
+      start_path: docs
+      branches: HEAD
+
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+
+output:
+  dir: build/site
+
+runtime:
+  log:
+    failure_level: warn
+
+asciidoc:
+  attributes:
+    experimental: ''
+    icons: font
+    sectanchors: ''
+    idprefix: ''
+    idseparator: '-'

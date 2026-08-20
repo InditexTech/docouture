@@ -8,7 +8,8 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "build": "antora --fetch antora-playbook.yml",
+    "build": "antora --fetch antora-playbook.local.yml",
+    "build:publish": "antora --fetch antora-playbook.yml",
     "dev": "node ../../scripts/dev.mjs build/site",
     "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
   },

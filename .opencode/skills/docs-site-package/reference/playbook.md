@@ -3,9 +3,9 @@
 `antora-playbook.yml` is Antora's only configuration file: content sources, UI, output and
 AsciiDoc attributes. Upstream reference: https://docs.antora.org/antora/latest/playbook/
 
-Both site packages carry the same playbook with the title, start page and `start_path`
-changed. What follows is what each key does, what this repository sets it to, and what the
-sites deliberately do not set.
+`example`'s playbook carries the title, start page and `start_path` for that one site —
+what follows is what each key does, what this repository sets it to, and what the site
+deliberately does not set.
 
 ## site
 
@@ -141,6 +141,6 @@ migration has to preserve existing links.
 | `redirect_facility` | `static` | how `page-aliases` are implemented: `static` HTML redirects, or `netlify`/`nginx` config |
 | `latest_version_segment` | unset | a fixed segment such as `latest` aliasing the current version |
 
-Neither site is versioned today (`docs/antora.yml` → `version: ~`, a single unnamed
-version). For `content.sources[].branches`/`tags` and `docs/antora.yml`'s `version`/
-`prerelease` across multiple refs, see `reference/versioning-modes.md`.
+`example` is versioned under Mode 2 (Stable + Prerelease) — `content.sources[].branches`/
+`tags` and `docs/antora.yml`'s `version`/`prerelease` across multiple refs are covered in
+`reference/versioning-modes.md`, along with Mode 1 (versioned tags), guidance-only so far.

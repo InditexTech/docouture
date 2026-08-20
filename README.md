@@ -42,7 +42,7 @@ $ just build                  # build everything
 $ just check                  # lint, typecheck and formatting — what CI runs
 $ just dev example            # serve a site on :5000, live reload (site defaults to example)
 $ just preview-ui             # UI-only dev server, live reload, :5252
-$ just build-site starter     # build one site
+$ just build-site example      # build one site
 $ just doctor                 # diagnose a workspace that won't build
 $ just bump minor             # set the version of every package
 ```
@@ -61,8 +61,9 @@ nothing else: no commit, no tag, no rebuild. The new version reaches
 reloads the browser. Antora has no incremental mode, so each change re-runs the
 whole build — fast for these sites, less so as one grows.
 
-It takes a second argument for the port, so two sites can run side by side:
-`just dev example` in one terminal and `just dev starter 5001` in another.
+It takes a second argument for the port, so a second site package could run
+alongside on its own port: `just dev example` in one terminal, `just dev
+<site> 5001` in another.
 
 When changing only the UI, prefer `just preview-ui`. It renders a single page
 exercising admonitions, code blocks, lists, tables and the navigation, and
@@ -90,8 +91,9 @@ an Nx target or a package script, and the recipe only calls it.
 justfile                    every command; runs everything inside code/
 code/                       the Nx workspace — see code/README.md
   packages/ui-bundle        the Antora UI bundle, published as a zip
-  packages/starter          the smallest complete site; copy it to start one
   packages/example          real-world site; currently a stub
+  packages/cli              `pdocs` CLI — scaffolds a standalone site (`pdocs new`),
+                             bundling its own starter template
 ```
 
 All toolchain configuration lives in `code/`, so `pnpm`, `nx` and `asdf` must be
@@ -105,7 +107,7 @@ working-tree changes, but the repository must have at least one commit, or the
 content source resolves to nothing and the site builds with zero pages:
 
 ```
-Start page specified for site not found: starter::index.adoc
+Start page specified for site not found: example::index.adoc
 ```
 
 If you see that on a fresh clone with no history, make an initial commit.

@@ -42,8 +42,10 @@ content:
 
 ui:
   bundle:
-    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
-    snapshot: true
+    # Same pdocs UI bundle as the real antora-playbook.yml — see its comment.
+    # Resolved from node_modules too, so `npm install` must have run first.
+    url: ./node_modules/@inditextech/pdocs-ui-bundle/build/ui-bundle.zip
+    snapshot: false
 
 output:
   dir: build/site

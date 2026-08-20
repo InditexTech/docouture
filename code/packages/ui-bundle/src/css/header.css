@@ -199,10 +199,64 @@ body {
   }
 }
 
-/* Solid tag is grey by default; green only on the component's latest version. */
+/*
+ * GH-103 — explicit Latest/older-Stable/Prerelease colouring for the
+ * dropdown toggle (`.ids-tag--solid`, page-versions.hbs) — three states:
+ * the current release green, an older stable version grey (no `alt-grey`
+ * pair exists in ids-tokens.css the way green/orange do, so this composes
+ * from the plain neutral scale instead — `--ids-color-bg-low`/`--ids-color-
+ * content-low`, the same "muted" pairing the dropdown's own plain rows use,
+ * page-versions.css), Prerelease orange. `.ids-tag--solid` reads its
+ * background off the `--ids-color-bg-low` custom property and its label off
+ * `--ids-color-content-default` (ids-components.css), so redefining those two
+ * variables locally is enough — no selector override needed.
+ */
 .header-toolbar__version--latest {
   --ids-color-bg-low: var(--ids-color-alt-green-low);
   --ids-color-content-default: var(--ids-color-alt-green-high);
+}
+
+.header-toolbar__version--older {
+  --ids-color-bg-low: var(--ids-color-bg-states-hover);
+  --ids-color-content-default: var(--ids-color-content-low);
+}
+
+.header-toolbar__version--prerelease {
+  --ids-color-bg-low: var(--ids-color-alt-orange-low);
+  --ids-color-content-default: var(--ids-color-alt-orange-high);
+}
+
+/*
+ * GH-103/GH-101 — the single-version read-only badge doesn't go through the
+ * variables above: `.ids-tag--read-only.ids-tag--solid` sets its own
+ * `background-color` directly, off `--ids-color-bg-states-disabled`
+ * (ids-components.css), ignoring `--ids-color-bg-low` entirely. Same for the
+ * label, which stays on the DS's default `--ids-color-content-default` read
+ * globally rather than the locally-scoped one `.ids-tag--solid` uses. Both
+ * need a selector-specificity override here instead of a variable swap.
+ */
+.header-toolbar__version--latest.ids-tag--read-only.ids-tag--solid {
+  background-color: var(--ids-color-alt-green-low);
+}
+
+.header-toolbar__version--latest.ids-tag--read-only .ids-tag__label {
+  color: var(--ids-color-alt-green-high);
+}
+
+.header-toolbar__version--older.ids-tag--read-only.ids-tag--solid {
+  background-color: var(--ids-color-bg-states-hover);
+}
+
+.header-toolbar__version--older.ids-tag--read-only .ids-tag__label {
+  color: var(--ids-color-content-low);
+}
+
+.header-toolbar__version--prerelease.ids-tag--read-only.ids-tag--solid {
+  background-color: var(--ids-color-alt-orange-low);
+}
+
+.header-toolbar__version--prerelease.ids-tag--read-only .ids-tag__label {
+  color: var(--ids-color-alt-orange-high);
 }
 
 /*

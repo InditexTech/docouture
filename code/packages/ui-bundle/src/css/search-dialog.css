@@ -235,9 +235,42 @@ body:has(#side-menu.is-active) .search-fab {
  * rather than in the middle of the available space. `flex: 1` is what
  * actually centres it: it grows to fill the results area, and the DS's own
  * `justify-content: center` (on `.ids-empty-state` itself) does the rest.
+ *
+ * Both this and the loader below (12-search.ts's `renderLoading`) also get
+ * some breathing room off the panel's own edges — neither carries any
+ * padding of its own in the DS component CSS (ids-components.css), so
+ * without it either sits flush against `.search-dialog__results`'s edges
+ * the moment the panel is short enough that `flex: 1` can't add slack.
+ * Scoped to this searcher usage, not the bare DS classes globally — a
+ * generic `.ids-empty-state` used elsewhere on a page has no reason to
+ * inherit search-dialog-specific spacing.
  */
 .search-dialog__results .ids-empty-state {
   flex: 1;
+  padding-block: var(--ids-size-250);
+}
+
+.search-dialog__results .ids-loader {
+  padding-block: var(--ids-size-250);
+}
+
+/*
+ * GH-69 — the gap between "No results found" and "Try a different search
+ * term" reads much bigger than the DS's own `row-gap: var(--ids-size-50)`
+ * on `.ids-empty-state__message` (ids-components.css) suggests: `title`/
+ * `description` render as plain `<p>` tags (empty-state.js) with no margin
+ * reset of their own — the DS component assumes a host app that already
+ * zeroes paragraph margins globally, which this bundle doesn't do (no
+ * reset stylesheet, unlike a Tailwind-preflight-style app). Each `<p>`'s
+ * UA-default `margin-block` stacks on top of the flex `row-gap`, roughly
+ * doubling the visual gap. Reset here, scoped to this usage, rather than
+ * hand-editing the generated `ids-components.css` (would just get
+ * overwritten by the next `ids-sync`) or resetting `p` margins bundle-wide
+ * (out of scope of this component's own bug).
+ */
+.search-dialog__results .ids-empty-state__title,
+.search-dialog__results .ids-empty-state__description {
+  margin: 0;
 }
 
 /*

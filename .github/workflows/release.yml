@@ -144,10 +144,13 @@ jobs:
             $prerelease_flag \
             '${{ steps.artifact.outputs.path }}'
 
-  # Off by default. `pdocs-ui-bundle` (and any future package) is `private`
-  # today, and publishing is not settled internally yet — see the pdocs design
-  # conversation this workflow came out of. Flip `vars.NPM_PUBLISH_ENABLED` to
-  # `true` once that is resolved; nothing else here needs to change.
+  # Off by default. The four `@inditextech/pdocs-*` packages below are public
+  # (no `private: true`) so they can be published locally to a Verdaccio
+  # snapshot registry for pre-release testing (`just release-local`), but
+  # publishing to the real npm registry from CI is not settled internally yet
+  # — see the pdocs design conversation this workflow came out of. Flip
+  # `vars.NPM_PUBLISH_ENABLED` to `true` once that is resolved; nothing else
+  # here needs to change.
   #
   # Trusted publishing (OIDC + provenance, no long-lived npm token) needs
   # npm >= 11.5.1 and the package's registry settings configured for it on
@@ -222,6 +225,23 @@ jobs:
       # ui-bundle above.
       - name: Publish cli
         working-directory: code/packages/cli
+        env:
+          NPM_CONFIG_PROVENANCE: "true"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+      # GH-92: extends the publishable set beyond ui-bundle/cli so a site
+      # outside the monorepo can `npm install` the extensions directly rather
+      # than depend on this repo's workspace layout.
+      - name: Publish antora-extensions
+        working-directory: code/packages/antora-extensions
+        env:
+          NPM_CONFIG_PROVENANCE: "true"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+      - name: Publish asciidoc-extensions
+        working-directory: code/packages/asciidoc-extensions
         env:
           NPM_CONFIG_PROVENANCE: "true"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -429,3 +429,147 @@ graph: (_hdr "graph")
 [group('maint')]
 outdated: (_hdr "outdated")
     pnpm outdated -r
+
+# --------------------------------------------------------------- release -----
+#
+# `release-local` snapshot-publishes the four platform packages
+# (ui-bundle, cli, antora-extensions, asciidoc-extensions) to a local
+# Verdaccio registry, for testing a consuming repo against them before
+# cutting a real release through .github/workflows/release.yml. Two
+# recipes, run in separate terminals:
+#
+#   local-registry-start   starts Verdaccio on :4873, foreground, until
+#                           you Ctrl-C it — run this first and leave it up
+#   release-local           snapshot-versions, builds and publishes to
+#                           whatever is listening on :4873, then reverts
+#                           the version bump — run this as many times as
+#                           you like while local-registry-start stays up
+#
+# Neither touches code/.npmrc (which pins the default registry to npmjs
+# for everyone else): `release-local` publishes with an explicit
+# `--registry` flag, and points you at a scoped `.npmrc` line to add to
+# whatever repo you're testing against instead.
+
+# Start an ephemeral local npm registry (Verdaccio) on :4873, for release-local
+[group('release')]
+[no-exit-message]
+local-registry-start: (_hdr "local-registry-start")
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    tmpdir=$(mktemp -d)
+    storage="$tmpdir/storage"
+    config="$tmpdir/config.yaml"
+    mkdir -p "$storage"
+    trap 'rm -rf "$tmpdir"' EXIT
+
+    # Proxies everything except @inditextech/* to npmjs, so a consuming
+    # repo's other dependencies still resolve normally through this
+    # registry if pointed at it wholesale rather than scoped.
+    cat > "$config" <<CONFIG
+    storage: $storage
+    uplinks:
+      npmjs:
+        url: https://registry.npmjs.org/
+    packages:
+      '@inditextech/*':
+        access: \$all
+        publish: \$all
+        unpublish: \$all
+      '**':
+        access: \$all
+        proxy: npmjs
+    log:
+      - { type: stdout, format: pretty, level: warn }
+    CONFIG
+
+    echo "  Verdaccio starting on http://localhost:4873"
+    echo "  storage: $storage"
+    echo "  Ctrl-C to stop and remove the storage directory."
+    echo
+
+    npx --yes verdaccio --config "$config" --listen 4873
+
+# Snapshot-publish ui-bundle/cli/antora-extensions/asciidoc-extensions to local-registry-start
+[group('release')]
+[no-exit-message]
+release-local: (_hdr "release-local")
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    registry='http://localhost:4873'
+    packages=(ui-bundle cli antora-extensions asciidoc-extensions)
+
+    if ! curl -fsS "$registry/-/ping" >/dev/null 2>&1; then
+      echo "  no registry responding at $registry"
+      echo "  run 'just local-registry-start' in another terminal first"
+      exit 1
+    fi
+
+    # Hard-abort on any uncommitted change to these files rather than stash
+    # or work around it: the revert step at the end trusts `git checkout` to
+    # put back exactly what was there before this ran, and an in-progress
+    # edit to one of these files should never be silently clobbered.
+    dirty=()
+    for pkg in "${packages[@]}"; do
+      path="packages/$pkg/package.json"
+      if ! git diff --quiet -- "$path" || ! git diff --quiet --cached -- "$path"; then
+        dirty+=("$path")
+      fi
+    done
+    if [ "${#dirty[@]}" -gt 0 ]; then
+      echo "  uncommitted changes in:"
+      printf '    %s\n' "${dirty[@]}"
+      echo "  commit or stash them first — release-local reverts these files to their committed state when it finishes."
+      exit 1
+    fi
+
+    snapshot="0.0.0-local.$(git rev-parse --short HEAD).$(date +%s)"
+    echo "  snapshot version: $snapshot"
+
+    # Runs on success, failure and interrupt alike, so a Ctrl-C mid-publish
+    # never leaves a package.json version bump behind.
+    restore() {
+      status=$?
+      echo
+      echo "  reverting package.json versions"
+      for pkg in "${packages[@]}"; do
+        git checkout -- "packages/$pkg/package.json"
+      done
+      exit $status
+    }
+    trap restore EXIT
+
+    for pkg in "${packages[@]}"; do
+      (cd "packages/$pkg" && npm version "$snapshot" --no-git-tag-version --allow-same-version --loglevel error >/dev/null)
+    done
+
+    # Only ui-bundle and cli have a build step; antora-extensions and
+    # asciidoc-extensions publish their committed JS source directly.
+    {{ nx }} run-many -t build -p @inditextech/pdocs-ui-bundle @inditextech/pdocs-cli
+
+    for pkg in "${packages[@]}"; do
+      echo "  publishing $pkg"
+      (cd "packages/$pkg" && npm publish --registry "$registry" --tag local --loglevel warn)
+    done
+
+    cat <<EOF
+
+      Published to $registry as $snapshot:
+        @inditextech/pdocs-ui-bundle
+        @inditextech/pdocs-cli
+        @inditextech/pdocs-antora-extensions
+        @inditextech/pdocs-asciidoc-extensions
+
+      To consume from another repo, add to its .npmrc:
+
+        @inditextech:registry=$registry/
+
+      Then install the snapshot, e.g.:
+
+        npm install @inditextech/pdocs-cli@$snapshot
+
+      package.json versions in this repo have already been reverted; the
+      snapshot stays installable from Verdaccio until local-registry-start's
+      storage directory is removed (Ctrl-C it).
+    EOF

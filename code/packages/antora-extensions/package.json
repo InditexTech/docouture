@@ -1,10 +1,13 @@
 {
   "name": "@inditextech/pdocs-antora-extensions",
   "version": "0.1.0",
-  "private": true,
   "description": "Antora pipeline extensions shared by pdocs documentation sites — per-module navigation metadata (nav_modules)",
   "license": "MPL-2.0",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "engines": {
     "node": ">=24.0.0"
   },

@@ -1,0 +1,18 @@
+code/packages/cli/src/lib/doctor-checks.ts
+  h_c93d154c7c7074 228
+code/packages/cli/templates/starter/docs/modules/main/nav.adoc
+  h_c93d154c7c7074 3
+code/packages/cli/templates/starter/docs/modules/main/pages/components.adoc
+  h_c93d154c7c7074 1-457
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "660d43d779989686a1759c7168ce8ae1a5fd160b",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

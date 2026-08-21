@@ -2,7 +2,14 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { readSiteUrl, readSourceUrl, readStartPage, readStartPageComponent, readStartPath } from './playbook-yml.js'
+import {
+  readOutputDir,
+  readSiteUrl,
+  readSourceUrl,
+  readStartPage,
+  readStartPageComponent,
+  readStartPath,
+} from './playbook-yml.js'
 
 const SAMPLE = `site:
   title: Example Docs
@@ -70,5 +77,15 @@ describe('readStartPath', () => {
 
   it('does not pick up output.dir instead', () => {
     expect(readStartPath(SAMPLE)).not.toBe('build/site')
+  })
+})
+
+describe('readOutputDir', () => {
+  it('reads output.dir', () => {
+    expect(readOutputDir(SAMPLE)).toBe('build/site')
+  })
+
+  it('returns null when output.dir is unset, leaving the Antora default to the caller', () => {
+    expect(readOutputDir('site:\n  title: X\n')).toBeNull()
   })
 })

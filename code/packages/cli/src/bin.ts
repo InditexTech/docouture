@@ -8,6 +8,7 @@ import { runVersion } from './commands/version.js'
 import { runDev } from './commands/dev.js'
 import { runBuild } from './commands/build.js'
 import { runDoctor } from './commands/doctor.js'
+import { runPublish } from './commands/publish.js'
 import { readCliInfo } from './lib/cli-info.js'
 
 const USAGE = `Usage:
@@ -30,6 +31,14 @@ const USAGE = `Usage:
   pdocs build [--dir <path>]
       Build the site once: a thin wrapper around the site's own 'npm run
       build' (antora --fetch antora-playbook.yml).
+
+  pdocs publish <target> [--dir <path>] [--<option> <value> ...]
+      Publish the already-built site (output.dir in antora-playbook.yml,
+      default build/site — run 'pdocs build' first) using the
+      '@inditextech/pdocs-publish-<target>' driver, e.g. 'gh-pages'. That
+      package must be a devDependency of the site itself. Options come
+      from docs/package.json's own "pdocs".publish.<target> object,
+      overridden by any --flags given here.
 
   pdocs doctor [--dir <path>]
       Check that the environment and site configuration are healthy: Node
@@ -72,6 +81,8 @@ async function main(): Promise<number> {
       return runDev(rest)
     case 'build':
       return runBuild(rest)
+    case 'publish':
+      return runPublish(rest)
     case 'doctor':
       return runDoctor(rest)
     default:

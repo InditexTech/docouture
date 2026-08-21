@@ -65,6 +65,11 @@ ui:
     snapshot: false
 
 output:
+  # `pdocs publish <target>` (see .github/workflows/pdocs-publish.yml)
+  # publishes whatever is here, defaulting to this same value if the line
+  # is removed. Its own configuration — which target, and that driver's
+  # options — lives in this package's own package.json under a "pdocs"
+  # key, not here: this file stays a plain, portable Antora playbook.
   dir: build/site
 
 runtime:

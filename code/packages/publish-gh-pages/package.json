@@ -1,0 +1,20 @@
+{
+  "name": "@inditextech/pdocs-publish-gh-pages",
+  "version": "0.1.0",
+  "description": "pdocs publish driver: pushes a built site to a GitHub Pages branch. Invoked by `pdocs publish gh-pages`, not an Antora extension.",
+  "license": "MPL-2.0",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "gh-pages": "~6.3.0"
+  }
+}

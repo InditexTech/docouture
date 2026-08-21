@@ -74,6 +74,20 @@ export default tseslint.config(
     },
   },
   {
+    // pdocs publish drivers: plain CommonJS Node modules, `require()`d by
+    // @inditextech/pdocs-cli's `publish` command out of a site's own
+    // node_modules — not bundled, not an Antora extension (that's why this
+    // isn't grouped with antora-extensions above).
+    files: ['packages/publish-gh-pages/**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: globals.node,
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
     // Developer scripts: standalone Node programs, ES modules, run by hand or
     // through a package script. Not part of any bundle.
     files: ['scripts/**/*.mjs', 'packages/*/scripts/**/*.mjs', 'tools/*/*.mjs'],

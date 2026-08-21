@@ -83,3 +83,13 @@ export function readStartPath(content: string): string | null {
 export function readSourceUrl(content: string): string | null {
   return firstField(topLevelBlock(content, 'content'), 'url')
 }
+
+/**
+ * `output.dir` — where `antora build` writes the built site. Unset in every
+ * playbook `pdocs new` scaffolds (Antora's own default, `build/site`,
+ * applies), so `pdocs publish` falls back to that same default rather than
+ * treating a missing value as an error.
+ */
+export function readOutputDir(content: string): string | null {
+  return firstField(topLevelBlock(content, 'output'), 'dir')
+}

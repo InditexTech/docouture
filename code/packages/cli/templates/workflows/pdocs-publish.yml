@@ -1,13 +1,27 @@
 name: pdocs-publish
 
-# Builds — and, once `pdocs publish` exists, deploys — this site. Deliberately
-# platform-agnostic: this file only does generic build mechanics (checkout,
-# install, `antora build`) and then hands off to the CLI. Where the built
-# site actually goes — GitHub Pages, S3, Azure Static Web Apps, Netlify, a
-# plain artifact upload, ... — is decided by whichever pdocs publish-target
-# antora-extension(s) this site's own antora-playbook.yml declares, not by
-# anything in this workflow. See the docs-site-package skill's
-# versioning-modes.md, "Follow-up work", for the state of that mechanism.
+# Builds this site, then publishes it with `pdocs publish <target>` — see
+# that command's own usage (`pdocs --help`) and
+# @inditextech/pdocs-cli's publish.ts for the mechanism: `<target>` resolves
+# by convention to the npm package `@inditextech/pdocs-publish-<target>`
+# (e.g. `gh-pages` → `@inditextech/pdocs-publish-gh-pages`), which this site
+# must add to its own devDependencies to opt in, alongside a
+# `"pdocs": { "publish": { "<target>": { ... } } }` block in this site's own
+# package.json for that driver's options. There is no publish-target Antora
+# extension and no `antora.extensions` involvement at all — publishing is a
+# CLI concern, decoupled from `antora build`, which is why Build and Publish
+# are two separate steps below: re-publishing an already-built site never
+# needs a rebuild.
+#
+# Replace `gh-pages` in the Publish step with whatever target this site's
+# own devDependencies declare a driver for, or drop the step entirely for a
+# site that only wants a build artifact for now — this file makes no
+# platform assumption.
+#
+# `permissions: contents: write` and `GITHUB_TOKEN` below are only ever used
+# by @inditextech/pdocs-publish-gh-pages specifically (pushing to a
+# `gh-pages` branch needs both); harmless to leave granted for any other
+# driver, which simply never reads them.
 #
 # Triggers on both refs either versioned or standalone mode (see
 # versioning-modes.md) can produce — `tags: ['stable']` (standalone's
@@ -30,6 +44,11 @@ jobs:
     name: Build and publish
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Needed only by @inditextech/pdocs-publish-gh-pages, if this site uses
+    # it — pushing to a `gh-pages` branch needs write access to repository
+    # contents. Harmless to leave granted for any other publish target.
+    permissions:
+      contents: write
     # `pdocs new` scaffolds this site's package.json, antora-playbook.yml
     # etc. under docs/ (not the repository root) — see the docs-site-package
     # skill's reference/versioning-modes.md. Every step below runs from
@@ -61,10 +80,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      # NOT YET IMPLEMENTED: `pdocs publish` does not exist yet — see
-      # versioning-modes.md's "Follow-up work" section. Until it does, this
-      # step has nothing to call and this workflow is build-only in effect;
-      # drop it and upload `build/site` as an artifact yourself (or wire your
-      # own deploy step) in the meantime.
+      # `GITHUB_TOKEN` is read by @inditextech/pdocs-publish-gh-pages
+      # specifically (unused, and unnecessary to set, for any other publish
+      # target). See this file's own header comment for the `<target>`
+      # naming convention and where its options come from.
       - name: Publish
-        run: npx pdocs publish
+        run: npx pdocs publish gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

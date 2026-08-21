@@ -46,11 +46,23 @@ function substitute(text: string, values: TemplateValues): string {
 // below, standalone or not.
 const VERSIONED_MARKER = '.versioned'
 
+// Extensions copied as raw bytes, no placeholder substitution — logo and
+// favicon assets under `supplemental-ui/` (GH-114). Substituting text tokens
+// into a binary file via `readFile(from, 'utf8')` corrupts it (the bytes get
+// decoded as UTF-8 and re-encoded on write), so these must take a separate,
+// non-text path instead of the generic one below.
+const BINARY_EXTENSIONS = new Set(['.png', '.ico', '.jpg', '.jpeg', '.gif', '.webp'])
+
+function isBinaryFile(name: string): boolean {
+  const dot = name.lastIndexOf('.')
+  if (dot === -1) return false
+  return BINARY_EXTENSIONS.has(name.slice(dot).toLowerCase())
+}
+
 // Copies every file under `srcDir` into `destDir`, substituting placeholder
-// tokens in each one. Every template file here is plain text (YAML, AsciiDoc,
-// JSON), so there is no binary case to special-case, unlike the UI bundle's
-// zip packing — see gulp.d/tasks/pack.js for why that distinction matters
-// there and does not here.
+// tokens in each text file. Most template files are plain text (YAML,
+// AsciiDoc, JSON) and go through that substitution; image assets
+// (BINARY_EXTENSIONS) are copied as raw bytes instead — see its own comment.
 export async function copyTemplate(srcDir: string, destDir: string, values: TemplateValues): Promise<void> {
   const entries = await readdir(srcDir, { withFileTypes: true })
 
@@ -64,6 +76,9 @@ export async function copyTemplate(srcDir: string, destDir: string, values: Temp
 
     if (entry.isDirectory()) {
       await copyTemplate(from, to, values)
+    } else if (isBinaryFile(entry.name)) {
+      const content = await readFile(from)
+      await writeFile(to, content)
     } else {
       const content = await readFile(from, 'utf8')
       await writeFile(to, substitute(content, values), 'utf8')

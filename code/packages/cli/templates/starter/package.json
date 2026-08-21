@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "__PDOCS_TITLE__ documentation, built with Antora",
+  "license": "UNLICENSED",
   "engines": {
     "node": ">=24.0.0"
   },
@@ -16,6 +17,12 @@
     "@inditextech/pdocs-ui-bundle": "__PDOCS_CLI_VERSION__",
     "@inditextech/pdocs-asciidoc-extensions": "__PDOCS_CLI_VERSION__",
     "@inditextech/pdocs-antora-extensions": "__PDOCS_CLI_VERSION__",
+    "@inditextech/pdocs-publish-gh-pages": "__PDOCS_CLI_VERSION__",
     "antora": "3.1.15"
+  },
+  "pdocs": {
+    "publish": {
+      "gh-pages": {}
+    }
   }
 }

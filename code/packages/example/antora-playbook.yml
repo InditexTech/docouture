@@ -42,6 +42,12 @@ site:
     # asking a site for a second asset.
     home_background: /_/home-background.jpg
 
+    # Browser tab icon (head-icons.hbs), read by that partial as
+    # site.keys.favicon. Cropped/padded from the same product-logo.png above
+    # onto a square canvas — see supplemental-ui/ — rather than a second,
+    # unrelated asset.
+    favicon: /_/favicon.ico
+
 content:
   sources:
     # This entry reads the AsciiDoc content that lives alongside this playbook.

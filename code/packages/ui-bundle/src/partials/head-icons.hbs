@@ -1,1 +1,15 @@
-    {{!-- <link rel="icon" href="{{{uiRootPath}}}/img/favicon.ico" type="image/x-icon"> --}}
+{{!--
+  Favicon (GH-114). `site.keys.favicon` is a playbook-level override — same
+  convention as `site.keys.productLogo` in nav-brand.hbs and `site.keys.repoUrl`
+  in repo-link.hbs — a root-relative or absolute URL to an icon image, set in
+  the playbook as `site.keys.favicon`. Absent, no `<link rel="icon">` is
+  emitted at all and the browser falls back to its own default (or whatever a
+  previous crawl cached), rather than pointing at an asset the bundle does not
+  ship. `relativize`, not root-absolute: this is an ordinary `<link href>`
+  resolved against the current document, the same as every other bundle asset
+  reference except home-background's CSS custom property — see head-styles.hbs
+  for why that one is the exception, not the rule.
+--}}
+{{#with site.keys.favicon}}
+    <link rel="icon" href="{{{relativize this}}}">
+{{/with}}

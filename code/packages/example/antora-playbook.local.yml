@@ -32,6 +32,7 @@ site:
   keys:
     product_logo: /_/product-logo.png
     home_background: /_/home-background.jpg
+    favicon: /_/favicon.ico
 
 content:
   sources:

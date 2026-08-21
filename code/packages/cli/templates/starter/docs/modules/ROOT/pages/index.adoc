@@ -1,12 +1,23 @@
 = Introduction
+:page-nav-module: main
 
 Welcome. This is __PDOCS_TITLE__, scaffolded by `pdocs new`.
+
+ROOT has no nav.adoc of its own (deliberately — see docs/antora.yml's own
+comment): this page borrows the `main` module's navigation for its side menu
+via `:page-nav-module:` above, the same way __PDOCS_TITLE__'s real landing
+page will once `main` holds real content instead of placeholders.
 
 == What is here
 
 * `antora-playbook.yml` — build configuration; start editing there.
-* `docs/antora.yml` — declares this component's name and version.
-* `docs/modules/ROOT/nav.adoc` — the navigation tree.
-* `docs/modules/ROOT/pages/` — the pages themselves.
+* `docs/antora.yml` — declares this component's name, version, navigation
+  modules and footer.
+* `docs/modules/ROOT/pages/index.adoc` — this page, the site's landing.
+* `docs/modules/main/nav.adoc` and `docs/modules/main/pages/` — a placeholder
+  content module, structured the way a real one would be (overview, getting
+  started, an application section, additional information). Replace its
+  pages, or add more modules alongside it, once there is real content.
 
-Continue to xref:getting-started.adoc[Getting started].
+Continue to xref:getting-started.adoc[Getting started], or browse the
+placeholder module starting at xref:main:index.adoc[About].

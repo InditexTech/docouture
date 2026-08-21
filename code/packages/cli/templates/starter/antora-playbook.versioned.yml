@@ -14,8 +14,25 @@ site:
   title: __PDOCS_TITLE__
   # Set this to the public URL of the deployed site. It is required for the
   # sitemap and for canonical links; leave it out while developing locally.
+  #
+  # Publishing to GitHub Pages as a project page (https://<org>.github.io/
+  # <repo>/) needs the repo name baked into this as a path segment — Antora
+  # uses it to generate correct absolute asset URLs — e.g.:
+  #
+  # url: https://<org>.github.io/<repo>
   # url: https://docs.example.com
   start_page: __PDOCS_NAME__::index.adoc
+  # Side-menu brand mark (nav-brand.hbs) and browser tab icon (head-icons.hbs)
+  # — placeholder artwork under supplemental-ui/, wired via
+  # ui.supplemental_files below. Supplemental files land under the UI's own
+  # output dir (ui.output_dir, default `_`), not the site root, hence the
+  # `/_/` prefix. Swap these two files (and product-logo-dark.png, used
+  # automatically under the dark theme) for real artwork, or remove the keys
+  # entirely to fall back to a text-only brand block and no favicon.
+  keys:
+    product_logo: /_/product-logo.png
+    product_logo_dark: /_/product-logo-dark.png
+    favicon: /_/favicon.ico
 
 content:
   sources:
@@ -61,6 +78,11 @@ ui:
     # (a URL or another local path) and dropping the devDependency above.
     url: ./node_modules/@inditextech/pdocs-ui-bundle/build/ui-bundle.zip
     snapshot: false
+  # Serves the placeholder logo and favicon under site.keys above from a
+  # root-relative URL — see the docs-site-package skill's reference/
+  # playbook.md for how this directory's contents land under the UI's own
+  # output dir at build time.
+  supplemental_files: ./supplemental-ui
 
 output:
   # `pdocs publish <target>` (see .github/workflows/pdocs-publish.yml)
@@ -69,6 +91,13 @@ output:
   # options — lives in this package's own package.json under a "pdocs"
   # key, not here: this file stays a plain, portable Antora playbook.
   dir: build/site
+
+urls:
+  # Every page's own URL ends in a trailing slash (.../page/) resolving an
+  # index.html, rather than a bare .../page.html — a matter of taste, not a
+  # requirement; drop this line for Antora's plain default if the deployed
+  # site sits behind something that prefers literal .html routes.
+  html_extension_style: indexify
 
 runtime:
   # Fail the build on broken xrefs and other content problems rather than
@@ -86,6 +115,18 @@ asciidoc:
     sectanchors: ''
     idprefix: ''
     idseparator: '-'
+    # Static, build-time syntax highlighting via Shiki instead of Antora's own
+    # default (highlight.js, client-side) — see
+    # @inditextech/pdocs-asciidoc-extensions's shiki-syntax-highlighter.js for
+    # the adapter this name resolves to, and
+    # @inditextech/pdocs-antora-extensions's shiki-prewarm.js (wired below,
+    # under `antora.extensions`) for the async setup it depends on.
+    source-highlighter: shiki
+    # Turns on the ui-bundle's previous/next footer nav (pagination.hbs) for
+    # every page by default — it is opt-in per page otherwise. `@` makes it a
+    # soft default, so an individual page can still opt out with
+    # `:!page-pagination:` (e.g. a landing-style page).
+    page-pagination: '@'
   extensions:
     # Authoring blocks with no plain AsciiDoc equivalent — [tabs], [cards],
     # [feature-tabs], [cta], [accordion] grouping, plus the label:[]/mono:[]

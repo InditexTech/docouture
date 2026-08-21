@@ -2,8 +2,8 @@
 
 == Add a page
 
-Create an AsciiDoc file under `modules/ROOT/pages/`, then add it to
-`modules/ROOT/nav.adoc` so it appears in the navigation:
+Create an AsciiDoc file under `modules/<module>/pages/`, then add it to that
+module's `nav.adoc` so it appears in the navigation:
 
 [,asciidoc]
 ----
@@ -11,7 +11,8 @@ Create an AsciiDoc file under `modules/ROOT/pages/`, then add it to
 ----
 
 A page that is not listed in the navigation is still published; it just cannot
-be reached by browsing.
+be reached by browsing. This page itself is an example — it has no entry in
+any `nav.adoc`, only a direct link from xref:index.adoc[Introduction].
 
 == Build the site
 
@@ -36,3 +37,36 @@ $ pdocs version 1.1.0-rc.0 --prerelease
 
 It rewrites `docs/antora.yml` in place and leaves everything else in this
 directory untouched.
+
+== Publish to GitHub Pages
+
+`pdocs new` already scaffolded `.github/workflows/pdocs-publish.yml`, which
+builds this site and runs `pdocs publish gh-pages` on every push to `main`
+and on the `stable`/`v*` tags `pdocs-release.yml` cuts. Two things are still
+required before that step actually publishes anything:
+
+. Add `@inditextech/pdocs-publish-gh-pages` to this package's own
+  `devDependencies` — already present in the scaffolded `package.json` — and
+  run `npm install` so it resolves.
+. Set `site.url` in `antora-playbook.yml` to this site's public URL. For a
+  GitHub Pages project page, that is `https://<org>.github.io/<repo>` — the
+  repository name has to be baked in as a path segment, or generated asset
+  URLs come out wrong.
+
+Optional: a custom domain is a `cname` string under this package's own
+`"pdocs": { "publish": { "gh-pages": { "cname": "docs.example.com" } } }` in
+`package.json` (see the scaffolded stub there) — `pdocs publish` writes it as
+a `CNAME` file alongside the built site. Leave the block empty, as scaffolded,
+for a plain `github.io` URL.
+
+To publish once manually, from this directory:
+
+[,console]
+----
+$ npm run build
+$ npx pdocs publish gh-pages
+----
+
+`GITHUB_TOKEN` (set automatically in the Actions workflow) authenticates the
+push; running this locally needs a token of your own with `repo` scope,
+passed as the `GITHUB_TOKEN` environment variable.

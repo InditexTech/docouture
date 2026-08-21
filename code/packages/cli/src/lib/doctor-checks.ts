@@ -225,7 +225,7 @@ export function checkReleaseLabelExists(repoRoot: string): Promise<CheckResult> 
         resolvePromise({
           ok: true,
           label,
-          message: "could not check (gh CLI unavailable, unauthenticated, or not a GitHub repo) — skipping",
+          message: 'could not check (gh CLI unavailable, unauthenticated, or not a GitHub repo) — skipping',
         })
         return
       }

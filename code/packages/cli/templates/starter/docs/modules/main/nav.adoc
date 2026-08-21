@@ -1,5 +1,6 @@
 * Welcome to pdocs
 * xref:main:getting-started.adoc[Getting started]
+* xref:main:components.adoc[AsciiDoc components]
 * Overview
 * xref:main:index.adoc[About]
 * xref:main:architecture.adoc[Architecture]

@@ -1,10 +1,11 @@
+* Welcome to pdocs
+* xref:main:getting-started.adoc[Getting started]
 * Overview
 * xref:main:index.adoc[About]
 * xref:main:architecture.adoc[Architecture]
 * xref:main:structure.adoc[Structure]
 * xref:main:glossary.adoc[Glossary]
 * Getting started
-* xref:main:getting-started.adoc[Getting started]
 * xref:main:requirements.adoc[Requirements]
 * xref:main:quickstart.adoc[Quickstart]
 * App

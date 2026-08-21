@@ -1,0 +1,25 @@
+code/packages/cli/src/commands/publish.spec.ts
+  s_d4c7f0737dd45a::t_57df47a472833f 1-155
+code/packages/cli/src/commands/publish.ts
+  s_d4c7f0737dd45a::t_a476d77de8e8a4 1-139
+code/packages/cli/templates/workflows/pdocs-publish.yml
+  s_d4c7f0737dd45a::t_02802d8c82043b 3-24,47-51,83-86,88-90
+code/pnpm-lock.yaml
+  s_d4c7f0737dd45a::t_f5485ef4296f15 117-122,1199-1202,1226-1228,1477-1483,1669-1672,1713-1715,1942-1949,1958-1965,2063-2067,2104-2107,2469-2472,2715-2718,2723-2726,2731-2734,2781-2784,2828-2831,3333-3336,3444-3447,3573-3576,4846-4847,4869-4870,5119-5122,5305-5308,5350-5351,5595-5602,5619-5629,5736-5745,5799-5807,6167-6170,6522-6525,6530-6533,6538-6539,6577-6578,6633-6636,7174-7175,7274-7277,7454-7457
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4332608a997a053cb06e876ad8950002a9bcb85c",
+  "prompts": {},
+  "sessions": {
+    "s_d4c7f0737dd45a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe01e798bffegvXad2UHQtLOBj",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

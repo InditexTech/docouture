@@ -25,9 +25,19 @@ import { readSiteUrl } from './playbook-yml.js'
 const RELOAD_PATH = '/__dev/reload'
 const CLIENT_PATH = '/__dev/client.js'
 const DEBOUNCE_MS = 150
+const BUILD_TIMEOUT_MS = 120_000
 
 const CLIENT_SCRIPT = `// Injected by pdocs dev. Not part of the built site.
-new EventSource(${JSON.stringify(RELOAD_PATH)}).addEventListener('message', () => location.reload())
+const es = new EventSource(${JSON.stringify(RELOAD_PATH)})
+es.addEventListener('message', () => location.reload())
+// Chrome (and other browsers) can freeze a navigated-away-from page in the
+// back/forward cache instead of tearing it down — keeping its EventSource
+// open indefinitely. Without this, every navigation leaks one open SSE
+// connection; after enough of them the browser's per-origin connection
+// limit is exhausted and the current page's own requests stop completing.
+// 'pagehide' fires on both a normal unload and a bfcache freeze, so this
+// closes the connection either way.
+window.addEventListener('pagehide', () => es.close())
 `
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -82,13 +92,22 @@ function defaultRunBuild(siteRoot: string): () => Promise<boolean> {
     new Promise((resolvePromise) => {
       // No --fetch here: that belongs to the one-off build only — on a
       // watch loop it would re-fetch the content source on every keystroke.
-      execFile(antoraBin, ['antora-playbook.local.yml'], { cwd: siteRoot }, (err, stdout, stderr) => {
-        if (err) {
-          if (stdout) process.stdout.write(stdout)
-          if (stderr) process.stderr.write(stderr)
+      // A timeout guards against a wedged/hung antora child process: with
+      // none, a single stuck build would permanently block every future
+      // rebuild for the rest of the dev session (drain()'s `running` flag
+      // never clears because runBuild() never resolves).
+      execFile(
+        antoraBin,
+        ['antora-playbook.local.yml'],
+        { cwd: siteRoot, timeout: BUILD_TIMEOUT_MS },
+        (err, stdout, stderr) => {
+          if (err) {
+            if (stdout) process.stdout.write(stdout)
+            if (stderr) process.stderr.write(stderr)
+          }
+          resolvePromise(!err)
         }
-        resolvePromise(!err)
-      })
+      )
     })
 }
 
@@ -132,7 +151,16 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
 
   const clients = new Set<import('node:http').ServerResponse>()
   function notifyReload(): void {
-    for (const res of clients) res.write('data: reload\n\n')
+    for (const res of clients) {
+      try {
+        res.write('data: reload\n\n')
+      } catch {
+        // Client's socket already gone (e.g. torn down mid-navigation) —
+        // drop it rather than let an unhandled write error crash the
+        // server; the 'error'/'close' listeners below also reap it.
+        clients.delete(res)
+      }
+    }
   }
 
   /**
@@ -168,6 +196,11 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
         res.write(': connected\n\n')
         clients.add(res)
         req.on('close', () => clients.delete(res))
+        // A page navigation can drop the underlying socket before the
+        // 'close' event above fires; without an 'error' listener here
+        // Node's default behaviour for an unhandled stream error is to
+        // throw, taking the whole dev server down mid-navigation.
+        res.on('error', () => clients.delete(res))
         return
       }
 
@@ -229,20 +262,27 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
     if (running || !queued) return
     running = true
 
-    while (queued) {
-      queued = false
-      const started = Date.now()
-      log('content changed, rebuilding site')
-      const ok = await runBuild()
-      if (ok) {
-        log(`rebuilt in ${((Date.now() - started) / 1000).toFixed(1)}s`)
-        notifyReload()
-      } else {
-        logError('rebuild failed, serving the previous build')
+    try {
+      while (queued) {
+        queued = false
+        const started = Date.now()
+        log('content changed, rebuilding site')
+        const ok = await runBuild()
+        if (ok) {
+          log(`rebuilt in ${((Date.now() - started) / 1000).toFixed(1)}s`)
+          notifyReload()
+        } else {
+          logError('rebuild failed, serving the previous build')
+        }
       }
+    } catch (err) {
+      // A build that throws instead of resolving false must not leave
+      // `running` stuck true forever — that would silently disable every
+      // future rebuild for the rest of the dev session.
+      logError(`rebuild crashed, serving the previous build: ${(err as Error).message}`)
+    } finally {
+      running = false
     }
-
-    running = false
   }
 
   const watchAbort = new AbortController()

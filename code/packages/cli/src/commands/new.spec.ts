@@ -156,6 +156,21 @@ describe('runNew', () => {
     expect(playbook).toContain('@inditextech/pdocs-antora-extensions')
   })
 
+  it('scaffolds docs/.gitignore under its real dotfile name (GH regression: npm strips .git*-named files from published packages, so the template source is named plain `gitignore` and must be renamed back on write)', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo])
+    expect(code).toBe(0)
+
+    const gitignore = await readFile(join(repo, 'docs', '.gitignore'), 'utf8')
+    expect(gitignore).toContain('node_modules/')
+    expect(gitignore).toContain('build/')
+
+    // The plain-named source file must never survive un-renamed alongside it.
+    await expect(readFile(join(repo, 'docs', 'gitignore'), 'utf8')).rejects.toThrow()
+  })
+
   it('scaffolds AGENTS.md and mirrored .opencode/.claude skills at the repo root', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)

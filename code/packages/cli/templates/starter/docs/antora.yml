@@ -76,4 +76,4 @@ footer:
         - text: Home
           url: ROOT:index.adoc
         - text: Getting started
-          url: ROOT:getting-started.adoc
+          url: main:getting-started.adoc

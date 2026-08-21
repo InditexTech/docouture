@@ -13,6 +13,7 @@ import {
   checkGitHasCommit,
   checkNamesAgree,
   checkNodeVersion,
+  checkReleaseLabelExists,
   type CheckResult,
 } from '../lib/doctor-checks.js'
 
@@ -136,6 +137,9 @@ export async function runDoctor(argv: string[]): Promise<number> {
 
   console.log('agent files')
   for (const result of checkAgentFilesPresent(target)) printAdvisory(result, colour)
+
+  console.log('release')
+  printAdvisory(await checkReleaseLabelExists(target), colour)
 
   return status === 0 ? 0 : 1
 }

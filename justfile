@@ -432,8 +432,9 @@ outdated: (_hdr "outdated")
 
 # --------------------------------------------------------------- release -----
 #
-# `release-local` snapshot-publishes the four platform packages
-# (ui-bundle, cli, antora-extensions, asciidoc-extensions) to a local
+# `release-local` snapshot-publishes the five platform packages
+# (ui-bundle, cli, antora-extensions, asciidoc-extensions, publish-gh-pages)
+# to a local
 # Verdaccio registry, for testing a consuming repo against them before
 # cutting a real release through .github/workflows/release.yml. Two
 # recipes, run in separate terminals:
@@ -498,7 +499,7 @@ release-local: (_hdr "release-local")
     set -euo pipefail
 
     registry='http://localhost:4873'
-    packages=(ui-bundle cli antora-extensions asciidoc-extensions)
+    packages=(ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages)
 
     if ! curl -fsS "$registry/-/ping" >/dev/null 2>&1; then
       echo "  no registry responding at $registry"
@@ -544,13 +545,19 @@ release-local: (_hdr "release-local")
       (cd "packages/$pkg" && npm version "$snapshot" --no-git-tag-version --allow-same-version --loglevel error >/dev/null)
     done
 
-    # Only ui-bundle and cli have a build step; antora-extensions and
-    # asciidoc-extensions publish their committed JS source directly.
+    # Only ui-bundle and cli have a build step; antora-extensions,
+    # asciidoc-extensions and publish-gh-pages publish their committed JS
+    # source directly.
     {{ nx }} run-many -t build -p @inditextech/pdocs-ui-bundle @inditextech/pdocs-cli
 
     for pkg in "${packages[@]}"; do
       echo "  publishing $pkg"
-      (cd "packages/$pkg" && npm publish --registry "$registry" --tag local --loglevel warn)
+      # pnpm publish (not npm publish) is required here: it rewrites each
+      # package's "workspace:*" cross-references to the resolved $snapshot
+      # version at pack time. npm doesn't understand the workspace: protocol
+      # at all and would ship the literal string, breaking installs in any
+      # consuming repo that isn't itself a pnpm workspace.
+      (cd "packages/$pkg" && pnpm publish --registry "$registry" --tag local --no-git-checks --loglevel warn)
     done
 
     cat <<EOF
@@ -560,6 +567,7 @@ release-local: (_hdr "release-local")
         @inditextech/pdocs-cli
         @inditextech/pdocs-antora-extensions
         @inditextech/pdocs-asciidoc-extensions
+        @inditextech/pdocs-publish-gh-pages
 
       To consume from another repo, add to its .npmrc:
 

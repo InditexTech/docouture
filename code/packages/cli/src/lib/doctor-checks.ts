@@ -196,6 +196,63 @@ const AGENT_SUPPORT_CHECK_PATHS = [
  * `commands/doctor.ts`'s own mode-detection comment, which reads the
  * playbook — a concern this function deliberately stays out of).
  */
+/** The label `pdocs-release.yml`'s `pull_request.closed` trigger requires — see that workflow's own `if:` condition. */
+const RELEASE_LABEL = 'docs/release'
+
+/**
+ * Whether the `docs/release` GitHub label exists on this repository —
+ * best-effort, via the `gh` CLI, since there is no other way to ask GitHub
+ * this from a local checkout. `pdocs new` never creates this label (GitHub
+ * does not create labels referenced by a workflow's `if:` condition on its
+ * own, and scaffolding is not a GitHub API call), so a repository fresh out
+ * of `pdocs new` is missing it until someone runs `gh label create
+ * docs/release` — see main's own getting-started.adoc's "Create the
+ * docs/release label" section. Without it, `pdocs-release.yml`'s automatic
+ * merge-triggers-a-release path is a silent no-op; only its
+ * `workflow_dispatch` path still works.
+ *
+ * Advisory only, same as checkAgentFilesPresent above: `gh` may not be
+ * installed, not authenticated, or this may not be a GitHub-hosted
+ * repository at all, none of which this function treats as a real failure —
+ * only an actual label list that is missing the label is reported as
+ * `ok: false`.
+ */
+export function checkReleaseLabelExists(repoRoot: string): Promise<CheckResult> {
+  const label = 'docs/release label'
+  return new Promise((resolvePromise) => {
+    execFile('gh', ['label', 'list', '--json', 'name'], { cwd: repoRoot }, (err, stdout) => {
+      if (err) {
+        resolvePromise({
+          ok: true,
+          label,
+          message: "could not check (gh CLI unavailable, unauthenticated, or not a GitHub repo) — skipping",
+        })
+        return
+      }
+      let names: string[]
+      try {
+        const parsed = JSON.parse(stdout) as { name: string }[]
+        names = parsed.map((entry) => entry.name)
+      } catch {
+        resolvePromise({ ok: true, label, message: "could not parse 'gh label list' output — skipping" })
+        return
+      }
+      if (names.includes(RELEASE_LABEL)) {
+        resolvePromise({ ok: true, label, message: `'${RELEASE_LABEL}' exists` })
+        return
+      }
+      resolvePromise({
+        ok: false,
+        label,
+        message: `'${RELEASE_LABEL}' does not exist`,
+        detail:
+          "pdocs-release.yml's merge-triggers-a-release path is a no-op without it — run " +
+          `'gh label create ${RELEASE_LABEL}', or use workflow_dispatch instead`,
+      })
+    })
+  })
+}
+
 export function checkAgentFilesPresent(repoRoot: string): CheckResult[] {
   return AGENT_SUPPORT_CHECK_PATHS.map(({ path: relativePath, label }) => {
     const absolutePath = join(repoRoot, relativePath)

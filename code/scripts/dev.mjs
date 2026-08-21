@@ -86,9 +86,19 @@ const hasLocalUi = existsSync(gulpBin) && existsSync(join(uiDir, 'src'))
 const RELOAD_PATH = '/__dev/reload'
 const CLIENT_PATH = '/__dev/client.js'
 const DEBOUNCE_MS = 150
+const BUILD_TIMEOUT_MS = 120_000
 
 const CLIENT_SCRIPT = `// Injected by scripts/dev.mjs. Not part of the built site.
-new EventSource(${JSON.stringify(RELOAD_PATH)}).addEventListener('message', () => location.reload())
+const es = new EventSource(${JSON.stringify(RELOAD_PATH)})
+es.addEventListener('message', () => location.reload())
+// Chrome (and other browsers) can freeze a navigated-away-from page in the
+// back/forward cache instead of tearing it down — keeping its EventSource
+// open indefinitely. Without this, every navigation leaks one open SSE
+// connection; after enough of them the browser's per-origin connection
+// limit is exhausted and the current page's own requests stop completing.
+// 'pagehide' fires on both a normal unload and a bfcache freeze, so this
+// closes the connection either way.
+window.addEventListener('pagehide', () => es.close())
 `
 
 // ------------------------------------------------------------------ log -----
@@ -147,7 +157,16 @@ async function resolveTarget(urlPath) {
 const clients = new Set()
 
 function notifyReload() {
-  for (const res of clients) res.write('data: reload\n\n')
+  for (const res of clients) {
+    try {
+      res.write('data: reload\n\n')
+    } catch {
+      // Client's socket already gone (e.g. torn down mid-navigation) — drop
+      // it rather than let an unhandled write error crash the server; the
+      // 'error'/'close' listeners below also reap it.
+      clients.delete(res)
+    }
+  }
 }
 
 const server = createServer(async (req, res) => {
@@ -164,6 +183,11 @@ const server = createServer(async (req, res) => {
     res.write(': connected\n\n')
     clients.add(res)
     req.on('close', () => clients.delete(res))
+    // A page navigation can drop the underlying socket before the 'close'
+    // event above fires; without an 'error' listener here Node's default
+    // behaviour for an unhandled stream error is to throw, taking the whole
+    // dev server down mid-navigation.
+    res.on('error', () => clients.delete(res))
     return
   }
 
@@ -246,11 +270,20 @@ let child = null
 function run(command, args, cwd) {
   return new Promise((resolvePromise) => {
     child = spawn(command, args, { cwd, stdio: 'inherit' })
+    // A wedged/hung build (antora or gulp) must not block every future
+    // rebuild for the rest of the dev session — without this, drain()'s
+    // `running` flag would never clear because the child never exits.
+    const killTimer = setTimeout(() => {
+      logError(`${command} timed out after ${BUILD_TIMEOUT_MS / 1000}s, killing it`)
+      child?.kill()
+    }, BUILD_TIMEOUT_MS)
     child.on('close', (code) => {
+      clearTimeout(killTimer)
       child = null
       resolvePromise(code === 0)
     })
     child.on('error', (err) => {
+      clearTimeout(killTimer)
       child = null
       logError(`could not run ${command}: ${err.message}`)
       resolvePromise(false)
@@ -279,26 +312,33 @@ async function drain() {
   if (running || !queued) return
   running = true
 
-  while (queued) {
-    const kind = queued
-    queued = null
+  try {
+    while (queued) {
+      const kind = queued
+      queued = null
 
-    const started = Date.now()
-    log(kind === 'ui' ? 'ui changed, rebuilding bundle and site' : 'content changed, rebuilding site')
+      const started = Date.now()
+      log(kind === 'ui' ? 'ui changed, rebuilding bundle and site' : 'content changed, rebuilding site')
 
-    // A failed build leaves the previous output in place: the browser keeps
-    // showing the last version that worked rather than a half-written site.
-    const ok = (kind !== 'ui' || (await buildUi())) && (await buildSite())
+      // A failed build leaves the previous output in place: the browser keeps
+      // showing the last version that worked rather than a half-written site.
+      const ok = (kind !== 'ui' || (await buildUi())) && (await buildSite())
 
-    if (ok) {
-      log(`rebuilt in ${((Date.now() - started) / 1000).toFixed(1)}s`)
-      notifyReload()
-    } else {
-      logError('rebuild failed, serving the previous build')
+      if (ok) {
+        log(`rebuilt in ${((Date.now() - started) / 1000).toFixed(1)}s`)
+        notifyReload()
+      } else {
+        logError('rebuild failed, serving the previous build')
+      }
     }
+  } catch (err) {
+    // A build that throws instead of resolving false must not leave
+    // `running` stuck true forever — that would silently disable every
+    // future rebuild for the rest of the dev session.
+    logError(`rebuild crashed, serving the previous build: ${err.message}`)
+  } finally {
+    running = false
   }
-
-  running = false
 }
 
 // ---------------------------------------------------------------- watch -----

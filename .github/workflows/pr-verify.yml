@@ -39,16 +39,15 @@ jobs:
             exit 1
           fi
 
-      # code/.tool-versions pins `ivm-node` / `ivm-pnpm` — asdf plugin names that
-      # only resolve on Inditex-provisioned machines. The version numbers are the
-      # real pin; setup-node/pnpm read them directly rather than going through asdf,
-      # so CI stays runnable on a public GitHub runner.
+      # code/.tool-versions pins the asdf `node` / `pnpm` plugins. setup-node/pnpm
+      # read the version numbers directly rather than going through asdf, so CI
+      # stays runnable on a public GitHub runner.
       - name: Read toolchain versions
         id: toolchain
         run: |
           {
-            echo "node=$(awk '/^ivm-node /{print $2}' code/.tool-versions)"
-            echo "pnpm=$(awk '/^ivm-pnpm /{print $2}' code/.tool-versions)"
+            echo "node=$(awk '/^node /{print $2}' code/.tool-versions)"
+            echo "pnpm=$(awk '/^pnpm /{print $2}' code/.tool-versions)"
           } >> "$GITHUB_OUTPUT"
 
       - name: Setup pnpm

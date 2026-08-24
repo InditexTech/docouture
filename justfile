@@ -178,7 +178,7 @@ preview-ui: (_hdr "preview-ui")
 # Build a site and serve it on :5000, rebuilding as you edit it
 [group('dev')]
 [no-exit-message]
-dev site='example' port='5000': (_hdr "dev " + site)
+dev site='example' port='5000' strict='false': (_hdr "dev " + site)
     #!/usr/bin/env bash
     set -uo pipefail
 
@@ -187,19 +187,26 @@ dev site='example' port='5000': (_hdr "dev " + site)
     # about to watch: on a cache hit it is twenty lines describing 90ms. Hold it
     # and print it only if the build fails, when it is the whole story.
     #
-    # `--log-failure-level=none` overrides the playbook's own `warn` (see
-    # antora-playbook.yml's runtime.log.failure_level comment) for this recipe
-    # only. That setting is deliberately strict everywhere else — it is this
-    # migration's regression test for broken xrefs — but `example`'s corpus
-    # still carries 22 known, pre-existing Fumadocs content bugs (broken
-    # links, meta.json typos) unrelated to whatever page you're actually
-    # editing. Left at the playbook default, `just dev example` could never
-    # start a server at all. Antora still exits non-zero (and this recipe
-    # still surfaces the output and stops) on a genuine crash — a malformed
-    # playbook, a missing UI bundle — since that's a thrown exception, not a
+    # By default this recipe overrides the playbook's own `warn`
+    # (see antora-playbook.yml's runtime.log.failure_level comment) with
+    # `--log-failure-level=none`, because `example`'s corpus still carries 22
+    # known, pre-existing Fumadocs content bugs (broken links, meta.json
+    # typos) unrelated to whatever page you're actually editing. Left at the
+    # playbook default, `just dev example` could never start a server at
+    # all. Pass `strict=true` to drop the override and build at the
+    # playbook's real, CI-equivalent strictness instead — useful once those
+    # 22 issues are fixed, or against a site that has none of them. Antora
+    # still exits non-zero (and this recipe still surfaces the output and
+    # stops) on a genuine crash — a malformed playbook, a missing UI bundle —
+    # regardless of this setting, since that's a thrown exception, not a
     # logged-message-count check; only the warn/error-level tolerance is
-    # relaxed here.
-    if ! out=$({{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static -- --log-failure-level=none 2>&1); then
+    # what `strict` controls.
+    extra_args=()
+    if [ '{{ strict }}' != 'true' ]; then
+      extra_args+=(--log-failure-level=none)
+    fi
+
+    if ! out=$({{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static -- "${extra_args[@]}" 2>&1); then
       printf '%s\n' "$out"
       exit 1
     fi

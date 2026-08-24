@@ -6,6 +6,7 @@ const registerNavModules = require('./lib/nav-modules')
 const registerNotFoundPage = require('./lib/not-found-page')
 const registerSearchIndex = require('./lib/search-index')
 const registerShikiPrewarm = require('./lib/shiki-prewarm')
+const registerVersionReport = require('./lib/version-report')
 
 /**
  * Registers pdocs' Antora pipeline extensions.
@@ -52,6 +53,11 @@ const registerShikiPrewarm = require('./lib/shiki-prewarm')
  * fires, by which point every `navigationBuilt` listener, regardless of
  * order, has already run to completion. Its position here is therefore not
  * load-bearing either.
+ *
+ * version-report listens on yet another event (`contentClassified`, fired
+ * before `navigationBuilt`) and only reads `contentCatalog`, which none of
+ * the above write to — its position is not load-bearing either; it is
+ * simply a plain diagnostic report of what Antora already decided.
  */
 module.exports.register = function () {
   registerNavModules(this)
@@ -60,4 +66,5 @@ module.exports.register = function () {
   registerLlmsTxt(this)
   registerShikiPrewarm(this)
   registerNotFoundPage(this)
+  registerVersionReport(this)
 }

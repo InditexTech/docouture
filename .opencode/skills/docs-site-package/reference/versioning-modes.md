@@ -198,6 +198,27 @@ dance either way; `Create GitHub Release` is the one step that only runs for ver
 mode (`if: steps.detect.outputs.mode == 'versioned'`), since standalone mode keeps no
 version history worth a Release object.
 
+## Previewing a release before merge: pdocs-release-preview.yml
+
+A sibling workflow, also templated by `pdocs new` (`.github/workflows/pdocs-release-preview.yml`),
+comments on a pull request the moment it carries the `docs/release` label (`labeled`,
+`synchronize`, `ready_for_review`, `opened`) — read-only, never touches git, tags or
+`docs/antora.yml`. It reuses `pdocs-release.yml`'s own "Detect mode" and "Resolve version"
+logic to state, before merge:
+
+- which target this PR will release (`stable`, or the `vX.Y.Z` read from
+  `docs/.release-version` in versioned mode),
+- a `:warning:` if that tag already exists and will be **force-overwritten** on merge (a
+  republish, see "Every release tag is force-recreated…" above),
+- an error-style comment, instead of failing a job, if versioned mode has no
+  `docs/.release-version` to read yet.
+
+Same 3-job shape as this monorepo's own `.github/workflows/code-release_preview.yml`
+(gate on a paths-filter over `docs/**`, then branch by whether the label is present): a
+`release-preview` job for the label-and-changes case, `release-preview-no-docs-changes`
+when the label is set but nothing under `docs/**` changed, and
+`release-preview-no-release-label` when `docs/**` changed but the label is missing.
+
 ## URL routing
 
 Both modes get a component-scoped version segment for free — `/weavejs/1.2.0/…`,

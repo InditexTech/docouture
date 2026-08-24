@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { parseArgs } from '../lib/args.js'
 import { readCliInfo } from '../lib/cli-info.js'
 import { copyTemplate, exists, isEmptyOrMissing, writeTemplateFile } from '../lib/copy-template.js'
+import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-manager.js'
 
 // Matches the rule an npm package name (and, not coincidentally, an Antora
 // component name — both end up as URL segments) can safely be: this is
@@ -31,11 +32,12 @@ const NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/
 const MODES = ['standalone', 'versioned'] as const
 type Mode = (typeof MODES)[number]
 
-// Filenames pdocs-publish.yml / pdocs-release.yml / pdocs-pr-verify.yml are
-// templated under (see templates/workflows/) — kept as a literal list here so
-// the pre-flight conflict check below can name exactly which ones would be
-// overwritten without having to read the template directory to find out.
-const WORKFLOW_NAMES = ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-pr-verify.yml']
+// Filenames pdocs-publish.yml / pdocs-release.yml / pdocs-release-preview.yml /
+// pdocs-pr-verify.yml are templated under (see templates/workflows/) — kept
+// as a literal list here so the pre-flight conflict check below can name
+// exactly which ones would be overwritten without having to read the
+// template directory to find out.
+const WORKFLOW_NAMES = ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-release-preview.yml', 'pdocs-pr-verify.yml']
 
 // Repo-root-relative paths `templates/agent-support/` lands under (see
 // new.ts's own copyTemplate call below) — kept as a literal list, same
@@ -296,7 +298,21 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // releases included.
   const { version: cliVersion } = await readCliInfo(import.meta.url, 2)
 
-  const values = { name, title, cliVersion }
+  // Read once, up front — both the templated workflows (cache/install steps)
+  // and the printed next-steps below need to agree on the same choice. See
+  // lib/detect-package-manager.ts for the precedence this follows.
+  const pm = packageManagerPlan(detectPackageManager(target))
+
+  const values = {
+    name,
+    title,
+    cliVersion,
+    pmName: pm.pm,
+    pmCacheName: pm.cacheName,
+    pmLockfile: pm.lockfile,
+    pmCiCmd: pm.ciCmd,
+    pmSetupStepYaml: pm.setupStepYaml,
+  }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own
   // nested docs/antora.yml — lands under <repo-root>/docs/ as one piece,
@@ -342,8 +358,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   console.log('')
   console.log('next steps:')
   console.log('  cd docs')
-  console.log('  npm install')
-  console.log('  npm run build')
+  console.log(`  ${pm.installCmd}`)
+  console.log(`  ${pm.devCmd}`)
 
   console.log('')
   if (mode === 'versioned') {
@@ -369,7 +385,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     "create that label for you: run 'gh label create docs/release' in this repository, or use workflow_dispatch"
   )
   console.log(
-    'instead until it exists. See docs/docs/modules/main/pages/getting-started.adoc\'s own "Create the docs/release label" section.'
+    'instead until it exists. See docs/docs/modules/main/pages/prerequisites.adoc for that and the rest of' +
+      ' what a public GitHub Pages site needs before its first publish.'
   )
 
   return 0

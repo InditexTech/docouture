@@ -1,5 +1,45 @@
 = Getting started
 
+If this site is meant to end up published on GitHub Pages, see
+xref:main:prerequisites.adoc[Prerequisites] first — the repository needs to
+be public, GitHub Pages needs to be pointed at `gh-pages`, and the
+`docs/release` label needs to exist, none of which `pdocs new` can set up on
+your behalf.
+
+== Start the local dev server
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,console]
+----
+$ pnpm install
+$ pnpm run dev
+----
+****
+
+[tab,label="npm"]
+****
+[,console]
+----
+$ npm install
+$ npm run dev
+----
+****
+--
+
+`pdocs dev` (what either script above wraps) builds the site once, serves it
+on http://localhost:5000, and rebuilds and reloads the browser on every
+change under `docs/` or to `antora-playbook.local.yml` — pass `--port` to
+use a different one. See xref:main:components.adoc[] for what the built-in
+blocks (tabs, cards, accordion, …) actually look like while you write.
+
+For a single, non-watching build instead — what CI itself runs — use
+`pdocs build`, a thin wrapper around `npm run build`/`pnpm run build`
+(`antora --fetch antora-playbook.yml`). Either way, the generated site is
+written to `build/site`.
+
 == Add a page
 
 Create an AsciiDoc file under `modules/<module>/pages/`, then add it to that
@@ -16,20 +56,23 @@ cannot be reached by browsing. This page itself is listed — see `main`'s own
 action (xref:ROOT:index.adoc[]'s `:page-action:` attribute) and its first
 quicklink card.
 
-== Build the site
+== Release the docs
 
-[,console]
-----
-$ npm install
-$ npm run build
-----
+A release is cut by running `.github/workflows/pdocs-release.yml`
+(scaffolded by `pdocs new`), not by hand-editing anything in this directory.
+Two ways to trigger it:
 
-The generated site is written to `build/site`.
+* **Manually** — Actions tab → "pdocs-release" → Run workflow. Works
+  immediately, nothing to set up first.
+* **Automatically** — merge a pull request into `main` carrying the
+  `docs/release` label. Requires that label to already exist — see
+  xref:main:prerequisites.adoc[] — otherwise the merge is a silent no-op.
 
-== Set the version
-
-If this site's version needs to move — for example when it starts tracking a
-release — use `pdocs version`:
+Under the hood this bumps the version recorded in `docs/antora.yml` and
+moves the `stable` tag (or, in Versioned mode, cuts a new `vX.Y.Z` tag) —
+see that workflow's own header comment for the full mechanism. To set the
+version yourself, outside of a release — for local testing, say — use
+`pdocs version` directly:
 
 [,console]
 ----
@@ -40,16 +83,17 @@ $ pdocs version 1.1.0-rc.0 --prerelease
 It rewrites `docs/antora.yml` in place and leaves everything else in this
 directory untouched.
 
-== Publish to GitHub Pages
+== Publish the docs
 
 `pdocs new` already scaffolded `.github/workflows/pdocs-publish.yml`, which
 builds this site and runs `pdocs publish gh-pages` on every push to `main`
 and on the `stable`/`v*` tags `pdocs-release.yml` cuts. Two things are still
-required before that step actually publishes anything:
+required before that step actually publishes anything (see
+xref:main:prerequisites.adoc[] for the repository/GitHub-Pages side of this):
 
 . Add `@inditextech/pdocs-publish-gh-pages` to this package's own
   `devDependencies` — already present in the scaffolded `package.json` — and
-  run `npm install` so it resolves.
+  install so it resolves.
 . Set `site.url` in `antora-playbook.yml` to this site's public URL. For a
   GitHub Pages project page, that is `https://<org>.github.io/<repo>` — the
   repository name has to be baked in as a path segment, or generated asset
@@ -63,38 +107,28 @@ for a plain `github.io` URL.
 
 To publish once manually, from this directory:
 
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,console]
+----
+$ pnpm run build
+$ pnpm exec pdocs publish gh-pages
+----
+****
+
+[tab,label="npm"]
+****
 [,console]
 ----
 $ npm run build
 $ npx pdocs publish gh-pages
 ----
+****
+--
 
 `GITHUB_TOKEN` (set automatically in the Actions workflow) authenticates the
 push; running this locally needs a token of your own with `repo` scope,
 passed as the `GITHUB_TOKEN` environment variable.
-
-== Create the `docs/release` label
-
-`.github/workflows/pdocs-release.yml` (also scaffolded by `pdocs new`) can
-cut a release two ways: `workflow_dispatch` (run it by hand from the Actions
-tab — works immediately, nothing to set up), or automatically whenever a
-pull request merges into `main` carrying a `docs/release` label.
-
-That label is not created automatically — GitHub does not create labels
-referenced by a workflow's `if:` condition, and `pdocs new` does not call the
-GitHub API on your behalf. Until the label exists, only the manual
-`workflow_dispatch` path works; a PR merged with what would otherwise be the
-intended label name is a silent no-op, not an error.
-
-Create it once, from this repository:
-
-[,console]
-----
-$ gh label create docs/release --description "Merging this PR cuts a release" --color 0E8A16
-----
-
-Or via the GitHub UI: repository → Issues or Pull requests → Labels → New
-label, named exactly `docs/release`. `pdocs doctor` warns (without failing)
-if it does not find this label, when the `gh` CLI is available and
-authenticated.
 

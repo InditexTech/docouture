@@ -94,4 +94,28 @@ function attr(name, value) {
   return ' ' + name + '="' + escapeHtml(value) + '"'
 }
 
-module.exports = { escapeHtml, attr }
+const TAG_RX = /<[^>]*>/g
+
+/**
+ * Strips every HTML tag from a string, looping to a fixed point rather than
+ * a single `.replace()` pass — a single pass can be bypassed by
+ * overlapping/nested angle brackets (e.g. removing the inner tag out of
+ * `<scr<script>ipt>` can leave a well-formed `<script>` behind, since that
+ * one pass only ever removes the leftmost, shortest match). Used wherever
+ * converted HTML (not raw author input) needs to become plain text — an ARIA
+ * label, a title used as a `data-` attribute, and the like.
+ *
+ * @param {string} html
+ * @returns {string}
+ */
+function stripTags(html) {
+  let previous
+  let current = html
+  do {
+    previous = current
+    current = previous.replace(TAG_RX, '')
+  } while (current !== previous)
+  return current
+}
+
+module.exports = { escapeHtml, attr, stripTags }

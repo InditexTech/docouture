@@ -9,6 +9,7 @@ import { runDev } from './commands/dev.js'
 import { runBuild } from './commands/build.js'
 import { runDoctor } from './commands/doctor.js'
 import { runPublish } from './commands/publish.js'
+import { runUpgrade } from './commands/upgrade.js'
 import { readCliInfo } from './lib/cli-info.js'
 
 const USAGE = `Usage:
@@ -46,6 +47,14 @@ const USAGE = `Usage:
       content path, package name), git history, that antora is installed,
       and (advisory only) whether AGENTS.md and the scaffolded skills are
       still present.
+
+  pdocs upgrade [--dir <path>] [--title <title>] [--dry-run]
+      Re-sync an already-scaffolded repository's .github/workflows/ and
+      agent support files (AGENTS.md, .opencode/skills/, .claude/skills/)
+      from the CLI's current templates, overwriting whatever is there —
+      unlike 'new', this never refuses on an existing file. Does not touch
+      docs/. --dry-run lists what would be written without changing
+      anything.
 
   pdocs --version, -v
       Print the installed @inditextech/pdocs-cli version and exit.
@@ -85,6 +94,8 @@ async function main(): Promise<number> {
       return runPublish(rest)
     case 'doctor':
       return runDoctor(rest)
+    case 'upgrade':
+      return runUpgrade(rest)
     default:
       console.error(`unknown command: '${command}'\n`)
       console.log(await banner())

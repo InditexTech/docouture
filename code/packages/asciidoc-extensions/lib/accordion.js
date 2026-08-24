@@ -1,7 +1,7 @@
 'use strict'
 
 const { chain, chainAll, precomputeSubtree } = require('./async-compat')
-const { escapeHtml, attr } = require('./html')
+const { escapeHtml, attr, stripTags } = require('./html')
 const uniqueId = require('./unique-id')
 const warn = require('./warn')
 
@@ -138,7 +138,7 @@ function ariaLabelFor(attrs, wrapper) {
   if (raw) return escapeHtml(raw)
   const title = wrapper.getTitle()
   if (!title) return ''
-  return escapeConvertedAttribute(String(title).replace(/<[^>]*>/g, ''))
+  return escapeConvertedAttribute(stripTags(String(title)))
 }
 
 /**

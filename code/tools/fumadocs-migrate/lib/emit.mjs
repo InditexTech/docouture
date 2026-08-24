@@ -10,9 +10,14 @@ import { rewriteDocLink, imageSubpath, resolveIncludeTarget } from './links.mjs'
 
 // A literal `|` in table-cell content is Asciidoctor's own column separator —
 // harmless in prose, fatal in a TypeTable-derived type column full of union
-// types (`Uint8Array | FetchInitialState | undefined`).
+// types (`Uint8Array | FetchInitialState | undefined`). Backslash is escaped
+// first: escaping `|` alone would let a source backslash immediately before
+// one combine with the `\` this function just inserted (`\|` becoming `\\|`,
+// which Asciidoctor reads back as an escaped backslash followed by a live,
+// unescaped column separator — the exact thing this function exists to
+// prevent).
 function escapeCell(text) {
-  return text.replace(/\|/g, '\\|')
+  return text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')
 }
 
 function evalJsxExpression(raw, ctx, what) {
@@ -58,11 +63,12 @@ function tabLabel(node) {
 
 // A `label=` value is a block STYLE attribute in the emitted AsciiDoc
 // (`[tab,label="…"]`), which Asciidoctor reads back raw — a literal `"`
-// in the label would otherwise close the attribute early. Only `"` needs
-// escaping here: the labels this corpus produces are package-manager names,
-// but the escape is cheap enough to keep unconditionally rather than assume.
+// in the label would otherwise close the attribute early. Backslash is
+// escaped first, same reasoning as escapeCell above: escaping `"` alone
+// would let a source backslash immediately before one combine with the `\`
+// this function just inserted, undoing the escape it exists to add.
 function escapeAttrValue(value) {
-  return value.replace(/"/g, '\\"')
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
 }
 
 // ---------------------------------------------------------------------------
@@ -467,13 +473,19 @@ function renderTypeTable(node, ctx) {
     ? ['Property', 'Type', 'Required', 'Default', 'Description']
     : ['Property', 'Type', 'Required', 'Description']
 
+  // A literal `]` closes a `mono:[…]` macro early, same idea as escapeCell's
+  // own `|` — and, same reasoning, backslash has to be escaped first or a
+  // source backslash right before a `]` combines with the one this escape
+  // inserts instead of staying independent of it.
+  const escapeMono = (text) => text.replace(/\\/g, '\\\\').replace(/\]/g, '\\]')
+
   const rows = entries.map(([key, v]) => {
     const cells = [
-      `mono:[${key.replace(/\]/g, '\\]')}]`,
-      `mono:[${String(v.type ?? '').replace(/\]/g, '\\]')}]`,
+      `mono:[${escapeMono(key)}]`,
+      `mono:[${escapeMono(String(v.type ?? ''))}]`,
       v.required ? 'label:green[Required]' : '',
     ]
-    if (hasDefault) cells.push(v.default !== undefined ? `mono:[${String(v.default).replace(/\]/g, '\\]')}]` : '')
+    if (hasDefault) cells.push(v.default !== undefined ? `mono:[${escapeMono(String(v.default))}]` : '')
     cells.push(v.description ?? '')
     return cells.map((c) => `| ${escapeCell(c)}`).join(' ')
   })

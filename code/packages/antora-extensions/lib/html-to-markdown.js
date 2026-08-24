@@ -230,8 +230,14 @@ function splitListItem(li, depth) {
 
 function tableToMarkdown(tableNode) {
   const rows = []
+  // Backslash is escaped first: escaping `|` alone would let a source
+  // backslash immediately before one combine with the `\` this line just
+  // inserted, producing `\\|` — an escaped backslash followed by a live,
+  // unescaped column separator, the exact thing this escape exists to
+  // prevent.
+  const escapeCell = (text) => text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')
   for (const rowNode of tableNode.querySelectorAll('tr')) {
-    const cells = rowNode.querySelectorAll('th,td').map((cell) => inlineText(cell).replace(/\|/g, '\\|') || ' ')
+    const cells = rowNode.querySelectorAll('th,td').map((cell) => escapeCell(inlineText(cell)) || ' ')
     if (cells.length) rows.push(cells)
   }
   if (!rows.length) return ''

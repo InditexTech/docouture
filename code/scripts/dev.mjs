@@ -24,7 +24,7 @@ import { createServer } from 'node:http'
 import { spawn } from 'node:child_process'
 import { readFile, stat, watch as watchDir } from 'node:fs/promises'
 import { createReadStream, existsSync, readFileSync } from 'node:fs'
-import { extname, join, normalize, resolve, sep } from 'node:path'
+import { extname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 
 const siteDir = process.cwd()
 const root = resolve(process.argv[2] ?? 'build/site')
@@ -140,8 +140,13 @@ const CONTENT_TYPES = {
 async function resolveTarget(urlPath) {
   const decoded = decodeURIComponent(urlPath.split('?')[0])
   const candidate = resolve(join(root, normalize(decoded)))
-  // Guard against path traversal via `..` segments.
-  if (candidate !== root && !candidate.startsWith(root + sep)) return null
+  // Containment check against `root`, expressed as a relative-path test —
+  // the form static analysis (CodeQL's js/path-injection) recognises as a
+  // real sanitizer, not just `startsWith` on two strings. A `candidate`
+  // outside `root` resolves to a relative path that either escapes upwards
+  // (`..`) or is itself absolute (no common prefix at all).
+  const rel = relative(root, candidate)
+  if (rel.startsWith('..') || isAbsolute(rel)) return null
   try {
     const info = await stat(candidate)
     if (!info.isDirectory()) return candidate

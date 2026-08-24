@@ -77,10 +77,29 @@ jobs:
           fi
           echo "RELEASE_LABELS=$RELEASE_LABELS" >> "$GITHUB_ENV"
 
+      # Resolved as close as possible to the checkout below, and pinned to an
+      # exact commit SHA rather than the mutable `refs/pull/<n>/head` — a PR
+      # author (or anyone able to push to that PR branch) could otherwise push
+      # a new commit in the window between the admin's `/publish-snapshot`
+      # comment and this job's checkout, and this privileged, secret-bearing
+      # job would build and publish that new, unreviewed commit instead of
+      # whatever the admin actually approved by commenting.
+      - name: Resolve PR head SHA
+        id: pr-head
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const { data } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.issue.number
+            });
+            core.setOutput('sha', data.head.sha);
+
       - name: Checkout PR branch
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
-          ref: refs/pull/${{ github.event.issue.number }}/head
+          ref: ${{ steps.pr-head.outputs.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -107,12 +126,19 @@ jobs:
       # here fails with "plugin node not found in repository". Homologated
       # with weave.js's code-npm_node-publish-release-and-snapshot.yml and
       # pdocs' own code-npm_node-pr-verify.yml, which use the identical asdf setup pattern.
+      # A random delimiter, not the literal "EOF": a heredoc into $GITHUB_ENV
+      # keyed off a fixed, guessable terminator lets any line in the appended
+      # content that happens to equal it close the heredoc early and inject
+      # arbitrary env vars into every later step of this job. code/.tool-versions
+      # is repo-controlled today, but this is the sound pattern regardless of
+      # what's being appended.
       - name: Save tool-versions content
         run: |
+          delimiter="TOOL_VERSIONS_$(openssl rand -hex 8)"
           {
-            echo "TOOL_VERSIONS<<EOF"
+            echo "TOOL_VERSIONS<<${delimiter}"
             cat code/.tool-versions
-            echo "EOF"
+            echo "${delimiter}"
           } >> "$GITHUB_ENV"
 
       - name: Setup asdf environment
@@ -465,12 +491,19 @@ jobs:
           path: ~/.asdf
           key: ${{ runner.os }}-asdf-${{ env.ASDF_BRANCH_VERSION }}-${{ hashFiles('code/.tool-versions') }}
 
+      # A random delimiter, not the literal "EOF": a heredoc into $GITHUB_ENV
+      # keyed off a fixed, guessable terminator lets any line in the appended
+      # content that happens to equal it close the heredoc early and inject
+      # arbitrary env vars into every later step of this job. code/.tool-versions
+      # is repo-controlled today, but this is the sound pattern regardless of
+      # what's being appended.
       - name: Save tool-versions content
         run: |
+          delimiter="TOOL_VERSIONS_$(openssl rand -hex 8)"
           {
-            echo "TOOL_VERSIONS<<EOF"
+            echo "TOOL_VERSIONS<<${delimiter}"
             cat code/.tool-versions
-            echo "EOF"
+            echo "${delimiter}"
           } >> "$GITHUB_ENV"
 
       - name: Setup asdf environment

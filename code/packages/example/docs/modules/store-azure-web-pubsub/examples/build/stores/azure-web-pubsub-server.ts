@@ -67,8 +67,18 @@ const azureWebPubsubServer = new WeaveAzureWebPubsubServer({ // <3>
 
 const app = express()
 
+// Example server: restricts allowed origins explicitly to whatever
+// WEAVE_AZURE_WEB_PUBSUB_ALLOWED_ORIGINS lists (comma-separated), rather
+// than reflecting back any Origin header a client sends (`origin: true`).
+// No origins configured means no cross-origin access at all -- add the
+// frontend's real origin(s) there instead of widening this default.
+const allowedOrigins = (process.env.WEAVE_AZURE_WEB_PUBSUB_ALLOWED_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+
 const corsOptions = {
-  origin: true,
+  origin: allowedOrigins.length > 0 ? allowedOrigins : false,
 }
 
 app.use(cors(corsOptions))

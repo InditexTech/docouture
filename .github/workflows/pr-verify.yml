@@ -26,10 +26,11 @@ jobs:
 
       # Homologated with weave.js's code-release_preview.yml: every PR that
       # touches code/** must add its own entry to CHANGELOG.md's [Unreleased]
-      # section (release.yml later promotes that section wholesale — nothing
-      # is invented at release time). `skip-release` is the documented escape
-      # hatch for PRs with no user-facing effect (internal tooling, CI config,
-      # etc.) — same label release.yml itself already recognizes.
+      # section (code-npm_node-publish-release-and-snapshot.yml later promotes
+      # that section wholesale — nothing is invented at release time).
+      # `skip-release` is the documented escape hatch for PRs with no
+      # user-facing effect (internal tooling, CI config, etc.) — same label
+      # that workflow itself already recognizes.
       - name: Require CHANGELOG.md update
         if: ${{ !contains(join(github.event.pull_request.labels.*.name, ', '), 'skip-release') }}
         run: |

@@ -436,7 +436,8 @@ outdated: (_hdr "outdated")
 # (ui-bundle, cli, antora-extensions, asciidoc-extensions, publish-gh-pages)
 # to a local
 # Verdaccio registry, for testing a consuming repo against them before
-# cutting a real release through .github/workflows/release.yml. Two
+# cutting a real release through
+# .github/workflows/code-npm_node-publish-release-and-snapshot.yml. Two
 # recipes, run in separate terminals:
 #
 #   local-registry-start   starts Verdaccio on :4873, foreground, until

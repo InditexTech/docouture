@@ -4,7 +4,7 @@
 
 ## Triggers
 
-- An `issue_comment` with `/publish-snapshot` on an open pull request (`publish-snapshot` job).
+- An `issue_comment` with `/publish-snapshot` on an open pull request (`build-snapshot` + `publish-snapshot` jobs).
 - Any `closed` pull request to `main`/`main-*` on the `code/**` or `.github/workflows/code**` paths, if labeled `release-type/*` and not `skip-release` (`release` job).
 - A manual dispatch (`workflow_dispatch`) invoked from the GitHub UI, taking a `BASELINE` branch and a `RELEASE_TYPE` (`release` job).
 
@@ -33,27 +33,38 @@ Permissions are scoped at the job level following the principle of least privile
 - **No gitflow sync-to-develop PR**: pdocs is trunk-based (main + PRs only), so weave.js's "create a sync PR into develop" step and its failure-comment step are dropped entirely.
 - **ui-bundle release artifact**: pdocs additionally locates `packages/ui-bundle/build/ui-bundle-<version>.zip` and attaches it to the GitHub Release — weave.js has no equivalent since it ships npm packages only, not a site-building tool with a distributable UI bundle.
 - **Tag scheme**: uses `tag-prefix: ""` (bare `X.Y.Z` tags), matching weave.js exactly.
+- **Snapshot publish is split into two jobs**, unlike weave.js's single `publish-snapshot` job: `build-snapshot` checks out the PR branch (still only after an admin's `/publish-snapshot` comment, and pinned to the PR's HEAD SHA at approval time) and packs `pnpm pack` tarballs, but never sees `NPM_TOKEN` or the OIDC id-token; `publish-snapshot` holds those credentials but only downloads the tarballs the first job produced and never checks out the PR branch itself. This closes off running an author-controlled `package.json`/lifecycle script in a job that can reach the npm registry — a workflow triggered by a PR comment is inherently building untrusted code, and admin approval narrows *who* can trigger it but doesn't make *what* gets built trustworthy.
+- **`build-snapshot`'s caches are read-only**: it restores the pnpm store and asdf caches but never saves them back (`actions/cache/restore`, not `actions/cache`, and no paired save step). This job's `issue_comment` trigger gets write access to the default branch's cache scope even though it's building a PR branch, so letting it save would let a malicious PR poison a cache entry later restored by `release` or `pr-verify`.
 
 ## Jobs
 
-- ### `publish-snapshot`
+- ### `build-snapshot`
 
-  Triggered by a `/publish-snapshot` comment on a pull request. Publishes a pre-release snapshot version tagged as `next`.
+  Triggered by a `/publish-snapshot` comment on a pull request. Builds the PR's code and packs (but does not publish) a pre-release snapshot version. Holds no publish credentials.
 
   - Validate the commenter has admin permissions.
   - Get the release labels from the PR.
-  - Checkout the PR branch.
-  - Setup pnpm store and asdf caches; configure asdf environment from `code/.tool-versions`.
+  - Resolve and checkout the PR's HEAD SHA (pinned at approval time).
+  - Restore (read-only) the pnpm store and asdf caches; configure asdf environment from `code/.tool-versions`.
   - Ensure minimum npm version (`>=11.5.1`) for OIDC support, upgrading only if needed.
-  - Configure npmrc registry (no auth token — OIDC handles authentication).
+  - Configure npmrc registry (no auth token — OIDC handles authentication in the publish job).
   - Install dependencies (`pnpm install --frozen-lockfile`).
   - Determine the release type from labels.
   - Update CHANGELOG.md and calculate next version using `release-flow/keep-a-changelog-action`.
   - Define the snapshot version (`<version>-SNAPSHOT.<run_number>.<run_attempt>`).
   - Bump every package to the snapshot version (`npm run version:release` + `npm run release:prepare`, just-free).
-  - Verify each of the five packages exists in the npm registry (decides OIDC vs `NPM_TOKEN`).
+  - Verify each of the five packages exists in the npm registry (decides OIDC vs `NPM_TOKEN` for the publish job).
   - Build (`pnpm build`).
-  - Publish the snapshot (`npm publish --tag next`, looped per package).
+  - Pack each package (`pnpm pack`) into `existing/` or `new/` tarball directories and upload them as a build artifact.
+
+- ### `publish-snapshot`
+
+  Runs after `build-snapshot` succeeds. Downloads its tarballs and publishes them — no checkout of the PR branch happens in this job.
+
+  - Download the `snapshot-tarballs` artifact.
+  - Setup Node.js and ensure minimum npm version (`>=11.5.1`) for OIDC support.
+  - Configure npmrc registry.
+  - Publish the `existing/` tarballs via OIDC trusted publishing (`npm publish --tag next`), or the `new/` tarballs via `NPM_TOKEN` if any packages are being published for the first time.
   - Comment on the PR with the result (success with version info, or failure).
 
 - ### `release`

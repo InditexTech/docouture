@@ -17,16 +17,21 @@
   Latest/older-Stable/Prerelease modifier (`header-toolbar__version--latest`/
   `--older`/`--prerelease`, see header.css) — three states, not two: a
   `page.componentVersion.prerelease` truthy always wins (orange); otherwise
-  `page.componentVersion.latest` decides between "the current release"
-  (green) and "a real, older stable version" (grey) — both real fields
-  Antora sets on the version descriptor itself (@antora/content-classifier
-  content-catalog.js), unlike the `(eq page.componentVersion page.component.
-  latest)` this replaced. That check looked plausible but isn't: Antora's
-  fallback for a component with only prerelease versions still points
-  `component.latest` at the sole one (there's no "no latest" state), so it
-  was trivially true whenever there was only one version, prerelease or
-  not — painting a preview build green, i.e. visually claiming "the current
-  release" for it. `prerelease`/`latest` have no such gap.
+  `(eq page.componentVersion page.component.latest)` decides between "the
+  current release" (green) and "a real, older stable version" (grey).
+
+  GH-104: `page.componentVersion.latest` is NOT a real field — don't put it
+  back. Antora only ever sets a `latest: true` flag on the copies it builds
+  for `page.versions` (@antora/page-composer build-ui-model.js), never on
+  the raw `componentVersion` descriptor this partial reads, so that check
+  was always false and every stable/latest page rendered grey. The identity
+  check `(eq page.componentVersion page.component.latest)` — which this
+  once was, and was changed away from — is safe specifically in this `else
+  if` slot: the `prerelease` branch above it already wins first, so the
+  "component has only a prerelease version, and `component.latest` points
+  at it" edge case that motivated the original change away from identity
+  comparison can no longer reach here. Don't reorder these branches without
+  re-checking that.
 
   `ids-tag--read-only` (DS modifier, tag/tag.css) marks the badge as
   non-interactive — it isn't a button and does nothing on click, so it must
@@ -39,7 +44,7 @@
 {{#if page.componentVersion}}
 <div class="page-versions">
   {{#if page.versions.[1]}}
-  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if page.componentVersion.latest}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}} version-menu-toggle" title="Show other versions of page" aria-expanded="false">
+  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}} version-menu-toggle" title="Show other versions of page" aria-expanded="false">
     <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
     <span class="ids-tag__icon">{{icon "arrows" "chevron-down-outlined"}}</span>
   </button>
@@ -73,7 +78,7 @@
     {{/each}}
   </div>
   {{else}}
-  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if page.componentVersion.latest}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}}" aria-label="Version {{page.componentVersion.displayVersion}}">
+  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}}" aria-label="Version {{page.componentVersion.displayVersion}}">
     <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
   </span>
   {{/if}}

@@ -14,9 +14,9 @@
 
 ## Versions used
 
-`asdf` and whatever `ivm-node`/`ivm-pnpm` versions are pinned in `code/.tool-versions`. npm is conditionally upgraded to `>=11.5.1` when the bundled version does not support OIDC Trusted Publishers.
+`asdf` and whatever `nodejs`/`pnpm` versions are pinned in `code/.tool-versions`. npm is conditionally upgraded to `>=11.5.1` when the bundled version does not support OIDC Trusted Publishers.
 
-> **Note:** `code/.tool-versions` pins Inditex-internal asdf plugin names (`ivm-node`, `ivm-pnpm`), unlike weave.js's plain `nodejs`. This workflow assumes it runs somewhere those plugins resolve. pdocs' other workflows (`pr-verify.yml`) deliberately avoid asdf for this exact reason and use `pnpm/action-setup` + `actions/setup-node` instead — if this workflow ever needs to run on a public GitHub-hosted runner, the asdf steps need swapping for that same approach.
+> **Note:** `code/.tool-versions` uses `nodejs` (not `node` — the latter isn't a registered asdf-plugins short name and fails to resolve) and `pnpm`, same names weave.js's `.tool-versions` uses. pdocs' `code-npm_node-pr-verify.yml` uses the identical asdf setup pattern as this workflow.
 
 ## Authentication
 

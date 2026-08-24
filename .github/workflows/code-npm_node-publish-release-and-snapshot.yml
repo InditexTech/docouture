@@ -102,13 +102,11 @@ jobs:
           path: ~/.asdf
           key: ${{ runner.os }}-asdf-${{ env.ASDF_BRANCH_VERSION }}-${{ hashFiles('code/.tool-versions') }}
 
-      # pdocs' code/.tool-versions pins `ivm-node` / `ivm-pnpm` — Inditex's
-      # internal asdf plugin names — rather than weave.js's plain `nodejs`.
-      # This step assumes those plugins resolve on the runner this workflow
-      # actually executes on; if it ever runs on a public GitHub-hosted
-      # runner instead of an Inditex-provisioned one, this install will fail
-      # and needs swapping for pnpm/action-setup + actions/setup-node (see
-      # pr-verify.yml, which takes that approach for exactly this reason).
+      # code/.tool-versions pins the `nodejs` / `pnpm` asdf plugins. `nodejs`,
+      # not `node`, is the registered asdf-plugins short name — using `node`
+      # here fails with "plugin node not found in repository". Homologated
+      # with weave.js's code-npm_node-publish-release-and-snapshot.yml and
+      # pdocs' own code-npm_node-pr-verify.yml, which use the identical asdf setup pattern.
       - name: Save tool-versions content
         run: |
           {

@@ -73,6 +73,10 @@ jobs:
           # file to keep in sync.
           node-version-file: docs/package.json
           cache: npm
+          # `defaults.run.working-directory: docs` above only applies to
+          # `run:` steps, not to this action's own inputs — without this,
+          # setup-node looks for a lockfile from the repo root and fails.
+          cache-dependency-path: docs/package-lock.json
 
       - name: Install dependencies
         run: npm ci

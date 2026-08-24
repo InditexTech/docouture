@@ -81,6 +81,26 @@ const DEFAULT_USER = {
   email: '41898282+github-actions[bot]@users.noreply.github.com',
 }
 
+function assertSafeGitRemote(value, name = 'remote') {
+  if (typeof value !== 'string' || value.length === 0) {
+    throw new Error(`Invalid ${name}: expected a non-empty string`)
+  }
+  if (value.startsWith('-')) {
+    throw new Error(`Invalid ${name}: must not start with '-'`)
+  }
+  if (/[\r\n\t ]/.test(value)) {
+    throw new Error(`Invalid ${name}: must not contain whitespace or control characters`)
+  }
+  if (
+    /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(value) || // URL forms
+    /^[A-Za-z0-9._-]+$/.test(value) || // remote name, e.g. origin
+    /^[^@\s]+@[^:\s]+:[^\s]+$/.test(value) // scp-like, e.g. git@github.com:org/repo.git
+  ) {
+    return
+  }
+  throw new Error(`Invalid ${name}: unsupported remote format`)
+}
+
 /**
  * Real git plumbing used to pre-create an empty orphan branch. Exposed as
  * its own object — rather than inlined — so tests can inject a fake in its
@@ -195,6 +215,7 @@ module.exports = async function publishGhPages(dir, options = {}, ghpages = requ
   // explicit repo URL, or else whatever the named remote resolves to
   // locally) — either is a valid target for `git ls-remote`/`git push`.
   const remoteTarget = repo || remote
+  assertSafeGitRemote(remoteTarget, 'repo/remote')
   const branchAlreadyExists = await git.branchExists(remoteTarget, branch)
   if (!branchAlreadyExists) {
     logger.info(`Branch '${branch}' does not exist on '${remoteTarget}' yet; creating it as an empty orphan branch`)

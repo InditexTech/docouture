@@ -116,8 +116,8 @@ async function assertSafeGitBranch(branch, fieldName = 'branch') {
   }
   try {
     await execFileAsync('git', ['check-ref-format', '--branch', branch])
-  } catch (_err) {
-    throw new Error(`Invalid ${fieldName}: ${branch}`)
+  } catch (err) {
+    throw new Error(`Invalid ${fieldName}: ${branch}`, { cause: err })
   }
 }
 

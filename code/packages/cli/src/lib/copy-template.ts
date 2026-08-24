@@ -13,12 +13,38 @@ export interface TemplateValues {
   // included, or npm install has nothing matching to resolve against on a
   // registry that only ever published that one exact version.
   cliVersion: string
+  // Package-manager-aware bits of the scaffolded workflow templates — see
+  // lib/detect-package-manager.ts, whose packageManagerPlan() output this
+  // maps to token-for-token. 'npm' is always a safe, working default: these
+  // only change what CI caches/runs, never what `pdocs build`/`pdocs dev`
+  // themselves shell out to (still npm, regardless — see run-script.ts).
+  pmName: string
+  pmCacheName: string
+  pmLockfile: string
+  pmCiCmd: string
+  pmSetupStepYaml: string
 }
 
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   __PDOCS_NAME__: 'name',
   __PDOCS_TITLE__: 'title',
   __PDOCS_CLI_VERSION__: 'cliVersion',
+  __PDOCS_PM__: 'pmName',
+  __PDOCS_PM_CACHE__: 'pmCacheName',
+  __PDOCS_LOCKFILE__: 'pmLockfile',
+  __PDOCS_INSTALL_CI__: 'pmCiCmd',
+  // The whole comment line (leading spaces, `#`, trailing newline) is the
+  // token here, not just the bare placeholder name — a bare
+  // `__PDOCS_PM_SETUP_STEP__` sitting at the start of a YAML line with a
+  // step's own `- name: …` right after it on the same line is not valid YAML
+  // on its own (before substitution), which is exactly the form these
+  // template files are in until `pdocs new` runs — and `just fmt`/prettier
+  // parses them as real YAML. A `#`-prefixed placeholder is a comment,
+  // valid on any line, so the *template* stays parseable; substituting the
+  // whole line (not just the token inside it) is what lets the pnpm-only
+  // value (which ends in its own `\n` — see packageManagerPlan) or the
+  // empty npm value drop cleanly in its place.
+  '      # __PDOCS_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
 }
 
 // `<!-- prettier-ignore -->` directives exist only to stop prettier mangling a

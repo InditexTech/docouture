@@ -4,6 +4,13 @@ concurrency:
   group: pr-verify-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+# Least privilege: this workflow only ever checks out the PR and runs
+# read-only verification (changelog check, lint/test/build) — no step here
+# pushes, comments, or otherwise writes back to GitHub, so the default
+# broad token scope is more than it needs.
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths:

@@ -40,20 +40,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # __PDOCS_PM_SETUP_STEP__
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           # Reads engines.node from docs/package.json — no separate version
           # file to keep in sync.
           node-version-file: docs/package.json
-          cache: npm
+          cache: __PDOCS_PM_CACHE__
           # `defaults.run.working-directory: docs` above only applies to
           # `run:` steps, not to this action's own inputs — without this,
           # setup-node looks for a lockfile from the repo root and fails.
-          cache-dependency-path: docs/package-lock.json
+          cache-dependency-path: docs/__PDOCS_LOCKFILE__
 
       - name: Install dependencies
-        run: npm ci
+        run: __PDOCS_INSTALL_CI__
 
       - name: Build
         run: npx antora --fetch antora-playbook.local.yml

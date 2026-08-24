@@ -208,8 +208,9 @@ const RELEASE_LABEL = 'docs/release'
  * does not create labels referenced by a workflow's `if:` condition on its
  * own, and scaffolding is not a GitHub API call), so a repository fresh out
  * of `pdocs new` is missing it until someone runs `gh label create
- * docs/release` — see main's own getting-started.adoc's "Create the
- * docs/release label" section. Without it, `pdocs-release.yml`'s automatic
+ * docs/release` — see main's own prerequisites.adoc, which covers this
+ * alongside the repository-public/GitHub-Pages-enablement steps a fresh
+ * site also needs. Without it, `pdocs-release.yml`'s automatic
  * merge-triggers-a-release path is a silent no-op; only its
  * `workflow_dispatch` path still works.
  *

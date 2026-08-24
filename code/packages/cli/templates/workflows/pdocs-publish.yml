@@ -23,16 +23,15 @@ name: pdocs-publish
 # `gh-pages` branch needs both); harmless to leave granted for any other
 # driver, which simply never reads them.
 #
-# Triggers on both refs either versioned or standalone mode (see
-# versioning-modes.md) can produce — `tags: ['stable']` (standalone's
-# rolling tag) and `tags: ['v*']` (versioned's release tags) are both listed
-# unconditionally: a mode that doesn't use one of them just never creates a
-# matching ref, so the trigger is harmless dead weight rather than something
-# that needs picking per mode.
+# Not triggered by push — pdocs-release.yml calls this workflow directly
+# (as a reusable job, via `uses:` + `needs:`) as its last step, once a
+# release has actually been cut, so ordering is a real dependency rather
+# than a coincidence of two workflows independently reacting to the same
+# git push. `workflow_call` is what makes that direct call possible.
+# `workflow_dispatch` is kept alongside it for a manual rebuild+republish
+# of whatever is currently on `main`, without cutting a new release.
 on:
-  push:
-    branches: [main]
-    tags: ['stable', 'v*']
+  workflow_call: {}
   workflow_dispatch: {}
 
 concurrency:

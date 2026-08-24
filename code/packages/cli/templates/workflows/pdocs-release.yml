@@ -356,7 +356,23 @@ jobs:
 
           echo "docs/.release-version: ${VERSION} → ${next}"
 
-      # Rebuild/deploy is not triggered from here — pdocs-publish.yml (see
-      # the sibling workflow of that name) triggers on push for both a
-      # `stable` move and a `v*` tag push on its own, so the `git push` above
-      # is what kicks off the rebuild, not an explicit step in this file.
+      # Rebuild/deploy: called directly here, as a reusable job, rather than
+      # relying on pdocs-publish.yml's own trigger reacting to the pushes
+      # above — a plain `on: push` there previously had two problems: (1) it
+      # matched both the tag push above AND main's ordinary pushes, so an
+      # unrelated commit to main (or this job's own release-version bump
+      # commit, previously pushed to main directly) could kick off a publish
+      # with nothing to do with a release, and (2) both this job's tag push
+      # and its main push could each independently match, firing publish
+      # twice for one release with no ordering guarantee between them. A
+      # direct `needs:` job dependency below has neither problem: publish
+      # only ever runs once, only after this job finishes, and only when it
+      # actually cut something (`needs.release.result == 'success'` is
+      # already false for a no-op run — see this job's own `if:` above,
+      # which makes a run that doesn't match skip rather than succeed).
+  publish:
+    name: Publish
+    needs: release
+    if: needs.release.result == 'success'
+    uses: ./.github/workflows/pdocs-publish.yml
+    secrets: inherit

@@ -114,6 +114,19 @@ async function assertSafeGitBranch(branch, fieldName = 'branch') {
   if (branch.startsWith('-')) {
     throw new Error(`Invalid ${fieldName}: must not start with '-'`)
   }
+  // Whitelist guard, checked ahead of (and independently from) the
+  // `check-ref-format` shellout below. Static analysis (CodeQL's
+  // second-order command injection query) doesn't treat "validated by
+  // shelling out to `git check-ref-format`" as a sanitizer — it only
+  // recognises inline whitelist checks like this one, the same pattern
+  // `assertSafeGitRemote` above already uses for `remote`. Functionally
+  // this also closes the actual gap: it rejects any value containing
+  // characters (spaces, `=`, control chars, …) that could turn a
+  // `--upload-pack=<cmd>`-shaped branch name into an argument `git
+  // ls-remote`/`git push` would interpret as a flag rather than a ref.
+  if (!/^[A-Za-z0-9._/-]+$/.test(branch)) {
+    throw new Error(`Invalid ${fieldName}: unsupported branch name format`)
+  }
   try {
     await execFileAsync('git', ['check-ref-format', '--branch', branch])
   } catch (err) {

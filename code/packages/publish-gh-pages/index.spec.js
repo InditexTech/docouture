@@ -203,6 +203,46 @@ describe('publishGhPages', () => {
     })
   })
 
+  describe('branch name validation', () => {
+    it('rejects a branch that looks like a git flag (e.g. --upload-pack=...)', async () => {
+      process.env.GITHUB_TOKEN = 'secret'
+      process.env.GITHUB_ACTIONS = 'true'
+
+      await expect(
+        publishGhPages(
+          '/site/build/site',
+          { logger: silentLogger, branch: '--upload-pack=touch /tmp/pwned;' },
+          fakeGhpages,
+          fakeGit
+        )
+      ).rejects.toThrow('Invalid branch')
+
+      expect(branchExists).not.toHaveBeenCalled()
+      expect(publish).not.toHaveBeenCalled()
+    })
+
+    it('rejects a branch containing whitespace or shell metacharacters', async () => {
+      process.env.GITHUB_TOKEN = 'secret'
+      process.env.GITHUB_ACTIONS = 'true'
+
+      await expect(
+        publishGhPages('/site/build/site', { logger: silentLogger, branch: 'gh pages; rm -rf /' }, fakeGhpages, fakeGit)
+      ).rejects.toThrow('Invalid branch')
+
+      expect(branchExists).not.toHaveBeenCalled()
+      expect(publish).not.toHaveBeenCalled()
+    })
+
+    it('accepts an ordinary branch name', async () => {
+      process.env.GITHUB_TOKEN = 'secret'
+      process.env.GITHUB_ACTIONS = 'true'
+
+      await publishGhPages('/site/build/site', { logger: silentLogger, branch: 'release/gh-pages' }, fakeGhpages, fakeGit)
+
+      expect(publish).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('orphan branch pre-create (fix 3)', () => {
     it('creates an empty orphan branch when it does not exist remotely yet', async () => {
       process.env.GITHUB_TOKEN = 'secret'

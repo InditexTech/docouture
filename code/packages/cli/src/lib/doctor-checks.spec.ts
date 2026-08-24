@@ -173,7 +173,7 @@ describe('checkAgentFilesPresent', () => {
   it('passes AGENTS.md and each skill once scaffolded', async () => {
     await writeFile(join(dir, 'AGENTS.md'), '# hi', 'utf8')
     for (const platform of ['.opencode', '.claude']) {
-      for (const skill of ['writing-docs-pages', 'site-structure']) {
+      for (const skill of ['documenting-your-repo', 'writing-docs-pages', 'docs-internals']) {
         await mkdir(join(dir, platform, 'skills', skill), { recursive: true })
         await writeFile(join(dir, platform, 'skills', skill, 'SKILL.md'), '# skill', 'utf8')
       }

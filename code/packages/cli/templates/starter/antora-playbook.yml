@@ -140,7 +140,7 @@ asciidoc:
 antora:
   extensions:
     # Antora pipeline extensions (a different key/kind from asciidoc.extensions
-    # above — see the site-structure skill's reference/antora-extensions.md):
+    # above — see the docs-internals skill's reference/antora-extensions.md):
     # nav_modules-driven module switcher, an authored site footer, the search
     # index the UI bundle's search dialog reads, and llms.txt/llms-full.txt
     # generation for AI ingestion.

@@ -20,7 +20,7 @@ docs/
         pages/*.adoc           one page per file — these become site URLs
 ```
 
-The nesting (`docs/docs/...`) is intentional — see the `site-structure` skill.
+The nesting (`docs/docs/...`) is intentional — see the `docs-internals` skill.
 
 ## Commands
 
@@ -48,10 +48,21 @@ go through the `pdocs` CLI.
 
 ## Skills
 
+- **`documenting-your-repo`** — start here: planning what to document, sourcing content
+  from wherever it actually lives (existing docs, README, or the code itself), and the
+  long-term loop that keeps docs in sync as the repo grows. Hands off to the two skills
+  below for mechanics once a decision is made.
 - **`writing-docs-pages`** — authoring AsciiDoc content: the language itself, `xref:`
   references, `nav.adoc`, admonitions, code blocks, and this site's own custom blocks
   (`[tabs]`, `[cards]`, `[accordion]`, …).
-- **`site-structure`** — the playbook, the component descriptor, the four names that must
+- **`docs-internals`** — the playbook, the component descriptor, the four names that must
   agree, the home-page vs. content-page patterns, and mono-module vs. multi-module sites.
 - **`docs-versioning`** — only present when this site was scaffolded with
   `--mode versioned`: cutting releases, `pdocs version`, and `docs/.release-version`.
+
+## Documentation state
+<!-- maintained by the documenting-your-repo skill — do not hand-edit structure, only content -->
+
+| doc page | derived from | status |
+| -------- | ------------ | ------ |
+| index.adoc (home) | manual (hand-written) | — |

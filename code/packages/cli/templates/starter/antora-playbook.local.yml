@@ -87,5 +87,5 @@ asciidoc:
 antora:
   extensions:
     # Same as the real antora-playbook.yml — see its own comment and the
-    # site-structure skill's reference/antora-extensions.md.
+    # docs-internals skill's reference/antora-extensions.md.
     - '@inditextech/pdocs-antora-extensions'

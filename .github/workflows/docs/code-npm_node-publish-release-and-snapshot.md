@@ -28,7 +28,7 @@ Permissions are scoped at the job level following the principle of least privile
 
 ## Divergences from weave.js's workflow of the same name
 
-- **Version bump**: weave.js calls package.json scripts `version:release` / `release:prepare` / `version:development`. pdocs has no such scripts — `just bump <version>` (a thin wrapper over `pnpm version`, propagated to every workspace package) replaces them. There is no `version:development` step: pdocs' release does not bump to a post-release snapshot version, so the repository is left at the just-released version rather than the next `-SNAPSHOT`.
+- **Version bump**: homologated with weave.js's `npm run version:release` + `npm run release:prepare` step pair — `code/package.json` defines both scripts as just-free wrappers around `pnpm version` (propagated to every workspace package), so CI doesn't need `just` installed on the runner (README, "just and package.json"); `justfile`'s `bump` recipe is the human-facing equivalent for local use. There is no `version:development` step: pdocs' release does not bump to a post-release snapshot version, so the repository is left at the just-released version rather than the next `-SNAPSHOT`.
 - **Publish**: weave.js calls one aggregate script (`publish:snapshot` / `release:perform`) across nx targets. pdocs has no such targets, so this loops `npm publish` directly over its five publishable packages (`ui-bundle`, `cli`, `antora-extensions`, `asciidoc-extensions`, `publish-gh-pages` — `example` is `private: true` and excluded, same set `just release-local` publishes to a local Verdaccio registry).
 - **No gitflow sync-to-develop PR**: pdocs is trunk-based (main + PRs only), so weave.js's "create a sync PR into develop" step and its failure-comment step are dropped entirely.
 - **ui-bundle release artifact**: pdocs additionally locates `packages/ui-bundle/build/ui-bundle-<version>.zip` and attaches it to the GitHub Release — weave.js has no equivalent since it ships npm packages only, not a site-building tool with a distributable UI bundle.
@@ -50,7 +50,7 @@ Permissions are scoped at the job level following the principle of least privile
   - Determine the release type from labels.
   - Update CHANGELOG.md and calculate next version using `release-flow/keep-a-changelog-action`.
   - Define the snapshot version (`<version>-SNAPSHOT.<run_number>.<run_attempt>`).
-  - Bump every package to the snapshot version with `just bump`.
+  - Bump every package to the snapshot version (`npm run version:release` + `npm run release:prepare`, just-free).
   - Verify each of the five packages exists in the npm registry (decides OIDC vs `NPM_TOKEN`).
   - Build (`pnpm build`).
   - Publish the snapshot (`npm publish --tag next`, looped per package).
@@ -70,7 +70,7 @@ Permissions are scoped at the job level following the principle of least privile
   - Determine the release type from labels.
   - Prepare committer information and configure GPG signing (gpg-agent with loopback-pinentry and preset-passphrase).
   - Update CHANGELOG.md and calculate next version using `release-flow/keep-a-changelog-action`.
-  - Bump every package to the released version with `just bump`.
+  - Bump every package to the released version (same `npm run version:release` + `npm run release:prepare` pair as the snapshot job).
   - Build (`pnpm build`) and locate the `ui-bundle` release artifact.
   - Verify each of the five packages exists in the npm registry (decides OIDC vs `NPM_TOKEN`).
   - Publish the release (`npm publish`, looped per package, unconditional — no publish gate).

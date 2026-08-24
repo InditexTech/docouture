@@ -85,14 +85,10 @@ jobs:
         working-directory: code
         run: pnpm install --frozen-lockfile
 
-      - name: Verify
+      - name: NPM / Verify
         working-directory: code
         run: |
-          pnpm lint
-          pnpm typecheck
-          pnpm format:check
-          pnpm nx run-many -t build --exclude=@inditextech/pdocs-example
-          pnpm nx run-many -t test
+          npm run verify
 
       - name: Build example site (PR HEAD)
         working-directory: code/packages/example

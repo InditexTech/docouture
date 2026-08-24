@@ -1,0 +1,18 @@
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  h_c93d154c7c7074 217-229,234,236,239,256-267,270,276-279,302-305,321-325,333-335,355-357,620-632,637,639,642,659-670,673,679-682,705-708,719-724,734-736,756-758
+code/scripts/publishable-packages.mjs
+  h_c93d154c7c7074 1-58
+justfile
+  h_c93d154c7c7074 502,510-513,574-579,581
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "88b470512c3367f6c334bbf74dc196a6b74c38de",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

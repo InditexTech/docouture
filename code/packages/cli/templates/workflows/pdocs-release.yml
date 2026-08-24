@@ -127,6 +127,29 @@ jobs:
       - name: Install dependencies
         run: __PDOCS_INSTALL_CI__
 
+      # Nothing before this point has actually built the docs — unlike
+      # pdocs-pr-verify.yml and pdocs-publish.yml, this workflow previously
+      # went straight from install to cutting a release tag. That let a
+      # broken site get tagged and released, only to be caught later, when
+      # the tag push triggers pdocs-publish.yml downstream. Building here
+      # too, before any git mutation below, catches it before a tag or
+      # GitHub Release ever exists for it.
+      #
+      # `antora-playbook.local.yml` (branches: HEAD), not the real
+      # antora-playbook.yml: the tag this run is about to cut doesn't exist
+      # yet, so the real playbook's tag-based content source can't see it —
+      # it would just rebuild whatever was already released, not what's
+      # about to ship. The local playbook validates exactly the content on
+      # `main` right now, which is what the new version will actually be.
+      - name: Build docs
+        run: npx antora --fetch antora-playbook.local.yml
+
+      # See pdocs-pr-verify.yml's own comment: catches raw http(s) links
+      # Antora's own strict mode (runtime.log.failure_level: warn, already
+      # exercised by Build above) can't see.
+      - name: Check links
+        run: npx linkinator build/site --recurse --skip "^(mailto:|tel:)"
+
       - name: git identity
         run: |
           git config user.name "github-actions[bot]"

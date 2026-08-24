@@ -85,6 +85,13 @@ jobs:
       - name: Build
         run: __PDOCS_PM__ run build
 
+      # See pdocs-pr-verify.yml's own comment: Antora's strict mode already
+      # catches broken cross-references during Build above; linkinator
+      # covers what it can't — raw http(s) links in content — before this
+      # site actually gets published.
+      - name: Check links
+        run: npx linkinator build/site --recurse --skip "^(mailto:|tel:)"
+
       # `GITHUB_TOKEN` is read by @inditextech/pdocs-publish-gh-pages
       # specifically (unused, and unnecessary to set, for any other publish
       # target). See this file's own header comment for the `<target>`

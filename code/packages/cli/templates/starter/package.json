@@ -10,7 +10,8 @@
   "scripts": {
     "build": "antora --fetch antora-playbook.yml",
     "dev": "pdocs dev",
-    "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
+    "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\"",
+    "check-links": "linkinator build/site --recurse --skip \"^(mailto:|tel:)\""
   },
   "devDependencies": {
     "@inditextech/pdocs-cli": "__PDOCS_CLI_VERSION__",
@@ -18,7 +19,8 @@
     "@inditextech/pdocs-asciidoc-extensions": "__PDOCS_CLI_VERSION__",
     "@inditextech/pdocs-antora-extensions": "__PDOCS_CLI_VERSION__",
     "@inditextech/pdocs-publish-gh-pages": "__PDOCS_CLI_VERSION__",
-    "antora": "3.1.15"
+    "antora": "3.1.15",
+    "linkinator": "8.0.4"
   },
   "pdocs": {
     "publish": {

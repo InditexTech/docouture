@@ -1,0 +1,172 @@
+---
+# Same name, filename and job shape as weave.js's code-release_preview.yml, so
+# the two repos' release processes read identically at a glance. Divergences
+# from the weave.js original are called out inline where pdocs' toolchain
+# (release-type/* labels + CHANGELOG.md, already used identically by
+# code-npm_node-publish-release-and-snapshot.yml) or its trunk-based-only
+# development flow (no gitflow/hotfix merge-strategy distinction to preview)
+# forces one. See docs/code-release_preview.md for the job-by-job walkthrough.
+name: code-release-preview
+
+concurrency:
+  group: release-preview
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    types: [labeled, synchronize, ready_for_review, opened]
+    branches: ["main", "main-*"]
+
+env:
+  PR_HEAD_REF: ${{ github.head_ref }}
+
+jobs:
+  check-changes-in-paths:
+    name: Check for changes in corresponding paths
+    runs-on: ubuntu-24.04
+    if: ${{ github.event.pull_request.draft == false || contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') }}
+    outputs:
+      detected: ${{ steps.changes.outputs.paths }}
+    steps:
+      - name: Check for changed files in specific paths
+        id: changes
+        uses: dorny/paths-filter@ebc4d7e9ebcb0b1eb21480bb8f43113e996ac77a # v3
+        with:
+          filters: |
+            paths:
+              - 'code/**'
+              - '.github/workflows/code**'
+
+  release-preview:
+    name: Release Preview
+    needs: check-changes-in-paths
+    if: ${{ contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') && needs.check-changes-in-paths.outputs.detected == 'true' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout merge commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup hotfix release type version
+        if: contains(github.event.pull_request.labels.*.name, 'release-type/hotfix')
+        run: echo "RELEASE_VERSION=patch" >> "$GITHUB_ENV"
+
+      - name: Setup multi-hotfix release type version
+        if: contains(github.event.pull_request.labels.*.name, 'release-type/multi-hotfix')
+        run: echo "RELEASE_VERSION=patch" >> "$GITHUB_ENV"
+
+      - name: Setup patch release type version
+        if: contains(github.event.pull_request.labels.*.name, 'release-type/patch')
+        run: echo "RELEASE_VERSION=patch" >> "$GITHUB_ENV"
+
+      - name: Setup minor release type version
+        if: contains(github.event.pull_request.labels.*.name, 'release-type/minor')
+        run: echo "RELEASE_VERSION=minor" >> "$GITHUB_ENV"
+
+      - name: Setup major release type version
+        if: contains(github.event.pull_request.labels.*.name, 'release-type/major')
+        run: echo "RELEASE_VERSION=major" >> "$GITHUB_ENV"
+
+      - name: Check if CHANGELOG.md has changes
+        run: |
+          if git diff --quiet HEAD^ HEAD -- code/CHANGELOG.md; then
+            echo "::error title={No CHANGELOG.md changes}::{No CHANGELOG.md changes were found. Update the UNRELEASED section with the new changes.}"
+            gh pr comment ${{ github.event.number }} --body "
+          ### :x: No changes in the \`CHANGELOG.md\` file
+          No changes were found in the \`CHANGELOG.md\` file. Please, update the UNRELEASED section, listing the new changes that applies to this release."
+            exit 1
+          fi
+
+      - name: Update CHANGELOG.md
+        id: update-changelog
+        uses: release-flow/keep-a-changelog-action@74931dec7ecdbfc8e38ac9ae7e8dd84c08db2f32 # v3.0.0
+        with:
+          command: bump
+          version: ${{ env.RELEASE_VERSION }}
+          changelog: code/CHANGELOG.md
+          fail-on-empty-release-notes: false
+          keep-unreleased-section: true
+          tag-prefix: ""
+
+      # pdocs is trunk-based only (main + PRs, no gitflow/hotfix branches to
+      # squash-vs-merge-commit between) — weave.js's "Check merge strategy"
+      # step and its "Merge Strategy" comment line have no pdocs equivalent
+      # and are dropped here.
+      - name: Add PR comment with release preview
+        run: |
+          TASKS=$(awk -v version="${{ steps.update-changelog.outputs.version }}" '
+            BEGIN { capture=0; found_version=0 }
+            $0 ~ "## \\[" version "\\] -" { capture=1; found_version=1; print; next }
+            capture && $0 ~ /^## \[.*\] -/ { capture=0 }
+            capture { print }
+            END {
+              if (found_version) {
+                while ((getline line < "code/CHANGELOG.md") > 0) {
+                  if (line ~ /^\[.*\]:/) {
+                    print line
+                  }
+                }
+              }
+            }
+          ' code/CHANGELOG.md)
+          MESSAGE="
+
+          ### :rocket: Release Preview Success
+          You are going to release the version **${RELEASE_VERSION}** with the following changes:
+          $TASKS
+          "
+
+          gh pr comment ${{ github.event.number }} --body "$(echo -e "$MESSAGE")"
+
+  release-preview-no-code-changes:
+    name: Add PR comment with configuration management information
+    needs: check-changes-in-paths
+    if: ${{ contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') && needs.check-changes-in-paths.outputs.detected == 'false' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout merge commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Add PR comment with release preview
+        run: |
+          BODY="
+          ### :exclamation: :exclamation: :exclamation: This Pull Request will not trigger a Release
+          A Pull Request with no changes to the \`code/\` folder will not trigger a release"
+
+          gh pr comment ${{ github.event.number }} --body "$BODY"
+
+  release-preview-no-release-labels:
+    name: Add PR comment with release information
+    needs: check-changes-in-paths
+    if: ${{ !contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') && needs.check-changes-in-paths.outputs.detected == 'true' && github.event.pull_request.draft == false }}
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout merge commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Add PR comment with release preview
+        run: |
+          gh pr comment ${{ github.event.number }} --body "
+          ### :exclamation: :exclamation: :exclamation: This Pull Request will not trigger a Release
+          A Pull Request with no \`release-type/...\` labels will not trigger a release, so you need to label this PR if you want to create a release.
+          "

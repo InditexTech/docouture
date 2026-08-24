@@ -46,6 +46,7 @@ code/packages/cli/templates/starter/
     pdocs-publish.yml                   build (and, once it exists, deploy) on push
     pdocs-pr-verify.yml                 HEAD-only build on every pull_request
     pdocs-release.yml                   cuts a release for either mode — detects which
+    pdocs-release-preview.yml           comments the target version/tag on a docs/release-labelled PR, before merge
   .gitignore
 ```
 

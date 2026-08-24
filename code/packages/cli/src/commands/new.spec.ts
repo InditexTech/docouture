@@ -145,7 +145,12 @@ describe('runNew', () => {
 
     // Workflows are peeled out to the true repo root — GitHub Actions never
     // discovers them nested under docs/.
-    for (const workflow of ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-pr-verify.yml']) {
+    for (const workflow of [
+      'pdocs-publish.yml',
+      'pdocs-release.yml',
+      'pdocs-release-preview.yml',
+      'pdocs-pr-verify.yml',
+    ]) {
       const content = await readFile(join(repo, '.github', 'workflows', workflow), 'utf8')
       expect(content.length).toBeGreaterThan(0)
     }

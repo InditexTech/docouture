@@ -25,6 +25,13 @@
   "pdocs": {
     "publish": {
       "gh-pages": {}
+    },
+    "checkLinks": {
+      "ignore": [
+        "*/edit/HEAD/*",
+        "https://<org>.github.io/<repo>",
+        "__PDOCS_REPO_IGNORE_GLOB__"
+      ]
     }
   }
 }

@@ -23,6 +23,17 @@ export interface TemplateValues {
   pmLockfile: string
   pmCiCmd: string
   pmSetupStepYaml: string
+  // A whole JSON array element — `, "https://github.com/owner/repo*"` — or
+  // an empty string, for `package.json`'s scaffolded `pdocs.checkLinks.ignore`
+  // (see scripts/check-links.mjs's own comment on that key). Computed once,
+  // at scaffold time, from `git remote get-url origin` (see new.ts) rather
+  // than at check-links.mjs runtime: unlike the repo-agnostic entries
+  // already in that array, this one is different for every site, and baking
+  // it in here keeps the whole list in one visible, editable place instead
+  // of splitting "some entries are in package.json, one is computed by the
+  // script" across two files. Empty when scaffolding outside a repo with an
+  // `origin` remote yet configured — nothing to bake in yet.
+  repoIgnoreGlob: string
 }
 
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
@@ -45,6 +56,14 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   // value (which ends in its own `\n` — see packageManagerPlan) or the
   // empty npm value drop cleanly in its place.
   '      # __PDOCS_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
+  // Same whole-segment trick as pmSetupStepYaml above, for the same reason:
+  // `, "__PDOCS_REPO_IGNORE_GLOB__"` is valid JSON on its own (a normal
+  // string array element) so the *template* stays parseable before
+  // substitution, and substituting the comma along with it is what lets the
+  // "no origin remote yet" case (empty string) remove the whole element
+  // cleanly rather than leaving a dangling comma or an empty-string glob
+  // that would match every link.
+  ', "__PDOCS_REPO_IGNORE_GLOB__"': 'repoIgnoreGlob',
 }
 
 // `<!-- prettier-ignore -->` directives exist only to stop prettier mangling a

@@ -74,6 +74,32 @@ function isInsideGitWorkTree(dir: string): boolean {
   }
 }
 
+// The web (https) form of this repo's `origin` remote, or undefined if
+// there isn't one configured yet (a fresh `git init` with no remote added).
+// Baked into the scaffolded package.json's `pdocs.checkLinks.ignore` (see
+// TemplateValues.repoIgnoreGlob, and scripts/check-links.mjs's own comment
+// on that key) so the repo-link.hbs header/nav link — which 404s to an
+// anonymous crawler whenever this repo is private, indistinguishable from
+// one that doesn't exist — doesn't fail pdocs-pr-verify.yml/pdocs-release.yml
+// out of the box. Converts an SSH remote (`git@host:owner/repo.git`) to its
+// https equivalent the same way an https remote is just stripped of its
+// trailing `.git`; anything else unparseable is treated the same as "no
+// remote yet".
+function repoWebUrl(dir: string): string | undefined {
+  let remote: string
+  try {
+    remote = execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: dir, stdio: ['ignore', 'pipe', 'ignore'] })
+      .toString()
+      .trim()
+  } catch {
+    return undefined
+  }
+  const ssh = /^git@([^:]+):(.+?)(\.git)?$/.exec(remote)
+  if (ssh) return `https://${ssh[1]}/${ssh[2]}`
+  if (/^https?:\/\//.test(remote)) return remote.replace(/\.git$/, '')
+  return undefined
+}
+
 // The bits of stdin/stdout the interactive wizard needs, pulled behind an
 // interface so tests can hand it a scripted stream pair instead of a real
 // TTY. `isTTY` decides whether the wizard runs at all — defaults to
@@ -304,6 +330,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // lib/detect-package-manager.ts for the precedence this follows.
   const pm = packageManagerPlan(detectPackageManager(target))
 
+  const repoUrl = repoWebUrl(target)
+
   const values = {
     name,
     title,
@@ -313,6 +341,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     pmLockfile: pm.lockfile,
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
+    repoIgnoreGlob: repoUrl !== undefined ? `, "${repoUrl}*"` : '',
   }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own

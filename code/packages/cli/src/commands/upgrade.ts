@@ -106,6 +106,10 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     pmLockfile: pm.lockfile,
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
+    // upgrade never re-copies docs/ (see below) — package.json, the only
+    // template file this placeholder appears in, is never touched here — so
+    // there's nothing meaningful to compute it from.
+    repoIgnoreGlob: '',
   }
 
   const workflowsDir = join(target, '.github', 'workflows')

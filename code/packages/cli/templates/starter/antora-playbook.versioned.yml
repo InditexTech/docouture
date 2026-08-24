@@ -104,6 +104,14 @@ runtime:
   # publishing a site with silent gaps.
   log:
     failure_level: warn
+    # Antora's own default is 'warn' (@antora/playbook-builder's convict
+    # schema, not @antora/logger's own 'info' default, which never actually
+    # applies here) — below that, @inditextech/pdocs-antora-extensions'
+    # diagnostic reports (pdocs-version-report: which versions Antora
+    # resolved and which it picked as latest; pdocs-search-index: how many
+    # pages/records were indexed) both log at 'info' and would otherwise be
+    # silently dropped, not merely hard to find in the build output.
+    level: info
 
 asciidoc:
   attributes:

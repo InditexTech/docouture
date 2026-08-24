@@ -61,8 +61,9 @@ go through the `pdocs` CLI.
   `--mode versioned`: cutting releases, `pdocs version`, and `docs/.release-version`.
 
 ## Documentation state
+
 <!-- maintained by the documenting-your-repo skill — do not hand-edit structure, only content -->
 
-| doc page | derived from | status |
-| -------- | ------------ | ------ |
-| index.adoc (home) | manual (hand-written) | — |
+| doc page          | derived from          | status |
+| ----------------- | --------------------- | ------ |
+| index.adoc (home) | manual (hand-written) | —      |

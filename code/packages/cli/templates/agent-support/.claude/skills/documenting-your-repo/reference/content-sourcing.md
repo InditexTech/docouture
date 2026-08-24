@@ -1,7 +1,7 @@
 # Content sourcing
 
 Once the structure is planned (`structure-planning.md`), every page needs real content
-from somewhere. This is deliberately not prescriptive about *where* — a repo with a rich
+from somewhere. This is deliberately not prescriptive about _where_ — a repo with a rich
 `docs/` wiki export and a repo with nothing but source code both need to end up
 documented, through different paths.
 

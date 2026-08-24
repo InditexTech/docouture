@@ -11,20 +11,21 @@ it was derived from, and its last-known status:
 
 ```markdown
 ## Documentation state
+
 <!-- maintained by the documenting-your-repo skill — do not hand-edit structure, only content -->
 
-| doc page                  | derived from                | status  |
-| -------------------------- | ---------------------------- | ------- |
-| reference/client.adoc     | src/api/client.ts exports    | current |
-| guides/cli-usage.adoc     | src/cli/*.ts command defs    | current |
-| index.adoc (home)         | manual (hand-written)        | —       |
+| doc page              | derived from              | status  |
+| --------------------- | ------------------------- | ------- |
+| reference/client.adoc | src/api/client.ts exports | current |
+| guides/cli-usage.adoc | src/cli/*.ts command defs | current |
+| index.adoc (home)     | manual (hand-written)     | —       |
 ```
 
 Rules for this table:
 
 - Add a row **only** for pages sourced from the repo's code (content-sourcing.md's step
   3). A page sourced from existing docs/README, or written by hand, gets `derived from:
-  manual` and `status: —` — this marks it as human-owned; never regenerate it from code
+manual` and `status: —` — this marks it as human-owned; never regenerate it from code
   without being asked.
 - `derived from` should be specific enough that a future pass can check whether it's still
   accurate — a file path, an export list, a schema file, a command name — not just "the

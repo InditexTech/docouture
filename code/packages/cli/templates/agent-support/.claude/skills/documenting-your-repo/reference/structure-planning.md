@@ -25,20 +25,20 @@ docs
 ├── 2. Getting started
 │   ├── prerequisites                      🔴
 │   └── quickstart                         🔴
-├── 3. Guides                              
-│   ├── overview                           🔴 
+├── 3. Guides
+│   ├── overview                           🔴
 │   ├── <task-name> / <feature>            🔴 (≥1, repeatable pattern, i.e. "How to setup [feature]", "How to use [feature]", etc.)
 │   └── development                        🟠
-├── 4. Reference                           
+├── 4. Reference
 │   ├── overview                           🔴
 │   ├── configuration                      🔵 (repo has a configuration surface)
 │   └── api / sdk / cli                    🔵 (repo has an API/SDK/CLI surface, it can be ≥1)
 ├── 5. Additional information
 │   ├── overview                           🔴
-│   ├── changelog                          🔴 
+│   ├── changelog                          🔴
 │   │   ├── overview                       🔴 (menu to each changelog, grouped by major if possible if standalone version, by date of publishing)
 │   │   └── vX.Y.Z / stable / prerelease   🔴 (the changelog notes of the version)
-│   ├── release-notes                      🔴 
+│   ├── release-notes                      🔴
 │   │   ├── overview                       🔴 (menu to each release, grouped by major if possible if standalone version, by date of publishing)
 │   │   └── vX.Y.Z / stable / prerelease   🔴 (the real release notes of a version)
 │   ├── faq                                🟠
@@ -93,11 +93,10 @@ doesn't need a user-facing CLI guide, for instance).
 
 ## The home page: structure now, content later
 
-The home page's *existence and slot* is fixed and non-negotiable, asserted in this phase:
+The home page's _existence and slot_ is fixed and non-negotiable, asserted in this phase:
 `ROOT`'s `pages/index.adoc`, using the `page-layout: home` pattern (see `docs-internals/
 reference/page-patterns.md`). It sits outside the six-section tree above — it's the site's
 entry point, not a member of "Overview". Do not skip creating it, and do not spend long
-drafting its real copy yet — its content is a *summary* of everything else, so it's better
+drafting its real copy yet — its content is a _summary_ of everything else, so it's better
 drafted roughly here (from whatever one-line description already exists) and properly
 finished in the content-sourcing phase, once there's something real to summarize.
-

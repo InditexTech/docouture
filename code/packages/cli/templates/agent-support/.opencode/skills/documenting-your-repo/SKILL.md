@@ -50,6 +50,6 @@ as the repo evolves, not a one-shot wizard that's done after the first pass.
 Where in the repo the "real" information lives is entirely up to the repo itself — a
 doc-comment, a type signature, a schema file, a test, a `--help` string, an existing
 `README.md`, are all fair game and equally valid sources. This skill does not prescribe a
-required location or format for source material; it only prescribes *that* every
-documented surface is traceable to something real, and *where in `AGENTS.md`* that
+required location or format for source material; it only prescribes _that_ every
+documented surface is traceable to something real, and _where in `AGENTS.md`_ that
 traceability is recorded (see `reference/maintenance-loop.md`).

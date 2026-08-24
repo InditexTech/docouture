@@ -8,6 +8,9 @@
 # forces one. See docs/code-release_preview.md for the job-by-job walkthrough.
 name: code-release-preview
 
+permissions:
+  contents: read
+
 concurrency:
   group: release-preview
   cancel-in-progress: true

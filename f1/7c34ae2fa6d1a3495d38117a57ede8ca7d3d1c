@@ -1,0 +1,19 @@
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  s_469dc72f6fdeb8::t_26e335ec51ba22 117-128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f17c34ae2fa6d1a3495d38117a57ede8ca7d3d1c",
+  "prompts": {},
+  "sessions": {
+    "s_469dc72f6fdeb8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcc3047bdffebe4LPwcBDG1p3t",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

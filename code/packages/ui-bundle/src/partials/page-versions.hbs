@@ -50,20 +50,21 @@
   </button>
   <div class="version-menu">
     {{#each page.versions}}
-    {{#if (eq ./version @root.page.version)}}
     {{!--
-      GH-103: the reader's own version, shown rather than hidden (previous
-      behaviour) so the dropdown states which version they're already on. A
-      `<span>`, not a link — nothing to navigate to — carrying the same
-      Stable/Prerelease semantics as the toggle above: a "Latest" pill only
-      when this entry is genuinely Antora's newest (`./latest`) AND not a
+      GH-103/GH-105: Stable/Prerelease pill semantics apply to every entry in
+      the list, not just the reader's own version — a "Latest" pill whenever
+      that entry is genuinely Antora's newest (`./latest`) AND not a
       prerelease; a "Prerelease" pill whenever `./prerelease` is set,
       including a prerelease that also happens to be latest (there being no
-      stable version yet). An older, non-latest stable current version gets
-      no pill at all — "Latest" would be wrong on it, and there is no
-      dedicated "Stable" pill in the design (Figma
-      5SAtxqb5sdtIqDQzz70yts#2610-32852).
+      stable version yet). An older, non-latest stable version gets no pill
+      at all — "Latest" would be wrong on it, and there is no dedicated
+      "Stable" pill in the design (Figma 5SAtxqb5sdtIqDQzz70yts#2610-32852).
+      Previously this was only wired into the current-page `<span>` branch,
+      so e.g. viewing 0.1.0 would fail to mark 0.2.0 as "Latest" in the list
+      — GH-105. Both branches below must carry it identically.
     --}}
+    {{#if (eq ./version @root.page.version)}}
+    {{!-- the reader's own version: a `<span>`, not a link — nothing to navigate to. --}}
     <span class="version is-current" aria-current="page">
       <span class="version__label">{{./displayVersion}}</span>
       {{#if ./prerelease}}
@@ -73,7 +74,14 @@
       {{/if}}
     </span>
     {{else}}
-    <a class="version{{#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">{{./displayVersion}}</a>
+    <a class="version{{#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">
+      <span class="version__label">{{./displayVersion}}</span>
+      {{#if ./prerelease}}
+      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
+      {{else if ./latest}}
+      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
+      {{/if}}
+    </a>
     {{/if}}
     {{/each}}
   </div>

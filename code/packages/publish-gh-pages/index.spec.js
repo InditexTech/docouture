@@ -237,7 +237,12 @@ describe('publishGhPages', () => {
       process.env.GITHUB_TOKEN = 'secret'
       process.env.GITHUB_ACTIONS = 'true'
 
-      await publishGhPages('/site/build/site', { logger: silentLogger, branch: 'release/gh-pages' }, fakeGhpages, fakeGit)
+      await publishGhPages(
+        '/site/build/site',
+        { logger: silentLogger, branch: 'release/gh-pages' },
+        fakeGhpages,
+        fakeGit
+      )
 
       expect(publish).toHaveBeenCalledTimes(1)
     })

@@ -1,17 +1,31 @@
 name: release
 
-# Manual only — a release is a deliberate act, not a side effect of a push.
-# The "Require main" step below is the actual guard; `just bump` performs no
-# git-state check of its own, so nothing else in this workflow prevents it
-# from running against whatever is checked out.
+# Homologated with weave.js's code-npm_node-publish-release-and-snapshot.yml:
+# a release is either triggered manually, or automatically when a PR labeled
+# `release-type/*` (and not `skip-release`) is merged to main. The actual
+# version number comes from release-flow/keep-a-changelog-action, which reads
+# code/CHANGELOG.md's `[Unreleased]` section — kept up to date per-PR, enforced
+# by pr-verify.yml — rather than being invented at release time.
 on:
+  pull_request:
+    types: [closed]
+    branches: ["main"]
+    paths: ["code/**", ".github/workflows/release.yml"]
+  issue_comment:
+    types: [created]
   workflow_dispatch:
     inputs:
-      level:
-        description: "major | minor | patch | premajor | preminor | prepatch | prerelease | X.Y.Z"
+      RELEASE_TYPE:
+        description: "Release type"
         required: true
-        default: patch
-        type: string
+        default: "release-type/minor"
+        type: choice
+        options:
+          - "release-type/hotfix"
+          - "release-type/multi-hotfix"
+          - "release-type/major"
+          - "release-type/minor"
+          - "release-type/patch"
 
 permissions:
   contents: write
@@ -25,20 +39,25 @@ jobs:
     name: Release
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    if: github.event_name == 'workflow_dispatch'
+      || (github.event.pull_request.merged == true
+      && !contains(join(github.event.pull_request.labels.*.name, ', '), 'skip-release')
+      && contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type'))
     outputs:
       version: ${{ steps.bump.outputs.version }}
     steps:
-      - name: Require main
-        if: github.ref != 'refs/heads/main'
-        run: |
-          echo "::error::release must run against main (got ${{ github.ref }})"
-          exit 1
+      # For workflow_dispatch this is just main. For a merged PR, GitHub has
+      # already fast-forwarded the base branch by the time `closed` fires, so
+      # checking the branch out by name (not the ephemeral PR merge ref) gets
+      # the real, just-merged commit — same approach as weave.js's workflow.
+      - name: Determine baseline branch
+        run: echo "BASELINE_BRANCH=${{ github.event.pull_request.base.ref || 'main' }}" >> "$GITHUB_ENV"
 
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ env.BASELINE_BRANCH }}
 
       # Same rationale as pr-verify.yml: `ivm-node` / `ivm-pnpm` are
       # asdf plugin names that only resolve on Inditex-provisioned machines.
@@ -80,22 +99,54 @@ jobs:
           pnpm format:check
           pnpm nx run-many -t test
 
+      # Same label -> semver mapping as weave.js: hotfix and multi-hotfix are
+      # both patch releases (a hotfix workflow, not a version-size distinction);
+      # `patch`/`minor`/`major` map directly. Defaults to minor if dispatched
+      # without narrowing further, matching this repo's pre-existing default.
+      - name: Determine release type
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            RELEASE_LABELS="${{ inputs.RELEASE_TYPE }}"
+          else
+            RELEASE_LABELS="${{ join(github.event.pull_request.labels.*.name, ', ') }}"
+          fi
+
+          case "$RELEASE_LABELS" in
+            *release-type/hotfix*|*release-type/multi-hotfix*|*release-type/patch*)
+              echo "RELEASE_VERSION=patch" >> "$GITHUB_ENV" ;;
+            *release-type/major*)
+              echo "RELEASE_VERSION=major" >> "$GITHUB_ENV" ;;
+            *)
+              echo "RELEASE_VERSION=minor" >> "$GITHUB_ENV" ;;
+          esac
+
+      # Promotes CHANGELOG.md's [Unreleased] section (hand-written per PR,
+      # enforced by pr-verify.yml) to a new versioned section and computes
+      # the concrete version number from it — the version isn't invented
+      # here, it's read back from what release-flow/keep-a-changelog-action
+      # just wrote. Pinned to the same commit weave.js already vets.
+      - name: Update CHANGELOG.md
+        id: update-changelog
+        uses: release-flow/keep-a-changelog-action@74931dec7ecdbfc8e38ac9ae7e8dd84c08db2f32 # v3.0.0
+        with:
+          command: bump
+          version: ${{ env.RELEASE_VERSION }}
+          changelog: code/CHANGELOG.md
+          fail-on-empty-release-notes: false
+          keep-unreleased-section: true
+          # Verified empirically against this action's actual dist bundle:
+          # its default does NOT match what its own README claims ('v') —
+          # without this, the compare/tag links it writes into CHANGELOG.md
+          # point at untagged refs like "0.1.0" instead of the "v0.1.0" tags
+          # this workflow actually creates below.
+          tag-prefix: "v"
+
       - name: Bump version
         id: bump
         run: |
-          just bump ${{ inputs.level }}
-          version=$(node -p "require('./code/package.json').version")
+          version='${{ steps.update-changelog.outputs.version }}'
+          just bump "$version"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
-
-          # A prerelease identifier (1.2.3-rc.0) marks this a GitHub prerelease.
-          # `just bump prerelease` and an explicit `X.Y.Z-...` both produce one;
-          # this reads the result rather than re-deriving it from the input, so
-          # it stays correct regardless of which path produced the version.
-          if [[ "$version" == *-* ]]; then
-            echo "prerelease=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Build
         working-directory: code
@@ -119,32 +170,35 @@ jobs:
           version='${{ steps.bump.outputs.version }}'
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add code/package.json code/packages/*/package.json
+          git add code/package.json code/packages/*/package.json code/CHANGELOG.md
           git commit -m "chore: release v${version}"
           git tag "v${version}"
           # actions/checkout leaves HEAD detached, not on a local branch named
           # `main` — `git push origin main` would fail with "src refspec main
           # does not match any". HEAD:main is correct whether HEAD happens to
           # be attached or detached.
-          git push origin HEAD:main
+          git push origin "HEAD:${BASELINE_BRANCH}"
           git push origin "v${version}"
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Passed via env, not interpolated straight into the script, so
+          # arbitrary markdown in the changelog (backticks, `$(...)`, etc.)
+          # can't be reinterpreted as shell — see GitHub's script-injection
+          # guidance for untrusted/multiline `${{ }}` values.
+          RELEASE_NOTES: ${{ steps.update-changelog.outputs.release-notes }}
         run: |
           version='${{ steps.bump.outputs.version }}'
-          prerelease_flag=""
-          if [ '${{ steps.bump.outputs.prerelease }}' = 'true' ]; then
-            prerelease_flag="--prerelease"
-          fi
+          notes_file=$(mktemp)
+          printf '%s\n' "$RELEASE_NOTES" > "$notes_file"
+
           gh release create "v${version}" \
             --title "v${version}" \
-            --generate-notes \
-            $prerelease_flag \
+            --notes-file "$notes_file" \
             '${{ steps.artifact.outputs.path }}'
 
-  # Off by default. The four `@inditextech/pdocs-*` packages below are public
+  # Off by default. The five `@inditextech/pdocs-*` packages below are public
   # (no `private: true`) so they can be published locally to a Verdaccio
   # snapshot registry for pre-release testing (`just release-local`), but
   # publishing to the real npm registry from CI is not settled internally yet
@@ -205,44 +259,362 @@ jobs:
         working-directory: code
         run: pnpm build
 
-      - name: Publish ui-bundle
-        working-directory: code/packages/ui-bundle
-        env:
-          NPM_CONFIG_PROVENANCE: "true"
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Same npm-version floor weave.js's
+      # code-npm_node-publish-release-and-snapshot.yml enforces: OIDC trusted
+      # publishing needs npm >= 11.5.1. The pinned Node toolchain ships a
+      # recent-enough npm already, so this is normally a no-op, but keeps this
+      # workflow correct if that ever regresses instead of failing publish
+      # with an opaque registry error.
+      - name: NPM / Ensure minimum npm version for trusted publishing
         run: |
-          # First publish of a package npm has never seen cannot use OIDC —
-          # there is no existing package to attach the trust relationship to.
-          # `npm publish` with a token succeeds either way; once the package
-          # exists on npmjs.com and its trusted-publisher config points at
-          # this workflow, drop NODE_AUTH_TOKEN and OIDC takes over on its own.
-          npm publish --access public
+          CURRENT_NPM=$(npm --version)
+          REQUIRED_NPM="11.5.1"
+          if printf '%s\n%s\n' "$REQUIRED_NPM" "$CURRENT_NPM" | sort -V -C; then
+            echo "npm $CURRENT_NPM already meets the minimum requirement ($REQUIRED_NPM). Skipping upgrade."
+          else
+            echo "npm $CURRENT_NPM is below the minimum requirement ($REQUIRED_NPM). Upgrading…"
+            npm install -g npm@^11.5.1 --registry="https://registry.npmjs.org/"
+          fi
+          echo "node path: $(command -v node)"
+          echo "npm path: $(command -v npm)"
+          node --version
+          npm --version
 
-      # GH-80: pdocs-release.yml (the template shipped to sites scaffolded by
-      # `pdocs new`) shells out to `npx pdocs version` to cut a Mode 2 `stable`
-      # tag — that only resolves once this package is a real, published npm
-      # package rather than `private: true`. Same publish rationale as
-      # ui-bundle above.
-      - name: Publish cli
-        working-directory: code/packages/cli
+      # OIDC trusted publishing only works for a package npm has already
+      # seen — there's no existing package to attach the trust relationship
+      # to on a first publish. Same detection weave.js uses: probe the
+      # registry for each of the five publishable packages (ui-bundle, cli,
+      # antora-extensions, asciidoc-extensions, publish-gh-pages — `example`
+      # is `private: true` and deliberately excluded) and fall back to
+      # NPM_TOKEN for any that are missing.
+      - name: NPM / Verify packages exist in registry
+        id: verify-packages
+        working-directory: code
+        run: |
+          PACKAGES=(ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages)
+          MISSING=()
+          for pkg in "${PACKAGES[@]}"; do
+            PKG_NAME=$(node -p "require('./packages/$pkg/package.json').name")
+            ENCODED_PKG_NAME=$(node -p "encodeURIComponent(process.argv[1])" "$PKG_NAME")
+            RESPONSE_FILE=$(mktemp)
+            if ! HTTP_STATUS=$(curl -sS -o "$RESPONSE_FILE" -w "%{http_code}" \
+              --connect-timeout 10 \
+              --max-time 30 \
+              --retry 3 \
+              --retry-delay 2 \
+              --retry-all-errors \
+              "https://registry.npmjs.org/${ENCODED_PKG_NAME}"); then
+              echo "::error::Failed to verify $PKG_NAME due to npm registry connectivity error"
+              rm -f "$RESPONSE_FILE"
+              exit 1
+            fi
+            case "$HTTP_STATUS" in
+              200)
+                PARSE_STATUS=0
+                node -e "try { const d=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')); process.exit(Object.keys(d.versions||{}).length > 0 ? 0 : 1); } catch(e) { console.error('JSON parse error:', e.message); process.exit(2); }" "$RESPONSE_FILE" || PARSE_STATUS=$?
+                case "$PARSE_STATUS" in
+                  0)
+                    echo "✓ $PKG_NAME exists in registry with active versions"
+                    ;;
+                  1)
+                    echo "✗ $PKG_NAME has no active versions (unpublished) — treating as new"
+                    MISSING+=("$PKG_NAME")
+                    ;;
+                  *)
+                    echo "::error::Failed to verify $PKG_NAME — npm registry returned invalid JSON (HTTP 200)"
+                    rm -f "$RESPONSE_FILE"
+                    exit 1
+                    ;;
+                esac
+                ;;
+              404)
+                echo "✗ $PKG_NAME NOT found in registry"
+                MISSING+=("$PKG_NAME")
+                ;;
+              429|5??)
+                echo "::error::Failed to verify $PKG_NAME due to transient npm registry error (HTTP $HTTP_STATUS)"
+                exit 1
+                ;;
+              *)
+                echo "::error::Failed to verify $PKG_NAME due to unexpected npm registry response (HTTP $HTTP_STATUS)"
+                exit 1
+                ;;
+            esac
+            rm -f "$RESPONSE_FILE"
+          done
+          if [[ ${#MISSING[@]} -gt 0 ]]; then
+            echo "MISSING_PACKAGES=${MISSING[*]}" >> "$GITHUB_ENV"
+            echo "HAS_NEW_PACKAGES=true" >> "$GITHUB_ENV"
+            echo "::warning::New packages detected: ${MISSING[*]} — will use NPM_TOKEN instead of OIDC"
+          else
+            echo "HAS_NEW_PACKAGES=false" >> "$GITHUB_ENV"
+            echo "All packages verified in registry — OIDC publish is safe."
+          fi
+
+      # GH-80/GH-92: ui-bundle, cli, antora-extensions and asciidoc-extensions
+      # are consumed outside this workspace (pdocs-release.yml's `npx pdocs
+      # version`, and sites that want the extensions without the whole
+      # monorepo layout); publish-gh-pages is included too, matching the same
+      # five-package set `just release-local` snapshot-publishes.
+      - name: NPM / Release Perform (OIDC + provenance)
+        if: env.HAS_NEW_PACKAGES == 'false'
         env:
           NPM_CONFIG_PROVENANCE: "true"
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
+        working-directory: code
+        run: |
+          set -euo pipefail
+          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
+            (cd "packages/$pkg" && npm publish --access public)
+          done
 
-      # GH-92: extends the publishable set beyond ui-bundle/cli so a site
-      # outside the monorepo can `npm install` the extensions directly rather
-      # than depend on this repo's workspace layout.
-      - name: Publish antora-extensions
-        working-directory: code/packages/antora-extensions
+      - name: NPM / Release Perform (NPM_TOKEN for new packages)
+        if: env.HAS_NEW_PACKAGES == 'true'
+        env:
+          NPM_AUTH: ${{ secrets.NPM_TOKEN }}
+        working-directory: code
+        run: |
+          if [ -z "${NPM_AUTH:-}" ]; then
+            echo "::error::NPM_TOKEN secret is required for publishing new packages but is not set"
+            exit 1
+          fi
+          TEMP_NPMRC="$(mktemp)"
+          trap 'rm -f "$TEMP_NPMRC"' EXIT
+          cp ~/.npmrc "$TEMP_NPMRC"
+          chmod 600 "$TEMP_NPMRC"
+          echo "//registry.npmjs.org/:_authToken=${NPM_AUTH}" >> "$TEMP_NPMRC"
+          export NPM_CONFIG_USERCONFIG="$TEMP_NPMRC"
+          set -euo pipefail
+          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
+            (cd "packages/$pkg" && npm publish --access public)
+          done
+
+  # Homologated with weave.js's snapshot job: an admin comments
+  # `/publish-snapshot` on an open PR and gets a real npm publish under the
+  # `next` dist-tag, without merging anything — useful for a consuming site
+  # to try a PR's changes before it lands. Gated by the same
+  # `vars.NPM_PUBLISH_ENABLED` switch as `publish-npm` above, so it's off
+  # wherever real publishing is off, and admin-only because it publishes to
+  # the real registry from an arbitrary PR branch.
+  publish-snapshot:
+    name: Publish npm snapshot
+    concurrency: publish-snapshot-${{ github.event.issue.number }}
+    if: github.event_name == 'issue_comment'
+      && github.event.issue.pull_request != null
+      && github.event.comment.body == '/publish-snapshot'
+      && vars.NPM_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Validate admin permissions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: context.actor
+            });
+            core.info(`User permission level: ${data.permission}`);
+            if (data.permission !== 'admin') {
+              core.setFailed(`User @${context.actor} is not a repository admin.`);
+            }
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.issue.number }}/head
+          fetch-depth: 0
+
+      - name: Read toolchain versions
+        id: toolchain
+        run: |
+          {
+            echo "node=$(awk '/^ivm-node /{print $2}' code/.tool-versions)"
+            echo "pnpm=$(awk '/^ivm-pnpm /{print $2}' code/.tool-versions)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ steps.toolchain.outputs.pnpm }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.toolchain.outputs.node }}
+          registry-url: https://registry.npmjs.org/
+          cache: pnpm
+          cache-dependency-path: code/pnpm-lock.yaml
+
+      - name: Setup just
+        uses: extractions/setup-just@v2
+
+      - name: Install dependencies
+        working-directory: code
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        working-directory: code
+        run: pnpm build
+
+      # Never committed or pushed — this bump only exists on the runner's
+      # checkout, long enough to `npm publish` it, same as weave.js's
+      # publish-snapshot job never touching the PR branch's history either.
+      - name: Determine snapshot version
+        id: snapshot
+        working-directory: code
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          CLEAN_VERSION=$(echo "$CURRENT_VERSION" | sed -E 's/-.*$//')
+          SNAPSHOT_VERSION="${CLEAN_VERSION}-SNAPSHOT.${{ github.run_number }}.${{ github.run_attempt }}"
+          echo "version=${SNAPSHOT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Bump to snapshot version
+        run: just bump '${{ steps.snapshot.outputs.version }}'
+
+      - name: NPM / Ensure minimum npm version for trusted publishing
+        run: |
+          CURRENT_NPM=$(npm --version)
+          REQUIRED_NPM="11.5.1"
+          if printf '%s\n%s\n' "$REQUIRED_NPM" "$CURRENT_NPM" | sort -V -C; then
+            echo "npm $CURRENT_NPM already meets the minimum requirement ($REQUIRED_NPM). Skipping upgrade."
+          else
+            echo "npm $CURRENT_NPM is below the minimum requirement ($REQUIRED_NPM). Upgrading…"
+            npm install -g npm@^11.5.1 --registry="https://registry.npmjs.org/"
+          fi
+          echo "node path: $(command -v node)"
+          echo "npm path: $(command -v npm)"
+          node --version
+          npm --version
+
+      - name: NPM / Verify packages exist in registry
+        id: verify-packages
+        working-directory: code
+        run: |
+          PACKAGES=(ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages)
+          MISSING=()
+          for pkg in "${PACKAGES[@]}"; do
+            PKG_NAME=$(node -p "require('./packages/$pkg/package.json').name")
+            ENCODED_PKG_NAME=$(node -p "encodeURIComponent(process.argv[1])" "$PKG_NAME")
+            RESPONSE_FILE=$(mktemp)
+            if ! HTTP_STATUS=$(curl -sS -o "$RESPONSE_FILE" -w "%{http_code}" \
+              --connect-timeout 10 \
+              --max-time 30 \
+              --retry 3 \
+              --retry-delay 2 \
+              --retry-all-errors \
+              "https://registry.npmjs.org/${ENCODED_PKG_NAME}"); then
+              echo "::error::Failed to verify $PKG_NAME due to npm registry connectivity error"
+              rm -f "$RESPONSE_FILE"
+              exit 1
+            fi
+            case "$HTTP_STATUS" in
+              200)
+                PARSE_STATUS=0
+                node -e "try { const d=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')); process.exit(Object.keys(d.versions||{}).length > 0 ? 0 : 1); } catch(e) { console.error('JSON parse error:', e.message); process.exit(2); }" "$RESPONSE_FILE" || PARSE_STATUS=$?
+                case "$PARSE_STATUS" in
+                  0)
+                    echo "✓ $PKG_NAME exists in registry with active versions"
+                    ;;
+                  1)
+                    echo "✗ $PKG_NAME has no active versions (unpublished) — treating as new"
+                    MISSING+=("$PKG_NAME")
+                    ;;
+                  *)
+                    echo "::error::Failed to verify $PKG_NAME — npm registry returned invalid JSON (HTTP 200)"
+                    rm -f "$RESPONSE_FILE"
+                    exit 1
+                    ;;
+                esac
+                ;;
+              404)
+                echo "✗ $PKG_NAME NOT found in registry"
+                MISSING+=("$PKG_NAME")
+                ;;
+              429|5??)
+                echo "::error::Failed to verify $PKG_NAME due to transient npm registry error (HTTP $HTTP_STATUS)"
+                exit 1
+                ;;
+              *)
+                echo "::error::Failed to verify $PKG_NAME due to unexpected npm registry response (HTTP $HTTP_STATUS)"
+                exit 1
+                ;;
+            esac
+            rm -f "$RESPONSE_FILE"
+          done
+          if [[ ${#MISSING[@]} -gt 0 ]]; then
+            echo "MISSING_PACKAGES=${MISSING[*]}" >> "$GITHUB_ENV"
+            echo "HAS_NEW_PACKAGES=true" >> "$GITHUB_ENV"
+            echo "::warning::New packages detected: ${MISSING[*]} — will use NPM_TOKEN instead of OIDC"
+          else
+            echo "HAS_NEW_PACKAGES=false" >> "$GITHUB_ENV"
+            echo "All packages verified in registry — OIDC publish is safe."
+          fi
+
+      - name: NPM / Publish Snapshot (OIDC + provenance)
+        if: env.HAS_NEW_PACKAGES == 'false'
         env:
           NPM_CONFIG_PROVENANCE: "true"
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
+        working-directory: code
+        run: |
+          set -euo pipefail
+          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
+            (cd "packages/$pkg" && npm publish --access public --tag next)
+          done
 
-      - name: Publish asciidoc-extensions
-        working-directory: code/packages/asciidoc-extensions
+      - name: NPM / Publish Snapshot (NPM_TOKEN for new packages)
+        if: env.HAS_NEW_PACKAGES == 'true'
         env:
-          NPM_CONFIG_PROVENANCE: "true"
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
+          NPM_AUTH: ${{ secrets.NPM_TOKEN }}
+        working-directory: code
+        run: |
+          if [ -z "${NPM_AUTH:-}" ]; then
+            echo "::error::NPM_TOKEN secret is required for publishing new packages but is not set"
+            exit 1
+          fi
+          TEMP_NPMRC="$(mktemp)"
+          trap 'rm -f "$TEMP_NPMRC"' EXIT
+          cp ~/.npmrc "$TEMP_NPMRC"
+          chmod 600 "$TEMP_NPMRC"
+          echo "//registry.npmjs.org/:_authToken=${NPM_AUTH}" >> "$TEMP_NPMRC"
+          export NPM_CONFIG_USERCONFIG="$TEMP_NPMRC"
+          set -euo pipefail
+          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
+            (cd "packages/$pkg" && npm publish --access public --tag next)
+          done
+
+      - name: Result / Comment on PR
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ job.status }}';
+            const authMethod = '${{ env.HAS_NEW_PACKAGES }}' === 'true'
+              ? 'NPM_TOKEN (new packages detected)'
+              : 'OIDC trusted publishing (provenance)';
+
+            const body = status === 'success'
+              ? [
+                  "### :rocket: NPM snapshot published",
+                  "",
+                  `- Version: \`${{ steps.snapshot.outputs.version }}\``,
+                  "- Tag: `next`",
+                  `- Auth: ${authMethod}`
+                ]
+              : [
+                  "### :x: NPM snapshot publication failed",
+                  "",
+                  "Please check the workflow logs for details."
+                ];
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body.join("\n")
+            });

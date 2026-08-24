@@ -451,6 +451,13 @@ outdated: (_hdr "outdated")
 # `--registry` flag, and points you at a scoped `.npmrc` line to add to
 # whatever repo you're testing against instead.
 
+# Show the not-yet-released entries in CHANGELOG.md
+[group('release')]
+changelog: (_hdr "changelog")
+    #!/usr/bin/env bash
+    set -euo pipefail
+    awk '/^## \[Unreleased\]/{f=1; next} f && /^## \[/{exit} f' CHANGELOG.md
+
 # Start an ephemeral local npm registry (Verdaccio) on :4873, for release-local
 [group('release')]
 [no-exit-message]

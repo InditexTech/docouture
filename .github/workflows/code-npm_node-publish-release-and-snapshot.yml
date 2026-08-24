@@ -35,14 +35,20 @@ on:
           - "release-type/patch"
 
 jobs:
-  publish-snapshot:
-    name: Publish Snapshot
-    concurrency: code-publish-snapshot-${{ github.ref }}
+  # Split from a single `publish-snapshot` job into build (this job) +
+  # publish (below) so that the step which checks out an admin-approved but
+  # still author-controlled PR branch never runs in the same job as the one
+  # holding NPM_TOKEN / the OIDC id-token. Building from untrusted content is
+  # unavoidable here — the whole point of `/publish-snapshot` is to preview
+  # the PR's own code — but that untrusted content should never share a job,
+  # and therefore never share secrets, with the actual publish step. This job
+  # only packs tarballs (`pnpm pack`); it has no publish credentials to leak.
+  build-snapshot:
+    name: Build Snapshot
+    concurrency: code-build-snapshot-${{ github.ref }}
     permissions:
-      id-token: write
       contents: read
-      issues: write
-      pull-requests: write
+      pull-requests: read
     if: >
       github.event_name == 'issue_comment' &&
       github.event.issue.pull_request != null &&
@@ -50,6 +56,9 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       ASDF_BRANCH_VERSION: 0.18.0
+    outputs:
+      snapshot_version: ${{ env.SNAPSHOT_VERSION }}
+      has_new_packages: ${{ env.HAS_NEW_PACKAGES }}
     steps:
       - name: Validate admin permissions
         id: permission-check
@@ -126,26 +135,25 @@ jobs:
       # here fails with "plugin node not found in repository". Homologated
       # with weave.js's code-npm_node-publish-release-and-snapshot.yml and
       # pdocs' own code-npm_node-pr-verify.yml, which use the identical asdf setup pattern.
-      # A random delimiter, not the literal "EOF": a heredoc into $GITHUB_ENV
-      # keyed off a fixed, guessable terminator lets any line in the appended
-      # content that happens to equal it close the heredoc early and inject
-      # arbitrary env vars into every later step of this job. code/.tool-versions
-      # is repo-controlled today, but this is the sound pattern regardless of
-      # what's being appended.
-      - name: Save tool-versions content
-        run: |
-          delimiter="TOOL_VERSIONS_$(openssl rand -hex 8)"
-          {
-            echo "TOOL_VERSIONS<<${delimiter}"
-            cat code/.tool-versions
-            echo "${delimiter}"
-          } >> "$GITHUB_ENV"
+      #
+      # asdf-vm/actions/install reads an existing `.tool-versions` from the
+      # job's working directory when no `tool_versions` input is given — so
+      # this just copies the repo-relative file into place instead of piping
+      # its (PR-branch-controlled) content through a `$GITHUB_ENV` heredoc.
+      # The previous approach appended `TOOL_VERSIONS<<${delimiter} ... cat
+      # code/.tool-versions ... ${delimiter}` to `$GITHUB_ENV`: even with a
+      # randomized delimiter, that pattern hands attacker-controlled file
+      # content straight into the mechanism GitHub Actions uses to define new
+      # environment variables for every later step in this job, which is
+      # exactly the shape CodeQL's envvar-injection query flags on a checkout
+      # of untrusted content. A plain `cp` has no such interpretation step.
+      - name: Stage tool-versions file for asdf
+        run: cp code/.tool-versions .tool-versions
 
       - name: Setup asdf environment
         uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302 # v4.0.0
         if: steps.asdf-cache.outputs.cache-hit != 'true'
         with:
-          tool_versions: ${{ env.TOOL_VERSIONS }}
           asdf_version: ${{ env.ASDF_BRANCH_VERSION }}
 
       - name: Save asdf Cache
@@ -342,30 +350,121 @@ jobs:
         working-directory: code
         run: pnpm build
 
-      # weave.js's equivalent is a single `npm run publish:snapshot` fanning
-      # out across nx targets; pdocs has no publish nx target, so this loops
-      # `pnpm publish` over scripts/publishable-packages.mjs's list directly.
-      # `pnpm publish` (not `npm publish`) is required: it rewrites each
-      # package's `workspace:*` cross-references to the resolved version at
-      # pack time — `npm publish` ships the literal string, which breaks
-      # installs in any consuming repo that isn't itself a pnpm workspace.
+      # Packs tarballs instead of publishing them directly. `pnpm pack` (not
+      # `npm pack`) is required for the same reason `pnpm publish` was used
+      # before: it rewrites each package's `workspace:*` cross-references to
+      # the resolved version at pack time — `npm pack` ships the literal
+      # string, which breaks installs in any consuming repo that isn't itself
+      # a pnpm workspace. The actual `npm publish` of these tarballs happens
+      # in the separate `publish-snapshot` job below, which never checks out
+      # this (admin-approved but still author-controlled) PR branch — only
+      # this job does, and it never sees NPM_TOKEN or the OIDC id-token. That
+      # split, not a runtime check, is what keeps an arbitrary `package.json`
+      # build/postinstall script on the PR branch from ever running in a job
+      # that holds publish credentials.
+      #
+      # Tarballs land in two directories so the publish job knows which auth
+      # method each needs without re-deriving it: packages already on the
+      # registry (OIDC-eligible) vs. brand new ones (which must use
+      # NPM_TOKEN, since npm's trusted-publisher/OIDC binding is configured
+      # per already-existing package).
+      - name: Pack snapshot tarballs
+        working-directory: code
+        run: |
+          set -euo pipefail
+          mkdir -p "$GITHUB_WORKSPACE/dist-packages/existing" "$GITHUB_WORKSPACE/dist-packages/new"
+          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
+          read -r -a MISSING <<< "${MISSING_PACKAGES:-}"
+          for pkg in "${PACKAGES[@]}"; do
+            PKG_NAME=$(node -p "require('./packages/$pkg/package.json').name")
+            dest="existing"
+            for m in "${MISSING[@]}"; do
+              [ "$m" = "$PKG_NAME" ] && dest="new"
+            done
+            (cd "packages/$pkg" && pnpm pack --pack-destination "$GITHUB_WORKSPACE/dist-packages/$dest")
+          done
+          echo "Packed tarballs:"
+          find "$GITHUB_WORKSPACE/dist-packages" -name '*.tgz' -print
+
+      - name: Upload snapshot tarballs
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: snapshot-tarballs
+          path: dist-packages
+          retention-days: 1
+          if-no-files-found: error
+
+  # Runs the actual `npm publish`, and holds the OIDC id-token / NPM_TOKEN
+  # required for it. Deliberately does *not* check out the PR branch — it
+  # only downloads the tarballs `build-snapshot` already packed, so an
+  # author-controlled `package.json` script never executes in the job that
+  # can reach the registry. See the `Pack snapshot tarballs` comment above
+  # for the full rationale.
+  publish-snapshot:
+    name: Publish Snapshot
+    needs: build-snapshot
+    concurrency: code-publish-snapshot-${{ github.ref }}
+    permissions:
+      id-token: write
+      contents: read
+      issues: write
+      pull-requests: write
+    if: >
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request != null &&
+      github.event.comment.body == '/publish-snapshot'
+    runs-on: ubuntu-24.04
+    env:
+      SNAPSHOT_VERSION: ${{ needs.build-snapshot.outputs.snapshot_version }}
+      HAS_NEW_PACKAGES: ${{ needs.build-snapshot.outputs.has_new_packages }}
+    steps:
+      - name: Download snapshot tarballs
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: snapshot-tarballs
+          path: dist-packages
+
+      - name: Setup Node.js
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "22"
+
+      - name: NPM / Set npmrc registry
+        env:
+          NPM_REGISTRY: "https://registry.npmjs.org/"
+        run: |
+          echo "registry=${NPM_REGISTRY}" >> /home/runner/.npmrc
+          echo "@inditextech:registry=${NPM_REGISTRY}" >> /home/runner/.npmrc
+
+      - name: NPM / Ensure minimum npm version for trusted publishing
+        run: |
+          CURRENT_NPM=$(npm --version)
+          REQUIRED_NPM="11.5.1"
+          if printf '%s\n%s\n' "$REQUIRED_NPM" "$CURRENT_NPM" | sort -V -C; then
+            echo "npm $CURRENT_NPM already meets the minimum requirement ($REQUIRED_NPM). Skipping upgrade."
+          else
+            echo "npm $CURRENT_NPM is below the minimum requirement ($REQUIRED_NPM). Upgrading…"
+            npm install -g npm@^11.5.1 --registry="https://registry.npmjs.org/"
+          fi
+          node --version
+          npm --version
+
       - name: NPM / Publish Snapshot (OIDC + provenance)
         if: env.HAS_NEW_PACKAGES == 'false'
         env:
           NPM_CONFIG_PROVENANCE: "true"
-        working-directory: code
         run: |
           set -euo pipefail
-          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
-          for pkg in "${PACKAGES[@]}"; do
-            (cd "packages/$pkg" && pnpm publish --access public --tag next --no-git-checks)
+          shopt -s nullglob
+          tarballs=(dist-packages/existing/*.tgz)
+          for tarball in "${tarballs[@]}"; do
+            npm publish "$tarball" --access public --tag next
           done
 
       - name: NPM / Publish Snapshot (NPM_TOKEN for new packages)
         if: env.HAS_NEW_PACKAGES == 'true'
         env:
           NPM_AUTH: ${{ secrets.NPM_TOKEN }}
-        working-directory: code
         run: |
           if [ -z "${NPM_AUTH:-}" ]; then
             echo "::error::NPM_TOKEN secret is required for publishing new packages but is not set"
@@ -378,9 +477,10 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH}" >> "$TEMP_NPMRC"
           export NPM_CONFIG_USERCONFIG="$TEMP_NPMRC"
           set -euo pipefail
-          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
-          for pkg in "${PACKAGES[@]}"; do
-            (cd "packages/$pkg" && pnpm publish --access public --tag next --no-git-checks)
+          shopt -s nullglob
+          tarballs=(dist-packages/new/*.tgz)
+          for tarball in "${tarballs[@]}"; do
+            npm publish "$tarball" --access public --tag next
           done
 
       - name: Result / Comment on PR
@@ -491,26 +591,17 @@ jobs:
           path: ~/.asdf
           key: ${{ runner.os }}-asdf-${{ env.ASDF_BRANCH_VERSION }}-${{ hashFiles('code/.tool-versions') }}
 
-      # A random delimiter, not the literal "EOF": a heredoc into $GITHUB_ENV
-      # keyed off a fixed, guessable terminator lets any line in the appended
-      # content that happens to equal it close the heredoc early and inject
-      # arbitrary env vars into every later step of this job. code/.tool-versions
-      # is repo-controlled today, but this is the sound pattern regardless of
-      # what's being appended.
-      - name: Save tool-versions content
-        run: |
-          delimiter="TOOL_VERSIONS_$(openssl rand -hex 8)"
-          {
-            echo "TOOL_VERSIONS<<${delimiter}"
-            cat code/.tool-versions
-            echo "${delimiter}"
-          } >> "$GITHUB_ENV"
+      # asdf-vm/actions/install reads an existing `.tool-versions` from the
+      # job's working directory when no `tool_versions` input is given — see
+      # the `build-snapshot` job's identical step for why this is preferred
+      # over piping the file's content through a `$GITHUB_ENV` heredoc.
+      - name: Stage tool-versions file for asdf
+        run: cp code/.tool-versions .tool-versions
 
       - name: Setup asdf environment
         uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302 # v4.0.0
         if: steps.asdf-cache.outputs.cache-hit != 'true'
         with:
-          tool_versions: ${{ env.TOOL_VERSIONS }}
           asdf_version: ${{ env.ASDF_BRANCH_VERSION }}
 
       - name: Save asdf Cache

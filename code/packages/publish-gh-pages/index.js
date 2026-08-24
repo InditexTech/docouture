@@ -107,6 +107,20 @@ function assertSafeGitRemote(value, name = 'remote') {
  * place, the same seam-over-mock reasoning as the `ghpages` parameter below
  * (a real `git` binary is not something a unit test should shell out to).
  */
+async function assertSafeGitBranch(branch, fieldName = 'branch') {
+  if (typeof branch !== 'string' || branch.length === 0) {
+    throw new Error(`Invalid ${fieldName}: expected a non-empty string`)
+  }
+  if (branch.startsWith('-')) {
+    throw new Error(`Invalid ${fieldName}: must not start with '-'`)
+  }
+  try {
+    await execFileAsync('git', ['check-ref-format', '--branch', branch])
+  } catch (_err) {
+    throw new Error(`Invalid ${fieldName}: ${branch}`)
+  }
+}
+
 const defaultGit = {
   /** @returns {Promise<boolean>} Whether `branch` already exists on `remote`. */
   async branchExists(remote, branch) {
@@ -201,6 +215,7 @@ module.exports = async function publishGhPages(dir, options = {}, ghpages = requ
   }
 
   const branch = options.branch || 'gh-pages'
+  await assertSafeGitBranch(branch, 'branch')
   const remote = options.remote || 'origin'
   const repo =
     options.repo ||

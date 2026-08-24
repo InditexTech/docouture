@@ -63,7 +63,13 @@ jobs:
       # antora-playbook.yml's own comment) already fails the Build step above
       # on a broken cross-reference — but that only covers refs Antora
       # itself resolves. Raw http(s) links in content are invisible to it, so
-      # linkinator crawls the built HTML separately to catch those (dead
-      # external links, bad anchors) before they reach a PR reviewer.
+      # `check-links` (package.json's own script, see scripts/check-links.mjs)
+      # crawls the built HTML separately to catch those before they reach a
+      # PR reviewer. It only fails on a broken EXTERNAL link — a broken local
+      # one is printed as a warning, never a failure, since this job builds
+      # with antora-playbook.local.yml (a single, HEAD-only source) and
+      # content generated from config (the module switcher, the footer) can
+      # legitimately point at another version/component this reduced build
+      # doesn't have. See that script's own header comment.
       - name: Check links
-        run: npx linkinator build/site --recurse --skip "^(mailto:|tel:)"
+        run: __PDOCS_PM__ run check-links

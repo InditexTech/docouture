@@ -125,12 +125,13 @@ difference from versioned mode: there "release" means create a new immutable ref
 and a new version *entry*; here it means move an existing tag and keep the same two
 version entries.
 
-Moving `stable` does trigger a rebuild: the sibling **pdocs-publish.yml** workflow
-(`.github/workflows/pdocs-publish.yml`, also templated by `pdocs new`) triggers on
-`push: tags: ['stable']` (and `branches: [main]`, and versioned mode's `tags: ['v*']`),
-builds the site fresh — Antora re-aggregates every ref `content.sources[]` matches, not
-just the one that changed — and hands off to the CLI to publish it. See "Follow-up work"
-below for what that hand-off does not yet do.
+Moving `stable` does trigger a rebuild: pdocs-release.yml's last job calls the sibling
+**pdocs-publish.yml** workflow (`.github/workflows/pdocs-publish.yml`, also templated by
+`pdocs new`) directly — as a reusable job (`needs: release` + `uses:`), not via a push
+trigger — once release has actually cut something. Publish then builds the site fresh —
+Antora re-aggregates every ref `content.sources[]` matches, not just the one that changed —
+and hands off to the CLI to publish it. See "Follow-up work" below for what that hand-off
+does not yet do.
 
 ## Cutting a release: pdocs-release.yml
 

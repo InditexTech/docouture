@@ -69,6 +69,11 @@ urls:
 runtime:
   log:
     failure_level: warn
+    # See antora-playbook.yml's own comment on this key: Antora's own
+    # default is 'warn', which would otherwise silently drop
+    # @inditextech/pdocs-antora-extensions' pdocs-version-report and
+    # pdocs-search-index diagnostics — both logged at 'info'.
+    level: info
 
 asciidoc:
   attributes:

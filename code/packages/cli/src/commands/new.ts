@@ -4,11 +4,12 @@ import { input, select } from '@inquirer/prompts'
 import { execFileSync } from 'node:child_process'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import pc from 'picocolors'
 
 import { parseArgs } from '../lib/args.js'
 import { readCliInfo } from '../lib/cli-info.js'
 import { copyTemplate, exists, isEmptyOrMissing, writeTemplateFile } from '../lib/copy-template.js'
-import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-manager.js'
+import { detectPackageManager, packageManagerPlan, type PackageManagerPlan } from '../lib/detect-package-manager.js'
 
 // Matches the rule an npm package name (and, not coincidentally, an Antora
 // component name — both end up as URL segments) can safely be: this is
@@ -71,6 +72,47 @@ function isInsideGitWorkTree(dir: string): boolean {
   } catch {
     return false
   }
+}
+
+// The web (https) form of this repo's `origin` remote, or undefined if
+// there isn't one configured yet (a fresh `git init` with no remote added).
+// Baked into the scaffolded package.json's `pdocs.checkLinks.ignore` (see
+// TemplateValues.repoIgnoreGlob, and scripts/check-links.mjs's own comment
+// on that key) so the repo-link.hbs header/nav link — which 404s to an
+// anonymous crawler whenever this repo is private, indistinguishable from
+// one that doesn't exist — doesn't fail pdocs-pr-verify.yml/pdocs-release.yml
+// out of the box. Converts an SSH remote (`git@host:owner/repo.git`) to its
+// https equivalent the same way an https remote is just stripped of its
+// trailing `.git`; anything else unparseable is treated the same as "no
+// remote yet".
+function repoWebUrl(dir: string): string | undefined {
+  let remote: string
+  try {
+    remote = execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: dir, stdio: ['ignore', 'pipe', 'ignore'] })
+      .toString()
+      .trim()
+  } catch {
+    return undefined
+  }
+  const ssh = /^git@([^:]+):(.+?)(\.git)?$/.exec(remote)
+  if (ssh) return `https://${ssh[1]}/${ssh[2]}`
+  if (/^https?:\/\//.test(remote)) return remote.replace(/\.git$/, '')
+  return undefined
+}
+
+// TemplateValues.repoIgnoreGlob is always present as its own array element
+// in the scaffolded package.json (see copy-template.ts's own comment on why
+// that array can't ever shrink an element away) — when there's no `origin`
+// remote yet to derive a real glob from, this sentinel fills the same slot
+// instead of an empty string. It has no `*`/`?`, so globToRegExp
+// (check-links.mjs) compiles it to a literal-substring match that will
+// never occur inside a real URL, rather than an empty pattern (which would
+// match — and silently ignore — every single link).
+const NO_REPO_REMOTE_GLOB = 'pdocs-new:no-origin-remote-configured'
+
+function repoIgnoreGlob(dir: string): string {
+  const url = repoWebUrl(dir)
+  return url !== undefined ? `${url}*` : NO_REPO_REMOTE_GLOB
 }
 
 // The bits of stdin/stdout the interactive wizard needs, pulled behind an
@@ -312,6 +354,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     pmLockfile: pm.lockfile,
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
+    repoIgnoreGlob: repoIgnoreGlob(target),
   }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own
@@ -337,7 +380,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     )
     await writeTemplateFile(
       join(starterDir, 'docs', 'release-version.versioned'),
-      join(docsDir, 'docs', '.release-version'),
+      join(docsDir, '.release-version'),
       values
     )
 
@@ -350,44 +393,71 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     }
   }
 
-  console.log(`created ${relative(process.cwd(), docsDir) || 'docs'}`)
-  console.log(`created ${relative(process.cwd(), workflowsDir)}`)
-  console.log(`created ${relative(process.cwd(), join(target, 'AGENTS.md'))}`)
-  console.log(`created ${relative(process.cwd(), join(target, '.opencode', 'skills'))}`)
-  console.log(`created ${relative(process.cwd(), join(target, '.claude', 'skills'))}`)
+  printNextSteps({ mode, pm, target, docsDir, workflowsDir })
+
+  return 0
+}
+
+// Everything printed after scaffolding finishes, grouped into labeled
+// sections so it reads as a short runbook rather than a flat log of
+// "created X" lines. Headers use picocolors' bold, matching bin.ts's own use
+// of it for the CLI banner.
+function printNextSteps(args: {
+  mode: Mode
+  pm: PackageManagerPlan
+  target: string
+  docsDir: string
+  workflowsDir: string
+}): void {
+  const { mode, pm, target, docsDir, workflowsDir } = args
+
+  console.log(pc.bold('Created:'))
+  console.log(`  ${relative(process.cwd(), docsDir) || 'docs'}`)
+  console.log(`  ${relative(process.cwd(), workflowsDir)}`)
+  console.log(`  ${relative(process.cwd(), join(target, 'AGENTS.md'))}`)
+  console.log(`  ${relative(process.cwd(), join(target, '.opencode', 'skills'))}`)
+  console.log(`  ${relative(process.cwd(), join(target, '.claude', 'skills'))}`)
+
   console.log('')
-  console.log('next steps:')
+  console.log(pc.bold('Next steps:'))
   console.log('  cd docs')
   console.log(`  ${pm.installCmd}`)
   console.log(`  ${pm.devCmd}`)
 
   console.log('')
   if (mode === 'versioned') {
-    console.log('this site is on Versioned (Full History) versioning — main is the prerelease channel.')
-    console.log(
-      'run the pdocs-release workflow (.github/workflows/pdocs-release.yml) to cut your first vX.Y.Z release.'
-    )
-    console.log('see the docs-versioning skill (.opencode/skills, .claude/skills) for the full mechanism.')
+    console.log(pc.bold('Versioning: Versioned (Full History)'))
+    console.log('  main is the prerelease channel.')
+    console.log('')
+    console.log('  To cut your first release:')
+    console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
+    console.log('    2. Open a PR that sets the target version in docs/.release-version (e.g. "1.0.0")')
+    console.log("    3. Label the PR 'docs/release'")
+    console.log('    4. Merge it — pdocs-release.yml runs automatically and tags vX.Y.Z')
+    console.log('')
+    console.log('  (or skip the label/PR entirely: run pdocs-release.yml manually via workflow_dispatch')
+    console.log('  and type the version)')
+    console.log('')
+    console.log('  See the docs-versioning skill (.opencode/skills, .claude/skills) for the full mechanism.')
   } else {
-    console.log('this site is on Standalone (Stable + Prerelease) versioning — main is the prerelease channel.')
-    console.log(
-      'run the pdocs-release workflow (.github/workflows/pdocs-release.yml) to cut your first stable release.'
-    )
+    console.log(pc.bold('Versioning: Standalone (Stable + Prerelease)'))
+    console.log('  main is the prerelease channel.')
+    console.log('')
+    console.log('  To cut your first stable release:')
+    console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
+    console.log("    2. Merge any PR labeled 'docs/release' into main — pdocs-release.yml runs automatically")
+    console.log('')
+    console.log('  (or skip the label/PR entirely: run pdocs-release.yml manually via workflow_dispatch,')
+    console.log('  default input is fine)')
   }
-  console.log('see the documenting-your-repo skill (.opencode/skills, .claude/skills) to get started —')
-  console.log('it plans what to document and pulls in docs-internals/writing-docs-pages as needed.')
 
   console.log('')
-  console.log(
-    "pdocs-release.yml also runs automatically on a PR merge carrying a 'docs/release' label — GitHub does not"
-  )
-  console.log(
-    "create that label for you: run 'gh label create docs/release' in this repository, or use workflow_dispatch"
-  )
-  console.log(
-    'instead until it exists. See docs/docs/modules/main/pages/prerequisites.adoc for that and the rest of' +
-      ' what a public GitHub Pages site needs before its first publish.'
-  )
+  console.log(pc.bold('Get started:'))
+  console.log('  See the documenting-your-repo skill (.opencode/skills, .claude/skills) — it plans what to')
+  console.log('  document and pulls in docs-internals/writing-docs-pages as needed.')
 
-  return 0
+  console.log('')
+  console.log(pc.bold('Before your first publish:'))
+  console.log('  See docs/docs/modules/main/pages/prerequisites.adoc for what a public GitHub Pages site')
+  console.log('  needs before its first publish.')
 }

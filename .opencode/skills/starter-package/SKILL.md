@@ -43,7 +43,7 @@ code/packages/cli/templates/starter/
       pages/index.adoc                  "what is here"
       pages/getting-started.adoc        add a page, build, set a version
   .github/workflows/
-    pdocs-publish.yml                   build (and, once it exists, deploy) on push
+    pdocs-publish.yml                   build (and, once it exists, deploy); called by pdocs-release.yml, or manual
     pdocs-pr-verify.yml                 HEAD-only build on every pull_request
     pdocs-release.yml                   cuts a release for either mode — detects which
     pdocs-release-preview.yml           comments the target version/tag on a docs/release-labelled PR, before merge

@@ -23,6 +23,19 @@ export interface TemplateValues {
   pmLockfile: string
   pmCiCmd: string
   pmSetupStepYaml: string
+  // A glob string for `package.json`'s scaffolded `pdocs.checkLinks.ignore`
+  // (see scripts/check-links.mjs's own comment on that key) — either
+  // `https://github.com/owner/repo*`, or, when there's no `origin` remote
+  // yet configured, a sentinel string that can never realistically match a
+  // real URL (see new.ts's own repoIgnoreGlob()). A bare token substituted
+  // directly into a JSON string literal already in the template — unlike
+  // the comma-and-quotes "whole segment" trick pmSetupStepYaml above uses,
+  // this one has to survive `package.json` being reformatted by prettier
+  // (which freely reflows a JSON array's elements across lines, unlike a
+  // YAML comment), so it can't depend on anything being on the same line as
+  // anything else. Always present as an array element either way — no
+  // "empty means the element vanishes" case to get wrong.
+  repoIgnoreGlob: string
 }
 
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
@@ -45,6 +58,10 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   // value (which ends in its own `\n` — see packageManagerPlan) or the
   // empty npm value drop cleanly in its place.
   '      # __PDOCS_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
+  // A bare token this time, unlike pmSetupStepYaml above — see
+  // TemplateValues.repoIgnoreGlob's own comment for why the whole-segment
+  // trick doesn't survive here.
+  __PDOCS_REPO_IGNORE_GLOB__: 'repoIgnoreGlob',
 }
 
 // `<!-- prettier-ignore -->` directives exist only to stop prettier mangling a

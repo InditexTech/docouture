@@ -95,8 +95,8 @@ jobs:
           MODE: ${{ steps.detect.outputs.mode }}
         run: |
           if [ "$MODE" = "versioned" ]; then
-            if [ -f docs/.release-version ]; then
-              version=$(tr -d '[:space:]' < docs/.release-version)
+            if [ -f .release-version ]; then
+              version=$(tr -d '[:space:]' < .release-version)
             else
               version=""
             fi

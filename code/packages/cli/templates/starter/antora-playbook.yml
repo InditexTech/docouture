@@ -100,12 +100,28 @@ urls:
   # requirement; drop this line for Antora's plain default if the deployed
   # site sits behind something that prefers literal .html routes.
   html_extension_style: indexify
+  # In this standalone (stable/prerelease) versioning setup, `.../stable/…`
+  # is already a fixed segment that never moves on release — unlike
+  # versioned mode's per-tag URLs, it doesn't need a "latest" alias to stay
+  # stable. This just adds a second, redundant `.../latest/…` alias pointing
+  # at whatever Antora computes as latest (the `stable` version, once a
+  # first release exists), for the case something external specifically
+  # expects the literal word "latest" in a URL. Safe to remove if unused.
+  latest_version_segment: latest
 
 runtime:
   # Fail the build on broken xrefs and other content problems rather than
   # publishing a site with silent gaps.
   log:
     failure_level: warn
+    # Antora's own default is 'warn' (@antora/playbook-builder's convict
+    # schema, not @antora/logger's own 'info' default, which never actually
+    # applies here) — below that, @inditextech/pdocs-antora-extensions'
+    # diagnostic reports (pdocs-version-report: which versions Antora
+    # resolved and which it picked as latest; pdocs-search-index: how many
+    # pages/records were indexed) both log at 'info' and would otherwise be
+    # silently dropped, not merely hard to find in the build output.
+    level: info
 
 asciidoc:
   attributes:

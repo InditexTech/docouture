@@ -36,12 +36,7 @@ type Mode = (typeof MODES)[number]
 // as a literal list here so the pre-flight conflict check below can name
 // exactly which ones would be overwritten without having to read the
 // template directory to find out.
-const WORKFLOW_NAMES = [
-  'pdocs-publish.yml',
-  'pdocs-release.yml',
-  'pdocs-release-preview.yml',
-  'pdocs-pr-verify.yml',
-]
+const WORKFLOW_NAMES = ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-release-preview.yml', 'pdocs-pr-verify.yml']
 
 // Repo-root-relative paths `templates/agent-support/` lands under (see
 // new.ts's own copyTemplate call below) — kept as a literal list, same

@@ -55,10 +55,32 @@ module.exports = function registerSearchIndex(context) {
     const outputDir = playbook.ui?.outputDir ?? '_'
     const defaultLayout = playbook.ui?.defaultLayout || DEFAULT_LAYOUT_NAME
 
+    // Site-wide feedback (GH-103-adjacent): a component version producing
+    // no search records used to fail silently — the index file for it
+    // simply never got written, with nothing in the log to explain why.
+    // These totals, plus the per-component-version summary below, make what
+    // actually got indexed (or didn't) visible on every build without
+    // reading the produced JSON files.
+    let totalPages = 0
+    let totalRecords = 0
+    let totalFiles = 0
+
     for (const component of contentCatalog.getComponents()) {
       for (const componentVersion of component.versions) {
+        const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
+        const pages = contentCatalog.getPages(
+          (page) =>
+            page.out &&
+            page.src.component === componentVersion.name &&
+            page.src.version === componentVersion.version &&
+            resolveLayout(page, defaultLayout) !== HOME_LAYOUT_NAME
+        )
         const records = buildComponentVersionRecords(componentVersion, contentCatalog, defaultLayout, logger)
-        if (!records.length) continue
+
+        if (!records.length) {
+          logger.warn('%s produced no search records; no search index written', where)
+          continue
+        }
 
         const basename = componentVersion.version
           ? `${componentVersion.name}-${componentVersion.version}.json`
@@ -83,8 +105,21 @@ module.exports = function registerSearchIndex(context) {
         // for why the UI resolves this against uiRootPath rather than being
         // handed an absolute URL.
         componentVersion.searchIndex = basename
+
+        logger.info('%s: %s pages, %s search records -> %s', where, pages.length, records.length, outPath)
+
+        totalPages += pages.length
+        totalRecords += records.length
+        totalFiles += 1
       }
     }
+
+    logger.info(
+      'search index totals: %s pages, %s records, %s index file(s) written',
+      totalPages,
+      totalRecords,
+      totalFiles
+    )
   })
 }
 

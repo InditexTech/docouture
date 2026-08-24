@@ -91,7 +91,7 @@ doctor: (_hdr "doctor")
     ok()   { printf '  %s ok %s  %s\n' "$green" "$off" "$1"; }
 
     echo "toolchain"
-    want_node=$(awk '/^ivm-node /{print $2}' .tool-versions)
+    want_node=$(awk '/^nodejs /{print $2}' .tool-versions)
     have_node=$(node --version 2>/dev/null | tr -d 'v')
     if [ "$want_node" = "$have_node" ]; then
       ok "node $have_node"
@@ -99,7 +99,7 @@ doctor: (_hdr "doctor")
       fail "node ${have_node:-missing}, expected $want_node — run 'asdf install'"
     fi
 
-    want_pnpm=$(awk '/^ivm-pnpm /{print $2}' .tool-versions)
+    want_pnpm=$(awk '/^pnpm /{print $2}' .tool-versions)
     have_pnpm=$(pnpm --version 2>/dev/null)
     if [ "$want_pnpm" = "$have_pnpm" ]; then
       ok "pnpm $have_pnpm"

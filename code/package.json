@@ -16,7 +16,10 @@
     "test": "nx run-many -t test",
     "clean": "nx run-many -t clean",
     "format": "prettier --write . ../README.md",
-    "format:check": "prettier --check . ../README.md"
+    "format:check": "prettier --check . ../README.md",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run format:check && nx run-many -t build --exclude=@inditextech/pdocs-example && pnpm run test",
+    "version:release": "pnpm version \"$RELEASE_VERSION\" --no-git-tag-version --loglevel error && pnpm -r exec -- npm version \"$RELEASE_VERSION\" --allow-same-version --no-git-tag-version --loglevel error",
+    "release:prepare": "prettier --write --log-level warn package.json 'packages/*/package.json'"
   },
   "devDependencies": {
     "@eslint/js": "~10.0.1",

@@ -108,8 +108,11 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     pmSetupStepYaml: pm.setupStepYaml,
     // upgrade never re-copies docs/ (see below) — package.json, the only
     // template file this placeholder appears in, is never touched here — so
-    // there's nothing meaningful to compute it from.
-    repoIgnoreGlob: '',
+    // there's nothing meaningful to compute it from. Not an empty string:
+    // an empty glob (see check-links.mjs's globToRegExp) compiles to a
+    // pattern matching every URL, which would be a silent, dangerous no-op
+    // if this value were ever actually substituted somewhere.
+    repoIgnoreGlob: 'unused-by-upgrade',
   }
 
   const workflowsDir = join(target, '.github', 'workflows')

@@ -100,6 +100,21 @@ function repoWebUrl(dir: string): string | undefined {
   return undefined
 }
 
+// TemplateValues.repoIgnoreGlob is always present as its own array element
+// in the scaffolded package.json (see copy-template.ts's own comment on why
+// that array can't ever shrink an element away) — when there's no `origin`
+// remote yet to derive a real glob from, this sentinel fills the same slot
+// instead of an empty string. It has no `*`/`?`, so globToRegExp
+// (check-links.mjs) compiles it to a literal-substring match that will
+// never occur inside a real URL, rather than an empty pattern (which would
+// match — and silently ignore — every single link).
+const NO_REPO_REMOTE_GLOB = 'pdocs-new:no-origin-remote-configured'
+
+function repoIgnoreGlob(dir: string): string {
+  const url = repoWebUrl(dir)
+  return url !== undefined ? `${url}*` : NO_REPO_REMOTE_GLOB
+}
+
 // The bits of stdin/stdout the interactive wizard needs, pulled behind an
 // interface so tests can hand it a scripted stream pair instead of a real
 // TTY. `isTTY` decides whether the wizard runs at all — defaults to
@@ -330,8 +345,6 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // lib/detect-package-manager.ts for the precedence this follows.
   const pm = packageManagerPlan(detectPackageManager(target))
 
-  const repoUrl = repoWebUrl(target)
-
   const values = {
     name,
     title,
@@ -341,7 +354,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     pmLockfile: pm.lockfile,
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
-    repoIgnoreGlob: repoUrl !== undefined ? `, "${repoUrl}*"` : '',
+    repoIgnoreGlob: repoIgnoreGlob(target),
   }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own

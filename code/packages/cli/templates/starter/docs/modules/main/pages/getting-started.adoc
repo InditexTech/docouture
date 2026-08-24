@@ -123,6 +123,14 @@ Optional: a custom domain is a `cname` string under this package's own
 a `CNAME` file alongside the built site. Leave the block empty, as scaffolded,
 for a plain `github.io` URL.
 
+The empty block is not "no config" — `@inditextech/pdocs-publish-gh-pages`
+defaults `nojekyll` to `true` regardless, writing a `.nojekyll` file at the
+published branch's root. Without it, GitHub Pages' own Jekyll processing
+silently drops every `_`-prefixed path — exactly where the UI bundle's own
+assets live (`/_/css/...`, `/_/js/...`) — and the published site loads
+unstyled. Only worth touching if something else needs Jekyll processing on;
+pass `"nojekyll": false` in that same block to opt back into it.
+
 To publish once manually, from this directory:
 
 [tabs]

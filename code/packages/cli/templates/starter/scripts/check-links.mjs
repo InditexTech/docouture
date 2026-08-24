@@ -92,15 +92,17 @@ function globToRegExp(glob) {
 //   - this site's own repo link (repo-link.hbs renders `site.keys.repoUrl`,
 //     or absent that Antora's own `page.origin.webUrl` — same URL either
 //     way, computed by `pdocs new` from `git remote get-url origin` at
-//     scaffold time; see new.ts's own repoWebUrl()), shown once per page so
-//     a single broken link here would otherwise report once per page in the
-//     results. There's a real, principled reason it can 404 to an
+//     scaffold time; see new.ts's own repoIgnoreGlob()), shown once per page
+//     so a single broken link here would otherwise report once per page in
+//     the results. There's a real, principled reason it can 404 to an
 //     anonymous CI crawler even when nothing is actually wrong: GitHub
 //     returns 404 (not 403) for a private repo when unauthenticated,
 //     indistinguishable from one that doesn't exist, and plenty of docs
 //     sites publish before (or without ever) making their source repo
-//     public. Absent — no third entry at all — when there was no `origin`
-//     remote configured yet at scaffold time. Baked in once, at scaffold
+//     public. A harmless sentinel glob that can never match a real URL
+//     fills this slot instead when there was no `origin` remote configured
+//     yet at scaffold time — never an empty string, which would silently
+//     ignore every link. Baked in once, at scaffold
 //     time, rather than recomputed here on every run: if this repo's remote
 //     is later renamed or moved, this entry goes stale along with it, the
 //     same as any other config a site owner would need to update by hand.

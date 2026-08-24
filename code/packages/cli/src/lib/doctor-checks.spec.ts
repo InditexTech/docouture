@@ -13,6 +13,7 @@ import {
   checkGitHasCommit,
   checkNamesAgree,
   checkNodeVersion,
+  checkReleaseLabelExists,
 } from './doctor-checks.js'
 
 describe('checkNodeVersion', () => {
@@ -180,5 +181,19 @@ describe('checkAgentFilesPresent', () => {
 
     const results = checkAgentFilesPresent(dir)
     expect(results.every((r) => r.ok)).toBe(true)
+  })
+})
+
+describe('checkReleaseLabelExists', () => {
+  it('is advisory-only (ok: true) when gh cannot answer for this directory — no GitHub remote/auth in a bare tmp dir', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-release-label-'))
+    execFileSync('git', ['init', '--quiet'], { cwd: dir })
+
+    const result = await checkReleaseLabelExists(dir)
+
+    // Never a hard failure here: no `gh` remote/auth is exactly the
+    // "cannot check" case this function treats as advisory, not broken.
+    expect(result.ok).toBe(true)
+    expect(result.label).toBe('docs/release label')
   })
 })

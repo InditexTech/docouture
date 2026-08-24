@@ -18,6 +18,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # 0 rather than the default shallow clone: the CHANGELOG.md check
+          # below diffs against the PR's base commit, which needs to be
+          # present locally, not just the tip being verified.
+          fetch-depth: 0
+
+      # Homologated with weave.js's code-release_preview.yml: every PR that
+      # touches code/** must add its own entry to CHANGELOG.md's [Unreleased]
+      # section (code-npm_node-publish-release-and-snapshot.yml later promotes
+      # that section wholesale — nothing is invented at release time).
+      # `skip-release` is the documented escape hatch for PRs with no
+      # user-facing effect (internal tooling, CI config, etc.) — same label
+      # that workflow itself already recognizes.
+      - name: Require CHANGELOG.md update
+        if: ${{ !contains(join(github.event.pull_request.labels.*.name, ', '), 'skip-release') }}
+        run: |
+          if git diff --quiet "${{ github.event.pull_request.base.sha }}" HEAD -- code/CHANGELOG.md; then
+            echo "::error title=No CHANGELOG.md changes::code/CHANGELOG.md's [Unreleased] section wasn't updated. Add an entry describing this change, or label the PR 'skip-release' if it has no user-facing effect."
+            exit 1
+          fi
 
       # code/.tool-versions pins `ivm-node` / `ivm-pnpm` — asdf plugin names that
       # only resolve on Inditex-provisioned machines. The version numbers are the

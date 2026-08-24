@@ -46,6 +46,21 @@ function substitute(text: string, values: TemplateValues): string {
 // below, standalone or not.
 const VERSIONED_MARKER = '.versioned'
 
+// npm's publish step unconditionally strips any file matching `.git*`
+// (.gitignore, .gitattributes, .gitmodules, ...) from a package's tarball,
+// regardless of the `files` field or an .npmignore — confirmed here with
+// `npm pack --dry-run` on this very package, which silently drops
+// templates/starter/.gitignore while every sibling file in that directory
+// survives. That means a `.gitignore` template only ever worked when
+// `pdocs new` ran from a repo checkout, never from an npm-installed copy —
+// the real-world case. The fix (the same one create-react-app's own
+// template uses): the template source file has no leading dot at all
+// (`gitignore`), and this map renames it back to its real name only at
+// write time, after npm has already packed it safely.
+const DOTFILE_RENAMES: Record<string, string> = {
+  gitignore: '.gitignore',
+}
+
 // Extensions copied as raw bytes, no placeholder substitution — logo and
 // favicon assets under `supplemental-ui/` (GH-114). Substituting text tokens
 // into a binary file via `readFile(from, 'utf8')` corrupts it (the bytes get
@@ -72,7 +87,7 @@ export async function copyTemplate(srcDir: string, destDir: string, values: Temp
     if (entry.name.includes(VERSIONED_MARKER)) continue
 
     const from = join(srcDir, entry.name)
-    const to = join(destDir, entry.name)
+    const to = join(destDir, DOTFILE_RENAMES[entry.name] ?? entry.name)
 
     if (entry.isDirectory()) {
       await copyTemplate(from, to, values)

@@ -358,5 +358,16 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   }
   console.log('see the site-structure and writing-docs-pages skills (.opencode/skills, .claude/skills) to get started.')
 
+  console.log('')
+  console.log(
+    "pdocs-release.yml also runs automatically on a PR merge carrying a 'docs/release' label — GitHub does not"
+  )
+  console.log(
+    "create that label for you: run 'gh label create docs/release' in this repository, or use workflow_dispatch"
+  )
+  console.log(
+    'instead until it exists. See docs/docs/modules/main/pages/getting-started.adoc\'s own "Create the docs/release label" section.'
+  )
+
   return 0
 }

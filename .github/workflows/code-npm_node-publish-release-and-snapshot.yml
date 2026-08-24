@@ -214,17 +214,29 @@ jobs:
           node --version
           npm --version
 
-      # Same five publishable packages `just release-local` snapshot-publishes
-      # locally: ui-bundle, cli, antora-extensions, asciidoc-extensions,
-      # publish-gh-pages. `example` is `private: true` and excluded.
+      # The publishable package list is derived from `packages/*/package.json`'s
+      # `private` field by scripts/publishable-packages.mjs — see justfile's
+      # `release-local` recipe for the human-facing equivalent. `example` is
+      # `private: true` and excluded automatically.
+      #
+      # This step also hard-fails the whole job, before any package is
+      # published, if the target version (already bumped into each
+      # package.json by "NPM / Prepare release", above) is found already
+      # published for any package. Without this pre-check, a mid-loop
+      # "already published" failure in the publish steps below would leave
+      # earlier packages in the loop live on the registry while later ones
+      # never get published in the same run — this check makes that
+      # partial-publish state impossible to reach.
       - name: NPM / Verify packages exist in registry
         id: verify-packages
         working-directory: code
         run: |
-          PACKAGES=(ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages)
+          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
           MISSING=()
+          ALREADY_PUBLISHED=()
           for pkg in "${PACKAGES[@]}"; do
             PKG_NAME=$(node -p "require('./packages/$pkg/package.json').name")
+            TARGET_VERSION=$(node -p "require('./packages/$pkg/package.json').version")
             ENCODED_PKG_NAME=$(node -p "encodeURIComponent(process.argv[1])" "$PKG_NAME")
             RESPONSE_FILE=$(mktemp)
             if ! HTTP_STATUS=$(curl -sS -o "$RESPONSE_FILE" -w "%{http_code}" \
@@ -241,14 +253,29 @@ jobs:
             case "$HTTP_STATUS" in
               200)
                 PARSE_STATUS=0
-                node -e "try { const d=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')); process.exit(Object.keys(d.versions||{}).length > 0 ? 0 : 1); } catch(e) { console.error('JSON parse error:', e.message); process.exit(2); }" "$RESPONSE_FILE" || PARSE_STATUS=$?
+                node -e "
+                  try {
+                    const d = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+                    const versions = Object.keys(d.versions || {});
+                    if (versions.length === 0) process.exit(1);
+                    if (versions.includes(process.argv[2])) process.exit(3);
+                    process.exit(0);
+                  } catch (e) {
+                    console.error('JSON parse error:', e.message);
+                    process.exit(2);
+                  }
+                " "$RESPONSE_FILE" "$TARGET_VERSION" || PARSE_STATUS=$?
                 case "$PARSE_STATUS" in
                   0)
-                    echo "✓ $PKG_NAME exists in registry with active versions"
+                    echo "✓ $PKG_NAME exists in registry, target version $TARGET_VERSION not yet published"
                     ;;
                   1)
                     echo "✗ $PKG_NAME has no active versions (unpublished) — treating as new"
                     MISSING+=("$PKG_NAME")
+                    ;;
+                  3)
+                    echo "::error::$PKG_NAME@$TARGET_VERSION is already published"
+                    ALREADY_PUBLISHED+=("$PKG_NAME@$TARGET_VERSION")
                     ;;
                   *)
                     echo "::error::Failed to verify $PKG_NAME — npm registry returned invalid JSON (HTTP 200)"
@@ -272,6 +299,10 @@ jobs:
             esac
             rm -f "$RESPONSE_FILE"
           done
+          if [[ ${#ALREADY_PUBLISHED[@]} -gt 0 ]]; then
+            echo "::error::Refusing to publish anything this run — already published: ${ALREADY_PUBLISHED[*]}"
+            exit 1
+          fi
           if [[ ${#MISSING[@]} -gt 0 ]]; then
             echo "MISSING_PACKAGES=${MISSING[*]}" >> "$GITHUB_ENV"
             echo "HAS_NEW_PACKAGES=true" >> "$GITHUB_ENV"
@@ -287,7 +318,11 @@ jobs:
 
       # weave.js's equivalent is a single `npm run publish:snapshot` fanning
       # out across nx targets; pdocs has no publish nx target, so this loops
-      # `npm publish` over the same five packages directly.
+      # `pnpm publish` over scripts/publishable-packages.mjs's list directly.
+      # `pnpm publish` (not `npm publish`) is required: it rewrites each
+      # package's `workspace:*` cross-references to the resolved version at
+      # pack time — `npm publish` ships the literal string, which breaks
+      # installs in any consuming repo that isn't itself a pnpm workspace.
       - name: NPM / Publish Snapshot (OIDC + provenance)
         if: env.HAS_NEW_PACKAGES == 'false'
         env:
@@ -295,8 +330,9 @@ jobs:
         working-directory: code
         run: |
           set -euo pipefail
-          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
-            (cd "packages/$pkg" && npm publish --access public --tag next)
+          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
+          for pkg in "${PACKAGES[@]}"; do
+            (cd "packages/$pkg" && pnpm publish --access public --tag next --no-git-checks)
           done
 
       - name: NPM / Publish Snapshot (NPM_TOKEN for new packages)
@@ -316,8 +352,9 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH}" >> "$TEMP_NPMRC"
           export NPM_CONFIG_USERCONFIG="$TEMP_NPMRC"
           set -euo pipefail
-          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
-            (cd "packages/$pkg" && npm publish --access public --tag next)
+          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
+          for pkg in "${PACKAGES[@]}"; do
+            (cd "packages/$pkg" && pnpm publish --access public --tag next --no-git-checks)
           done
 
       - name: Result / Comment on PR
@@ -580,14 +617,29 @@ jobs:
           node --version
           npm --version
 
+      # The publishable package list is derived from `packages/*/package.json`'s
+      # `private` field by scripts/publishable-packages.mjs — see justfile's
+      # `release-local` recipe for the human-facing equivalent. `example` is
+      # `private: true` and excluded automatically.
+      #
+      # This step also hard-fails the whole job, before any package is
+      # published, if the target version (already bumped into each
+      # package.json by "NPM / Prepare release", above) is found already
+      # published for any package. Without this pre-check, a mid-loop
+      # "already published" failure in the publish steps below would leave
+      # earlier packages in the loop live on the registry while later ones
+      # never get published in the same run — this check makes that
+      # partial-publish state impossible to reach.
       - name: NPM / Verify packages exist in registry
         id: verify-packages
         working-directory: code
         run: |
-          PACKAGES=(ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages)
+          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
           MISSING=()
+          ALREADY_PUBLISHED=()
           for pkg in "${PACKAGES[@]}"; do
             PKG_NAME=$(node -p "require('./packages/$pkg/package.json').name")
+            TARGET_VERSION=$(node -p "require('./packages/$pkg/package.json').version")
             ENCODED_PKG_NAME=$(node -p "encodeURIComponent(process.argv[1])" "$PKG_NAME")
             RESPONSE_FILE=$(mktemp)
             if ! HTTP_STATUS=$(curl -sS -o "$RESPONSE_FILE" -w "%{http_code}" \
@@ -604,14 +656,29 @@ jobs:
             case "$HTTP_STATUS" in
               200)
                 PARSE_STATUS=0
-                node -e "try { const d=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')); process.exit(Object.keys(d.versions||{}).length > 0 ? 0 : 1); } catch(e) { console.error('JSON parse error:', e.message); process.exit(2); }" "$RESPONSE_FILE" || PARSE_STATUS=$?
+                node -e "
+                  try {
+                    const d = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+                    const versions = Object.keys(d.versions || {});
+                    if (versions.length === 0) process.exit(1);
+                    if (versions.includes(process.argv[2])) process.exit(3);
+                    process.exit(0);
+                  } catch (e) {
+                    console.error('JSON parse error:', e.message);
+                    process.exit(2);
+                  }
+                " "$RESPONSE_FILE" "$TARGET_VERSION" || PARSE_STATUS=$?
                 case "$PARSE_STATUS" in
                   0)
-                    echo "✓ $PKG_NAME exists in registry with active versions"
+                    echo "✓ $PKG_NAME exists in registry, target version $TARGET_VERSION not yet published"
                     ;;
                   1)
                     echo "✗ $PKG_NAME has no active versions (unpublished) — treating as new"
                     MISSING+=("$PKG_NAME")
+                    ;;
+                  3)
+                    echo "::error::$PKG_NAME@$TARGET_VERSION is already published"
+                    ALREADY_PUBLISHED+=("$PKG_NAME@$TARGET_VERSION")
                     ;;
                   *)
                     echo "::error::Failed to verify $PKG_NAME — npm registry returned invalid JSON (HTTP 200)"
@@ -635,6 +702,10 @@ jobs:
             esac
             rm -f "$RESPONSE_FILE"
           done
+          if [[ ${#ALREADY_PUBLISHED[@]} -gt 0 ]]; then
+            echo "::error::Refusing to publish anything this run — already published: ${ALREADY_PUBLISHED[*]}"
+            exit 1
+          fi
           if [[ ${#MISSING[@]} -gt 0 ]]; then
             echo "MISSING_PACKAGES=${MISSING[*]}" >> "$GITHUB_ENV"
             echo "HAS_NEW_PACKAGES=true" >> "$GITHUB_ENV"
@@ -645,7 +716,12 @@ jobs:
           fi
 
       # weave.js's equivalent is `npm run release:perform`; pdocs has no
-      # release:perform nx target, so this loops `npm publish` directly.
+      # release:perform nx target, so this loops `pnpm publish` over
+      # scripts/publishable-packages.mjs's list directly. `pnpm publish`
+      # (not `npm publish`) is required: it rewrites each package's
+      # `workspace:*` cross-references to the resolved version at pack
+      # time — `npm publish` ships the literal string, which breaks
+      # installs in any consuming repo that isn't itself a pnpm workspace.
       # Unlike pdocs' previous release.yml, this is unconditional — no
       # NPM_PUBLISH_ENABLED gate — matching weave.js's always-publish release job.
       - name: NPM / Release Perform (OIDC + provenance)
@@ -655,8 +731,9 @@ jobs:
         working-directory: code
         run: |
           set -euo pipefail
-          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
-            (cd "packages/$pkg" && npm publish --access public)
+          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
+          for pkg in "${PACKAGES[@]}"; do
+            (cd "packages/$pkg" && pnpm publish --access public --no-git-checks)
           done
 
       - name: NPM / Release Perform (NPM_TOKEN for new packages)
@@ -676,8 +753,9 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH}" >> "$TEMP_NPMRC"
           export NPM_CONFIG_USERCONFIG="$TEMP_NPMRC"
           set -euo pipefail
-          for pkg in ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages; do
-            (cd "packages/$pkg" && npm publish --access public)
+          mapfile -t PACKAGES < <(node scripts/publishable-packages.mjs)
+          for pkg in "${PACKAGES[@]}"; do
+            (cd "packages/$pkg" && pnpm publish --access public --no-git-checks)
           done
 
       - name: Release / Commit and Tag

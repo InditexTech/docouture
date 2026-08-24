@@ -244,7 +244,7 @@ describe('runNew', () => {
     expect(antoraYml).toContain('version: prerelease')
     expect(antoraYml).toContain('prerelease: true')
 
-    const releaseVersion = await readFile(join(repo, 'docs', 'docs', '.release-version'), 'utf8')
+    const releaseVersion = await readFile(join(repo, 'docs', '.release-version'), 'utf8')
     expect(releaseVersion.trim()).toMatch(/^\d+\.\d+\.\d+$/)
 
     const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')

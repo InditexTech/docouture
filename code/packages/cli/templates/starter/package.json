@@ -11,7 +11,7 @@
     "build": "antora --fetch antora-playbook.yml",
     "dev": "pdocs dev",
     "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\"",
-    "check-links": "linkinator build/site --recurse --skip \"^(mailto:|tel:)\""
+    "check-links": "node scripts/check-links.mjs"
   },
   "devDependencies": {
     "@inditextech/pdocs-cli": "__PDOCS_CLI_VERSION__",

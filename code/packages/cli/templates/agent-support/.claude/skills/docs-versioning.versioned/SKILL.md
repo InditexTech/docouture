@@ -22,7 +22,7 @@ a release tag, and what the release workflow actually does).
 - **`pdocs version <value>`** is the one piece of this the CLI does for you locally — it
   patches `docs/docs/antora.yml`'s `version:`/`prerelease:` fields. Useful for testing a
   version bump locally; the actual release workflow uses the same command internally.
-- **`docs/docs/.release-version`** holds the next planned version (e.g. `1.2.0`) as plain
+- **`docs/.release-version`** holds the next planned version (e.g. `1.2.0`) as plain
   text. It's what a merged, `docs/release`-labeled pull request uses to tell the release
   workflow what to tag — review it like any other file in that PR's diff.
 - **Cutting a release** happens through the `pdocs-release.yml` GitHub Actions workflow
@@ -30,8 +30,8 @@ a release tag, and what the release workflow actually does).
   Trigger it either by:
   - running it by hand (`workflow_dispatch`), giving the target version as input, or
   - merging a pull request labeled `docs/release` into `main` — it reads the target
-    version from `docs/docs/.release-version`.
+    version from `docs/.release-version`.
 - After a genuine new release (not a republish of an existing tag), the workflow bumps
-  `docs/docs/.release-version` forward to the next patch version automatically and commits
+  `docs/.release-version` forward to the next patch version automatically and commits
   that to `main` — you shouldn't normally need to edit it yourself except to set an
   intentionally different next target (e.g. jumping to a new minor).

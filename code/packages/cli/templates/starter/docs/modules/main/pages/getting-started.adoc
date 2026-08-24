@@ -70,18 +70,36 @@ Two ways to trigger it:
 
 Under the hood this bumps the version recorded in `docs/antora.yml` and
 moves the `stable` tag (or, in Versioned mode, cuts a new `vX.Y.Z` tag) —
-see that workflow's own header comment for the full mechanism. To set the
-version yourself, outside of a release — for local testing, say — use
-`pdocs version` directly:
+see that workflow's own header comment for the full mechanism.
+
+In *Versioned* mode, the target version for the *next* release is not typed
+into a form — it comes from `docs/.release-version`, a plain-text file
+`pdocs new` already seeded (e.g. `0.1.0`). To release `1.0.0`:
+
+. Edit `docs/.release-version` so it contains `1.0.0`
+. Open a pull request with that change, labeled `docs/release`
+. Merge it — `pdocs-release.yml` reads the file, tags `v1.0.0`, and bumps
+  `docs/.release-version` forward to the next patch version afterwards so
+  the file is always ready for whatever comes next
+
+(Or skip the PR: run `pdocs-release.yml` manually via `workflow_dispatch` and
+type the version into its `version` input.) *Standalone* mode has no such
+file — every release always targets the same `stable` tag, so there is
+nothing to set beforehand.
+
+`pdocs version <value>` is a different, narrower tool: it directly
+rewrites `docs/antora.yml`'s `version:`/`prerelease:` fields in place and
+leaves everything else in this directory untouched. It is what
+`pdocs-release.yml` itself uses internally, and it's useful for local,
+throwaway testing of how a given version renders — but running it yourself
+does not cut a release, on either mode, and in particular it never touches
+`docs/.release-version`:
 
 [,console]
 ----
 $ pdocs version 1.0.0
 $ pdocs version 1.1.0-rc.0 --prerelease
 ----
-
-It rewrites `docs/antora.yml` in place and leaves everything else in this
-directory untouched.
 
 == Publish the docs
 

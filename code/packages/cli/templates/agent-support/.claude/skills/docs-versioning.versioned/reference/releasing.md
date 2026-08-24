@@ -61,7 +61,7 @@ or rename a tag and it drops out of the aggregate on the next build.
 
 **Where the target version comes from** differs by trigger: `workflow_dispatch` has a
 form field for it; the `pull_request` trigger has none, so it reads
-`docs/docs/.release-version` instead — the plain-text file committed as part of the
+`docs/.release-version` instead — the plain-text file committed as part of the
 merged PR, containing just the target version.
 
 **The release itself**: `pdocs version <value>` patches `docs/docs/antora.yml` on a
@@ -74,7 +74,7 @@ advanced or touched by this step; its own `docs/docs/antora.yml` permanently kee
 released version, e.g. a docs typo caught after the tag went out) is a deliberate,
 ordinary act, not something needing a separate flag.
 
-## `docs/docs/.release-version` after a release
+## `docs/.release-version` after a release
 
 Nothing clears it — it's bumped forward instead, except on a republish. On a genuine
 forward release (the target tag was new), a final step in the workflow advances the file

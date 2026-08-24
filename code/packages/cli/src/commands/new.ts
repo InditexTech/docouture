@@ -46,10 +46,12 @@ const WORKFLOW_NAMES = ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-pr-veri
 // site with no such directory yet is never blocked by this check on it.
 const AGENT_SUPPORT_PATHS = [
   'AGENTS.md',
+  join('.opencode', 'skills', 'documenting-your-repo'),
   join('.opencode', 'skills', 'writing-docs-pages'),
-  join('.opencode', 'skills', 'site-structure'),
+  join('.opencode', 'skills', 'docs-internals'),
+  join('.claude', 'skills', 'documenting-your-repo'),
   join('.claude', 'skills', 'writing-docs-pages'),
-  join('.claude', 'skills', 'site-structure'),
+  join('.claude', 'skills', 'docs-internals'),
 ]
 
 function titleCase(name: string): string {
@@ -356,7 +358,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
       'run the pdocs-release workflow (.github/workflows/pdocs-release.yml) to cut your first stable release.'
     )
   }
-  console.log('see the site-structure and writing-docs-pages skills (.opencode/skills, .claude/skills) to get started.')
+  console.log('see the documenting-your-repo skill (.opencode/skills, .claude/skills) to get started —')
+  console.log('it plans what to document and pulls in docs-internals/writing-docs-pages as needed.')
 
   console.log('')
   console.log(

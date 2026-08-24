@@ -19,7 +19,7 @@ where this skill and the upstream Asciidoctor docs differ, follow this skill.
   `label:`/`mono:` inline macros, and a few table/video sizing attributes.
 
 For the home page vs. content page patterns, mono- vs. multi-module sites, and the
-playbook/component-descriptor mechanics, see the `site-structure` skill.
+playbook/component-descriptor mechanics, see the `docs-internals` skill.
 
 ## Where content lives
 
@@ -59,7 +59,7 @@ Inside the same module:
 | -------------------------------- | ---------------------------------------------------------------------------- |
 | `xref:index.adoc[Home]`          | a page in the same module                                                    |
 | `xref:guide/setup.adoc[]`        | a page in a subdirectory of `pages/` — empty text uses the target's title    |
-| `xref:other-module:index.adoc[]` | a page in another module — only in a multi-module site, see `site-structure` |
+| `xref:other-module:index.adoc[]` | a page in another module — only in a multi-module site, see `docs-internals` |
 | `xref:index.adoc#install[]`      | a fragment on another page                                                   |
 | `include::partial$intro.adoc[]`  | a partial from the same module                                               |
 
@@ -94,7 +94,7 @@ file-relative.
 - **Unconstrained formatting needs doubled marks.** `**bold**` mid-word, `__italic__`
   mid-word. The single-mark form adjacent to a word character is not formatting at all.
 - **A cross-module xref only resolves inside a multi-module site**, and only once both
-  modules are listed under `docs/docs/antora.yml`'s `nav:` — see `site-structure`.
+  modules are listed under `docs/docs/antora.yml`'s `nav:` — see `docs-internals`.
 
 ## Page attributes the UI reads
 
@@ -106,7 +106,7 @@ file-relative.
 | `page-action-secondary` / `page-action-secondary-url` | secondary hero button, same rule                                                                                                                        |
 | `page-hero-image` / `page-hero-image-alt`             | hero illustration                                                                                                                                       |
 | `page-nav-module`                                     | which module's nav tree the side menu shows for this page — set on `ROOT`'s own landing page in a multi-module site, since `ROOT` has no nav of its own |
-| `page-layout: home`                                   | the marketing home-page layout — see `site-structure`'s page-patterns reference                                                                         |
+| `page-layout: home`                                   | the marketing home-page layout — see `docs-internals`'s page-patterns reference                                                                         |
 | `page-role: -hero`                                    | suppresses the hero entirely                                                                                                                            |
 | `page-role: -toc`                                     | suppresses the right-hand table of contents                                                                                                             |
 | `page-pagination`                                     | enables the previous/next footer links                                                                                                                  |

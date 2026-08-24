@@ -499,7 +499,7 @@ local-registry-start: (_hdr "local-registry-start")
 
     npx --yes verdaccio --config "$config" --listen 4873
 
-# Snapshot-publish ui-bundle/cli/antora-extensions/asciidoc-extensions to local-registry-start
+# Snapshot-publish every non-private packages/* package to local-registry-start
 [group('release')]
 [no-exit-message]
 release-local: (_hdr "release-local")
@@ -507,7 +507,10 @@ release-local: (_hdr "release-local")
     set -euo pipefail
 
     registry='http://localhost:4873'
-    packages=(ui-bundle cli antora-extensions asciidoc-extensions publish-gh-pages)
+    # Derived from packages/*/package.json's `private` field — the same
+    # source scripts/publishable-packages.mjs feeds to the CI release
+    # workflow, so the two can't silently drift apart.
+    mapfile -t packages < <(node scripts/publishable-packages.mjs)
 
     if ! curl -fsS "$registry/-/ping" >/dev/null 2>&1; then
       echo "  no registry responding at $registry"
@@ -568,14 +571,14 @@ release-local: (_hdr "release-local")
       (cd "packages/$pkg" && pnpm publish --registry "$registry" --tag local --no-git-checks --loglevel warn)
     done
 
-    cat <<EOF
+    echo
+    echo "  Published to $registry as $snapshot:"
+    for pkg in "${packages[@]}"; do
+      name=$(node -p "require('./packages/$pkg/package.json').name")
+      echo "    $name"
+    done
 
-      Published to $registry as $snapshot:
-        @inditextech/pdocs-ui-bundle
-        @inditextech/pdocs-cli
-        @inditextech/pdocs-antora-extensions
-        @inditextech/pdocs-asciidoc-extensions
-        @inditextech/pdocs-publish-gh-pages
+    cat <<EOF
 
       To consume from another repo, add to its .npmrc:
 

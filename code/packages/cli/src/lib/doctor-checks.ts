@@ -178,10 +178,12 @@ export function checkAntoraAvailable(siteRoot: string): CheckResult {
 // (@inquirer/prompts) into that dependency graph for no reason.
 const AGENT_SUPPORT_CHECK_PATHS = [
   { path: 'AGENTS.md', label: 'AGENTS.md' },
+  { path: join('.opencode', 'skills', 'documenting-your-repo'), label: '.opencode/skills/documenting-your-repo' },
   { path: join('.opencode', 'skills', 'writing-docs-pages'), label: '.opencode/skills/writing-docs-pages' },
-  { path: join('.opencode', 'skills', 'site-structure'), label: '.opencode/skills/site-structure' },
+  { path: join('.opencode', 'skills', 'docs-internals'), label: '.opencode/skills/docs-internals' },
+  { path: join('.claude', 'skills', 'documenting-your-repo'), label: '.claude/skills/documenting-your-repo' },
   { path: join('.claude', 'skills', 'writing-docs-pages'), label: '.claude/skills/writing-docs-pages' },
-  { path: join('.claude', 'skills', 'site-structure'), label: '.claude/skills/site-structure' },
+  { path: join('.claude', 'skills', 'docs-internals'), label: '.claude/skills/docs-internals' },
 ]
 
 /**

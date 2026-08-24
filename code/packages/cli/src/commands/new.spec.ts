@@ -102,13 +102,13 @@ describe('runNew', () => {
   it('refuses to scaffold when a skill directory already exists and is non-empty', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
-    await mkdir(join(repo, '.opencode', 'skills', 'site-structure'), { recursive: true })
-    await writeFile(join(repo, '.opencode', 'skills', 'site-structure', 'SKILL.md'), 'existing', 'utf8')
+    await mkdir(join(repo, '.opencode', 'skills', 'docs-internals'), { recursive: true })
+    await writeFile(join(repo, '.opencode', 'skills', 'docs-internals', 'SKILL.md'), 'existing', 'utf8')
 
     const code = await runNew(['my-project-docs', '--dir', repo])
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing agent file'))
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('site-structure'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('docs-internals'))
   })
 
   it('scaffolds docs/ (standalone by default, Stable + Prerelease) and .github/workflows/ into an existing repo', async () => {
@@ -182,7 +182,7 @@ describe('runNew', () => {
     expect(agentsMd).toContain('My Project Docs')
 
     for (const platform of ['.opencode', '.claude']) {
-      for (const skill of ['writing-docs-pages', 'site-structure']) {
+      for (const skill of ['documenting-your-repo', 'writing-docs-pages', 'docs-internals']) {
         const skillMd = await readFile(join(repo, platform, 'skills', skill, 'SKILL.md'), 'utf8')
         expect(skillMd).toContain(`name: ${skill}`)
       }
@@ -193,7 +193,7 @@ describe('runNew', () => {
     await expect(readFile(join(repo, '.claude', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')).rejects.toThrow()
 
     // Both platforms' copies are byte-identical.
-    for (const skill of ['writing-docs-pages', 'site-structure']) {
+    for (const skill of ['documenting-your-repo', 'writing-docs-pages', 'docs-internals']) {
       const opencode = await readFile(join(repo, '.opencode', 'skills', skill, 'SKILL.md'), 'utf8')
       const claude = await readFile(join(repo, '.claude', 'skills', skill, 'SKILL.md'), 'utf8')
       expect(opencode).toBe(claude)

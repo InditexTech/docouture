@@ -139,7 +139,7 @@ describe('runDoctor', () => {
 
     await writeFile(join(repo, 'AGENTS.md'), '# hi', 'utf8')
     for (const platform of ['.opencode', '.claude']) {
-      for (const skill of ['writing-docs-pages', 'site-structure']) {
+      for (const skill of ['documenting-your-repo', 'writing-docs-pages', 'docs-internals']) {
         await mkdir(join(repo, platform, 'skills', skill), { recursive: true })
         await writeFile(join(repo, platform, 'skills', skill, 'SKILL.md'), '# skill', 'utf8')
       }

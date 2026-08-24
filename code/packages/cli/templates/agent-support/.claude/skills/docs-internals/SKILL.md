@@ -1,5 +1,5 @@
 ---
-name: site-structure
+name: docs-internals
 description: "How this Antora documentation site is put together: the playbook, the docs/antora.yml component descriptor, the four names that must agree, mono-module vs. multi-module layout, and the home-page vs. content-page patterns. USE WHEN adding a page or module, renaming the site/component, choosing between a single-module and multi-module layout, building a landing/home page, or diagnosing a site that builds with zero pages or fails with 'start page not found'. EXAMPLES: 'add a new module', 'rename this docs site', 'build a marketing home page', 'the site builds but has no pages', 'start page not found', 'should this be one module or several'."
 ---
 

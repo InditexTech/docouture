@@ -1,0 +1,24 @@
+code/packages/cli/src/bin.ts
+  h_c93d154c7c7074 12,51-58,97-98
+code/packages/cli/src/commands/upgrade.spec.ts
+  h_c93d154c7c7074 1-135
+code/packages/cli/src/commands/upgrade.ts
+  h_c93d154c7c7074 1-139
+code/packages/cli/src/lib/copy-template.spec.ts
+  h_c93d154c7c7074 1-60
+code/packages/cli/src/lib/copy-template.ts
+  h_c93d154c7c7074 103-113,118-126,128,130-132,141-143,147,151,154-155
+code/packages/cli/src/lib/doctor-checks.ts
+  h_c93d154c7c7074 269
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4bd40e5b966d7d86931be03df534a4bd75d075fe",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -2,6 +2,11 @@
   "name": "@inditextech/pdocs-antora-extensions",
   "version": "0.1.0",
   "description": "Antora pipeline extensions shared by pdocs documentation sites — per-module navigation metadata (nav_modules)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InditexTech/test-antoradocs.git",
+    "directory": "code/packages/antora-extensions"
+  },
   "license": "MPL-2.0",
   "main": "index.js",
   "files": [

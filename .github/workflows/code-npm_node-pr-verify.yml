@@ -77,6 +77,17 @@ jobs:
           tool_versions: ${{ env.TOOL_VERSIONS }}
           asdf_version: ${{ env.ASDF_BRANCH_VERSION }}
 
+      # On a cache hit the install step above is skipped, so nothing else
+      # puts asdf's shims on PATH — pnpm/node would otherwise be
+      # "command not found". Homologated with the identical step in
+      # code-npm_node-publish-release-and-snapshot.yml.
+      - name: Restore asdf shims to PATH
+        if: steps.asdf-cache.outputs.cache-hit == 'true'
+        run: |
+          echo "$HOME/.asdf/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
+          cp code/.tool-versions "$HOME/.tool-versions"
+
       # code/.npmrc pins the default registry to npmjs. The IOP Design System
       # (the only dependency that was ever on a different registry) is not
       # installed in this workspace — see code/tools/ids/README.md — so this

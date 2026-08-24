@@ -100,14 +100,36 @@ function isBinaryFile(name: string): boolean {
   return BINARY_EXTENSIONS.has(name.slice(dot).toLowerCase())
 }
 
+export interface CopyTemplateOptions {
+  /**
+   * Walk the same tree and return the same paths without touching disk —
+   * used by `pdocs upgrade --dry-run` to preview which files a real run
+   * would create/overwrite. Directories are still recursed into (their
+   * existence on disk is never checked, only the source tree's shape), so
+   * the returned list is identical to a real run's.
+   */
+  dryRun?: boolean
+}
+
 // Copies every file under `srcDir` into `destDir`, substituting placeholder
 // tokens in each text file. Most template files are plain text (YAML,
 // AsciiDoc, JSON) and go through that substitution; image assets
 // (BINARY_EXTENSIONS) are copied as raw bytes instead — see its own comment.
-export async function copyTemplate(srcDir: string, destDir: string, values: TemplateValues): Promise<void> {
+// Returns every destination file path written (or, under `dryRun`, that
+// would have been written) — `new.ts` ignores this, `upgrade.ts` uses it
+// both to report progress and to preview a dry run.
+export async function copyTemplate(
+  srcDir: string,
+  destDir: string,
+  values: TemplateValues,
+  opts: CopyTemplateOptions = {}
+): Promise<string[]> {
   const entries = await readdir(srcDir, { withFileTypes: true })
+  const written: string[] = []
 
-  await mkdir(destDir, { recursive: true })
+  if (!opts.dryRun) {
+    await mkdir(destDir, { recursive: true })
+  }
 
   for (const entry of entries) {
     if (entry.name.includes(VERSIONED_MARKER)) continue
@@ -116,15 +138,21 @@ export async function copyTemplate(srcDir: string, destDir: string, values: Temp
     const to = join(destDir, DOTFILE_RENAMES[entry.name] ?? entry.name)
 
     if (entry.isDirectory()) {
-      await copyTemplate(from, to, values)
+      written.push(...(await copyTemplate(from, to, values, opts)))
+    } else if (opts.dryRun) {
+      written.push(to)
     } else if (isBinaryFile(entry.name)) {
       const content = await readFile(from)
       await writeFile(to, content)
+      written.push(to)
     } else {
       const content = await readFile(from, 'utf8')
       await writeFile(to, substitute(content, values), 'utf8')
+      written.push(to)
     }
   }
+
+  return written
 }
 
 // Overwrites a single already-copied file with a versioning-mode override —

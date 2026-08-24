@@ -266,7 +266,7 @@ export function checkAgentFilesPresent(repoRoot: string): CheckResult[] {
           ok: false,
           label,
           message: 'missing',
-          detail: 'run pdocs new again in this repository to regenerate it, or restore it from version control',
+          detail: "run 'pdocs upgrade' in this repository to regenerate it, or restore it from version control",
         }
   })
 }

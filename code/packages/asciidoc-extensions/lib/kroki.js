@@ -3,7 +3,14 @@
 const { escapeHtml } = require('./html')
 const warn = require('./warn')
 const kroki = require('./kroki-instance')
-const { SUPPORTED_TYPES, PNG_SUPPORTED_TYPES, ENABLED_ATTR, TYPES_ATTR, resolveEnabledTypes, resolveFormat } = require('./kroki-config')
+const {
+  SUPPORTED_TYPES,
+  PNG_SUPPORTED_TYPES,
+  ENABLED_ATTR,
+  TYPES_ATTR,
+  resolveEnabledTypes,
+  resolveFormat,
+} = require('./kroki-config')
 const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 
 // GH-44: renders diagram source — Mermaid, PlantUML, GraphViz, … (see
@@ -131,10 +138,7 @@ function renderDiagram(parent, type, source, requestedFormat) {
     )
     return literalFallback(source)
   }
-  const body =
-    payload.format === 'png'
-      ? '<img src="data:image/png;base64,' + payload.data + '" alt="">'
-      : payload.data
+  const body = payload.format === 'png' ? '<img src="data:image/png;base64,' + payload.data + '" alt="">' : payload.data
   return '<div class="pdocs-diagram" data-diagram-type="' + type + '">' + body + '</div>'
 }
 

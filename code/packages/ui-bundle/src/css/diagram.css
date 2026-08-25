@@ -87,7 +87,7 @@
  * server-side — see this file's own header): every tool that draws a
  * rounded rect at all sets `rx`/`ry` as a plain SVG presentation attribute,
  * which CSS beats even without `!important` — EXCEPT Mermaid also repeats
- * `rx`/`ry` from its own injected `<style>` block scoped by `#container`,
+ * `rx`/`ry` from its own injected `\3c style>` block scoped by `#container`,
  * an ID selector outranking any class selector regardless of source order,
  * where only `!important` actually wins (verified: a plain override looked
  * fine against an isolated test with no competing stylesheet, but silently
@@ -134,6 +134,7 @@
   fill: var(--ids-color-border-default) !important;
   stroke: var(--ids-color-border-default) !important;
 }
+
 .pdocs-diagram[data-diagram-type='bpmn'] svg [style*='fill: white'] {
   fill: var(--ids-color-bg-default) !important;
 }

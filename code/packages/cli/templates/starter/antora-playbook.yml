@@ -179,4 +179,4 @@ antora:
     # independent copy, not a redirect — once a first release exists (see
     # the `urls` note above).
     - require: '@inditextech/pdocs-antora-extensions'
-      duplicateLatestVersion: true
+      duplicate_latest_version: true

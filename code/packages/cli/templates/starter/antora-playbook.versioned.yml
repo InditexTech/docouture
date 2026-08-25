@@ -157,4 +157,4 @@ antora:
     # latest a second time under `/latest/…` — a real, independent copy,
     # not a redirect stub — once a first release tag exists.
     - require: '@inditextech/pdocs-antora-extensions'
-      duplicateLatestVersion: true
+      duplicate_latest_version: true

@@ -242,16 +242,28 @@ sub-extension into duplicating a component's latest version:
 antora:
   extensions:
     - require: '@inditextech/pdocs-antora-extensions'
-      duplicateLatestVersion: true
+      duplicate_latest_version: true
 ```
 
-`duplicateLatestVersion` (`lib/duplicate-latest-version.js`) hooks Antora's `pagesComposed`
-event — after every page's final HTML is rendered, before redirects/sitemap/publish — and
-republishes whichever ComponentVersion Antora itself computed as `component.latest`
-(excluding prereleases by default) a **second time**, verbatim, under a fixed `latest`
-segment. This is mode-agnostic: it's always `component.latest`, which happens to be `stable`
-in standalone mode and whichever release tag is newest in versioned mode — no branching
-needed. Both the real version's own URL and `/latest/…` are genuinely independent, real,
+MUST be authored snake_case, like every other playbook key — a camelCase
+`duplicateLatestVersion: true` silently does nothing (GH #137's own follow-up: this is
+literally the bug that shipped first). `@antora/playbook-builder` lowercases every playbook
+key and only re-cases `_`/`-` boundaries back to camelCase (`build-playbook.js`'s
+`camelCaseKeys`); a key with no such boundary survives fully lowercased
+(`duplicatelatestversion`), and `config?.duplicateLatestVersion` in the extension's own code
+then reads `undefined` and no-ops with no warning — the same reason every other key here
+(`html_extension_style`, `latest_version_segment`, `not_found_module`, ...) is snake_case,
+never camelCase.
+
+`duplicate_latest_version` (`lib/duplicate-latest-version.js`, read as `config.
+duplicateLatestVersion` once Antora's own camelCasing has run) hooks Antora's
+`pagesComposed` event — after every page's final HTML is rendered, before
+redirects/sitemap/publish — and republishes whichever ComponentVersion Antora itself
+computed as `component.latest` (excluding prereleases by default) a **second time**,
+verbatim, under a fixed `latest` segment. This is mode-agnostic: it's always
+`component.latest`, which happens to be `stable` in standalone mode and whichever release
+tag is newest in versioned mode — no branching needed. Both the real version's own URL and
+`/latest/…` are genuinely independent, real,
 200-status pages; neither is a redirect stub.
 
 No HTML rewriting is needed to make internal links inside the `/latest/…` copy work

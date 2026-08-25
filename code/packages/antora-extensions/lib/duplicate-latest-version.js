@@ -66,12 +66,19 @@
  *
  * Configured on the extension's own registration entry in the playbook —
  * same place `redirects.js`'s rules live, for the same reason (this is
- * build behaviour, not per-ref content):
+ * build behaviour, not per-ref content). MUST be authored snake_case, like
+ * every other playbook key (`html_extension_style`, `latest_version_segment`,
+ * ...): `@antora/playbook-builder` lowercases every playbook key and only
+ * re-cases `_`/`-` boundaries back to camelCase (`build-playbook.js`'s own
+ * `camelCaseKeys`) — a camelCase-authored `duplicateLatestVersion: true`
+ * survives as `duplicatelatestversion`, which `config?.duplicateLatestVersion`
+ * below then reads as `undefined` and silently no-ops (GH #137 follow-up;
+ * this is exactly what happened the first time this shipped):
  *
  *     antora:
  *       extensions:
  *         - require: '@inditextech/pdocs-antora-extensions'
- *           duplicateLatestVersion: true
+ *           duplicate_latest_version: true
  */
 module.exports = function registerDuplicateLatestVersion(context, config) {
   const logger = context.getLogger('pdocs-duplicate-latest-version')

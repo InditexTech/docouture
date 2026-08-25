@@ -166,7 +166,7 @@ describe('runNew', () => {
     // publishes `stable`'s content a second time under `/latest/…` as a
     // real, independent copy.
     expect(playbook).not.toContain('latest_version_segment:')
-    expect(playbook).toContain('duplicateLatestVersion: true')
+    expect(playbook).toContain('duplicate_latest_version: true')
   })
 
   it('scaffolds docs/.gitignore under its real dotfile name (GH regression: npm strips .git*-named files from published packages, so the template source is named plain `gitignore` and must be renamed back on write)', async () => {
@@ -264,7 +264,7 @@ describe('runNew', () => {
     // GH #137: versioned mode also opts into duplicateLatestVersion, so
     // whichever release tag Antora computes as latest is also published
     // under /latest/… as a real, independent copy.
-    expect(playbook).toContain('duplicateLatestVersion: true')
+    expect(playbook).toContain('duplicate_latest_version: true')
   })
 
   it('pins @inditextech/pdocs-cli and antora to exact versions in the scaffolded package.json', async () => {

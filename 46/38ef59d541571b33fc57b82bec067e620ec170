@@ -1,0 +1,19 @@
+code/packages/ui-bundle/src/css/diagram.css
+  s_b7dd28e33bde9b::t_6f007bb30624d6 90,137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4638ef59d541571b33fc57b82bec067e620ec170",
+  "prompts": {},
+  "sessions": {
+    "s_b7dd28e33bde9b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fc7e4d0d1ffexu6Dl6tGTroZ7B",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

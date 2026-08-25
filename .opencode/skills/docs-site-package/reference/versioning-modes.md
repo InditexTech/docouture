@@ -224,50 +224,57 @@ when the label is set but nothing under `docs/**` changed, and
 
 Both modes get a component-scoped version segment for free — `/weavejs/1.2.0/…`,
 `/weavejs/stable/…` — Antora always includes the version in the URL unless told otherwise.
-The one playbook key that changes routing behaviour, `urls.latest_version_segment`, is
-about giving one version an *additional*, stable alias URL:
+
+**`urls.latest_version_segment` is deliberately NOT set on either starter template** (GH
+#137). Antora's own `latest_version_segment_strategy` (`replace`, the default, or
+`redirect:to`/`redirect:from`) always treats one segment as a symbolic alias and reduces the
+OTHER one to a single root-page redirect stub — every other real page under the aliased-away
+segment stops existing under its own URL at all. For standalone mode that meant
+`/weavejs/stable/…` — the URL the "Stable + Prerelease" feature name itself promises — went
+from real content to a permanent client-side-redirect bounce the moment a release existed;
+only `/weavejs/latest/…` (and `/weavejs/prerelease/…`) stayed real. That is a bug, not a
+trade-off, and is exactly what happened in practice (see the GH #137 write-up).
+
+Instead, both starter templates opt a custom `@inditextech/pdocs-antora-extensions`
+sub-extension into duplicating a component's latest version:
 
 ```yaml
-urls:
-  latest_version_segment: latest
+antora:
+  extensions:
+    - require: '@inditextech/pdocs-antora-extensions'
+      duplicateLatestVersion: true
 ```
 
-With this set, Antora's default `latest_version_segment_strategy` (`replace`) moves the
-*real* content for whichever version it computes as "latest" onto the fixed alias —
-`/weavejs/latest/…` — and turns that version's own actual-version URL into a static
-redirect stub pointing at it, rather than adding `/latest/…` as a second copy alongside an
-unchanged real path. On a plain static host (GitHub Pages, or this site's own unset default —
-see `urls-redirect-facility` upstream), that stub is a real, 200-status HTML file with a
-`<meta http-equiv="refresh">` bounce and a `noindex` canonical tag pointing at `/latest/…`,
-not a server-side 301/302 — so the old URL still resolves, just via a client-side hop rather
-than serving real content directly. The redirect direction can't be reversed on a static host:
-`latest_version_segment_strategy: redirect:from` (keep the actual-version URL real, alias
-`/latest/…` instead) is explicitly ignored by Antora when the redirect facility is `static`.
+`duplicateLatestVersion` (`lib/duplicate-latest-version.js`) hooks Antora's `pagesComposed`
+event — after every page's final HTML is rendered, before redirects/sitemap/publish — and
+republishes whichever ComponentVersion Antora itself computed as `component.latest`
+(excluding prereleases by default) a **second time**, verbatim, under a fixed `latest`
+segment. This is mode-agnostic: it's always `component.latest`, which happens to be `stable`
+in standalone mode and whichever release tag is newest in versioned mode — no branching
+needed. Both the real version's own URL and `/latest/…` are genuinely independent, real,
+200-status pages; neither is a redirect stub.
 
-"Latest" is Antora's own computation (a semver-aware comparison across all a component's
-matched versions), **not** `prerelease`/`version` on their own — `prerelease: true` keeps
-a version out of the "latest" running (Antora's default is to compute latest among
-non-prerelease versions), it does not directly set the alias target.
+No HTML rewriting is needed to make internal links inside the `/latest/…` copy work
+correctly: the UI bundle's `relativize` helper (`packages/ui-bundle/src/helpers/
+relativize.ts`) computes every href as a path-relative offset from directory depth alone,
+never from the literal version string, and swapping one version segment for another never
+changes a path's depth. `<link rel="canonical">` — already baked into the cloned HTML off
+the SOURCE version's own `pub.url` — keeps pointing at the source version by construction,
+which avoids duplicate-content SEO concerns while both URLs still serve full content.
 
-- **Versioned**: `latest_version_segment: latest` gives the newest release tag's real content
-  at `/weavejs/latest/…`, with that tag's own `/weavejs/v1.2.0/…` as the redirect stub for as
-  long as it holds the "latest" title. Unlike standalone mode, this is temporary per version:
-  the moment a newer tag ships, the superseded tag's actual-version URL flips back into real,
-  permanent content (no longer being replaced), while `/latest/…` moves on to the new tag.
-  `/weavejs/prerelease/…` (the `main` branch) is untouched either way — prereleases are
-  excluded from the "latest" computation by default.
-- **Standalone**: `stable` never moves to a new URL on release the way a versioned-mode tag
-  would, but under the default `replace` strategy its actual-version segment
-  (`/weavejs/stable/…`) is *permanently* a redirect stub for as long as `latest_version_segment`
-  is set — there's no later release that gives it a moment of being real again, the way an
-  old versioned-mode tag gets. Real content always lives at `/weavejs/latest/…` only.
+- **Versioned**: `/weavejs/latest/…` mirrors whichever release tag is newest. The moment a
+  newer tag ships, the NEXT build's `component.latest` moves to it automatically — the
+  superseded tag's own real, permanent URL is untouched either way (it was never a stub to
+  begin with), and `/latest/…` simply republishes from the new tag next time.
+- **Standalone**: `/weavejs/latest/…` mirrors `stable`, republished on every release. Both
+  `/weavejs/stable/…` and `/weavejs/latest/…` stay real, permanently, for as long as a
+  release exists. Before a first release (only `prerelease` exists), `duplicateLatestVersion`
+  is a no-op — no `/latest/…` is published for content that was never actually released.
 
-Either way, a rule authored via the `redirects` extension config (see the docs-site-package
-skill's own "Legacy URL redirects" section) must target `/weavejs/latest/…` explicitly, never
-a version's own actual segment — matching only ever happens against genuinely real pages, so a
-rule pointed at an alias-only segment (`/weavejs/stable/…` under standalone's `replace`
-strategy) matches nothing, which is caught at build time as a "matched no real pages" warning
-rather than silently shipping a rule that never fires.
+A rule authored via the `redirects` extension config (see the docs-site-package skill's own
+"Legacy URL redirects" section) can target either `/weavejs/stable/…` or `/weavejs/latest/…`
+now — both resolve real pages, so neither is the "only guaranteed real" target the way
+`/weavejs/latest/…` used to be the sole survivor under the old `replace`-strategy setup.
 
 ## Version descriptor labels and display names
 

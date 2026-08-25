@@ -152,5 +152,9 @@ antora:
     # above — see the docs-internals skill's reference/antora-extensions.md):
     # nav_modules-driven module switcher, an authored site footer, the search
     # index the UI bundle's search dialog reads, and llms.txt/llms-full.txt
-    # generation for AI ingestion.
-    - '@inditextech/pdocs-antora-extensions'
+    # generation for AI ingestion. `duplicateLatestVersion` (GH #137)
+    # additionally publishes whichever release tag Antora computes as
+    # latest a second time under `/latest/…` — a real, independent copy,
+    # not a redirect stub — once a first release tag exists.
+    - require: '@inditextech/pdocs-antora-extensions'
+      duplicateLatestVersion: true

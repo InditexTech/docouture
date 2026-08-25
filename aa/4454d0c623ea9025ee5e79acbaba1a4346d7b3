@@ -1,0 +1,14 @@
+code/packages/asciidoc-extensions/lib/kroki-mermaid-theme.js
+  h_c93d154c7c7074 49-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "aa4454d0c623ea9025ee5e79acbaba1a4346d7b3",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+.github/workflows/code-npm_node-pr-verify.yml
+  h_c93d154c7c7074 41-49,134-158
+code/packages/antora-extensions/resources/kroki-compose.yml
+  h_c93d154c7c7074 36-44,47,60,65,70
+code/packages/cli/templates/starter/antora-playbook.local.yml
+  h_c93d154c7c7074 88-89
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  h_c93d154c7c7074 139-140
+code/packages/cli/templates/starter/antora-playbook.yml
+  h_c93d154c7c7074 149-150,161-162
+code/packages/cli/templates/starter/docs/modules/main/pages/components.adoc
+  h_c93d154c7c7074 453-468,502-509,566-604,647-678
+code/packages/cli/templates/workflows/pdocs-pr-verify.yml
+  h_c93d154c7c7074 59-88
+code/packages/cli/templates/workflows/pdocs-publish.yml
+  h_c93d154c7c7074 84-104
+code/packages/cli/templates/workflows/pdocs-release.yml
+  h_c93d154c7c7074 130-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "510c6fd8408a73a49c2ee2b7846a92b020cc413c",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -46,7 +46,18 @@ const DEFAULT_THEME_INIT = {
   // documented limitation the old CSS-based version had.
   themeCSS:
     '.node rect,.statediagram-state rect.basic,.statediagram-cluster rect{rx:0!important;ry:0!important;}' +
-    '.transition,.marker,.node circle.state-start,[id$="-barbEnd"]{stroke:#000000!important;fill:#000000!important;}' +
+    // `.transition` is the edge/connector PATH itself, not an arrowhead —
+    // it always ships its own inline `fill:none` (paths are lines, never
+    // filled shapes). Setting `fill` here too (as a previous version of
+    // this rule did) beats that inline `fill:none` (an `!important`
+    // stylesheet rule always wins over a plain inline declaration,
+    // regardless of specificity) and silently turns any edge whose path
+    // happens to double back on itself — e.g. a self-loop like `G --> G`
+    // in a stateDiagram — into a solid black blob, since the now-closed-ish
+    // curve gets a fill. `stroke` is the only channel `.transition` should
+    // ever touch; arrowheads are separate elements matched below.
+    '.transition{stroke:#000000!important;}' +
+    '.marker,.node circle.state-start,[id$="-barbEnd"]{stroke:#000000!important;fill:#000000!important;}' +
     '.node circle.state-end{fill:#000000!important;stroke:#ffffff!important;}' +
     '.nodeLabel,.edgeLabel,.stateLabel,.cluster-label{color:#000000!important;}',
 }

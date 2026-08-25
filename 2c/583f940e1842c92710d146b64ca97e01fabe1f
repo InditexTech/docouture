@@ -1,0 +1,21 @@
+code/packages/antora-extensions/lib/redirects.spec.js
+  s_590a27aa61b310::t_d99a7675ffb828 1-129
+code/pnpm-lock.yaml
+  s_590a27aa61b310::t_6f3edf8ead3208 57-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2c583f940e1842c92710d146b64ca97e01fabe1f",
+  "prompts": {},
+  "sessions": {
+    "s_590a27aa61b310": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fc6b2e288ffe3AXqJNfqndA4E4",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

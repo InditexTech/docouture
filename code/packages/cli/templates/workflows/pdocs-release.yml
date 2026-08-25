@@ -127,6 +127,26 @@ jobs:
       - name: Install dependencies
         run: __PDOCS_INSTALL_CI__
 
+      # See pdocs-pr-verify.yml's own comment: primes the runner's Docker
+      # image store before the Build step's implicit Kroki startup.
+      - name: Kroki / Docker image cache
+        id: kroki-cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/kroki-images.tar
+          key: ${{ runner.os }}-kroki-images-${{ hashFiles('**/kroki-compose.yml') }}
+
+      - name: Kroki / Load cached images
+        if: steps.kroki-cache.outputs.cache-hit == 'true'
+        run: docker load -i /tmp/kroki-images.tar
+
+      - name: Kroki / Pull and save images
+        if: steps.kroki-cache.outputs.cache-hit != 'true'
+        run: |
+          compose_file="$(find . -name kroki-compose.yml 2>/dev/null | head -1)"
+          docker compose -f "$compose_file" pull
+          docker save -o /tmp/kroki-images.tar $(docker compose -f "$compose_file" config --images)
+
       # Nothing before this point has actually built the docs — unlike
       # pdocs-pr-verify.yml and pdocs-publish.yml, this workflow previously
       # went straight from install to cutting a release tag. That let a

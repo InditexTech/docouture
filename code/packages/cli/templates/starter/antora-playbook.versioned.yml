@@ -136,8 +136,8 @@ asciidoc:
     # `:!page-pagination:` (e.g. a landing-style page).
     page-pagination: '@'
     # Same as the real antora-playbook.yml — see its own comment.
-    # kroki-enabled: true
-    # kroki-diagram-types: mermaid,plantuml,bpmn,excalidraw
+    kroki-enabled: true
+    kroki-diagram-types: mermaid,plantuml,bpmn,excalidraw
   extensions:
     # Authoring blocks with no plain AsciiDoc equivalent — [tabs], [cards],
     # [feature-tabs], [cta], [accordion] grouping, plus the label:[]/mono:[]

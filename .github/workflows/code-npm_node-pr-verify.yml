@@ -38,6 +38,15 @@ jobs:
     # `code-npm_node-publish-release-and-snapshot.yml` nor
     # `code-release_preview.yml` needs this: neither builds the example
     # site's Antora output at all.
+    #
+    # "Kroki / ..." cache steps below prime the runner's local Docker image
+    # store *before* that implicit `docker compose up -d` fires, so it never
+    # has to pull — a fresh ubuntu-24.04 runner otherwise pulls all 4 images
+    # (kroki core + mermaid/bpmn/excalidraw companions) from scratch on every
+    # single run. Only possible because kroki-compose.yml pins every image by
+    # digest, not `:latest` — the cache key below is derived from that same
+    # file's contents, so it only invalidates when those digests actually
+    # change, not on every run.
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -121,6 +130,31 @@ jobs:
         working-directory: code
         run: |
           npm run verify
+
+      # See this job's own header comment. Cache key is the compose file's
+      # own hash — image digests only, so a hit means the exact same 4
+      # images this run needs are already loaded, whatever else changed.
+      - name: Kroki / Docker image cache
+        id: kroki-cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/kroki-images.tar
+          key: ${{ runner.os }}-kroki-images-${{ hashFiles('code/packages/antora-extensions/resources/kroki-compose.yml') }}
+
+      - name: Kroki / Load cached images
+        if: steps.kroki-cache.outputs.cache-hit == 'true'
+        run: docker load -i /tmp/kroki-images.tar
+
+      # Cache miss (first run after a digest bump, or a cold cache): pull
+      # once here, then save straight back out so this exact set is reusable
+      # this run onward — `docker compose ... pull` alone would otherwise pull
+      # a second time inside kroki-prewarm.js's own `up -d` for nothing.
+      - name: Kroki / Pull and save images
+        if: steps.kroki-cache.outputs.cache-hit != 'true'
+        run: |
+          docker compose -f code/packages/antora-extensions/resources/kroki-compose.yml pull
+          docker save -o /tmp/kroki-images.tar \
+            $(docker compose -f code/packages/antora-extensions/resources/kroki-compose.yml config --images)
 
       - name: Build example site (PR HEAD)
         working-directory: code/packages/example

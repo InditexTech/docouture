@@ -33,9 +33,18 @@
 # and adding it here the same way — check the new companion image's own
 # actual listening port first (`docker exec <container> netstat -tlnp`),
 # don't assume it from an adjacent one.
+# Images are pinned by digest, not `:latest` — this makes the image set
+# reproducible (a rebuild months later pulls the exact same bits) and lets CI
+# cache the pulled layers keyed on this file's own contents (see
+# .github/workflows/*.yml's "Kroki docker image cache" step): a cache key
+# derived from a `:latest` tag would never invalidate when upstream actually
+# moves, silently serving a stale image forever. Bump these deliberately —
+# `docker pull yuzutech/kroki:latest && docker inspect --format='{{index
+# .RepoDigests 0}}' yuzutech/kroki:latest` (same for the other three) — not
+# as a side effect of some automated tool touching `:latest` for you.
 services:
   kroki:
-    image: yuzutech/kroki:latest
+    image: yuzutech/kroki@sha256:6980bfb218b48b74ea14b888d9c7e8c032d1cb6325f3292277abdf62483abd9d
     ports:
       - '8500:8000'
     environment:
@@ -48,16 +57,16 @@ services:
       - excalidraw
 
   mermaid:
-    image: yuzutech/kroki-mermaid:latest
+    image: yuzutech/kroki-mermaid@sha256:ad6721646aabfb8b5f5005db2daa6e37189c25e18aab19a8ef8590b6171cd192
     expose:
       - '8002'
 
   bpmn:
-    image: yuzutech/kroki-bpmn:latest
+    image: yuzutech/kroki-bpmn@sha256:1558692f39cbede20f70f732d34c906dde7a3333e004f55dc66ea8fbfc3e7d70
     expose:
       - '8003'
 
   excalidraw:
-    image: yuzutech/kroki-excalidraw:latest
+    image: yuzutech/kroki-excalidraw@sha256:214f13c1cd3c3f79a18a83631a900fedbed71b2f39d3a0c5630ac5fa5ad40046
     expose:
       - '8004'

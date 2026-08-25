@@ -56,6 +56,36 @@ jobs:
       - name: Install dependencies
         run: __PDOCS_INSTALL_CI__
 
+      # This site's antora-playbook.yml has `kroki-enabled: true`, so the
+      # Build step below renders real diagrams through a local Kroki service
+      # that `@inditextech/pdocs-antora-extensions`' `kroki-prewarm.js` starts
+      # itself (docker compose) the moment it finds nothing listening yet —
+      # no explicit setup needed for that. These two steps only prime the
+      # runner's Docker image store first, so that implicit startup finds
+      # everything already pulled instead of doing it cold on every run. Cache
+      # key is the compose file's own hash (images are pinned by digest, not
+      # `:latest` — see that file's own header), so it only invalidates when
+      # the actual pinned images change.
+      - name: Kroki / Docker image cache
+        id: kroki-cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/kroki-images.tar
+          key: ${{ runner.os }}-kroki-images-${{ hashFiles('**/kroki-compose.yml') }}
+
+      - name: Kroki / Load cached images
+        if: steps.kroki-cache.outputs.cache-hit == 'true'
+        run: docker load -i /tmp/kroki-images.tar
+
+      - name: Kroki / Pull and save images
+        if: steps.kroki-cache.outputs.cache-hit != 'true'
+        run: |
+          # docs/kroki-compose.yml if this site has ejected it (see that
+          # file's own header), else the bundled default under node_modules.
+          compose_file="$(find . -name kroki-compose.yml 2>/dev/null | head -1)"
+          docker compose -f "$compose_file" pull
+          docker save -o /tmp/kroki-images.tar $(docker compose -f "$compose_file" config --images)
+
       - name: Build
         run: npx antora --fetch antora-playbook.local.yml
 

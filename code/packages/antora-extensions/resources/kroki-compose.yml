@@ -1,0 +1,72 @@
+# GH-44: default Kroki (https://kroki.io) container definitions —
+# `kroki-prewarm.js` starts these automatically (`docker compose -f
+# <this file> up -d`) the first time a `kroki-enabled: true` build needs a
+# diagram rendered and finds nothing already listening at the fixed local
+# URL `@inditextech/pdocs-asciidoc-extensions/lib/kroki-config.js` hardcodes.
+# There is no teardown: containers are left running after the build, reused
+# by the next one (a fast reachability check skips straight past this file
+# when Kroki is already up), and simply discarded whenever the machine or CI
+# runner they ran on goes away.
+#
+# CUSTOMIZING THIS: run `pdocs eject kroki` to copy this exact file to
+# docs/kroki-compose.yml in your own site's repository — kroki-prewarm.js
+# prefers that copy over this bundled default whenever one exists, so you
+# can add companions for other diagram types, pin different image versions,
+# or add whatever else your environment needs, without forking this package.
+#
+# `mermaid`, `bpmn` and `excalidraw` are the three SUPPORTED_TYPES entries
+# (see kroki-config.js) that need a headless-Chrome/JS environment of their
+# own to lay a diagram out — Kroki's own catalogue, not something specific
+# to this package (verified against the real yuzutech/kroki-{mermaid,bpmn,
+# excalidraw} images: each is a Node+Puppeteer service listening on its own
+# fixed port — 8002, 8003, 8004 respectively — that Kroki's core service
+# reaches for by that exact port whenever `KROKI_<TYPE>_HOST` names a
+# reachable host, regardless of what `expose:` claims; get the port wrong
+# for one of these three and Kroki's core container fails that diagram type
+# with a "Connection refused" to whatever port IT expected, not the one the
+# companion's container actually listens on — this bit us once already,
+# assigning excalidraw the bpmn port). Every other supported type
+# (plantuml, graphviz, ditaa, ...) is rendered by the `kroki` service alone,
+# no headless browser involved. Widening `kroki-diagram-types` to one of
+# those needs no compose change; a future SUPPORTED_TYPES entry that also
+# needs its own companion means ejecting this file (`pdocs eject kroki`)
+# and adding it here the same way — check the new companion image's own
+# actual listening port first (`docker exec <container> netstat -tlnp`),
+# don't assume it from an adjacent one.
+# Images are pinned by digest, not `:latest` — this makes the image set
+# reproducible (a rebuild months later pulls the exact same bits) and lets CI
+# cache the pulled layers keyed on this file's own contents (see
+# .github/workflows/*.yml's "Kroki docker image cache" step): a cache key
+# derived from a `:latest` tag would never invalidate when upstream actually
+# moves, silently serving a stale image forever. Bump these deliberately —
+# `docker pull yuzutech/kroki:latest && docker inspect --format='{{index
+# .RepoDigests 0}}' yuzutech/kroki:latest` (same for the other three) — not
+# as a side effect of some automated tool touching `:latest` for you.
+services:
+  kroki:
+    image: yuzutech/kroki@sha256:6980bfb218b48b74ea14b888d9c7e8c032d1cb6325f3292277abdf62483abd9d
+    ports:
+      - '8500:8000'
+    environment:
+      KROKI_MERMAID_HOST: mermaid
+      KROKI_BPMN_HOST: bpmn
+      KROKI_EXCALIDRAW_HOST: excalidraw
+    depends_on:
+      - mermaid
+      - bpmn
+      - excalidraw
+
+  mermaid:
+    image: yuzutech/kroki-mermaid@sha256:ad6721646aabfb8b5f5005db2daa6e37189c25e18aab19a8ef8590b6171cd192
+    expose:
+      - '8002'
+
+  bpmn:
+    image: yuzutech/kroki-bpmn@sha256:1558692f39cbede20f70f732d34c906dde7a3333e004f55dc66ea8fbfc3e7d70
+    expose:
+      - '8003'
+
+  excalidraw:
+    image: yuzutech/kroki-excalidraw@sha256:214f13c1cd3c3f79a18a83631a900fedbed71b2f39d3a0c5630ac5fa5ad40046
+    expose:
+      - '8004'

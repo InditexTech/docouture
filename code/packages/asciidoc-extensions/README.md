@@ -32,9 +32,9 @@ Every extension in this package keeps all eight of these.
 anything — a site lists this package once and gets the whole set.
 
 `lib/` also holds modules that register nothing: `async-compat.js`,
-`first-positional.js`, `html.js`, `unique-id.js`, `warn.js`. They are helpers,
-required directly by the extensions, and are deliberately absent from
-`index.js`.
+`first-positional.js`, `html.js`, `unique-id.js`, `warn.js`, `kroki-config.js`
+and `kroki-instance.js`. They are helpers, required directly by the
+extensions, and are deliberately absent from `index.js`.
 
 ### 2. `register` is exported as both a named export and `module.exports.register`
 
@@ -163,6 +163,69 @@ Two steps, both required. Doing only one fails silently.
 Note the neighbouring package: `@inditextech/pdocs-antora-extensions` hooks
 Antora's own pipeline under the **`antora.extensions`** key. Listing either
 package under the other's key makes Antora log a warning and skip it.
+
+### Kroki: opt-in, disabled by default
+
+`[mermaid]`, `[plantuml]`, `[graphviz]` and the rest of `kroki.js`'s
+`SUPPORTED_TYPES` are the one extension in this package that is **not** active
+just by listing the package — see that file's own header. A site turns it on
+with two more `asciidoc.attributes`:
+
+```yaml
+asciidoc:
+  attributes:
+    kroki-enabled: true
+    kroki-diagram-types: mermaid,plantuml # optional; omitted = every supported type
+```
+
+Per-block, `[mermaid,format=png]` renders a transparent PNG `<img>` instead of the
+default inline SVG — see `kroki-config.js`'s `PNG_SUPPORTED_TYPES` for which of
+`SUPPORTED_TYPES` actually support it (`bpmn` and `excalidraw` notably don't; Kroki
+itself rejects those two output formats outright). An unsupported combination falls
+back to `svg` with a build warning.
+
+Mermaid diagrams also get IOP DS-aligned styling (square corners, DS colors, DS body
+typography) baked in server-side via a `%%{init: {...}}%%` directive
+`kroki-mermaid-theme.js` prepends to the diagram's own source before it reaches Kroki
+— not a CSS override, so it applies identically whether the block renders as `svg` or
+`format=png`. An author who opens their own diagram with `%%{init...}%%` opts out
+automatically (Mermaid only honors the first one); every other `SUPPORTED_TYPES` entry
+keeps its own baked-in look, font aside (ui-bundle's `diagram.css` normalizes that one
+blanket, safely, for every type).
+
+It also needs a Kroki service reachable at build time, at the fixed local URL
+`kroki-config.js` hardcodes (not itself configurable — see that file's own
+header for why). No manual setup: the sibling `@inditextech/pdocs-antora-
+extensions` package's `kroki-prewarm.js` starts one itself, via `docker
+compose`, the first time a build needs it and finds nothing already
+listening — on every invocation path (`pdocs dev`/`pdocs build`, this
+monorepo's own `just dev`/`just build-site`, a raw `antora` call, any
+consumer's own CI) equally, with no automatic teardown (a stopped-and-
+restarted Kroki on every build would only add latency back). Run `pdocs
+eject kroki` to copy the bundled compose file into a site's own repo for
+customization (a different image version, a companion container for
+another diagram type); run `pdocs teardown kroki` (or, in this monorepo,
+`just kroki-down`) to stop it manually once you're actually done with it.
+Without `kroki-enabled: true`, or if Docker/the service never becomes
+reachable, these blocks render exactly as plain AsciiDoc already would — a
+disabled or unavailable Kroki is never itself a build failure.
+
+A healthy run is otherwise silent: `kroki-docker.js` and `kroki-prewarm.js`
+log their whole lifecycle (already-reachable / starting via which compose
+file / `docker compose up -d` succeeded / became reachable after Ns /
+render summary) at `info`, so nothing about a working setup looks different
+from Nx quietly replaying a stale cached build. Antora's own default log
+level is `warn`, so these are invisible unless you ask for them — as is
+every other pdocs extension's own `getLogger('pdocs-...')` observability
+(search-index's per-component summary, llms-txt's, footer's, ...), same
+reasoning throughout. This monorepo's own `just dev`/`just build-site`
+recipes, and `pdocs dev`/`pdocs build` (`antora-log.ts` in the `cli`
+package), all pass `--log-level=info` to every Antora invocation they make
+for exactly this reason, so no extra flag is needed there — a raw `antora`
+invocation of your own still needs `--log-level=info` (or
+`ANTORA_LOG_LEVEL=info`) passed explicitly. A real failure (Docker missing,
+daemon unreachable, service never comes up, an individual diagram failing
+to render) still logs at `warn` unconditionally either way.
 
 ## Targets
 

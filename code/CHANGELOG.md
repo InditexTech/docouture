@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#44](https://github.com/InditexTech/test-antoradocs/issues/44) Migration: render `[mermaid]`/`[plantuml]`/etc. diagrams via a self-hosted Kroki service instead of literal diagram source — opt-in per site (`kroki-enabled`/`kroki-diagram-types`), disabled by default, auto-started on demand (no manual `docker compose` step, no CI service container), customizable via `pdocs eject kroki`, stoppable via `pdocs teardown kroki` (`just kroki-down` in this monorepo); Kroki's own auto-start/render lifecycle, and every other pdocs Antora extension's own observability (search-index, llms-txt, footer, nav-modules, version-report, not-found-page), now logs at `info` under a `pdocs-*` name and is surfaced by default from `just dev`/`just build-site` and `pdocs dev`/`pdocs build`; a new always-on `lifecycle-log` extension traces Antora's own generator pipeline (`contextStarted` through `contextClosed`) the same way, since Antora itself never logs when it enters a phase at any log level
 - [#120](https://github.com/InditexTech/test-antoradocs/pull/120) Polish CLI starter template: align with example, add placeholder module, wire extensions, add default logo/favicon
 - [#119](https://github.com/InditexTech/test-antoradocs/pull/119) Docs publish: Create reusable GitHub Actions workflow for Antora to GitHub Pages
 - [#118](https://github.com/InditexTech/test-antoradocs/pull/118) [Epic] Version selector: visibility, modes & responsive styling

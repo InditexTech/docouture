@@ -11,7 +11,8 @@
   "main": "index.js",
   "files": [
     "index.js",
-    "lib"
+    "lib",
+    "resources"
   ],
   "engines": {
     "node": ">=24.0.0"
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "@antora/page-composer": "~3.1.15",
+    "@antora/redirect-producer": "~3.1.15",
     "@inditextech/pdocs-asciidoc-extensions": "workspace:*",
     "@shikijs/langs": "~4.4.0",
     "@shikijs/themes": "~4.4.0",

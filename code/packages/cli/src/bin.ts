@@ -10,6 +10,8 @@ import { runBuild } from './commands/build.js'
 import { runDoctor } from './commands/doctor.js'
 import { runPublish } from './commands/publish.js'
 import { runUpgrade } from './commands/upgrade.js'
+import { runEject } from './commands/eject.js'
+import { runTeardown } from './commands/teardown.js'
 import { readCliInfo } from './lib/cli-info.js'
 
 const USAGE = `Usage:
@@ -56,6 +58,21 @@ const USAGE = `Usage:
       docs/. --dry-run lists what would be written without changing
       anything.
 
+  pdocs eject <target> [--dir <path>]
+      Copy a bundled default file out into docs/ for local customization.
+      'kroki': docs/kroki-compose.yml, the docker compose definition
+      @inditextech/pdocs-antora-extensions' kroki-prewarm.js starts
+      automatically when a build needs Kroki (kroki-enabled: true) and finds
+      nothing already running — auto-detected and preferred over the
+      bundled default once it exists. Refuses to overwrite an existing file.
+
+  pdocs teardown <target> [--dir <path>]
+      Stop a service pdocs started for you. 'kroki': runs 'docker compose
+      down' against whichever kroki-compose.yml is actually in effect (an
+      ejected docs/kroki-compose.yml if you have one, else the bundled
+      default) — the manual counterpart to kroki-prewarm.js's own auto-start,
+      which never stops it itself.
+
   pdocs --version, -v
       Print the installed @inditextech/pdocs-cli version and exit.
 `
@@ -96,6 +113,10 @@ async function main(): Promise<number> {
       return runDoctor(rest)
     case 'upgrade':
       return runUpgrade(rest)
+    case 'eject':
+      return runEject(rest)
+    case 'teardown':
+      return runTeardown(rest)
     default:
       console.error(`unknown command: '${command}'\n`)
       console.log(await banner())

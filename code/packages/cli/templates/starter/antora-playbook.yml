@@ -145,6 +145,21 @@ asciidoc:
     # soft default, so an individual page can still opt out with
     # `:!page-pagination:` (e.g. a landing-style page).
     page-pagination: '@'
+    # Renders `[mermaid]`/`[plantuml]`/etc. blocks as real diagrams instead of
+    # literal source text, via a self-hosted Kroki service — enabled by
+    # default (comment both lines below out to turn it off). Needs Docker
+    # available; @inditextech/pdocs-antora-extensions' kroki-prewarm.js
+    # starts the service itself, automatically, the first time a build needs
+    # it — no manual setup required. Run `pdocs eject kroki` to copy the
+    # bundled compose file into docs/kroki-compose.yml if you need to
+    # customize it (a different image version, a companion for another
+    # diagram type, ...); `pdocs teardown kroki` stops it manually, since
+    # nothing stops it automatically. `kroki-diagram-types` is a
+    # comma-separated subset of kroki.js's `SUPPORTED_TYPES` (e.g. `mermaid`
+    # or `mermaid,plantuml,bpmn,excalidraw`); omit it to enable every
+    # supported type.
+    kroki-enabled: true
+    kroki-diagram-types: mermaid,plantuml,bpmn,excalidraw
   extensions:
     # Authoring blocks with no plain AsciiDoc equivalent — [tabs], [cards],
     # [feature-tabs], [cta], [accordion] grouping, plus the label:[]/mono:[]

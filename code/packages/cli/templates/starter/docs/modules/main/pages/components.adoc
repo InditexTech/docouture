@@ -432,6 +432,250 @@ A short pitch, plus one prominent action.
 xref:main:getting-started.adoc[Get started]
 ====
 
+=== Diagrams
+
+`[mermaid]`, `[plantuml]`, `[graphviz]` and a handful of other diagram languages (see
+`@inditextech/pdocs-asciidoc-extensions`' `lib/kroki-config.js` for the full list) render
+as real diagrams via a self-hosted https://kroki.io[Kroki] service — a literal block
+(four dots, not a fenced code block) styled with the diagram language's name:
+
+[,asciidoc]
+----
+[mermaid]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+----
+
+[mermaid]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+
+This feature is **enabled by default** in this starter (see `antora-playbook.yml`'s
+`kroki-enabled`/`kroki-diagram-types` attributes) — it needs Docker available, since the
+build starts a self-hosted Kroki service the first time a build needs it, no manual step
+required (it isn't stopped automatically either — run `pdocs teardown kroki` once you're
+done with it). Run `pdocs eject kroki` if you ever need to customize the container
+definition, or comment the two attributes back out to turn the feature off entirely — a
+block like the one above then renders exactly as plain AsciiDoc already would: the raw
+diagram source, as literal text, same as the fenced listing shows it above.
+
+==== Styling
+
+Mermaid diagrams are themed to match the IOP Design System automatically — square
+corners, black-on-white (light mode; inverted for dark), body typography — via a
+`%%{init: {...}}%%` directive this extension prepends to the diagram's own source
+before it ever reaches Kroki, not via CSS. Write your own `%%{init...}%%` as the
+diagram's first line to opt out and take full control of Mermaid's own theming instead.
+Every other diagram type's font is still normalized via CSS (safe — a tool's typeface
+choice carries no meaning); BPMN's two-tone palette is still remapped via CSS too
+(its bpmn-js renderer has no source-level theming hook this package uses yet, unlike
+Mermaid's). BPMN's own rounded task-box corners could not be un-rounded by any means
+found — bpmn-js hardcodes that radius; this is a real, currently-unfixed limitation,
+not an oversight.
+
+==== PNG output
+
+`[mermaid,format=png]` (or any other diagram language Kroki can rasterize — see
+`kroki-config.js`'s `PNG_SUPPORTED_TYPES` for the full list; `bpmn` and `excalidraw`
+are notably **not** on it, Kroki itself rejects `/bpmn/png` and `/excalidraw/png`
+outright) renders a transparent PNG instead of inline SVG:
+
+[,asciidoc]
+----
+[mermaid,format=png]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+----
+
+[mermaid,format=png]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+
+Embedded as a plain `<img>` with a base64 `data:` URI — no extra file written, no extra
+HTTP request. Reach for this only when you actually need a raster image (an export, an
+email, a renderer that can't handle inline SVG); the inline-SVG default stays sharper at
+every zoom level and lets a reader select/search the diagram's own text, neither of
+which a PNG can do. An unsupported type or a typo'd `format=` value both fall back to
+`svg` with a build warning, the same degrade-not-fail posture as an unknown
+`kroki-diagram-types` entry.
+
+==== BPMN
+
+`[bpmn]` renders BPMN 2.0 XML (the same format bpmn.io and most process-modeling tools
+export). Like `mermaid` and `excalidraw`, it needs its own headless-Chrome companion
+container — the bundled `kroki-compose.yml` already includes one:
+
+[,asciidoc]
+----
+[bpmn]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+    id="definitions" targetNamespace="http://bpmn.io/schema/bpmn">
+  <process id="process_1" isExecutable="false">
+    <startEvent id="start" name="Request received"/>
+    <task id="task" name="Handle request"/>
+    <endEvent id="end" name="Done"/>
+    <sequenceFlow id="flow_1" sourceRef="start" targetRef="task"/>
+    <sequenceFlow id="flow_2" sourceRef="task" targetRef="end"/>
+  </process>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane" bpmnElement="process_1">
+      <bpmndi:BPMNShape id="start_di" bpmnElement="start">
+        <omgdc:Bounds x="100" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="task_di" bpmnElement="task">
+        <omgdc:Bounds x="200" y="78" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_di" bpmnElement="end">
+        <omgdc:Bounds x="360" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="flow_1_di" bpmnElement="flow_1">
+        <omgdi:waypoint x="136" y="118"/>
+        <omgdi:waypoint x="200" y="118"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow_2_di" bpmnElement="flow_2">
+        <omgdi:waypoint x="300" y="118"/>
+        <omgdi:waypoint x="360" y="118"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
+....
+----
+
+[bpmn]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+    id="definitions" targetNamespace="http://bpmn.io/schema/bpmn">
+  <process id="process_1" isExecutable="false">
+    <startEvent id="start" name="Request received"/>
+    <task id="task" name="Handle request"/>
+    <endEvent id="end" name="Done"/>
+    <sequenceFlow id="flow_1" sourceRef="start" targetRef="task"/>
+    <sequenceFlow id="flow_2" sourceRef="task" targetRef="end"/>
+  </process>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane" bpmnElement="process_1">
+      <bpmndi:BPMNShape id="start_di" bpmnElement="start">
+        <omgdc:Bounds x="100" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="task_di" bpmnElement="task">
+        <omgdc:Bounds x="200" y="78" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_di" bpmnElement="end">
+        <omgdc:Bounds x="360" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="flow_1_di" bpmnElement="flow_1">
+        <omgdi:waypoint x="136" y="118"/>
+        <omgdi:waypoint x="200" y="118"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow_2_di" bpmnElement="flow_2">
+        <omgdi:waypoint x="300" y="118"/>
+        <omgdi:waypoint x="360" y="118"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
+....
+
+==== Excalidraw
+
+`[excalidraw]` renders an Excalidraw scene (the JSON a `.excalidraw` file, or
+https://excalidraw.com[excalidraw.com]'s own "Save to..." export, contains). Unlike
+`bpmn`, this type *does* need its own companion — the bundled `kroki-compose.yml`
+includes an `excalidraw` service alongside `mermaid` for exactly that reason:
+
+[,asciidoc]
+----
+[excalidraw]
+....
+{
+  "type": "excalidraw",
+  "version": 2,
+  "elements": [
+    {
+      "type": "rectangle",
+      "id": "rect1",
+      "x": 100,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "seed": 1
+    },
+    {
+      "type": "text",
+      "id": "text1",
+      "x": 130,
+      "y": 135,
+      "width": 140,
+      "height": 25,
+      "text": "Hello, Excalidraw",
+      "fontSize": 20,
+      "seed": 2
+    }
+  ]
+}
+....
+----
+
+[excalidraw]
+....
+{
+  "type": "excalidraw",
+  "version": 2,
+  "elements": [
+    {
+      "type": "rectangle",
+      "id": "rect1",
+      "x": 100,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "seed": 1
+    },
+    {
+      "type": "text",
+      "id": "text1",
+      "x": 130,
+      "y": 135,
+      "width": 140,
+      "height": 25,
+      "text": "Hello, Excalidraw",
+      "fontSize": 20,
+      "seed": 2
+    }
+  ]
+}
+....
+
 === Inline macros: `label:` and `mono:`
 
 label:grey[Default] label:red[Blocked] label:orange[Pending] label:green[Stable]

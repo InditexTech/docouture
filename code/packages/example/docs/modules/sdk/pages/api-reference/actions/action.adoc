@@ -32,7 +32,7 @@ Don't instantiate this WeaveAction class directly.
 
 Weave.js action lifecycle is pretty simple:
 
-[mermaid]
+[mermaid,format=png]
 ....
 stateDiagram-v2
 A: Weave instance is started

@@ -21,6 +21,7 @@ import { createReadStream, existsSync } from 'node:fs'
 import { extname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 
 import { readSiteUrl } from './playbook-yml.js'
+import { ANTORA_LOG_LEVEL_ARGS, filterObservableAntoraLog } from './antora-log.js'
 
 const RELOAD_PATH = '/__dev/reload'
 const CLIENT_PATH = '/__dev/client.js'
@@ -98,12 +99,24 @@ function defaultRunBuild(siteRoot: string): () => Promise<boolean> {
       // never clears because runBuild() never resolves).
       execFile(
         antoraBin,
-        ['antora-playbook.local.yml'],
+        ['antora-playbook.local.yml', ...ANTORA_LOG_LEVEL_ARGS],
         { cwd: siteRoot, timeout: BUILD_TIMEOUT_MS },
         (err, stdout, stderr) => {
           if (err) {
+            // A failed rebuild gets its raw, unfiltered output — the whole
+            // story, not a filtered excerpt that might cut short exactly
+            // the line that explains the failure.
             if (stdout) process.stdout.write(stdout)
             if (stderr) process.stderr.write(stderr)
+          } else {
+            // A successful rebuild would otherwise be completely silent —
+            // every pdocs-* extension's own observability logs (Kroki's
+            // auto-start/render lifecycle, search-index's summary, ...)
+            // discarded along with Antora's own routine noise. See
+            // antora-log.ts's own header for why `--log-level=info` above
+            // is what makes those lines exist to filter in the first place.
+            const observable = filterObservableAntoraLog(`${stdout}\n${stderr}`)
+            if (observable) process.stdout.write(observable + '\n')
           }
           resolvePromise(!err)
         }

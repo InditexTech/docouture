@@ -37,7 +37,7 @@ review it, suggest feedback if necessary, and merge when ready.
 
 If you're more visual, here's a flowchart for the collaboration process:
 
-[mermaid]
+[mermaid,format=png]
 ....
 flowchart TD
 A[Fork Weave.js Repository] --> B[Create a New Branch]

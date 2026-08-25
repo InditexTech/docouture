@@ -153,6 +153,20 @@ asciidoc:
     # with `:!page-pagination:` if one ever needs to (e.g. a future landing
     # page).
     page-pagination: '@'
+    # GH-44: renders `[mermaid]` blocks (the migration left 11 of them behind
+    # as literal diagram source — see tools/fumadocs-migrate/lib/emit.mjs) as
+    # real diagrams, via a self-hosted Kroki service at the fixed local URL
+    # @inditextech/pdocs-asciidoc-extensions/lib/kroki-config.js hardcodes —
+    # @inditextech/pdocs-antora-extensions' kroki-prewarm.js starts it
+    # automatically, no manual step needed. Only `mermaid` is enabled: that's
+    # the only diagram type the migrated corpus actually uses; widening this
+    # to a comma-separated list of more of kroki.js's `SUPPORTED_TYPES` may
+    # also need a companion container added — copy that package's
+    # resources/kroki-compose.yml to kroki-compose.yml right here (this
+    # directory) to customize it; kroki-prewarm.js prefers that copy once it
+    # exists.
+    kroki-enabled: true
+    kroki-diagram-types: mermaid
   extensions:
     # GH-14: `label:red[Text]` / `label:[Text]` (grey default) — an IDS
     # Label inline; `mono:[text]` — plain monospaced text, no code chip.

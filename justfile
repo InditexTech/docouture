@@ -175,10 +175,30 @@ doctor: (_hdr "doctor")
 preview-ui: (_hdr "preview-ui")
     pnpm --filter @inditextech/pdocs-ui-bundle preview
 
-# Build a site and serve it on :5000, rebuilding as you edit it
+# Stop the local Kroki service (GH-44) that kroki-prewarm.js starts automatically
+# for a kroki-enabled build — the manual counterpart to that auto-start, which
+# never stops it itself; see antora-extensions/lib/kroki-docker.js's own header.
+# Targets whichever compose file is actually in effect for `example` — an ejected
+# override at packages/example/kroki-compose.yml if one exists there, else the
+# bundled default in packages/antora-extensions/resources — same resolution order
+# kroki-docker.js itself uses. Scaffolded (non-monorepo) sites use `pdocs teardown
+# kroki` instead, which resolves the same way against their own docs/ directory.
+[group('dev')]
+kroki-down: (_hdr "kroki-down")
+    #!/usr/bin/env bash
+    set -euo pipefail
+    compose_file="packages/example/kroki-compose.yml"
+    if [ ! -f "$compose_file" ]; then
+      compose_file="packages/antora-extensions/resources/kroki-compose.yml"
+    fi
+    docker compose -f "$compose_file" down
+
+# Build a site and serve it on :5000, rebuilding as you edit it. Pass `true`
+# as the last arg to force a real rebuild instead of an Nx cache replay —
+# see `build-site`'s own comment for when that matters.
 [group('dev')]
 [no-exit-message]
-dev site='example' port='5000' strict='false': (_hdr "dev " + site)
+dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + site)
     #!/usr/bin/env bash
     set -uo pipefail
 
@@ -201,20 +221,68 @@ dev site='example' port='5000' strict='false': (_hdr "dev " + site)
     # regardless of this setting, since that's a thrown exception, not a
     # logged-message-count check; only the warn/error-level tolerance is
     # what `strict` controls.
-    extra_args=()
+    #
+    # `--log-level=info`: Antora's own default (`warn`, set by
+    # @antora/playbook-builder's convict schema, not the `info` @antora/
+    # logger falls back to on its own) would otherwise silently drop every
+    # pdocs-* extension's own observability logs — Kroki's auto-start/
+    # render lifecycle (kroki-docker.js/kroki-prewarm.js), search-index's
+    # per-component summary, llms-txt's, footer's, nav-modules', version-
+    # report's, not-found-page's — before the grep below even sees them.
+    # See asciidoc-extensions/README.md's own note on this for Kroki
+    # specifically; the same reasoning applies to every `getLogger('pdocs-
+    # ...')` caller in antora-extensions/lib, which is why the filter below
+    # keys off the shared `pdocs-` logger-name prefix rather than naming
+    # Kroki alone.
+    #
+    # `--log-format=pretty`: Antora's own default format is "pretty if
+    # CI=true or stdout is a TTY, json otherwise" (its own schema doc) — and
+    # piping through `tee`/`grep` below, same as this recipe already did
+    # before this flag existed, makes stdout not a TTY, so without this
+    # override every line downgrades to raw ndjson
+    # (`{"level":"info","time":...}`) even though a human is reading it right
+    # here. Forcing pretty explicitly is what `build-site` gets for free by
+    # never piping its own output at all. The grep filter below is written
+    # against pino-pretty's line shape, not ndjson's, to match.
+    extra_args=(--log-level=info --log-format=pretty)
     if [ '{{ strict }}' != 'true' ]; then
       extra_args+=(--log-failure-level=none)
     fi
 
-    if ! out=$({{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static -- "${extra_args[@]}" 2>&1); then
-      printf '%s\n' "$out"
+    # Stream the build live, filtered to the same pdocs-*/warn/error signal
+    # the old buffer-then-print version only showed you once the whole
+    # build was over. That buffering was invisible-by-design for the common
+    # case (a cache hit is twenty lines describing 90ms) but it also meant
+    # Kroki's own auto-start (kroki-docker.js: up to ~1s reachability probe
+    # + however long `docker compose up -d` itself takes, cold-pulling
+    # images the first time + up to 60s polling — see that file's own
+    # constants) produced zero terminal output for however long that took,
+    # indistinguishable from a hung process. `tee` keeps the full raw log
+    # for the on-failure dump below while a parallel `grep` shows the
+    # filtered subset AS it's written, not after — a cache hit with nothing
+    # pdocs-* to report still prints nothing, same as before.
+    #
+    # PIPESTATUS, not `pipefail` + `if ! pipeline`: grep legitimately exits 1
+    # whenever nothing in this build matched (the common, good case), and a
+    # trailing `|| true` to tolerate that clobbers PIPESTATUS itself (bash
+    # overwrites it with the trivial one-element pipeline `true` becomes) —
+    # reading PIPESTATUS[0] (the nx/antora process, not grep) immediately
+    # after the pipeline, with neither `pipefail` nor a tolerating `||`, is
+    # what actually keeps nx's own exit code intact.
+    logfile=$(mktemp)
+    trap 'rm -f "$logfile"' EXIT
+
+    {{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- "${extra_args[@]}" 2>&1 \
+      | tee "$logfile" \
+      | grep --line-buffered -E '\(pdocs-|\bWARN\b|\bERROR\b'
+    build_status=${PIPESTATUS[0]}
+
+    if [ "$build_status" -ne 0 ]; then
+      # The live grep above only ever showed the filtered subset — a
+      # genuine failure needs the whole story, same as before.
+      cat "$logfile"
       exit 1
     fi
-    # Still surface Antora's own content warnings — real signal, not Nx/gulp
-    # noise — just without the surrounding wrapper chatter a cache hit would
-    # otherwise print on every single save.
-    printf '%s\n' "$out" | grep -E '"level":"(warn|error)"' || true
-
 
     # The server itself does not go through Nx: there is nothing left to
     # orchestrate, and running the script directly keeps a task runner from
@@ -232,10 +300,24 @@ dev site='example' port='5000' strict='false': (_hdr "dev " + site)
 build *args: (_hdr "build")
     {{ nx }} run-many -t build {{ args }}
 
-# Build a single site
+# Build a single site. Pass `true` as the second arg to force a real
+# rebuild instead of an Nx cache replay.
 [group('build')]
-build-site site: (_hdr "build-site " + site)
-    {{ nx }} run @inditextech/pdocs-{{ site }}:build
+build-site site no_cache='false': (_hdr "build-site " + site)
+    # `--log-level=info`: same reasoning as `dev`'s own recipe above — Antora's
+    # actual default (`warn`) would otherwise silently drop every pdocs-*
+    # extension's own `info`-level observability logs (Kroki's lifecycle,
+    # search-index's per-component summary, ...) before they're even
+    # emitted. Unlike `dev`, this prints everything unfiltered already (no
+    # grep — nx streams it live), so this one flag is the whole fix here.
+    #
+    # `no_cache`: Nx's cache replays a prior run verbatim — including its
+    # captured log output — whenever none of that task's declared inputs
+    # changed; useful when what changed is actually external, e.g.
+    # re-exercising Kroki's docker-compose auto-start after `just
+    # kroki-down`, not just re-reading a cache entry that already has
+    # "Kroki rendered N diagram(s)" baked into it from a prior run.
+    {{ nx }} run @inditextech/pdocs-{{ site }}:build {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- --log-level=info
 
 # ----------------------------------------------------------------- test ------
 

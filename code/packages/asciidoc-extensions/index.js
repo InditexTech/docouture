@@ -5,8 +5,12 @@
 // register nothing and are absent from this list on purpose: async-compat.js,
 // first-positional.js, html.js, unique-id.js, warn.js, shiki-instance.js and
 // shiki-config.js are shared helpers the extensions require directly.
-// shiki-syntax-highlighter.js is the one exception that DOES register
-// something outside `registerAll` — see its own `require(...)` below.
+// kroki-config.js and kroki-instance.js are the same kind of helper, shared
+// between kroki.js (below) and the sibling
+// @inditextech/pdocs-antora-extensions package's kroki-prewarm.js — see
+// kroki.js's own header. shiki-syntax-highlighter.js is the one exception
+// that DOES register something outside `registerAll` — see its own
+// `require(...)` below.
 const registerLabelMacro = require('./lib/label-macro')
 const registerMonoMacro = require('./lib/mono-macro')
 const registerTableWidth = require('./lib/table-width')
@@ -18,6 +22,7 @@ const registerFeatureTabs = require('./lib/feature-tabs')
 const registerCta = require('./lib/cta')
 const registerAccordion = require('./lib/accordion')
 const registerTabs = require('./lib/tabs')
+const registerKroki = require('./lib/kroki')
 
 // GH-89: registers Asciidoctor's 'shiki' SyntaxHighlighter adapter. Required
 // here, at module top level, NOT inside `registerAll` below — this is a
@@ -62,6 +67,13 @@ function registerAll(target) {
   // an OPEN block, for the mirror-image reason accordion.js gives — see its
   // own header.
   registerTabs(target)
+  // [mermaid]/[plantuml]/etc — GH-44, real diagrams via a self-hosted Kroki
+  // service, over the literal diagram source the Weave.js migration left
+  // behind (see tools/fumadocs-migrate/lib/emit.mjs). Unlike every extension
+  // above, OPT IN and disabled by default per site — see its own header for
+  // why, and for the `kroki-enabled`/`kroki-diagram-types` attributes that
+  // turn it on. Registers once per supported diagram type, not once overall.
+  registerKroki(target)
 }
 
 /**

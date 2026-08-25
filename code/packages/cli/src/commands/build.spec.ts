@@ -33,7 +33,14 @@ describe('runBuild', () => {
       join(base, 'docs', 'package.json'),
       JSON.stringify({
         name: 'my-project-docs',
-        scripts: { build: `node -e "require('fs').writeFileSync('built.txt', 'ok')"` },
+        // The trailing `--` matters here, unlike a real `antora` build
+        // script: without it, `node -e` itself parses the
+        // `--log-level=info` runBuild now always forwards (see
+        // antora-log.ts) as one of *node's own* CLI flags rather than a
+        // script argument, and fails with "bad option" before the eval
+        // body ever runs. A real `antora` binary parses `--log-level`
+        // itself just fine either way.
+        scripts: { build: `node -e "require('fs').writeFileSync('built.txt', 'ok')" --` },
       }),
       'utf8'
     )
@@ -47,11 +54,29 @@ describe('runBuild', () => {
     await mkdir(join(base, 'docs'), { recursive: true })
     await writeFile(
       join(base, 'docs', 'package.json'),
-      JSON.stringify({ name: 'my-project-docs', scripts: { build: 'node -e "process.exit(3)"' } }),
+      JSON.stringify({ name: 'my-project-docs', scripts: { build: 'node -e "process.exit(3)" --' } }),
       'utf8'
     )
 
     const code = await runBuild(['--dir', base])
     expect(code).toBe(3)
+  })
+
+  it('forwards --log-level=info so pdocs-* extension logs are actually emitted (GH-44 follow-up)', async () => {
+    await mkdir(join(base, 'docs'), { recursive: true })
+    await writeFile(
+      join(base, 'docs', 'package.json'),
+      JSON.stringify({
+        name: 'my-project-docs',
+        scripts: {
+          build: `node -e "require('fs').writeFileSync('argv.json', JSON.stringify(process.argv.slice(1)))" --`,
+        },
+      }),
+      'utf8'
+    )
+
+    await runBuild(['--dir', base])
+    const argv: string[] = JSON.parse(await readFile(join(base, 'docs', 'argv.json'), 'utf8'))
+    expect(argv).toContain('--log-level=info')
   })
 })

@@ -96,17 +96,30 @@ async function ensureKrokiRunning(url, playbookDir, logger, deps = {}) {
 
   const composeFile = await resolveComposeFile(playbookDir)
   logger.info('Kroki service not reachable at %s yet — starting it via %s', url, composeFile)
+  let composeResult
   try {
-    await runDockerCompose('docker', ['compose', '-f', composeFile, 'up', '-d'])
+    composeResult = await runDockerCompose('docker', ['compose', '-f', composeFile, 'up', '-d'])
   } catch (err) {
+    // Node attaches `stdout`/`stderr` to the rejection itself (not just
+    // `message`) for a failed execFile — surfacing them is the difference
+    // between "is Docker installed?" and actually seeing docker's own error
+    // (a missing image, a port already bound, a daemon that refused the
+    // connection, ...).
+    const stdout = /** @type {{ stdout?: string }} */ (err).stdout
+    const stderr = /** @type {{ stderr?: string }} */ (err).stderr
     logger.warn(
-      'Could not start the local Kroki service (%s) — is Docker installed and running? Diagrams will render as raw source until %s is reachable.',
+      'Could not start the local Kroki service (%s) — is Docker installed and running? Diagrams will render as raw source until %s is reachable.%s',
       /** @type {Error} */ (err).message,
-      url
+      url,
+      formatProcessOutput(stdout, stderr)
     )
     return
   }
-  logger.info('docker compose up -d succeeded — waiting for %s to become reachable...', url)
+  logger.info(
+    'docker compose up -d succeeded — waiting for %s to become reachable...%s',
+    url,
+    formatProcessOutput(composeResult && composeResult.stdout, composeResult && composeResult.stderr)
+  )
 
   const deadline = Date.now() + STARTUP_TIMEOUT_MS
   while (Date.now() < deadline) {
@@ -114,6 +127,12 @@ async function ensureKrokiRunning(url, playbookDir, logger, deps = {}) {
       logger.info('Kroki service reachable at %s after %ds', url, Math.round((Date.now() - startedAt) / 1000))
       return
     }
+    logger.info(
+      'Still waiting for Kroki at %s to become reachable (%ds elapsed, giving up after %ds — a cold `docker compose up` pulling images for the first time is the usual reason this takes a while)...',
+      url,
+      Math.round((Date.now() - startedAt) / 1000),
+      STARTUP_TIMEOUT_MS / 1000
+    )
     await wait(POLL_INTERVAL_MS)
   }
   logger.warn(
@@ -121,6 +140,23 @@ async function ensureKrokiRunning(url, playbookDir, logger, deps = {}) {
     url,
     STARTUP_TIMEOUT_MS / 1000
   )
+}
+
+/**
+ * Renders captured process output for a log message — empty/whitespace-only
+ * streams (the common case: `docker compose up -d` is quiet on a warm image
+ * cache) contribute nothing, so a healthy run's log line doesn't grow a
+ * trailing blank appendix.
+ *
+ * @param {string | undefined} stdout
+ * @param {string | undefined} stderr
+ * @returns {string}
+ */
+function formatProcessOutput(stdout, stderr) {
+  const parts = []
+  if (stdout && stdout.trim()) parts.push('stdout:\n' + stdout.trim())
+  if (stderr && stderr.trim()) parts.push('stderr:\n' + stderr.trim())
+  return parts.length ? '\n' + parts.join('\n') : ''
 }
 
 module.exports = { ensureKrokiRunning, BUNDLED_COMPOSE_FILE, OVERRIDE_FILENAME }

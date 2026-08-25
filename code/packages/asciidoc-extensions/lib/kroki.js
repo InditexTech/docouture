@@ -3,7 +3,8 @@
 const { escapeHtml } = require('./html')
 const warn = require('./warn')
 const kroki = require('./kroki-instance')
-const { SUPPORTED_TYPES, ENABLED_ATTR, TYPES_ATTR, resolveEnabledTypes } = require('./kroki-config')
+const { SUPPORTED_TYPES, PNG_SUPPORTED_TYPES, ENABLED_ATTR, TYPES_ATTR, resolveEnabledTypes, resolveFormat } = require('./kroki-config')
+const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 
 // GH-44: renders diagram source — Mermaid, PlantUML, GraphViz, … (see
 // kroki-config.js's `SUPPORTED_TYPES`) — as an actual diagram, via a
@@ -25,6 +26,12 @@ const { SUPPORTED_TYPES, ENABLED_ATTR, TYPES_ATTR, resolveEnabledTypes } = requi
 // migrated `<Mermaid chart={...}>` — this extension is what turns that
 // previously-inert shape into a real diagram, nothing upstream of it
 // changes.
+//
+// `[mermaid,format=png]` renders a transparent PNG instead of inline SVG —
+// see kroki-config.js's `PNG_SUPPORTED_TYPES` for which of `SUPPORTED_TYPES`
+// actually support it (Kroki's own `/{type}/png` rejects the rest with a
+// plain 400); anything else falls back to `svg` with a warning, the same
+// degrade-not-fail posture as an unsupported `kroki-diagram-types` entry.
 //
 // OPT IN, PER SITE, DISABLED BY DEFAULT
 //
@@ -87,7 +94,7 @@ function literalFallback(source) {
   return '<div class="literalblock"><div class="content"><pre>' + escapeHtml(source) + '</pre></div></div>'
 }
 
-function renderDiagram(parent, type, source) {
+function renderDiagram(parent, type, source, requestedFormat) {
   const document = parent.getDocument()
   const enabledAttr = document.getAttribute(ENABLED_ATTR)
   const typesAttr = document.getAttribute(TYPES_ATTR)
@@ -101,8 +108,22 @@ function renderDiagram(parent, type, source) {
   )
   if (!enabledTypes.has(type)) return literalFallback(source)
 
-  const svg = kroki.get(kroki.keyFor(type, source))
-  if (!svg) {
+  const format = resolveFormat(type, requestedFormat, (t, requested) =>
+    warn(
+      parent,
+      '[' + t + ',format=' + requested + ']',
+      'unsupported format "' + requested + '" for a ' + t + ' diagram — falling back to svg',
+      PNG_SUPPORTED_TYPES.has(t) ? ['svg', 'png'] : ['svg']
+    )
+  )
+  // Mermaid gets its own default theme baked in server-side (see that
+  // file's own header for why this happens here rather than via ui-bundle
+  // CSS) — applied to the LOOKUP key only; `literalFallback` below still
+  // shows the author's own original source, untouched, on a cache miss.
+  const effectiveSource = type === 'mermaid' ? applyDefaultMermaidTheme(source) : source
+
+  const payload = kroki.get(kroki.keyFor(type, effectiveSource, format))
+  if (!payload) {
     warn(
       parent,
       '[' + type + ']',
@@ -110,7 +131,11 @@ function renderDiagram(parent, type, source) {
     )
     return literalFallback(source)
   }
-  return '<div class="pdocs-diagram" data-diagram-type="' + type + '">' + svg + '</div>'
+  const body =
+    payload.format === 'png'
+      ? '<img src="data:image/png;base64,' + payload.data + '" alt="">'
+      : payload.data
+  return '<div class="pdocs-diagram" data-diagram-type="' + type + '">' + body + '</div>'
 }
 
 function krokiBlock(type) {
@@ -122,7 +147,7 @@ function krokiBlock(type) {
       // `null` for a block with no attributes beyond its style.
       attrs = attrs || {}
       const source = reader.getLines().join('\n')
-      const html = renderDiagram(parent, type, source)
+      const html = renderDiagram(parent, type, source, attrs.format)
       return this.createBlock(parent, 'pass', html, attrs)
     })
   }

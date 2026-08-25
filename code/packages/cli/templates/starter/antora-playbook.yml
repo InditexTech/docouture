@@ -156,9 +156,10 @@ asciidoc:
     # diagram type, ...); `pdocs teardown kroki` stops it manually, since
     # nothing stops it automatically. `kroki-diagram-types` is a
     # comma-separated subset of kroki.js's `SUPPORTED_TYPES` (e.g. `mermaid`
-    # or `mermaid,plantuml`); omit it to enable every supported type.
+    # or `mermaid,plantuml,bpmn,excalidraw`); omit it to enable every
+    # supported type.
     # kroki-enabled: true
-    # kroki-diagram-types: mermaid
+    # kroki-diagram-types: mermaid,plantuml,bpmn,excalidraw
   extensions:
     # Authoring blocks with no plain AsciiDoc equivalent — [tabs], [cards],
     # [feature-tabs], [cta], [accordion] grouping, plus the label:[]/mono:[]

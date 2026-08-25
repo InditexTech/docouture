@@ -14,12 +14,25 @@
 # can add companions for other diagram types, pin different image versions,
 # or add whatever else your environment needs, without forking this package.
 #
-# Only the `mermaid` companion is included here: it is the one diagram type
-# that needs a JS/DOM environment of its own to lay a diagram out, and the
-# one this repo's own migrated content actually uses (GH-44). Widening
-# `kroki-diagram-types` to another SUPPORTED_TYPES entry from kroki-config.js
-# that also needs a companion (currently only `excalidraw` does, in Kroki's
-# own catalogue) means ejecting this file and adding it here.
+# `mermaid`, `bpmn` and `excalidraw` are the three SUPPORTED_TYPES entries
+# (see kroki-config.js) that need a headless-Chrome/JS environment of their
+# own to lay a diagram out — Kroki's own catalogue, not something specific
+# to this package (verified against the real yuzutech/kroki-{mermaid,bpmn,
+# excalidraw} images: each is a Node+Puppeteer service listening on its own
+# fixed port — 8002, 8003, 8004 respectively — that Kroki's core service
+# reaches for by that exact port whenever `KROKI_<TYPE>_HOST` names a
+# reachable host, regardless of what `expose:` claims; get the port wrong
+# for one of these three and Kroki's core container fails that diagram type
+# with a "Connection refused" to whatever port IT expected, not the one the
+# companion's container actually listens on — this bit us once already,
+# assigning excalidraw the bpmn port). Every other supported type
+# (plantuml, graphviz, ditaa, ...) is rendered by the `kroki` service alone,
+# no headless browser involved. Widening `kroki-diagram-types` to one of
+# those needs no compose change; a future SUPPORTED_TYPES entry that also
+# needs its own companion means ejecting this file (`pdocs eject kroki`)
+# and adding it here the same way — check the new companion image's own
+# actual listening port first (`docker exec <container> netstat -tlnp`),
+# don't assume it from an adjacent one.
 services:
   kroki:
     image: yuzutech/kroki:latest
@@ -27,10 +40,24 @@ services:
       - '8500:8000'
     environment:
       KROKI_MERMAID_HOST: mermaid
+      KROKI_BPMN_HOST: bpmn
+      KROKI_EXCALIDRAW_HOST: excalidraw
     depends_on:
       - mermaid
+      - bpmn
+      - excalidraw
 
   mermaid:
     image: yuzutech/kroki-mermaid:latest
     expose:
       - '8002'
+
+  bpmn:
+    image: yuzutech/kroki-bpmn:latest
+    expose:
+      - '8003'
+
+  excalidraw:
+    image: yuzutech/kroki-excalidraw:latest
+    expose:
+      - '8004'

@@ -169,7 +169,7 @@ We've prepared this simple diagram showcasing how the connectivity works on the 
 when using this store. The lines connecting display the value of the connection `status` returned
 on the `onStoreConnectionStatusChange` event.
 
-[mermaid]
+[mermaid,format=png]
 ....
 flowchart TD
 A["Weave.js instance start()"]

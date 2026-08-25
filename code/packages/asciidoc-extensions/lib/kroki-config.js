@@ -31,9 +31,13 @@ const KROKI_URL = 'http://localhost:8500'
 // `kroki-prewarm.js` and `@inditextech/pdocs-antora-extensions`'
 // `resources/kroki-compose.yml`). Kroki supports more; add to this list —
 // and to that compose file's companions, for any type that needs one,
-// mermaid and excalidraw being the two in Kroki's own catalogue that do —
-// before authors can rely on a new one. A site can customize that compose
-// file for itself via `pdocs eject kroki` without forking this package.
+// mermaid, bpmn and excalidraw being the three in Kroki's own catalogue
+// that do (each is its own headless-Chrome/Puppeteer service, on its own
+// fixed port — see that compose file's own header for the port each one
+// actually listens on, verified by inspecting the running container rather
+// than assumed) — before authors can rely on a new one. A site can
+// customize that compose file for itself via `pdocs eject kroki` without
+// forking this package.
 const SUPPORTED_TYPES = [
   'mermaid',
   'plantuml',
@@ -50,6 +54,33 @@ const SUPPORTED_TYPES = [
   'wavedrom',
   'bpmn',
 ]
+
+// Kroki's own `/{type}/{format}` API rejects a format it doesn't support for
+// that type with a plain 400 rather than degrading — verified against a
+// live server, one `SUPPORTED_TYPES` entry at a time (posting a
+// deliberately-invalid body to every type's own `/png` endpoint: a syntax
+// error means the format itself was accepted, "Unsupported output format"
+// means it wasn't). Five entries are SVG-only in Kroki's own catalogue:
+// `excalidraw`, `nomnoml`, `svgbob`, `wavedrom`, and — despite drawing
+// ordinary rectangles and circles that look no different from any other
+// diagram-as-code output — `bpmn`. The other nine, listed here, all render
+// PNG (and Kroki formats beyond that this package doesn't expose a way to
+// request) the same way they render SVG. `format=png` on an unlisted type
+// falls back to `svg` with a warning — see `resolveFormat` — the same
+// degrade-not-fail posture as an unknown `kroki-diagram-types` entry.
+const PNG_SUPPORTED_TYPES = new Set([
+  'mermaid',
+  'plantuml',
+  'graphviz',
+  'c4plantuml',
+  'blockdiag',
+  'ditaa',
+  'erd',
+  'vega',
+  'vegalite',
+])
+
+const DEFAULT_FORMAT = 'svg'
 
 // The two `asciidoc.attributes` keys a site sets in its playbook. Both are
 // read from the same `document` object on the synchronous (Asciidoctor)
@@ -116,11 +147,45 @@ function resolveEnabledTypes(enabledAttr, typesAttr, onUnknownType) {
   return active
 }
 
+/**
+ * Resolves the actual output format to request from Kroki for one block:
+ * an author writes `[mermaid,format=png]`; omitted, empty, or explicitly
+ * `svg` all mean the existing default. Shared verbatim by the sync block
+ * processor (kroki.js) and the async prewarm scanner (kroki-prewarm.js) for
+ * the same reason `resolveEnabledTypes` is — both derive a cache key from
+ * this value (kroki-instance.js's `keyFor`), so a type this function
+ * silently downgrades in one place and not the other would look up a key
+ * the other side never populated.
+ *
+ * @param {string} type - a `SUPPORTED_TYPES` entry.
+ * @param {unknown} requestedFormat - the block's own `format` attribute,
+ *   however Asciidoctor or the raw-text regex handed it over — anything at
+ *   all, not just `"svg"`/`"png"`, since this is the one place both sides
+ *   actually validate it (kroki-prewarm.js's own regex deliberately doesn't
+ *   restrict the value it captures, for exactly this reason).
+ * @param {(type: string, requestedFormat: string) => void} [onUnsupported] -
+ *   called once for any `requestedFormat` that isn't `svg`/absent and isn't
+ *   a `png` this type's Kroki companion actually supports — an unrecognized
+ *   value (a typo, `format=jpeg`) and a recognized-but-unsupported one
+ *   (`format=png` on `bpmn`) both go through this the same way, so the
+ *   caller can warn with its own node context either way.
+ * @returns {'svg' | 'png'}
+ */
+function resolveFormat(type, requestedFormat, onUnsupported) {
+  if (requestedFormat == null || requestedFormat === '' || requestedFormat === DEFAULT_FORMAT) return DEFAULT_FORMAT
+  if (requestedFormat === 'png' && PNG_SUPPORTED_TYPES.has(type)) return 'png'
+  if (onUnsupported) onUnsupported(type, String(requestedFormat))
+  return DEFAULT_FORMAT
+}
+
 module.exports = {
   KROKI_URL,
   SUPPORTED_TYPES,
+  PNG_SUPPORTED_TYPES,
+  DEFAULT_FORMAT,
   ENABLED_ATTR,
   TYPES_ATTR,
   isTruthy,
   resolveEnabledTypes,
+  resolveFormat,
 }

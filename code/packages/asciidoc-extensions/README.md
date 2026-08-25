@@ -178,6 +178,21 @@ asciidoc:
     kroki-diagram-types: mermaid,plantuml # optional; omitted = every supported type
 ```
 
+Per-block, `[mermaid,format=png]` renders a transparent PNG `<img>` instead of the
+default inline SVG — see `kroki-config.js`'s `PNG_SUPPORTED_TYPES` for which of
+`SUPPORTED_TYPES` actually support it (`bpmn` and `excalidraw` notably don't; Kroki
+itself rejects those two output formats outright). An unsupported combination falls
+back to `svg` with a build warning.
+
+Mermaid diagrams also get IOP DS-aligned styling (square corners, DS colors, DS body
+typography) baked in server-side via a `%%{init: {...}}%%` directive
+`kroki-mermaid-theme.js` prepends to the diagram's own source before it reaches Kroki
+— not a CSS override, so it applies identically whether the block renders as `svg` or
+`format=png`. An author who opens their own diagram with `%%{init...}%%` opts out
+automatically (Mermaid only honors the first one); every other `SUPPORTED_TYPES` entry
+keeps its own baked-in look, font aside (ui-bundle's `diagram.css` normalizes that one
+blanket, safely, for every type).
+
 It also needs a Kroki service reachable at build time, at the fixed local URL
 `kroki-config.js` hardcodes (not itself configurable — see that file's own
 header for why). No manual setup: the sibling `@inditextech/pdocs-antora-

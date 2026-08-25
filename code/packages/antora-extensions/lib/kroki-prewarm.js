@@ -39,53 +39,68 @@ const {
   TYPES_ATTR,
   KROKI_URL,
   resolveEnabledTypes,
+  resolveFormat,
 } = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-config')
+const { applyDefaultMermaidTheme } = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-mermaid-theme')
 const kroki = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-instance')
 const { ensureKrokiRunning } = require('./kroki-docker')
 
-// Matches the exact shape kroki.js intercepts: a `[type]` style line
-// immediately followed by a four-dot-delimited LITERAL block. Built from
-// `SUPPORTED_TYPES` rather than a bare `\w+`, so a block styled with some
-// other, unsupported name (or a coincidental four-dot block that isn't a
-// diagram at all) is never sent to Kroki on a guess. Tolerant of `\r\n` line
-// endings and of trailing whitespace on the delimiter lines — real-world
-// authoring and git checkout settings both produce those — but otherwise
-// matches `tools/fumadocs-migrate/lib/emit.mjs`'s own emitted shape
-// verbatim, since that's the one real caller of this today.
+// Matches the exact shape kroki.js intercepts: a `[type]` (optionally
+// `,format=<anything>` — deliberately not restricted to `svg|png` here;
+// `resolveFormat` is the one place both this file and kroki.js validate the
+// value, so a typo (`format=jpeg`) is caught and warned about the same way
+// on both sides, rather than this regex silently failing to match the
+// whole block and this file treating it as not a diagram at all while
+// kroki.js's own Asciidoctor-parsed `attrs.format` still sees it) style
+// line immediately followed by a four-dot-delimited LITERAL block. Built
+// from `SUPPORTED_TYPES` rather than a bare `\w+`, so a block styled with
+// some other, unsupported name (or a coincidental four-dot block that
+// isn't a diagram at all) is never sent to Kroki on a guess. Tolerant of
+// `\r\n` line endings and of trailing whitespace on the delimiter lines —
+// real-world authoring and git checkout settings both produce those — but
+// otherwise matches `tools/fumadocs-migrate/lib/emit.mjs`'s own emitted
+// shape verbatim, since that's the one real caller of this today (which
+// never emits `format=`).
 function buildBlockPattern() {
   const typeAlternation = SUPPORTED_TYPES.map((type) => type.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
   return new RegExp(
-    '^\\[(' + typeAlternation + ')\\]\\r?\\n\\.\\.\\.\\.[ \\t]*\\r?\\n([\\s\\S]*?)\\r?\\n\\.\\.\\.\\.[ \\t]*$',
+    '^\\[(' +
+      typeAlternation +
+      ')(?:,\\s*format\\s*=\\s*([a-zA-Z0-9_-]*)\\s*)?\\]\\r?\\n\\.\\.\\.\\.[ \\t]*\\r?\\n([\\s\\S]*?)\\r?\\n\\.\\.\\.\\.[ \\t]*$',
     'gm'
   )
 }
 
-/** Every `(type, source)` pair found in one file's raw contents. */
+/** Every `(type, source, format)` triple found in one file's raw contents. */
 function extractDiagrams(text, pattern) {
   const found = []
   pattern.lastIndex = 0
   let match
   while ((match = pattern.exec(text))) {
-    found.push({ type: match[1], source: match[2] })
+    found.push({ type: match[1], format: match[2], source: match[3] })
   }
   return found
 }
 
-async function fetchSvg(type, source, logger) {
+async function fetchDiagram(type, source, format, logger) {
   try {
-    const response = await fetch(KROKI_URL + '/' + type + '/svg', {
+    const response = await fetch(KROKI_URL + '/' + type + '/' + format, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       body: source,
     })
     if (!response.ok) {
       logger.warn(
-        'Kroki render failed for a %s diagram: %s %s — falling back to raw source for it',
+        'Kroki render failed for a %s diagram (%s): %s %s — falling back to raw source for it',
         type,
+        format,
         response.status,
         response.statusText
       )
       return
+    }
+    if (format === 'png') {
+      return Buffer.from(await response.arrayBuffer()).toString('base64')
     }
     return await response.text()
   } catch (err) {
@@ -117,17 +132,26 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
 
     const pattern = buildBlockPattern()
     // Deduplicated by kroki-instance.js's own key: the same diagram source
-    // repeated across pages (or byte-identical after a migration re-run)
-    // should cost one Kroki call, not one per occurrence.
+    // (and requested format) repeated across pages (or byte-identical after
+    // a migration re-run) should cost one Kroki call, not one per
+    // occurrence.
     const jobs = new Map()
     for (const bucket of contentAggregate) {
       for (const file of bucket.files || []) {
         if (!file.path || !file.path.endsWith('.adoc')) continue
         const text = file.contents.toString('utf8')
-        for (const { type, source } of extractDiagrams(text, pattern)) {
+        for (const { type, source, format: requestedFormat } of extractDiagrams(text, pattern)) {
           if (!enabledTypes.has(type)) continue
-          const key = kroki.keyFor(type, source)
-          if (!jobs.has(key)) jobs.set(key, { type, source })
+          const format = resolveFormat(type, requestedFormat, (t, requested) =>
+            logger.warn('Ignoring unsupported format "%s" for a %s diagram; falling back to svg', requested, t)
+          )
+          // See kroki-mermaid-theme.js's own header: this has to be the
+          // SAME transform kroki.js applies before computing its own
+          // lookup key, or a prewarmed entry becomes unreachable from the
+          // synchronous side.
+          const effectiveSource = type === 'mermaid' ? applyDefaultMermaidTheme(source) : source
+          const key = kroki.keyFor(type, effectiveSource, format)
+          if (!jobs.has(key)) jobs.set(key, { type, source: effectiveSource, format })
         }
       }
     }
@@ -136,10 +160,10 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     logger.info('Rendering %d diagram(s) via Kroki at %s', jobs.size, KROKI_URL)
     let rendered = 0
     await Promise.all(
-      Array.from(jobs, async ([key, { type, source }]) => {
-        const svg = await fetchSvg(type, source, logger)
-        if (svg) {
-          kroki.set(key, svg)
+      Array.from(jobs, async ([key, { type, source, format }]) => {
+        const data = await fetchDiagram(type, source, format, logger)
+        if (data) {
+          kroki.set(key, { format, data })
           rendered++
         }
       })

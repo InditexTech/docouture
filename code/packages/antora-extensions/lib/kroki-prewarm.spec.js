@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const registerKrokiPrewarm = require('./kroki-prewarm')
 const kroki = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-instance')
+const { applyDefaultMermaidTheme } = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-mermaid-theme')
 
 function createContext() {
   const listeners = {}
@@ -26,8 +27,9 @@ function file(path, contents) {
   return { path, contents: Buffer.from(contents, 'utf8') }
 }
 
-function block(type, source) {
-  return `[${type}]\n....\n${source}\n....\n`
+function block(type, source, format) {
+  const style = format ? `${type},format=${format}` : type
+  return `[${style}]\n....\n${source}\n....\n`
 }
 
 async function run({ attributes, files }) {
@@ -60,7 +62,7 @@ describe('registerKrokiPrewarm', () => {
     await run({ attributes: {}, files: [file('modules/main/pages/a.adoc', block('mermaid', source))] })
 
     expect(fetchMock).not.toHaveBeenCalled()
-    expect(kroki.get(kroki.keyFor('mermaid', source))).toBeUndefined()
+    expect(kroki.get(kroki.keyFor('mermaid', applyDefaultMermaidTheme(source), 'svg'))).toBeUndefined()
   })
 
   it('fetches and caches every requested diagram type found in the raw content', async () => {
@@ -76,7 +78,14 @@ describe('registerKrokiPrewarm', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/mermaid/svg')
-    expect(kroki.get(kroki.keyFor('mermaid', source))).toBe(svg)
+    // The body actually POSTed is the theme-injected source (kroki-mermaid-
+    // theme.js), not the author's raw one — this is the one place that's
+    // observable from outside kroki-prewarm.js itself.
+    expect(fetchMock.mock.calls[0][1].body).toBe(applyDefaultMermaidTheme(source))
+    expect(kroki.get(kroki.keyFor('mermaid', applyDefaultMermaidTheme(source), 'svg'))).toEqual({
+      format: 'svg',
+      data: svg,
+    })
   })
 
   it('logs a success summary when every requested diagram renders', async () => {
@@ -130,7 +139,7 @@ describe('registerKrokiPrewarm', () => {
       files: [file('modules/main/pages/a.adoc', block('mermaid', source))],
     })
 
-    expect(kroki.get(kroki.keyFor('mermaid', source))).toBeUndefined()
+    expect(kroki.get(kroki.keyFor('mermaid', applyDefaultMermaidTheme(source), 'svg'))).toBeUndefined()
     expect(context.warnings.some(([msg]) => msg.includes('Could not reach the Kroki service'))).toBe(true)
   })
 
@@ -145,7 +154,10 @@ describe('registerKrokiPrewarm', () => {
       files: [file('modules/main/pages/a.adoc', block('mermaid', source))],
     })
 
-    expect(kroki.get(kroki.keyFor('mermaid', source))).toBe(svg)
+    expect(kroki.get(kroki.keyFor('mermaid', applyDefaultMermaidTheme(source), 'svg'))).toEqual({
+      format: 'svg',
+      data: svg,
+    })
     expect(context.warnings.some(([msg]) => msg.includes('unknown %s entry'))).toBe(true)
   })
 
@@ -159,5 +171,39 @@ describe('registerKrokiPrewarm', () => {
     })
 
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('requests and base64-caches a png diagram for a type that supports it', async () => {
+    const bytes = new Uint8Array([137, 80, 78, 71]) // a PNG magic-number prefix is enough for this test
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, arrayBuffer: async () => bytes.buffer })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = 'stateDiagram-v2\nA --> B (png case)'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'mermaid' },
+      files: [file('modules/main/pages/a.adoc', block('mermaid', source, 'png'))],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/mermaid/png')
+    expect(kroki.get(kroki.keyFor('mermaid', applyDefaultMermaidTheme(source), 'png'))).toEqual({
+      format: 'png',
+      data: Buffer.from(bytes).toString('base64'),
+    })
+  })
+
+  it('falls back to svg and warns when png is requested for a type Kroki does not support', async () => {
+    const svg = '<svg>bpmn fallback</svg>'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = '<definitions>(bpmn png-unsupported case)</definitions>'
+    const context = await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'bpmn' },
+      files: [file('modules/main/pages/a.adoc', block('bpmn', source, 'png'))],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/bpmn/svg')
+    expect(kroki.get(kroki.keyFor('bpmn', source, 'svg'))).toEqual({ format: 'svg', data: svg })
+    expect(context.warnings.some(([msg]) => msg.includes('unsupported format'))).toBe(true)
   })
 })

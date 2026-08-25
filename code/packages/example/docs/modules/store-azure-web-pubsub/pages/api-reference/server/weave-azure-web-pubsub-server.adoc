@@ -326,7 +326,7 @@ type WeaveStoreAzureWebPubsubSyncHostOptions = {
 
 If not defined the `defaultInitialState` is used, which is nothing more than:
 
-[mermaid]
+[mermaid,format=png]
 ....
 flowchart TD;
 Stage --> gridLayer;

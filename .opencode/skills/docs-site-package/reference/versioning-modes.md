@@ -232,26 +232,42 @@ urls:
   latest_version_segment: latest
 ```
 
-With this set, whichever version Antora computes as "latest" for a component is also
-served at a fixed alias — `/weavejs/latest/…` — alongside its real version path, so an
-external link that should always point at "whatever is current" does not need editing on
-every release.
+With this set, Antora's default `latest_version_segment_strategy` (`replace`) moves the
+*real* content for whichever version it computes as "latest" onto the fixed alias —
+`/weavejs/latest/…` — and turns that version's own actual-version URL into a static
+redirect stub pointing at it, rather than adding `/latest/…` as a second copy alongside an
+unchanged real path. On a plain static host (GitHub Pages, or this site's own unset default —
+see `urls-redirect-facility` upstream), that stub is a real, 200-status HTML file with a
+`<meta http-equiv="refresh">` bounce and a `noindex` canonical tag pointing at `/latest/…`,
+not a server-side 301/302 — so the old URL still resolves, just via a client-side hop rather
+than serving real content directly. The redirect direction can't be reversed on a static host:
+`latest_version_segment_strategy: redirect:from` (keep the actual-version URL real, alias
+`/latest/…` instead) is explicitly ignored by Antora when the redirect facility is `static`.
 
 "Latest" is Antora's own computation (a semver-aware comparison across all a component's
 matched versions), **not** `prerelease`/`version` on their own — `prerelease: true` keeps
 a version out of the "latest" running (Antora's default is to compute latest among
 non-prerelease versions), it does not directly set the alias target.
 
-- **Versioned**: `latest_version_segment: latest` gives the newest release tag a
-  `/weavejs/latest/…` alias, distinct from `/weavejs/prerelease/…` (the prerelease branch,
-  always reachable by its own literal segment). Useful when most inbound links should
-  track "whatever the newest stable release is" without editing them on every tag.
-  `urls.latest_version_segment` only affects the *alias*; the version's own segment
-  (`v1.2.0` or whatever `version:` says) keeps working too — both resolve.
-- **Standalone**: less commonly needed, since `stable` is already a fixed, stable segment —
-  `/weavejs/stable/…` never moves to a new URL on release the way a versioned-mode tag
-  would. Setting `latest_version_segment: stable` is only useful if something outside the
-  site specifically expects a `/latest/` URL rather than `/stable/`.
+- **Versioned**: `latest_version_segment: latest` gives the newest release tag's real content
+  at `/weavejs/latest/…`, with that tag's own `/weavejs/v1.2.0/…` as the redirect stub for as
+  long as it holds the "latest" title. Unlike standalone mode, this is temporary per version:
+  the moment a newer tag ships, the superseded tag's actual-version URL flips back into real,
+  permanent content (no longer being replaced), while `/latest/…` moves on to the new tag.
+  `/weavejs/prerelease/…` (the `main` branch) is untouched either way — prereleases are
+  excluded from the "latest" computation by default.
+- **Standalone**: `stable` never moves to a new URL on release the way a versioned-mode tag
+  would, but under the default `replace` strategy its actual-version segment
+  (`/weavejs/stable/…`) is *permanently* a redirect stub for as long as `latest_version_segment`
+  is set — there's no later release that gives it a moment of being real again, the way an
+  old versioned-mode tag gets. Real content always lives at `/weavejs/latest/…` only.
+
+Either way, a rule authored via the `redirects` extension config (see the docs-site-package
+skill's own "Legacy URL redirects" section) must target `/weavejs/latest/…` explicitly, never
+a version's own actual segment — matching only ever happens against genuinely real pages, so a
+rule pointed at an alias-only segment (`/weavejs/stable/…` under standalone's `replace`
+strategy) matches nothing, which is caught at build time as a "matched no real pages" warning
+rather than silently shipping a rule that never fires.
 
 ## Version descriptor labels and display names
 

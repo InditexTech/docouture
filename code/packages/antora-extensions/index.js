@@ -6,6 +6,7 @@ const registerLifecycleLog = require('./lib/lifecycle-log')
 const registerLlmsTxt = require('./lib/llms-txt')
 const registerNavModules = require('./lib/nav-modules')
 const registerNotFoundPage = require('./lib/not-found-page')
+const registerRedirects = require('./lib/redirects')
 const registerSearchIndex = require('./lib/search-index')
 const registerShikiPrewarm = require('./lib/shiki-prewarm')
 const registerVersionReport = require('./lib/version-report')
@@ -20,15 +21,21 @@ const registerVersionReport = require('./lib/version-report')
  * per page (`asciidoc.extensions`). Antora tells the two apart by inspecting
  * `register.toString()` and warns when one is listed under the other's key.
  *
- * Declared with NO parameters on purpose. @antora/site-generator's
- * GeneratorContext._registerExtensions branches on `register.length` and on
- * whether the first parameter is named: a named one gets
- * `register(context, vars)` — and, if it happens to be called `registry`, an
- * "Asciidoctor extension registered as an Antora extension" warning — while
- * zero parameters gets `register.call(context)`. Nothing here needs the
- * playbook or the extension's own `config` block at registration time, so the
- * zero-parameter form is both the simplest and the one furthest from that
- * misdetection.
+ * Declared with two named parameters, `(context, { config })` — GH redirects
+ * feature. @antora/site-generator's GeneratorContext._registerExtensions
+ * branches on `register.length`: zero parameters gets `register.call(context)`
+ * (no way to receive this extension entry's own playbook config at all);
+ * exactly one NAMED parameter gets `register(context)`, still no config;
+ * anything else — including this file's two — gets a plain
+ * `register(context, Object.assign({ config }, vars))` call, `config` being
+ * everything on this package's own `antora.extensions` entry in the playbook
+ * besides `enabled`/`id`/`require`. redirects.js's rules (see its own header)
+ * are authored there, not in `docs/antora.yml`, which is the one reason this
+ * package needs that config at all — every other sub-extension here still
+ * ignores it entirely. The one thing that still has to be avoided is the
+ * OTHER branch of that same detection: a parameter literally named `registry`
+ * is what trips the "Asciidoctor extension registered as an Antora extension"
+ * warning, so this stays `context`, never `registry`, same as before.
  *
  * REGISTRATION ORDER IS LOAD-BEARING. footer, search-index and llms-txt all
  * listen on `navigationBuilt`, and GeneratorContext#notify awaits listeners
@@ -77,15 +84,22 @@ const registerVersionReport = require('./lib/version-report')
  * its "entering phase" trace line print before that event's own
  * extension-specific work (and its logs) run, which reads chronologically
  * rather than the other way round.
+ *
+ * redirects also listens on `navigationBuilt`, reading only real pages'
+ * already-computed `pub.url` — nothing nav-modules/footer/search-index/
+ * llms-txt/not-found-page write, and nothing that reads from it either — so
+ * its position is not load-bearing. Listed last simply because it's the
+ * newest addition.
  */
-module.exports.register = function () {
-  registerLifecycleLog(this)
-  registerNavModules(this)
-  registerFooter(this)
-  registerSearchIndex(this)
-  registerLlmsTxt(this)
-  registerShikiPrewarm(this)
-  registerKrokiPrewarm(this)
-  registerNotFoundPage(this)
-  registerVersionReport(this)
+module.exports.register = function (context, { config }) {
+  registerLifecycleLog(context)
+  registerNavModules(context)
+  registerFooter(context)
+  registerSearchIndex(context)
+  registerLlmsTxt(context)
+  registerShikiPrewarm(context)
+  registerKrokiPrewarm(context)
+  registerNotFoundPage(context)
+  registerVersionReport(context)
+  registerRedirects(context, config?.redirects)
 }

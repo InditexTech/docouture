@@ -96,6 +96,45 @@ nothing is dropped with a warning rather than rendered as a dead link.
 A page can also borrow another module's navigation with `:page-nav-module:`, which is how a
 landing in `ROOT` gets a side menu at all. See the `ui-bundle-anatomy` skill.
 
+## Legacy URL redirects — playbook-based, not per-ref
+
+Unlike `nav_modules`/`footer`/`llms`/`not_found_module` above, redirects from an arbitrary
+literal legacy URL (e.g. a Fumadocs-era `/weavejs/docs/main/quickstart`) to whatever real page
+currently answers the equivalent URL are authored on `@inditextech/pdocs-antora-extensions`'s
+own registration entry in the **playbook**, not in `docs/antora.yml`:
+
+```yaml
+antora:
+  extensions:
+    - require: '@inditextech/pdocs-antora-extensions'
+      redirects:
+        - from: '/weavejs/docs/main/build/node/comment'   # exact override
+          to: '/weavejs/latest/main/build/nodes/comment'
+        - from: '/weavejs/docs/**'                          # catch-all, tried last
+          to: '/weavejs/latest/**'
+```
+
+Why the playbook and not the component descriptor: a single Antora run aggregates content
+from every matched ref at once (`main` + `stable`, or `main` + every `v*` tag) into one site,
+so — unlike `nav_modules` — there's no per-ref build to duplicate the list onto; one copy, in
+the one playbook, is evaluated fresh against whatever pages any given build actually resolves.
+
+`from`/`to` are literal URL templates (`*` = one path segment, `**` = the remainder), matched
+against real pages' own `pub.url` only — never against another redirect Antora itself already
+produced (e.g. `urls.latest_version_segment`'s own stubs) — so a rule can never chain two
+redirects together. This is also why `to` must name a segment that's genuinely real right now
+(`/weavejs/latest/...`, not `/weavejs/stable/...` once `latest_version_segment`'s default
+`replace` strategy has moved real content off of it — see `reference/versioning-modes.md`).
+Rules are first-match-wins in authoring order, so exact overrides belong ahead of a broad `**`
+catch-all. A rule matching zero real pages, or whose `from`/`to` wildcard counts disagree, or
+whose computed legacy URL collides with a real page's own URL, warns — and, under this site's
+`runtime.log.failure_level: warn`, fails the build — the same treatment as a broken xref.
+
+Implementation reuses `@antora/redirect-producer` directly (the same library
+`latest_version_segment` and the built-in `page-aliases` attribute are built on), so whatever
+`redirect_facility` the playbook is configured with gets the right output format for these
+rules too, not just the static meta-refresh stubs a plain host like GitHub Pages needs.
+
 ## Constraints that fail silently
 
 - **Antora needs at least one commit.** It reads content from git. A repository with no

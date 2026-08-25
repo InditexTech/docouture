@@ -1,0 +1,37 @@
+code/packages/example/docs/modules/main/pages/build/actions/index.adoc
+  s_b7dd28e33bde9b::t_90f9ea0cc02178 20
+code/packages/example/docs/modules/main/pages/build/plugins/index.adoc
+  s_b7dd28e33bde9b::t_f2e71b3bfe83c1 22
+code/packages/example/docs/modules/main/pages/build/stores/azure-web-pubsub-store.adoc
+  s_b7dd28e33bde9b::t_4f2828acd6d1d2 172
+code/packages/example/docs/modules/main/pages/build/stores/websockets-store.adoc
+  s_b7dd28e33bde9b::t_e96897d20806bd 68
+code/packages/example/docs/modules/sdk/pages/api-reference/actions/action.adoc
+  s_b7dd28e33bde9b::t_254856f67f36cc 35
+code/packages/example/docs/modules/sdk/pages/api-reference/plugins/plugin.adoc
+  s_b7dd28e33bde9b::t_c16d5c966d9267 33
+code/packages/example/docs/modules/store-azure-web-pubsub/pages/api-reference/server/weave-azure-web-pubsub-server.adoc
+  s_b7dd28e33bde9b::t_dc0955b05a78a0 329
+code/packages/example/docs/modules/store-standalone/pages/api-reference/index.adoc
+  s_b7dd28e33bde9b::t_25fea29e282832 50
+code/packages/example/docs/modules/store-websockets/pages/api-reference/server/weave-websockets-server.adoc
+  s_b7dd28e33bde9b::t_415cf923c70cce 113
+code/packages/ui-bundle/src/css/ids-tokens.css
+  s_b7dd28e33bde9b::t_c6526536cb3bc5 199,281,291,302,314
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "5b30a9c96cc9d59ab69d9fdb2d2a3f318f1a41a3",
+  "prompts": {},
+  "sessions": {
+    "s_b7dd28e33bde9b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fc7e4d0d1ffexu6Dl6tGTroZ7B",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

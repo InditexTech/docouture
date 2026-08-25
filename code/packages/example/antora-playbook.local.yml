@@ -66,6 +66,11 @@ asciidoc:
     idseparator: '-'
     source-highlighter: shiki
     page-pagination: '@'
+    # GH-44: see antora-playbook.yml's own comment on these same two keys —
+    # duplicated here rather than referenced, like every other attribute in
+    # this file.
+    kroki-enabled: true
+    kroki-diagram-types: mermaid
   extensions:
     - '@inditextech/pdocs-asciidoc-extensions'
 

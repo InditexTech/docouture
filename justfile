@@ -175,6 +175,24 @@ doctor: (_hdr "doctor")
 preview-ui: (_hdr "preview-ui")
     pnpm --filter @inditextech/pdocs-ui-bundle preview
 
+# Stop the local Kroki service (GH-44) that kroki-prewarm.js starts automatically
+# for a kroki-enabled build — the manual counterpart to that auto-start, which
+# never stops it itself; see antora-extensions/lib/kroki-docker.js's own header.
+# Targets whichever compose file is actually in effect for `example` — an ejected
+# override at packages/example/kroki-compose.yml if one exists there, else the
+# bundled default in packages/antora-extensions/resources — same resolution order
+# kroki-docker.js itself uses. Scaffolded (non-monorepo) sites use `pdocs teardown
+# kroki` instead, which resolves the same way against their own docs/ directory.
+[group('dev')]
+kroki-down: (_hdr "kroki-down")
+    #!/usr/bin/env bash
+    set -euo pipefail
+    compose_file="packages/example/kroki-compose.yml"
+    if [ ! -f "$compose_file" ]; then
+      compose_file="packages/antora-extensions/resources/kroki-compose.yml"
+    fi
+    docker compose -f "$compose_file" down
+
 # Build a site and serve it on :5000, rebuilding as you edit it
 [group('dev')]
 [no-exit-message]
@@ -201,7 +219,20 @@ dev site='example' port='5000' strict='false': (_hdr "dev " + site)
     # regardless of this setting, since that's a thrown exception, not a
     # logged-message-count check; only the warn/error-level tolerance is
     # what `strict` controls.
-    extra_args=()
+    #
+    # `--log-level=info`: Antora's own default (`warn`, set by
+    # @antora/playbook-builder's convict schema, not the `info` @antora/
+    # logger falls back to on its own) would otherwise silently drop every
+    # pdocs-* extension's own observability logs — Kroki's auto-start/
+    # render lifecycle (kroki-docker.js/kroki-prewarm.js), search-index's
+    # per-component summary, llms-txt's, footer's, nav-modules', version-
+    # report's, not-found-page's — before the grep below even sees them.
+    # See asciidoc-extensions/README.md's own note on this for Kroki
+    # specifically; the same reasoning applies to every `getLogger('pdocs-
+    # ...')` caller in antora-extensions/lib, which is why the filter below
+    # keys off the shared `pdocs-` logger-name prefix rather than naming
+    # Kroki alone.
+    extra_args=(--log-level=info)
     if [ '{{ strict }}' != 'true' ]; then
       extra_args+=(--log-failure-level=none)
     fi
@@ -212,8 +243,13 @@ dev site='example' port='5000' strict='false': (_hdr "dev " + site)
     fi
     # Still surface Antora's own content warnings — real signal, not Nx/gulp
     # noise — just without the surrounding wrapper chatter a cache hit would
-    # otherwise print on every single save.
-    printf '%s\n' "$out" | grep -E '"level":"(warn|error)"' || true
+    # otherwise print on every single save. Every pdocs-* extension's own
+    # logger is let through unconditionally on top of the warn/error filter
+    # (rather than raising it to print every `info` line the flag above
+    # just turned on) — the whole point is knowing whether pdocs's own
+    # machinery (Kroki, search index, nav, ...) actually worked, not a wall
+    # of unrelated Antora/gulp chatter.
+    printf '%s\n' "$out" | grep -E '"level":"(warn|error)"|"name":"pdocs-' || true
 
 
     # The server itself does not go through Nx: there is nothing left to
@@ -235,7 +271,13 @@ build *args: (_hdr "build")
 # Build a single site
 [group('build')]
 build-site site: (_hdr "build-site " + site)
-    {{ nx }} run @inditextech/pdocs-{{ site }}:build
+    # `--log-level=info`: same reasoning as `dev`'s own recipe above — Antora's
+    # actual default (`warn`) would otherwise silently drop every pdocs-*
+    # extension's own `info`-level observability logs (Kroki's lifecycle,
+    # search-index's per-component summary, ...) before they're even
+    # emitted. Unlike `dev`, this prints everything unfiltered already (no
+    # grep — nx streams it live), so this one flag is the whole fix here.
+    {{ nx }} run @inditextech/pdocs-{{ site }}:build -- --log-level=info
 
 # ----------------------------------------------------------------- test ------
 

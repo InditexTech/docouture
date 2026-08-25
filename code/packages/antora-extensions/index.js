@@ -1,6 +1,8 @@
 'use strict'
 
 const registerFooter = require('./lib/footer')
+const registerKrokiPrewarm = require('./lib/kroki-prewarm')
+const registerLifecycleLog = require('./lib/lifecycle-log')
 const registerLlmsTxt = require('./lib/llms-txt')
 const registerNavModules = require('./lib/nav-modules')
 const registerNotFoundPage = require('./lib/not-found-page')
@@ -47,6 +49,13 @@ const registerVersionReport = require('./lib/version-report')
  * — it is simply registered here too because this file is the one place
  * `@antora/site-generator` is told about every pdocs Antora extension.
  *
+ * kroki-prewarm (GH-44) listens on the same `contentAggregated` event as
+ * shiki-prewarm, for the same reason (async work that must finish before
+ * Asciidoctor's synchronous conversion starts) but touches entirely
+ * different state (kroki-instance.js, not shiki-instance.js) — the two
+ * listeners are independent and their relative order is not load-bearing
+ * either.
+ *
  * not-found-page also listens on `navigationBuilt`, but only to stash the
  * `navigationCatalog` reference for later — it reads `tree.module` (which
  * nav-modules.js stamps during THAT SAME event) only once `pagesComposed`
@@ -58,13 +67,25 @@ const registerVersionReport = require('./lib/version-report')
  * before `navigationBuilt`) and only reads `contentCatalog`, which none of
  * the above write to — its position is not load-bearing either; it is
  * simply a plain diagnostic report of what Antora already decided.
+ *
+ * lifecycle-log listens on EVERY documented generate-site.js event (see its
+ * own header for the full list and citation) purely to log when Antora
+ * itself enters each one and how long the previous phase took — it reads
+ * and writes no shared state at all, so its position is not load-bearing
+ * either. Registered FIRST anyway: for an event several extensions share
+ * (`contentAggregated`, `contentClassified`, `navigationBuilt`), that makes
+ * its "entering phase" trace line print before that event's own
+ * extension-specific work (and its logs) run, which reads chronologically
+ * rather than the other way round.
  */
 module.exports.register = function () {
+  registerLifecycleLog(this)
   registerNavModules(this)
   registerFooter(this)
   registerSearchIndex(this)
   registerLlmsTxt(this)
   registerShikiPrewarm(this)
+  registerKrokiPrewarm(this)
   registerNotFoundPage(this)
   registerVersionReport(this)
 }

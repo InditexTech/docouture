@@ -3,6 +3,7 @@
 import { join, resolve } from 'node:path'
 
 import { parseArgs } from '../lib/args.js'
+import { ANTORA_LOG_LEVEL_ARGS } from '../lib/antora-log.js'
 import { exists } from '../lib/copy-template.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { runNpmScript } from '../lib/run-script.js'
@@ -22,5 +23,5 @@ export async function runBuild(argv: string[]): Promise<number> {
     return 1
   }
 
-  return runNpmScript('build', { cwd: siteRoot })
+  return runNpmScript('build', { cwd: siteRoot, args: [...ANTORA_LOG_LEVEL_ARGS] })
 }

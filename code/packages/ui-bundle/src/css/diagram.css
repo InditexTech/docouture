@@ -1,0 +1,29 @@
+/*
+ * The `[mermaid]`/`[plantuml]`/etc. blocks — asciidoc-extensions/lib/kroki.js.
+ *
+ * Purely a containment fix: kroki.js inlines whatever `<svg>` Kroki itself
+ * returned, verbatim, with no size normalization of its own (the diagram
+ * tool decides its own intrinsic viewBox). Left alone, that SVG's natural
+ * width can exceed the reading column on a narrow viewport, or render at an
+ * awkwardly small intrinsic size on a wide one. Both are fixed the same way
+ * `[cards]`/`[cta]`/`[feature-tabs]` size their own wide blocks — see
+ * card-grid.css's own header for why a block-level `width` here, not a
+ * container query, is what actually stops at the doc column rather than the
+ * viewport.
+ *
+ * No JavaScript is involved anywhere in this block — see kroki.js's own
+ * header: the SVG is real markup already in the page's HTML, exactly like
+ * the disabled/unreachable-Kroki fallback (a plain `<pre>`) it replaces.
+ */
+.pdocs-diagram {
+  margin: var(--doc-space-block) 0 0;
+  max-width: 100%;
+  overflow-x: auto;
+  width: fit-content;
+}
+
+.pdocs-diagram svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}

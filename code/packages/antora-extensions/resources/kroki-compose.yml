@@ -1,0 +1,36 @@
+# GH-44: default Kroki (https://kroki.io) container definitions —
+# `kroki-prewarm.js` starts these automatically (`docker compose -f
+# <this file> up -d`) the first time a `kroki-enabled: true` build needs a
+# diagram rendered and finds nothing already listening at the fixed local
+# URL `@inditextech/pdocs-asciidoc-extensions/lib/kroki-config.js` hardcodes.
+# There is no teardown: containers are left running after the build, reused
+# by the next one (a fast reachability check skips straight past this file
+# when Kroki is already up), and simply discarded whenever the machine or CI
+# runner they ran on goes away.
+#
+# CUSTOMIZING THIS: run `pdocs eject kroki` to copy this exact file to
+# docs/kroki-compose.yml in your own site's repository — kroki-prewarm.js
+# prefers that copy over this bundled default whenever one exists, so you
+# can add companions for other diagram types, pin different image versions,
+# or add whatever else your environment needs, without forking this package.
+#
+# Only the `mermaid` companion is included here: it is the one diagram type
+# that needs a JS/DOM environment of its own to lay a diagram out, and the
+# one this repo's own migrated content actually uses (GH-44). Widening
+# `kroki-diagram-types` to another SUPPORTED_TYPES entry from kroki-config.js
+# that also needs a companion (currently only `excalidraw` does, in Kroki's
+# own catalogue) means ejecting this file and adding it here.
+services:
+  kroki:
+    image: yuzutech/kroki:latest
+    ports:
+      - '8500:8000'
+    environment:
+      KROKI_MERMAID_HOST: mermaid
+    depends_on:
+      - mermaid
+
+  mermaid:
+    image: yuzutech/kroki-mermaid:latest
+    expose:
+      - '8002'

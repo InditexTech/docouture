@@ -24,6 +24,20 @@ jobs:
     timeout-minutes: 30
     env:
       ASDF_BRANCH_VERSION: 0.18.0
+    # GH-44: `example`'s playbook sets `kroki-enabled: true`, so its "Build
+    # example site" step below renders real `[mermaid]` diagrams through a
+    # Kroki service — no explicit setup here: `@inditextech/pdocs-antora-
+    # extensions`' `kroki-prewarm.js` starts one itself (docker compose,
+    # `code/packages/antora-extensions/resources/kroki-compose.yml`) the
+    # first time it finds nothing already listening at the fixed local URL
+    # `@inditextech/pdocs-asciidoc-extensions/lib/kroki-config.js` hardcodes
+    # — the same auto-start every other invocation path (`just dev`, `pdocs
+    # dev`/`pdocs build`, a consumer site's own CI) goes through, so this
+    # workflow needs nothing Kroki-specific beyond Docker itself, which
+    # ubuntu-24.04 runners already have. Neither
+    # `code-npm_node-publish-release-and-snapshot.yml` nor
+    # `code-release_preview.yml` needs this: neither builds the example
+    # site's Antora output at all.
     steps:
       - name: Checkout
         uses: actions/checkout@v4

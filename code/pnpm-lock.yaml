@@ -15,6 +15,9 @@ importers:
       '@eslint/js':
         specifier: ~10.0.1
         version: 10.0.1(eslint@10.8.1)
+      '@inditextech/docouture-tooling':
+        specifier: workspace:*
+        version: link:packages/tooling
       '@types/node':
         specifier: ~24.10.1
         version: 24.10.15
@@ -126,6 +129,15 @@ importers:
       gh-pages:
         specifier: ~6.3.0
         version: 6.3.0
+
+  packages/tooling:
+    devDependencies:
+      '@types/node':
+        specifier: ~24.10.1
+        version: 24.10.15
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
 
   packages/ui-bundle:
     devDependencies:

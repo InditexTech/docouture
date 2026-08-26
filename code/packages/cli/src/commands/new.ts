@@ -358,7 +358,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own
-  // nested docs/antora.yml — lands under <repo-root>/docs/ as one piece,
+  // nested src/antora.yml — lands under <repo-root>/docs/ as one piece,
   // unchanged in shape. Only .github/workflows/ is peeled out to a second
   // copy at the true repo root, since GitHub Actions never discovers
   // workflows anywhere else.
@@ -379,7 +379,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
       values
     )
     await writeTemplateFile(
-      join(starterDir, 'docs', 'release-version.versioned'),
+      join(starterDir, 'src', 'release-version.versioned'),
       join(docsDir, '.release-version'),
       values
     )
@@ -458,6 +458,6 @@ function printNextSteps(args: {
 
   console.log('')
   console.log(pc.bold('Before your first publish:'))
-  console.log('  See docs/docs/modules/main/pages/prerequisites.adoc for what a public GitHub Pages site')
+  console.log('  See docs/src/modules/main/pages/prerequisites.adoc for what a public GitHub Pages site')
   console.log('  needs before its first publish.')
 }

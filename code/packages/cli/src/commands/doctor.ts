@@ -84,7 +84,7 @@ export async function runDoctor(argv: string[]): Promise<number> {
 
   console.log('names')
   const playbookFile = join(siteRoot, 'antora-playbook.yml')
-  const antoraYmlFile = join(siteRoot, 'docs', 'antora.yml')
+  const antoraYmlFile = join(siteRoot, 'src', 'antora.yml')
 
   const playbookContent = (await exists(playbookFile)) ? await readFile(playbookFile, 'utf8') : null
   const antoraYmlContent = (await exists(antoraYmlFile)) ? await readFile(antoraYmlFile, 'utf8') : null
@@ -96,13 +96,13 @@ export async function runDoctor(argv: string[]): Promise<number> {
     )
   }
   if (!antoraYmlContent) {
-    status |= printResult({ ok: false, label: 'docs/antora.yml', message: `not found at '${antoraYmlFile}'` }, colour)
+    status |= printResult({ ok: false, label: 'src/antora.yml', message: `not found at '${antoraYmlFile}'` }, colour)
   }
 
   if (playbookContent && antoraYmlContent) {
     const sourceUrl = readSourceUrl(playbookContent)
     if (sourceUrl && sourceUrl !== '.') {
-      // The repository-root-relative form of `docs/antora.yml`'s real
+      // The repository-root-relative form of `src/antora.yml`'s real
       // location — see lib/playbook-yml.ts's own comment on why `url: .`
       // only works when the playbook itself sits at the repository root.
       const descriptorPath = relative(target, dirname(antoraYmlFile)).split(sep).join('/')

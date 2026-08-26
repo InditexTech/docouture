@@ -34,7 +34,7 @@ async function scaffoldGoodSite(root: string): Promise<void> {
   execFileSync('git', ['config', 'user.name', 'a'], { cwd: root })
 
   const siteRoot = join(root, 'docs')
-  await mkdir(join(siteRoot, 'docs'), { recursive: true })
+  await mkdir(join(siteRoot, 'src'), { recursive: true })
   await mkdir(join(siteRoot, 'node_modules', '.bin'), { recursive: true })
   await mkdir(join(siteRoot, 'node_modules', 'antora'), { recursive: true })
   await writeFile(join(siteRoot, 'node_modules', '.bin', 'antora'), '', 'utf8')
@@ -45,13 +45,13 @@ async function scaffoldGoodSite(root: string): Promise<void> {
     'utf8'
   )
   await writeFile(
-    join(siteRoot, 'docs', 'antora.yml'),
+    join(siteRoot, 'src', 'antora.yml'),
     'name: my-project-docs\ntitle: My Project Docs\nversion: ~\n',
     'utf8'
   )
   await writeFile(
     join(siteRoot, 'antora-playbook.yml'),
-    'site:\n  start_page: my-project-docs::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n',
+    'site:\n  start_page: my-project-docs::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/src\n',
     'utf8'
   )
 
@@ -86,12 +86,12 @@ describe('runDoctor', () => {
 
   it('fails on an uncommitted repository', async () => {
     const siteRoot = join(repo, 'docs')
-    await mkdir(join(siteRoot, 'docs'), { recursive: true })
+    await mkdir(join(siteRoot, 'src'), { recursive: true })
     await writeFile(join(siteRoot, 'package.json'), JSON.stringify({ name: 'x' }), 'utf8')
-    await writeFile(join(siteRoot, 'docs', 'antora.yml'), 'name: x\nversion: ~\n', 'utf8')
+    await writeFile(join(siteRoot, 'src', 'antora.yml'), 'name: x\nversion: ~\n', 'utf8')
     await writeFile(
       join(siteRoot, 'antora-playbook.yml'),
-      'site:\n  start_page: x::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n',
+      'site:\n  start_page: x::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/src\n',
       'utf8'
     )
 
@@ -104,7 +104,7 @@ describe('runDoctor', () => {
     await scaffoldGoodSite(repo)
     await writeFile(
       join(repo, 'docs', 'antora-playbook.yml'),
-      'site:\n  start_page: renamed::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n',
+      'site:\n  start_page: renamed::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/src\n',
       'utf8'
     )
 

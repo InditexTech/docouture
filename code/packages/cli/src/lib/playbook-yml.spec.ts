@@ -19,7 +19,7 @@ const SAMPLE = `site:
 content:
   sources:
     - url: ..
-      start_path: docs/docs
+      start_path: docs/src
       branches: HEAD
 
 ui:
@@ -72,7 +72,7 @@ describe('readSourceUrl', () => {
 
 describe('readStartPath', () => {
   it('reads content.sources[0].start_path', () => {
-    expect(readStartPath(SAMPLE)).toBe('docs/docs')
+    expect(readStartPath(SAMPLE)).toBe('docs/src')
   })
 
   it('does not pick up output.dir instead', () => {

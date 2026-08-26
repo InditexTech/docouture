@@ -49,7 +49,7 @@ content:
     # See antora-playbook.yml's comment on `url`/`start_path` — same reasoning
     # applies here: this playbook lives at <repo-root>/docs/ too.
     - url: ..
-      start_path: docs/docs
+      start_path: docs/src
       branches: HEAD
 
 ui:

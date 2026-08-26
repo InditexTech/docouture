@@ -44,10 +44,10 @@ content:
     # the standalone playbook's own comment on this, and the
     # docs-site-package skill.
     - url: ..
-      # Repository-root relative, hence `docs/docs` — see the standalone
-      # playbook's comment: the starter template's own nested `docs/` lands
+      # Repository-root relative, hence `docs/src` — see the standalone
+      # playbook's comment: the starter template's own nested `src/` lands
       # one level below this repository's `docs/`.
-      start_path: docs/docs
+      start_path: docs/src
       # Versioned (Full History): `main` aggregates as the prerelease
       # version — docs/antora.yml on this branch says `version: prerelease`,
       # `prerelease: true`, the same as the standalone mode's shape (this

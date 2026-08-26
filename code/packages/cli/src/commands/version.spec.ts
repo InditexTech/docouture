@@ -24,9 +24,9 @@ afterEach(() => {
 })
 
 async function writeAntoraYml(content: string): Promise<string> {
-  const docsDir = join(dir, 'docs')
-  await mkdir(docsDir, { recursive: true })
-  const file = join(docsDir, 'antora.yml')
+  const srcDir = join(dir, 'src')
+  await mkdir(srcDir, { recursive: true })
+  const file = join(srcDir, 'antora.yml')
   await writeFile(file, content, 'utf8')
   return file
 }
@@ -50,7 +50,7 @@ describe('runVersion', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('no antora.yml found'))
   })
 
-  it('patches version at docs/antora.yml under --dir', async () => {
+  it('patches version at src/antora.yml under --dir', async () => {
     const file = await writeAntoraYml("name: example\nversion: '0.1.0'\n")
     const code = await runVersion(['1.0.0', '--dir', dir])
     expect(code).toBe(0)
@@ -76,8 +76,8 @@ describe('runVersion', () => {
   })
 
   it('reports an error when the file is not a valid component descriptor', async () => {
-    const file = join(dir, 'docs', 'antora.yml')
-    await mkdir(join(dir, 'docs'), { recursive: true })
+    const file = join(dir, 'src', 'antora.yml')
+    await mkdir(join(dir, 'src'), { recursive: true })
     await writeFile(file, 'no version line here\n', 'utf8')
     const code = await runVersion(['1.0.0', '--dir', dir])
     expect(code).toBe(1)

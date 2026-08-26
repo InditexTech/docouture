@@ -32,11 +32,11 @@ export async function runVersion(argv: string[]): Promise<number> {
   const file =
     typeof flags.file === 'string'
       ? resolve(flags.file)
-      : resolve(typeof flags.dir === 'string' ? flags.dir : '.', 'docs', 'antora.yml')
+      : resolve(typeof flags.dir === 'string' ? flags.dir : '.', 'src', 'antora.yml')
 
   if (!(await exists(file))) {
     console.error(`no antora.yml found at '${file}'`)
-    console.error('pass --dir <path> (a component root, i.e. the parent of docs/) or --file <path> directly')
+    console.error('pass --dir <path> (a component root, i.e. the parent of src/) or --file <path> directly')
     return 1
   }
 

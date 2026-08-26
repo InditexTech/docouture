@@ -49,8 +49,8 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'my-project-docs',
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     expect(results.every((r) => r.ok)).toBe(true)
@@ -61,8 +61,8 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'renamed-docs',
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     const failed = results.filter((r) => !r.ok)
@@ -75,7 +75,7 @@ describe('checkNamesAgree', () => {
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'my-project-docs',
       startPath: 'docs',
-      descriptorPath: 'docs/docs',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     const failed = results.filter((r) => !r.ok)
@@ -87,8 +87,8 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'my-project-docs',
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'something-else',
     })
     const failed = results.filter((r) => !r.ok)
@@ -100,8 +100,8 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: null,
       startPageComponent: null,
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     expect(results).toHaveLength(1)

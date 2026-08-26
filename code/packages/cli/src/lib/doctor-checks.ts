@@ -58,7 +58,7 @@ export interface NamesInput {
   startPageComponent: string | null
   /** The playbook's `content.sources[0].start_path`. */
   startPath: string | null
-  /** Where `docs/antora.yml` actually is, repo-root relative (e.g. `docs/docs`). */
+  /** Where `docs/antora.yml` actually is, repo-root relative (e.g. `docs/src`). */
   descriptorPath: string | null
   /** `package.json` -> `name`. */
   packageName: string | null

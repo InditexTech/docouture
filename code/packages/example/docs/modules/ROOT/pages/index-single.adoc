@@ -1,0 +1,99 @@
+= Home (single column)
+:page-layout: home-single
+:page-nav-module: main
+:description: Weave.js — the framework for building visual collaborative applications.
+:page-tags: collaborative, canvas, real-time
+:page-action: Open the showcase
+:page-action-url: https://weavejs.cloud.inditex.com
+:page-action-secondary: Quickstart
+:page-action-secondary-url: main:quickstart.adoc
+:page-hero-image: home-hero.png
+:page-hero-image-alt: A Weave.js room with a text node selected on the canvas.
+
+Demo page for the single-column landing (`:page-layout: home-single`): the
+same hero (`home-hero.hbs`) and the same content-column conventions as
+xref:index.adoc[the real home page], stacked into one column at every
+breakpoint instead of splitting into a sticky hero aside beside a 7-column
+content well. Not the site's `start_page` — reachable directly, to compare
+the two layouts side by side.
+
+== Get started
+
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
+====
+[card,subheader="Start here"]
+.xref:main:quickstart.adoc[Quickstart]
+--
+image::cloth-quickstart.png["Abstract study of draped cloth, warm grey"]
+
+Set up a room, render a canvas and invite a second participant.
+--
+
+[card,subheader="Reference"]
+.xref:sdk:index.adoc[SDK]
+--
+image::cloth-sdk.png["Abstract study of draped cloth, cool grey"]
+
+The headless library the canvas is built on.
+--
+
+[card,subheader="Integration"]
+.xref:react:index.adoc[React Helper]
+--
+image::cloth-react.png["Abstract study of draped cloth, sand"]
+
+Components for integrating Weave.js into a React application.
+--
+
+[card,subheader="Transport"]
+.xref:main:build/stores/index.adoc[Stores]
+--
+image::cloth-stores.png["Abstract study of draped cloth, slate"]
+
+How a room's state reaches every participant, and which transport to pick.
+--
+====
+
+== Build collaborative whiteboard applications
+
+[feature-tabs]
+====
+[feature,label="UI-agnostic"]
+--
+image::feature-1.png[A Weave.js canvas rendered through several UI frameworks]
+image::feature-1-dark.png[role=dark]
+
+Change the UI using our included primitives or build a new one. With Weave.js,
+you get a unified system that includes a high-performance, fully customizable
+whiteboard so you can focus on building the product.
+
+[.cta]
+xref:main:architecture.adoc[Learn more]
+--
+
+[feature,label="Powerful abstractions"]
+--
+image::feature-2.png[The store, node, plugin and action layers of a Weave.js room]
+image::feature-2-dark.png[role=dark]
+
+Keep what you need, discard the rest, and build your own. Stores handle the
+real-time sync complexity while nodes, plugins, and actions allow for
+selection, drawing, erasing, creating geometric shapes, and perfect freehand
+drawing to smooth development.
+
+[.cta]
+xref:main:build/index.adoc[Learn more]
+--
+====
+
+== Free & open source
+
+[cta]
+====
+Weave.js is actively maintained and open for contributions.
+
+It comes with best-in-class documentation and developer experience.
+
+[.primary]
+https://github.com/InditexTech/weavejs-frontend/fork[Create a fork]
+====

@@ -1,0 +1,274 @@
+/*
+ * Single-column landing (home-single.hbs) — the two-column layout's own
+ * hero (home-hero.hbs) and content column (home.css's `.home__main`),
+ * unchanged, held in one full-width column at every breakpoint instead of
+ * only below `s`.
+ *
+ * home.css already stacks `.home__hero` above `.home__main` at xs/s — there
+ * is nothing to stick a sticky aside beside once both spans are 12 and the
+ * grid wraps them into separate rows. This file's job is only to make that
+ * the permanent arrangement: it holds no typography, colour or spacing of
+ * its own, only the column/stickiness overrides home.css's m/l rules would
+ * otherwise apply.
+ *
+ * Every rule here is deliberately NOT wrapped in an `@media` block. A
+ * `.home--single .home__hero` selector is two classes on one element's
+ * ancestor chain (0,2,0) against home.css's bare `.home__hero` (0,1,0), so it
+ * outranks that rule at every breakpoint regardless of which media query the
+ * losing declaration sits inside — @media conditions when a rule applies,
+ * not its specificity, so an unscoped override here still wins inside the
+ * `m`/`l` blocks it is overriding. That means one rule each covers what would
+ * otherwise need matching entries per breakpoint.
+ */
+
+/* ------------------------------------------------------------ hero ------- */
+
+.home--single .home__hero {
+  /* Always the full 12 columns, never home.css's 6 (base) or 5 (m/l). */
+  grid-column-end: span 12;
+  /*
+   * Undoes the m/l sticky behaviour (home.css): with nothing beside it to
+   * scroll past, a sticky hero would simply pin itself under the toolbar
+   * and never release.
+   */
+  align-self: auto;
+  padding-block-end: 0;
+  position: static;
+  top: auto;
+}
+
+/* ---------------------------------------------------------- content ------ */
+
+.home--single .home__main {
+  /* Always the full 12 columns, never home.css's 7 (m/l). */
+  grid-column: auto / span 12;
+  /*
+   * home.css adds 160px here at `m` on the assumption the column sits beside
+   * the hero's first line rather than below its last one — wrong once the
+   * hero is a full-width block above it; the row-gap the two share (home.css
+   * `.home { row-gap }`) is the only space needed between them here, same as
+   * it already is at xs/s.
+   */
+  padding-block-start: 0;
+}
+
+/*
+ * The block heading's dashed rule, full viewport width — not just to the
+ * well's own edges, or even the grid container's (home.css's own bleed,
+ * cancelled below), regardless of how narrow the centered well gets. Margins
+ * can't do this: any negative-margin bleed is expressed relative to h2's own
+ * containing block (the well), so it can only ever reach back out to an
+ * ancestor's edge, never past it to the true viewport — which is exactly
+ * the wall the well's own inset (centered well --- below) runs into.
+ *
+ * The trick instead: NOTHING between h2 and the document root sets
+ * `position` (checked — `.body`, `.home`, `.home__main`, `.sect1`, the DS's
+ * own `.ids-grid-layout`, all left at the initial `static`; the side menu's
+ * `position: fixed`, home.css's own hero `position: sticky`, are siblings/
+ * cousins, not ancestors, of this h2). An absolutely positioned element with
+ * no positioned ancestor resolves its containing block to the INITIAL
+ * containing block, which has the viewport's own width — so `::after`
+ * escapes the well entirely and can be sized `100vw` — while `h2` itself
+ * gains `position: relative` purely so the pseudo's `left: 50%` is relative
+ * to h2's own box (letting `translateX(-50%)` recentre it on h2, which is
+ * itself centered in the well, which is itself centered in the content area
+ * — three centres that coincide into one, so the line's midpoint lands on
+ * the viewport's own centre without this file ever computing the well's
+ * inset as a number). This only lines up exactly when the side menu is
+ * collapsed (the default here, `data-page-home` — home.hbs/home-single.hbs)
+ * — expanded, the content area itself is off-centre by half the menu's
+ * width, and so is this line, by the same amount, same as any full-bleed
+ * break-out has always cost when the layout it bleeds from isn't centred on
+ * the true viewport to begin with.
+ *
+ * `h2` no longer needs the negative-margin bleed home.css's OWN base rule
+ * gives it (`margin-inline-end`) — the pseudo replaces the visual entirely
+ * — so that inherited bleed is cancelled here instead of merely re-aimed,
+ * and so is home.css's own `background-image` on `h2` itself: painting the
+ * line twice (h2's own copy clipped to the well, this file's `::after` full
+ * viewport) would stack two dashes at the same baseline for no reason.
+ */
+.home--single .home__main > .sect1 > h2 {
+  background-image: none;
+  margin-inline-end: 0;
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  position: relative;
+}
+
+.home--single .home__main > .sect1 > h2::after {
+  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-size: 8px 1px;
+  block-size: 1px;
+  content: "";
+  inline-size: 100vw;
+  inset-block-end: 0;
+  inset-inline-start: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+/* ------------------------------------------------------- centered well --- */
+
+/*
+ * At m and up the single column narrows to a well centered in the grid
+ * (empty columns either side) instead of running edge to edge — an
+ * editorial "centered landing" reading rather than the full-bleed one above,
+ * which stays the xs/s (and, absent this block, the m/l) behaviour. A
+ * `grid-column` line-number pair rather than two `--span-*` utility classes
+ * for the same reason home.css gives for not using them at all (see its own
+ * header note): those classes are keyed to the design system's own `m`
+ * (1024px), not this project's (1240px, ids-breakpoints.css).
+ *
+ * Two widths, not one: 2/8/2 (columns 3–10) from `m` (1240px) up, narrowed
+ * further to 3/6/3 (columns 4–9) from `l` (1680px) up — the well itself
+ * keeps shrinking relative to the viewport as the viewport grows, rather
+ * than an 8-column measure stretching indefinitely on a very wide screen.
+ * The `l` block below is later in the cascade and, at widths where both
+ * media conditions are true, wins on source order — same selector, same
+ * specificity, last declaration standing.
+ */
+@media screen and (--ids-breakpoints-m) {
+  .home--single .home__hero,
+  .home--single .home__main {
+    grid-column: 3 / span 8;
+  }
+
+  /*
+   * The reading measure (doc.css's `.doc > .sect1 > .sectionbody` /
+   * home.css's `#preamble > .sectionbody`, both `max-width:
+   * var(--content-max-width)`) caps a block's BODY at 780px, which is what
+   * this file wants centered — but capping and centering `.sectionbody`
+   * itself, rather than its actual prose, was the first thing tried here and
+   * it broke a different set of blocks: `[cards,width=container]`,
+   * `[feature-tabs]` and `[cta]` all deliberately escape that 780px measure
+   * on THEMSELVES (`max-width: none; width: min(1.5 * 780px,
+   * var(--doc-inset-cap, 100cqw))` — card-grid.css/feature-tabs.css/cta.css
+   * all explain it), sizing against `100cqw` — `.home__main`'s OWN width,
+   * the full well, set as a container query in home.css. Centering
+   * `.sectionbody` shrinks and shifts its OWN box inward, but changes
+   * nothing about what `100cqw` reports (still the full well) — so a card
+   * grid stayed exactly as wide as the well while starting from the
+   * now-shifted, narrower `.sectionbody`'s left edge instead of the well's,
+   * overflowing out the right by however far `.sectionbody` had moved in.
+   *
+   * The fix: leave `.sectionbody` itself uncapped and flush (so the three
+   * width-escaping blocks keep measuring and positioning against the same
+   * box they always did — this rule states the override explicitly rather
+   * than relying on it having no `max-width` of its own to begin with, since
+   * "no rule sets one" is a fact about today's CSS, not a guarantee); cap
+   * and center everything else — the plain prose a block actually writes,
+   * one section at a time — instead. `:not()` lists the three escape
+   * hatches by their own block classes rather than this file inventing a
+   * fourth "is prose" class no author would ever see.
+   */
+  .home--single .home__main > .sect1 > .sectionbody,
+  .home--single .home__main > #preamble > .sectionbody {
+    max-width: none;
+  }
+
+  .home--single .home__main > .sect1 > .sectionbody > :not(.docouture-card-grid, .docouture-feature-tabs, .docouture-cta),
+  .home--single .home__main > #preamble > .sectionbody > :not(.docouture-card-grid, .docouture-feature-tabs, .docouture-cta) {
+    margin-inline: auto;
+    max-width: var(--content-max-width);
+  }
+
+  /*
+   * The three escape hatches keep their own `width: min(...)` untouched —
+   * this only adds `margin-inline: auto`, which is inert while that width
+   * resolves to the full well (`100cqw`, the common case: nothing to
+   * center, no leftover space either side) and only takes effect once a well
+   * wide enough to hit their OWN 1.5-measure cap (huge viewports) leaves
+   * them narrower than their now-uncapped, full-well parent — centering
+   * them in the leftover space instead of leaving them flush left in it.
+   */
+  .home--single .home__main .docouture-card-grid,
+  .home--single .home__main .docouture-feature-tabs,
+  .home--single .home__main .docouture-cta {
+    margin-inline: auto;
+  }
+
+  /*
+   * Content column: text centers in the well rather than reading left,
+   * matching the hero above. `text-align`, not `align-items` — the column
+   * is a flex column (home.css) whose children (a `[cards]` grid, a
+   * `[feature-tabs]` block, `.sectionbody`) rely on the default
+   * `align-items: stretch` to size themselves to the column's full width;
+   * `center` there would shrink each to its own content width instead,
+   * collapsing every block's internal grid/flex layout. `text-align`
+   * inherits down through them and centers plain prose (headings,
+   * paragraphs, list text) without touching how the blocks themselves are
+   * sized — the same distinction home.css's own header draws between this
+   * column's placement and doc.css's ownership of what is inside it.
+   */
+  .home--single .home__main {
+    text-align: center;
+  }
+
+  /*
+   * Two block extensions rely on that same inherited alignment for their OWN
+   * internal copy rather than setting their own (card-grid.css and
+   * feature-tabs.css both say so in their own comments) — on every other
+   * view that inherited value is home.css's default left, so it was never a
+   * visible choice until this file made it `center`. A card's title and
+   * description, and a feature slide's heading/prose/cta, are laid out by
+   * their own component CSS (a grid of fixed-width cards, a fixed-width tab
+   * list) and read wrong centered — reset back to how every other view
+   * already renders them.
+   */
+  .home--single .home__main .docouture-card-grid,
+  .home--single .home__main .docouture-feature-tabs {
+    text-align: left;
+  }
+
+  /*
+   * Hero: still home-hero.hbs's own stacked column (logo/title/chips/actions,
+   * then media, top to bottom) — not the row split an earlier pass tried
+   * here — just centered within the well, matching the content below it.
+   * `.home-hero` itself stays `flex-direction: column` (home-hero.css);
+   * `.home__main`'s `text-align: center` never reaches it regardless
+   * (`.home-hero` is `.home__hero`'s child, not `.home__main`'s), so the
+   * copy and the chip/action rows need their own centering here.
+   */
+  .home--single .home-hero {
+    align-items: center;
+    text-align: center;
+  }
+
+  /*
+   * `.home-hero__intro` (home-hero.css) is ITSELF a flex column, and its own
+   * `align-items` is left at the default (`normal`, computing to `stretch`)
+   * — every child without a fixed size (the `<h1>`, the labels/actions rows)
+   * stretches to the intro box's own width, so `text-align: center` above,
+   * inherited into them, is enough on its own. The product mark is the one
+   * child WITH a fixed size (40×40, `home-hero.css`) — a fixed cross size
+   * can't stretch, so per the flexbox spec it falls back to `flex-start`
+   * (left) instead, sitting flush against the intro box's left edge while
+   * the centered title reads as if nothing were wrong above it. `center`
+   * here overrides that fallback for the mark specifically; it changes
+   * nothing for the children that were already stretching to full width.
+   */
+  .home--single .home-hero__intro {
+    align-items: center;
+  }
+
+  .home--single .home-hero__labels,
+  .home--single .home-hero__actions {
+    justify-content: center;
+  }
+}
+
+/*
+ * `l` narrows the well further: 3/6/3 (columns 4–9) instead of `m`'s 2/8/2.
+ * Only the span changes — centering, the heading's reset bleed and the hero's
+ * own alignment are already unconditional across this whole range, from the
+ * `m` block above.
+ */
+@media screen and (--ids-breakpoints-l) {
+  .home--single .home__hero,
+  .home--single .home__main {
+    grid-column: 4 / span 6;
+  }
+}

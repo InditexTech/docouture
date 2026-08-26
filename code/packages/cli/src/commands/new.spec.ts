@@ -41,6 +41,47 @@ async function initRepo(dir: string): Promise<void> {
   execFileSync('git', ['init', '--quiet'], { cwd: dir })
 }
 
+// @inquirer/prompts renders each prompt asynchronously (several
+// microtask/setImmediate hops deep inside its own promise chain) before it
+// starts reading keystrokes — writing answers on a fixed tick schedule
+// races that and silently drops keystrokes typed before the next prompt's
+// listener has attached. Waiting for each prompt's own message to actually
+// appear in the output stream before typing its answer is the reliable
+// equivalent of a person watching the terminal before typing.
+function makeInteractiveIo(): {
+  input: PassThrough
+  output: PassThrough
+  isTTY: true
+  waitForPrompt(text: string): Promise<void>
+} {
+  const input = new PassThrough()
+  const output = new PassThrough()
+  let rendered = ''
+  output.on('data', (chunk: Buffer) => {
+    rendered += chunk.toString('utf8')
+  })
+
+  function waitForPrompt(text: string): Promise<void> {
+    return new Promise((resolvePromise, reject) => {
+      const start = Date.now()
+      const check = (): void => {
+        if (rendered.includes(text)) {
+          resolvePromise()
+          return
+        }
+        if (Date.now() - start > 4000) {
+          reject(new Error(`timed out waiting for prompt '${text}' — rendered so far: ${rendered}`))
+          return
+        }
+        setTimeout(check, 5)
+      }
+      check()
+    })
+  }
+
+  return { input, output, isTTY: true, waitForPrompt }
+}
+
 describe('runNew', () => {
   it('rejects an invalid name', async () => {
     const code = await runNew(['Not_Valid', '--dir', join(base, 'repo')])
@@ -55,6 +96,31 @@ describe('runNew', () => {
     const code = await runNew(['my-project-docs', '--dir', repo, '--mode', 'bogus'])
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('invalid --mode'))
+  })
+
+  it('rejects an invalid --pm value', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--pm', 'bogus'])
+    expect(code).toBe(1)
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("invalid --pm: 'bogus'"))
+  })
+
+  it('honours --pm pnpm in both the scaffolded workflows and the printed next steps', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--pm', 'pnpm'])
+    expect(code).toBe(0)
+
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    expect(workflow).toContain('pnpm')
+    expect(workflow).not.toContain('__PDOCS_PM')
+
+    const allLogs = logSpy.mock.calls.map((call) => String(call[0])).join('\n')
+    expect(allLogs).toContain('pnpm install')
+    expect(allLogs).toContain('pnpm run dev')
   })
 
   it('refuses to scaffold when --dir is not inside a git repository', async () => {
@@ -77,7 +143,7 @@ describe('runNew', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('already exists and is not empty'))
   })
 
-  it('refuses to scaffold when a target workflow file already exists', async () => {
+  it('refuses to scaffold when a target workflow file already exists (non-interactive)', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
@@ -85,21 +151,43 @@ describe('runNew', () => {
 
     const code = await runNew(['my-project-docs', '--dir', repo])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing workflow'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing file'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('pdocs-release.yml'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('pdocs upgrade'))
   })
 
-  it('refuses to scaffold when AGENTS.md already exists at the repo root', async () => {
+  it('appends the pdocs section to a foreign AGENTS.md without blocking or prompting', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
-    await writeFile(join(repo, 'AGENTS.md'), 'existing', 'utf8')
+    await writeFile(join(repo, 'AGENTS.md'), '# My own notes\n\nSome hand-written content.\n', 'utf8')
+
+    const code = await runNew(['my-project-docs', '--dir', repo])
+    expect(code).toBe(0)
+
+    const agentsMd = await readFile(join(repo, 'AGENTS.md'), 'utf8')
+    expect(agentsMd).toContain('# My own notes')
+    expect(agentsMd).toContain('Some hand-written content.')
+    expect(agentsMd).toContain('pdocs:start')
+    expect(agentsMd).toContain('My Project Docs documentation')
+  })
+
+  it('refuses to scaffold (non-interactive) when AGENTS.md already has a pdocs-managed section', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await writeFile(
+      join(repo, 'AGENTS.md'),
+      '<!-- pdocs:start - managed by pdocs; edits inside this block are overwritten by `pdocs new`/`pdocs upgrade` -->\nold content\n<!-- pdocs:end -->\n',
+      'utf8'
+    )
 
     const code = await runNew(['my-project-docs', '--dir', repo])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing agent file'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing file'))
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('AGENTS.md'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('pdocs upgrade'))
   })
 
-  it('refuses to scaffold when a skill directory already exists and is non-empty', async () => {
+  it('refuses to scaffold when a skill directory already exists and is non-empty (non-interactive)', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await mkdir(join(repo, '.opencode', 'skills', 'docs-internals'), { recursive: true })
@@ -107,7 +195,7 @@ describe('runNew', () => {
 
     const code = await runNew(['my-project-docs', '--dir', repo])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing agent file'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing file'))
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('docs-internals'))
   })
 
@@ -121,7 +209,12 @@ describe('runNew', () => {
     // The whole starter subtree lands under docs/, unflattened — its own
     // nested docs/antora.yml keeps that shape.
     const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
-    expect(antoraYml).toContain('name: my-project-docs')
+    // The extra URL path segment (the "extra URL path segment" wizard
+    // question / --url-segment) is off by default: docs/antora.yml's
+    // component name is Antora's reserved 'ROOT', not the site name —
+    // package.json's own name (asserted below) still keeps the site name
+    // regardless, since the two are deliberately decoupled.
+    expect(antoraYml).toContain('name: ROOT')
     expect(antoraYml).toContain('title: My Project Docs')
     expect(antoraYml).toContain('version: prerelease')
     expect(antoraYml).toContain('prerelease: true')
@@ -142,6 +235,7 @@ describe('runNew', () => {
     expect(playbook).toContain('start_path: docs/src')
     expect(playbook).toContain('branches: [main]')
     expect(playbook).toContain("tags: ['stable']")
+    expect(playbook).toContain('start_page: ROOT::index.adoc')
 
     // Workflows are peeled out to the true repo root — GitHub Actions never
     // discovers them nested under docs/.
@@ -169,6 +263,23 @@ describe('runNew', () => {
     // real, independent copy.
     expect(playbook).not.toContain('latest_version_segment:')
     expect(playbook).toContain('duplicate_latest_version: true')
+  })
+
+  it('keeps the site name as a real URL segment with --url-segment', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--url-segment'])
+    expect(code).toBe(0)
+
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
+    expect(antoraYml).toContain('name: my-project-docs')
+
+    const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
+    expect(playbook).toContain('start_page: my-project-docs::index.adoc')
+
+    const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as { name?: string }
+    expect(pkg.name).toBe('my-project-docs')
   })
 
   it('scaffolds docs/.gitignore under its real dotfile name (GH regression: npm strips .git*-named files from published packages, so the template source is named plain `gitignore` and must be renamed back on write)', async () => {
@@ -296,47 +407,52 @@ describe('runNew', () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
-    // @inquirer/prompts renders each prompt asynchronously (several
-    // microtask/setImmediate hops deep inside its own promise chain) before
-    // it starts reading keystrokes — writing answers on a fixed tick schedule
-    // races that and silently drops keystrokes typed before the next
-    // prompt's listener has attached. Waiting for each prompt's own message
-    // to actually appear in the output stream before typing its answer is
-    // the reliable equivalent of a person watching the terminal before
-    // typing.
-    const input = new PassThrough()
-    const output = new PassThrough()
-    let rendered = ''
-    output.on('data', (chunk: Buffer) => {
-      rendered += chunk.toString('utf8')
-    })
+    const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
 
-    function waitForPrompt(text: string): Promise<void> {
-      return new Promise((resolve, reject) => {
-        const start = Date.now()
-        const check = (): void => {
-          if (rendered.includes(text)) {
-            resolve()
-            return
-          }
-          if (Date.now() - start > 4000) {
-            reject(new Error(`timed out waiting for prompt '${text}' — rendered so far: ${rendered}`))
-            return
-          }
-          setTimeout(check, 5)
-        }
-        check()
-      })
-    }
+    const resultPromise = runNew(['--dir', repo], { input, output, isTTY })
 
-    const resultPromise = runNew(['--dir', repo], { input, output, isTTY: true })
-
-    await waitForPrompt('Site / component name')
+    await waitForPrompt('Site slug')
     input.write('my-wizard-docs\n')
     await waitForPrompt('Site title')
     input.write('\n') // Enter — accept the default title
+    await waitForPrompt('extra URL path segment')
+    input.write('\n') // Enter — accept the default (no, i.e. ROOT)
     await waitForPrompt('Versioning mode')
     input.write('2\n') // Versioned mode (second choice)
+    await waitForPrompt('Package manager')
+    input.write('\n') // Enter — accept the default (npm, or whatever was auto-guessed)
+
+    const code = await resultPromise
+    input.end()
+    expect(code).toBe(0)
+
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
+    expect(antoraYml).toContain('name: ROOT')
+    expect(antoraYml).toContain('title: My Wizard Docs')
+    expect(antoraYml).toContain('version: prerelease')
+
+    const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
+    expect(playbook).toContain("tags: ['v*']")
+  })
+
+  it('answering yes to the extra URL path segment question at the wizard keeps the site name as the component name', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
+
+    const resultPromise = runNew(['--dir', repo], { input, output, isTTY })
+
+    await waitForPrompt('Site slug')
+    input.write('my-wizard-docs\n')
+    await waitForPrompt('Site title')
+    input.write('\n')
+    await waitForPrompt('extra URL path segment')
+    input.write('y\n')
+    await waitForPrompt('Versioning mode')
+    input.write('\n')
+    await waitForPrompt('Package manager')
+    input.write('\n')
 
     const code = await resultPromise
     input.end()
@@ -344,11 +460,33 @@ describe('runNew', () => {
 
     const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('name: my-wizard-docs')
-    expect(antoraYml).toContain('title: My Wizard Docs')
-    expect(antoraYml).toContain('version: prerelease')
+  })
 
-    const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
-    expect(playbook).toContain("tags: ['v*']")
+  it('selecting pnpm at the wizard prompt is honoured the same as --pm', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
+
+    const resultPromise = runNew(['--dir', repo], { input, output, isTTY })
+
+    await waitForPrompt('Site slug')
+    input.write('my-wizard-docs\n')
+    await waitForPrompt('Site title')
+    input.write('\n')
+    await waitForPrompt('extra URL path segment')
+    input.write('\n')
+    await waitForPrompt('Versioning mode')
+    input.write('\n')
+    await waitForPrompt('Package manager')
+    input.write('2\n') // pnpm (second choice)
+
+    const code = await resultPromise
+    input.end()
+    expect(code).toBe(0)
+
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    expect(workflow).toContain('pnpm')
   })
 
   it('--yes skips the wizard even against an interactive io, using defaults', async () => {
@@ -363,7 +501,116 @@ describe('runNew', () => {
     expect(code).toBe(0)
 
     const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
-    expect(antoraYml).toContain('name: my-project-docs')
+    expect(antoraYml).toContain('name: ROOT')
     expect(antoraYml).toContain('version: prerelease')
+  })
+
+  it('--yes still hard-refuses on a conflict even against an interactive io (nobody to confirm with)', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
+    await writeFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'existing', 'utf8')
+
+    const input = new PassThrough()
+    const output = new PassThrough()
+    output.resume()
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--yes'], { input, output, isTTY: true })
+    expect(code).toBe(1)
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing file'))
+
+    // Nothing written — docs/ never got created.
+    await expect(readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')).rejects.toThrow()
+  })
+
+  it('prompts to overwrite an existing workflow/skill/AGENTS.md-managed-section conflict, and proceeds when confirmed', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
+    await writeFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'existing', 'utf8')
+
+    const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
+
+    const resultPromise = runNew(['my-project-docs', '--dir', repo, '--title', 'My Project Docs'], {
+      input,
+      output,
+      isTTY,
+    })
+
+    await waitForPrompt('Site slug')
+    input.write('\n')
+    await waitForPrompt('Site title')
+    input.write('\n')
+    await waitForPrompt('extra URL path segment')
+    input.write('\n')
+    await waitForPrompt('Versioning mode')
+    input.write('\n')
+    await waitForPrompt('Package manager')
+    input.write('\n')
+    await waitForPrompt('Overwrite them?')
+    input.write('y\n')
+
+    const code = await resultPromise
+    input.end()
+    expect(code).toBe(0)
+
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    expect(workflow).not.toBe('existing')
+
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
+    expect(antoraYml).toContain('name: ROOT')
+  })
+
+  it('aborts without writing anything when the overwrite prompt is declined', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
+    await writeFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'existing', 'utf8')
+
+    const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
+
+    const resultPromise = runNew(['my-project-docs', '--dir', repo, '--title', 'My Project Docs'], {
+      input,
+      output,
+      isTTY,
+    })
+
+    await waitForPrompt('Site slug')
+    input.write('\n')
+    await waitForPrompt('Site title')
+    input.write('\n')
+    await waitForPrompt('extra URL path segment')
+    input.write('\n')
+    await waitForPrompt('Versioning mode')
+    input.write('\n')
+    await waitForPrompt('Package manager')
+    input.write('\n')
+    await waitForPrompt('Overwrite them?')
+    input.write('n\n')
+
+    const code = await resultPromise
+    input.end()
+    expect(code).toBe(1)
+
+    // Untouched, and docs/ was never created.
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    expect(workflow).toBe('existing')
+    await expect(readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')).rejects.toThrow()
+  })
+
+  it('scaffolds at the true repo root when --dir points at a nested subdirectory', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    const nested = join(repo, 'some', 'nested', 'dir')
+    await mkdir(nested, { recursive: true })
+
+    const code = await runNew(['my-project-docs', '--dir', nested])
+    expect(code).toBe(0)
+
+    // Landed at the repo root, not the nested directory --dir pointed at.
+    const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as { name?: string }
+    expect(pkg.name).toBe('my-project-docs')
+    await readFile(join(repo, 'AGENTS.md'), 'utf8')
+    await expect(readFile(join(nested, 'docs', 'src', 'antora.yml'), 'utf8')).rejects.toThrow()
   })
 })

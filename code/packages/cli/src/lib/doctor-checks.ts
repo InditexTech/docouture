@@ -106,20 +106,36 @@ export function checkNamesAgree(input: NamesInput): CheckResult[] {
   }
 
   if (input.packageName && input.antoraYmlName) {
-    results.push(
-      input.packageName === input.antoraYmlName
-        ? {
-            ok: true,
-            label: 'package name',
-            message: `package.json name '${input.packageName}' matches component name`,
-          }
-        : {
-            ok: false,
-            label: 'package name',
-            message: `package.json name '${input.packageName}' != docs/antora.yml name '${input.antoraYmlName}'`,
-            detail: 'pdocs new sets both from the same value — if one was renamed by hand, rename the other to match',
-          }
-    )
+    if (input.antoraYmlName === 'ROOT') {
+      // `ROOT` is Antora's own reserved component name (dropped from every
+      // published URL — see how-antora-builds-urls's "Component segment"),
+      // set by `pdocs new` when the "extra URL path segment" question/
+      // `--url-segment` flag is declined (the default) — see new.ts's own
+      // comment on TemplateValues.componentName. It is never derived from
+      // package.json's name, so the two are expected to differ here; only
+      // a real, chosen component name must still match package.json's own
+      // name, which is what the else branch below still enforces.
+      results.push({
+        ok: true,
+        label: 'package name',
+        message: `docs/antora.yml name is 'ROOT' (no URL segment) — package.json name '${input.packageName}' is independent`,
+      })
+    } else {
+      results.push(
+        input.packageName === input.antoraYmlName
+          ? {
+              ok: true,
+              label: 'package name',
+              message: `package.json name '${input.packageName}' matches component name`,
+            }
+          : {
+              ok: false,
+              label: 'package name',
+              message: `package.json name '${input.packageName}' != docs/antora.yml name '${input.antoraYmlName}'`,
+              detail: 'pdocs new sets both from the same value — if one was renamed by hand, rename the other to match',
+            }
+      )
+    }
   }
 
   return results

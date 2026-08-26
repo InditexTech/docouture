@@ -1,10 +1,11 @@
 'use strict'
 
 import { readFile, writeFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 
 import { parseArgs } from '../lib/args.js'
 import { exists } from '../lib/copy-template.js'
+import { findRepoRoot } from '../lib/repo-root.js'
 import { patchVersion, readVersion } from '../lib/antora-yml.js'
 
 // Unlike `just bump` — which moves this workspace's own package.json files
@@ -29,14 +30,22 @@ export async function runVersion(argv: string[]): Promise<number> {
     return 1
   }
 
-  const file =
-    typeof flags.file === 'string'
-      ? resolve(flags.file)
-      : resolve(typeof flags.dir === 'string' ? flags.dir : '.', 'src', 'antora.yml')
+  // --dir (or cwd) can be anywhere inside the repository — findRepoRoot
+  // walks up to the actual repository root, same as dev/build/doctor, so
+  // this works whether run from the repo root, from inside docs/, or from a
+  // nested page directory. --file bypasses all of this with a literal path.
+  let file: string
+  if (typeof flags.file === 'string') {
+    file = resolve(flags.file)
+  } else {
+    const startDir = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
+    const repoRoot = await findRepoRoot(startDir)
+    file = join(repoRoot, 'docs', 'src', 'antora.yml')
+  }
 
   if (!(await exists(file))) {
     console.error(`no antora.yml found at '${file}'`)
-    console.error('pass --dir <path> (a component root, i.e. the parent of src/) or --file <path> directly')
+    console.error('pass --dir <path> (anywhere inside the repository) or --file <path> directly')
     return 1
   }
 

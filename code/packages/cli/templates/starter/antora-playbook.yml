@@ -15,13 +15,20 @@ site:
   # Set this to the public URL of the deployed site. It is required for the
   # sitemap and for canonical links; leave it out while developing locally.
   #
-  # Publishing to GitHub Pages as a project page (https://<org>.github.io/
-  # <repo>/) needs the repo name baked into this as a path segment — Antora
-  # uses it to generate correct absolute asset URLs — e.g.:
+  # Publishing to GitHub Pages as a project page always publishes under
+  # https://<org>.github.io/<repo>/ — the repo name has to be baked into
+  # this as a path segment; Antora uses it to generate correct absolute
+  # asset URLs — e.g.:
   #
   # url: https://<org>.github.io/<repo>
   # url: https://docs.example.com
-  start_page: __PDOCS_NAME__::index.adoc
+  #
+  # A second /<component-name>/ segment only appears below (in
+  # site.start_page) if this site opted into one (`pdocs new`'s "extra URL
+  # path segment" question, or `--url-segment`) — off by default, in which
+  # case docs/antora.yml's component name is Antora's reserved `ROOT` and
+  # contributes no segment.
+  start_page: __PDOCS_COMPONENT_NAME__::index.adoc
   # Side-menu brand mark (nav-brand.hbs) and browser tab icon (head-icons.hbs)
   # — placeholder artwork under supplemental-ui/, wired via
   # ui.supplemental_files below. Supplemental files land under the UI's own

@@ -1,5 +1,6 @@
 'use strict'
 
+import { execFileSync } from 'node:child_process'
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -24,7 +25,7 @@ afterEach(() => {
 })
 
 async function writeAntoraYml(content: string): Promise<string> {
-  const srcDir = join(dir, 'src')
+  const srcDir = join(dir, 'docs', 'src')
   await mkdir(srcDir, { recursive: true })
   const file = join(srcDir, 'antora.yml')
   await writeFile(file, content, 'utf8')
@@ -50,7 +51,7 @@ describe('runVersion', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('no antora.yml found'))
   })
 
-  it('patches version at src/antora.yml under --dir', async () => {
+  it('patches version at docs/src/antora.yml under --dir', async () => {
     const file = await writeAntoraYml("name: example\nversion: '0.1.0'\n")
     const code = await runVersion(['1.0.0', '--dir', dir])
     expect(code).toBe(0)
@@ -76,11 +77,24 @@ describe('runVersion', () => {
   })
 
   it('reports an error when the file is not a valid component descriptor', async () => {
-    const file = join(dir, 'src', 'antora.yml')
-    await mkdir(join(dir, 'src'), { recursive: true })
+    const file = join(dir, 'docs', 'src', 'antora.yml')
+    await mkdir(join(dir, 'docs', 'src'), { recursive: true })
     await writeFile(file, 'no version line here\n', 'utf8')
     const code = await runVersion(['1.0.0', '--dir', dir])
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('does not look like an Antora component descriptor'))
+  })
+
+  it('finds docs/src/antora.yml from the true repo root when --dir points at a nested subdirectory', async () => {
+    execFileSync('git', ['init', '--quiet'], { cwd: dir })
+    const file = await writeAntoraYml("name: example\nversion: '0.1.0'\n")
+
+    const nested = join(dir, 'docs', 'src', 'modules', 'ROOT', 'pages')
+    await mkdir(nested, { recursive: true })
+
+    const code = await runVersion(['1.0.0', '--dir', nested])
+    expect(code).toBe(0)
+    const content = await readFile(file, 'utf8')
+    expect(content).toContain('version: 1.0.0')
   })
 })

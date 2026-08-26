@@ -107,6 +107,19 @@ describe('checkNamesAgree', () => {
     expect(results).toHaveLength(1)
     expect(results[0]?.label).toBe('content path')
   })
+
+  it('passes the package name pair when the component is the reserved ROOT name, even though it differs from package.json', () => {
+    const results = checkNamesAgree({
+      antoraYmlName: 'ROOT',
+      startPageComponent: 'ROOT',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
+      packageName: 'my-project-docs',
+    })
+    expect(results.every((r) => r.ok)).toBe(true)
+    const packageNameResult = results.find((r) => r.label === 'package name')
+    expect(packageNameResult?.ok).toBe(true)
+  })
 })
 
 describe('checkGitHasCommit', () => {

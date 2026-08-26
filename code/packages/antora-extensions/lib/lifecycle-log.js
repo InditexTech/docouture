@@ -1,7 +1,7 @@
 'use strict'
 
 // Traces Antora's OWN generator pipeline — when it starts, and how long
-// each documented phase takes — under a single `pdocs-lifecycle` logger, at
+// each documented phase takes — under a single `docouture-lifecycle` logger, at
 // `info`. @antora/site-generator's generate-site.js notifies every one of
 // the events below (`context.notify(eventName)`, see that file's own
 // source for the exact call sites this list is transcribed from) but never
@@ -17,10 +17,10 @@
 // and a log line, nothing else, so there is nothing here to disable.
 //
 // Its log lines flow through the exact same observability plumbing already
-// wired for every other `pdocs-*` extension — `--log-level=info` (Antora's
-// own real default is `warn`) plus a `"name":"pdocs-` filter — in this
+// wired for every other `docouture-*` extension — `--log-level=info` (Antora's
+// own real default is `warn`) plus a `"name":"docouture-` filter — in this
 // monorepo's own `just dev`/`just build-site` recipes and in
-// `pdocs dev`/`pdocs build` (the CLI package's `antora-log.ts`). No extra
+// `docouture dev`/`docouture build` (the CLI package's `antora-log.ts`). No extra
 // flag or config specific to this file is needed to see it.
 //
 // EVENT ORDER below is generate-site.js's actual pipeline order (plus
@@ -45,7 +45,7 @@ const EVENTS = [
 
 module.exports = function registerLifecycleLog(context, deps = {}) {
   const now = deps.now || Date.now
-  const logger = context.getLogger('pdocs-lifecycle')
+  const logger = context.getLogger('docouture-lifecycle')
   const startedAt = now()
   let lastAt = startedAt
 

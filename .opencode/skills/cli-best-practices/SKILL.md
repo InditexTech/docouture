@@ -1,9 +1,9 @@
 ---
 name: cli-best-practices
-description: How the pdocs CLI (code/packages/cli) is built to Node.js CLI best practices — global flags, colour/output discipline, the banner, signal handling for spawned children, and config precedence. USE WHEN adding or editing a command in code/packages/cli, wiring a new flag, touching bin.ts, or reviewing a change to that package for polish/consistency.
+description: How the docouture CLI (code/packages/cli) is built to Node.js CLI best practices — global flags, colour/output discipline, the banner, signal handling for spawned children, and config precedence. USE WHEN adding or editing a command in code/packages/cli, wiring a new flag, touching bin.ts, or reviewing a change to that package for polish/consistency.
 ---
 
-## House rules for the pdocs CLI
+## House rules for the docouture CLI
 
 These conventions came out of a deliberate pass to align `code/packages/cli`
 with community Node.js CLI best practices (see
@@ -32,7 +32,7 @@ command's own `parseArgs` runs:
   `doctor`). Extend a command's own output path, gated on
   `getContext().json`, rather than adding a second ad hoc `--json` per
   command.
-- `--verbose` — same effect as `DEBUG=pdocs` (see `src/lib/debug-log.ts`);
+- `--verbose` — same effect as `DEBUG=docouture` (see `src/lib/debug-log.ts`);
   logs to stderr only, never stdout.
 - `--no-color` / `--color` — forces colour off/on regardless of TTY
   detection; read by `src/lib/theme.ts`.
@@ -75,7 +75,7 @@ splitting the human report across streams.
 Every place this CLI spawns a real child process now forwards SIGINT/SIGTERM
 to it and tracks it for cleanup:
 
-- `src/lib/run-script.ts` (`pdocs build`'s `npm run build`) forwards both
+- `src/lib/run-script.ts` (`docouture build`'s `npm run build`) forwards both
   signals to the child and removes the listeners once it exits.
 - `src/lib/dev-server.ts` tracks the in-flight `antora` rebuild child so
   `close()` (itself called from `dev.ts`'s own SIGINT/SIGTERM handler) can
@@ -110,7 +110,7 @@ exactly what a naive spread gets wrong and `resolveConfig` gets right.
 ### Debug logging
 
 `src/lib/debug-log.ts`'s `debugLog(message)` prints to stderr only when
-`--verbose` or `DEBUG=pdocs`/`DEBUG=*` is set. Use it for "what did we just
+`--verbose` or `DEBUG=docouture`/`DEBUG=*` is set. Use it for "what did we just
 spawn and where" detail (see its call sites in `run-script.ts`/
 `dev-server.ts`) — not for anything a user needs to see by default.
 

@@ -1,12 +1,12 @@
 'use strict'
 
-// AGENTS.md is the one scaffolded file `pdocs new`/`pdocs upgrade` never
+// AGENTS.md is the one scaffolded file `docouture new`/`docouture upgrade` never
 // treat as all-or-nothing: unlike a workflow file or a skill directory, a
-// repository may well already have its own AGENTS.md before `pdocs new`
+// repository may well already have its own AGENTS.md before `docouture new`
 // ever runs, and the `documenting-your-repo` skill edits this file's own
 // '## Documentation state' table over time as a repo's docs grow — content
 // no template regenerates. Rather than clobber the whole file (today's
-// behavior for every other scaffolded file) or refuse outright, pdocs' own
+// behavior for every other scaffolded file) or refuse outright, docouture' own
 // content lives inside a clearly marked, mechanically findable block —
 // everything outside it (a human's own notes, or that evolving table) is
 // never touched. The template itself
@@ -14,12 +14,12 @@
 // '## Documentation state', so that section is deliberately outside the
 // block even on a brand-new scaffold.
 export const MANAGED_START =
-  '<!-- pdocs:start - managed by pdocs; edits inside this block are overwritten by `pdocs new`/`pdocs upgrade` -->'
-export const MANAGED_END = '<!-- pdocs:end -->'
+  '<!-- docouture:start - managed by docouture; edits inside this block are overwritten by `docouture new`/`docouture upgrade` -->'
+export const MANAGED_END = '<!-- docouture:end -->'
 
 export const AGENTS_MD_FILENAME = 'AGENTS.md'
 
-// True when `content` already has a complete pdocs-managed block — the
+// True when `content` already has a complete docouture-managed block — the
 // signal `new.ts` uses to decide whether an existing AGENTS.md counts as a
 // genuine overwrite conflict (subject to the same confirm-before-overwrite
 // prompt as workflows/skills) versus a foreign file that's simply safe to
@@ -36,13 +36,13 @@ function extractManagedBlock(templateContent: string): string {
   if (start === -1 || end === -1 || end <= start) {
     // Only reachable if templates/agent-support/AGENTS.md itself loses its
     // own markers — a packaging bug, not a runtime/user condition.
-    throw new Error('templates/agent-support/AGENTS.md is missing its pdocs:start/pdocs:end markers')
+    throw new Error('templates/agent-support/AGENTS.md is missing its docouture:start/docouture:end markers')
   }
   return templateContent.slice(start, end + MANAGED_END.length)
 }
 
 // Merges `templateContent` — this run's freshly rendered AGENTS.md, exactly
-// as `pdocs new` would write it from scratch (placeholders already
+// as `docouture new` would write it from scratch (placeholders already
 // substituted, both markers and the default '## Documentation state' tail
 // all present) — into `existing`, the AGENTS.md content already on disk (or
 // `undefined` if there wasn't one):

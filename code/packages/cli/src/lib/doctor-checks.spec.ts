@@ -126,7 +126,7 @@ describe('checkGitHasCommit', () => {
   let dir: string
 
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-git-'))
+    dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-git-'))
   })
 
   it('fails when the directory is not a git repository', async () => {
@@ -155,7 +155,7 @@ describe('checkAntoraAvailable', () => {
   let dir: string
 
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-antora-'))
+    dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-antora-'))
   })
 
   it('fails when node_modules/antora is missing', () => {
@@ -174,7 +174,7 @@ describe('checkAgentFilesPresent', () => {
   let dir: string
 
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-agent-files-'))
+    dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-agent-files-'))
   })
 
   it('flags every path missing on a bare directory', () => {
@@ -199,7 +199,7 @@ describe('checkAgentFilesPresent', () => {
 
 describe('checkReleaseLabelExists', () => {
   it('is advisory-only (ok: true) when gh cannot answer for this directory — no GitHub remote/auth in a bare tmp dir', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-release-label-'))
+    const dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-release-label-'))
     execFileSync('git', ['init', '--quiet'], { cwd: dir })
 
     const result = await checkReleaseLabelExists(dir)

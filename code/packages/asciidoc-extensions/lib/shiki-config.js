@@ -1,7 +1,7 @@
 'use strict'
 
 // Shared config between the two halves of the Shiki (GH-89) syntax
-// highlighter: `shiki-prewarm.js` (an @inditextech/pdocs-antora-extensions
+// highlighter: `shiki-prewarm.js` (an @inditextech/docouture-antora-extensions
 // pipeline extension, builds the one shared highlighter instance
 // asynchronously before any page converts) and `shiki-syntax-highlighter.js`
 // (the Asciidoctor SyntaxHighlighter adapter that reads it back

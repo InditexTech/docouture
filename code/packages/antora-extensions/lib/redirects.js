@@ -21,7 +21,7 @@ const produceRedirects = require('@antora/redirect-producer')
  *
  *     antora:
  *       extensions:
- *         - require: '@inditextech/pdocs-antora-extensions'
+ *         - require: '@inditextech/docouture-antora-extensions'
  *           redirects:
  *             - from: '/weavejs/docs/main/build/node/comment'
  *               to: '/weavejs/latest/main/build/nodes/comment'
@@ -68,7 +68,7 @@ const produceRedirects = require('@antora/redirect-producer')
  * format for these rules too, for free.
  */
 module.exports = function registerRedirects(context, rules) {
-  const logger = context.getLogger('pdocs-redirects')
+  const logger = context.getLogger('docouture-redirects')
   if (rules === undefined) return
   if (!Array.isArray(rules)) {
     logger.warn('Ignoring redirects extension config: expected a list of {from, to} rules, got %s', typeof rules)

@@ -1,4 +1,4 @@
-# Asciidoctor extensions in pdocs
+# Asciidoctor extensions in docouture
 
 Use an extension when the content component has no AsciiDoc equivalent — tabs, cards,
 steps, KPI. If Asciidoctor already emits usable HTML (admonitions, tables, code blocks,
@@ -10,7 +10,7 @@ anywhere else.
 
 ```
 code/packages/asciidoc-extensions/
-  package.json          name: @inditextech/pdocs-asciidoc-extensions
+  package.json          name: @inditextech/docouture-asciidoc-extensions
   lib/
     index.js            registers every extension
     tabs.js
@@ -29,7 +29,7 @@ existing `asciidoc:` key, as a sibling of `attributes:`:
 ```yaml
 asciidoc:
   extensions:
-    - '@inditextech/pdocs-asciidoc-extensions'
+    - '@inditextech/docouture-asciidoc-extensions'
   attributes:
     experimental: ''
     icons: font
@@ -41,7 +41,7 @@ currently has no `asciidoc` key; add one at the top level:
 ```yaml
 asciidoc:
   extensions:
-    - '@inditextech/pdocs-asciidoc-extensions'
+    - '@inditextech/docouture-asciidoc-extensions'
 ```
 
 `gulp.d/tasks/build-preview-pages.js:43` reads it, `require`s each request, calls

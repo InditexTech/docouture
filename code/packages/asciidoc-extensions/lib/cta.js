@@ -171,14 +171,14 @@ function renderMark(lightHtml, darkHtml) {
   if (!light && !dark) return ''
   const themed = light && dark
   return (
-    '<div class="pdocs-cta__mark">' +
+    '<div class="docouture-cta__mark">' +
     (light
       ? light.replace(
           '<img',
-          '<img class="pdocs-cta__mark-image' + (themed ? ' pdocs-cta__mark-image--light' : '') + '"'
+          '<img class="docouture-cta__mark-image' + (themed ? ' docouture-cta__mark-image--light' : '') + '"'
         )
       : '') +
-    (dark ? dark.replace('<img', '<img class="pdocs-cta__mark-image pdocs-cta__mark-image--dark"') : '') +
+    (dark ? dark.replace('<img', '<img class="docouture-cta__mark-image docouture-cta__mark-image--dark"') : '') +
     '</div>'
   )
 }
@@ -207,15 +207,15 @@ function renderAction(converted, variant, role, parent) {
   return (
     '<a class="ids-button ids-button--' +
     variant +
-    ' pdocs-cta__action' +
+    ' docouture-cta__action' +
     (github ? ' ids-button--icon-and-label ids-button--icon-icon' : '') +
     '"' +
     attr('href', href) +
     '>' +
     '<span class="ids-button__content">' +
     (github
-      ? '<span class="ids-button__icon ids-button__icon-icon pdocs-cta__action-icon ' +
-        'pdocs-cta__action-icon--github" aria-hidden="true"></span>'
+      ? '<span class="ids-button__icon ids-button__icon-icon docouture-cta__action-icon ' +
+        'docouture-cta__action-icon--github" aria-hidden="true"></span>'
       : '') +
     label +
     '</span>' +
@@ -274,25 +274,25 @@ function finish(parent, wrapper, attrs, self) {
   bodies.forEach((body) => parts.push(body.getContent()))
 
   return chainAll(parts, ([lightHtml, darkHtml, primaryHtml, secondaryHtml, ...bodyHtmls]) => {
-    const titleHtml = title ? '<h2 class="pdocs-cta__title discrete ids-text--title-l">' + title + '</h2>' : ''
+    const titleHtml = title ? '<h2 class="docouture-cta__title discrete ids-text--title-l">' + title + '</h2>' : ''
     const leadHtml = bodyHtmls
       .filter(Boolean)
-      .map((text) => '<p class="pdocs-cta__lead ids-text--body-l">' + text + '</p>')
+      .map((text) => '<p class="docouture-cta__lead ids-text--body-l">' + text + '</p>')
       .join('')
     const markHtml = renderMark(lightHtml, darkHtml)
     const actionsHtml =
       primaryHtml || secondaryHtml
-        ? '<div class="pdocs-cta__actions">' +
+        ? '<div class="docouture-cta__actions">' +
           renderAction(primaryHtml, 'primary', 'primary', parent) +
           renderAction(secondaryHtml, 'secondary', 'secondary', parent) +
           '</div>'
         : ''
 
     const html =
-      '<div class="pdocs-cta pdocs-cta--' +
+      '<div class="docouture-cta docouture-cta--' +
       (ALIGNMENTS.includes(align) ? align : DEFAULT_ALIGN) +
       '">' +
-      '<div class="pdocs-cta__body">' +
+      '<div class="docouture-cta__body">' +
       titleHtml +
       leadHtml +
       '</div>' +

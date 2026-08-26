@@ -63,7 +63,7 @@ Every `title-*` style is `text-transform: uppercase`. That is right for applicat
 chrome — panel headers, section labels — and wrong for long-form documentation, where
 headings are sentences.
 
-pdocs therefore applies title **sizing** to article headings while resetting the
+docouture therefore applies title **sizing** to article headings while resetting the
 transform:
 
 ```css
@@ -113,7 +113,7 @@ Sites served from a `.cn` hostname must use `amgassets.inditex.cn` instead; the 
 rule in `head-styles.hbs`.
 
 The Figma Typography canvas also documents CJK, Ukrainian and Polish family tokens
-(`Noto Sans SC` / `TC` / `Noto Sans`). The package does **not** ship them. If pdocs
+(`Noto Sans SC` / `TC` / `Noto Sans`). The package does **not** ship them. If docouture
 ever needs a CJK locale, that is a gap to raise with the DS team, not to fill locally.
 
 ## Fallback stack

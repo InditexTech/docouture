@@ -1,7 +1,7 @@
 ;(function () {
   'use strict'
 
-  var STORAGE_KEY = 'pdocs-toc'
+  var STORAGE_KEY = 'docouture-toc'
 
   var root = document.documentElement
   var sidebar = document.getElementById('on-this-page')

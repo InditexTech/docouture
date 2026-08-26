@@ -1,4 +1,4 @@
-# pdocs — developer workflow entrypoint.
+# docouture — developer workflow entrypoint.
 #
 # The Nx workspace root is `code/`, not the repository root: `.tool-versions` is
 # resolved by walking up from the current directory, so `pnpm` only works from
@@ -11,7 +11,7 @@
 set working-directory := 'code'
 
 nx := 'pnpm nx'
-name := 'pdocs'
+name := 'docouture'
 version := `awk -F'"' '/"version"/ { print $4; exit }' package.json`
 
 # List the available commands. Private: it is what a bare `just` runs, so
@@ -173,7 +173,7 @@ doctor: (_hdr "doctor")
 # Live-reloading UI bundle preview on :5252
 [group('dev')]
 preview-ui: (_hdr "preview-ui")
-    pnpm --filter @inditextech/pdocs-ui-bundle preview
+    pnpm --filter @inditextech/docouture-ui-bundle preview
 
 # Stop the local Kroki service (GH-44) that kroki-prewarm.js starts automatically
 # for a kroki-enabled build — the manual counterpart to that auto-start, which
@@ -181,7 +181,7 @@ preview-ui: (_hdr "preview-ui")
 # Targets whichever compose file is actually in effect for `example` — an ejected
 # override at packages/example/kroki-compose.yml if one exists there, else the
 # bundled default in packages/antora-extensions/resources — same resolution order
-# kroki-docker.js itself uses. Scaffolded (non-monorepo) sites use `pdocs teardown
+# kroki-docker.js itself uses. Scaffolded (non-monorepo) sites use `docouture teardown
 # kroki` instead, which resolves the same way against their own docs/ directory.
 [group('dev')]
 kroki-down: (_hdr "kroki-down")
@@ -225,14 +225,14 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
     # `--log-level=info`: Antora's own default (`warn`, set by
     # @antora/playbook-builder's convict schema, not the `info` @antora/
     # logger falls back to on its own) would otherwise silently drop every
-    # pdocs-* extension's own observability logs — Kroki's auto-start/
+    # docouture-* extension's own observability logs — Kroki's auto-start/
     # render lifecycle (kroki-docker.js/kroki-prewarm.js), search-index's
     # per-component summary, llms-txt's, footer's, nav-modules', version-
     # report's, not-found-page's — before the grep below even sees them.
     # See asciidoc-extensions/README.md's own note on this for Kroki
-    # specifically; the same reasoning applies to every `getLogger('pdocs-
+    # specifically; the same reasoning applies to every `getLogger('docouture-
     # ...')` caller in antora-extensions/lib, which is why the filter below
-    # keys off the shared `pdocs-` logger-name prefix rather than naming
+    # keys off the shared `docouture-` logger-name prefix rather than naming
     # Kroki alone.
     #
     # `--log-format=pretty`: Antora's own default format is "pretty if
@@ -249,7 +249,7 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
       extra_args+=(--log-failure-level=none)
     fi
 
-    # Stream the build live, filtered to the same pdocs-*/warn/error signal
+    # Stream the build live, filtered to the same docouture-*/warn/error signal
     # the old buffer-then-print version only showed you once the whole
     # build was over. That buffering was invisible-by-design for the common
     # case (a cache hit is twenty lines describing 90ms) but it also meant
@@ -260,7 +260,7 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
     # indistinguishable from a hung process. `tee` keeps the full raw log
     # for the on-failure dump below while a parallel `grep` shows the
     # filtered subset AS it's written, not after — a cache hit with nothing
-    # pdocs-* to report still prints nothing, same as before.
+    # docouture-* to report still prints nothing, same as before.
     #
     # PIPESTATUS, not `pipefail` + `if ! pipeline`: grep legitimately exits 1
     # whenever nothing in this build matched (the common, good case), and a
@@ -272,9 +272,9 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
     logfile=$(mktemp)
     trap 'rm -f "$logfile"' EXIT
 
-    {{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- "${extra_args[@]}" 2>&1 \
+    {{ nx }} run @inditextech/docouture-{{ site }}:build --outputStyle=static {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- "${extra_args[@]}" 2>&1 \
       | tee "$logfile" \
-      | grep --line-buffered -E '\(pdocs-|\bWARN\b|\bERROR\b'
+      | grep --line-buffered -E '\(docouture-|\bWARN\b|\bERROR\b'
     build_status=${PIPESTATUS[0]}
 
     if [ "$build_status" -ne 0 ]; then
@@ -305,7 +305,7 @@ build *args: (_hdr "build")
 [group('build')]
 build-site site no_cache='false': (_hdr "build-site " + site)
     # `--log-level=info`: same reasoning as `dev`'s own recipe above — Antora's
-    # actual default (`warn`) would otherwise silently drop every pdocs-*
+    # actual default (`warn`) would otherwise silently drop every docouture-*
     # extension's own `info`-level observability logs (Kroki's lifecycle,
     # search-index's per-component summary, ...) before they're even
     # emitted. Unlike `dev`, this prints everything unfiltered already (no
@@ -317,7 +317,7 @@ build-site site no_cache='false': (_hdr "build-site " + site)
     # re-exercising Kroki's docker-compose auto-start after `just
     # kroki-down`, not just re-reading a cache entry that already has
     # "Kroki rendered N diagram(s)" baked into it from a prior run.
-    {{ nx }} run @inditextech/pdocs-{{ site }}:build {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- --log-level=info
+    {{ nx }} run @inditextech/docouture-{{ site }}:build {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- --log-level=info
 
 # ----------------------------------------------------------------- test ------
 
@@ -338,7 +338,7 @@ test-package packages *args: (_hdr "test-package " + packages)
       # strip leading/trailing whitespace
       n="$(echo "$n" | xargs)"
       [ -z "$n" ] && continue
-      projects+=("@inditextech/pdocs-$n")
+      projects+=("@inditextech/docouture-$n")
     done
     target_projects=$(IFS=,; echo "${projects[*]}")
     {{ nx }} run-many -t test -p "$target_projects" {{ args }}
@@ -648,7 +648,7 @@ release-local: (_hdr "release-local")
     # Only ui-bundle and cli have a build step; antora-extensions,
     # asciidoc-extensions and publish-gh-pages publish their committed JS
     # source directly.
-    {{ nx }} run-many -t build -p @inditextech/pdocs-ui-bundle @inditextech/pdocs-cli
+    {{ nx }} run-many -t build -p @inditextech/docouture-ui-bundle @inditextech/docouture-cli
 
     for pkg in "${packages[@]}"; do
       echo "  publishing $pkg"
@@ -675,7 +675,7 @@ release-local: (_hdr "release-local")
 
       Then install the snapshot, e.g.:
 
-        npm install @inditextech/pdocs-cli@$snapshot
+        npm install @inditextech/docouture-cli@$snapshot
 
       package.json versions in this repo have already been reverted; the
       snapshot stays installable from Verdaccio until local-registry-start's

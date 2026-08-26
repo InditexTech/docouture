@@ -12,7 +12,7 @@ let dir: string
 const originalUserAgent = process.env.npm_config_user_agent
 
 beforeEach(async () => {
-  dir = await realpath(await mkdtemp(join(tmpdir(), 'pdocs-cli-detect-pm-')))
+  dir = await realpath(await mkdtemp(join(tmpdir(), 'docouture-cli-detect-pm-')))
   delete process.env.npm_config_user_agent
 })
 
@@ -42,7 +42,7 @@ describe('detectPackageManager', () => {
     expect(detectPackageManager(dir)).toBe('npm')
   })
 
-  it('falls back to how pdocs new was invoked (npm_config_user_agent) with no repo signal', () => {
+  it('falls back to how docouture new was invoked (npm_config_user_agent) with no repo signal', () => {
     process.env.npm_config_user_agent = 'pnpm/9.1.0 npm/? node/v20.11.0 darwin x64'
     expect(detectPackageManager(dir)).toBe('pnpm')
   })

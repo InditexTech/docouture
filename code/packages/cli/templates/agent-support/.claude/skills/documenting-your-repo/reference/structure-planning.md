@@ -50,7 +50,7 @@ docs
 
 ## Mapping the tree onto modules
 
-`pdocs new` scaffolds mono-module by default (single `ROOT`, one `nav.adoc`). For a small
+`docouture new` scaffolds mono-module by default (single `ROOT`, one `nav.adoc`). For a small
 or early-stage repo, keep the whole tree above inside `ROOT`: each numbered section becomes
 a bare, unlinked list item in `nav.adoc` grouping its pages under a heading with no page of
 its own (see `docs-internals/reference/page-patterns.md`'s grouping example) — sections 1,

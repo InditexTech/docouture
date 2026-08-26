@@ -1,4 +1,4 @@
-* Welcome to pdocs
+* Welcome to docouture
 * xref:main:prerequisites.adoc[Prerequisites]
 * xref:main:getting-started.adoc[Getting started]
 * xref:main:components.adoc[AsciiDoc components]

@@ -1,7 +1,7 @@
 'use strict'
 
-// `pdocs completion <bash|zsh>` — prints a completion script to stdout (so
-// `pdocs completion bash > file` and `eval "$(pdocs completion bash)"` both
+// `docouture completion <bash|zsh>` — prints a completion script to stdout (so
+// `docouture completion bash > file` and `eval "$(docouture completion bash)"` both
 // work); everything else this command has to say (usage errors) goes to
 // stderr, same discipline as every other command. The candidate list is
 // kept here as a literal array rather than derived from bin.ts's dispatch
@@ -27,34 +27,34 @@ export const COMMANDS = [
 
 function bashScript(): string {
   const words = COMMANDS.join(' ')
-  return `# pdocs bash completion
+  return `# docouture bash completion
 #
 # Install for the current session:
-#   eval "$(pdocs completion bash)"
+#   eval "$(docouture completion bash)"
 #
 # Install permanently, e.g. on macOS with Homebrew's bash-completion@2:
-#   pdocs completion bash > "$(brew --prefix)/etc/bash_completion.d/pdocs"
-_pdocs_completions() {
+#   docouture completion bash > "$(brew --prefix)/etc/bash_completion.d/docouture"
+_docouture_completions() {
   local cur=\${COMP_WORDS[COMP_CWORD]}
   COMPREPLY=($(compgen -W "${words}" -- "$cur"))
 }
-complete -F _pdocs_completions pdocs
+complete -F _docouture_completions docouture
 `
 }
 
 function zshScript(): string {
   const words = COMMANDS.map((c) => `'${c}'`).join(' ')
-  return `#compdef pdocs
-# pdocs zsh completion
+  return `#compdef docouture
+# docouture zsh completion
 #
 # Install by placing this on your $fpath, e.g.:
-#   pdocs completion zsh > "\${fpath[1]}/_pdocs"
-_pdocs() {
+#   docouture completion zsh > "\${fpath[1]}/_docouture"
+_docouture() {
   local -a commands
   commands=(${words})
-  _describe 'pdocs command' commands
+  _describe 'docouture command' commands
 }
-_pdocs
+_docouture
 `
 }
 
@@ -70,6 +70,6 @@ export function runCompletion(argv: string[]): number {
     return 0
   }
 
-  console.error('usage: pdocs completion <bash|zsh>')
+  console.error('usage: docouture completion <bash|zsh>')
   return 1
 }

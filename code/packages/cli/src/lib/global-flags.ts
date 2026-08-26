@@ -10,7 +10,7 @@ export interface GlobalFlags {
 /**
  * Recognises the three global flags (--json, --verbose, --no-color/--color)
  * anywhere in argv — before or after the command name, so both
- * `pdocs --verbose dev` and `pdocs dev --verbose` work — strips them out,
+ * `docouture --verbose dev` and `docouture dev --verbose` work — strips them out,
  * and returns what's left for command dispatch. Kept separate from
  * lib/args.ts's per-command parser: these are process-wide concerns (see
  * lib/cli-context.ts), never a value a specific command's own flags need to

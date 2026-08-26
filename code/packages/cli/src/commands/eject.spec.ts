@@ -14,7 +14,7 @@ let errorSpy: ReturnType<typeof vi.spyOn>
 let logSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  base = await mkdtemp(join(tmpdir(), 'pdocs-cli-eject-cmd-'))
+  base = await mkdtemp(join(tmpdir(), 'docouture-cli-eject-cmd-'))
   siteRoot = join(base, 'docs')
   await mkdir(siteRoot, { recursive: true })
   await writeFile(join(siteRoot, 'package.json'), JSON.stringify({ name: 'my-project-docs' }))
@@ -31,17 +31,17 @@ describe('runEject', () => {
   it('fails when no target is given', async () => {
     const code = await runEject(['--dir', base])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs eject'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture eject'))
   })
 
   it('fails on an unsupported target', async () => {
     const code = await runEject(['not-a-real-target', '--dir', base])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs eject'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture eject'))
   })
 
   it('fails when no package.json is found under --dir/docs', async () => {
-    const empty = await mkdtemp(join(tmpdir(), 'pdocs-cli-eject-cmd-empty-'))
+    const empty = await mkdtemp(join(tmpdir(), 'docouture-cli-eject-cmd-empty-'))
     const code = await runEject(['kroki', '--dir', empty])
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('no package.json found'))
@@ -86,9 +86,9 @@ describe('runEject', () => {
   it('resolves the real, on-disk bundled resource when no override is injected', async () => {
     // End-to-end sanity check of the actual createRequire-based resolver,
     // same shape as publish.spec.ts's own equivalent test — a real
-    // @inditextech/pdocs-antora-extensions install under the site's own
+    // @inditextech/docouture-antora-extensions install under the site's own
     // node_modules, not a fixture package name.
-    const pkgDir = join(siteRoot, 'node_modules', '@inditextech', 'pdocs-antora-extensions')
+    const pkgDir = join(siteRoot, 'node_modules', '@inditextech', 'docouture-antora-extensions')
     await mkdir(join(pkgDir, 'resources'), { recursive: true })
     await writeFile(join(pkgDir, 'package.json'), JSON.stringify({ name: 'fixture', main: 'index.js' }))
     await writeFile(join(pkgDir, 'index.js'), 'module.exports = {}')

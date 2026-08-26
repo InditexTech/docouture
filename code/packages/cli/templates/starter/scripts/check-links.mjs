@@ -11,7 +11,7 @@
 // reasons a local link can legitimately show up BROKEN here even though
 // nothing is actually wrong:
 //
-//   1. pdocs-pr-verify.yml and pdocs-release.yml both build with
+//   1. docouture-pr-verify.yml and docouture-release.yml both build with
 //      antora-playbook.local.yml (branches: HEAD only) rather than the real,
 //      multi-source antora-playbook.yml — content generated from config
 //      rather than an xref (the module switcher, the footer, a
@@ -27,7 +27,7 @@
 // http(s):// so it looks external, but it isn't a real third-party
 // dependency an author is vouching for.
 //
-// Uses linkinator's own JS API (see @inditextech/pdocs-*'s own
+// Uses linkinator's own JS API (see @inditextech/docouture-*'s own
 // devDependency on it in package.json) rather than shelling out to its CLI:
 // the CLI's own --skip flag can only exclude a link from being checked
 // altogether (see linkinator's own source, LinkChecker#crawl: a skipped URL
@@ -62,9 +62,9 @@ function globToRegExp(glob) {
   return new RegExp(escaped.replace(/\*/g, '.*').replace(/\?/g, '.'))
 }
 
-// `package.json`'s own "pdocs" config block (see the scaffolded stub, next
-// to "pdocs.publish") is this project's existing place for a local,
-// site-specific override — `pdocs.checkLinks.ignore` is a list of globs
+// `package.json`'s own "docouture" config block (see the scaffolded stub, next
+// to "docouture.publish") is this project's existing place for a local,
+// site-specific override — `docouture.checkLinks.ignore` is a list of globs
 // (see globToRegExp above), tested the same way linkinator's own
 // `--skip`/`linksToSkip` are, but warned rather than silently dropped so an
 // ignored link that starts failing for a REAL reason still shows up
@@ -74,8 +74,8 @@ function globToRegExp(glob) {
 //
 //   - `*/edit/HEAD/*` — the footer's "Propose a change" link
 //     (edit-this-page.hbs) renders `page.editUrl`, which Antora builds from
-//     whatever ref it detects checked out. pdocs-pr-verify.yml and
-//     pdocs-release.yml both build from a detached-HEAD checkout (a PR
+//     whatever ref it detects checked out. docouture-pr-verify.yml and
+//     docouture-release.yml both build from a detached-HEAD checkout (a PR
 //     merge commit, or a one-off commit on top of main — see those
 //     workflows' own comments), so Antora has no real branch name to put
 //     there and falls back to the literal string `HEAD` — a path GitHub's
@@ -91,7 +91,7 @@ function globToRegExp(glob) {
 //     up as a real (and obviously never-resolving) link in the built HTML.
 //   - this site's own repo link (repo-link.hbs renders `site.keys.repoUrl`,
 //     or absent that Antora's own `page.origin.webUrl` — same URL either
-//     way, computed by `pdocs new` from `git remote get-url origin` at
+//     way, computed by `docouture new` from `git remote get-url origin` at
 //     scaffold time; see new.ts's own repoIgnoreGlob()), shown once per page
 //     so a single broken link here would otherwise report once per page in
 //     the results. There's a real, principled reason it can 404 to an
@@ -113,7 +113,7 @@ async function ignorePatterns() {
   } catch {
     return []
   }
-  const ignore = pkg?.pdocs?.checkLinks?.ignore
+  const ignore = pkg?.docouture?.checkLinks?.ignore
   return Array.isArray(ignore) ? ignore.map(globToRegExp) : []
 }
 

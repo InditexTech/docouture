@@ -1,6 +1,6 @@
 # This site's custom blocks
 
-Registered by `@inditextech/pdocs-asciidoc-extensions`, listed under
+Registered by `@inditextech/docouture-asciidoc-extensions`, listed under
 `antora-playbook.yml`'s `asciidoc.extensions`. Everything below is authored content with
 no plain-AsciiDoc equivalent — the extension only emits markup, all styling comes from
 the UI bundle's CSS. Every block here degrades to plain, readable HTML with JavaScript

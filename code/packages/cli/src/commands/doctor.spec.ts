@@ -16,7 +16,7 @@ let errorSpy: ReturnType<typeof vi.spyOn>
 let stdoutSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  repo = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-cmd-'))
+  repo = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-cmd-'))
   logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
   stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true)

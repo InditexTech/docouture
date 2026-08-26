@@ -24,7 +24,7 @@ beforeEach(async () => {
   // realpath: on macOS, os.tmpdir() itself lives under a symlink (/var ->
   // /private/var), which would otherwise make every path assertion below
   // fragile against which form Node happens to resolve to.
-  base = await realpath(await mkdtemp(join(tmpdir(), 'pdocs-cli-new-')))
+  base = await realpath(await mkdtemp(join(tmpdir(), 'docouture-cli-new-')))
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
   logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
 })
@@ -114,9 +114,9 @@ describe('runNew', () => {
     const code = await runNew(['my-project-docs', '--dir', repo, '--pm', 'pnpm'])
     expect(code).toBe(0)
 
-    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
     expect(workflow).toContain('pnpm')
-    expect(workflow).not.toContain('__PDOCS_PM')
+    expect(workflow).not.toContain('__DOCOUTURE_PM')
 
     const allLogs = logSpy.mock.calls.map((call) => String(call[0])).join('\n')
     expect(allLogs).toContain('pnpm install')
@@ -147,16 +147,16 @@ describe('runNew', () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
-    await writeFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'existing', 'utf8')
+    await writeFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'existing', 'utf8')
 
     const code = await runNew(['my-project-docs', '--dir', repo])
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing file'))
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('pdocs-release.yml'))
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('pdocs upgrade'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('docouture-release.yml'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('docouture upgrade'))
   })
 
-  it('appends the pdocs section to a foreign AGENTS.md without blocking or prompting', async () => {
+  it('appends the docouture section to a foreign AGENTS.md without blocking or prompting', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await writeFile(join(repo, 'AGENTS.md'), '# My own notes\n\nSome hand-written content.\n', 'utf8')
@@ -167,16 +167,16 @@ describe('runNew', () => {
     const agentsMd = await readFile(join(repo, 'AGENTS.md'), 'utf8')
     expect(agentsMd).toContain('# My own notes')
     expect(agentsMd).toContain('Some hand-written content.')
-    expect(agentsMd).toContain('pdocs:start')
+    expect(agentsMd).toContain('docouture:start')
     expect(agentsMd).toContain('My Project Docs documentation')
   })
 
-  it('refuses to scaffold (non-interactive) when AGENTS.md already has a pdocs-managed section', async () => {
+  it('refuses to scaffold (non-interactive) when AGENTS.md already has a docouture-managed section', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await writeFile(
       join(repo, 'AGENTS.md'),
-      '<!-- pdocs:start - managed by pdocs; edits inside this block are overwritten by `pdocs new`/`pdocs upgrade` -->\nold content\n<!-- pdocs:end -->\n',
+      '<!-- docouture:start - managed by docouture; edits inside this block are overwritten by `docouture new`/`docouture upgrade` -->\nold content\n<!-- docouture:end -->\n',
       'utf8'
     )
 
@@ -184,7 +184,7 @@ describe('runNew', () => {
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing file'))
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('AGENTS.md'))
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('pdocs upgrade'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('docouture upgrade'))
   })
 
   it('refuses to scaffold when a skill directory already exists and is non-empty (non-interactive)', async () => {
@@ -240,21 +240,21 @@ describe('runNew', () => {
     // Workflows are peeled out to the true repo root — GitHub Actions never
     // discovers them nested under docs/.
     for (const workflow of [
-      'pdocs-publish.yml',
-      'pdocs-publish-prerelease.yml',
-      'pdocs-release.yml',
-      'pdocs-release-preview.yml',
-      'pdocs-pr-verify.yml',
-      'pdocs-kroki-cache-warm.yml',
+      'docouture-publish.yml',
+      'docouture-publish-prerelease.yml',
+      'docouture-release.yml',
+      'docouture-release-preview.yml',
+      'docouture-pr-verify.yml',
+      'docouture-kroki-cache-warm.yml',
     ]) {
       const content = await readFile(join(repo, '.github', 'workflows', workflow), 'utf8')
       expect(content.length).toBeGreaterThan(0)
     }
 
-    // asciidoc/antora pdocs extensions are wired into the playbook, and both
+    // asciidoc/antora docouture extensions are wired into the playbook, and both
     // packages are pinned as devDependencies alongside ui-bundle/cli.
-    expect(playbook).toContain('@inditextech/pdocs-asciidoc-extensions')
-    expect(playbook).toContain('@inditextech/pdocs-antora-extensions')
+    expect(playbook).toContain('@inditextech/docouture-asciidoc-extensions')
+    expect(playbook).toContain('@inditextech/docouture-antora-extensions')
 
     // GH #137: standalone mode must not set `latest_version_segment` (it
     // turns `/stable/…` into a permanent redirect stub the moment a release
@@ -380,7 +380,7 @@ describe('runNew', () => {
     expect(playbook).toContain('duplicate_latest_version: true')
   })
 
-  it('pins @inditextech/pdocs-cli and antora to exact versions in the scaffolded package.json', async () => {
+  it('pins @inditextech/docouture-cli and antora to exact versions in the scaffolded package.json', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
@@ -394,12 +394,12 @@ describe('runNew', () => {
     // version this must match: a snapshot/local-release build's version
     // (0.0.0-local.<sha>.<ts>) has to resolve on install exactly as
     // published, which a ^/~ range around a different number never does.
-    expect(pkg.devDependencies?.['@inditextech/pdocs-cli']).not.toMatch(/[\^~]/)
+    expect(pkg.devDependencies?.['@inditextech/docouture-cli']).not.toMatch(/[\^~]/)
     expect(pkg.devDependencies?.antora).toBe('3.1.15')
-    expect(pkg.devDependencies?.['@inditextech/pdocs-asciidoc-extensions']).not.toMatch(/[\^~]/)
-    expect(pkg.devDependencies?.['@inditextech/pdocs-antora-extensions']).not.toMatch(/[\^~]/)
-    expect(pkg.devDependencies?.['@inditextech/pdocs-asciidoc-extensions']).toBe(
-      pkg.devDependencies?.['@inditextech/pdocs-cli']
+    expect(pkg.devDependencies?.['@inditextech/docouture-asciidoc-extensions']).not.toMatch(/[\^~]/)
+    expect(pkg.devDependencies?.['@inditextech/docouture-antora-extensions']).not.toMatch(/[\^~]/)
+    expect(pkg.devDependencies?.['@inditextech/docouture-asciidoc-extensions']).toBe(
+      pkg.devDependencies?.['@inditextech/docouture-cli']
     )
   })
 
@@ -485,7 +485,7 @@ describe('runNew', () => {
     input.end()
     expect(code).toBe(0)
 
-    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
     expect(workflow).toContain('pnpm')
   })
 
@@ -509,7 +509,7 @@ describe('runNew', () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
-    await writeFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'existing', 'utf8')
+    await writeFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'existing', 'utf8')
 
     const input = new PassThrough()
     const output = new PassThrough()
@@ -527,7 +527,7 @@ describe('runNew', () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
-    await writeFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'existing', 'utf8')
+    await writeFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'existing', 'utf8')
 
     const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
 
@@ -554,7 +554,7 @@ describe('runNew', () => {
     input.end()
     expect(code).toBe(0)
 
-    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
     expect(workflow).not.toBe('existing')
 
     const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
@@ -565,7 +565,7 @@ describe('runNew', () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await mkdir(join(repo, '.github', 'workflows'), { recursive: true })
-    await writeFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'existing', 'utf8')
+    await writeFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'existing', 'utf8')
 
     const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
 
@@ -593,7 +593,7 @@ describe('runNew', () => {
     expect(code).toBe(1)
 
     // Untouched, and docs/ was never created.
-    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
     expect(workflow).toBe('existing')
     await expect(readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')).rejects.toThrow()
   })

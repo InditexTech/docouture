@@ -1,6 +1,6 @@
 ---
 name: iop-ds-foundations
-description: "IOP Design System (IDS) design tokens, theming, breakpoints, typography and motion for the pdocs Antora UI bundle. USE WHEN writing or editing any CSS in code/packages/ui-bundle, adding a colour/spacing/font value, implementing dark mode or responsive behaviour, or wiring PostCSS. EXAMPLES: 'what colour should this border be', 'add dark mode', 'make this responsive', 'why is my custom property missing in the build', 'set the heading font size'."
+description: "IOP Design System (IDS) design tokens, theming, breakpoints, typography and motion for the docouture Antora UI bundle. USE WHEN writing or editing any CSS in code/packages/ui-bundle, adding a colour/spacing/font value, implementing dark mode or responsive behaviour, or wiring PostCSS. EXAMPLES: 'what colour should this border be', 'add dark mode', 'make this responsive', 'why is my custom property missing in the build', 'set the heading font size'."
 ---
 
 # IOP DS — Foundations
@@ -95,10 +95,10 @@ token — e.g. the `--hljs-*` syntax palette.
 
 `.ids-scale-medium` (default) and `.ids-scale-large` rescale **every** `--ids-size-*`
 and `--ids-typo-font-size-*` / `--ids-typo-line-height-*`. `ids-size-100` is 16px at
-medium and 20px at large. pdocs ships `ids-scale-medium` and does not expose a switcher.
+medium and 20px at large. docouture ships `ids-scale-medium` and does not expose a switcher.
 
 `.ids-pda-true` / `.ids-pda-false` enlarges touch targets for handheld terminals.
-pdocs sets neither, which defaults to `false`.
+docouture sets neither, which defaults to `false`.
 
 ## Resolution tiers — pure CSS, no JavaScript
 
@@ -165,7 +165,7 @@ Roles: `display-{s,m,l}`, `title-{xs,s,m,l,xl}`, `body-{m,l}`, `label-{m,l}`,
 `detail-m`, `code-m`. A `-high` suffix means the emphasised weight of the same style.
 
 ⚠ **Every `title-*` style is `text-transform: uppercase`.** That is correct for
-application chrome and wrong for documentation prose. Article headings in pdocs use
+application chrome and wrong for documentation prose. Article headings in docouture use
 `title-*` sizing with the transform explicitly reset — that deviation is deliberate
 and documented in `reference/typography.md`. Do not "fix" it back.
 

@@ -6,8 +6,8 @@ name: weavejs
 title: Weave.js
 # Mode 2 (Stable + Prerelease) — GH-80. `main` is permanently the prerelease
 # channel: this file never toggles back and forth, only the rolling `stable`
-# tag's own one-off copy of this same file (cut by pdocs-release.yml, see
-# templates/starter/.github/workflows/pdocs-release.yml) says version: stable,
+# tag's own one-off copy of this same file (cut by docouture-release.yml, see
+# templates/starter/.github/workflows/docouture-release.yml) says version: stable,
 # prerelease: false. See versioning-modes.md for the full mechanism.
 version: prerelease
 prerelease: true
@@ -32,7 +32,7 @@ nav:
   - modules/store-standalone/nav.adoc
   - modules/types/nav.adoc
 
-# Per-module navigation metadata, read by @inditextech/pdocs-antora-extensions
+# Per-module navigation metadata, read by @inditextech/docouture-antora-extensions
 # (registered under `antora.extensions` in the playbook) and attached to the
 # navigation trees Antora builds from the `nav` list above. It is what lets the
 # UI show ONE module's navigation at a time with a switcher between them, the
@@ -83,7 +83,7 @@ nav_modules:
 # --- end generated
 
 # Which module's navigation the generated 404 page's side menu shows,
-# read by @inditextech/pdocs-antora-extensions (not-found-page.js). This
+# read by @inditextech/docouture-antora-extensions (not-found-page.js). This
 # component has seven modules (nav_modules above) — with more than one,
 # that extension has no default to fall back to (an empty side menu, not a
 # guess, is what a component-less 404 page gets otherwise) — hand-authored,
@@ -92,7 +92,7 @@ nav_modules:
 not_found_module: main
 
 # llms.txt / llms-full.txt generation (GH-95), read by
-# @inditextech/pdocs-antora-extensions. `summary` becomes the blockquote
+# @inditextech/docouture-antora-extensions. `summary` becomes the blockquote
 # under the site title in the generated `llms.txt`. `exclude` is a list of
 # page IDs — the same strings `xref:...[]` accepts — left out of both
 # generated files; useful for a page that exists only for internal review
@@ -107,7 +107,7 @@ llms:
   #   - main:some-internal-page.adoc
 
 # Site footer link groups (ui-bundle GH issue #18), read by
-# @inditextech/pdocs-antora-extensions and attached to this component version
+# @inditextech/docouture-antora-extensions and attached to this component version
 # as `footer`. Authored here rather than in the playbook because `site.keys`
 # is a flat primitive map and cannot carry a list — see that extension's own
 # header for the full reasoning, which is the same one `nav_modules` above

@@ -10,7 +10,7 @@ import { runNpmScript } from './run-script.js'
 
 describe('runNpmScript', () => {
   it('does not leak SIGINT/SIGTERM listeners once the child has exited', async () => {
-    const base = await mkdtemp(join(tmpdir(), 'pdocs-cli-run-script-'))
+    const base = await mkdtemp(join(tmpdir(), 'docouture-cli-run-script-'))
     await mkdir(base, { recursive: true })
     await writeFile(
       join(base, 'package.json'),

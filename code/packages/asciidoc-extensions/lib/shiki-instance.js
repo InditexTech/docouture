@@ -3,7 +3,7 @@
 // Shared handle to the one Shiki highlighter instance for an entire Antora
 // build.
 //
-// `shiki-prewarm.js` — an @inditextech/pdocs-antora-extensions PIPELINE
+// `shiki-prewarm.js` — an @inditextech/docouture-antora-extensions PIPELINE
 // extension, hooking Antora's own generator lifecycle — creates it exactly
 // once, asynchronously, before any page is converted. This file's
 // `highlight()` counterpart in shiki-syntax-highlighter.js is an ASCIIDOCTOR
@@ -54,7 +54,7 @@ module.exports = {
   /**
    * @returns {{ highlighter: object, rootStyle: string } | null} `null`
    *   before the prewarm listener has run — e.g. the ui-bundle preview
-   *   harness, which never registers `@inditextech/pdocs-antora-extensions`
+   *   harness, which never registers `@inditextech/docouture-antora-extensions`
    *   at all (see extensions.md: it has no content catalog and no Antora
    *   pipeline). `highlight()` degrades to plain escaped text in that case.
    */

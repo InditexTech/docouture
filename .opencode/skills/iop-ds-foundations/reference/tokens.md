@@ -97,7 +97,7 @@ Prefer the generic token; reach for `--ids-comp-*` only when restyling that exac
 ## Size
 
 One scale for spacing, dimensions, gaps and radii. Values shown for `.ids-scale-medium`
-(pdocs default); `.ids-scale-large` rescales all of them.
+(docouture default); `.ids-scale-large` rescales all of them.
 
 | token | medium | large |
 | --- | --- | --- |

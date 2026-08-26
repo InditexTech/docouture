@@ -31,7 +31,7 @@ asciidoc:
     # Requires the ui-bundle devDependency (package.json) so plain
     # `require()` (not Antora's user-require-helper, unused here)
     # resolves it.
-    - '@inditextech/pdocs-asciidoc-extensions'
+    - '@inditextech/docouture-asciidoc-extensions'
 site:
   url: http://localhost:5252
   title: Atd Docs
@@ -78,7 +78,7 @@ site:
           displayVersion: Stable
           latest: true
           # Site footer link groups (GH-18): not Antora's either —
-          # @inditextech/pdocs-antora-extensions reads them from the component
+          # @inditextech/docouture-antora-extensions reads them from the component
           # descriptor's own `footer` key and attaches them here, with every
           # `url` already resolved. The first group is the footer's links
           # column; the second is only reached on a site with fewer than two
@@ -169,7 +169,7 @@ page:
   # for the sake of covering the wrapper case.
   navigation:
     # `module`, `title`, `description`, `icon` and `startUrl` are not Antora's:
-    # @inditextech/pdocs-antora-extensions stamps them onto each root menu from
+    # @inditextech/docouture-antora-extensions stamps them onto each root menu from
     # the component descriptor's own `nav_modules` key. Two modules here, not
     # one, so the preview actually renders nav-switcher.hbs — nav-menu.hbs
     # shows only the tree whose `module` matches `page.module` above, and the

@@ -28,7 +28,7 @@
  * registration guard, so it cannot collide with anything Asciidoctor or Antora
  * puts on the same object.
  */
-const COUNTER_KEY = '$pdocsUniqueIdCounters'
+const COUNTER_KEY = '$docoutureUniqueIdCounters'
 
 /**
  * Anything with a document behind it: the `parent` handed to a block

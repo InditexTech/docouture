@@ -1,7 +1,7 @@
 ---
 # Same name, filename and job shape as weave.js's code-release_preview.yml, so
 # the two repos' release processes read identically at a glance. Divergences
-# from the weave.js original are called out inline where pdocs' toolchain
+# from the weave.js original are called out inline where docouture' toolchain
 # (release-type/* labels + CHANGELOG.md, already used identically by
 # code-npm_node-publish-release-and-snapshot.yml) or its trunk-based-only
 # development flow (no gitflow/hotfix merge-strategy distinction to preview)
@@ -97,9 +97,9 @@ jobs:
           keep-unreleased-section: true
           tag-prefix: ""
 
-      # pdocs is trunk-based only (main + PRs, no gitflow/hotfix branches to
+      # docouture is trunk-based only (main + PRs, no gitflow/hotfix branches to
       # squash-vs-merge-commit between) — weave.js's "Check merge strategy"
-      # step and its "Merge Strategy" comment line have no pdocs equivalent
+      # step and its "Merge Strategy" comment line have no docouture equivalent
       # and are dropped here.
       - name: Add PR comment with release preview
         run: |

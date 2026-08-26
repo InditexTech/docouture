@@ -26,12 +26,12 @@
   if (!blocks.length) return
 
   blocks.forEach(function (block: HTMLElement) {
-    var list = block.querySelector<HTMLElement>('.pdocs-feature-tabs__list')
+    var list = block.querySelector<HTMLElement>('.docouture-feature-tabs__list')
     var tabs = [].slice.call(
-      block.querySelectorAll<HTMLAnchorElement>('.pdocs-feature-tabs__tab')
+      block.querySelectorAll<HTMLAnchorElement>('.docouture-feature-tabs__tab')
     ) as HTMLAnchorElement[]
     var panels = [].slice.call(
-      block.querySelectorAll<HTMLElement>('.pdocs-feature-tabs__panel')
+      block.querySelectorAll<HTMLElement>('.docouture-feature-tabs__panel')
     ) as HTMLElement[]
     // One tab per panel or the pairing below is guesswork — leave the block in
     // its server-rendered state, which is readable on its own, rather than

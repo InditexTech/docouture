@@ -50,15 +50,15 @@ const warn = require('./warn')
 //
 // WHAT THIS EMITS
 //
-// `<div class="pdocs-accordion-group" role="group" aria-label="…">` wrapping
+// `<div class="docouture-accordion-group" role="group" aria-label="…">` wrapping
 // the children's OWN converted markup verbatim — nothing here re-renders a
 // collapsible; `child.convert()` is Asciidoctor's own `convert_example`
-// (`node.hasOption('collapsible')` branch), unchanged. `pdocs-accordion-group`
+// (`node.hasOption('collapsible')` branch), unchanged. `docouture-accordion-group`
 // is not an invented DS class — the real `Accordion` component's own wrapper
 // `<div>` (`accordion.js`) carries no class of its own beyond whatever the
 // CALLER passes; there is nothing to match here, so this file names its own
 // wrapper the same way every other non-DS wrapper in this package does
-// (`pdocs-cta`, `pdocs-card-grid`, `pdocs-feature-tabs`). Styled in
+// (`docouture-cta`, `docouture-card-grid`, `docouture-feature-tabs`). Styled in
 // `ui-bundle/src/css/accordion.css`, alongside the items it groups.
 //
 // Single-open is implemented with the native `<details name="…">` radio-group
@@ -202,7 +202,7 @@ function finish(parent, wrapper, attrs, self) {
       .join('')
 
     const html =
-      '<div class="pdocs-accordion-group" role="group"' +
+      '<div class="docouture-accordion-group" role="group"' +
       (ariaLabel ? ' aria-label="' + ariaLabel + '"' : '') +
       '>' +
       itemsHtml +

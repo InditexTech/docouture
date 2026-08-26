@@ -63,7 +63,7 @@ const createPageComposer = require('@antora/page-composer')
  *     switcher.
  */
 module.exports = function registerNotFoundPage(context) {
-  const logger = context.getLogger('pdocs-not-found-page')
+  const logger = context.getLogger('docouture-not-found-page')
   // Keyed the same way nav-modules.js and footer.js key their own copies.
   const notFoundModules = new Map()
   let navigationCatalog

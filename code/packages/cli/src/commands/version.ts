@@ -21,7 +21,7 @@ export async function runVersion(argv: string[]): Promise<number> {
   const value = positional[0]
 
   if (!value) {
-    console.error('usage: pdocs version <value> [--dir <path>] [--file <path>] [--prerelease | --stable]')
+    console.error('usage: docouture version <value> [--dir <path>] [--file <path>] [--prerelease | --stable]')
     return 1
   }
 

@@ -19,7 +19,7 @@ import { extractGlobalFlags } from './lib/global-flags.js'
 // Single source of truth per command: usageLine is the left column of the
 // top-level command table (bare name, or with its positional arg spelled
 // out, e.g. 'eject <target>'); summary is the one-line description shown
-// both there and as the title of 'pdocs <command> --help'; help is the
+// both there and as the title of 'docouture <command> --help'; help is the
 // full usage/options body for that per-command help screen.
 interface CommandInfo {
   usageLine: string
@@ -45,13 +45,13 @@ const COMMAND_INFO: Record<(typeof COMMAND_ORDER)[number], CommandInfo> = {
     usageLine: 'new <name>',
     summary: 'Scaffold a new documentation site',
     help: `Usage:
-  pdocs new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned] [--pm npm|pnpm] [--yes]
+  docouture new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned] [--pm npm|pnpm] [--yes]
 
 Scaffold an Antora documentation site into docs/ (and its workflows into
 .github/workflows/), plus AGENTS.md and agent skills (.opencode/skills/,
 .claude/skills/) into the root of an existing git repository. --dir/cwd
 can be anywhere inside that repository — the actual top-level is found
-automatically. If any workflows, skills or a pdocs-managed AGENTS.md
+automatically. If any workflows, skills or a docouture-managed AGENTS.md
 section already exist, prompts to overwrite them (refuses outright when
 not running interactively). Prompts interactively for anything not given
 as a flag when run in a terminal (pass --yes to always use defaults, and
@@ -62,7 +62,7 @@ Options:
   --title <title>  Site title (default: title-cased from <name>)
   --mode <mode>    'standalone' (default) or 'versioned'
   --pm <pm>        'npm' or 'pnpm' (default: auto-detected from a lockfile/packageManager
-                   field, or how pdocs itself was invoked)
+                   field, or how docouture itself was invoked)
   --yes            Skip the interactive wizard, use defaults for anything unset
 `,
   },
@@ -70,7 +70,7 @@ Options:
     usageLine: 'version <value>',
     summary: 'Set the version recorded in docs/antora.yml',
     help: `Usage:
-  pdocs version <value> [--dir <path>] [--file <path>] [--prerelease | --stable]
+  docouture version <value> [--dir <path>] [--file <path>] [--prerelease | --stable]
 
 Set the version recorded in docs/antora.yml.
 
@@ -85,7 +85,7 @@ Options:
     usageLine: 'dev',
     summary: 'Build and serve the site with live reload',
     help: `Usage:
-  pdocs dev [--port <port>] [--dir <path>]
+  docouture dev [--port <port>] [--dir <path>]
 
 Build the site and serve it with live reload, rebuilding on every
 change to docs/ or antora-playbook.yml. --dir is the repository root
@@ -100,7 +100,7 @@ Options:
     usageLine: 'build',
     summary: 'Build the site once',
     help: `Usage:
-  pdocs build [--dir <path>]
+  docouture build [--dir <path>]
 
 Build the site once: a thin wrapper around the site's own 'npm run
 build' (antora --fetch antora-playbook.yml).
@@ -113,13 +113,13 @@ Options:
     usageLine: 'publish <target>',
     summary: 'Publish the already-built site',
     help: `Usage:
-  pdocs publish <target> [--dir <path>] [--<option> <value> ...]
+  docouture publish <target> [--dir <path>] [--<option> <value> ...]
 
 Publish the already-built site (output.dir in antora-playbook.yml,
-default build/site — run 'pdocs build' first) using the
-'@inditextech/pdocs-publish-<target>' driver, e.g. 'gh-pages'. That
+default build/site — run 'docouture build' first) using the
+'@inditextech/docouture-publish-<target>' driver, e.g. 'gh-pages'. That
 package must be a devDependency of the site itself. Options come
-from docs/package.json's own "pdocs".publish.<target> object,
+from docs/package.json's own "docouture".publish.<target> object,
 overridden by any --flags given here.
 
 Options:
@@ -128,14 +128,14 @@ Options:
   --user-name/--user-email  Combined into a nested {user:{name,email}} option
 
 Example:
-  pdocs publish gh-pages --branch gh-pages
+  docouture publish gh-pages --branch gh-pages
 `,
   },
   doctor: {
     usageLine: 'doctor',
     summary: 'Check environment and site health',
     help: `Usage:
-  pdocs doctor [--dir <path>] [--json]
+  docouture doctor [--dir <path>] [--json]
 
 Check that the environment and site configuration are healthy: Node
 version, the four names that must agree (component name, start page,
@@ -152,14 +152,14 @@ Options:
     usageLine: 'upgrade',
     summary: 'Re-sync workflows and agent support files',
     help: `Usage:
-  pdocs upgrade [--dir <path>] [--title <title>] [--dry-run]
+  docouture upgrade [--dir <path>] [--title <title>] [--dry-run]
 
 Re-sync an already-scaffolded repository's .github/workflows/ and
 agent support files (AGENTS.md, .opencode/skills/, .claude/skills/)
 from the CLI's current templates — --dir/cwd can be anywhere inside
 that repository, the actual top-level is found automatically.
 Workflows and skills are fully overwritten; AGENTS.md is merged
-instead — only pdocs' own managed section is replaced, anything a
+instead — only docouture' own managed section is replaced, anything a
 human added around it survives. Does not touch docs/. --dry-run lists
 what would be written without changing anything.
 
@@ -173,11 +173,11 @@ Options:
     usageLine: 'eject <target>',
     summary: 'Copy a bundled default file out for customization',
     help: `Usage:
-  pdocs eject <target> [--dir <path>]
+  docouture eject <target> [--dir <path>]
 
 Copy a bundled default file out into docs/ for local customization.
 'kroki': docs/kroki-compose.yml, the docker compose definition
-@inditextech/pdocs-antora-extensions' kroki-prewarm.js starts
+@inditextech/docouture-antora-extensions' kroki-prewarm.js starts
 automatically when a build needs Kroki (kroki-enabled: true) and finds
 nothing already running — auto-detected and preferred over the
 bundled default once it exists. Refuses to overwrite an existing file.
@@ -188,11 +188,11 @@ Options:
   },
   teardown: {
     usageLine: 'teardown <target>',
-    summary: 'Stop a service pdocs started for you',
+    summary: 'Stop a service docouture started for you',
     help: `Usage:
-  pdocs teardown <target> [--dir <path>]
+  docouture teardown <target> [--dir <path>]
 
-Stop a service pdocs started for you. 'kroki': runs 'docker compose
+Stop a service docouture started for you. 'kroki': runs 'docker compose
 down' against whichever kroki-compose.yml is actually in effect (an
 ejected docs/kroki-compose.yml if you have one, else the bundled
 default) — the manual counterpart to kroki-prewarm.js's own auto-start,
@@ -206,27 +206,27 @@ Options:
     usageLine: 'completion <shell>',
     summary: 'Print a shell completion script (bash|zsh)',
     help: `Usage:
-  pdocs completion <bash|zsh>
+  docouture completion <bash|zsh>
 
-Print a shell completion script for pdocs to stdout.
+Print a shell completion script for docouture to stdout.
 
 Examples:
-  eval "$(pdocs completion bash)"
-  pdocs completion zsh > "\${fpath[1]}/_pdocs"
+  eval "$(docouture completion bash)"
+  docouture completion zsh > "\${fpath[1]}/_docouture"
 `,
   },
 }
 
 // Top-level equivalent of each COMMAND_INFO entry's `summary` — printed as
-// the title of the bare/--help screen, same 'pdocs — <summary>' shape as
-// 'pdocs <command> --help' uses for a single command.
+// the title of the bare/--help screen, same 'docouture — <summary>' shape as
+// 'docouture <command> --help' uses for a single command.
 const CLI_SUMMARY = 'Scaffold, build, and publish Antora documentation sites'
 
 // Left column width of the command table below, including the 2-space
 // indent — wide enough for the longest usageLine ('completion <shell>').
 const COMMAND_COLUMN_WIDTH = 22
 
-const USAGE = `Usage: pdocs <command> [options]
+const USAGE = `Usage: docouture <command> [options]
 
 Commands:
 ${COMMAND_ORDER.map((cmd) => {
@@ -236,12 +236,12 @@ ${COMMAND_ORDER.map((cmd) => {
 
 Global options:
   -h, --help     Show help (pass after a command for command-specific help)
-  -v, --version  Print the installed @inditextech/pdocs-cli version and exit
+  -v, --version  Print the installed @inditextech/docouture-cli version and exit
   --json         Machine-readable output where supported (currently: doctor)
-  --verbose      Print extra diagnostic detail to stderr (same as DEBUG=pdocs)
+  --verbose      Print extra diagnostic detail to stderr (same as DEBUG=docouture)
   --no-color     Disable coloured output regardless of TTY detection
 
-Run 'pdocs <command> --help' for command-specific usage and options.
+Run 'docouture <command> --help' for command-specific usage and options.
 `
 
 type Runner = (argv: string[]) => Promise<number>
@@ -273,7 +273,7 @@ async function banner(): Promise<string> {
 }
 
 // Recognises the three global flags anywhere in argv (before or after the
-// command name — `pdocs --verbose dev` and `pdocs dev --verbose` both
+// command name — `docouture --verbose dev` and `docouture dev --verbose` both
 // work), strips them out, and returns what's left for command dispatch —
 // see lib/global-flags.ts.
 
@@ -295,7 +295,7 @@ async function main(): Promise<number> {
   if (command === undefined || command === '--help' || command === '-h' || command === 'help') {
     console.log(await banner())
     console.log('')
-    console.log(theme.bold(`pdocs — ${CLI_SUMMARY}`))
+    console.log(theme.bold(`docouture — ${CLI_SUMMARY}`))
     console.log('')
     console.log(USAGE)
     return 0
@@ -305,7 +305,7 @@ async function main(): Promise<number> {
     const info = COMMAND_INFO[command as (typeof COMMAND_ORDER)[number]]
     console.log(await banner())
     console.log('')
-    console.log(theme.bold(`pdocs ${command} — ${info.summary}`))
+    console.log(theme.bold(`docouture ${command} — ${info.summary}`))
     console.log('')
     console.log(info.help)
     return 0
@@ -315,7 +315,7 @@ async function main(): Promise<number> {
     console.error(`unknown command: '${command}'\n`)
     console.error(await banner())
     console.error('')
-    console.error(theme.bold(`pdocs — ${CLI_SUMMARY}`))
+    console.error(theme.bold(`docouture — ${CLI_SUMMARY}`))
     console.error('')
     console.error(USAGE)
     return 1
@@ -335,7 +335,7 @@ async function main(): Promise<number> {
     const info = COMMAND_INFO[command as (typeof COMMAND_ORDER)[number]]
     console.error(await banner())
     console.error('')
-    console.error(theme.bold(`pdocs ${command} — ${info.summary}`))
+    console.error(theme.bold(`docouture ${command} — ${info.summary}`))
     console.error('')
   }
 

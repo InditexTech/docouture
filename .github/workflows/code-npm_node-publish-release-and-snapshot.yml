@@ -2,7 +2,7 @@
 # Same name, filename and job shape as weave.js's
 # code-npm_node-publish-release-and-snapshot.yml, so the two repos' release
 # processes read identically at a glance. Divergences from the weave.js
-# original are called out inline where pdocs' toolchain (pnpm/nx/just instead
+# original are called out inline where docouture' toolchain (pnpm/nx/just instead
 # of plain npm scripts) or its site-generator nature (a ui-bundle release
 # artifact, no npm-publish precedent yet to gate) forces one. See
 # docs/code-npm_node-publish-release-and-snapshot.md for the job-by-job walkthrough.
@@ -112,7 +112,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # pdocs uses pnpm, not npm, for its own dependency install — cache the
+      # docouture uses pnpm, not npm, for its own dependency install — cache the
       # pnpm store instead of weave.js's ~/.npm, keyed off pnpm-lock.yaml.
       #
       # actions/cache/restore, not actions/cache: this job builds an
@@ -144,7 +144,7 @@ jobs:
       # not `node`, is the registered asdf-plugins short name — using `node`
       # here fails with "plugin node not found in repository". Homologated
       # with weave.js's code-npm_node-publish-release-and-snapshot.yml and
-      # pdocs' own code-npm_node-pr-verify.yml, which use the identical asdf setup pattern.
+      # docouture' own code-npm_node-pr-verify.yml, which use the identical asdf setup pattern.
       #
       # asdf-vm/actions/install reads an existing `.tool-versions` from the
       # job's working directory when no `tool_versions` input is given — so
@@ -714,8 +714,8 @@ jobs:
         working-directory: code
         run: pnpm build
 
-      # pdocs-specific: weave.js publishes npm packages only, with no
-      # per-repo build artifact to attach to the GitHub Release. pdocs is a
+      # docouture-specific: weave.js publishes npm packages only, with no
+      # per-repo build artifact to attach to the GitHub Release. docouture is a
       # site generator, so its release also ships the ui-bundle zip.
       - name: Locate ui-bundle artifact
         id: artifact
@@ -842,14 +842,14 @@ jobs:
             echo "All packages verified in registry — OIDC publish is safe."
           fi
 
-      # weave.js's equivalent is `npm run release:perform`; pdocs has no
+      # weave.js's equivalent is `npm run release:perform`; docouture has no
       # release:perform nx target, so this loops `pnpm publish` over
       # scripts/publishable-packages.mjs's list directly. `pnpm publish`
       # (not `npm publish`) is required: it rewrites each package's
       # `workspace:*` cross-references to the resolved version at pack
       # time — `npm publish` ships the literal string, which breaks
       # installs in any consuming repo that isn't itself a pnpm workspace.
-      # Unlike pdocs' previous release.yml, this is unconditional — no
+      # Unlike docouture' previous release.yml, this is unconditional — no
       # NPM_PUBLISH_ENABLED gate — matching weave.js's always-publish release job.
       - name: NPM / Release Perform (OIDC + provenance)
         if: env.HAS_NEW_PACKAGES == 'false'

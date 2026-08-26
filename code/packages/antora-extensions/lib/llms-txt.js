@@ -53,7 +53,7 @@ const HOME_LAYOUT_NAME = 'home'
  * matching everything or nothing.
  */
 module.exports = function registerLlmsTxt(context) {
-  const logger = context.getLogger('pdocs-llms-txt')
+  const logger = context.getLogger('docouture-llms-txt')
   // Keyed the same way nav-modules.js and footer.js key their own copies of
   // the descriptor — see nav-modules.js's header for why this has to be a
   // two-phase (contentAggregated, then navigationBuilt) extension at all.

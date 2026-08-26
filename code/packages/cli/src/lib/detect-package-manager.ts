@@ -32,9 +32,9 @@ const PNPM_ACTION_SETUP_STEP =
 
 // Reads the invoking package manager off npm's own user-agent env var — set
 // by npm, pnpm and yarn alike on every script/exec they run, e.g.
-// 'pnpm/9.1.0 npm/? node/v20.11.0 darwin x64'. This is how `pdocs new` was
-// actually invoked (`npx @inditextech/pdocs-cli` vs `pnpm dlx
-// @inditextech/pdocs-cli`) — the best signal available for a brand-new
+// 'pnpm/9.1.0 npm/? node/v20.11.0 darwin x64'. This is how `docouture new` was
+// actually invoked (`npx @inditextech/docouture-cli` vs `pnpm dlx
+// @inditextech/docouture-cli`) — the best signal available for a brand-new
 // repository with no lockfile of its own yet.
 function fromUserAgent(): PackageManager | null {
   const ua = process.env.npm_config_user_agent
@@ -67,11 +67,11 @@ function fromLockfile(targetDir: string): PackageManager | null {
 }
 
 /**
- * Which package manager `pdocs new`'s printed next-steps (and the
+ * Which package manager `docouture new`'s printed next-steps (and the
  * package-manager-aware bits of the scaffolded workflow templates) should
  * assume for this repository. Checked in order of how much it's worth
  * trusting: an explicit `packageManager` field first, then a lockfile
- * already committed at the repo root, then how `pdocs new` itself was
+ * already committed at the repo root, then how `docouture new` itself was
  * invoked, defaulting to npm when none of those say otherwise.
  */
 export function detectPackageManager(targetDir: string): PackageManager {

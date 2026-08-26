@@ -14,7 +14,7 @@
 // to Kroki, which is asynchronous. So that work happens ONCE, up front,
 // outside the conversion loop entirely, and its result handed to the
 // synchronous side (kroki.js, in the SIBLING
-// @inditextech/pdocs-asciidoc-extensions package) through a plain shared
+// @inditextech/docouture-asciidoc-extensions package) through a plain shared
 // module, kroki-instance.js.
 //
 // Unlike Shiki, there is no single instance to build — every distinct
@@ -40,9 +40,9 @@ const {
   KROKI_URL,
   resolveEnabledTypes,
   resolveFormat,
-} = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-config')
-const { applyDefaultMermaidTheme } = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-mermaid-theme')
-const kroki = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-instance')
+} = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-config')
+const { applyDefaultMermaidTheme } = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-mermaid-theme')
+const kroki = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-instance')
 const { ensureKrokiRunning } = require('./kroki-docker')
 
 // Matches the exact shape kroki.js intercepts: a `[type]` (optionally
@@ -117,7 +117,7 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
   const doEnsureKrokiRunning = deps.ensureKrokiRunning || ensureKrokiRunning
   context.on('contentAggregated', async ({ contentAggregate, playbook }) => {
     const attributes = (playbook && playbook.asciidoc && playbook.asciidoc.attributes) || {}
-    const logger = context.getLogger('pdocs-kroki-prewarm')
+    const logger = context.getLogger('docouture-kroki-prewarm')
     const enabledTypes = resolveEnabledTypes(attributes[ENABLED_ATTR], attributes[TYPES_ATTR], (unknown) =>
       logger.warn('Ignoring unknown %s entry "%s"; expected one of %s', TYPES_ATTR, unknown, SUPPORTED_TYPES.join(', '))
     )

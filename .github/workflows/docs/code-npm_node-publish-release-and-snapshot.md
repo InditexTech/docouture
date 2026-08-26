@@ -1,6 +1,6 @@
 # `code-npm-publish-release-and-snapshot`
 
-[`code-npm_node-publish-release-and-snapshot.yml`](../code-npm_node-publish-release-and-snapshot.yml) is the same workflow (name, filename, job shape, triggers) as weave.js's workflow of the same name, adapted to pdocs' pnpm/nx/just toolchain and to pdocs being a site generator (it also ships a `ui-bundle` release artifact) rather than a plain npm-package monorepo.
+[`code-npm_node-publish-release-and-snapshot.yml`](../code-npm_node-publish-release-and-snapshot.yml) is the same workflow (name, filename, job shape, triggers) as weave.js's workflow of the same name, adapted to docouture' pnpm/nx/just toolchain and to docouture being a site generator (it also ships a `ui-bundle` release artifact) rather than a plain npm-package monorepo.
 
 ## Triggers
 
@@ -16,7 +16,7 @@
 
 `asdf` and whatever `nodejs`/`pnpm` versions are pinned in `code/.tool-versions`. npm is conditionally upgraded to `>=11.5.1` when the bundled version does not support OIDC Trusted Publishers.
 
-> **Note:** `code/.tool-versions` uses `nodejs` (not `node` — the latter isn't a registered asdf-plugins short name and fails to resolve) and `pnpm`, same names weave.js's `.tool-versions` uses. pdocs' `code-npm_node-pr-verify.yml` uses the identical asdf setup pattern as this workflow.
+> **Note:** `code/.tool-versions` uses `nodejs` (not `node` — the latter isn't a registered asdf-plugins short name and fails to resolve) and `pnpm`, same names weave.js's `.tool-versions` uses. docouture' `code-npm_node-pr-verify.yml` uses the identical asdf setup pattern as this workflow.
 
 ## Authentication
 
@@ -28,10 +28,10 @@ Permissions are scoped at the job level following the principle of least privile
 
 ## Divergences from weave.js's workflow of the same name
 
-- **Version bump**: homologated with weave.js's `npm run version:release` + `npm run release:prepare` step pair — `code/package.json` defines both scripts as just-free wrappers around `pnpm version` (propagated to every workspace package), so CI doesn't need `just` installed on the runner (README, "just and package.json"); `justfile`'s `bump` recipe is the human-facing equivalent for local use. There is no `version:development` step: pdocs' release does not bump to a post-release snapshot version, so the repository is left at the just-released version rather than the next `-SNAPSHOT`.
-- **Publish**: weave.js calls one aggregate script (`publish:snapshot` / `release:perform`) across nx targets. pdocs has no such targets, so this loops `npm publish` directly over its five publishable packages (`ui-bundle`, `cli`, `antora-extensions`, `asciidoc-extensions`, `publish-gh-pages` — `example` is `private: true` and excluded, same set `just release-local` publishes to a local Verdaccio registry).
-- **No gitflow sync-to-develop PR**: pdocs is trunk-based (main + PRs only), so weave.js's "create a sync PR into develop" step and its failure-comment step are dropped entirely.
-- **ui-bundle release artifact**: pdocs additionally locates `packages/ui-bundle/build/ui-bundle-<version>.zip` and attaches it to the GitHub Release — weave.js has no equivalent since it ships npm packages only, not a site-building tool with a distributable UI bundle.
+- **Version bump**: homologated with weave.js's `npm run version:release` + `npm run release:prepare` step pair — `code/package.json` defines both scripts as just-free wrappers around `pnpm version` (propagated to every workspace package), so CI doesn't need `just` installed on the runner (README, "just and package.json"); `justfile`'s `bump` recipe is the human-facing equivalent for local use. There is no `version:development` step: docouture' release does not bump to a post-release snapshot version, so the repository is left at the just-released version rather than the next `-SNAPSHOT`.
+- **Publish**: weave.js calls one aggregate script (`publish:snapshot` / `release:perform`) across nx targets. docouture has no such targets, so this loops `npm publish` directly over its five publishable packages (`ui-bundle`, `cli`, `antora-extensions`, `asciidoc-extensions`, `publish-gh-pages` — `example` is `private: true` and excluded, same set `just release-local` publishes to a local Verdaccio registry).
+- **No gitflow sync-to-develop PR**: docouture is trunk-based (main + PRs only), so weave.js's "create a sync PR into develop" step and its failure-comment step are dropped entirely.
+- **ui-bundle release artifact**: docouture additionally locates `packages/ui-bundle/build/ui-bundle-<version>.zip` and attaches it to the GitHub Release — weave.js has no equivalent since it ships npm packages only, not a site-building tool with a distributable UI bundle.
 - **Tag scheme**: uses `tag-prefix: ""` (bare `X.Y.Z` tags), matching weave.js exactly.
 - **Snapshot publish is split into two jobs**, unlike weave.js's single `publish-snapshot` job: `build-snapshot` checks out the PR branch (still only after an admin's `/publish-snapshot` comment, and pinned to the PR's HEAD SHA at approval time) and packs `pnpm pack` tarballs, but never sees `NPM_TOKEN` or the OIDC id-token; `publish-snapshot` holds those credentials but only downloads the tarballs the first job produced and never checks out the PR branch itself. This closes off running an author-controlled `package.json`/lifecycle script in a job that can reach the npm registry — a workflow triggered by a PR comment is inherently building untrusted code, and admin approval narrows *who* can trigger it but doesn't make *what* gets built trustworthy.
 - **`build-snapshot`'s caches are read-only**: it restores the pnpm store and asdf caches but never saves them back (`actions/cache/restore`, not `actions/cache`, and no paired save step). This job's `issue_comment` trigger gets write access to the default branch's cache scope even though it's building a PR branch, so letting it save would let a malicious PR poison a cache entry later restored by `release` or `pr-verify`.

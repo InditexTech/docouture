@@ -22,7 +22,7 @@
  * blocks read as the same family.
  */
 
-.pdocs-cta {
+.docouture-cta {
   align-items: center;
   background-color: var(--ids-color-bg-low);
   display: flex;
@@ -46,7 +46,7 @@
 }
 
 /* `align=start`: the reference's own default is centred; this is the escape. */
-.pdocs-cta--start {
+.docouture-cta--start {
   align-items: flex-start;
   text-align: start;
 }
@@ -57,7 +57,7 @@
  * flex column with its own gap (home.css), so it needs none — same split,
  * and same `.doc`-scoped rule, as card-grid.css and feature-tabs.css.
  */
-.doc .pdocs-cta {
+.doc .docouture-cta {
   margin: var(--doc-space-block) 0 0;
 }
 
@@ -68,7 +68,7 @@
  * is wider — the same "wider band, prose-width text" relationship the
  * reference draws (its own `max-w-[800px]` inside a full-bleed section).
  */
-.pdocs-cta__body {
+.docouture-cta__body {
   display: flex;
   flex-direction: column;
   gap: var(--ids-size-150); /* 24 */
@@ -88,11 +88,11 @@
  * (0,2,0) — the same specificity trick feature-tabs.css's own heading
  * override uses, for the same reason.
  */
-.pdocs-cta .pdocs-cta__title {
+.docouture-cta .docouture-cta__title {
   margin: 0;
 }
 
-.pdocs-cta__lead {
+.docouture-cta__lead {
   margin: 0;
 }
 
@@ -106,39 +106,39 @@
  * `[feature-tabs]`'s media stills both take this shape (home-hero.hbs,
  * feature-tabs.js).
  */
-.pdocs-cta__mark-image {
+.docouture-cta__mark-image {
   height: auto;
   max-height: var(--ids-size-250); /* 40 */
   width: auto;
 }
 
 /* Themed pair: CSS shows one per theme; an untthemed mark (light only) is unclassed and shows in both. */
-.pdocs-cta__mark-image--light {
+.docouture-cta__mark-image--light {
   display: block;
 }
 
-.ids-theme-dark .pdocs-cta__mark-image--light {
+.ids-theme-dark .docouture-cta__mark-image--light {
   display: none;
 }
 
-.pdocs-cta__mark-image--dark {
+.docouture-cta__mark-image--dark {
   display: none;
 }
 
-.ids-theme-dark .pdocs-cta__mark-image--dark {
+.ids-theme-dark .docouture-cta__mark-image--dark {
   display: block;
 }
 
 /* ----------------------------------------------------------- actions ------ */
 
-.pdocs-cta__actions {
+.docouture-cta__actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--ids-size-100); /* 16 */
   justify-content: center;
 }
 
-.pdocs-cta--start .pdocs-cta__actions {
+.docouture-cta--start .docouture-cta__actions {
   justify-content: flex-start;
 }
 
@@ -147,7 +147,7 @@
  * the GitHub mark below) — background/mask plumbing only; the mask image
  * itself comes from the modifier class paired with this one.
  */
-.pdocs-cta__action-icon {
+.docouture-cta__action-icon {
   background: currentColor;
   block-size: var(--ids-size-125); /* 20 */
   inline-size: var(--ids-size-125);
@@ -169,7 +169,7 @@
   --icon-mask-brand-github: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z' shape-rendering='geometricPrecision'/%3E%3C/svg%3E");
 }
 
-.pdocs-cta__action-icon--github {
+.docouture-cta__action-icon--github {
   mask-image: var(--icon-mask-brand-github);
 }
 
@@ -182,7 +182,7 @@
  * DS's own button.css) imports near the top of site.css, this file after
  * `feature-tabs.css`, near the bottom.
  */
-.pdocs-cta__action.ids-button--icon-and-label .ids-button__icon-icon {
+.docouture-cta__action.ids-button--icon-and-label .ids-button__icon-icon {
   margin-inline-end: var(--ids-size-75); /* 12 */
 }
 
@@ -199,8 +199,8 @@
  * don't need this: the DS sets their OWN hover `color` at (0,3,0), which
  * already outranks `.doc a:hover` outright.
  */
-.doc .pdocs-cta__action.ids-button--primary:hover,
-.doc .pdocs-cta__action.ids-button--primary:focus {
+.doc .docouture-cta__action.ids-button--primary:hover,
+.doc .docouture-cta__action.ids-button--primary:focus {
   color: var(--ids-color-content-inverse);
   text-decoration: none;
 }

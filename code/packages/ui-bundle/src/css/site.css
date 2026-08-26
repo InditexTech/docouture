@@ -53,7 +53,7 @@
 
 /*
  * Syntax highlighting (GH-89): source blocks are highlighted at Antora
- * build time by Shiki (@inditextech/pdocs-asciidoc-extensions/lib/
+ * build time by Shiki (@inditextech/docouture-asciidoc-extensions/lib/
  * shiki-syntax-highlighter.js), which emits `--shiki-light`/`--shiki-dark`
  * custom properties per token (Shiki's "css variables" dual-theme mode)
  * instead of a literal colour, so one build output serves both this

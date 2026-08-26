@@ -4,8 +4,8 @@
 // monorepo's code/scripts/dev.mjs, trimmed to what a standalone site (no
 // sibling ui-bundle package, ever) actually needs: this package builds and
 // ships the server so a bugfix reaches already-scaffolded sites on their
-// next `npm update @inditextech/pdocs-cli`, rather than being frozen at
-// whatever `pdocs new` copied at scaffold time.
+// next `npm update @inditextech/docouture-cli`, rather than being frozen at
+// whatever `docouture new` copied at scaffold time.
 //
 // Antora is a batch generator with no incremental mode, so "live reload"
 // here means re-running the whole build on every change and reloading the
@@ -30,7 +30,7 @@ const CLIENT_PATH = '/__dev/client.js'
 const DEBOUNCE_MS = 150
 const BUILD_TIMEOUT_MS = 120_000
 
-const CLIENT_SCRIPT = `// Injected by pdocs dev. Not part of the built site.
+const CLIENT_SCRIPT = `// Injected by docouture dev. Not part of the built site.
 const es = new EventSource(${JSON.stringify(RELOAD_PATH)})
 es.addEventListener('message', () => location.reload())
 // Chrome (and other browsers) can freeze a navigated-away-from page in the
@@ -118,7 +118,7 @@ function defaultRunBuild(siteRoot: string, onChildStart?: (child: ChildProcess) 
             if (stderr) process.stderr.write(stderr)
           } else {
             // A successful rebuild would otherwise be completely silent —
-            // every pdocs-* extension's own observability logs (Kroki's
+            // every docouture-* extension's own observability logs (Kroki's
             // auto-start/render lifecycle, search-index's summary, ...)
             // discarded along with Antora's own routine noise. See
             // antora-log.ts's own header for why `--log-level=info` above

@@ -1,6 +1,6 @@
 'use strict'
 
-// Patches the two fields `pdocs version` cares about — `version:` and
+// Patches the two fields `docouture version` cares about — `version:` and
 // `prerelease:` — by line, rather than parsing the file into a YAML document
 // and re-serialising it. A full parse/dump round-trip would lose the comments
 // antora.yml carries (see docs-site-package's own antora.yml for an example),

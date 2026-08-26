@@ -24,7 +24,7 @@ async function writeFixtureSite(root: string, opts: { siteUrl?: string } = {}): 
 }
 
 beforeEach(async () => {
-  siteRoot = await mkdtemp(join(tmpdir(), 'pdocs-cli-dev-server-'))
+  siteRoot = await mkdtemp(join(tmpdir(), 'docouture-cli-dev-server-'))
 })
 
 afterEach(async () => {

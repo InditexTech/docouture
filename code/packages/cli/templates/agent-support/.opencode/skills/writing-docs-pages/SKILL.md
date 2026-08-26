@@ -13,8 +13,8 @@ where this skill and the upstream Asciidoctor docs differ, follow this skill.
   blocks, text formatting, lists, links/xrefs, images, source blocks, admonitions, tables,
   includes, conditionals, substitutions, attributes — plus a URL index into
   `https://docs.asciidoctor.org/asciidoc/latest/` for anything not covered.
-- `reference/pdocs-blocks.md` — this site's own custom blocks, registered via
-  `@inditextech/pdocs-asciidoc-extensions` (see `antora-playbook.yml`'s
+- `reference/docouture-blocks.md` — this site's own custom blocks, registered via
+  `@inditextech/docouture-asciidoc-extensions` (see `antora-playbook.yml`'s
   `asciidoc.extensions`): `[tabs]`, `[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]`,
   `label:`/`mono:` inline macros, and a few table/video sizing attributes.
 

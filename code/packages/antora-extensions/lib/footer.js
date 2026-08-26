@@ -47,7 +47,7 @@ const resolveUrl = require('./resolve-url')
  * here: this extension resolves what was authored and stops.
  */
 module.exports = function registerFooter(context) {
-  const logger = context.getLogger('pdocs-footer')
+  const logger = context.getLogger('docouture-footer')
   // Keyed the same way @antora/navigation-builder keys its own accumulator,
   // and the same way nav-modules.js keys its copy of the descriptors.
   const descriptors = new Map()

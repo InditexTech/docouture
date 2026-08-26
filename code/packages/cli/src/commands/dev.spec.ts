@@ -12,7 +12,7 @@ let base: string
 let errorSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  base = await mkdtemp(join(tmpdir(), 'pdocs-cli-dev-cmd-'))
+  base = await mkdtemp(join(tmpdir(), 'docouture-cli-dev-cmd-'))
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 })
 

@@ -1,7 +1,7 @@
-name: pdocs-release-preview
+name: docouture-release-preview
 
 # Comments on a pull request labeled `docs/release`, previewing what
-# pdocs-release.yml (this workflow's sibling) will do when the PR merges —
+# docouture-release.yml (this workflow's sibling) will do when the PR merges —
 # same 3-job shape as this monorepo's own .github/workflows/code-release_preview.yml
 # (check-changes-in-paths / release-preview / release-preview-no-*-changes /
 # release-preview-no-release-label), adapted to docs-release's own signal
@@ -9,11 +9,11 @@ name: pdocs-release-preview
 # code-release's (`release-type/*` labels + a CHANGELOG.md diff).
 #
 # Read-only: this workflow never touches git, tags, or docs/antora.yml — it
-# only reports what pdocs-release.yml would do, so a reviewer can catch a
+# only reports what docouture-release.yml would do, so a reviewer can catch a
 # missing docs/.release-version (versioned mode) or an about-to-be-overwritten
 # tag before merging, not after.
 #
-# Reuses pdocs-release.yml's own "Detect mode" (grep antora-playbook.yml's
+# Reuses docouture-release.yml's own "Detect mode" (grep antora-playbook.yml's
 # content.sources[] tags) and "Resolve version" (stable, or
 # docs/.release-version's contents) logic verbatim — see that workflow's own
 # comments, and the docs-site-package skill's reference/versioning-modes.md,
@@ -42,7 +42,7 @@ jobs:
           filters: |
             paths:
               - 'docs/**'
-              - '.github/workflows/pdocs-release*.yml'
+              - '.github/workflows/docouture-release*.yml'
 
   release-preview:
     name: Release Preview
@@ -52,9 +52,9 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    # `pdocs new` scaffolds this site's antora-playbook.yml, docs/antora.yml
+    # `docouture new` scaffolds this site's antora-playbook.yml, docs/antora.yml
     # etc. under docs/ (not the repository root) — same layout
-    # pdocs-release.yml itself runs against. Every step below runs from
+    # docouture-release.yml itself runs against. Every step below runs from
     # there; only .github/workflows itself has to live at the true repo
     # root.
     defaults:
@@ -64,7 +64,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Same signal pdocs-release.yml's own "Detect mode" step reads:
+      # Same signal docouture-release.yml's own "Detect mode" step reads:
       # antora-playbook.yml's content.sources[] tags, not docs/antora.yml
       # (identical on main for both modes, so it carries no mode signal).
       - name: Detect mode
@@ -86,7 +86,7 @@ jobs:
 
       # Standalone always targets 'stable'; versioned reads the plain-text
       # docs/.release-version this PR is expected to have committed — same
-      # source pdocs-release.yml's pull_request trigger reads (there is no
+      # source docouture-release.yml's pull_request trigger reads (there is no
       # workflow_dispatch input to fall back to here, since this workflow
       # only ever runs on pull_request).
       - name: Resolve version
@@ -110,7 +110,7 @@ jobs:
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
 
       # Query the remote directly — no local tag fetch needed. A hit here
-      # means pdocs-release.yml's "Push release tag" step will force-move an
+      # means docouture-release.yml's "Push release tag" step will force-move an
       # existing tag (a republish) rather than create a new one.
       - name: Check for existing tag
         id: check

@@ -34,7 +34,7 @@
 // percentage form already has.
 const ATTR_NAME = 'table-width'
 const VALID_RX = /^\d+(?:\.\d+)?(?:px|rem|em|ch|vw|vh|%)?$/
-const STASH_KEY = '$pdocsTableWidths'
+const STASH_KEY = '$docoutureTableWidths'
 
 function parseWidth(raw, doc, table) {
   const trimmed = String(raw).trim()

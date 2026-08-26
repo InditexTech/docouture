@@ -59,7 +59,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   if (!isInsideGitWorkTree(startDir)) {
     console.error(`'${startDir}' is not inside a git repository`)
     console.error(
-      'pdocs upgrade re-syncs an already-scaffolded repository — run it from your repo root, or pass --dir <path> to one'
+      'docouture upgrade re-syncs an already-scaffolded repository — run it from your repo root, or pass --dir <path> to one'
     )
     return 1
   }
@@ -78,7 +78,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // build/commands/upgrade.js -> package root, 2 levels up — see
   // readCliInfo's own comment. Always re-read fresh: an upgrade run re-pins
   // whatever templates reference the CLI version to the one actually
-  // installed now, which may well differ from whatever `pdocs new`
+  // installed now, which may well differ from whatever `docouture new`
   // originally stamped in.
   const { version: cliVersion } = await readCliInfo(import.meta.url, 2)
 
@@ -86,7 +86,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // lockfile (or a packageManager field) since it was first scaffolded.
   const pm = packageManagerPlan(detectPackageManager(target))
 
-  // AGENTS.md's own __PDOCS_TITLE__ placeholder (the only name/title token
+  // AGENTS.md's own __DOCOUTURE_TITLE__ placeholder (the only name/title token
   // used outside `new.ts`'s starter/docs templates — see copy-template.ts's
   // PLACEHOLDERS) needs a value from somewhere, but `upgrade` takes no
   // <name> argument: it re-syncs an existing site, so the value it already
@@ -114,7 +114,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const values = {
     name,
     title,
-    // Same reasoning as repoIgnoreGlob below: __PDOCS_COMPONENT_NAME__ only
+    // Same reasoning as repoIgnoreGlob below: __DOCOUTURE_COMPONENT_NAME__ only
     // appears in docs/antora.yml and antora-playbook.yml, neither of which
     // upgrade ever re-copies (see the comment above `name` itself) — this
     // value is structurally required by TemplateValues but never actually
@@ -148,7 +148,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // (see copy-template.ts) leaves it untouched by the walk above, and it's
   // merged instead — see lib/agents-md.ts for why a blind overwrite here
   // would silently destroy the 'Documentation state' table
-  // `documenting-your-repo` maintains outside pdocs' own managed section.
+  // `documenting-your-repo` maintains outside docouture' own managed section.
   if (dryRun) {
     const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
     const plannedAgentSupport = await copyTemplate(agentSupportDir, target, values, { dryRun: true })

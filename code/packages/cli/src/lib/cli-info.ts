@@ -22,5 +22,5 @@ export async function readCliInfo(callerUrl: string, levelsToPackageRoot: number
   const pkgPath = join(here, ...upSegments, 'package.json')
   const raw = await readFile(pkgPath, 'utf8')
   const pkg = JSON.parse(raw) as { name?: string; version?: string }
-  return { name: pkg.name ?? '@inditextech/pdocs-cli', version: pkg.version ?? '0.0.0' }
+  return { name: pkg.name ?? '@inditextech/docouture-cli', version: pkg.version ?? '0.0.0' }
 }

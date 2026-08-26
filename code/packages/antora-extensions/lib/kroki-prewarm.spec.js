@@ -3,8 +3,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const registerKrokiPrewarm = require('./kroki-prewarm')
-const kroki = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-instance')
-const { applyDefaultMermaidTheme } = require('@inditextech/pdocs-asciidoc-extensions/lib/kroki-mermaid-theme')
+const kroki = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-instance')
+const { applyDefaultMermaidTheme } = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-mermaid-theme')
 
 function createContext() {
   const listeners = {}

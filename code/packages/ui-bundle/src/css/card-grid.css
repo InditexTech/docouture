@@ -50,7 +50,7 @@
 
 /* ------------------------------------------------------------- the grid ---- */
 
-.pdocs-card-grid {
+.docouture-card-grid {
   display: grid;
   gap: var(--ids-size-250); /* 40, both axes */
   grid-template-columns: minmax(0, 1fr);
@@ -61,7 +61,7 @@
  * same top margin every other block gets. The landing's content column is a
  * flex column with its own gap (home.css), so it needs none — hence `.doc`.
  */
-.doc .pdocs-card-grid {
+.doc .docouture-card-grid {
   margin: var(--doc-space-block) 0 0;
 }
 
@@ -94,7 +94,7 @@
  * measure already does. The class is still emitted, so the markup says which
  * of the two an author chose.
  */
-.pdocs-card-grid--width-container {
+.docouture-card-grid--width-container {
   max-width: none;
   width: min(calc(var(--content-max-width) * 1.5), var(--doc-inset-cap, 100cqw));
 }
@@ -115,30 +115,30 @@
  * l 1680), not the design system package's own — see home.css's note on why
  * the two differ.
  */
-.pdocs-card-grid--cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.pdocs-card-grid--cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.pdocs-card-grid--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.pdocs-card-grid--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.docouture-card-grid--cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.docouture-card-grid--cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.docouture-card-grid--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.docouture-card-grid--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
 @media screen and (--ids-breakpoints-s) {
-  .pdocs-card-grid--cols-s-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-s-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-s-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-s-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-s-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-s-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-s-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-s-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media screen and (--ids-breakpoints-m) {
-  .pdocs-card-grid--cols-m-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-m-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-m-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-m-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-m-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-m-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-m-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-m-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media screen and (--ids-breakpoints-l) {
-  .pdocs-card-grid--cols-l-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-l-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-l-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .pdocs-card-grid--cols-l-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-l-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-l-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-l-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .docouture-card-grid--cols-l-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 /* ------------------------------------------------------------- the card ---- */
@@ -152,7 +152,7 @@
  * padding and `.ids-card__content` its own 16px and background, which is
  * exactly what the frames draw.
  */
-.pdocs-card {
+.docouture-card {
   position: relative;
 }
 
@@ -162,7 +162,7 @@
  * rather than `:has(:focus-visible)`: the card holds exactly one focusable
  * element, so the two mean the same thing here, and this needs no `:has`.
  */
-.pdocs-card:focus-within {
+.docouture-card:focus-within {
   outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
   outline-offset: var(--ids-size-25);
 }
@@ -184,7 +184,7 @@
  * on `--ids-color-bg-default` anyway, so transparent renders identically and
  * one rule serves both.
  */
-.pdocs-card .ids-card__content {
+.docouture-card .ids-card__content {
   background-color: transparent;
   display: flex;
   flex-direction: column;
@@ -199,7 +199,7 @@
    * Measured — `elementFromPoint` over the image returned the `<img>` with
    * `cursor: auto`, not the anchor.
    *
-   * `static` hands the containing block back to `.pdocs-card`, which is
+   * `static` hands the containing block back to `.docouture-card`, which is
    * `position: relative` for exactly this purpose. The overlay then covers the
    * card edge to edge, image included, and still paints above the image:
    * both are positioned with `z-index: auto`, and the overlay comes later in
@@ -217,33 +217,33 @@
  * the image stretches. `flex: none` puts the sizing back on `aspect-ratio`,
  * which is what the frames specify per type.
  */
-.pdocs-card__image {
+.docouture-card__image {
   flex: none;
   overflow: hidden;
 }
 
-.pdocs-card__image img {
+.docouture-card__image img {
   display: block;
   height: 100%;
   object-fit: cover;
   width: 100%;
 }
 
-.pdocs-card--landscape .pdocs-card__image {
+.docouture-card--landscape .docouture-card__image {
   aspect-ratio: 16 / 9;
 }
 
-.pdocs-card--square .pdocs-card__image {
+.docouture-card--square .docouture-card__image {
   aspect-ratio: 1 / 1;
 }
 
-.pdocs-card--portrait .pdocs-card__image {
+.docouture-card--portrait .docouture-card__image {
   aspect-ratio: 2 / 3;
 }
 
 /* ----------------------------------------------------------- the header ---- */
 
-.pdocs-card__header {
+.docouture-card__header {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
@@ -263,11 +263,11 @@
  * here; downstream sites have no such check, so an unmasked icon shows a
  * warning glyph rather than an empty box.
  */
-:where(.pdocs-card__icon) {
+:where(.docouture-card__icon) {
   mask-image: var(--icon-mask-alerts-warning-outlined);
 }
 
-.pdocs-card__icon {
+.docouture-card__icon {
   background: currentColor;
   block-size: var(--ids-size-125); /* 20 */
   inline-size: var(--ids-size-125);
@@ -276,7 +276,7 @@
   mask-size: contain;
 }
 
-.pdocs-card__subheader {
+.docouture-card__subheader {
   color: var(--ids-color-content-low);
   font: var(--ids-typo-label-m);
   font-variant-numeric: var(--ids-typo-font-variant-numeric);
@@ -286,13 +286,13 @@
 
 /* ------------------------------------------------- title and description ---- */
 
-.pdocs-card__main {
+.docouture-card__main {
   display: flex;
   flex-direction: column;
   gap: var(--ids-size-75); /* 12 */
 }
 
-.pdocs-card__title {
+.docouture-card__title {
   color: var(--ids-color-content-default);
   font: var(--ids-typo-title-s);
   font-variant-numeric: var(--ids-typo-font-variant-numeric);
@@ -311,9 +311,9 @@
  * wins. The card's own hover feedback is `.ids-card:hover`'s rule from
  * card.css — the design changes the card's edges on hover, never its text.
  */
-.pdocs-card__title a,
-.pdocs-card__title a:hover,
-.pdocs-card__title a:focus {
+.docouture-card__title a,
+.docouture-card__title a:hover,
+.docouture-card__title a:focus {
   color: inherit;
   text-decoration: none;
 }
@@ -324,7 +324,7 @@
  * — without wrapping the card in a second, nested one. This is why the card
  * carries no button of its own: the affordance is the card.
  */
-.pdocs-card__title a::after {
+.docouture-card__title a::after {
   content: '';
   inset: 0;
   position: absolute;
@@ -345,13 +345,13 @@
  * `--doc-font-color` is `--ids-color-content-default` (bridge.css), which is
  * what this set before.
  */
-.pdocs-card p {
+.docouture-card p {
   margin: 0;
 }
 
 /* -------------------------------------------------------------- the meta ---- */
 
-.pdocs-card__meta {
+.docouture-card__meta {
   display: flex;
   flex-wrap: wrap;
   gap: var(--ids-size-25); /* 4 */

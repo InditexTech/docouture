@@ -2,7 +2,7 @@
 # Antora playbook — the entry point for building this site.
 # Reference: https://docs.antora.org/antora/latest/playbook/
 #
-# Build with:  pnpm nx run @inditextech/pdocs-example:build
+# Build with:  pnpm nx run @inditextech/docouture-example:build
 # Output:      build/site
 #
 
@@ -67,7 +67,7 @@ content:
     # GH-80: Mode 2 (Stable + Prerelease) — see versioning-modes.md. `main`
     # aggregates as the prerelease version (docs/antora.yml there permanently
     # says version: prerelease, prerelease: true); `tags: ['stable']` is a
-    # single pinned tag name, not a glob — a rolling tag that pdocs-release.yml
+    # single pinned tag name, not a glob — a rolling tag that docouture-release.yml
     # force-moves to a fresh one-off commit on every release, rather than a
     # second long-lived branch. Its own docs/antora.yml (at whatever commit the
     # tag currently points to) says version: stable, prerelease: false.
@@ -97,7 +97,7 @@ ui:
     # artifact URL or a path to a downloaded zip. Prefer the versioned name
     # there, so the site records which bundle it was built against:
     #
-    # url: https://example.com/pdocs-ui-bundle/releases/0.1.0/ui-bundle-0.1.0.zip
+    # url: https://example.com/docouture-ui-bundle/releases/0.1.0/ui-bundle-0.1.0.zip
     # snapshot: false
   # Serves the side-menu brand mark (nav-brand.hbs, site.keys.productLogo)
   # from a root-relative URL. The source is Weave.js's own logo
@@ -141,9 +141,9 @@ asciidoc:
     idseparator: '-'
     # GH-89: static, build-time syntax highlighting via Shiki instead of
     # Antora's own default (highlight.js, client-side) — see
-    # @inditextech/pdocs-asciidoc-extensions/lib/shiki-syntax-highlighter.js
+    # @inditextech/docouture-asciidoc-extensions/lib/shiki-syntax-highlighter.js
     # for the adapter this name resolves to, and
-    # @inditextech/pdocs-antora-extensions/lib/shiki-prewarm.js (wired below,
+    # @inditextech/docouture-antora-extensions/lib/shiki-prewarm.js (wired below,
     # under `antora.extensions`) for the async setup it depends on.
     source-highlighter: shiki
     # Turn on the ui-bundle's previous/next footer nav (pagination.hbs) for
@@ -156,8 +156,8 @@ asciidoc:
     # GH-44: renders `[mermaid]` blocks (the migration left 11 of them behind
     # as literal diagram source — see tools/fumadocs-migrate/lib/emit.mjs) as
     # real diagrams, via a self-hosted Kroki service at the fixed local URL
-    # @inditextech/pdocs-asciidoc-extensions/lib/kroki-config.js hardcodes —
-    # @inditextech/pdocs-antora-extensions' kroki-prewarm.js starts it
+    # @inditextech/docouture-asciidoc-extensions/lib/kroki-config.js hardcodes —
+    # @inditextech/docouture-antora-extensions' kroki-prewarm.js starts it
     # automatically, no manual step needed. Only `mermaid` is enabled: that's
     # the only diagram type the migrated corpus actually uses; widening this
     # to a comma-separated list of more of kroki.js's `SUPPORTED_TYPES` may
@@ -171,7 +171,7 @@ asciidoc:
     # GH-14: `label:red[Text]` / `label:[Text]` (grey default) — an IDS
     # Label inline; `mono:[text]` — plain monospaced text, no code chip.
     # Both styled by ui-bundle's already-vendored CSS.
-    - '@inditextech/pdocs-asciidoc-extensions'
+    - '@inditextech/docouture-asciidoc-extensions'
 
 antora:
   extensions:
@@ -182,4 +182,4 @@ antora:
     # extension: this one hooks Antora's own pipeline, that one hooks the
     # AsciiDoc processor. Listing either under the other's key makes Antora
     # log a warning and skip it.
-    - '@inditextech/pdocs-antora-extensions'
+    - '@inditextech/docouture-antora-extensions'

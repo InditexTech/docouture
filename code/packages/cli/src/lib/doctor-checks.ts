@@ -151,7 +151,7 @@ export function checkNamesAgree(input: NamesInput): CheckResult[] {
 export function checkGitHasCommit(dir: string): Promise<CheckResult> {
   const label = 'git history'
   return new Promise((resolvePromise) => {
-    execFile('git', ['rev-parse', 'HEAD'], { cwd: dir }, (err) => {
+    execFile('git', ['rev-parse', 'HEAD'], { cwd: dir, timeout: 10_000 }, (err) => {
       resolvePromise(
         err
           ? {
@@ -240,7 +240,7 @@ const RELEASE_LABEL = 'docs/release'
 export function checkReleaseLabelExists(repoRoot: string): Promise<CheckResult> {
   const label = 'docs/release label'
   return new Promise((resolvePromise) => {
-    execFile('gh', ['label', 'list', '--json', 'name'], { cwd: repoRoot }, (err, stdout) => {
+    execFile('gh', ['label', 'list', '--json', 'name'], { cwd: repoRoot, timeout: 10_000 }, (err, stdout) => {
       if (err) {
         resolvePromise({
           ok: true,

@@ -4,10 +4,10 @@
 
 Every block and macro this scaffold's toolchain understands, rendered once so you can see
 what each one actually looks like before reaching for it in real content. The first half
-is plain AsciiDoc — nothing pdocs-specific, all of it documented in full in the
+is plain AsciiDoc — nothing docouture-specific, all of it documented in full in the
 `writing-docs-pages` skill's `reference/language-basics.md`. The second half is this
-site's own custom blocks, registered by `@inditextech/pdocs-asciidoc-extensions` and
-documented in that same skill's `reference/pdocs-blocks.md`. Delete this page (and its
+site's own custom blocks, registered by `@inditextech/docouture-asciidoc-extensions` and
+documented in that same skill's `reference/docouture-blocks.md`. Delete this page (and its
 `nav.adoc` entry) once you no longer need the reference — nothing else on the site links
 to it.
 
@@ -258,7 +258,7 @@ Rendered as a native `<details>` element — works with JavaScript off.
 
 == Custom blocks
 
-Registered by `@inditextech/pdocs-asciidoc-extensions`. Every one of these degrades to
+Registered by `@inditextech/docouture-asciidoc-extensions`. Every one of these degrades to
 plain, readable HTML with JavaScript disabled.
 
 === Tabs
@@ -435,7 +435,7 @@ xref:main:getting-started.adoc[Get started]
 === Diagrams
 
 `[mermaid]`, `[plantuml]`, `[graphviz]` and a handful of other diagram languages (see
-`@inditextech/pdocs-asciidoc-extensions`' `lib/kroki-config.js` for the full list) render
+`@inditextech/docouture-asciidoc-extensions`' `lib/kroki-config.js` for the full list) render
 as real diagrams via a self-hosted https://kroki.io[Kroki] service — a literal block
 (four dots, not a fenced code block) styled with the diagram language's name:
 
@@ -461,8 +461,8 @@ stateDiagram-v2
 This feature is **enabled by default** in this starter (see `antora-playbook.yml`'s
 `kroki-enabled`/`kroki-diagram-types` attributes) — it needs Docker available, since the
 build starts a self-hosted Kroki service the first time a build needs it, no manual step
-required (it isn't stopped automatically either — run `pdocs teardown kroki` once you're
-done with it). Run `pdocs eject kroki` if you ever need to customize the container
+required (it isn't stopped automatically either — run `docouture teardown kroki` once you're
+done with it). Run `docouture eject kroki` if you ever need to customize the container
 definition, or comment the two attributes back out to turn the feature off entirely — a
 block like the one above then renders exactly as plain AsciiDoc already would: the raw
 diagram source, as literal text, same as the fenced listing shows it above.

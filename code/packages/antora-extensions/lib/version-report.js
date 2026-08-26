@@ -10,7 +10,7 @@
  * is otherwise invisible until someone notices a version tag/toggle
  * rendering the wrong colour on the built site — by which point it could
  * just as easily be a stale/never-actually-published deploy as a real
- * version-data problem (see the pdocs-publish.yml / gh-pages fixes this
+ * version-data problem (see the docouture-publish.yml / gh-pages fixes this
  * shipped alongside). Logging it plainly at build time answers "did Antora
  * pick the version I expected as latest" without needing to inspect a live
  * site at all.
@@ -24,7 +24,7 @@
  * and that is not an error.
  */
 module.exports = function registerVersionReport(context) {
-  const logger = context.getLogger('pdocs-version-report')
+  const logger = context.getLogger('docouture-version-report')
 
   context.on('contentClassified', ({ contentCatalog }) => {
     for (const component of contentCatalog.getComponents()) {

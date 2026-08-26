@@ -1,11 +1,11 @@
 ---
 name: ui-bundle-anatomy
-description: "How the pdocs Antora UI bundle package (code/packages/ui-bundle) is structured and built — directory layout, the gulp/esbuild/PostCSS pipeline, the Handlebars template tree, the helper compilation contract, the TypeScript config split and the preview harness. USE WHEN adding or editing a partial, layout, helper, browser script or stylesheet in that package, changing anything under gulp.d, debugging a build/preview failure, or working out where a change belongs. EXAMPLES: 'add a new partial', 'my helper isn't registered', 'why is the font corrupted in the zip', 'add a language to syntax highlighting', 'the preview doesn't rebuild', 'where does site.js come from'."
+description: "How the docouture Antora UI bundle package (code/packages/ui-bundle) is structured and built — directory layout, the gulp/esbuild/PostCSS pipeline, the Handlebars template tree, the helper compilation contract, the TypeScript config split and the preview harness. USE WHEN adding or editing a partial, layout, helper, browser script or stylesheet in that package, changing anything under gulp.d, debugging a build/preview failure, or working out where a change belongs. EXAMPLES: 'add a new partial', 'my helper isn't registered', 'why is the font corrupted in the zip', 'add a language to syntax highlighting', 'the preview doesn't rebuild', 'where does site.js come from'."
 ---
 
 # UI bundle — anatomy
 
-`code/packages/ui-bundle` (`@inditextech/pdocs-ui-bundle`) is an **Antora UI bundle**:
+`code/packages/ui-bundle` (`@inditextech/docouture-ui-bundle`) is an **Antora UI bundle**:
 a zip of layouts, partials, helpers, CSS, JS and images that Antora unpacks and uses to
 render every page of a site. It is a fork of `antora-ui-default`, modernised (gulp 5,
 esbuild, PostCSS 8, TypeScript) and re-skinned onto the IOP Design System.
@@ -114,10 +114,10 @@ Run from `code/` (the Nx workspace root — `pnpm` does not resolve above it).
 | command | does |
 | --- | --- |
 | `just preview-ui` | live-reloading preview on `http://localhost:5252` |
-| `pnpm nx run @inditextech/pdocs-ui-bundle:build` | `gulp bundle` — clean, build, pack, alias |
-| `pnpm nx run @inditextech/pdocs-ui-bundle:typecheck` | both tsconfigs (helpers strict, browser loose) |
-| `pnpm nx run @inditextech/pdocs-ui-bundle:lint` | eslint + stylelint (`lint:fix` to autofix) |
-| `pnpm nx run @inditextech/pdocs-ui-bundle:clean` | remove `build/`, `public/`, `.tsbuild/` |
+| `pnpm nx run @inditextech/docouture-ui-bundle:build` | `gulp bundle` — clean, build, pack, alias |
+| `pnpm nx run @inditextech/docouture-ui-bundle:typecheck` | both tsconfigs (helpers strict, browser loose) |
+| `pnpm nx run @inditextech/docouture-ui-bundle:lint` | eslint + stylelint (`lint:fix` to autofix) |
+| `pnpm nx run @inditextech/docouture-ui-bundle:clean` | remove `build/`, `public/`, `.tsbuild/` |
 
 Nx infers these targets from `package.json` scripts — the package has no `project.json`.
 Caching, inputs and outputs come from `targetDefaults` in `code/nx.json`; `build` is cached

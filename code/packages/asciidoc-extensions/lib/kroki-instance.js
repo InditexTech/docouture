@@ -13,7 +13,7 @@ const { createHash } = require('node:crypto')
 // package's block processor (kroki.js) is fully synchronous and cannot
 // itself await anything. So all the fetching happens up front, for every
 // `[mermaid]`/`[plantuml]`/etc. block the raw content aggregate contains,
-// in `@inditextech/pdocs-antora-extensions`' `kroki-prewarm.js` — an Antora
+// in `@inditextech/docouture-antora-extensions`' `kroki-prewarm.js` — an Antora
 // PIPELINE extension hooking `contentAggregated`, well before
 // `documentsConverted` ever reaches Asciidoctor. This file is the seam
 // between that async producer and kroki.js's synchronous consumer, exactly

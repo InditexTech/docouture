@@ -1,8 +1,8 @@
-# @inditextech/pdocs-antora-extensions
+# @inditextech/docouture-antora-extensions
 
 Registered under `antora-playbook.yml`'s **`antora.extensions`** key — a different key,
 and a different kind of extension, from `writing-docs-pages`' `asciidoc.extensions`
-(`@inditextech/pdocs-asciidoc-extensions`). This one hooks Antora's own site-generation
+(`@inditextech/docouture-asciidoc-extensions`). This one hooks Antora's own site-generation
 pipeline rather than the AsciiDoc processor; listing either package under the other's key
 makes Antora log a warning and skip it.
 

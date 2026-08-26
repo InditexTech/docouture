@@ -14,7 +14,7 @@ let errorSpy: ReturnType<typeof vi.spyOn>
 let logSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-version-'))
+  dir = await mkdtemp(join(tmpdir(), 'docouture-cli-version-'))
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
   logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
 })
@@ -36,7 +36,7 @@ describe('runVersion', () => {
   it('fails with usage when no value is given', async () => {
     const code = await runVersion([])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs version'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture version'))
   })
 
   it('rejects --prerelease and --stable together', async () => {

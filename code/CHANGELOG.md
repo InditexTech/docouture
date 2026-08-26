@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- [#142](https://github.com/InditexTech/test-antoradocs/issues/142) Renamed the product from `pdocs` to `docouture`: npm packages are now scoped `@inditextech/docouture*` (e.g. `@inditextech/docouture-cli` was `@inditextech/pdocs-cli`), the CLI binary is now `docouture` (was `pdocs`), the Antora extension logger-name prefix is now `docouture-*` (was `pdocs-*`), and CLI-scaffolded output (workflow templates, agent skill docs, the site-title placeholder token) uses `docouture` branding for newly created sites. Entries below this one predate the rename and refer to the product by its former name.
+
 ### Fixed
 
 - [#138](https://github.com/InditexTech/test-antoradocs/pull/138) CLI starter template: fix `pdocs-publish-prerelease.yml` — add a checkout step before its `dorny/paths-filter` call (on a `push` trigger the action diffs `github.event.before` against `github.sha` via local git history, which fails with `git` exit 128 without an actual checkout in that job first), and grant `contents: write` on its `publish` job specifically rather than the workflow's top-level read-only permissions (without it, GitHub rejects the call into `pdocs-publish.yml`'s reusable `publish` job outright as a permissions escalation, since that job requests `contents: write` for `@inditextech/pdocs-publish-gh-pages`'s push to `gh-pages`)

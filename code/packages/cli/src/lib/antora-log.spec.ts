@@ -20,16 +20,16 @@ describe('filterObservableAntoraLog', () => {
     )
   })
 
-  it('keeps any pdocs-* named logger line regardless of level', () => {
+  it('keeps any docouture-* named logger line regardless of level', () => {
     const input = [
       '{"level":"info","name":"antora","msg":"unrelated Antora chatter"}',
-      '{"level":"info","name":"pdocs-search-index","msg":"weavejs: 451 pages, 2025 records"}',
-      '{"level":"info","name":"pdocs-kroki-prewarm","msg":"Kroki service already reachable"}',
+      '{"level":"info","name":"docouture-search-index","msg":"weavejs: 451 pages, 2025 records"}',
+      '{"level":"info","name":"docouture-kroki-prewarm","msg":"Kroki service already reachable"}',
     ].join('\n')
 
     const result = filterObservableAntoraLog(input)
-    expect(result).toContain('pdocs-search-index')
-    expect(result).toContain('pdocs-kroki-prewarm')
+    expect(result).toContain('docouture-search-index')
+    expect(result).toContain('docouture-kroki-prewarm')
     expect(result).not.toContain('unrelated Antora chatter')
   })
 

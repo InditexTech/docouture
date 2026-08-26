@@ -57,7 +57,7 @@ importers:
       '@antora/redirect-producer':
         specifier: ~3.1.15
         version: 3.1.15
-      '@inditextech/pdocs-asciidoc-extensions':
+      '@inditextech/docouture-asciidoc-extensions':
         specifier: workspace:*
         version: link:../asciidoc-extensions
       '@shikijs/langs':
@@ -107,13 +107,13 @@ importers:
 
   packages/example:
     dependencies:
-      '@inditextech/pdocs-antora-extensions':
+      '@inditextech/docouture-antora-extensions':
         specifier: workspace:*
         version: link:../antora-extensions
-      '@inditextech/pdocs-asciidoc-extensions':
+      '@inditextech/docouture-asciidoc-extensions':
         specifier: workspace:*
         version: link:../asciidoc-extensions
-      '@inditextech/pdocs-ui-bundle':
+      '@inditextech/docouture-ui-bundle':
         specifier: workspace:*
         version: link:../ui-bundle
     devDependencies:
@@ -132,7 +132,7 @@ importers:
       '@asciidoctor/core':
         specifier: ~4.0.8
         version: 4.0.8
-      '@inditextech/pdocs-asciidoc-extensions':
+      '@inditextech/docouture-asciidoc-extensions':
         specifier: workspace:*
         version: link:../asciidoc-extensions
       '@vscode/gulp-vinyl-zip':

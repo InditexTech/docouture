@@ -25,8 +25,8 @@ import { AGENTS_MD_FILENAME, hasManagedSection, mergeAgentsMd } from '../lib/age
 // that makes no sense for a directory name here.
 const NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/
 
-// The only two versioning shapes `pdocs new` scaffolds — both real,
-// releasable configurations handled by the templated pdocs-release.yml — see
+// The only two versioning shapes `docouture new` scaffolds — both real,
+// releasable configurations handled by the templated docouture-release.yml — see
 // the docs-site-package skill's reference/versioning-modes.md. 'standalone'
 // (the default): `main` always builds as the prerelease/preview version, and
 // a release just force-moves a rolling `stable` tag — no historical archive,
@@ -36,26 +36,26 @@ const NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/
 // release is instead its own immutable `vX.Y.Z` git tag, kept forever —
 // appropriate for a library/SDK whose consumers pin an old version. (A bare,
 // unversioned checkout — no prerelease/stable split at all — is not offered
-// here: it only ever comes up as an ad-hoc `pdocs dev` preview before a mode
+// here: it only ever comes up as an ad-hoc `docouture dev` preview before a mode
 // is chosen, never as something worth releasing.)
 const MODES = ['standalone', 'versioned'] as const
 type Mode = (typeof MODES)[number]
 
 const PACKAGE_MANAGERS = ['npm', 'pnpm'] as const
 
-// Filenames pdocs-publish.yml / pdocs-publish-prerelease.yml /
-// pdocs-release.yml / pdocs-release-preview.yml / pdocs-pr-verify.yml /
-// pdocs-kroki-cache-warm.yml are templated under (see templates/workflows/)
+// Filenames docouture-publish.yml / docouture-publish-prerelease.yml /
+// docouture-release.yml / docouture-release-preview.yml / docouture-pr-verify.yml /
+// docouture-kroki-cache-warm.yml are templated under (see templates/workflows/)
 // — kept as a literal list here so the pre-flight conflict check below can
 // name exactly which ones would be overwritten without having to read the
 // template directory to find out.
 const WORKFLOW_NAMES = [
-  'pdocs-publish.yml',
-  'pdocs-publish-prerelease.yml',
-  'pdocs-release.yml',
-  'pdocs-release-preview.yml',
-  'pdocs-pr-verify.yml',
-  'pdocs-kroki-cache-warm.yml',
+  'docouture-publish.yml',
+  'docouture-publish-prerelease.yml',
+  'docouture-release.yml',
+  'docouture-release-preview.yml',
+  'docouture-pr-verify.yml',
+  'docouture-kroki-cache-warm.yml',
 ]
 
 // Repo-root-relative paths `templates/agent-support/` lands under (see
@@ -107,11 +107,11 @@ function originRemoteUrl(dir: string): string | undefined {
 
 // The web (https) form of this repo's `origin` remote, or undefined if
 // there isn't one configured yet. Baked into the scaffolded package.json's
-// `pdocs.checkLinks.ignore` (see TemplateValues.repoIgnoreGlob, and
+// `docouture.checkLinks.ignore` (see TemplateValues.repoIgnoreGlob, and
 // scripts/check-links.mjs's own comment on that key) so the repo-link.hbs
 // header/nav link — which 404s to an anonymous crawler whenever this repo
 // is private, indistinguishable from one that doesn't exist — doesn't fail
-// pdocs-pr-verify.yml/pdocs-release.yml out of the box. Converts an SSH
+// docouture-pr-verify.yml/docouture-release.yml out of the box. Converts an SSH
 // remote (`git@host:owner/repo.git`) to its https equivalent the same way
 // an https remote is just stripped of its trailing `.git`; anything else
 // unparseable is treated the same as "no remote yet".
@@ -124,7 +124,7 @@ function repoWebUrl(dir: string): string | undefined {
   return undefined
 }
 
-// The GitHub Pages project-site URL 'pdocs publish gh-pages' will produce
+// The GitHub Pages project-site URL 'docouture publish gh-pages' will produce
 // once published — GitHub's own convention is
 // https://<owner>.github.io/<repo>/, derived here from origin's remote
 // rather than asked for, so printNextSteps can tell a first-time user what
@@ -156,7 +156,7 @@ function githubPagesUrl(dir: string): string | undefined {
 // (check-links.mjs) compiles it to a literal-substring match that will
 // never occur inside a real URL, rather than an empty pattern (which would
 // match — and silently ignore — every single link).
-const NO_REPO_REMOTE_GLOB = 'pdocs-new:no-origin-remote-configured'
+const NO_REPO_REMOTE_GLOB = 'docouture-new:no-origin-remote-configured'
 
 function repoIgnoreGlob(dir: string): string {
   const url = repoWebUrl(dir)
@@ -356,7 +356,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   }
 
   // Best-effort guess for the wizard's own default (an existing
-  // packageManager field/lockfile at --dir/cwd, or how pdocs itself was
+  // packageManager field/lockfile at --dir/cwd, or how docouture itself was
   // invoked) — see lib/detect-package-manager.ts. Computed against
   // --dir/cwd directly rather than the eventual repo root (not resolved
   // until after the wizard runs, see below): a reasonable guess either way,
@@ -384,7 +384,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
 
   if (!name) {
     console.error(
-      'usage: pdocs new <name> [--dir <path>] [--title <title>] [--url-segment] [--mode standalone|versioned] [--pm npm|pnpm]'
+      'usage: docouture new <name> [--dir <path>] [--title <title>] [--url-segment] [--mode standalone|versioned] [--pm npm|pnpm]'
     )
     return 1
   }
@@ -398,7 +398,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   title = title ?? titleCase(name)
 
   // The target is always an EXISTING repository's root, not a fresh
-  // directory `pdocs new` creates. --dir/cwd can be anywhere inside that
+  // directory `docouture new` creates. --dir/cwd can be anywhere inside that
   // repository — findRepoRoot walks up to the actual top-level, same as
   // every other command that operates on a whole repo (dev/build/doctor/
   // eject/teardown/publish) — rather than requiring --dir/cwd to already
@@ -408,7 +408,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   if (!isInsideGitWorkTree(startDir)) {
     console.error(`'${startDir}' is not inside a git repository`)
     console.error(
-      'pdocs new scaffolds into an existing repository — run it from your repo root (after git init), or pass --dir <path> to one'
+      'docouture new scaffolds into an existing repository — run it from your repo root (after git init), or pass --dir <path> to one'
     )
     return 1
   }
@@ -438,8 +438,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   }
 
   // AGENTS.md is never an all-or-nothing conflict the way a workflow file or
-  // a skill directory is: a foreign/human-written file (no pdocs-managed
-  // block yet — see lib/agents-md.ts) is always safe to append pdocs' own
+  // a skill directory is: a foreign/human-written file (no docouture-managed
+  // block yet — see lib/agents-md.ts) is always safe to append docouture' own
   // section to without asking. Only a file that already HAS a managed
   // block counts as something this run would actually overwrite.
   let existingAgentsMd: string | undefined
@@ -458,7 +458,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
       // rather than silently overwriting something already there.
       console.error(`refusing to overwrite existing file(s)/dir(s) under '${target}':`)
       console.error(`  ${conflicts.join(', ')}`)
-      console.error("run 'pdocs upgrade' instead if you want to re-sync them")
+      console.error("run 'docouture upgrade' instead if you want to re-sync them")
       return 1
     }
 
@@ -479,7 +479,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // build/commands/new.js -> build/templates/{starter,workflows,agent-support}
   // — see scripts/copy-templates.mjs, which puts the templates/ directory
   // here at build time. Resolved from import.meta.url so this works
-  // regardless of the directory pdocs is invoked from.
+  // regardless of the directory docouture is invoked from.
   const here = dirname(fileURLToPath(import.meta.url))
   const templatesRoot = join(here, '..', 'templates')
   const starterDir = join(templatesRoot, 'starter')
@@ -488,7 +488,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
 
   // build/commands/new.js -> build/ -> package root, 2 levels up — see
   // readCliInfo's own comment. This is the exact version a scaffolded
-  // site's devDependency on @inditextech/pdocs-cli gets pinned to below, so
+  // site's devDependency on @inditextech/docouture-cli gets pinned to below, so
   // it always matches whatever CLI actually generated it, snapshot/local
   // releases included.
   const { version: cliVersion } = await readCliInfo(import.meta.url, 2)
@@ -508,7 +508,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     // contribute no segment to a page's published URL at all (see
     // how-antora-builds-urls's "Component segment" section) — which is
     // exactly what dropping the extra GitHub Pages path segment requires.
-    // package.json's own `name` stays `name` above either way; `pdocs
+    // package.json's own `name` stays `name` above either way; `docouture
     // doctor`'s checkNamesAgree knows to skip the package-name-matches-
     // component-name check when this is the literal 'ROOT'.
     componentName: urlSegment ? name : 'ROOT',
@@ -615,9 +615,9 @@ function printNextSteps(args: {
     console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
     console.log('    2. Open a PR that sets the target version in docs/.release-version (e.g. "1.0.0")')
     console.log("    3. Label the PR 'docs/release'")
-    console.log('    4. Merge it — pdocs-release.yml runs automatically and tags vX.Y.Z')
+    console.log('    4. Merge it — docouture-release.yml runs automatically and tags vX.Y.Z')
     console.log('')
-    console.log('  (or skip the label/PR entirely: run pdocs-release.yml manually via workflow_dispatch')
+    console.log('  (or skip the label/PR entirely: run docouture-release.yml manually via workflow_dispatch')
     console.log('  and type the version)')
     console.log('')
     console.log('  See the docs-versioning skill (.opencode/skills, .claude/skills) for the full mechanism.')
@@ -627,9 +627,9 @@ function printNextSteps(args: {
     console.log('')
     console.log('  To cut your first stable release:')
     console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
-    console.log("    2. Merge any PR labeled 'docs/release' into main — pdocs-release.yml runs automatically")
+    console.log("    2. Merge any PR labeled 'docs/release' into main — docouture-release.yml runs automatically")
     console.log('')
-    console.log('  (or skip the label/PR entirely: run pdocs-release.yml manually via workflow_dispatch,')
+    console.log('  (or skip the label/PR entirely: run docouture-release.yml manually via workflow_dispatch,')
     console.log('  default input is fine)')
   }
 

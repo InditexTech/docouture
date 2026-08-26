@@ -94,8 +94,8 @@
   td,
   blockquote,
   dd,
-  .pdocs-tabs__panel,
-  .pdocs-accordion-group,
+  .docouture-tabs__panel,
+  .docouture-accordion-group,
   .ids-timeline-item-content
 ) {
   --doc-inset-cap: 100%;
@@ -1707,7 +1707,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * inside here too (it is a bare descendant selector, any nesting depth) and
  * was stacking its own `margin-top` on top of the gap, doubling the visible
  * space between children (16px gap + 24px margin = 40px, measured). Reset
- * ALL children, not just the first, the same fix `.pdocs-steps
+ * ALL children, not just the first, the same fix `.docouture-steps
  * .ids-timeline-item-content > *` already applies for the same reason
  * (steps.css).
  */
@@ -1920,7 +1920,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * GH-89: Shiki (Antora build-time syntax highlighting, replacing
  * highlight.js) emits `--shiki-light`/`--shiki-dark` custom properties per
  * token instead of a literal colour (its "css variables" dual-theme mode —
- * see @inditextech/pdocs-asciidoc-extensions/lib/shiki-syntax-highlighter.js).
+ * see @inditextech/docouture-asciidoc-extensions/lib/shiki-syntax-highlighter.js).
  * Every token span, and the outermost wrapper span that function adds in
  * place of Shiki's own (discarded) `<pre>`, redefines both variables to ITS
  * OWN token's colour in each theme — so one rule switching which of the two

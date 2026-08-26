@@ -5,23 +5,23 @@ import { join } from 'node:path'
 
 import { exists } from './copy-template.js'
 
-// Shared by `pdocs eject kroki` and `pdocs teardown kroki` — GH-44. Both
-// need to locate the `docker compose` file @inditextech/pdocs-antora-
+// Shared by `docouture eject kroki` and `docouture teardown kroki` — GH-44. Both
+// need to locate the `docker compose` file @inditextech/docouture-antora-
 // extensions' `kroki-prewarm.js`/`kroki-docker.js` use to run Kroki; kept in
 // one place so the two commands can never disagree about where that file is.
 
-export const PACKAGE_NAME = '@inditextech/pdocs-antora-extensions'
+export const PACKAGE_NAME = '@inditextech/docouture-antora-extensions'
 export const RESOURCE = 'resources/kroki-compose.yml'
 export const OVERRIDE_FILENAME = 'kroki-compose.yml'
 
 /**
- * The package's own bundled default — what `pdocs eject kroki` copies out,
+ * The package's own bundled default — what `docouture eject kroki` copies out,
  * regardless of whether a site has already ejected/customized one of its
  * own. Resolved from the SITE's own installed copy of the package (via
  * `createRequire` against its `package.json`, exactly like `publish.ts`'s
  * `loadDriver` resolves a publish driver), not from any copy this CLI
  * itself might depend on — this CLI has no dependency on
- * @inditextech/pdocs-antora-extensions at all, since a plain `pdocs` install
+ * @inditextech/docouture-antora-extensions at all, since a plain `docouture` install
  * has no reason to carry every package a scaffolded site might use.
  *
  * @param {string} packageJsonFile - the SITE's `package.json` (`docs/package.json`).
@@ -36,7 +36,7 @@ export function resolveBundledComposeFile(packageJsonFile: string): string {
 /**
  * Whichever compose file a build actually used — `kroki-docker.js`'s own
  * resolution order, reproduced here: an ejected override at the site root
- * first, the bundled default otherwise. Used by `pdocs teardown kroki`,
+ * first, the bundled default otherwise. Used by `docouture teardown kroki`,
  * which has to target the file that's actually running, not necessarily the
  * bundled one.
  *

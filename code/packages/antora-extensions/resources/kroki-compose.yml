@@ -2,13 +2,13 @@
 # `kroki-prewarm.js` starts these automatically (`docker compose -f
 # <this file> up -d`) the first time a `kroki-enabled: true` build needs a
 # diagram rendered and finds nothing already listening at the fixed local
-# URL `@inditextech/pdocs-asciidoc-extensions/lib/kroki-config.js` hardcodes.
+# URL `@inditextech/docouture-asciidoc-extensions/lib/kroki-config.js` hardcodes.
 # There is no teardown: containers are left running after the build, reused
 # by the next one (a fast reachability check skips straight past this file
 # when Kroki is already up), and simply discarded whenever the machine or CI
 # runner they ran on goes away.
 #
-# CUSTOMIZING THIS: run `pdocs eject kroki` to copy this exact file to
+# CUSTOMIZING THIS: run `docouture eject kroki` to copy this exact file to
 # docs/kroki-compose.yml in your own site's repository — kroki-prewarm.js
 # prefers that copy over this bundled default whenever one exists, so you
 # can add companions for other diagram types, pin different image versions,
@@ -29,7 +29,7 @@
 # (plantuml, graphviz, ditaa, ...) is rendered by the `kroki` service alone,
 # no headless browser involved. Widening `kroki-diagram-types` to one of
 # those needs no compose change; a future SUPPORTED_TYPES entry that also
-# needs its own companion means ejecting this file (`pdocs eject kroki`)
+# needs its own companion means ejecting this file (`docouture eject kroki`)
 # and adding it here the same way — check the new companion image's own
 # actual listening port first (`docker exec <container> netstat -tlnp`),
 # don't assume it from an adjacent one.

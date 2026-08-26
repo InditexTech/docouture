@@ -4,7 +4,7 @@ Package root below is `@inditex/sewingiopdsweb-react-components@1.28.0`; paths a
 relative to it. The Figma counterpart is *IDS &lt;Name&gt;* in file `k7yFLKOvab4OBB1v6xhM6i`
 (one component per page).
 
-`status` is how pdocs uses the component:
+`status` is how docouture uses the component:
 
 - **chrome** — rendered by a Handlebars partial
 - **content** — mapped onto Asciidoctor output with CSS only
@@ -21,7 +21,7 @@ $ grep -o '\.ids-[a-z0-9_-]*' \
 
 ## Site chrome
 
-| IDS component | block | path | status | pdocs use |
+| IDS component | block | path | status | docouture use |
 | --- | --- | --- | --- | --- |
 | Header | `.ids-header` | `header/*.css` (3) | chrome | site navbar, brand, search slot |
 | Menu | `.ids-menu` | `menu/*.css` | chrome | component/version explore panel |
@@ -49,7 +49,7 @@ $ grep -o '\.ids-[a-z0-9_-]*' \
 
 ## Document content
 
-| IDS component | block | path | status | pdocs use |
+| IDS component | block | path | status | docouture use |
 | --- | --- | --- | --- | --- |
 | Banner | `.ids-banner` | `banner/banner.css` | available | design uses Notification for admonitions instead — see below |
 | Notification | `.ids-notification` | `notifications/notification/notification.css` | content | **admonitions** — see mapping below. Path has an extra `notification/` segment; `notifications/` also ships `notifications-container/`, `notification-item/`, `notification-floating/` for other uses |

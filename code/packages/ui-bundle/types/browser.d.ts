@@ -35,7 +35,7 @@ declare global {
      * absent until then, since `12-search.ts` injects that script lazily on
      * first intent rather than on every page.
      */
-    __pdocsSearch?: {
+    __docoutureSearch?: {
       load: (
         url: string
       ) => Promise<(term: string, signal: AbortSignal, options?: SearchOptions) => Promise<SearchHit[]>>
@@ -43,11 +43,11 @@ declare global {
 
     /**
      * Recent-searches surface (GH-69), assigned by 13-search-recents.ts —
-     * always present once that file has run (unlike `__pdocsSearch`, it has
+     * always present once that file has run (unlike `__docoutureSearch`, it has
      * no lazy-load split of its own, so 12-search.ts still guards every call
      * in case that script were ever removed from a page).
      */
-    __pdocsSearchRecents?: {
+    __docoutureSearchRecents?: {
       record: (term: string) => void
       render: (container: HTMLElement, onSelect: (term: string) => void, onRemove: () => void) => HTMLElement[]
     }

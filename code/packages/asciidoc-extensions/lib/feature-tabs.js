@@ -190,14 +190,16 @@ function renderMedia(lightHtml, darkHtml) {
   if (!light && !dark) return ''
   const themed = light && dark
   return (
-    '<div class="pdocs-feature-tabs__media">' +
+    '<div class="docouture-feature-tabs__media">' +
     (light
       ? light.replace(
           '<img',
-          '<img class="pdocs-feature-tabs__image' + (themed ? ' pdocs-feature-tabs__image--light' : '') + '"'
+          '<img class="docouture-feature-tabs__image' + (themed ? ' docouture-feature-tabs__image--light' : '') + '"'
         )
       : '') +
-    (dark ? dark.replace('<img', '<img class="pdocs-feature-tabs__image pdocs-feature-tabs__image--dark"') : '') +
+    (dark
+      ? dark.replace('<img', '<img class="docouture-feature-tabs__image docouture-feature-tabs__image--dark"')
+      : '') +
     '</div>'
   )
 }
@@ -226,7 +228,7 @@ function renderCta(converted, parent) {
   const label = match[2] || ''
   const external = EXTERNAL_RX.test(href)
   return (
-    '<a class="ids-button ids-button--ghost pdocs-feature-tabs__cta' +
+    '<a class="ids-button ids-button--ghost docouture-feature-tabs__cta' +
     (external ? ' ids-button--icon-and-label ids-button--icon-action' : '') +
     '"' +
     attr('href', href) +
@@ -234,7 +236,7 @@ function renderCta(converted, parent) {
     '<span class="ids-button__content">' +
     label +
     (external
-      ? '<span class="ids-button__icon ids-button__icon-action pdocs-feature-tabs__cta-icon ' +
+      ? '<span class="ids-button__icon ids-button__icon-action docouture-feature-tabs__cta-icon ' +
         'ids-icon-mask--connectivity-link-external-outlined" aria-hidden="true"></span>'
       : '') +
     '</span>' +
@@ -288,8 +290,8 @@ function renderFeature(block, index, parent) {
 
   return chainAll(parts, ([lightHtml, darkHtml, ctaHtml, ...bodyHtmls]) => {
     const tab =
-      '<li class="pdocs-feature-tabs__item">' +
-      '<a class="ids-tabs-item pdocs-feature-tabs__tab' +
+      '<li class="docouture-feature-tabs__item">' +
+      '<a class="ids-tabs-item docouture-feature-tabs__tab' +
       (index === 0 ? ' ids-tabs-item--selected' : '') +
       '"' +
       attr('id', tabId) +
@@ -300,10 +302,10 @@ function renderFeature(block, index, parent) {
       '</li>'
 
     const heading = title
-      ? '<h3 class="pdocs-feature-tabs__heading' +
+      ? '<h3 class="docouture-feature-tabs__heading' +
         // No explicit label means the heading and the tab say the same thing, so
         // the enhanced state hides the heading rather than printing it twice.
-        (label ? '' : ' pdocs-feature-tabs__heading--redundant') +
+        (label ? '' : ' docouture-feature-tabs__heading--redundant') +
         '"' +
         attr('id', headingId) +
         '>' +
@@ -312,7 +314,7 @@ function renderFeature(block, index, parent) {
       : ''
 
     const panel =
-      '<section class="pdocs-feature-tabs__panel' +
+      '<section class="docouture-feature-tabs__panel' +
       (index === 0 ? ' is-selected' : '') +
       '"' +
       attr('id', panelId) +
@@ -324,7 +326,7 @@ function renderFeature(block, index, parent) {
       '>' +
       heading +
       renderMedia(lightHtml, darkHtml) +
-      '<div class="pdocs-feature-tabs__body">' +
+      '<div class="docouture-feature-tabs__body">' +
       bodyHtmls.filter(Boolean).join('') +
       '</div>' +
       renderCta(ctaHtml, parent) +
@@ -355,11 +357,11 @@ function finish(parent, wrapper, attrs, self) {
     const tabs = slides.map((slide) => slide.tab).join('')
     const panels = slides.map((slide) => slide.panel).join('')
     const html =
-      '<div class="pdocs-feature-tabs" data-feature-tabs>' +
-      '<ul class="pdocs-feature-tabs__list">' +
+      '<div class="docouture-feature-tabs" data-feature-tabs>' +
+      '<ul class="docouture-feature-tabs__list">' +
       tabs +
       '</ul>' +
-      '<div class="pdocs-feature-tabs__panels">' +
+      '<div class="docouture-feature-tabs__panels">' +
       panels +
       '</div>' +
       '</div>'

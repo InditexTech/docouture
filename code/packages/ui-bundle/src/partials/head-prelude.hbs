@@ -36,7 +36,7 @@
        */
       (function () {
         var stored
-        try { stored = localStorage.getItem('pdocs-side-menu') } catch (e) {}
+        try { stored = localStorage.getItem('docouture-side-menu') } catch (e) {}
         var collapsed = stored === 'collapsed' || stored === 'open'
           ? stored === 'collapsed'
           : document.documentElement.hasAttribute('data-page-home')
@@ -59,7 +59,7 @@
        */
       (function () {
         var stored
-        try { stored = localStorage.getItem('pdocs-toc') } catch (e) {}
+        try { stored = localStorage.getItem('docouture-toc') } catch (e) {}
         if (stored === 'closed') document.documentElement.classList.add('is-toc-closed')
       })()
     </script>

@@ -1,6 +1,6 @@
 ---
 name: docs-site-package
-description: "How a documentation site package in pdocs (code/packages/example) is put together — the playbook, the component descriptor, the docs/ tree, the UI bundle link, and the Nx/pnpm wiring that makes `just dev` and `just build-site` work. USE WHEN creating a new site package, editing antora-playbook.yml or docs/antora.yml, changing a site's title, start page, output dir or content source, pointing a site at a different UI bundle, setting up multi-version docs (release tags, a stable/prerelease branch pair, the version dropdown, `urls.latest_version_segment`), or debugging a site that builds with zero pages, a missing start page or a stale UI. EXAMPLES: 'add a new docs site', 'the site builds but has no pages', 'start page not found', 'my UI change doesn't show up in the site', 'point this site at a published bundle', 'why is the content path repo-root relative', 'just dev says port in use', 'set up docs versioning', 'add a stable vs prerelease toggle', 'why does the version dropdown only show one entry'."
+description: "How a documentation site package in docouture (code/packages/example) is put together — the playbook, the component descriptor, the docs/ tree, the UI bundle link, and the Nx/pnpm wiring that makes `just dev` and `just build-site` work. USE WHEN creating a new site package, editing antora-playbook.yml or docs/antora.yml, changing a site's title, start page, output dir or content source, pointing a site at a different UI bundle, setting up multi-version docs (release tags, a stable/prerelease branch pair, the version dropdown, `urls.latest_version_segment`), or debugging a site that builds with zero pages, a missing start page or a stale UI. EXAMPLES: 'add a new docs site', 'the site builds but has no pages', 'start page not found', 'my UI change doesn't show up in the site', 'point this site at a published bundle', 'why is the content path repo-root relative', 'just dev says port in use', 'set up docs versioning', 'add a stable vs prerelease toggle', 'why does the version dropdown only show one entry'."
 ---
 
 # Documentation site packages
@@ -10,7 +10,7 @@ builds, wired into the workspace so Nx builds the UI bundle first. It is current
 only one — `code/packages/starter`, the minimal site meant to be copied, was removed (its
 `workspace:*` deps have no standalone equivalent; see `reference/new-site.md`). The
 surviving `starter` is `code/packages/cli/templates/starter`, bundled into
-`@inditextech/pdocs-cli` for `pdocs new` to scaffold a site **outside** this monorepo — a
+`@inditextech/docouture-cli` for `docouture new` to scaffold a site **outside** this monorepo — a
 deliberately simpler, dependency-free shape (plain Antora default UI), not something to
 copy in here.
 
@@ -22,7 +22,7 @@ UI those sites render through, read `ui-bundle-anatomy`.
 
 ```
 code/packages/<site>/
-  package.json              name @inditextech/pdocs-<site>, private, deps: ui-bundle
+  package.json              name @inditextech/docouture-<site>, private, deps: ui-bundle
   antora-playbook.yml       build entry point — the only Antora config
   docs/
     antora.yml              component descriptor: name, title, version, nav
@@ -45,7 +45,7 @@ A site builds to zero pages, or dies on "start page not found", when these drift
 | component name (`example`) | `docs/antora.yml` → `name` | the `<component>::` prefix of `site.start_page`. It is also the site's **first URL segment** — `weavejs` in `/weavejs/main/…` — and has nothing to do with the `docs/` directory |
 | start page (`index.adoc`) | playbook → `site.start_page` | a real file under `modules/ROOT/pages/` |
 | content path | playbook → `content.sources[].start_path` | the directory holding `docs/antora.yml`, **relative to the repository root** |
-| package name (`pdocs-<site>`) | `package.json` → `name` | the directory name — `just dev <site>` interpolates both |
+| package name (`docouture-<site>`) | `package.json` → `name` | the directory name — `just dev <site>` interpolates both |
 
 ## The playbook
 
@@ -78,7 +78,7 @@ branches, extensions, `urls.*`): `reference/playbook.md`.
 
 `site.keys` in the playbook is declared `primitive-map` — flat primitives only — and convict
 rejects any playbook key outside its schema, so anything structured a site needs is authored
-in `docs/antora.yml` and read by `@inditextech/pdocs-antora-extensions` (registered under
+in `docs/antora.yml` and read by `@inditextech/docouture-antora-extensions` (registered under
 `antora.extensions`). Antora itself drops these keys; the extension reads them from the raw
 aggregate before it does.
 
@@ -100,13 +100,13 @@ landing in `ROOT` gets a side menu at all. See the `ui-bundle-anatomy` skill.
 
 Unlike `nav_modules`/`footer`/`llms`/`not_found_module` above, redirects from an arbitrary
 literal legacy URL (e.g. a Fumadocs-era `/weavejs/docs/main/quickstart`) to whatever real page
-currently answers the equivalent URL are authored on `@inditextech/pdocs-antora-extensions`'s
+currently answers the equivalent URL are authored on `@inditextech/docouture-antora-extensions`'s
 own registration entry in the **playbook**, not in `docs/antora.yml`:
 
 ```yaml
 antora:
   extensions:
-    - require: '@inditextech/pdocs-antora-extensions'
+    - require: '@inditextech/docouture-antora-extensions'
       redirects:
         - from: '/weavejs/docs/main/build/node/comment'   # exact override
           to: '/weavejs/latest/main/build/nodes/comment'
@@ -172,7 +172,7 @@ directory.
 | --- | --- |
 | `just dev example` | Nx build, then serve `build/site` on :5000 with rebuild-and-reload |
 | `just dev <site> <port>` | same, with an explicit second port — for a second site package running alongside |
-| `just build-site example` | `nx run @inditextech/pdocs-example:build` |
+| `just build-site example` | `nx run @inditextech/docouture-example:build` |
 | `just build` | every package, UI bundle included |
 | `just preview-ui` | UI-only preview on :5252 — prefer it when content is not what changed |
 | `pnpm -C packages/example run build` | raw Antora run, no Nx, no UI rebuild |
@@ -193,8 +193,8 @@ four places. Details, and why `starter` isn't that template anymore:
 
 `example` is versioned under **standalone (Stable + Prerelease)** (GH #80): `main` permanently
 aggregates as the `prerelease` version, and a rolling `stable` tag — force-moved to a fresh
-commit on each release by the single `pdocs-release.yml` workflow template
-(`.github/workflows/` in a site scaffolded by `pdocs new`, which detects standalone vs
+commit on each release by the single `docouture-release.yml` workflow template
+(`.github/workflows/` in a site scaffolded by `docouture new`, which detects standalone vs
 versioned from `docs/antora-playbook.yml`'s own `content.sources[]` tags and branches its
 steps accordingly) — aggregates as the `stable` version. The other supported shape,
 **versioned (Full History)** — every release tag kept forever, `main` unchanged — that
@@ -203,9 +203,9 @@ same workflow already handles, but is not wired up on `example` or anywhere else
 and URL-routing notes (`urls.latest_version_segment`): `reference/versioning-modes.md`.
 
 Either mode's `content.sources[]` names refs (`main`/`stable`/`v*`) that a PR checkout —
-detached HEAD or a feature branch — doesn't have. A site scaffolded by `pdocs new` gets a
+detached HEAD or a feature branch — doesn't have. A site scaffolded by `docouture new` gets a
 second playbook, `antora-playbook.pr-verify.yml` (one source, `branches: HEAD`, nothing
-version-specific), and `pdocs-pr-verify.yml` builds with it on every PR instead of the real
+version-specific), and `docouture-pr-verify.yml` builds with it on every PR instead of the real
 `antora-playbook.yml` — always validating whatever the PR actually changed, regardless of
 which mode (or none) the site has adopted. `example`'s own equivalent is
 `antora-playbook.local.yml`, wired into its `build` script (`package.json`) so `pnpm build`
@@ -222,7 +222,7 @@ instead.
 - `reference/versioning-modes.md` — the two docs versioning modes (versioned: full history
   via release tags, standalone: stable + prerelease), with `antora.yml`/playbook examples
   for each, how the
-  single `pdocs-release.yml` detects which mode a site is on and cuts a release either way
+  single `docouture-release.yml` detects which mode a site is on and cuts a release either way
   (manually, or automatically on a `docs/release`-labelled PR merge),
   the force-republish and `docs/.release-version` auto-bump mechanics, and how
-  `pdocs-pr-verify.yml` / `antora-playbook.pr-verify.yml` keep PR builds mode-agnostic.
+  `docouture-pr-verify.yml` / `antora-playbook.pr-verify.yml` keep PR builds mode-agnostic.

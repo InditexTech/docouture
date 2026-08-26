@@ -1,33 +1,33 @@
-name: pdocs-publish-prerelease
+name: docouture-publish-prerelease
 
 # Rebuilds and republishes the prerelease (main-branch) docs automatically on
 # every ordinary push to main* that actually touches content — no
-# docs/release label needed, unlike pdocs-release.yml. This exists
+# docs/release label needed, unlike docouture-release.yml. This exists
 # specifically so ordinary content merges show up without anyone having to
-# fall back to pdocs-publish.yml's own workflow_dispatch every time.
+# fall back to docouture-publish.yml's own workflow_dispatch every time.
 #
 # A plain `on: push: branches: [main*]` used to live directly on
-# pdocs-publish.yml and was removed for two reasons — see that file's own
+# docouture-publish.yml and was removed for two reasons — see that file's own
 # header comment. Both are avoided here by construction rather than by
 # reintroducing the same trigger in the same place:
 #
 #   1. An unrelated commit shouldn't kick off a rebuild with nothing new to
 #      publish. `check-changes-in-paths` (below) gates on real content paths
 #      only. In particular this deliberately excludes docs/.release-version:
-#      that file is the ONLY thing pdocs-release.yml's own "Bump release
+#      that file is the ONLY thing docouture-release.yml's own "Bump release
 #      descriptor" step pushes straight to main directly (see that
 #      workflow's own comment on that step) — a bot commit that is not new
 #      docs content and would otherwise fire this workflow for nothing.
 #
 #   2. Firing twice for one release — once from a docs/release-labeled
-#      merge's own content, and again from pdocs-release.yml's chained
-#      pdocs-publish.yml call once the tag is actually cut — is not a race
+#      merge's own content, and again from docouture-release.yml's chained
+#      docouture-publish.yml call once the tag is actually cut — is not a race
 #      (the two are sequential, not simultaneous: this workflow's own push
-#      event fires at merge time, before pdocs-release.yml's job even
+#      event fires at merge time, before docouture-release.yml's job even
 #      starts), just a redundant rebuild. `check-release-label` (below)
 #      closes that gap directly: if the commit that triggered this push came
 #      from a merged pull request carrying the docs/release label,
-#      pdocs-release.yml is already about to publish the definitive
+#      docouture-release.yml is already about to publish the definitive
 #      post-release build itself, so this workflow skips rather than
 #      duplicate it.
 on:
@@ -39,7 +39,7 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: pdocs-publish-prerelease
+  group: docouture-publish-prerelease
   cancel-in-progress: true
 
 jobs:
@@ -100,7 +100,7 @@ jobs:
 
           if echo "$labels" | grep -qx 'docs/release'; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "This push came from a docs/release-labeled merge — pdocs-release.yml will publish the definitive build itself, skipping here."
+            echo "This push came from a docs/release-labeled merge — docouture-release.yml will publish the definitive build itself, skipping here."
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
@@ -109,8 +109,8 @@ jobs:
     name: Publish
     needs: [check-changes-in-paths, check-release-label]
     if: needs.check-changes-in-paths.outputs.detected == 'true' && needs.check-release-label.outputs.skip != 'true'
-    # pdocs-publish.yml's own `publish` job requests `contents: write` (only
-    # ever used by @inditextech/pdocs-publish-gh-pages, pushing to the
+    # docouture-publish.yml's own `publish` job requests `contents: write` (only
+    # ever used by @inditextech/docouture-publish-gh-pages, pushing to the
     # `gh-pages` branch) — a reusable workflow can never be granted more than
     # its caller job holds, so without this the call is rejected outright as
     # a permissions escalation rather than merely losing write access at
@@ -118,5 +118,5 @@ jobs:
     # actually calls through, needs the elevated grant.
     permissions:
       contents: write
-    uses: ./.github/workflows/pdocs-publish.yml
+    uses: ./.github/workflows/docouture-publish.yml
     secrets: inherit

@@ -78,7 +78,7 @@ Answer.
 ```
 
 Block syntax for `[cards]`, `[feature-tabs]`, `[cta]` and `[accordion]` is in the
-`writing-docs-pages` skill's `reference/pdocs-blocks.md`; this file is the section-order
+`writing-docs-pages` skill's `reference/docouture-blocks.md`; this file is the section-order
 pattern, not the block reference.
 
 ## Content pages
@@ -194,7 +194,7 @@ const instance = new Thing() // <1>
 
 ## Mono-module vs. multi-module
 
-`pdocs new` scaffolds a **mono-module** site by default: a single `modules/ROOT/` holding
+`docouture new` scaffolds a **mono-module** site by default: a single `modules/ROOT/` holding
 both the landing page and all content, no `nav_modules:` in `docs/src/antora.yml`. This
 is the right shape for a small site with one coherent topic.
 

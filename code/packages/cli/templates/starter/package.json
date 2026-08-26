@@ -1,28 +1,28 @@
 {
-  "name": "__PDOCS_NAME__",
+  "name": "__DOCOUTURE_NAME__",
   "version": "0.1.0",
   "private": true,
-  "description": "__PDOCS_TITLE__ documentation, built with Antora",
+  "description": "__DOCOUTURE_TITLE__ documentation, built with Antora",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=24.0.0"
   },
   "scripts": {
     "build": "antora --fetch antora-playbook.yml",
-    "dev": "pdocs dev",
+    "dev": "docouture dev",
     "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\"",
     "check-links": "node scripts/check-links.mjs"
   },
   "devDependencies": {
-    "@inditextech/pdocs-cli": "__PDOCS_CLI_VERSION__",
-    "@inditextech/pdocs-ui-bundle": "__PDOCS_CLI_VERSION__",
-    "@inditextech/pdocs-asciidoc-extensions": "__PDOCS_CLI_VERSION__",
-    "@inditextech/pdocs-antora-extensions": "__PDOCS_CLI_VERSION__",
-    "@inditextech/pdocs-publish-gh-pages": "__PDOCS_CLI_VERSION__",
+    "@inditextech/docouture-cli": "__DOCOUTURE_CLI_VERSION__",
+    "@inditextech/docouture-ui-bundle": "__DOCOUTURE_CLI_VERSION__",
+    "@inditextech/docouture-asciidoc-extensions": "__DOCOUTURE_CLI_VERSION__",
+    "@inditextech/docouture-antora-extensions": "__DOCOUTURE_CLI_VERSION__",
+    "@inditextech/docouture-publish-gh-pages": "__DOCOUTURE_CLI_VERSION__",
     "antora": "3.1.15",
     "linkinator": "8.0.4"
   },
-  "pdocs": {
+  "docouture": {
     "publish": {
       "gh-pages": {}
     },
@@ -30,7 +30,7 @@
       "ignore": [
         "*/edit/HEAD/*",
         "https://<org>.github.io/<repo>",
-        "__PDOCS_REPO_IGNORE_GLOB__"
+        "__DOCOUTURE_REPO_IGNORE_GLOB__"
       ]
     }
   }

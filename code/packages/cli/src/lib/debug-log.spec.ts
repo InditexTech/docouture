@@ -33,8 +33,8 @@ describe('debugLog', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('hello'))
   })
 
-  it('prints when DEBUG=pdocs', () => {
-    process.env.DEBUG = 'pdocs'
+  it('prints when DEBUG=docouture', () => {
+    process.env.DEBUG = 'docouture'
     debugLog('hello')
     expect(errorSpy).toHaveBeenCalledTimes(1)
   })

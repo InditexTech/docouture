@@ -100,7 +100,7 @@ const HREF_RX = /<a\b[^>]*\bhref="([^"]*)"/i
 const IMG_RX = /<img\b[^>]*>/i
 
 /** `image-portrait` -> `portrait`; `no-image` has no modifier of its own. */
-const typeModifier = (type) => (type === 'no-image' ? '' : ' pdocs-card--' + type.slice('image-'.length))
+const typeModifier = (type) => (type === 'no-image' ? '' : ' docouture-card--' + type.slice('image-'.length))
 
 /**
  * Parse the `columns` spec into grid classes.
@@ -132,7 +132,7 @@ function parseColumns(spec, parent) {
       )
       continue
     }
-    classes.push('pdocs-card-grid--cols-' + (breakpoint ? breakpoint + '-' : '') + columns)
+    classes.push('docouture-card-grid--cols-' + (breakpoint ? breakpoint + '-' : '') + columns)
   }
   return classes
 }
@@ -155,7 +155,7 @@ function renderHeader(icon, subheader, parent) {
   if (icon) {
     if (ICON_RX.test(icon)) {
       iconHtml =
-        '<span class="pdocs-card__icon ids-icon-mask--' +
+        '<span class="docouture-card__icon ids-icon-mask--' +
         escapeHtml(icon.replace('/', '-')) +
         '" aria-hidden="true"></span>'
     } else {
@@ -166,8 +166,8 @@ function renderHeader(icon, subheader, parent) {
       )
     }
   }
-  const subheaderHtml = subheader ? '<span class="pdocs-card__subheader">' + escapeHtml(subheader) + '</span>' : ''
-  return '<div class="pdocs-card__header">' + iconHtml + subheaderHtml + '</div>'
+  const subheaderHtml = subheader ? '<span class="docouture-card__subheader">' + escapeHtml(subheader) + '</span>' : ''
+  return '<div class="docouture-card__header">' + iconHtml + subheaderHtml + '</div>'
 }
 
 function renderMeta(labels) {
@@ -177,7 +177,7 @@ function renderMeta(labels) {
     .filter(Boolean)
   if (!chips.length) return ''
   return (
-    '<div class="pdocs-card__meta">' +
+    '<div class="docouture-card__meta">' +
     chips
       .map(
         (label) =>
@@ -192,14 +192,14 @@ function renderMeta(labels) {
 
 function buildCardHtml({ type, imageHtml, header, title, description, meta }) {
   return (
-    '<div class="ids-card ids-card--vertical pdocs-card' +
+    '<div class="ids-card ids-card--vertical docouture-card' +
     typeModifier(type) +
     '">' +
     imageHtml +
     '<div class="ids-card__content">' +
     header +
-    '<div class="pdocs-card__main">' +
-    '<div class="pdocs-card__title">' +
+    '<div class="docouture-card__main">' +
+    '<div class="docouture-card__title">' +
     title +
     '</div>' +
     description +
@@ -254,7 +254,7 @@ function renderCard(block, type, parent) {
 
   return chainAll(parts, ([converted, ...texts]) => {
     const image = converted ? (IMG_RX.exec(converted) || [])[0] : ''
-    const imageHtml = image ? '<div class="ids-card__image pdocs-card__image">' + image + '</div>' : ''
+    const imageHtml = image ? '<div class="ids-card__image docouture-card__image">' + image + '</div>' : ''
     const description = texts
       .filter(Boolean)
       .map((text) => '<p>' + text + '</p>')
@@ -289,9 +289,9 @@ function finish(parent, wrapper, attrs, self) {
   const cardHtmls = cards.map((card) => renderCard(card, TYPES.includes(type) ? type : DEFAULT_TYPE, parent))
 
   return chainAll(cardHtmls, (rendered) => {
-    const classes = ['pdocs-card-grid']
+    const classes = ['docouture-card-grid']
       .concat(parseColumns(attrs.columns || DEFAULT_COLUMNS, parent))
-      .concat('pdocs-card-grid--width-' + (WIDTHS.includes(width) ? width : DEFAULT_WIDTH))
+      .concat('docouture-card-grid--width-' + (WIDTHS.includes(width) ? width : DEFAULT_WIDTH))
     const html = '<div class="' + classes.join(' ') + '">' + rendered.join('') + '</div>'
     return self.createBlock(parent, 'pass', html, attrs)
   })

@@ -1,15 +1,15 @@
 # The four names that must agree
 
 Four independent files each carry a name that has to match another one, or the site
-builds to zero pages, or fails outright with "start page not found". `pdocs doctor` checks
+builds to zero pages, or fails outright with "start page not found". `docouture doctor` checks
 every pair automatically — run it after any rename.
 
-| name           | set in                                                  | must match                                                                                                                             |
-| -------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| component name | `docs/src/antora.yml` → `name`                          | the `<component>::` prefix of the playbook's `site.start_page`                                                                         |
-| start page     | `antora-playbook.yml` → `site.start_page`               | a real file under `modules/ROOT/pages/` (or whichever module it names)                                                                 |
-| content path   | `antora-playbook.yml` → `content.sources[0].start_path` | where `docs/src/antora.yml` actually is, repo-root relative — `docs/src` for a site scaffolded as-is                                   |
-| package name   | `docs/package.json` → `name`                            | no hard requirement on its own, but conventionally matches the component name — this is what `pdocs new <name>` sets both to initially |
+| name           | set in                                                  | must match                                                                                                                                 |
+| -------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| component name | `docs/src/antora.yml` → `name`                          | the `<component>::` prefix of the playbook's `site.start_page`                                                                             |
+| start page     | `antora-playbook.yml` → `site.start_page`               | a real file under `modules/ROOT/pages/` (or whichever module it names)                                                                     |
+| content path   | `antora-playbook.yml` → `content.sources[0].start_path` | where `docs/src/antora.yml` actually is, repo-root relative — `docs/src` for a site scaffolded as-is                                       |
+| package name   | `docs/package.json` → `name`                            | no hard requirement on its own, but conventionally matches the component name — this is what `docouture new <name>` sets both to initially |
 
 ## Why each one matters
 
@@ -26,7 +26,7 @@ every pair automatically — run it after any rename.
   without updating `start_path` and Antora aggregates zero pages — no error, just an
   empty site, because the path it looked in wasn't a component root at all.
 - **Package name.** Not load-bearing for Antora itself, but drift here is a strong signal
-  something else drifted too (a manual rename that missed a file) — `pdocs doctor` flags
+  something else drifted too (a manual rename that missed a file) — `docouture doctor` flags
   it for that reason.
 
 ## Fixing a drift

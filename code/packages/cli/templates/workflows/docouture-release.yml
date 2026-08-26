@@ -1,6 +1,6 @@
-name: pdocs-release
+name: docouture-release
 
-# Handles BOTH versioning modes — see the pdocs docs-site-package skill's
+# Handles BOTH versioning modes — see the docouture docs-site-package skill's
 # versioning-modes.md for the full mechanism. Which mode a site is on is
 # detected, not asked: `docs/antora-playbook.yml`'s own content.sources[]
 # tags permanently say `tags: ['v*']` under versioned (Full History) or
@@ -59,7 +59,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: pdocs-release
+  group: docouture-release
   cancel-in-progress: false
 
 jobs:
@@ -67,7 +67,7 @@ jobs:
     name: Cut release
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # `pdocs new` scaffolds this site's package.json, antora-playbook.yml,
+    # `docouture new` scaffolds this site's package.json, antora-playbook.yml,
     # docs/antora.yml etc. under docs/ (not the repository root) — see the
     # docs-site-package skill's reference/versioning-modes.md. Every step
     # below — including the git ones, so `docs/antora.yml` below really
@@ -97,7 +97,7 @@ jobs:
         # reflects the merge.
         if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
         run: |
-          echo "::error::pdocs-release must run against main (got ${{ github.ref }})"
+          echo "::error::docouture-release must run against main (got ${{ github.ref }})"
           exit 1
 
       - name: Checkout
@@ -111,23 +111,23 @@ jobs:
           fetch-depth: 0
           ref: main
 
-      # __PDOCS_PM_SETUP_STEP__
+      # __DOCOUTURE_PM_SETUP_STEP__
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           # Reads engines.node from docs/package.json — no separate version
           # file to keep in sync.
           node-version-file: docs/package.json
-          cache: __PDOCS_PM_CACHE__
+          cache: __DOCOUTURE_PM_CACHE__
           # `defaults.run.working-directory: docs` above only applies to
           # `run:` steps, not to this action's own inputs — without this,
           # setup-node looks for a lockfile from the repo root and fails.
-          cache-dependency-path: docs/__PDOCS_LOCKFILE__
+          cache-dependency-path: docs/__DOCOUTURE_LOCKFILE__
 
       - name: Install dependencies
-        run: __PDOCS_INSTALL_CI__
+        run: __DOCOUTURE_INSTALL_CI__
 
-      # See pdocs-pr-verify.yml's own comment: this build reads
+      # See docouture-pr-verify.yml's own comment: this build reads
       # antora-playbook.local.yml (Build docs below), not the real
       # antora-playbook.yml — same reason as that step's own "Detect mode"
       # doesn't apply here (the tag this run is about to cut doesn't exist
@@ -142,7 +142,7 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # See pdocs-pr-verify.yml's own comment: primes the runner's Docker
+      # See docouture-pr-verify.yml's own comment: primes the runner's Docker
       # image store before the Build step's implicit Kroki startup.
       - name: Kroki / Docker image cache
         id: kroki-cache
@@ -164,10 +164,10 @@ jobs:
           docker save -o /tmp/kroki-images.tar $(docker compose -f "$compose_file" config --images)
 
       # Nothing before this point has actually built the docs — unlike
-      # pdocs-pr-verify.yml and pdocs-publish.yml, this workflow previously
+      # docouture-pr-verify.yml and docouture-publish.yml, this workflow previously
       # went straight from install to cutting a release tag. That let a
       # broken site get tagged and released, only to be caught later, when
-      # the tag push triggers pdocs-publish.yml downstream. Building here
+      # the tag push triggers docouture-publish.yml downstream. Building here
       # too, before any git mutation below, catches it before a tag or
       # GitHub Release ever exists for it.
       #
@@ -180,14 +180,14 @@ jobs:
       - name: Build docs
         run: npx antora --fetch antora-playbook.local.yml
 
-      # See pdocs-pr-verify.yml's own comment: catches raw http(s) links
+      # See docouture-pr-verify.yml's own comment: catches raw http(s) links
       # Antora's own strict mode (runtime.log.failure_level: warn, already
       # exercised by Build above) can't see. Only a broken EXTERNAL link
       # fails this step — a broken local one is a warning only, since this
       # job also builds with antora-playbook.local.yml (see that comment for
       # why a local link can legitimately look broken here).
       - name: Check links
-        run: __PDOCS_PM__ run check-links
+        run: __DOCOUTURE_PM__ run check-links
 
       - name: git identity
         run: |
@@ -256,7 +256,7 @@ jobs:
             if [ "$EVENT" = "workflow_dispatch" ]; then
               echo "::error::Versioned mode requires a real target version — re-run with a 'version' input other than the default 'stable', e.g. 1.2.0."
             else
-              echo "::error::Versioned mode requires a real target version, and this PR carried no docs/.release-version — add that file with the target version (e.g. 1.2.0) before merging with the docs/release label, or run pdocs-release manually via workflow_dispatch instead."
+              echo "::error::Versioned mode requires a real target version, and this PR carried no docs/.release-version — add that file with the target version (e.g. 1.2.0) before merging with the docs/release label, or run docouture-release manually via workflow_dispatch instead."
             fi
             exit 1
           fi
@@ -272,7 +272,7 @@ jobs:
 
       # `main`'s own docs/antora.yml is never touched here — it permanently
       # says version: prerelease (both modes). This step patches a COMMIT,
-      # not main itself: `pdocs version <value>` edits the working tree,
+      # not main itself: `docouture version <value>` edits the working tree,
       # that edit is committed on top of main's current tip, and then main
       # is reset back to that same tip immediately after — so the commit's
       # only route into the repository's reachable history is whichever tag
@@ -294,7 +294,7 @@ jobs:
 
           base=$(git rev-parse HEAD)
 
-          npx pdocs version "$value"
+          npx docouture version "$value"
           git add src/antora.yml
           git commit -m "chore: docs release ${tag}"
           sha=$(git rev-parse HEAD)
@@ -393,7 +393,7 @@ jobs:
           echo "docs/.release-version: ${VERSION} → ${next}"
 
       # Rebuild/deploy: called directly here, as a reusable job, rather than
-      # relying on pdocs-publish.yml's own trigger reacting to the pushes
+      # relying on docouture-publish.yml's own trigger reacting to the pushes
       # above — a plain `on: push` there previously had two problems: (1) it
       # matched both the tag push above AND main's ordinary pushes, so an
       # unrelated commit to main (or this job's own release-version bump
@@ -410,5 +410,5 @@ jobs:
     name: Publish
     needs: release
     if: needs.release.result == 'success'
-    uses: ./.github/workflows/pdocs-publish.yml
+    uses: ./.github/workflows/docouture-publish.yml
     secrets: inherit

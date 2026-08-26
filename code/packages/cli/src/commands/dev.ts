@@ -19,7 +19,7 @@ export async function runDev(argv: string[]): Promise<number> {
 
   if (!(await exists(join(siteRoot, 'antora-playbook.local.yml')))) {
     console.error(`no antora-playbook.local.yml found at '${siteRoot}'`)
-    console.error('pass --dir <path> to a component root (the parent of docs/), or run pdocs new first')
+    console.error('pass --dir <path> to a component root (the parent of docs/), or run docouture new first')
     return 1
   }
 

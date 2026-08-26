@@ -1,7 +1,7 @@
-name: pdocs-kroki-cache-warm
+name: docouture-kroki-cache-warm
 
 # GitHub Actions' cache is scoped to the branch/ref a run executes under, not
-# just the key string — and a `pull_request`-triggered run (pdocs-release.yml's
+# just the key string — and a `pull_request`-triggered run (docouture-release.yml's
 # main trigger) is ALWAYS scoped to that PR's own ephemeral merge ref
 # (`refs/pull/<N>/merge`), by design, even when it targets `main` and even
 # after it merges. See GitHub's own docs ("Restrictions for accessing a
@@ -20,7 +20,7 @@ name: pdocs-kroki-cache-warm
 # automatically falls back to that scope on its own cache lookup, no
 # `restore-keys` needed, since the key string is already identical
 # everywhere. That's this workflow's only job: keep that default-branch-scoped
-# entry warm, so pdocs-pr-verify.yml/pdocs-release.yml/pdocs-publish.yml's own
+# entry warm, so docouture-pr-verify.yml/docouture-release.yml/docouture-publish.yml's own
 # (unmodified) cache steps get a real hit instead of a cold pull on every run.
 #
 # Gated on `kroki-enabled` the same way those three are — no point warming a
@@ -30,7 +30,7 @@ on:
     branches: ['main*']
 
 concurrency:
-  group: pdocs-kroki-cache-warm
+  group: docouture-kroki-cache-warm
   cancel-in-progress: true
 
 jobs:
@@ -38,7 +38,7 @@ jobs:
     name: Warm Kroki image cache
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # `pdocs new` scaffolds this site's package.json, antora-playbook.yml
+    # `docouture new` scaffolds this site's package.json, antora-playbook.yml
     # etc. under docs/ (not the repository root) — see the docs-site-package
     # skill's reference/versioning-modes.md. Every step below runs from
     # there; only .github/workflows itself has to live at the true repo
@@ -50,26 +50,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # __PDOCS_PM_SETUP_STEP__
+      # __DOCOUTURE_PM_SETUP_STEP__
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           # Reads engines.node from docs/package.json — no separate version
           # file to keep in sync.
           node-version-file: docs/package.json
-          cache: __PDOCS_PM_CACHE__
+          cache: __DOCOUTURE_PM_CACHE__
           # `defaults.run.working-directory: docs` above only applies to
           # `run:` steps, not to this action's own inputs — without this,
           # setup-node looks for a lockfile from the repo root and fails.
-          cache-dependency-path: docs/__PDOCS_LOCKFILE__
+          cache-dependency-path: docs/__DOCOUTURE_LOCKFILE__
 
       - name: Install dependencies
-        run: __PDOCS_INSTALL_CI__
+        run: __DOCOUTURE_INSTALL_CI__
 
       # This is `main`'s own real antora-playbook.yml (this workflow only
       # ever runs on a push to main, so there's no local/tag ambiguity to
-      # worry about the way pdocs-release.yml's build step has) — see
-      # pdocs-pr-verify.yml's own comment on the `kroki-enabled` attribute.
+      # worry about the way docouture-release.yml's build step has) — see
+      # docouture-pr-verify.yml's own comment on the `kroki-enabled` attribute.
       - name: Kroki / Detect enabled
         id: kroki-check
         run: |
@@ -79,8 +79,8 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # Same cache key as pdocs-pr-verify.yml/pdocs-release.yml/
-      # pdocs-publish.yml — the point of this job is only WHERE it's written
+      # Same cache key as docouture-pr-verify.yml/docouture-release.yml/
+      # docouture-publish.yml — the point of this job is only WHERE it's written
       # from (a trusted `push` trigger, landing in the default branch's cache
       # scope), never a different key. No load/consume step below: nothing
       # else in this job needs the images locally, it only needs the cache

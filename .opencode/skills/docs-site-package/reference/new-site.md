@@ -3,13 +3,13 @@
 # Creating a site package
 
 There is currently no in-workspace template to copy: `code/packages/starter` was removed
-(it depended on `workspace:*` links to packages — `pdocs-ui-bundle`,
-`pdocs-antora-extensions`, `pdocs-asciidoc-extensions` — none of which are published to
+(it depended on `workspace:*` links to packages — `docouture-ui-bundle`,
+`docouture-antora-extensions`, `docouture-asciidoc-extensions` — none of which are published to
 npm, so it could never be reused outside this monorepo either). The only surviving
-`starter` is `code/packages/cli/templates/starter`, bundled into `@inditextech/pdocs-cli`
-and used exclusively by `pdocs new` to scaffold a **standalone** site outside this
+`starter` is `code/packages/cli/templates/starter`, bundled into `@inditextech/docouture-cli`
+and used exclusively by `docouture new` to scaffold a **standalone** site outside this
 monorepo — it deliberately does not depend on those unpublished packages (plain Antora
-default UI, no pdocs extensions) and is not meant to be copied into `code/packages/`.
+default UI, no docouture extensions) and is not meant to be copied into `code/packages/`.
 
 ## In this workspace
 
@@ -25,7 +25,7 @@ $ rm -rf mysite/build mysite/node_modules
 Then rename in four places. They are the values that have to agree; see the table in
 `SKILL.md`.
 
-1. `mysite/package.json` → `"name": "@inditextech/pdocs-mysite"`.
+1. `mysite/package.json` → `"name": "@inditextech/docouture-mysite"`.
 2. `mysite/docs/antora.yml` → `name: mysite`, `title: My Site`.
 3. `mysite/antora-playbook.yml` → `site.title`, `site.start_page: mysite::index.adoc`,
    and `content.sources[0].start_path: code/packages/mysite/docs`.
@@ -50,8 +50,8 @@ write.
 
 ## Conventions the name has to satisfy
 
-- **Directory name = the `pdocs-` suffix of the package name.** `just dev` and
-  `just build-site` interpolate a bare site name into `@inditextech/pdocs-<site>` and, for
+- **Directory name = the `docouture-` suffix of the package name.** `just dev` and
+  `just build-site` interpolate a bare site name into `@inditextech/docouture-<site>` and, for
   `dev`, into `packages/<site>` as well. A mismatch breaks the recipes, not the build.
 - **`"private": true`.** These sites are never published; the artifact is the UI bundle.
 - **Keep the version at whatever the workspace is on.** `just bump` rewrites every package

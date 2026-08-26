@@ -4,7 +4,7 @@
 // `bin` entries get their executable bit set automatically when npm packs a
 // published tarball, but that happens at publish time — a local build (what
 // pnpm's workspace link and `pnpm nx run cli:build` produce) needs it done
-// explicitly, or invoking `pdocs` fails with EACCES before node ever runs.
+// explicitly, or invoking `docouture` fails with EACCES before node ever runs.
 
 import { chmod } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'

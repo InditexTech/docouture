@@ -23,7 +23,7 @@ function parseMajor(value: string): number | null {
 }
 
 /**
- * Compares the Node version actually running `pdocs` (the same one `npm
+ * Compares the Node version actually running `docouture` (the same one `npm
  * run build`/`dev` will use) against the site's own `engines.node` — a
  * range like `>=24.0.0`. Only the major version is compared: this package
  * has no semver dependency (see antora-yml.ts's own comment on a similar
@@ -47,7 +47,7 @@ export function checkNodeVersion(engineRange: string | null | undefined, actualV
     ok: false,
     label,
     message: `${actualVersion} does not satisfy ${engineRange}`,
-    detail: `install Node ${wantMajor} or newer — this is what 'npm run build'/'pdocs dev' will actually run under`,
+    detail: `install Node ${wantMajor} or newer — this is what 'npm run build'/'docouture dev' will actually run under`,
   }
 }
 
@@ -109,7 +109,7 @@ export function checkNamesAgree(input: NamesInput): CheckResult[] {
     if (input.antoraYmlName === 'ROOT') {
       // `ROOT` is Antora's own reserved component name (dropped from every
       // published URL — see how-antora-builds-urls's "Component segment"),
-      // set by `pdocs new` when the "extra URL path segment" question/
+      // set by `docouture new` when the "extra URL path segment" question/
       // `--url-segment` flag is declined (the default) — see new.ts's own
       // comment on TemplateValues.componentName. It is never derived from
       // package.json's name, so the two are expected to differ here; only
@@ -132,7 +132,8 @@ export function checkNamesAgree(input: NamesInput): CheckResult[] {
               ok: false,
               label: 'package name',
               message: `package.json name '${input.packageName}' != docs/antora.yml name '${input.antoraYmlName}'`,
-              detail: 'pdocs new sets both from the same value — if one was renamed by hand, rename the other to match',
+              detail:
+                'docouture new sets both from the same value — if one was renamed by hand, rename the other to match',
             }
       )
     }
@@ -150,7 +151,7 @@ export function checkNamesAgree(input: NamesInput): CheckResult[] {
 export function checkGitHasCommit(dir: string): Promise<CheckResult> {
   const label = 'git history'
   return new Promise((resolvePromise) => {
-    execFile('git', ['rev-parse', 'HEAD'], { cwd: dir }, (err) => {
+    execFile('git', ['rev-parse', 'HEAD'], { cwd: dir, timeout: 10_000 }, (err) => {
       resolvePromise(
         err
           ? {
@@ -186,7 +187,7 @@ export function checkAntoraAvailable(siteRoot: string): CheckResult {
   }
 }
 
-// Repo-root-relative paths `pdocs new` scaffolds AGENTS.md/the skill
+// Repo-root-relative paths `docouture new` scaffolds AGENTS.md/the skill
 // directories under — see new.ts's own AGENT_SUPPORT_PATHS, which this
 // mirrors. Kept as a separate literal here rather than imported: doctor-
 // checks.ts is a plain library module with fixture-driven unit tests (see
@@ -203,7 +204,7 @@ const AGENT_SUPPORT_CHECK_PATHS = [
 ]
 
 /**
- * Whether AGENTS.md and the two platform-mirrored skill directories `pdocs
+ * Whether AGENTS.md and the two platform-mirrored skill directories `docouture
  * new` scaffolds are still present at the repository root — advisory only,
  * this is presence, not a content/drift diff (a site legitimately edits its
  * own skills after scaffolding), so `commands/doctor.ts` reports these
@@ -214,19 +215,19 @@ const AGENT_SUPPORT_CHECK_PATHS = [
  * `commands/doctor.ts`'s own mode-detection comment, which reads the
  * playbook — a concern this function deliberately stays out of).
  */
-/** The label `pdocs-release.yml`'s `pull_request.closed` trigger requires — see that workflow's own `if:` condition. */
+/** The label `docouture-release.yml`'s `pull_request.closed` trigger requires — see that workflow's own `if:` condition. */
 const RELEASE_LABEL = 'docs/release'
 
 /**
  * Whether the `docs/release` GitHub label exists on this repository —
  * best-effort, via the `gh` CLI, since there is no other way to ask GitHub
- * this from a local checkout. `pdocs new` never creates this label (GitHub
+ * this from a local checkout. `docouture new` never creates this label (GitHub
  * does not create labels referenced by a workflow's `if:` condition on its
  * own, and scaffolding is not a GitHub API call), so a repository fresh out
- * of `pdocs new` is missing it until someone runs `gh label create
+ * of `docouture new` is missing it until someone runs `gh label create
  * docs/release` — see main's own prerequisites.adoc, which covers this
  * alongside the repository-public/GitHub-Pages-enablement steps a fresh
- * site also needs. Without it, `pdocs-release.yml`'s automatic
+ * site also needs. Without it, `docouture-release.yml`'s automatic
  * merge-triggers-a-release path is a silent no-op; only its
  * `workflow_dispatch` path still works.
  *
@@ -239,7 +240,7 @@ const RELEASE_LABEL = 'docs/release'
 export function checkReleaseLabelExists(repoRoot: string): Promise<CheckResult> {
   const label = 'docs/release label'
   return new Promise((resolvePromise) => {
-    execFile('gh', ['label', 'list', '--json', 'name'], { cwd: repoRoot }, (err, stdout) => {
+    execFile('gh', ['label', 'list', '--json', 'name'], { cwd: repoRoot, timeout: 10_000 }, (err, stdout) => {
       if (err) {
         resolvePromise({
           ok: true,
@@ -265,7 +266,7 @@ export function checkReleaseLabelExists(repoRoot: string): Promise<CheckResult> 
         label,
         message: `'${RELEASE_LABEL}' does not exist`,
         detail:
-          "pdocs-release.yml's merge-triggers-a-release path is a no-op without it — run " +
+          "docouture-release.yml's merge-triggers-a-release path is a no-op without it — run " +
           `'gh label create ${RELEASE_LABEL}', or use workflow_dispatch instead`,
       })
     })
@@ -282,7 +283,7 @@ export function checkAgentFilesPresent(repoRoot: string): CheckResult[] {
           ok: false,
           label,
           message: 'missing',
-          detail: "run 'pdocs upgrade' in this repository to regenerate it, or restore it from version control",
+          detail: "run 'docouture upgrade' in this repository to regenerate it, or restore it from version control",
         }
   })
 }

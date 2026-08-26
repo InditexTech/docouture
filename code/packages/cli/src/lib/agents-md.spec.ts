@@ -7,7 +7,7 @@ import { MANAGED_END, MANAGED_START, hasManagedSection, mergeAgentsMd } from './
 const TEMPLATE_CONTENT = `${MANAGED_START}
 # Example documentation
 
-Some pdocs-generated content.
+Some docouture-generated content.
 ${MANAGED_END}
 
 ## Documentation state
@@ -41,7 +41,7 @@ describe('mergeAgentsMd', () => {
 
     expect(merged.startsWith(existing)).toBe(true)
     expect(merged).toContain(MANAGED_START)
-    expect(merged).toContain('Some pdocs-generated content.')
+    expect(merged).toContain('Some docouture-generated content.')
     expect(merged).toContain('## Documentation state')
   })
 
@@ -53,7 +53,7 @@ describe('mergeAgentsMd', () => {
     expect(merged).toContain('# Team notes')
     expect(merged).toContain('Say hi to the docs bot.')
     expect(merged).not.toContain('old stale content')
-    expect(merged).toContain('Some pdocs-generated content.')
+    expect(merged).toContain('Some docouture-generated content.')
     // The human-maintained Documentation state table survives untouched —
     // this is the whole reason AGENTS.md isn't a blind whole-file overwrite.
     expect(merged).toContain('| index.adoc | manual | done |')

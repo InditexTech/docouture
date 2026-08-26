@@ -77,11 +77,11 @@
  *
  *     antora:
  *       extensions:
- *         - require: '@inditextech/pdocs-antora-extensions'
+ *         - require: '@inditextech/docouture-antora-extensions'
  *           duplicate_latest_version: true
  */
 module.exports = function registerDuplicateLatestVersion(context, config) {
-  const logger = context.getLogger('pdocs-duplicate-latest-version')
+  const logger = context.getLogger('docouture-duplicate-latest-version')
   if (!config?.duplicateLatestVersion) return
 
   const ALIAS_SEGMENT = 'latest'

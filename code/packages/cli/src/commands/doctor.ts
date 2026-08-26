@@ -88,7 +88,7 @@ export async function runDoctor(argv: string[]): Promise<number> {
 
   if (!(await exists(siteRoot))) {
     console.error(`no site found at '${siteRoot}'`)
-    console.error('pass --dir <path> to a component root (the parent of docs/), or run pdocs new first')
+    console.error('pass --dir <path> to a component root (the parent of docs/), or run docouture new first')
     return 1
   }
 

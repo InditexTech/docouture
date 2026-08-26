@@ -59,7 +59,7 @@ const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 // diagrams. `kroki-diagram-types` lets a site narrow which of
 // `SUPPORTED_TYPES` it actually wants — most sites need only `mermaid`, and
 // each additional type may need its own companion container (see the
-// sibling @inditextech/pdocs-antora-extensions package's
+// sibling @inditextech/docouture-antora-extensions package's
 // resources/kroki-compose.yml, which kroki-prewarm.js starts automatically —
 // no manual setup required).
 //
@@ -74,7 +74,7 @@ const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 // which 4.0 makes Promise-returning but 2.2 keeps synchronous — a network
 // call has no synchronous form under EITHER major. So none happens here.
 // All of it happens up front, for the whole build, in
-// `@inditextech/pdocs-antora-extensions`' `kroki-prewarm.js` — an Antora
+// `@inditextech/docouture-antora-extensions`' `kroki-prewarm.js` — an Antora
 // PIPELINE extension (`antora.extensions`, not this package's
 // `asciidoc.extensions`) that scans the raw content aggregate for these
 // blocks and fetches every one from Kroki BEFORE Asciidoctor conversion
@@ -139,7 +139,7 @@ function renderDiagram(parent, type, source, requestedFormat) {
     return literalFallback(source)
   }
   const body = payload.format === 'png' ? '<img src="data:image/png;base64,' + payload.data + '" alt="">' : payload.data
-  return '<div class="pdocs-diagram" data-diagram-type="' + type + '">' + body + '</div>'
+  return '<div class="docouture-diagram" data-diagram-type="' + type + '">' + body + '</div>'
 }
 
 function krokiBlock(type) {

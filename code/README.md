@@ -1,4 +1,4 @@
-# pdocs workspace
+# docouture workspace
 
 This directory is the Nx workspace root. All toolchain configuration lives here,
 not at the repository root, so anything invoked directly — `pnpm`, `nx`, `asdf`
@@ -11,14 +11,14 @@ follows is how the workspace itself is put together.
 
 ## Packages
 
-| Package              | Purpose                                                                                                                                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `packages/ui-bundle` | The Antora UI bundle: layouts, styles, browser scripts and Handlebars helpers. Produces `build/ui-bundle-<version>.zip`, plus an unversioned `build/ui-bundle.zip` copy.                               |
-| `packages/example`   | Real-world site; destination of the Fumadocs migration. Currently a stub.                                                                                                                              |
-| `packages/cli`       | `@inditextech/pdocs-cli` — the `pdocs` CLI: scaffolds a standalone site (`pdocs new`, bundling its own `templates/starter`) and sets a site's Antora version (`pdocs version`) outside this workspace. |
+| Package              | Purpose                                                                                                                                                                                                                |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/ui-bundle` | The Antora UI bundle: layouts, styles, browser scripts and Handlebars helpers. Produces `build/ui-bundle-<version>.zip`, plus an unversioned `build/ui-bundle.zip` copy.                                               |
+| `packages/example`   | Real-world site; destination of the Fumadocs migration. Currently a stub.                                                                                                                                              |
+| `packages/cli`       | `@inditextech/docouture-cli` — the `docouture` CLI: scaffolds a standalone site (`docouture new`, bundling its own `templates/starter`) and sets a site's Antora version (`docouture version`) outside this workspace. |
 
 `example` consumes `ui-bundle` through a `workspace:*` dependency, so Nx rebuilds the
-bundle before it. `packages/cli/templates/starter` — what `pdocs new` scaffolds — does
+bundle before it. `packages/cli/templates/starter` — what `docouture new` scaffolds — does
 not: it depends on `ui-bundle`, `antora-extensions` and `asciidoc-extensions` as real npm
 packages (pinned to the exact CLI version that generated it), not workspace links, since
 none of them are published to the real npm registry yet (see `.github/workflows/

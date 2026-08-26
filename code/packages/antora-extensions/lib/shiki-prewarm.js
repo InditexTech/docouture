@@ -13,7 +13,7 @@
 // work has to happen ONCE, up front, outside the conversion loop entirely,
 // and its result handed to the synchronous side through a plain shared
 // module (`shiki-instance.js`, in the SIBLING
-// @inditextech/pdocs-asciidoc-extensions package — that's where the
+// @inditextech/docouture-asciidoc-extensions package — that's where the
 // synchronous consumer, `shiki-syntax-highlighter.js`'s `highlight()`,
 // lives too).
 //
@@ -26,8 +26,8 @@
 // itself, so it declares zero parameters.
 const { createOnigurumaEngine } = require('shiki/engine/oniguruma')
 const { createHighlighterCoreSync } = require('shiki/core')
-const shikiInstance = require('@inditextech/pdocs-asciidoc-extensions/lib/shiki-instance')
-const { LANGS, LIGHT_THEME, DARK_THEME } = require('@inditextech/pdocs-asciidoc-extensions/lib/shiki-config')
+const shikiInstance = require('@inditextech/docouture-asciidoc-extensions/lib/shiki-instance')
+const { LANGS, LIGHT_THEME, DARK_THEME } = require('@inditextech/docouture-asciidoc-extensions/lib/shiki-config')
 
 async function loadLangs() {
   return Promise.all(LANGS.map((id) => import('@shikijs/langs/' + id).then((mod) => mod.default)))
@@ -38,7 +38,7 @@ async function loadThemes() {
 }
 
 module.exports = function registerShikiPrewarm(context) {
-  context.on('contentAggregated', async function pdocsShikiPrewarm() {
+  context.on('contentAggregated', async function docoutureShikiPrewarm() {
     const [engine, langs, themes] = await Promise.all([
       // `shiki/wasm` ships the pre-built oniguruma binary — no network fetch,
       // no separate build step. Instantiating it is the one truly

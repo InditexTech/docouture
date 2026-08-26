@@ -12,7 +12,7 @@ const path = require('node:path')
 // reachability check below short-circuits straight past a start attempt),
 // and simply discarded whenever the machine or CI runner it ran on goes
 // away. This is deliberately the ONE place across every invocation path —
-// `pdocs dev`/`pdocs build`, this monorepo's own `just dev`/`just
+// `docouture dev`/`docouture build`, this monorepo's own `just dev`/`just
 // build-site`, a raw `antora` invocation, any consumer's own CI — that
 // starts Kroki, because it is the one piece of code every single one of
 // those paths runs through: the Antora pipeline extension itself.
@@ -20,11 +20,11 @@ const execFileAsync = promisify(execFile)
 
 const BUNDLED_COMPOSE_FILE = path.join(__dirname, '..', 'resources', 'kroki-compose.yml')
 
-// The file `pdocs eject kroki` copies the bundled compose definition to —
+// The file `docouture eject kroki` copies the bundled compose definition to —
 // see that command's own header. Looked up relative to the PLAYBOOK's own
 // directory (`playbook.dir`, set by @antora/playbook-builder to wherever
 // `antora-playbook.yml` actually is), i.e. the site root, the same
-// directory `pdocs eject kroki` writes it into.
+// directory `docouture eject kroki` writes it into.
 const OVERRIDE_FILENAME = 'kroki-compose.yml'
 
 const REACHABLE_TIMEOUT_MS = 1000

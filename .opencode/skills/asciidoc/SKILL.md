@@ -1,9 +1,9 @@
 ---
 name: asciidoc
-description: "How AsciiDoc is authored and extended in pdocs — the content tree Antora expects, resource IDs and xrefs, the attributes the playbooks set, and the Asciidoctor.js extension API as Antora actually loads it. USE WHEN writing or editing an .adoc page, adding a page to the nav, fixing a broken xref or include, writing a custom block/macro/preprocessor, or wiring an extension into a playbook. EXAMPLES: 'add a page', 'my xref doesn't resolve', 'the build fails on a warning', 'add a custom admonition', 'register a block macro', 'my extension is being skipped', 'why is {attr} not substituted'."
+description: "How AsciiDoc is authored and extended in docouture — the content tree Antora expects, resource IDs and xrefs, the attributes the playbooks set, and the Asciidoctor.js extension API as Antora actually loads it. USE WHEN writing or editing an .adoc page, adding a page to the nav, fixing a broken xref or include, writing a custom block/macro/preprocessor, or wiring an extension into a playbook. EXAMPLES: 'add a page', 'my xref doesn't resolve', 'the build fails on a warning', 'add a custom admonition', 'register a block macro', 'my extension is being skipped', 'why is {attr} not substituted'."
 ---
 
-# AsciiDoc in pdocs
+# AsciiDoc in docouture
 
 Every page of every site here is AsciiDoc, parsed by **Asciidoctor** and orchestrated by
 **Antora**. Both facts matter: Antora restricts and reinterprets parts of the language
@@ -176,6 +176,6 @@ Each of these produces a wrong result or a hard build failure without an obvious
 | `just build` | build every package |
 | `just dev example` | build, then serve on `:5000` and rebuild on edit |
 | `just preview-ui` | UI bundle preview on `:5252` — templates only, not real content |
-| `pnpm nx run @inditextech/pdocs-example:build` | the underlying target (`antora --fetch antora-playbook.yml`) |
+| `pnpm nx run @inditextech/docouture-example:build` | the underlying target (`antora --fetch antora-playbook.yml`) |
 
 Build output is `code/packages/<site>/build/site`.

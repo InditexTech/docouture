@@ -205,6 +205,6 @@ function snippetAround (content: string, term: string): string {
   return prefix + content.slice(start, end) + suffix
 }
 
-;(window as unknown as { __pdocsSearch: { load: typeof loadSearcher } }).__pdocsSearch = {
+;(window as unknown as { __docoutureSearch: { load: typeof loadSearcher } }).__docoutureSearch = {
   load: loadSearcher,
 }

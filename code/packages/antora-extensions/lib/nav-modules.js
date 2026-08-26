@@ -74,7 +74,7 @@ const MODULE_NAV_PATH_RX = /^modules\/([^/]+)\//
  * behaviour every single-nav-file site already had.
  */
 module.exports = function registerNavModules(context) {
-  const logger = context.getLogger('pdocs-nav-modules')
+  const logger = context.getLogger('docouture-nav-modules')
   // Keyed the same way @antora/navigation-builder keys its own accumulator.
   const descriptors = new Map()
 

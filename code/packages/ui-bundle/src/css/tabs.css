@@ -9,7 +9,7 @@
  * EXACTLY ONE PANEL VISIBLE, ALWAYS — NOT JUST ONCE ENHANCED
  *
  * Unlike feature-tabs.css (and this file's own first revision), there is no
- * "plain stacked document" state here: `.pdocs-tabs__panel` not carrying
+ * "plain stacked document" state here: `.docouture-tabs__panel` not carrying
  * `.is-selected` is `display: none` UNCONDITIONALLY, not nested under an
  * `.is-enhanced` gate. The extension already emits real `role=tab`/
  * `tabpanel`/`aria-selected` server-side (asciidoc-extensions/lib/tabs.js's
@@ -44,7 +44,7 @@
  * position the frame draws it: 1px, the full item width, sitting at y=32 of a
  * 40px item (`bottom: var(--ids-size-50)`, 8px up from its foot). The subtle
  * full-width line under the WHOLE strip is a separate rule, on
- * `.pdocs-tabs__list` itself: `Kind=Underlined`'s own baseline, present
+ * `.docouture-tabs__list` itself: `Kind=Underlined`'s own baseline, present
  * regardless of which item is selected.
  *
  * `.ids-tabs-item__label` (also vendored) gives the ellipsis a long label
@@ -58,7 +58,7 @@
 
 /* ------------------------------------------------------------ the block ---- */
 
-.pdocs-tabs {
+.docouture-tabs {
   display: flex;
   flex-direction: column;
 }
@@ -68,7 +68,7 @@
  * margin every other block gets there — same `.doc`-scoped rule as
  * card-grid.css, feature-tabs.css and steps.css.
  */
-.doc .pdocs-tabs {
+.doc .docouture-tabs {
   margin: var(--doc-space-block) 0 0;
 }
 
@@ -79,11 +79,11 @@
  * `.doc ul` rule uses (margin AND padding together) rather than overridden
  * property-by-property: at equal specificity `.doc ul`'s `padding: 0 0 0
  * var(--ids-size-100)` is what actually wins without this, because a bare
- * `.pdocs-tabs__list` alone is one class lower — (0,1,0) against (0,2,0) —
+ * `.docouture-tabs__list` alone is one class lower — (0,1,0) against (0,2,0) —
  * regardless of import order. This is a plain button strip, not a list a
  * reader reads as one, so `list-style` is reset here too.
  */
-.doc .pdocs-tabs__list {
+.doc .docouture-tabs__list {
   border-bottom: var(--ids-size-border-default) solid var(--ids-color-border-low);
   display: flex;
   gap: var(--ids-size-150); /* 24, the frames' own tab-to-tab gap */
@@ -93,7 +93,7 @@
   padding: 0;
 }
 
-.pdocs-tabs__item {
+.docouture-tabs__item {
   flex: none;
 }
 
@@ -115,7 +115,7 @@
  * selected and unselected tabs both rendered in the inherited body font
  * instead of `label/l`/`label/l-high`. Leave `font` alone.
  */
-.pdocs-tabs__tab {
+.docouture-tabs__tab {
   appearance: none;
   background: none;
   border: 0;
@@ -126,7 +126,7 @@
 }
 
 @media (hover: hover) {
-  .pdocs-tabs__tab:not(.ids-tabs-item--selected):hover {
+  .docouture-tabs__tab:not(.ids-tabs-item--selected):hover {
     color: var(--ids-color-content-states-hover);
   }
 }
@@ -138,7 +138,7 @@
  * Sits above the strip's own baseline (`z-index` unnecessary: it is drawn
  * on the item, which is a flex sibling of nothing at that position).
  */
-.pdocs-tabs__tab.ids-tabs-item--selected::after {
+.docouture-tabs__tab.ids-tabs-item--selected::after {
   background: currentColor;
   block-size: var(--ids-size-border-default); /* 1 */
   bottom: var(--ids-size-50); /* 8 — the frame's y=32 inside a 40px item */
@@ -149,7 +149,7 @@
 
 /* ----------------------------------------------------------- the panels ---- */
 
-.pdocs-tabs__panels {
+.docouture-tabs__panels {
   min-inline-size: 0;
 }
 
@@ -158,11 +158,11 @@
  * `.is-enhanced` gate: this is the resting state whether or not
  * `11-tabs.ts` has run.
  */
-.pdocs-tabs__panel {
+.docouture-tabs__panel {
   display: none;
 }
 
-.pdocs-tabs__panel.is-selected {
+.docouture-tabs__panel.is-selected {
   display: block;
   margin-block-start: var(--ids-size-100); /* 16, the frames' own strip-to-content gap */
   min-inline-size: 0;
@@ -174,6 +174,6 @@
  * otherwise add to the first one, same reasoning as steps.css's own
  * `.ids-timeline-item-content > *` rule.
  */
-.pdocs-tabs__panel.is-selected > :first-child {
+.docouture-tabs__panel.is-selected > :first-child {
   margin-top: 0;
 }

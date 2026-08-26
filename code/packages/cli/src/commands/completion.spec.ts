@@ -22,7 +22,7 @@ describe('runCompletion', () => {
     const code = runCompletion(['bash'])
     expect(code).toBe(0)
     const output = String(writeSpy.mock.calls[0]?.[0])
-    expect(output).toContain('complete -F _pdocs_completions pdocs')
+    expect(output).toContain('complete -F _docouture_completions docouture')
     for (const command of COMMANDS) expect(output).toContain(command)
   })
 
@@ -30,16 +30,16 @@ describe('runCompletion', () => {
     const code = runCompletion(['zsh'])
     expect(code).toBe(0)
     const output = String(writeSpy.mock.calls[0]?.[0])
-    expect(output).toContain('#compdef pdocs')
+    expect(output).toContain('#compdef docouture')
     for (const command of COMMANDS) expect(output).toContain(command)
   })
 
   it('fails with a usage message for an unsupported or missing shell', () => {
     expect(runCompletion([])).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs completion'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture completion'))
 
     errorSpy.mockClear()
     expect(runCompletion(['fish'])).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs completion'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture completion'))
   })
 })

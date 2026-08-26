@@ -1,5 +1,5 @@
 {
-  "name": "@inditextech/pdocs",
+  "name": "@inditextech/docouture",
   "version": "0.1.0",
   "private": true,
   "description": "Documentation platform built on Antora",
@@ -21,7 +21,7 @@
     "clean": "nx run-many -t clean",
     "format": "prettier --write . ../README.md",
     "format:check": "prettier --check . ../README.md",
-    "verify": "nx run-many -t lint --exclude=@inditextech/pdocs-example && nx run-many -t typecheck --exclude=@inditextech/pdocs-example && pnpm run format:check && nx run-many -t build --exclude=@inditextech/pdocs-example && nx run-many -t test --exclude=@inditextech/pdocs-example",
+    "verify": "nx run-many -t lint --exclude=@inditextech/docouture-example && nx run-many -t typecheck --exclude=@inditextech/docouture-example && pnpm run format:check && nx run-many -t build --exclude=@inditextech/docouture-example && nx run-many -t test --exclude=@inditextech/docouture-example",
     "version:release": "pnpm version \"$RELEASE_VERSION\" --no-git-tag-version --loglevel error && pnpm -r exec -- npm version \"$RELEASE_VERSION\" --allow-same-version --no-git-tag-version --loglevel error",
     "release:prepare": "prettier --write --log-level warn package.json 'packages/*/package.json'"
   },

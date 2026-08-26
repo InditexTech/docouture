@@ -13,12 +13,12 @@ const registerShikiPrewarm = require('./lib/shiki-prewarm')
 const registerVersionReport = require('./lib/version-report')
 
 /**
- * Registers pdocs' Antora pipeline extensions.
+ * Registers docouture' Antora pipeline extensions.
  *
  * These are ANTORA extensions, not Asciidoctor ones — a different contract
  * and a different playbook key. They hook the site generator's own lifecycle
  * (`antora.extensions` in the playbook), where the sibling
- * @inditextech/pdocs-asciidoc-extensions package hooks the AsciiDoc processor
+ * @inditextech/docouture-asciidoc-extensions package hooks the AsciiDoc processor
  * per page (`asciidoc.extensions`). Antora tells the two apart by inspecting
  * `register.toString()` and warns when one is listed under the other's key.
  *
@@ -55,7 +55,7 @@ const registerVersionReport = require('./lib/version-report')
  * not `navigationBuilt`) and touches none of the state the other four
  * share, so its position in this list is not load-bearing the way theirs is
  * — it is simply registered here too because this file is the one place
- * `@antora/site-generator` is told about every pdocs Antora extension.
+ * `@antora/site-generator` is told about every docouture Antora extension.
  *
  * kroki-prewarm (GH-44) listens on the same `contentAggregated` event as
  * shiki-prewarm, for the same reason (async work that must finish before

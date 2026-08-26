@@ -74,8 +74,8 @@ export default tseslint.config(
     },
   },
   {
-    // pdocs publish drivers: plain CommonJS Node modules, `require()`d by
-    // @inditextech/pdocs-cli's `publish` command out of a site's own
+    // docouture publish drivers: plain CommonJS Node modules, `require()`d by
+    // @inditextech/docouture-cli's `publish` command out of a site's own
     // node_modules — not bundled, not an Antora extension (that's why this
     // isn't grouped with antora-extensions above).
     files: ['packages/publish-gh-pages/**/*.js'],

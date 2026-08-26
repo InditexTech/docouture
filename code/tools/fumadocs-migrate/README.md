@@ -157,7 +157,7 @@ This tool's own warning summary only catches what it _notices_ going wrong
 (an unhandled node type, a failed eval). It does NOT catch bad AsciiDoc
 syntax, broken cross-references, or structurally invalid section nesting —
 several real bugs during Phase 3 were only caught by actually building the
-site (`pnpm nx run @inditextech/pdocs-example:build`) and reading Antora's
+site (`pnpm nx run @inditextech/docouture-example:build`) and reading Antora's
 own errors, not by anything this converter reported:
 
 - a heading-level mapping bug that produced "section title out of sequence"
@@ -183,4 +183,4 @@ opened. Before Phase 4, `nav.adoc` wasn't populated yet, so a full build
 needed a temporary throwaway flat nav (every `pages/**/*.adoc` per module as
 a bare `xref`) to exercise the whole corpus at all; now that `build-nav.mjs`
 produces the real navigation, a plain `pnpm nx run
-@inditextech/pdocs-example:build` exercises everything with no extra setup.
+@inditextech/docouture-example:build` exercises everything with no extra setup.

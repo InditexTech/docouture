@@ -139,7 +139,7 @@ asciidoc:
     experimental: ''
   extensions:
     - ./lib/callout-block.js        # path relative to the playbook directory
-    - '@inditextech/pdocs-asciidoc-extensions'   # or a package name
+    - '@inditextech/docouture-asciidoc-extensions'   # or a package name
 ```
 
 If a package is used, it must be a dependency of the site package so pnpm links it into
@@ -147,7 +147,7 @@ If a package is used, it must be a dependency of the site package so pnpm links 
 
 There is **no extensions package in this repository yet**. When one is added it belongs at
 `code/packages/<name>` as a workspace package, listed in both site packages' dependencies
-and in both playbooks — same shape as `@inditextech/pdocs-ui-bundle`.
+and in both playbooks — same shape as `@inditextech/docouture-ui-bundle`.
 
 The `--extension` and `-r` CLI flags described upstream are Asciidoctor CLI options.
 Antora does not read them; the playbook is the only wiring point for site builds.

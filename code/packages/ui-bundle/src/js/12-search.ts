@@ -114,7 +114,7 @@
   }
 
   var engineScriptPromise: Promise<void> | null = null
-  var searcherPromise: ReturnType<NonNullable<Window['__pdocsSearch']>['load']> | null = null
+  var searcherPromise: ReturnType<NonNullable<Window['__docoutureSearch']>['load']> | null = null
   var currentAbort: AbortController | null = null
   var rows: HTMLElement[] = []
   var activeRow = -1
@@ -277,7 +277,7 @@
   function loadIndex () {
     if (searcherPromise) return searcherPromise
     searcherPromise = ensureEngine().then(function () {
-      return window.__pdocsSearch!.load(indexUrl)
+      return window.__docoutureSearch!.load(indexUrl)
     })
     searcherPromise.catch(function () {
       searcherPromise = null
@@ -389,7 +389,7 @@
   /** Idle state: recent searches (13-search-recents.ts) when there are any, a blank panel otherwise. */
   function renderIdle () {
     announce('')
-    var recents = window.__pdocsSearchRecents
+    var recents = window.__docoutureSearchRecents
     var recentRows = recents ? recents.render(resultsEl!, replay, renderIdle) : []
     if (!recents) resultsEl!.replaceChildren()
     prepareRows(recentRows)
@@ -559,7 +559,7 @@
         // avoids the dialog being visibly still open for the instant before
         // the browser unloads.
         link.addEventListener('click', function () {
-          if (window.__pdocsSearchRecents) window.__pdocsSearchRecents.record(term)
+          if (window.__docoutureSearchRecents) window.__docoutureSearchRecents.record(term)
           dialog!.close()
         })
         item.appendChild(link)

@@ -13,7 +13,7 @@ export interface RunNpmScriptOptions {
 
 /**
  * Runs `npm run <script>` in `cwd` with inherited stdio, resolving the exit
- * code. Used by `pdocs build` — a genuine thin wrapper, unlike `pdocs dev`,
+ * code. Used by `docouture build` — a genuine thin wrapper, unlike `docouture dev`,
  * which owns its server logic directly (see lib/dev-server.ts) rather than
  * shelling out to a copy of it.
  */
@@ -32,7 +32,7 @@ export function runNpmScript(script: string, options: RunNpmScriptOptions): Prom
       env: options.env ? { ...process.env, ...options.env } : process.env,
     })
 
-    // Forward SIGINT/SIGTERM to the child so `pdocs build` sent a signal
+    // Forward SIGINT/SIGTERM to the child so `docouture build` sent a signal
     // directly (not just a terminal Ctrl-C, which already reaches the whole
     // foreground process group on its own) still gives npm/antora a chance
     // to shut down cleanly instead of being silently orphaned.

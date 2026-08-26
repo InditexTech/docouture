@@ -1,7 +1,7 @@
 {
-  "name": "@inditextech/pdocs-ui-bundle",
+  "name": "@inditextech/docouture-ui-bundle",
   "version": "0.1.0",
-  "description": "Antora UI bundle for the pdocs documentation platform",
+  "description": "Antora UI bundle for the docouture documentation platform",
   "repository": {
     "type": "git",
     "url": "https://github.com/InditexTech/test-antoradocs.git",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@asciidoctor/core": "~4.0.8",
-    "@inditextech/pdocs-asciidoc-extensions": "workspace:*",
+    "@inditextech/docouture-asciidoc-extensions": "workspace:*",
     "@vscode/gulp-vinyl-zip": "~2.6.0",
     "autoprefixer": "~10.5.4",
     "cssnano": "~8.0.5",

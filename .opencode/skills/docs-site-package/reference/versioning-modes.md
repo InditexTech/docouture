@@ -1,9 +1,9 @@
 # Docs versioning: Versioned (Full History) vs Standalone (Stable + Prerelease)
 
-Part of the docs release epic (GH #78). Both modes are wired up in `pdocs new`
+Part of the docs release epic (GH #78). Both modes are wired up in `docouture new`
 (GH #80, GH #81, GH #111): **standalone** (the CLI's default) is the fixed, two-entry
 (stable/prerelease) selector; **versioned** is the full-history, one-entry-per-release-tag
-selector. `pdocs new`'s wizard/`--mode` flag ("standalone" / "versioned") names both the
+selector. `docouture new`'s wizard/`--mode` flag ("standalone" / "versioned") names both the
 CLI choice and the mode itself — there is no separate "Mode 1"/"Mode 2" numbering to map
 onto anymore.
 
@@ -77,7 +77,7 @@ delete or rename a tag and it drops out of the aggregate on the next build.
 Cutting a release under this mode is: tag the commit, bump `docs/antora.yml`'s `version`
 and flip `prerelease` to `false` on that tag (or have the release process do it as part of
 tagging), rebuild. `main` never needs touching for a release to appear. A site scaffolded
-by `pdocs new` gets a single **pdocs-release.yml** workflow (`.github/workflows/`) that
+by `docouture new` gets a single **docouture-release.yml** workflow (`.github/workflows/`) that
 handles this — see "Cutting a release" below for how it tells the two modes apart and
 runs the right steps for each.
 
@@ -115,9 +115,9 @@ signal that history is deliberately not being kept.
 
 Cutting a release under this mode is: force-move the `stable` tag to whatever commit on
 `main` is being released, so its own `docs/antora.yml` copy at that point says
-`version: stable`, `prerelease: false`. The same single **pdocs-release.yml** workflow
-(`.github/workflows/`, templated by `pdocs new`) that handles versioned mode handles this
-too: it patches `docs/antora.yml` via the `pdocs version` CLI command on a one-off commit
+`version: stable`, `prerelease: false`. The same single **docouture-release.yml** workflow
+(`.github/workflows/`, templated by `docouture new`) that handles versioned mode handles this
+too: it patches `docs/antora.yml` via the `docouture version` CLI command on a one-off commit
 built on top of `main`'s current tip, then force-moves the `stable` tag to that commit —
 `main` itself is never advanced or touched by the release step; its own `docs/antora.yml`
 permanently says `version: prerelease`, `prerelease: true`. This is the operational
@@ -125,15 +125,15 @@ difference from versioned mode: there "release" means create a new immutable ref
 and a new version *entry*; here it means move an existing tag and keep the same two
 version entries.
 
-Moving `stable` does trigger a rebuild: pdocs-release.yml's last job calls the sibling
-**pdocs-publish.yml** workflow (`.github/workflows/pdocs-publish.yml`, also templated by
-`pdocs new`) directly — as a reusable job (`needs: release` + `uses:`), not via a push
+Moving `stable` does trigger a rebuild: docouture-release.yml's last job calls the sibling
+**docouture-publish.yml** workflow (`.github/workflows/docouture-publish.yml`, also templated by
+`docouture new`) directly — as a reusable job (`needs: release` + `uses:`), not via a push
 trigger — once release has actually cut something. Publish then builds the site fresh —
 Antora re-aggregates every ref `content.sources[]` matches, not just the one that changed —
 and hands off to the CLI to publish it. See "Follow-up work" below for what that hand-off
 does not yet do.
 
-## Cutting a release: pdocs-release.yml
+## Cutting a release: docouture-release.yml
 
 One workflow handles both modes — it detects which one a site is on rather than being
 told, and branches its steps accordingly.
@@ -194,17 +194,17 @@ already-planned value instead of protecting it.
 
 **The rest of the job is genuinely shared, not two paths bolted together**: `Cut release`
 computes `value`/`tag` from the detected mode (`v<version>` for versioned,
-literal `stable` for standalone) and runs the same `pdocs version` + commit-then-reset
+literal `stable` for standalone) and runs the same `docouture version` + commit-then-reset
 dance either way; `Create GitHub Release` is the one step that only runs for versioned
 mode (`if: steps.detect.outputs.mode == 'versioned'`), since standalone mode keeps no
 version history worth a Release object.
 
-## Previewing a release before merge: pdocs-release-preview.yml
+## Previewing a release before merge: docouture-release-preview.yml
 
-A sibling workflow, also templated by `pdocs new` (`.github/workflows/pdocs-release-preview.yml`),
+A sibling workflow, also templated by `docouture new` (`.github/workflows/docouture-release-preview.yml`),
 comments on a pull request the moment it carries the `docs/release` label (`labeled`,
 `synchronize`, `ready_for_review`, `opened`) — read-only, never touches git, tags or
-`docs/antora.yml`. It reuses `pdocs-release.yml`'s own "Detect mode" and "Resolve version"
+`docs/antora.yml`. It reuses `docouture-release.yml`'s own "Detect mode" and "Resolve version"
 logic to state, before merge:
 
 - which target this PR will release (`stable`, or the `vX.Y.Z` read from
@@ -235,13 +235,13 @@ from real content to a permanent client-side-redirect bounce the moment a releas
 only `/weavejs/latest/…` (and `/weavejs/prerelease/…`) stayed real. That is a bug, not a
 trade-off, and is exactly what happened in practice (see the GH #137 write-up).
 
-Instead, both starter templates opt a custom `@inditextech/pdocs-antora-extensions`
+Instead, both starter templates opt a custom `@inditextech/docouture-antora-extensions`
 sub-extension into duplicating a component's latest version:
 
 ```yaml
 antora:
   extensions:
-    - require: '@inditextech/pdocs-antora-extensions'
+    - require: '@inditextech/docouture-antora-extensions'
       duplicate_latest_version: true
 ```
 
@@ -316,17 +316,17 @@ controlled entirely from `docs/antora.yml`:
 Both are legitimate; the epic (GH #78) treats them as two supported flows, not a
 recommendation of one over the other. GH #80 wired standalone mode's config shape into
 `example` (never itself cut/released — a testbed only) and shipped the single
-`pdocs-release.yml` / `pdocs-publish.yml` workflow templates a real site scaffolded by
-`pdocs new` would actually run. GH #81 extended that same `pdocs-release.yml` to also
+`docouture-release.yml` / `docouture-publish.yml` workflow templates a real site scaffolded by
+`docouture new` would actually run. GH #81 extended that same `docouture-release.yml` to also
 handle versioned mode (detected, not a separate file — see "Cutting a release" above).
-GH #111 finished wiring versioned mode's config shape into `pdocs new` itself
+GH #111 finished wiring versioned mode's config shape into `docouture new` itself
 (`antora-playbook.versioned.yml`, `docs/release-version.versioned`, behind
 `--mode versioned`) — both modes are now real, CLI-scaffolded choices, not just
 release-workflow logic waiting for a template. A later pass on the same issue removed the
 `docs/antora.yml` override versioned mode originally had (it used to say
 `version: next` on `main`; that shape was dropped in favour of the identical
 `version: prerelease` descriptor both modes now share), renamed the internal `.mode1`
-template marker to `.versioned`, consolidated the PR-verification playbook and `pdocs
+template marker to `.versioned`, consolidated the PR-verification playbook and `docouture
 dev`'s target under one name (`antora-playbook.local.yml`, replacing
 `antora-playbook.pr-verify.yml`), and removed the `docs/force-release` label/`force` input
 in favour of always force-recreating a release tag that already exists.
@@ -335,28 +335,28 @@ in favour of always force-recreating a release tag that already exists.
 
 Either mode's `content.sources[]` names refs — `main`, `stable`, `v*` — that a pull
 request's own checkout does not have: a PR is built on a detached HEAD or a feature
-branch, neither of which is `main` or a release ref. The same is true of a local `pdocs
+branch, neither of which is `main` or a release ref. The same is true of a local `docouture
 dev` session on a feature branch. Building the real `antora-playbook.yml` there either
 fails outright (the named refs aren't reachable from a shallow, single-ref checkout) or,
 worse, silently succeeds while validating fewer versions than the site actually has —
 neither is what "does this content build" should mean.
 
-A site scaffolded by `pdocs new` gets a second playbook for exactly this,
+A site scaffolded by `docouture new` gets a second playbook for exactly this,
 **`antora-playbook.local.yml`** — one content source, `branches: HEAD`, nothing
 version-specific, so it never has to change shape when a site adopts a mode or cuts a
 release. It serves two purposes under one name:
 
-- `pdocs-pr-verify.yml` (`.github/workflows/`) builds with it on every `pull_request`,
+- `docouture-pr-verify.yml` (`.github/workflows/`) builds with it on every `pull_request`,
   instead of the real playbook — a plain, single-ref checkout is enough, `fetch-depth: 0`
   is never needed here because no other ref is ever read.
-- `pdocs dev` (`src/commands/dev.ts`, `src/lib/dev-server.ts`) targets it too, for the same
+- `docouture dev` (`src/commands/dev.ts`, `src/lib/dev-server.ts`) targets it too, for the same
   reason: a local checkout on any branch just needs to preview HEAD, not aggregate `main` +
   release refs it may not have.
 
-Publishing (`pdocs-publish.yml`) is unaffected — it still builds the real
+Publishing (`docouture-publish.yml`) is unaffected — it still builds the real
 `antora-playbook.yml`.
 
-`example` is not scaffolded by `pdocs new`, so it carries the same idea under the same
+`example` is not scaffolded by `docouture new`, so it carries the same idea under the same
 name: `antora-playbook.local.yml` (`branches: HEAD`, same rationale) — this was the
 precedent the rename above followed. It's wired into that package's `build` script
 (`package.json`), which is what `pnpm build` — and therefore this monorepo's own root
@@ -364,59 +364,59 @@ precedent the rename above followed. It's wired into that package's `build` scri
 instead, by `docs.yml` and the `build:publish` script, neither of which goes through the
 generic `build` target.
 
-## CLI orchestration: why there is no `pdocs release` command
+## CLI orchestration: why there is no `docouture release` command
 
-GH #82 evaluated whether cutting a release should be a dedicated `@inditextech/pdocs-cli`
-command (`pdocs release`, wrapping git tag/branch/push and `gh release` itself) instead of
+GH #82 evaluated whether cutting a release should be a dedicated `@inditextech/docouture-cli`
+command (`docouture release`, wrapping git tag/branch/push and `gh release` itself) instead of
 the workflow-level orchestration described above. **Decision: keep it in the workflow.**
-`pdocs-release.yml`'s own steps depend on CI-only concerns a portable local CLI command
+`docouture-release.yml`'s own steps depend on CI-only concerns a portable local CLI command
 would either have to assume or re-implement badly: a `GITHUB_TOKEN` with `contents: write` +
 `pull-requests: write`, reading which label a merged PR carried, `gh release
-create`/`delete`. None of that has a sane local equivalent — a person running `pdocs
+create`/`delete`. None of that has a sane local equivalent — a person running `docouture
 release` on their laptop still couldn't create a GitHub Release without also handing the
 CLI a token and reimplementing the label-driven trigger logic.
 
-The CLI's release-adjacent surface stays deliberately narrow: `pdocs version` (already
+The CLI's release-adjacent surface stays deliberately narrow: `docouture version` (already
 shipped) is the one piece of actual logic the workflow reuses — patching
 `docs/antora.yml`'s `version:`/`prerelease:` fields — because that part genuinely is
 portable, needed both from CI and by a person testing a mode change locally, and is now
 covered by unit tests (`src/lib/antora-yml.spec.ts`, `src/commands/version.spec.ts`) added
 as part of #82. Everything else — detecting the mode, resolving the target version,
 tagging, force-pushing, creating the Release, bumping `docs/.release-version` — stays exactly
-where it already lived after #80/#81: in `pdocs-release.yml` itself.
+where it already lived after #80/#81: in `docouture-release.yml` itself.
 
 ## Follow-up work
 
 Deliberately not built as part of GH #80 — tracked here so a later issue picks up
 from a documented starting point rather than rediscovering the gaps:
 
-- **~~Mode selection is manual.~~ Done (GH #93).** `pdocs new` prompts interactively
+- **~~Mode selection is manual.~~ Done (GH #93).** `docouture new` prompts interactively
   (in a terminal, unless `--yes` is given) for name, title and versioning mode, and
   scripting still works non-interactively via `--mode standalone|versioned`. It
   scaffolds into `docs/` (and `.github/workflows/`) of an **existing** repository —
   it no longer creates a fresh nested one or runs `git init`/commits anything itself;
   it requires `docs/` (and each workflow filename) to not already exist.
-- **~~Versioned mode's config shape isn't wired into `pdocs new`.~~ Done (GH #111).**
+- **~~Versioned mode's config shape isn't wired into `docouture new`.~~ Done (GH #111).**
   `--mode versioned` scaffolds `antora-playbook.versioned.yml` and a seeded
   `docs/.release-version`, laid down over the standalone default the same way standalone
-  itself already was — `pdocs-release.yml`'s versioned-mode logic finally has a template
+  itself already was — `docouture-release.yml`'s versioned-mode logic finally has a template
   that produces sites shaped for it. `docs/antora.yml` itself is never overridden — it is
   identical for both modes.
-- **`pdocs doctor` does not exist.** Should check that a site's `.github/workflows/`
-  contains `pdocs-publish.yml`, `pdocs-pr-verify.yml` and `pdocs-release.yml`, and that
-  none has drifted from what the currently-installed `@inditextech/pdocs-cli` would
+- **`docouture doctor` does not exist.** Should check that a site's `.github/workflows/`
+  contains `docouture-publish.yml`, `docouture-pr-verify.yml` and `docouture-release.yml`, and that
+  none has drifted from what the currently-installed `@inditextech/docouture-cli` would
   generate — the same regenerate-in-memory-and-diff idiom this monorepo's own
   `just ids-check` already uses, rather than a version-marker comment (which drifts from
   reality the moment a template changes without a version bump, or someone hand-edits the
   file).
-- **`pdocs publish` does not exist.** `pdocs-publish.yml` already calls `npx pdocs publish`
+- **`docouture publish` does not exist.** `docouture-publish.yml` already calls `npx docouture publish`
   after building, but the command itself, and the pluggable "publish-target
   antora-extension" mechanism it's meant to dispatch to (GitHub Pages, S3, Azure Static Web
-  Apps, Netlify, ...), are both undesigned. Until it exists, `pdocs-publish.yml` is
+  Apps, Netlify, ...), are both undesigned. Until it exists, `docouture-publish.yml` is
   build-only in effect.
-- **No refresh path for an existing site.** `pdocs new` only scaffolds empty directories.
+- **No refresh path for an existing site.** `docouture new` only scaffolds empty directories.
   Once `doctor` can detect workflow drift, something needs to be able to fix it in a repo
-  that already exists — a `pdocs sync` / `pdocs workflows update` command, not yet designed.
+  that already exists — a `docouture sync` / `docouture workflows update` command, not yet designed.
 
 ## Upstream reference
 

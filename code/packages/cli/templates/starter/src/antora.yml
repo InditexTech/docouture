@@ -3,15 +3,15 @@
 #
 # `name` is either this site's own name (a real URL path segment on
 # publish) or Antora's reserved `ROOT` (contributes no segment at all) —
-# decided by the `pdocs new` wizard's "extra URL path segment" question (or
+# decided by the `docouture new` wizard's "extra URL path segment" question (or
 # `--url-segment`), default off/ROOT. See antora-playbook.yml's own
 # site.url comment for the full GitHub Pages URL shape either way.
-name: __PDOCS_COMPONENT_NAME__
-title: __PDOCS_TITLE__
-# This descriptor is identical for BOTH versioning modes — see the pdocs
+name: __DOCOUTURE_COMPONENT_NAME__
+title: __DOCOUTURE_TITLE__
+# This descriptor is identical for BOTH versioning modes — see the docouture
 # docs-site-package skill's reference/versioning-modes.md. `main` permanently
 # says `version: prerelease`, `prerelease: true`, regardless of whether this
-# site was scaffolded standalone or versioned (`pdocs new --mode versioned`).
+# site was scaffolded standalone or versioned (`docouture new --mode versioned`).
 # What differs between the two modes is only antora-playbook.yml's
 # content.sources[] tags (`stable` vs `v*`) and what a release tag's own copy
 # of this file ends up saying: standalone's `stable` tag says
@@ -35,7 +35,7 @@ start_page: ROOT:index.adoc
 nav:
   - modules/main/nav.adoc
 
-# Per-module navigation metadata, read by @inditextech/pdocs-antora-extensions
+# Per-module navigation metadata, read by @inditextech/docouture-antora-extensions
 # (registered under `antora.extensions` in the playbook) and attached to the
 # navigation trees Antora builds from the `nav` list above. It is what lets
 # the UI show one module's navigation at a time, with a switcher between
@@ -45,7 +45,7 @@ nav:
 # itself appear.
 #
 # A LIST, not a map keyed by module — deliberately, and it must stay one. See
-# @inditextech/pdocs-antora-extensions's own docs for why: a map's keys get
+# @inditextech/docouture-antora-extensions's own docs for why: a map's keys get
 # silently camelCased by Antora's content aggregator, which breaks any module
 # slug containing a hyphen.
 #
@@ -58,12 +58,12 @@ nav_modules:
     icon: design/grid-outlined
 
 # Which module's navigation the generated 404 page's side menu shows, read
-# by @inditextech/pdocs-antora-extensions. With a single module there is
+# by @inditextech/docouture-antora-extensions. With a single module there is
 # only one sensible value; update this alongside nav_modules above if a
 # second module is added and the 404 page should point somewhere else.
 not_found_module: main
 
-# Site footer link groups (read by @inditextech/pdocs-antora-extensions and
+# Site footer link groups (read by @inditextech/docouture-antora-extensions and
 # attached to this component version as `footer`). Authored here rather than
 # in the playbook because `site.keys` is a flat primitive map and cannot
 # carry a list.

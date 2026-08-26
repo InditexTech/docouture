@@ -49,7 +49,7 @@ const HOME_LAYOUT_NAME = 'home'
  * grouping.
  */
 module.exports = function registerSearchIndex(context) {
-  const logger = context.getLogger('pdocs-search-index')
+  const logger = context.getLogger('docouture-search-index')
 
   context.on('navigationBuilt', ({ contentCatalog, siteCatalog, playbook }) => {
     const outputDir = playbook.ui?.outputDir ?? '_'

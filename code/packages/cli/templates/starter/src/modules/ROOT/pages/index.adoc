@@ -1,7 +1,7 @@
-= __PDOCS_TITLE__
+= __DOCOUTURE_TITLE__
 :page-layout: home
 :page-nav-module: main
-:description: Replace this with a one-line description of __PDOCS_TITLE__ — it feeds page metadata as well as the hero.
+:description: Replace this with a one-line description of __DOCOUTURE_TITLE__ — it feeds page metadata as well as the hero.
 :page-tags: replace, these, tags
 :page-action: Get started
 :page-action-url: main:getting-started.adoc
@@ -10,7 +10,7 @@
 :page-hero-image: hero-placeholder.png
 :page-hero-image-alt: Placeholder standing in for a product screenshot or diagram.
 
-Replace this preamble with a short lead-in for __PDOCS_TITLE__ — one or two
+Replace this preamble with a short lead-in for __DOCOUTURE_TITLE__ — one or two
 sentences, no heading of its own. It sits above the `Get started` row below
 and is the first thing a reader sees beside the hero.
 
@@ -53,7 +53,7 @@ Where to describe the system's major components and how they fit together.
 
 == Key features
 
-Replace this `[feature-tabs]` block with __PDOCS_TITLE__'s own — each slide
+Replace this `[feature-tabs]` block with __DOCOUTURE_TITLE__'s own — each slide
 is a media still, a short paragraph, and an optional call to action.
 
 [feature-tabs]
@@ -63,7 +63,7 @@ is a media still, a short paragraph, and an optional call to action.
 image::feature-placeholder.png[Placeholder feature image]
 image::feature-placeholder-dark.png[role=dark]
 
-Describe the first thing worth knowing about __PDOCS_TITLE__ here.
+Describe the first thing worth knowing about __DOCOUTURE_TITLE__ here.
 
 [.cta]
 xref:main:index.adoc[Learn more]
@@ -96,7 +96,7 @@ primary action, styled apart from the ordinary body copy above it.
 
 [cta]
 ====
-Replace this with a short pitch for __PDOCS_TITLE__ — why it is worth a
+Replace this with a short pitch for __DOCOUTURE_TITLE__ — why it is worth a
 reader's attention.
 
 [.primary]
@@ -105,7 +105,7 @@ https://github.com[Replace with a real link]
 
 == Frequently asked questions
 
-Replace this `[accordion]` block with __PDOCS_TITLE__'s own real questions —
+Replace this `[accordion]` block with __DOCOUTURE_TITLE__'s own real questions —
 this is a placeholder shape, not sample copy to keep.
 
 [accordion,aria-label="Frequently asked questions"]

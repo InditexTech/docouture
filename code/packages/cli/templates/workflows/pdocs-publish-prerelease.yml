@@ -96,5 +96,14 @@ jobs:
     name: Publish
     needs: [check-changes-in-paths, check-release-label]
     if: needs.check-changes-in-paths.outputs.detected == 'true' && needs.check-release-label.outputs.skip != 'true'
+    # pdocs-publish.yml's own `publish` job requests `contents: write` (only
+    # ever used by @inditextech/pdocs-publish-gh-pages, pushing to the
+    # `gh-pages` branch) — a reusable workflow can never be granted more than
+    # its caller job holds, so without this the call is rejected outright as
+    # a permissions escalation rather than merely losing write access at
+    # runtime. The two gate jobs above stay read-only; only this job, which
+    # actually calls through, needs the elevated grant.
+    permissions:
+      contents: write
     uses: ./.github/workflows/pdocs-publish.yml
     secrets: inherit

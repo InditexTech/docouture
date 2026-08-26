@@ -3,6 +3,7 @@ pnpm-lock.yaml
 packages/*/build
 packages/*/public
 packages/*/.tsbuild
+packages/example
 .nx
 
 # Handlebars templates — prettier cannot parse `{{> partial}}` syntax.

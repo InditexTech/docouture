@@ -9,6 +9,7 @@ import { parseArgs } from '../lib/args.js'
 import { readCliInfo } from '../lib/cli-info.js'
 import { copyTemplate, exists } from '../lib/copy-template.js'
 import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-manager.js'
+import { resolveConfig } from '../lib/config-resolver.js'
 
 // Same check `new.ts` uses, duplicated rather than imported — it's three
 // lines, and `doctor-checks.ts` already sets the precedent of duplicating a
@@ -89,13 +90,20 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // subtree) falls back to a plain, title-cased directory name.
   const descriptorPath = join(target, 'docs', 'src', 'antora.yml')
   let name = 'docs'
-  let title = titleCase(name)
+  let fromYmlTitle: string | undefined
   if (await exists(descriptorPath)) {
     const content = await readFile(descriptorPath, 'utf8')
     name = readAntoraField(content, 'name') ?? name
-    title = readAntoraField(content, 'title') ?? titleCase(name)
+    fromYmlTitle = readAntoraField(content, 'title') ?? undefined
   }
-  if (typeof flags.title === 'string') title = flags.title
+  // Same three-tier precedence publish.ts uses (see lib/config-resolver.ts):
+  // --title flag > the value already recorded in docs/antora.yml > a plain
+  // title-cased fallback computed from the name above.
+  const { title } = resolveConfig(
+    { title: titleCase(name) },
+    { title: fromYmlTitle },
+    { title: typeof flags.title === 'string' ? flags.title : undefined }
+  )
 
   const values = {
     name,

@@ -3,11 +3,14 @@
 import { createRequire } from 'node:module'
 import { readFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
+import ora from 'ora'
 
 import { parseArgs } from '../lib/args.js'
 import { exists } from '../lib/copy-template.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { readOutputDir } from '../lib/playbook-yml.js'
+import { resolveConfig } from '../lib/config-resolver.js'
+import { debugLog } from '../lib/debug-log.js'
 
 // `pdocs publish <target>` is deliberately decoupled from `pdocs build`:
 // it publishes whatever is already sitting at `output.dir` (Antora's own
@@ -126,13 +129,22 @@ export async function runPublish(argv: string[], deps: { loadDriver?: typeof loa
   const packageJson = await readJson<PublishConfig>(packageJsonFile)
   const configuredOptions = packageJson?.pdocs?.publish?.[target] ?? {}
   // CLI flags win over docs/package.json's own "pdocs".publish.<target>
-  // config, which wins over whatever defaults the driver applies itself.
-  const options = { ...configuredOptions, ...flagsToOptions(flags) }
+  // config, which wins over whatever defaults the driver applies itself —
+  // see lib/config-resolver.ts for this precedence rule shared with upgrade.
+  const options = resolveConfig<Record<string, unknown>>({}, configuredOptions, flagsToOptions(flags))
+  debugLog(`publishing '${target}' from ${siteDir} with options: ${JSON.stringify(options)}`)
 
+  const spinner = ora({ text: `Publishing to ${target}…`, stream: process.stderr }).start()
   try {
     const published = await driver(siteDir, options)
-    return published === false ? 1 : 0
+    if (published === false) {
+      spinner.fail(`'${target}' driver reported it did not publish`)
+      return 1
+    }
+    spinner.succeed(`Published to ${target}`)
+    return 0
   } catch (err) {
+    spinner.fail(`publishing to '${target}' failed`)
     console.error(err instanceof Error ? err.stack : String(err))
     return 1
   }

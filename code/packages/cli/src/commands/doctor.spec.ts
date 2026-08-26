@@ -8,20 +8,26 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { runDoctor } from './doctor.js'
+import { resetContext } from '../lib/cli-context.js'
 
 let repo: string
 let logSpy: ReturnType<typeof vi.spyOn>
 let errorSpy: ReturnType<typeof vi.spyOn>
+let stdoutSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
   repo = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-cmd-'))
   logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+  stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+  resetContext()
 })
 
 afterEach(() => {
   logSpy.mockRestore()
   errorSpy.mockRestore()
+  stdoutSpy.mockRestore()
+  resetContext()
 })
 
 function loggedLines(): string {
@@ -150,5 +156,20 @@ describe('runDoctor', () => {
     expect(codePresent).toBe(0)
     const outPresent = loggedLines()
     expect(outPresent).not.toContain('warn')
+  })
+
+  it('prints a machine-readable report to stdout and nothing via console.log under --json', async () => {
+    const { setContext } = await import('../lib/cli-context.js')
+    setContext({ json: true })
+    await scaffoldGoodSite(repo)
+
+    const code = await runDoctor(['--dir', repo])
+    expect(code).toBe(0)
+    expect(logSpy).not.toHaveBeenCalled()
+
+    const written = stdoutSpy.mock.calls.map((call) => String(call[0])).join('')
+    const parsed = JSON.parse(written) as { status: string; checks: { label: string; ok: boolean }[] }
+    expect(parsed.status).toBe('ok')
+    expect(parsed.checks.some((c) => c.label === 'component name')).toBe(true)
   })
 })

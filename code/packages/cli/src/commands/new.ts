@@ -4,8 +4,8 @@ import { input, select } from '@inquirer/prompts'
 import { execFileSync } from 'node:child_process'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import pc from 'picocolors'
 
+import { theme } from '../lib/theme.js'
 import { parseArgs } from '../lib/args.js'
 import { readCliInfo } from '../lib/cli-info.js'
 import { copyTemplate, exists, isEmptyOrMissing, writeTemplateFile } from '../lib/copy-template.js'
@@ -408,8 +408,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
 
 // Everything printed after scaffolding finishes, grouped into labeled
 // sections so it reads as a short runbook rather than a flat log of
-// "created X" lines. Headers use picocolors' bold, matching bin.ts's own use
-// of it for the CLI banner.
+// "created X" lines. Headers use the shared theme's bold, matching bin.ts's
+// own banner — see lib/theme.ts for why that's not picocolors directly.
 function printNextSteps(args: {
   mode: Mode
   pm: PackageManagerPlan
@@ -418,23 +418,24 @@ function printNextSteps(args: {
   workflowsDir: string
 }): void {
   const { mode, pm, target, docsDir, workflowsDir } = args
+  const created = (path: string): string => `  ${theme.success('✓')} ${path}`
 
-  console.log(pc.bold('Created:'))
-  console.log(`  ${relative(process.cwd(), docsDir) || 'docs'}`)
-  console.log(`  ${relative(process.cwd(), workflowsDir)}`)
-  console.log(`  ${relative(process.cwd(), join(target, 'AGENTS.md'))}`)
-  console.log(`  ${relative(process.cwd(), join(target, '.opencode', 'skills'))}`)
-  console.log(`  ${relative(process.cwd(), join(target, '.claude', 'skills'))}`)
+  console.log(theme.bold('Created:'))
+  console.log(created(relative(process.cwd(), docsDir) || 'docs'))
+  console.log(created(relative(process.cwd(), workflowsDir)))
+  console.log(created(relative(process.cwd(), join(target, 'AGENTS.md'))))
+  console.log(created(relative(process.cwd(), join(target, '.opencode', 'skills'))))
+  console.log(created(relative(process.cwd(), join(target, '.claude', 'skills'))))
 
   console.log('')
-  console.log(pc.bold('Next steps:'))
+  console.log(theme.bold('Next steps:'))
   console.log('  cd docs')
   console.log(`  ${pm.installCmd}`)
   console.log(`  ${pm.devCmd}`)
 
   console.log('')
   if (mode === 'versioned') {
-    console.log(pc.bold('Versioning: Versioned (Full History)'))
+    console.log(theme.bold('Versioning: Versioned (Full History)'))
     console.log('  main is the prerelease channel.')
     console.log('')
     console.log('  To cut your first release:')
@@ -448,7 +449,7 @@ function printNextSteps(args: {
     console.log('')
     console.log('  See the docs-versioning skill (.opencode/skills, .claude/skills) for the full mechanism.')
   } else {
-    console.log(pc.bold('Versioning: Standalone (Stable + Prerelease)'))
+    console.log(theme.bold('Versioning: Standalone (Stable + Prerelease)'))
     console.log('  main is the prerelease channel.')
     console.log('')
     console.log('  To cut your first stable release:')
@@ -460,12 +461,12 @@ function printNextSteps(args: {
   }
 
   console.log('')
-  console.log(pc.bold('Get started:'))
+  console.log(theme.bold('Get started:'))
   console.log('  See the documenting-your-repo skill (.opencode/skills, .claude/skills) — it plans what to')
   console.log('  document and pulls in docs-internals/writing-docs-pages as needed.')
 
   console.log('')
-  console.log(pc.bold('Before your first publish:'))
+  console.log(theme.bold('Before your first publish:'))
   console.log('  See docs/src/modules/main/pages/prerequisites.adoc for what a public GitHub Pages site')
   console.log('  needs before its first publish.')
 }

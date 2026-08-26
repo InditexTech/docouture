@@ -4,8 +4,8 @@
 
 | name                | set in                                       | scope                                                       |
 | ------------------- | -------------------------------------------- | ----------------------------------------------------------- |
-| `version`           | `docs/src/antora.yml`                       | per git ref — a ref's own checkout declares its own version |
-| `prerelease`        | `docs/src/antora.yml`                       | per git ref — `true`/`false`                                |
+| `version`           | `docs/src/antora.yml`                        | per git ref — a ref's own checkout declares its own version |
+| `prerelease`        | `docs/src/antora.yml`                        | per git ref — `true`/`false`                                |
 | `branches` / `tags` | `antora-playbook.yml` → `content.sources[0]` | which refs the _build_ aggregates content from at all       |
 
 `docs/src/antora.yml` is read once per matched ref — `main` and each release tag get

@@ -71,12 +71,12 @@ file-relative.
 
 | you want to                    | do                                                                                                                                             |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| add a page                     | create `docs/src/modules/<module>/pages/name.adoc` **and** add an `xref:` to that module's `nav.adoc`                                         |
+| add a page                     | create `docs/src/modules/<module>/pages/name.adoc` **and** add an `xref:` to that module's `nav.adoc`                                          |
 | add a section to the nav       | edit `nav.adoc` — nesting is list depth (`*`, `**`, `***`); a bare, unlinked list item can group xrefs under a heading with no page of its own |
-| reuse a chunk of prose         | `docs/src/modules/<module>/partials/name.adoc`, included as `partial$name.adoc`                                                               |
-| add an image                   | `docs/src/modules/<module>/images/name.png`, referenced as `image::name.png[Alt]`                                                             |
+| reuse a chunk of prose         | `docs/src/modules/<module>/partials/name.adoc`, included as `partial$name.adoc`                                                                |
+| add an image                   | `docs/src/modules/<module>/images/name.png`, referenced as `image::name.png[Alt]`                                                              |
 | set a site-wide attribute      | `asciidoc.attributes` in `antora-playbook.yml`                                                                                                 |
-| set a component-wide attribute | `asciidoc.attributes` in `docs/src/antora.yml`                                                                                                |
+| set a component-wide attribute | `asciidoc.attributes` in `docs/src/antora.yml`                                                                                                 |
 | set a page-scoped attribute    | an attribute entry in the page header, above the first blank line                                                                              |
 
 ## Constraints that fail silently

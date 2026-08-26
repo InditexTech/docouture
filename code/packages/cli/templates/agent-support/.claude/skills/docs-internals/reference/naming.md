@@ -6,9 +6,9 @@ every pair automatically — run it after any rename.
 
 | name           | set in                                                  | must match                                                                                                                             |
 | -------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| component name | `docs/src/antora.yml` → `name`                         | the `<component>::` prefix of the playbook's `site.start_page`                                                                         |
+| component name | `docs/src/antora.yml` → `name`                          | the `<component>::` prefix of the playbook's `site.start_page`                                                                         |
 | start page     | `antora-playbook.yml` → `site.start_page`               | a real file under `modules/ROOT/pages/` (or whichever module it names)                                                                 |
-| content path   | `antora-playbook.yml` → `content.sources[0].start_path` | where `docs/src/antora.yml` actually is, repo-root relative — `docs/src` for a site scaffolded as-is                                 |
+| content path   | `antora-playbook.yml` → `content.sources[0].start_path` | where `docs/src/antora.yml` actually is, repo-root relative — `docs/src` for a site scaffolded as-is                                   |
 | package name   | `docs/package.json` → `name`                            | no hard requirement on its own, but conventionally matches the component name — this is what `pdocs new <name>` sets both to initially |
 
 ## Why each one matters

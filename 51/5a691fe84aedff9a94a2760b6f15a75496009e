@@ -1,0 +1,27 @@
+code/packages/cli/src/commands/new.spec.ts
+  s_9bf698a916a0c9::t_4a51baf9033b8b 153
+code/packages/cli/src/commands/new.ts
+  s_9bf698a916a0c9::t_10836f95f0584a 37-47
+code/packages/cli/templates/workflows/pdocs-pr-verify.yml
+  s_9bf698a916a0c9::t_b5b012128c4708 59-82,85,92,96
+code/packages/cli/templates/workflows/pdocs-publish.yml
+  s_9bf698a916a0c9::t_25c21b57f2477b 84-96,102,109,113
+code/packages/cli/templates/workflows/pdocs-release.yml
+  s_9bf698a916a0c9::t_bfdf2e879ae413 130-144,149,156,160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "515a691fe84aedff9a94a2760b6f15a75496009e",
+  "prompts": {},
+  "sessions": {
+    "s_9bf698a916a0c9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fc3145cc5ffekgX2txZ14QjDSI",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

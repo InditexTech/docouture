@@ -1,0 +1,367 @@
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  s_a4040fecbff732::t_a506d5b58d676b 5,115,147,717-718,845,852
+.github/workflows/code-release_preview.yml
+  s_a4040fecbff732::t_852cc246305be5 4,100,102
+.github/workflows/docs/code-npm_node-publish-release-and-snapshot.md
+  s_a4040fecbff732::t_4ecd66a5c8bb64 3,19,31-34
+.github/workflows/docs/code-release_preview.md
+  s_a4040fecbff732::t_def2fb5bbe1654 3,25-26
+.opencode/skills/asciidoc/SKILL.md
+  s_a4040fecbff732::t_ebe314b064ba64 3,6,179
+.opencode/skills/asciidoc/reference/extensions.md
+  s_a4040fecbff732::t_94f6c1cf43e55e 142,150
+.opencode/skills/cli-best-practices/SKILL.md
+  s_a4040fecbff732::t_490f4508f78006 3,6,35,78,113
+.opencode/skills/cli-best-practices/reference/nodejs-cli-best-practices.md
+  s_a4040fecbff732::t_2c259e03655866 1,5,17,36,43,45,55
+.opencode/skills/docs-site-package/SKILL.md
+  s_a4040fecbff732::t_7fc20278933d75 3,13,25,48,81,103,109,175,196-197,206,208,225,228
+.opencode/skills/docs-site-package/reference/new-site.md
+  s_a4040fecbff732::t_b53f61161a5615 6-7,9-10,12,28,53-54
+.opencode/skills/docs-site-package/reference/playbook.md
+  s_a4040fecbff732::t_6fdf6c6fc61b34 78,142
+.opencode/skills/docs-site-package/reference/versioning-modes.md
+  s_a4040fecbff732::t_90b2c0e8be42e8 3,6,80,118-120,128-130,136,197,202,204,207,238,244,319-320,322,329,338,344,349,352,356,359,367,369-370,372,375,379,386,393,399,402,405-407,412,415,417,419
+.opencode/skills/iop-ds-components/SKILL.md
+  s_a4040fecbff732::t_cd25d8dfbea792 3,166,172
+.opencode/skills/iop-ds-components/reference/catalogue.md
+  s_a4040fecbff732::t_7703af77689a6b 7,24,52
+.opencode/skills/iop-ds-components/reference/extensions.md
+  s_a4040fecbff732::t_447551b71f9a20 1,13,32,44
+.opencode/skills/iop-ds-foundations/SKILL.md
+  s_a4040fecbff732::t_07187bfea6d393 3,98,101,168
+.opencode/skills/iop-ds-foundations/reference/tokens.md
+  s_a4040fecbff732::t_fbf87f6ea702c3 100
+.opencode/skills/iop-ds-foundations/reference/typography.md
+  s_a4040fecbff732::t_2ffbc7e115cf98 66,116
+.opencode/skills/starter-package/SKILL.md
+  s_a4040fecbff732::t_509d8ff5d77f7c 3,10-11,14-16,20,24,30,36-38,40,46-49,64-67,73,78,90,94,97
+.opencode/skills/ui-bundle-anatomy/SKILL.md
+  s_a4040fecbff732::t_5d048a70c20c28 3,8,117-120
+.opencode/skills/ui-bundle-anatomy/reference/templates.md
+  s_a4040fecbff732::t_2d16ff8706d73e 71
+README.md
+  s_a4040fecbff732::t_ce0d5a46329ec9 1,52,95
+code/eslint.config.mjs
+  s_a4040fecbff732::t_baa8becd6709b5 77-78
+code/package.json
+  s_a4040fecbff732::t_c4bf693dd17986 2,24
+code/packages/antora-extensions/index.js
+  s_a4040fecbff732::t_88abfa8911e617 16,21,58
+code/packages/antora-extensions/lib/duplicate-latest-version.js
+  s_a4040fecbff732::t_7cb725bae6fd4a 80,84
+code/packages/antora-extensions/lib/footer.js
+  s_a4040fecbff732::t_00dc6c8301a5eb 50
+code/packages/antora-extensions/lib/kroki-docker.js
+  s_a4040fecbff732::t_4afd4b0e89132c 15,23,27
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  s_a4040fecbff732::t_6607947dbc96da 17,43-45,120
+code/packages/antora-extensions/lib/kroki-prewarm.spec.js
+  s_a4040fecbff732::t_5361a4ef78e7d4 6-7
+code/packages/antora-extensions/lib/lifecycle-log.js
+  s_a4040fecbff732::t_73e381f20e79a3 4,20-21,23,48
+code/packages/antora-extensions/lib/llms-txt.js
+  s_a4040fecbff732::t_81015f1c869e41 56
+code/packages/antora-extensions/lib/nav-modules.js
+  s_a4040fecbff732::t_c8ba388c0693a2 77
+code/packages/antora-extensions/lib/not-found-page.js
+  s_a4040fecbff732::t_1122ec80d71165 66
+code/packages/antora-extensions/lib/redirects.js
+  s_a4040fecbff732::t_4dc4888d1e72f2 24,71
+code/packages/antora-extensions/lib/search-index.js
+  s_a4040fecbff732::t_5014bf93bbc62d 52
+code/packages/antora-extensions/lib/shiki-prewarm.js
+  s_a4040fecbff732::t_dbd4dd5f12f77e 16,29-30,41
+code/packages/antora-extensions/lib/version-report.js
+  s_a4040fecbff732::t_d23bd7427cebea 13,27
+code/packages/antora-extensions/package.json
+  s_a4040fecbff732::t_976d0ef558c2b4 2,4,27
+code/packages/antora-extensions/resources/kroki-compose.yml
+  s_a4040fecbff732::t_381a042424302e 5,11,32
+code/packages/asciidoc-extensions/README.md
+  s_a4040fecbff732::t_b3db1d19ce90a4 1,3,161,163,198,201,204,207,219,222,233-234
+code/packages/asciidoc-extensions/index.js
+  s_a4040fecbff732::t_bf343c3fcc606c 10,80,111-112
+code/packages/asciidoc-extensions/lib/accordion.js
+  s_a4040fecbff732::t_a34422298933f9 53,56,61,205
+code/packages/asciidoc-extensions/lib/card-grid.js
+  s_a4040fecbff732::t_e27fe1869c71c2 103,135,158,169-170,180,195,201-202,257,292,294
+code/packages/asciidoc-extensions/lib/cta.js
+  s_a4040fecbff732::t_7a0eb25ff901c8 174,178,181,210,217-218,277,280,285,292,295
+code/packages/asciidoc-extensions/lib/kroki-config.js
+  s_a4040fecbff732::t_7ca1a08859da4a 10,31,39
+code/packages/asciidoc-extensions/lib/kroki-instance.js
+  s_a4040fecbff732::t_37cce47c002c59 16
+code/packages/asciidoc-extensions/lib/kroki.js
+  s_a4040fecbff732::t_9b08400280786e 62,77,142
+code/packages/asciidoc-extensions/lib/shiki-config.js
+  s_a4040fecbff732::t_32228c6e25795a 4
+code/packages/asciidoc-extensions/lib/shiki-instance.js
+  s_a4040fecbff732::t_30bf60fd5ca5d5 6,57
+code/packages/asciidoc-extensions/lib/shiki-syntax-highlighter.js
+  s_a4040fecbff732::t_2a8dff92e215cf 85
+code/packages/asciidoc-extensions/lib/table-width.js
+  s_a4040fecbff732::t_1de3cfd149003b 37
+code/packages/asciidoc-extensions/lib/tabs.js
+  s_a4040fecbff732::t_b7d4586e603836 168-169,186,224-225,228
+code/packages/asciidoc-extensions/lib/unique-id.js
+  s_a4040fecbff732::t_f98ee4570caadf 31
+code/packages/asciidoc-extensions/package.json
+  s_a4040fecbff732::t_98456178419d42 2,4
+code/packages/cli/package.json
+  s_a4040fecbff732::t_4155d8c10c359c 2,4,13
+code/packages/cli/scripts/chmod-bin.mjs
+  s_a4040fecbff732::t_85bbaf90d1f3a0 7
+code/packages/cli/src/bin.ts
+  s_a4040fecbff732::t_de998281ca3cb9 22,48,54,65,73,88,103,116,119-120,122,131,138,155,162,176,180,191,193,195,209,211,214-215,221-222,229,239,241,244,276,298,308,318,338
+code/packages/cli/src/commands/build.spec.ts
+  s_a4040fecbff732::t_1e6819715e087b 15,65
+code/packages/cli/src/commands/build.ts
+  s_a4040fecbff732::t_2df8fe25677047 22
+code/packages/cli/src/commands/completion.spec.ts
+  s_a4040fecbff732::t_d18520eb3232a2 25,33,39,43
+code/packages/cli/src/commands/completion.ts
+  s_a4040fecbff732::t_3521ad8008e7e6 3-4,30,33,36-37,41,47-48,51-52,55,57,73
+code/packages/cli/src/commands/dev.spec.ts
+  s_a4040fecbff732::t_bbcfd00b7a1ad9 15
+code/packages/cli/src/commands/dev.ts
+  s_a4040fecbff732::t_a775319e925d40 22
+code/packages/cli/src/commands/doctor.spec.ts
+  s_a4040fecbff732::t_14fbcfd197ca1c 19
+code/packages/cli/src/commands/doctor.ts
+  s_a4040fecbff732::t_267832a2a46488 91
+code/packages/cli/src/commands/eject.spec.ts
+  s_a4040fecbff732::t_972c6aec387959 17,34,40,44,89,91
+code/packages/cli/src/commands/eject.ts
+  s_a4040fecbff732::t_5202de64a3aa36 11-12,19,23,43,58
+code/packages/cli/src/commands/new.spec.ts
+  s_a4040fecbff732::t_174acc55fd3187 27,117,119,150,155-156,159,170,174,179,187,243-248,254,256-257,383,397,399-402,488,512,530,557,568,596
+code/packages/cli/src/commands/new.ts
+  s_a4040fecbff732::t_f9ae8c69c2bf21 28-29,39,46-48,53-58,110,114,127,159,359,387,401,411,441-442,461,482,491,511,618,620,630,632
+code/packages/cli/src/commands/publish.spec.ts
+  s_a4040fecbff732::t_610deaffaa4a64 16,31,35,49,51,56,65,78,83,138,143
+code/packages/cli/src/commands/publish.ts
+  s_a4040fecbff732::t_9e369967c17dfb 15,18-19,25,28,31,38,40,48,55,74,94-95,106,110,125,130-131
+code/packages/cli/src/commands/teardown.spec.ts
+  s_a4040fecbff732::t_a3f58655aa10f7 17,34,40,44
+code/packages/cli/src/commands/teardown.ts
+  s_a4040fecbff732::t_0f008bdb65fb41 12-13,45,59,67,69
+code/packages/cli/src/commands/upgrade.spec.ts
+  s_a4040fecbff732::t_b33c65e23f50c4 23,57,95,107,119,121,144,154,162,175
+code/packages/cli/src/commands/upgrade.ts
+  s_a4040fecbff732::t_14595255c6a03d 62,81,89,117,151
+code/packages/cli/src/commands/version.spec.ts
+  s_a4040fecbff732::t_ca5a687c5b5302 17,39
+code/packages/cli/src/commands/version.ts
+  s_a4040fecbff732::t_20bca29cef8d41 24
+code/packages/cli/src/lib/agents-md.spec.ts
+  s_a4040fecbff732::t_c22788689aad3e 10,44,56
+code/packages/cli/src/lib/agents-md.ts
+  s_a4040fecbff732::t_93fb7aceda6c54 3,5,9,17-18,22,39,45
+code/packages/cli/src/lib/antora-log.spec.ts
+  s_a4040fecbff732::t_6174fd67878fae 23,26-27,31-32
+code/packages/cli/src/lib/antora-log.ts
+  s_a4040fecbff732::t_63b5c601062a4e 6,8,10,18-20,23
+code/packages/cli/src/lib/antora-yml.ts
+  s_a4040fecbff732::t_46071a1ab8d8ad 3
+code/packages/cli/src/lib/cli-info.ts
+  s_a4040fecbff732::t_ed898b4b97bea7 25
+code/packages/cli/src/lib/copy-template.spec.ts
+  s_a4040fecbff732::t_954e33916433cb 25,33-34
+code/packages/cli/src/lib/copy-template.ts
+  s_a4040fecbff732::t_782b755e13e553 20,28,35,51-58,61,64,70,74,78,80,97,104-105,116,141
+code/packages/cli/src/lib/debug-log.spec.ts
+  s_a4040fecbff732::t_0c0aff221edcf4 36-37
+code/packages/cli/src/lib/debug-log.ts
+  s_a4040fecbff732::t_6f3edc6506bd1c 6,9,14,19
+code/packages/cli/src/lib/detect-package-manager.spec.ts
+  s_a4040fecbff732::t_f899151ebd80cb 15,45
+code/packages/cli/src/lib/detect-package-manager.ts
+  s_a4040fecbff732::t_2f80347e0224de 35-37,70,74
+code/packages/cli/src/lib/dev-server.spec.ts
+  s_a4040fecbff732::t_65037d4aaefb4a 27
+code/packages/cli/src/lib/dev-server.ts
+  s_a4040fecbff732::t_21f93dffa765b4 7-8,33,121
+code/packages/cli/src/lib/doctor-checks.spec.ts
+  s_a4040fecbff732::t_2c711e389e62ac 129,158,177,202
+code/packages/cli/src/lib/global-flags.ts
+  s_a4040fecbff732::t_d80ff58ce13aa0 13
+code/packages/cli/src/lib/kroki-compose.ts
+  s_a4040fecbff732::t_c7d5ec6d0c81f6 8-9,13,18,24,39
+code/packages/cli/src/lib/playbook-yml.ts
+  s_a4040fecbff732::t_4485ee93456d2d 3-4,73,89-90
+code/packages/cli/src/lib/repo-root.spec.ts
+  s_a4040fecbff732::t_a02f2224bf47de 18
+code/packages/cli/src/lib/repo-root.ts
+  s_a4040fecbff732::t_ccfbb0747d6d9f 6-7,14
+code/packages/cli/src/lib/run-script.spec.ts
+  s_a4040fecbff732::t_3e6648b00ac0bd 13
+code/packages/cli/src/lib/run-script.ts
+  s_a4040fecbff732::t_3a7858bd913988 16,35
+code/packages/cli/templates/agent-support/.claude/skills/docs-internals/SKILL.md
+  s_a4040fecbff732::t_e09440346b7f37 8,13,16,29,31,52-53
+code/packages/cli/templates/agent-support/.claude/skills/docs-internals/reference/antora-extensions.md
+  s_a4040fecbff732::t_f50ebeb7960171 1,5
+code/packages/cli/templates/agent-support/.claude/skills/docs-internals/reference/page-patterns.md
+  s_a4040fecbff732::t_f73a8609f75b54 81,197
+code/packages/cli/templates/agent-support/.claude/skills/docs-versioning.versioned/SKILL.md
+  s_a4040fecbff732::t_45600597eacb69 3,8,22,28
+code/packages/cli/templates/agent-support/.claude/skills/docs-versioning.versioned/reference/releasing.md
+  s_a4040fecbff732::t_bab4de6d5888e7 50,67,87,89,93
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/SKILL.md
+  s_a4040fecbff732::t_86d4d2f4321959 9,33
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/reference/structure-planning.md
+  s_a4040fecbff732::t_02f6addeab440d 53
+code/packages/cli/templates/agent-support/.claude/skills/writing-docs-pages/SKILL.md
+  s_a4040fecbff732::t_d07831fc9e71da 16-17
+code/packages/cli/templates/agent-support/.claude/skills/writing-docs-pages/reference/docouture-blocks.md
+  s_a4040fecbff732::t_6a5e5834fc7b40 3
+code/packages/cli/templates/agent-support/.opencode/skills/docs-internals/SKILL.md
+  s_a4040fecbff732::t_45959da4c9cb3b 8,13,16,29,31,52-53
+code/packages/cli/templates/agent-support/.opencode/skills/docs-internals/reference/antora-extensions.md
+  s_a4040fecbff732::t_ada9d593b81c84 1,5
+code/packages/cli/templates/agent-support/.opencode/skills/docs-internals/reference/page-patterns.md
+  s_a4040fecbff732::t_126cdb866e9f45 81,197
+code/packages/cli/templates/agent-support/.opencode/skills/docs-versioning.versioned/SKILL.md
+  s_a4040fecbff732::t_7f47b82ee282f9 3,8,22,28
+code/packages/cli/templates/agent-support/.opencode/skills/docs-versioning.versioned/reference/releasing.md
+  s_a4040fecbff732::t_de89a1598e90da 50,67,87,89,93
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/SKILL.md
+  s_a4040fecbff732::t_b42444a3a4479c 9,33
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/reference/structure-planning.md
+  s_a4040fecbff732::t_8989648eea1e35 53
+code/packages/cli/templates/agent-support/.opencode/skills/writing-docs-pages/SKILL.md
+  s_a4040fecbff732::t_6fcaf2fd3b1ec4 16-17
+code/packages/cli/templates/agent-support/.opencode/skills/writing-docs-pages/reference/docouture-blocks.md
+  s_a4040fecbff732::t_3963065ff4997a 3
+code/packages/cli/templates/starter/antora-playbook.local.yml
+  s_a4040fecbff732::t_245922ff276593 11,21-22,28,32,34,39,57,59,74-75,92-93,99
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  s_a4040fecbff732::t_3e0924d01b1afe 8,14,27,31,50,63,71,75,86,95,98,116-118,135,137,152,154,166
+code/packages/cli/templates/starter/antora-playbook.yml
+  s_a4040fecbff732::t_eaafc92dacffd0 8,14,27,31,50,63,73,77,88,97,100,115,126-128,145,147,158,160,163,174,176,188
+code/packages/cli/templates/starter/package.json
+  s_a4040fecbff732::t_63c233b1607bb2 2,5,12,17-21,25,33
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  s_a4040fecbff732::t_a82ce17a25793b 14,30,65-67,77-78,94,116
+code/packages/cli/templates/starter/src/antora.yml
+  s_a4040fecbff732::t_e37fa76e009948 6,9-11,14,38,48,61,66
+code/packages/cli/templates/starter/src/modules/ROOT/pages/index.adoc
+  s_a4040fecbff732::t_639ac3a80b09f6 1,4,13,56,66,99,108
+code/packages/cli/templates/starter/src/modules/main/nav.adoc
+  s_a4040fecbff732::t_40376d5985d1c7 1
+code/packages/cli/templates/starter/src/modules/main/pages/components.adoc
+  s_a4040fecbff732::t_c3d4fe09411586 7,9-10,261,438,464-465
+code/packages/cli/templates/starter/src/modules/main/pages/getting-started.adoc
+  s_a4040fecbff732::t_6c8ab0a0401bd0 6,32,39,61-62,65,77,81,85,90,93,100-101,106-107,109,112,121,130-131,135,152,161
+code/packages/cli/templates/starter/src/modules/main/pages/index.adoc
+  s_a4040fecbff732::t_0fecb1114aeafb 4,8
+code/packages/cli/templates/starter/src/modules/main/pages/prerequisites.adoc
+  s_a4040fecbff732::t_45d77973ea3405 5,13,15,24-25,34,40,53
+code/packages/cli/templates/workflows/docouture-kroki-cache-warm.yml
+  s_a4040fecbff732::t_b2403819c135f7 1,4,23,33,41,53,60,64,67,71-72,82-83
+code/packages/cli/templates/workflows/docouture-pr-verify.yml
+  s_a4040fecbff732::t_ad62ed3464fbd4 1,23,31,43,50,54,57,75,120
+code/packages/cli/templates/workflows/docouture-publish-prerelease.yml
+  s_a4040fecbff732::t_cd12246319bd09 1,5,7,10,17,23-24,26,30,42,103,112-113,121
+code/packages/cli/templates/workflows/docouture-publish.yml
+  s_a4040fecbff732::t_9cacab2441f539 1,3-7,9,22,26,38,46,51,68,75,79,82,84,97,120,122,129,131,136
+code/packages/cli/templates/workflows/docouture-release-preview.yml
+  s_a4040fecbff732::t_ca7620500224a0 1,4,12,16,45,55,57,67,89,113
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_a4040fecbff732::t_62dd5ea82e4fb4 1,3,62,70,100,114,121,125,128,130,145,167,170,183,190,259,275,297,396,413
+code/packages/example/antora-playbook.local.yml
+  s_a4040fecbff732::t_591547935f1496 75,79
+code/packages/example/antora-playbook.yml
+  s_a4040fecbff732::t_47fbb52f9363b4 5,70,100,144,146,159-160,174,185
+code/packages/example/docs/antora.yml
+  s_a4040fecbff732::t_b31fb8a146f62e 9-10,35,86,95,110
+code/packages/example/package.json
+  s_a4040fecbff732::t_7868b50d6d532e 2,17-19
+code/packages/example/scripts/generate-card-images.js
+  s_a4040fecbff732::t_57a5c646ba2eeb 822-823
+code/packages/publish-gh-pages/index.js
+  s_a4040fecbff732::t_974bea0c7c89e9 3-5,9,19,151,216
+code/packages/publish-gh-pages/package.json
+  s_a4040fecbff732::t_553524f26d6996 2,4
+code/packages/ui-bundle/package.json
+  s_a4040fecbff732::t_a95dd3c650997b 2,4,39
+code/packages/ui-bundle/preview-src/ui-model.yml
+  s_a4040fecbff732::t_81708dc9dd3152 34,81,172
+code/packages/ui-bundle/src/css/accordion.css
+  s_a4040fecbff732::t_95584602cc7d01 264,283
+code/packages/ui-bundle/src/css/card-grid.css
+  s_a4040fecbff732::t_2f2a6ddcc83853 53,64,97,118-121,124-127,131-134,138-141,155,165,187,202,220,225,232,236,240,246,266,270,279,289,295,314-316,327,348,354
+code/packages/ui-bundle/src/css/cta.css
+  s_a4040fecbff732::t_bda08afdf58d2e 25,49,60,71,91,95,109,116,120,124,128,134,141,150,172,185,202-203
+code/packages/ui-bundle/src/css/diagram.css
+  s_a4040fecbff732::t_7fc23755ee4589 19,68,79-80,96,115-118,133,138,160-161
+code/packages/ui-bundle/src/css/doc.css
+  s_a4040fecbff732::t_9e43d42e3783b2 97-98,1710,1923
+code/packages/ui-bundle/src/css/feature-tabs.css
+  s_a4040fecbff732::t_5b08c30e78f50d 59,93,108,126,138,154,172-174,180,194,202,206,230,238,249,265,290,318,327,338-339,343,360,371,375-377,387
+code/packages/ui-bundle/src/css/site.css
+  s_a4040fecbff732::t_d56bebaa3fe662 56
+code/packages/ui-bundle/src/css/tabs.css
+  s_a4040fecbff732::t_544da76b4d624d 12,47,61,71,82,86,96,118,129,141,152,161,165,177
+code/packages/ui-bundle/src/js/01-nav.ts
+  s_a4040fecbff732::t_c484eef09437c0 4
+code/packages/ui-bundle/src/js/02-on-this-page.ts
+  s_a4040fecbff732::t_8713450a46e7ef 4
+code/packages/ui-bundle/src/js/07-feature-tabs.ts
+  s_a4040fecbff732::t_263e616ca3fa68 29,31,34
+code/packages/ui-bundle/src/js/10-accordion.ts
+  s_a4040fecbff732::t_5c22c3034b532f 5,36,81,83,182,190,198
+code/packages/ui-bundle/src/js/11-tabs.ts
+  s_a4040fecbff732::t_25dfd5c2818060 39-40
+code/packages/ui-bundle/src/js/12-search.ts
+  s_a4040fecbff732::t_12581fe6b5c8f1 117,280,392,562
+code/packages/ui-bundle/src/js/13-search-recents.ts
+  s_a4040fecbff732::t_ae1c0d554212f9 11-12,29,34,176
+code/packages/ui-bundle/src/js/vendor/search.bundle.ts
+  s_a4040fecbff732::t_21ae811de106bd 208
+code/packages/ui-bundle/src/layouts/home.hbs
+  s_a4040fecbff732::t_ad43264151d707 10
+code/packages/ui-bundle/src/partials/head-prelude.hbs
+  s_a4040fecbff732::t_47b8061121f8a9 39,62
+code/packages/ui-bundle/src/partials/nav-menu.hbs
+  s_a4040fecbff732::t_1ec77c3fd4a618 17
+code/packages/ui-bundle/src/partials/nav-switcher.hbs
+  s_a4040fecbff732::t_da4f1d040b837b 11
+code/packages/ui-bundle/src/partials/pagination.hbs
+  s_a4040fecbff732::t_78b49528ed5bb1 41
+code/packages/ui-bundle/src/partials/search-dialog.hbs
+  s_a4040fecbff732::t_7b60219fae95f7 68
+code/packages/ui-bundle/src/partials/site-footer.hbs
+  s_a4040fecbff732::t_0b4c2460c8e91e 24
+code/packages/ui-bundle/types/browser.d.ts
+  s_a4040fecbff732::t_7060b4ca0d7ad3 38,46,50
+code/pnpm-lock.yaml
+  s_a4040fecbff732::t_81bd89fe9bc211 60,110,113,116,135
+code/tools/fumadocs-migrate/README.md
+  s_a4040fecbff732::t_bb6f9ed6f49e4e 160,186
+code/tools/fumadocs-migrate/build-nav.mjs
+  s_a4040fecbff732::t_7cb0a72ec7b669 263
+code/tools/fumadocs-migrate/package.json
+  s_a4040fecbff732::t_59d0973068a964 2
+code/tools/ids/package.json
+  s_a4040fecbff732::t_658e25ed325cce 2
+justfile
+  s_a4040fecbff732::t_d88b96ca608485 1,14,176,184,228,233,235,252,263,275,277,308,320,341,651,678
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "80a57910158021dd8ebaddf0a5086b762377cebe",
+  "prompts": {},
+  "sessions": {
+    "s_a4040fecbff732": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fc1a82e36ffekTZkD4uv48hpOT",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

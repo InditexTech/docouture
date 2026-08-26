@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Real-world documentation site — target for the Fumadocs migration",
-  "license": "MPL-2.0",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=24.0.0"
   },

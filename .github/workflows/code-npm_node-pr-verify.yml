@@ -1,7 +1,7 @@
-name: pr-verify
+name: code-npm-pr-verify
 
 concurrency:
-  group: pr-verify-${{ github.event.pull_request.number }}
+  group: code-npm-pr-verify-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 # Least privilege: this workflow only ever checks out the PR and runs
@@ -107,4 +107,3 @@ jobs:
         working-directory: code
         run: |
           npm run verify
-

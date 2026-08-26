@@ -120,7 +120,7 @@ describe('runNew', () => {
 
     // The whole starter subtree lands under docs/, unflattened — its own
     // nested docs/antora.yml keeps that shape.
-    const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('name: my-project-docs')
     expect(antoraYml).toContain('title: My Project Docs')
     expect(antoraYml).toContain('version: prerelease')
@@ -139,7 +139,7 @@ describe('runNew', () => {
     // a `docs/`) was copied under this repo's own `docs/`.
     const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
     expect(playbook).toContain('url: ..')
-    expect(playbook).toContain('start_path: docs/docs')
+    expect(playbook).toContain('start_path: docs/src')
     expect(playbook).toContain('branches: [main]')
     expect(playbook).toContain("tags: ['stable']")
 
@@ -147,9 +147,11 @@ describe('runNew', () => {
     // discovers them nested under docs/.
     for (const workflow of [
       'pdocs-publish.yml',
+      'pdocs-publish-prerelease.yml',
       'pdocs-release.yml',
       'pdocs-release-preview.yml',
       'pdocs-pr-verify.yml',
+      'pdocs-kroki-cache-warm.yml',
     ]) {
       const content = await readFile(join(repo, '.github', 'workflows', workflow), 'utf8')
       expect(content.length).toBeGreaterThan(0)
@@ -159,6 +161,14 @@ describe('runNew', () => {
     // packages are pinned as devDependencies alongside ui-bundle/cli.
     expect(playbook).toContain('@inditextech/pdocs-asciidoc-extensions')
     expect(playbook).toContain('@inditextech/pdocs-antora-extensions')
+
+    // GH #137: standalone mode must not set `latest_version_segment` (it
+    // turns `/stable/…` into a permanent redirect stub the moment a release
+    // exists) and must instead opt into duplicateLatestVersion, which
+    // publishes `stable`'s content a second time under `/latest/…` as a
+    // real, independent copy.
+    expect(playbook).not.toContain('latest_version_segment:')
+    expect(playbook).toContain('duplicate_latest_version: true')
   })
 
   it('scaffolds docs/.gitignore under its real dotfile name (GH regression: npm strips .git*-named files from published packages, so the template source is named plain `gitignore` and must be renamed back on write)', async () => {
@@ -227,7 +237,7 @@ describe('runNew', () => {
     await initRepo(repo)
 
     await runNew(['my-project-docs', '--dir', repo])
-    const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('title: My Project Docs')
   })
 
@@ -240,7 +250,7 @@ describe('runNew', () => {
 
     // docs/antora.yml is identical for both modes — only antora-playbook.yml
     // and .release-version differ.
-    const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('version: prerelease')
     expect(antoraYml).toContain('prerelease: true')
 
@@ -251,7 +261,12 @@ describe('runNew', () => {
     expect(playbook).toContain("tags: ['v*']")
     expect(playbook).toContain('branches: [main]')
     expect(playbook).toContain('url: ..')
-    expect(playbook).toContain('start_path: docs/docs')
+    expect(playbook).toContain('start_path: docs/src')
+
+    // GH #137: versioned mode also opts into duplicateLatestVersion, so
+    // whichever release tag Antora computes as latest is also published
+    // under /latest/… as a real, independent copy.
+    expect(playbook).toContain('duplicate_latest_version: true')
   })
 
   it('pins @inditextech/pdocs-cli and antora to exact versions in the scaffolded package.json', async () => {
@@ -327,7 +342,7 @@ describe('runNew', () => {
     input.end()
     expect(code).toBe(0)
 
-    const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('name: my-wizard-docs')
     expect(antoraYml).toContain('title: My Wizard Docs')
     expect(antoraYml).toContain('version: prerelease')
@@ -347,7 +362,7 @@ describe('runNew', () => {
     const code = await runNew(['my-project-docs', '--dir', repo, '--yes'], { input, output, isTTY: true })
     expect(code).toBe(0)
 
-    const antoraYml = await readFile(join(repo, 'docs', 'docs', 'antora.yml'), 'utf8')
+    const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('name: my-project-docs')
     expect(antoraYml).toContain('version: prerelease')
   })

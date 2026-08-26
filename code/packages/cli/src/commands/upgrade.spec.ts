@@ -78,7 +78,7 @@ describe('runUpgrade', () => {
     await initRepo(repo)
     await runNew(['my-project-docs', '--dir', repo, '--yes'])
 
-    const antoraYmlPath = join(repo, 'docs', 'docs', 'antora.yml')
+    const antoraYmlPath = join(repo, 'docs', 'src', 'antora.yml')
     const before = await readFile(antoraYmlPath, 'utf8')
 
     await runUpgrade(['--dir', repo])

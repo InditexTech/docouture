@@ -24,7 +24,7 @@ playbook/component-descriptor mechanics, see the `docs-internals` skill.
 ## Where content lives
 
 ```
-docs/docs/
+docs/src/
   antora.yml                  component descriptor: name, title, version, nav
   modules/
     ROOT/                     the default module; its name is omitted from resource IDs
@@ -71,12 +71,12 @@ file-relative.
 
 | you want to                    | do                                                                                                                                             |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| add a page                     | create `docs/docs/modules/<module>/pages/name.adoc` **and** add an `xref:` to that module's `nav.adoc`                                         |
+| add a page                     | create `docs/src/modules/<module>/pages/name.adoc` **and** add an `xref:` to that module's `nav.adoc`                                          |
 | add a section to the nav       | edit `nav.adoc` — nesting is list depth (`*`, `**`, `***`); a bare, unlinked list item can group xrefs under a heading with no page of its own |
-| reuse a chunk of prose         | `docs/docs/modules/<module>/partials/name.adoc`, included as `partial$name.adoc`                                                               |
-| add an image                   | `docs/docs/modules/<module>/images/name.png`, referenced as `image::name.png[Alt]`                                                             |
+| reuse a chunk of prose         | `docs/src/modules/<module>/partials/name.adoc`, included as `partial$name.adoc`                                                                |
+| add an image                   | `docs/src/modules/<module>/images/name.png`, referenced as `image::name.png[Alt]`                                                              |
 | set a site-wide attribute      | `asciidoc.attributes` in `antora-playbook.yml`                                                                                                 |
-| set a component-wide attribute | `asciidoc.attributes` in `docs/docs/antora.yml`                                                                                                |
+| set a component-wide attribute | `asciidoc.attributes` in `docs/src/antora.yml`                                                                                                 |
 | set a page-scoped attribute    | an attribute entry in the page header, above the first blank line                                                                              |
 
 ## Constraints that fail silently
@@ -94,7 +94,7 @@ file-relative.
 - **Unconstrained formatting needs doubled marks.** `**bold**` mid-word, `__italic__`
   mid-word. The single-mark form adjacent to a word character is not formatting at all.
 - **A cross-module xref only resolves inside a multi-module site**, and only once both
-  modules are listed under `docs/docs/antora.yml`'s `nav:` — see `docs-internals`.
+  modules are listed under `docs/src/antora.yml`'s `nav:` — see `docs-internals`.
 
 ## Page attributes the UI reads
 

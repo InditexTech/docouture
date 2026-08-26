@@ -46,11 +46,11 @@ content:
     # a git repository". (Only a playbook living AT the repository root can
     # use `url: .` — see the docs-site-package skill.)
     - url: ..
-      # Repository-root relative, hence `docs/docs`: the whole starter
-      # template — including its own nested `docs/` holding antora.yml — was
+      # Repository-root relative, hence `docs/src`: the whole starter
+      # template — including its own nested `src/` holding antora.yml — was
       # copied under this repository's `docs/`, so the descriptor ends up at
-      # `docs/docs/antora.yml`.
-      start_path: docs/docs
+      # `docs/src/antora.yml`.
+      start_path: docs/src
       # Standalone: `main` aggregates as the prerelease version —
       # docs/antora.yml on this branch permanently says `version: prerelease`,
       # `prerelease: true`. `stable` is a rolling tag that pdocs-release.yml
@@ -100,14 +100,14 @@ urls:
   # requirement; drop this line for Antora's plain default if the deployed
   # site sits behind something that prefers literal .html routes.
   html_extension_style: indexify
-  # In this standalone (stable/prerelease) versioning setup, `.../stable/…`
-  # is already a fixed segment that never moves on release — unlike
-  # versioned mode's per-tag URLs, it doesn't need a "latest" alias to stay
-  # stable. This just adds a second, redundant `.../latest/…` alias pointing
-  # at whatever Antora computes as latest (the `stable` version, once a
-  # first release exists), for the case something external specifically
-  # expects the literal word "latest" in a URL. Safe to remove if unused.
-  latest_version_segment: latest
+  # NOTE: deliberately no `latest_version_segment` here. Under Antora's own
+  # `latest_version_segment_strategy` (default `replace`), setting it turns
+  # `.../stable/…` into a permanent redirect stub the moment a release
+  # exists — the opposite of what this standalone (stable/prerelease) setup
+  # promises. A `/.../latest/…` alias is provided instead, further down,
+  # by @inditextech/pdocs-antora-extensions' `duplicateLatestVersion` (GH
+  # #137) — it publishes `stable`'s content a second time under `/latest/…`
+  # as a genuinely independent copy, so BOTH URLs stay real.
 
 runtime:
   # Fail the build on broken xrefs and other content problems rather than
@@ -174,5 +174,9 @@ antora:
     # above — see the docs-internals skill's reference/antora-extensions.md):
     # nav_modules-driven module switcher, an authored site footer, the search
     # index the UI bundle's search dialog reads, and llms.txt/llms-full.txt
-    # generation for AI ingestion.
-    - '@inditextech/pdocs-antora-extensions'
+    # generation for AI ingestion. `duplicateLatestVersion` additionally
+    # publishes `stable`'s content a second time under `/latest/…` — a real,
+    # independent copy, not a redirect — once a first release exists (see
+    # the `urls` note above).
+    - require: '@inditextech/pdocs-antora-extensions'
+      duplicate_latest_version: true

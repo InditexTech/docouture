@@ -87,7 +87,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // asked for again. --title still overrides it, and a site with no
   // docs/antora.yml (workflows/skills used standalone of the starter
   // subtree) falls back to a plain, title-cased directory name.
-  const descriptorPath = join(target, 'docs', 'docs', 'antora.yml')
+  const descriptorPath = join(target, 'docs', 'src', 'antora.yml')
   let name = 'docs'
   let title = titleCase(name)
   if (await exists(descriptorPath)) {

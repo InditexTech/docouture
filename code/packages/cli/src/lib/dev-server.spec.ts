@@ -18,7 +18,7 @@ async function writeFixtureSite(root: string, opts: { siteUrl?: string } = {}): 
   const siteBlock = opts.siteUrl ? `site:\n  url: ${opts.siteUrl}\n` : 'site:\n  title: Fixture\n'
   await writeFile(
     join(root, 'antora-playbook.local.yml'),
-    `${siteBlock}\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n`,
+    `${siteBlock}\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/src\n`,
     'utf8'
   )
 }

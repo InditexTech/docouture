@@ -12,7 +12,7 @@ to look for more.
 docs/
   antora-playbook.yml          build entry point: site title, content sources, UI bundle
   antora-playbook.local.yml    used by `pdocs dev` and PR verification — builds HEAD only
-  docs/
+  src/
     antora.yml                 component descriptor: name, title, version, nav
     modules/
       ROOT/                    the default module
@@ -20,7 +20,7 @@ docs/
         pages/*.adoc           one page per file — these become site URLs
 ```
 
-The nesting (`docs/docs/...`) is intentional — see the `docs-internals` skill.
+The nesting (`docs/src/...`) is intentional — see the `docs-internals` skill.
 
 ## Commands
 
@@ -37,7 +37,7 @@ go through the `pdocs` CLI.
 
 ## Conventions
 
-- Every page lives at `docs/docs/modules/<module>/pages/*.adoc` and must have an `xref:`
+- Every page lives at `docs/src/modules/<module>/pages/*.adoc` and must have an `xref:`
   entry in that module's `nav.adoc`, or it builds but is unreachable from the navigation.
 - A build failure on a warning is expected behaviour here, not a bug — `antora-playbook.yml`
   sets `runtime.log.failure_level: warn`. A broken `xref:`, a missing include target or an

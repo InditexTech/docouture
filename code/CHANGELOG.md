@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- [#138](https://github.com/InditexTech/test-antoradocs/pull/138) CLI starter template: fix `pdocs-publish-prerelease.yml` — add a checkout step before its `dorny/paths-filter` call (on a `push` trigger the action diffs `github.event.before` against `github.sha` via local git history, which fails with `git` exit 128 without an actual checkout in that job first), and grant `contents: write` on its `publish` job specifically rather than the workflow's top-level read-only permissions (without it, GitHub rejects the call into `pdocs-publish.yml`'s reusable `publish` job outright as a permissions escalation, since that job requests `contents: write` for `@inditextech/pdocs-publish-gh-pages`'s push to `gh-pages`)
+
 ### Added
 
 - [#44](https://github.com/InditexTech/test-antoradocs/issues/44) Migration: render `[mermaid]`/`[plantuml]`/etc. diagrams via a self-hosted Kroki service instead of literal diagram source — opt-in per site (`kroki-enabled`/`kroki-diagram-types`), disabled by default, auto-started on demand (no manual `docker compose` step, no CI service container), customizable via `pdocs eject kroki`, stoppable via `pdocs teardown kroki` (`just kroki-down` in this monorepo); Kroki's own auto-start/render lifecycle, and every other pdocs Antora extension's own observability (search-index, llms-txt, footer, nav-modules, version-report, not-found-page), now logs at `info` under a `pdocs-*` name and is surfaced by default from `just dev`/`just build-site` and `pdocs dev`/`pdocs build`; a new always-on `lifecycle-log` extension traces Antora's own generator pipeline (`contextStarted` through `contextClosed`) the same way, since Antora itself never logs when it enters a phase at any log level

@@ -15,12 +15,12 @@ a release tag, and what the release workflow actually does).
 
 ## The short version
 
-- **`docs/docs/antora.yml`** on `main` always says `version: prerelease`,
+- **`docs/src/antora.yml`** on `main` always says `version: prerelease`,
   `prerelease: true` — never edit this by hand to "cut" a release; it doesn't change on
   `main` at all. A release tag gets its _own_ copy of this file, with `version: '1.2.0'`,
   `prerelease: false`.
 - **`pdocs version <value>`** is the one piece of this the CLI does for you locally — it
-  patches `docs/docs/antora.yml`'s `version:`/`prerelease:` fields. Useful for testing a
+  patches `docs/src/antora.yml`'s `version:`/`prerelease:` fields. Useful for testing a
   version bump locally; the actual release workflow uses the same command internally.
 - **`docs/.release-version`** holds the next planned version (e.g. `1.2.0`) as plain
   text. It's what a merged, `docs/release`-labeled pull request uses to tell the release

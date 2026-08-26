@@ -30,17 +30,17 @@ docs/
                                  PR/feature-branch checkout doesn't have `main` or a release tag
   package.json                 name, devDependencies (pdocs-cli, ui-bundle, the two extension
                                  packages), the `build`/`dev` scripts
-  docs/
+  src/
     antora.yml                 component descriptor: name, title, version, nav
     modules/<module>/nav.adoc  navigation tree, one per module
 ```
 
-The whole starter template — `package.json`, both playbooks, the nested `docs/` — was
+The whole starter template — `package.json`, both playbooks, the nested `src/` — was
 copied under this repository's own `docs/`, so `antora-playbook.yml` lives at
 `<repo-root>/docs/antora-playbook.yml` and the component descriptor ends up one level
-further down, at `docs/docs/antora.yml`. That's why `antora-playbook.yml`'s
+further down, at `docs/src/antora.yml`. That's why `antora-playbook.yml`'s
 `content.sources[0]` reads `url: ..` (this repo's root, one level up from `docs/`) and
-`start_path: docs/docs`.
+`start_path: docs/src`.
 
 ## Versioning
 

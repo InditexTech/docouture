@@ -81,22 +81,36 @@ jobs:
       - name: Install dependencies
         run: __PDOCS_INSTALL_CI__
 
+      # See pdocs-pr-verify.yml's own comment: this build reads the real
+      # antora-playbook.yml (Build below), unlike pr-verify/release which
+      # build antora-playbook.local.yml — so the enabled check looks at the
+      # same file this job actually builds.
+      - name: Kroki / Detect enabled
+        id: kroki-check
+        run: |
+          if grep -qE "^\s*kroki-enabled:\s*['\"]?true['\"]?\s*(#.*)?$" antora-playbook.yml; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       # See pdocs-pr-verify.yml's own comment: primes the runner's Docker
       # image store before Build's implicit Kroki startup, so a fresh runner
       # doesn't pull all 4 images from scratch on every publish.
       - name: Kroki / Docker image cache
         id: kroki-cache
+        if: steps.kroki-check.outputs.enabled == 'true'
         uses: actions/cache@v4
         with:
           path: /tmp/kroki-images.tar
           key: ${{ runner.os }}-kroki-images-${{ hashFiles('**/kroki-compose.yml') }}
 
       - name: Kroki / Load cached images
-        if: steps.kroki-cache.outputs.cache-hit == 'true'
+        if: steps.kroki-check.outputs.enabled == 'true' && steps.kroki-cache.outputs.cache-hit == 'true'
         run: docker load -i /tmp/kroki-images.tar
 
       - name: Kroki / Pull and save images
-        if: steps.kroki-cache.outputs.cache-hit != 'true'
+        if: steps.kroki-check.outputs.enabled == 'true' && steps.kroki-cache.outputs.cache-hit != 'true'
         run: |
           compose_file="$(find . -name kroki-compose.yml 2>/dev/null | head -1)"
           docker compose -f "$compose_file" pull

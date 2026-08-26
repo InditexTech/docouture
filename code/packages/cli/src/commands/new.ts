@@ -33,12 +33,20 @@ const NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/
 const MODES = ['standalone', 'versioned'] as const
 type Mode = (typeof MODES)[number]
 
-// Filenames pdocs-publish.yml / pdocs-release.yml / pdocs-release-preview.yml /
-// pdocs-pr-verify.yml are templated under (see templates/workflows/) — kept
-// as a literal list here so the pre-flight conflict check below can name
-// exactly which ones would be overwritten without having to read the
+// Filenames pdocs-publish.yml / pdocs-publish-prerelease.yml /
+// pdocs-release.yml / pdocs-release-preview.yml / pdocs-pr-verify.yml /
+// pdocs-kroki-cache-warm.yml are templated under (see templates/workflows/)
+// — kept as a literal list here so the pre-flight conflict check below can
+// name exactly which ones would be overwritten without having to read the
 // template directory to find out.
-const WORKFLOW_NAMES = ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-release-preview.yml', 'pdocs-pr-verify.yml']
+const WORKFLOW_NAMES = [
+  'pdocs-publish.yml',
+  'pdocs-publish-prerelease.yml',
+  'pdocs-release.yml',
+  'pdocs-release-preview.yml',
+  'pdocs-pr-verify.yml',
+  'pdocs-kroki-cache-warm.yml',
+]
 
 // Repo-root-relative paths `templates/agent-support/` lands under (see
 // new.ts's own copyTemplate call below) — kept as a literal list, same
@@ -358,7 +366,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own
-  // nested docs/antora.yml — lands under <repo-root>/docs/ as one piece,
+  // nested src/antora.yml — lands under <repo-root>/docs/ as one piece,
   // unchanged in shape. Only .github/workflows/ is peeled out to a second
   // copy at the true repo root, since GitHub Actions never discovers
   // workflows anywhere else.
@@ -379,7 +387,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
       values
     )
     await writeTemplateFile(
-      join(starterDir, 'docs', 'release-version.versioned'),
+      join(starterDir, 'src', 'release-version.versioned'),
       join(docsDir, '.release-version'),
       values
     )
@@ -458,6 +466,6 @@ function printNextSteps(args: {
 
   console.log('')
   console.log(pc.bold('Before your first publish:'))
-  console.log('  See docs/docs/modules/main/pages/prerequisites.adoc for what a public GitHub Pages site')
+  console.log('  See docs/src/modules/main/pages/prerequisites.adoc for what a public GitHub Pages site')
   console.log('  needs before its first publish.')
 }

@@ -103,11 +103,20 @@ $ pdocs version 1.1.0-rc.0 --prerelease
 
 == Publish the docs
 
-`pdocs new` already scaffolded `.github/workflows/pdocs-publish.yml`, which
-builds this site and runs `pdocs publish gh-pages` on every push to `main`
-and on the `stable`/`v*` tags `pdocs-release.yml` cuts. Two things are still
-required before that step actually publishes anything (see
-xref:main:prerequisites.adoc[] for the repository/GitHub-Pages side of this):
+`pdocs new` already scaffolded two workflows that build this site and run
+`pdocs publish gh-pages`:
+
+* **`pdocs-publish-prerelease.yml`** — runs automatically on every ordinary
+  push to `main` that touches actual docs content, no label needed. This is
+  what keeps the prerelease version up to date after a normal merge.
+* **`pdocs-publish.yml`** — not triggered by push itself; `pdocs-release.yml`
+  calls it directly once a release is actually cut (see `== Release the
+  docs` above), and it stays available for a manual rebuild+republish of
+  whatever is currently on `main` via its own `workflow_dispatch`.
+
+Two things are still required before either of these actually publishes
+anything (see xref:main:prerequisites.adoc[] for the repository/GitHub-Pages
+side of this):
 
 . Add `@inditextech/pdocs-publish-gh-pages` to this package's own
   `devDependencies` — already present in the scaffolded `package.json` — and

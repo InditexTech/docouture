@@ -147,6 +147,7 @@ describe('runNew', () => {
     // discovers them nested under docs/.
     for (const workflow of [
       'pdocs-publish.yml',
+      'pdocs-publish-prerelease.yml',
       'pdocs-release.yml',
       'pdocs-release-preview.yml',
       'pdocs-pr-verify.yml',

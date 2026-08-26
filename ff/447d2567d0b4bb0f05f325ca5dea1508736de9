@@ -1,0 +1,20 @@
+code/packages/cli/src/commands/new.spec.ts
+  h_c93d154c7c7074 150
+code/packages/cli/src/commands/new.ts
+  h_c93d154c7c7074 36-41,44
+code/packages/cli/templates/starter/src/modules/main/pages/getting-started.adoc
+  h_c93d154c7c7074 106-119
+code/packages/cli/templates/workflows/pdocs-publish-prerelease.yml
+  h_c93d154c7c7074 1-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ff447d2567d0b4bb0f05f325ca5dea1508736de9",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+code/packages/tooling/src/commands/changelog.spec.ts
+  s_4962c4da09f54e::t_7689a41a796236 1-59
+code/packages/tooling/src/commands/release-local.ts
+  s_4962c4da09f54e::t_b3ba7046fafe9b 1-141
+code/packages/tooling/src/lib/doctor-checks.ts
+  s_4962c4da09f54e::t_76be982784b8e2 1-110
+code/pnpm-lock.yaml
+  s_4962c4da09f54e::t_7bdfc25adf8ff9 18-20,133-141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "dfef2838734740d069beb2c1f0112c864f929b1d",
+  "prompts": {},
+  "sessions": {
+    "s_4962c4da09f54e": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fc183e860ffeFdTeu0LoJYFcv3",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

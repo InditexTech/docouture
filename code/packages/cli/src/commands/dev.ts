@@ -1,6 +1,7 @@
 'use strict'
 
 import { join, resolve } from 'node:path'
+import ora from 'ora'
 
 import { parseArgs } from '../lib/args.js'
 import { exists } from '../lib/copy-template.js'
@@ -31,8 +32,25 @@ export async function runDev(argv: string[]): Promise<number> {
     }
   }
 
+  // Spinner covers only the initial build+listen wait, where the previous
+  // behaviour was otherwise silent for however long the first Antora build
+  // takes — ora auto-detects a non-TTY stderr (CI, piped output) and
+  // degrades to plain text on its own, so this stays quiet under
+  // automation without a separate flag. Once the server is up, log/logError
+  // below revert to plain per-rebuild lines exactly as before.
+  const spinner = ora({ text: 'Starting dev server…', stream: process.stderr }).start()
+  let ready = false
+  const log = (msg: string): void => {
+    if (ready) console.error(`dev ${msg}`)
+  }
+  const logError = (msg: string): void => {
+    if (ready) console.error(`dev ${msg}`)
+  }
+
   try {
-    const server = await startDevServer({ siteRoot, port })
+    const server = await startDevServer({ siteRoot, port, log, logError })
+    ready = true
+    spinner.succeed(`Serving ${server.url}`)
 
     await new Promise<void>((resolvePromise) => {
       const shutdown = (): void => {
@@ -45,11 +63,11 @@ export async function runDev(argv: string[]): Promise<number> {
     return 0
   } catch (err) {
     if ((err as NodeJS.ErrnoException)?.code === 'EADDRINUSE') {
-      console.error(`port ${port ?? 5000} is already in use`)
+      spinner.fail(`port ${port ?? 5000} is already in use`)
       console.error('  stop whatever is listening on it, or pass --port <port>')
       return 1
     }
-    console.error(err instanceof Error ? err.message : String(err))
+    spinner.fail(err instanceof Error ? err.message : String(err))
     return 1
   }
 }

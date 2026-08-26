@@ -1,14 +1,17 @@
 'use strict'
 
 import { execFileSync } from 'node:child_process'
-import { readFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { parseArgs } from '../lib/args.js'
 import { readCliInfo } from '../lib/cli-info.js'
-import { copyTemplate, exists } from '../lib/copy-template.js'
+import { copyTemplate, exists, renderTemplateFile } from '../lib/copy-template.js'
 import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-manager.js'
+import { resolveConfig } from '../lib/config-resolver.js'
+import { findRepoRoot } from '../lib/repo-root.js'
+import { AGENTS_MD_FILENAME, mergeAgentsMd } from '../lib/agents-md.js'
 
 // Same check `new.ts` uses, duplicated rather than imported — it's three
 // lines, and `doctor-checks.ts` already sets the precedent of duplicating a
@@ -51,15 +54,19 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const { flags } = parseArgs(argv)
 
   const dryRun = flags['dry-run'] === true
-  const target = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
+  const startDir = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
 
-  if (!isInsideGitWorkTree(target)) {
-    console.error(`'${target}' is not inside a git repository`)
+  if (!isInsideGitWorkTree(startDir)) {
+    console.error(`'${startDir}' is not inside a git repository`)
     console.error(
       'pdocs upgrade re-syncs an already-scaffolded repository — run it from your repo root, or pass --dir <path> to one'
     )
     return 1
   }
+
+  // --dir/cwd can be anywhere inside the repository — findRepoRoot walks up
+  // to the actual top-level, same as new.ts and the rest of the CLI.
+  const target = await findRepoRoot(startDir)
 
   // build/commands/upgrade.js -> build/templates/{workflows,agent-support} —
   // same resolution new.ts uses, see its own comment.
@@ -89,17 +96,30 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // subtree) falls back to a plain, title-cased directory name.
   const descriptorPath = join(target, 'docs', 'src', 'antora.yml')
   let name = 'docs'
-  let title = titleCase(name)
+  let fromYmlTitle: string | undefined
   if (await exists(descriptorPath)) {
     const content = await readFile(descriptorPath, 'utf8')
     name = readAntoraField(content, 'name') ?? name
-    title = readAntoraField(content, 'title') ?? titleCase(name)
+    fromYmlTitle = readAntoraField(content, 'title') ?? undefined
   }
-  if (typeof flags.title === 'string') title = flags.title
+  // Same three-tier precedence publish.ts uses (see lib/config-resolver.ts):
+  // --title flag > the value already recorded in docs/antora.yml > a plain
+  // title-cased fallback computed from the name above.
+  const { title } = resolveConfig(
+    { title: titleCase(name) },
+    { title: fromYmlTitle },
+    { title: typeof flags.title === 'string' ? flags.title : undefined }
+  )
 
   const values = {
     name,
     title,
+    // Same reasoning as repoIgnoreGlob below: __PDOCS_COMPONENT_NAME__ only
+    // appears in docs/antora.yml and antora-playbook.yml, neither of which
+    // upgrade ever re-copies (see the comment above `name` itself) — this
+    // value is structurally required by TemplateValues but never actually
+    // substituted anywhere upgrade touches.
+    componentName: 'unused-by-upgrade',
     cliVersion,
     pmName: pm.pm,
     pmCacheName: pm.cacheName,
@@ -116,6 +136,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   }
 
   const workflowsDir = join(target, '.github', 'workflows')
+  const agentsMdFile = join(target, AGENTS_MD_FILENAME)
 
   // Unlike `new.ts`, this command's whole purpose is to overwrite what's
   // already there — workflows and agent skills are meant to be regenerable
@@ -123,12 +144,17 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // is no content-hash/diff tracking anywhere in this CLI to tell a stock
   // file from a user-edited one). `docs/` itself — the starter content a
   // site has since written its own pages into — is never touched here.
+  // AGENTS.md is the one exception: copyTemplate's own SKIP_FILENAMES skip
+  // (see copy-template.ts) leaves it untouched by the walk above, and it's
+  // merged instead — see lib/agents-md.ts for why a blind overwrite here
+  // would silently destroy the 'Documentation state' table
+  // `documenting-your-repo` maintains outside pdocs' own managed section.
   if (dryRun) {
     const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
     const plannedAgentSupport = await copyTemplate(agentSupportDir, target, values, { dryRun: true })
 
     console.log('would write:')
-    for (const path of [...plannedWorkflows, ...plannedAgentSupport]) {
+    for (const path of [...plannedWorkflows, ...plannedAgentSupport, agentsMdFile]) {
       console.log(`  ${relative(target, path)}`)
     }
     return 0
@@ -137,10 +163,18 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
   await copyTemplate(agentSupportDir, target, values)
 
-  console.log(`updated ${relative(process.cwd(), workflowsDir)}`)
-  console.log(`updated ${relative(process.cwd(), join(target, 'AGENTS.md'))}`)
-  console.log(`updated ${relative(process.cwd(), join(target, '.opencode', 'skills'))}`)
-  console.log(`updated ${relative(process.cwd(), join(target, '.claude', 'skills'))}`)
+  const existingAgentsMd = (await exists(agentsMdFile)) ? await readFile(agentsMdFile, 'utf8') : undefined
+  const renderedAgentsMd = await renderTemplateFile(join(agentSupportDir, AGENTS_MD_FILENAME), values)
+  await writeFile(agentsMdFile, mergeAgentsMd(existingAgentsMd, renderedAgentsMd), 'utf8')
+
+  // Relative to `target` (the repo root), not process.cwd() — cwd may be a
+  // nested subdirectory findRepoRoot walked up from, in which case
+  // relative(cwd, ...) produces a useless '../../..' chain for paths that
+  // are actually just '.github/workflows', 'AGENTS.md' etc. at the root.
+  console.log(`updated ${relative(target, workflowsDir)}`)
+  console.log(`updated ${relative(target, agentsMdFile)}`)
+  console.log(`updated ${relative(target, join(target, '.opencode', 'skills'))}`)
+  console.log(`updated ${relative(target, join(target, '.claude', 'skills'))}`)
 
   return 0
 }

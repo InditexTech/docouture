@@ -6,6 +6,15 @@ import { join } from 'node:path'
 export interface TemplateValues {
   name: string
   title: string
+  // Antora's own component `name` (docs/antora.yml, and the component
+  // prefix in each playbook's site.start_page) — separate from `name`
+  // above once the two diverge: `new.ts`'s `urlSegment` wizard
+  // question/flag sets this to either the same value as `name` (component
+  // segment kept as a real URL segment) or the literal 'ROOT' (Antora's
+  // reserved component name, dropped from every published URL — see
+  // Antora's "How Antora Builds URLs" docs). `name` itself never changes:
+  // it still names package.json and the scaffolded directory regardless.
+  componentName: string
   // The exact version of the CLI binary doing the scaffolding (read from its
   // own package.json — see new.ts) — never a range. A scaffolded site's
   // devDependency on @inditextech/pdocs-cli must match whatever actually
@@ -41,6 +50,7 @@ export interface TemplateValues {
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   __PDOCS_NAME__: 'name',
   __PDOCS_TITLE__: 'title',
+  __PDOCS_COMPONENT_NAME__: 'componentName',
   __PDOCS_CLI_VERSION__: 'cliVersion',
   __PDOCS_PM__: 'pmName',
   __PDOCS_PM_CACHE__: 'pmCacheName',
@@ -88,6 +98,14 @@ function substitute(text: string, values: TemplateValues): string {
 // It must never be copied under its own literal name by the generic walk
 // below, standalone or not.
 const VERSIONED_MARKER = '.versioned'
+
+// AGENTS.md needs its own merge logic (see lib/agents-md.ts) rather than a
+// blind overwrite — a repository may already have its own AGENTS.md, or a
+// human may have added notes around pdocs' own section since the last
+// `pdocs new`/`pdocs upgrade`. `new.ts`/`upgrade.ts` read, merge and write
+// it themselves; the generic walk below must skip over it entirely rather
+// than clobbering it the same way it does every other template file.
+const SKIP_FILENAMES = new Set(['AGENTS.md'])
 
 // npm's publish step unconditionally strips any file matching `.git*`
 // (.gitignore, .gitattributes, .gitmodules, ...) from a package's tarball,
@@ -150,6 +168,7 @@ export async function copyTemplate(
 
   for (const entry of entries) {
     if (entry.name.includes(VERSIONED_MARKER)) continue
+    if (SKIP_FILENAMES.has(entry.name)) continue
 
     const from = join(srcDir, entry.name)
     const to = join(destDir, DOTFILE_RENAMES[entry.name] ?? entry.name)
@@ -183,6 +202,15 @@ export async function copyTemplate(
 export async function writeTemplateFile(srcFile: string, destFile: string, values: TemplateValues): Promise<void> {
   const content = await readFile(srcFile, 'utf8')
   await writeFile(destFile, substitute(content, values), 'utf8')
+}
+
+// Renders a single template file's placeholder-substituted content without
+// writing it anywhere — used for AGENTS.md (see lib/agents-md.ts), which
+// `new.ts`/`upgrade.ts` need as a string to merge against whatever's already
+// on disk, rather than a file copyTemplate can just write directly.
+export async function renderTemplateFile(srcFile: string, values: TemplateValues): Promise<string> {
+  const content = await readFile(srcFile, 'utf8')
+  return substitute(content, values)
 }
 
 export async function isEmptyOrMissing(dir: string): Promise<boolean> {

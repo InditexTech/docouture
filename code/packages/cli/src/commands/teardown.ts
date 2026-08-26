@@ -27,7 +27,9 @@ import { resolveEffectiveComposeFile } from '../lib/kroki-compose.js'
 // necessarily the package's un-customized default.
 const execFileAsync = promisify(execFile)
 
-const SUPPORTED_TARGETS = new Set(['kroki'])
+const SUPPORTED_TARGETS: Record<string, { description: string }> = {
+  kroki: { description: 'Kroki diagram rendering service (docker compose)' },
+}
 
 export async function runTeardown(
   argv: string[],
@@ -39,9 +41,12 @@ export async function runTeardown(
   const { positional, flags } = parseArgs(argv)
   const target = positional[0]
 
-  if (!target || !SUPPORTED_TARGETS.has(target)) {
+  if (!target || !(target in SUPPORTED_TARGETS)) {
     console.error('usage: pdocs teardown <target> [--dir <path>]')
-    console.error(`supported targets: ${Array.from(SUPPORTED_TARGETS).join(', ')}`)
+    console.error('supported targets:')
+    for (const [name, { description }] of Object.entries(SUPPORTED_TARGETS)) {
+      console.error(`  ${name} — ${description}`)
+    }
     return 1
   }
 

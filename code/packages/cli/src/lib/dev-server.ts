@@ -16,12 +16,14 @@
 import { createServer } from 'node:http'
 import type { Server } from 'node:http'
 import { execFile } from 'node:child_process'
+import type { ChildProcess } from 'node:child_process'
 import { readFile, stat, watch as watchDir } from 'node:fs/promises'
 import { createReadStream, existsSync } from 'node:fs'
 import { extname, isAbsolute, join, normalize, relative, resolve } from 'node:path'
 
 import { readSiteUrl } from './playbook-yml.js'
 import { ANTORA_LOG_LEVEL_ARGS, filterObservableAntoraLog } from './antora-log.js'
+import { debugLog } from './debug-log.js'
 
 const RELOAD_PATH = '/__dev/reload'
 const CLIENT_PATH = '/__dev/client.js'
@@ -87,8 +89,13 @@ export interface DevServer {
   close(): Promise<void>
 }
 
-function defaultRunBuild(siteRoot: string): () => Promise<boolean> {
-  const antoraBin = resolve(siteRoot, 'node_modules', '.bin', 'antora')
+function defaultRunBuild(siteRoot: string, onChildStart?: (child: ChildProcess) => void): () => Promise<boolean> {
+  // On Windows, a locally-installed bin is shimmed as `<name>.cmd`, not the
+  // bare POSIX shell script `execFile` would otherwise try (and fail) to
+  // run directly — see run-script.ts's own comment on the equivalent `npm`
+  // vs `npm.cmd` gotcha.
+  const antoraBinName = process.platform === 'win32' ? 'antora.cmd' : 'antora'
+  const antoraBin = resolve(siteRoot, 'node_modules', '.bin', antoraBinName)
   return () =>
     new Promise((resolvePromise) => {
       // No --fetch here: that belongs to the one-off build only — on a
@@ -97,7 +104,8 @@ function defaultRunBuild(siteRoot: string): () => Promise<boolean> {
       // none, a single stuck build would permanently block every future
       // rebuild for the rest of the dev session (drain()'s `running` flag
       // never clears because runBuild() never resolves).
-      execFile(
+      debugLog(`spawning: ${antoraBin} antora-playbook.local.yml ${ANTORA_LOG_LEVEL_ARGS.join(' ')}`)
+      const child = execFile(
         antoraBin,
         ['antora-playbook.local.yml', ...ANTORA_LOG_LEVEL_ARGS],
         { cwd: siteRoot, timeout: BUILD_TIMEOUT_MS },
@@ -121,6 +129,7 @@ function defaultRunBuild(siteRoot: string): () => Promise<boolean> {
           resolvePromise(!err)
         }
       )
+      onChildStart?.(child)
     })
 }
 
@@ -142,7 +151,11 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
   const { siteRoot } = options
   const log = options.log ?? ((msg: string) => console.log(`dev ${msg}`))
   const logError = options.logError ?? ((msg: string) => console.error(`dev ${msg}`))
-  const runBuild = options.runBuild ?? defaultRunBuild(siteRoot)
+  // Only the default build path's child is trackable for a forced kill on
+  // shutdown (below) — a custom options.runBuild (tests; a future
+  // non-Antora build) owns its own process lifecycle, if it has one at all.
+  let activeBuildChild: ChildProcess | null = null
+  const runBuild = options.runBuild ?? defaultRunBuild(siteRoot, (child) => (activeBuildChild = child))
 
   const root = resolve(siteRoot, 'build', 'site')
   const basePath = await readBasePath(siteRoot)
@@ -356,6 +369,13 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
     async close() {
       watchAbort.abort()
       if (timer) clearTimeout(timer)
+      // A rebuild that's still in flight when SIGINT/SIGTERM arrives would
+      // otherwise be left running as an orphan after the dev server itself
+      // has already torn down — kill it too, best-effort (it may already
+      // have exited on its own by the time close() runs).
+      if (activeBuildChild && activeBuildChild.exitCode === null && !activeBuildChild.killed) {
+        activeBuildChild.kill('SIGTERM')
+      }
       for (const res of clients) res.end()
       await new Promise<void>((resolvePromise) => server.close(() => resolvePromise()))
     },

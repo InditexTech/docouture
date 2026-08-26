@@ -1,3 +1,4 @@
+<!-- pdocs:start - managed by pdocs; edits inside this block are overwritten by `pdocs new`/`pdocs upgrade` -->
 <!-- prettier-ignore -->
 # __PDOCS_TITLE__ documentation
 
@@ -59,6 +60,8 @@ go through the `pdocs` CLI.
   agree, the home-page vs. content-page patterns, and mono-module vs. multi-module sites.
 - **`docs-versioning`** — only present when this site was scaffolded with
   `--mode versioned`: cutting releases, `pdocs version`, and `docs/.release-version`.
+
+<!-- pdocs:end -->
 
 ## Documentation state
 

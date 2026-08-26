@@ -25,8 +25,11 @@ import { PACKAGE_NAME, RESOURCE, OVERRIDE_FILENAME, resolveBundledComposeFile } 
 // `MODULE_NOT_FOUND` — see lib/kroki-compose.js's own header for why
 // resolution goes through the site's own install rather than this CLI's.
 
-const SUPPORTED_TARGETS: Record<string, { resolve: typeof resolveBundledComposeFile }> = {
-  kroki: { resolve: resolveBundledComposeFile },
+const SUPPORTED_TARGETS: Record<string, { resolve: typeof resolveBundledComposeFile; description: string }> = {
+  kroki: {
+    resolve: resolveBundledComposeFile,
+    description: 'Kroki + mermaid-companion docker compose definition (docs/kroki-compose.yml)',
+  },
 }
 
 export async function runEject(
@@ -38,7 +41,10 @@ export async function runEject(
 
   if (!target || !(target in SUPPORTED_TARGETS)) {
     console.error('usage: pdocs eject <target> [--dir <path>]')
-    console.error(`supported targets: ${Object.keys(SUPPORTED_TARGETS).join(', ')}`)
+    console.error('supported targets:')
+    for (const [name, { description }] of Object.entries(SUPPORTED_TARGETS)) {
+      console.error(`  ${name} — ${description}`)
+    }
     return 1
   }
 

@@ -132,4 +132,47 @@ describe('runUpgrade', () => {
     const agentsMd = await readFile(join(repo, 'AGENTS.md'), 'utf8')
     expect(agentsMd).toContain('Custom Title')
   })
+
+  it('re-syncs at the true repo root when --dir points at a nested subdirectory', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-project-docs', '--dir', repo, '--yes'])
+
+    const nested = join(repo, 'docs', 'src', 'modules', 'ROOT', 'pages')
+    await mkdir(nested, { recursive: true })
+
+    const workflowPath = join(repo, '.github', 'workflows', 'pdocs-release.yml')
+    await writeFile(workflowPath, 'stale content', 'utf8')
+
+    const code = await runUpgrade(['--dir', nested])
+    expect(code).toBe(0)
+
+    const workflow = await readFile(workflowPath, 'utf8')
+    expect(workflow).not.toBe('stale content')
+  })
+
+  it("merges into AGENTS.md's pdocs-managed section, leaving a human's own content around it untouched", async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-project-docs', '--dir', repo, '--title', 'My Project Docs', '--yes'])
+
+    const agentsPath = join(repo, 'AGENTS.md')
+    const scaffolded = await readFile(agentsPath, 'utf8')
+
+    // A human adds their own notes before and after pdocs' own section.
+    const withHandEdits = `# Team notes\n\nSay hi to the docs bot.\n\n${scaffolded}\n## Also see\n\nOur internal wiki.\n`
+    await writeFile(agentsPath, withHandEdits, 'utf8')
+
+    const code = await runUpgrade(['--dir', repo])
+    expect(code).toBe(0)
+
+    const after = await readFile(agentsPath, 'utf8')
+    expect(after).toContain('# Team notes')
+    expect(after).toContain('Say hi to the docs bot.')
+    expect(after).toContain('## Also see')
+    expect(after).toContain('Our internal wiki.')
+    // The managed section itself is still there, refreshed.
+    expect(after).toContain('pdocs:start')
+    expect(after).toContain('My Project Docs documentation')
+  })
 })

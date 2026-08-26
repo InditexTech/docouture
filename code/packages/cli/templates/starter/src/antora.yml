@@ -1,6 +1,12 @@
 # Component descriptor. Every directory Antora treats as documentation needs
 # one of these. See https://docs.antora.org/antora/latest/component-version/
-name: __PDOCS_NAME__
+#
+# `name` is either this site's own name (a real URL path segment on
+# publish) or Antora's reserved `ROOT` (contributes no segment at all) —
+# decided by the `pdocs new` wizard's "extra URL path segment" question (or
+# `--url-segment`), default off/ROOT. See antora-playbook.yml's own
+# site.url comment for the full GitHub Pages URL shape either way.
+name: __PDOCS_COMPONENT_NAME__
 title: __PDOCS_TITLE__
 # This descriptor is identical for BOTH versioning modes — see the pdocs
 # docs-site-package skill's reference/versioning-modes.md. `main` permanently

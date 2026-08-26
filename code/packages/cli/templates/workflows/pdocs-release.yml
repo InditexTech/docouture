@@ -127,21 +127,37 @@ jobs:
       - name: Install dependencies
         run: __PDOCS_INSTALL_CI__
 
+      # See pdocs-pr-verify.yml's own comment: this build reads
+      # antora-playbook.local.yml (Build docs below), not the real
+      # antora-playbook.yml — same reason as that step's own "Detect mode"
+      # doesn't apply here (the tag this run is about to cut doesn't exist
+      # yet, per Build docs' own comment), so the enabled check has to look
+      # at the same file Build docs actually builds.
+      - name: Kroki / Detect enabled
+        id: kroki-check
+        run: |
+          if grep -qE "^\s*kroki-enabled:\s*['\"]?true['\"]?\s*(#.*)?$" antora-playbook.local.yml; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       # See pdocs-pr-verify.yml's own comment: primes the runner's Docker
       # image store before the Build step's implicit Kroki startup.
       - name: Kroki / Docker image cache
         id: kroki-cache
+        if: steps.kroki-check.outputs.enabled == 'true'
         uses: actions/cache@v4
         with:
           path: /tmp/kroki-images.tar
           key: ${{ runner.os }}-kroki-images-${{ hashFiles('**/kroki-compose.yml') }}
 
       - name: Kroki / Load cached images
-        if: steps.kroki-cache.outputs.cache-hit == 'true'
+        if: steps.kroki-check.outputs.enabled == 'true' && steps.kroki-cache.outputs.cache-hit == 'true'
         run: docker load -i /tmp/kroki-images.tar
 
       - name: Kroki / Pull and save images
-        if: steps.kroki-cache.outputs.cache-hit != 'true'
+        if: steps.kroki-check.outputs.enabled == 'true' && steps.kroki-cache.outputs.cache-hit != 'true'
         run: |
           compose_file="$(find . -name kroki-compose.yml 2>/dev/null | head -1)"
           docker compose -f "$compose_file" pull

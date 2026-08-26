@@ -150,6 +150,7 @@ describe('runNew', () => {
       'pdocs-release.yml',
       'pdocs-release-preview.yml',
       'pdocs-pr-verify.yml',
+      'pdocs-kroki-cache-warm.yml',
     ]) {
       const content = await readFile(join(repo, '.github', 'workflows', workflow), 'utf8')
       expect(content.length).toBeGreaterThan(0)

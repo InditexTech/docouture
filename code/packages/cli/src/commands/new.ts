@@ -34,11 +34,17 @@ const MODES = ['standalone', 'versioned'] as const
 type Mode = (typeof MODES)[number]
 
 // Filenames pdocs-publish.yml / pdocs-release.yml / pdocs-release-preview.yml /
-// pdocs-pr-verify.yml are templated under (see templates/workflows/) — kept
-// as a literal list here so the pre-flight conflict check below can name
-// exactly which ones would be overwritten without having to read the
-// template directory to find out.
-const WORKFLOW_NAMES = ['pdocs-publish.yml', 'pdocs-release.yml', 'pdocs-release-preview.yml', 'pdocs-pr-verify.yml']
+// pdocs-pr-verify.yml / pdocs-kroki-cache-warm.yml are templated under (see
+// templates/workflows/) — kept as a literal list here so the pre-flight
+// conflict check below can name exactly which ones would be overwritten
+// without having to read the template directory to find out.
+const WORKFLOW_NAMES = [
+  'pdocs-publish.yml',
+  'pdocs-release.yml',
+  'pdocs-release-preview.yml',
+  'pdocs-pr-verify.yml',
+  'pdocs-kroki-cache-warm.yml',
+]
 
 // Repo-root-relative paths `templates/agent-support/` lands under (see
 // new.ts's own copyTemplate call below) — kept as a literal list, same

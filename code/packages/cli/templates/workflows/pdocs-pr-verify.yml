@@ -56,29 +56,44 @@ jobs:
       - name: Install dependencies
         run: __PDOCS_INSTALL_CI__
 
-      # This site's antora-playbook.yml has `kroki-enabled: true`, so the
-      # Build step below renders real diagrams through a local Kroki service
-      # that `@inditextech/pdocs-antora-extensions`' `kroki-prewarm.js` starts
-      # itself (docker compose) the moment it finds nothing listening yet —
-      # no explicit setup needed for that. These two steps only prime the
-      # runner's Docker image store first, so that implicit startup finds
-      # everything already pulled instead of doing it cold on every run. Cache
-      # key is the compose file's own hash (images are pinned by digest, not
-      # `:latest` — see that file's own header), so it only invalidates when
-      # the actual pinned images change.
+      # This build's antora-playbook.local.yml (the file Build actually reads
+      # below) may or may not have `kroki-enabled: true` — a site can turn it
+      # off (see that attribute's own comment). When it's off, the Build
+      # step's implicit Kroki startup never runs, so priming a Docker image
+      # store for it would just waste time on every single PR run; this step
+      # checks that up front and gates the three Kroki steps below on it.
+      - name: Kroki / Detect enabled
+        id: kroki-check
+        run: |
+          if grep -qE "^\s*kroki-enabled:\s*['\"]?true['\"]?\s*(#.*)?$" antora-playbook.local.yml; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # When enabled: the Build step below renders real diagrams through a
+      # local Kroki service that `@inditextech/pdocs-antora-extensions`'
+      # `kroki-prewarm.js` starts itself (docker compose) the moment it finds
+      # nothing listening yet — no explicit setup needed for that. These two
+      # steps only prime the runner's Docker image store first, so that
+      # implicit startup finds everything already pulled instead of doing it
+      # cold on every run. Cache key is the compose file's own hash (images
+      # are pinned by digest, not `:latest` — see that file's own header), so
+      # it only invalidates when the actual pinned images change.
       - name: Kroki / Docker image cache
         id: kroki-cache
+        if: steps.kroki-check.outputs.enabled == 'true'
         uses: actions/cache@v4
         with:
           path: /tmp/kroki-images.tar
           key: ${{ runner.os }}-kroki-images-${{ hashFiles('**/kroki-compose.yml') }}
 
       - name: Kroki / Load cached images
-        if: steps.kroki-cache.outputs.cache-hit == 'true'
+        if: steps.kroki-check.outputs.enabled == 'true' && steps.kroki-cache.outputs.cache-hit == 'true'
         run: docker load -i /tmp/kroki-images.tar
 
       - name: Kroki / Pull and save images
-        if: steps.kroki-cache.outputs.cache-hit != 'true'
+        if: steps.kroki-check.outputs.enabled == 'true' && steps.kroki-cache.outputs.cache-hit != 'true'
         run: |
           # docs/kroki-compose.yml if this site has ejected it (see that
           # file's own header), else the bundled default under node_modules.

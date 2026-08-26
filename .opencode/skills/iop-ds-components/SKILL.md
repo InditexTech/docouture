@@ -1,6 +1,6 @@
 ---
 name: iop-ds-components
-description: "Build UI in the pdocs Antora bundle out of IOP DS (IDS) components — reusing the design system's shipped BEM CSS instead of writing new styles. USE WHEN editing Handlebars layouts or partials in code/packages/ui-bundle, styling site chrome (header, nav, toolbar, breadcrumbs, pagination, toc, footer), rendering AsciiDoc content as a DS component, or writing an Antora/Asciidoctor extension. EXAMPLES: 'style the nav like the DS', 'add tabs to the docs', 'make admonitions look like IDS notifications', 'add a card grid block macro'."
+description: "Build UI in the docouture Antora bundle out of IOP DS (IDS) components — reusing the design system's shipped BEM CSS instead of writing new styles. USE WHEN editing Handlebars layouts or partials in code/packages/ui-bundle, styling site chrome (header, nav, toolbar, breadcrumbs, pagination, toc, footer), rendering AsciiDoc content as a DS component, or writing an Antora/Asciidoctor extension. EXAMPLES: 'style the nav like the DS', 'add tabs to the docs', 'make admonitions look like IDS notifications', 'add a card grid block macro'."
 ---
 
 # IOP DS — Components in the Antora bundle
@@ -163,11 +163,11 @@ generated from them — the token layer, one icon-sizing rule, and whatever
 `packages/ui-bundle/src/css/ids-components.yml` currently lists (check that file for
 the live set — it changes as components are added). Every manifest addition joins that
 same generated surface. `code/packages/ui-bundle/NOTICE` records what's derived and
-from where. **If a pdocs site is ever published externally, or before vendoring a
+from where. **If a docouture site is ever published externally, or before vendoring a
 large chunk of component CSS, this must be revisited with whoever owns DS
 licensing** — flag it rather than shipping quietly.
 
 ## Reference
 
-- `reference/catalogue.md` — IDS component → BEM block → package path → what pdocs uses it for
+- `reference/catalogue.md` — IDS component → BEM block → package path → what docouture uses it for
 - `reference/extensions.md` — writing and registering Asciidoctor extensions here

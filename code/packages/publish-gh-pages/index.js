@@ -1,12 +1,12 @@
 'use strict'
 
-// The GitHub Pages `pdocs publish` driver. Called by
-// @inditextech/pdocs-cli's `publish` command as
-// `require('@inditextech/pdocs-publish-gh-pages')(dir, options)` — a plain
+// The GitHub Pages `docouture publish` driver. Called by
+// @inditextech/docouture-cli's `publish` command as
+// `require('@inditextech/docouture-publish-gh-pages')(dir, options)` — a plain
 // function, not an Antora extension. Earlier design hooked Antora's own
 // `sitePublished` pipeline event instead (a publish-target `antora.extensions`
 // entry); this package is deliberately NOT that anymore; publishing is a CLI
-// concern (`pdocs publish gh-pages`), decoupled from `antora build` — a site
+// concern (`docouture publish gh-pages`), decoupled from `antora build` — a site
 // can build without publishing, and re-publish an already-built `build/site`
 // without rebuilding.
 //
@@ -16,7 +16,7 @@
 // is pushing that directory to a branch.
 //
 // THREE HARD-LEARNED FIXES BAKED IN HERE, all discovered from the same
-// symptom: `pdocs-publish.yml` reported success ("GitHub Pages publish
+// symptom: `docouture-publish.yml` reported success ("GitHub Pages publish
 // complete") while the `gh-pages` branch was never actually created/updated.
 //
 //   1. DEFAULT GIT IDENTITY. `gh-pages`'s own commit step needs a
@@ -148,7 +148,7 @@ const defaultGit = {
 
   /** Creates `branch` on `remote` as a single, empty, historyless commit. */
   async createOrphanBranch(remote, branch, user) {
-    const dir = await mkdtemp(path.join(os.tmpdir(), 'pdocs-gh-pages-'))
+    const dir = await mkdtemp(path.join(os.tmpdir(), 'docouture-gh-pages-'))
     try {
       await execFileAsync('git', ['init', '--quiet', dir])
       await execFileAsync('git', ['checkout', '--quiet', '--orphan', branch], { cwd: dir })
@@ -213,7 +213,7 @@ module.exports = async function publishGhPages(dir, options = {}, ghpages = requ
   //   - Not GitHub Actions, no push, UNLESS `options.force` says so
   //     explicitly. `GITHUB_ACTIONS=true` is set by every GitHub Actions job
   //     automatically — nothing to configure there — so the common case
-  //     (pdocs-publish.yml, in GitHub Actions) "just works". Any other CI
+  //     (docouture-publish.yml, in GitHub Actions) "just works". Any other CI
   //     vendor, or a deliberate publish from a local machine, has to opt in
   //     with `--force` — a choice made explicitly at the call site, never a
   //     side effect nobody asked for.

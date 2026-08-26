@@ -20,7 +20,7 @@ let errorSpy: ReturnType<typeof vi.spyOn>
 let logSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  base = await realpath(await mkdtemp(join(tmpdir(), 'pdocs-cli-upgrade-')))
+  base = await realpath(await mkdtemp(join(tmpdir(), 'docouture-cli-upgrade-')))
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
   logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
 })
@@ -54,7 +54,7 @@ describe('runUpgrade', () => {
 
     // Simulate drift: a workflow and a skill file were hand-edited (or are
     // simply stale relative to the CLI's current templates).
-    const workflowPath = join(repo, '.github', 'workflows', 'pdocs-release.yml')
+    const workflowPath = join(repo, '.github', 'workflows', 'docouture-release.yml')
     await writeFile(workflowPath, 'stale content', 'utf8')
     const agentsPath = join(repo, 'AGENTS.md')
     await writeFile(agentsPath, 'stale content', 'utf8')
@@ -78,7 +78,7 @@ describe('runUpgrade', () => {
     await initRepo(repo)
     await runNew(['my-project-docs', '--dir', repo, '--yes'])
 
-    const antoraYmlPath = join(repo, 'docs', 'docs', 'antora.yml')
+    const antoraYmlPath = join(repo, 'docs', 'src', 'antora.yml')
     const before = await readFile(antoraYmlPath, 'utf8')
 
     await runUpgrade(['--dir', repo])
@@ -92,7 +92,7 @@ describe('runUpgrade', () => {
     await initRepo(repo)
     await runNew(['my-project-docs', '--dir', repo, '--yes'])
 
-    const workflowPath = join(repo, '.github', 'workflows', 'pdocs-release.yml')
+    const workflowPath = join(repo, '.github', 'workflows', 'docouture-release.yml')
     await writeFile(workflowPath, 'stale content', 'utf8')
 
     const code = await runUpgrade(['--dir', repo, '--dry-run'])
@@ -104,7 +104,7 @@ describe('runUpgrade', () => {
 
     expect(logSpy).toHaveBeenCalledWith('would write:')
     const allLogs = logSpy.mock.calls.map((call) => String(call[0])).join('\n')
-    expect(allLogs).toContain('pdocs-release.yml')
+    expect(allLogs).toContain('docouture-release.yml')
     expect(allLogs).toContain('AGENTS.md')
   })
 
@@ -116,9 +116,9 @@ describe('runUpgrade', () => {
     const code = await runUpgrade(['--dir', repo])
     expect(code).toBe(0)
 
-    const workflow = await readFile(join(repo, '.github', 'workflows', 'pdocs-release.yml'), 'utf8')
+    const workflow = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
     // Never a leftover placeholder token, whatever the actual value is.
-    expect(workflow).not.toContain('__PDOCS_')
+    expect(workflow).not.toContain('__DOCOUTURE_')
   })
 
   it('falls back to a directory-derived title when docs/antora.yml is absent, and --title overrides it', async () => {
@@ -131,5 +131,48 @@ describe('runUpgrade', () => {
 
     const agentsMd = await readFile(join(repo, 'AGENTS.md'), 'utf8')
     expect(agentsMd).toContain('Custom Title')
+  })
+
+  it('re-syncs at the true repo root when --dir points at a nested subdirectory', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-project-docs', '--dir', repo, '--yes'])
+
+    const nested = join(repo, 'docs', 'src', 'modules', 'ROOT', 'pages')
+    await mkdir(nested, { recursive: true })
+
+    const workflowPath = join(repo, '.github', 'workflows', 'docouture-release.yml')
+    await writeFile(workflowPath, 'stale content', 'utf8')
+
+    const code = await runUpgrade(['--dir', nested])
+    expect(code).toBe(0)
+
+    const workflow = await readFile(workflowPath, 'utf8')
+    expect(workflow).not.toBe('stale content')
+  })
+
+  it("merges into AGENTS.md's docouture-managed section, leaving a human's own content around it untouched", async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-project-docs', '--dir', repo, '--title', 'My Project Docs', '--yes'])
+
+    const agentsPath = join(repo, 'AGENTS.md')
+    const scaffolded = await readFile(agentsPath, 'utf8')
+
+    // A human adds their own notes before and after docouture' own section.
+    const withHandEdits = `# Team notes\n\nSay hi to the docs bot.\n\n${scaffolded}\n## Also see\n\nOur internal wiki.\n`
+    await writeFile(agentsPath, withHandEdits, 'utf8')
+
+    const code = await runUpgrade(['--dir', repo])
+    expect(code).toBe(0)
+
+    const after = await readFile(agentsPath, 'utf8')
+    expect(after).toContain('# Team notes')
+    expect(after).toContain('Say hi to the docs bot.')
+    expect(after).toContain('## Also see')
+    expect(after).toContain('Our internal wiki.')
+    // The managed section itself is still there, refreshed.
+    expect(after).toContain('docouture:start')
+    expect(after).toContain('My Project Docs documentation')
   })
 })

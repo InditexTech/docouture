@@ -2,7 +2,7 @@
  * `<details>` height animation (GH-61 Part 1 follow-up) + `[accordion]`
  * group keyboard nav (Part 2) — layered onto the server-rendered markup
  * both `[%collapsible]` (plain Asciidoctor, no extension involved) and
- * `asciidoc-extensions/lib/accordion.js` (a `.pdocs-accordion-group`
+ * `asciidoc-extensions/lib/accordion.js` (a `.docouture-accordion-group`
  * wrapping the same `<details>` shape) emit. Every `<details>` under
  * `.doc` is already a fully working, independently togglable disclosure
  * with NO script at all (that is Part 1's whole point) — single-open, when
@@ -33,7 +33,7 @@
  *      (verified against the DS: `cloneElement` in `accordion.js` never
  *      passes a `tabIndex` to its children), so every header stays in the
  *      normal tab order and the arrow keys only ever move focus, never
- *      remove a stop from Tab. Deliberately scoped to `.pdocs-accordion-
+ *      remove a stop from Tab. Deliberately scoped to `.docouture-accordion-
  *      group` only, unlike (1): roving focus between `<details>` elements
  *      that have nothing to do with each other (two unrelated
  *      `[%collapsible]`s three sections apart) would move focus somewhere
@@ -78,9 +78,9 @@
   })
 
   // Keyboard roving focus, unlike the animation above, is scoped to items
-  // that share a `.pdocs-accordion-group` — see the header comment's point
+  // that share a `.docouture-accordion-group` — see the header comment's point
   // (2) for why a standalone `[%collapsible]` deliberately gets none of it.
-  var groups = [].slice.call(document.querySelectorAll<HTMLElement>('.pdocs-accordion-group'))
+  var groups = [].slice.call(document.querySelectorAll<HTMLElement>('.docouture-accordion-group'))
   groups.forEach(function (group: HTMLElement) {
     var items = [].slice.call(group.querySelectorAll<HTMLDetailsElement>(':scope > details'))
     var summaries = items.map(function (details: HTMLDetailsElement) {
@@ -179,7 +179,7 @@
    * pinning the element at a stale pixel height once it finishes.
    */
   function animate (el: HTMLElement, from: number, to: number, motion: { duration: number; easing: string }, onDone: (() => void) | null) {
-    var pending = (el as HTMLElement & { pdocsAccordionAnimation?: Animation }).pdocsAccordionAnimation
+    var pending = (el as HTMLElement & { docoutureAccordionAnimation?: Animation }).docoutureAccordionAnimation
     if (pending) pending.cancel()
 
     el.style.overflow = 'hidden'
@@ -187,7 +187,7 @@
       duration: motion.duration,
       easing: motion.easing,
     })
-    ;(el as HTMLElement & { pdocsAccordionAnimation?: Animation }).pdocsAccordionAnimation = anim
+    ;(el as HTMLElement & { docoutureAccordionAnimation?: Animation }).docoutureAccordionAnimation = anim
 
     anim.addEventListener('finish', finish)
     anim.addEventListener('cancel', finish)
@@ -195,7 +195,7 @@
     function finish () {
       el.style.overflow = ''
       el.style.height = ''
-      ;(el as HTMLElement & { pdocsAccordionAnimation?: Animation }).pdocsAccordionAnimation = undefined
+      ;(el as HTMLElement & { docoutureAccordionAnimation?: Animation }).docoutureAccordionAnimation = undefined
       if (onDone) onDone()
     }
   }

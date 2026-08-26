@@ -68,7 +68,7 @@ default.hbs
 `home.hbs`'s own tree is `head` + `header` (`variant='home'`) + `nav` + `home` (the two
 grid columns) + `site-footer` + `footer-scripts`. `site-footer.hbs` is four columns —
 brand, authored links, module links, copyright — where the two link columns come from
-`page.componentVersion.footer`, attached by `@inditextech/pdocs-antora-extensions` from the
+`page.componentVersion.footer`, attached by `@inditextech/docouture-antora-extensions` from the
 `footer` key in `antora.yml` (the playbook's `site.keys` is a flat primitive map and cannot
 carry a list). The modules column lists every navigation tree that has a `startUrl`, and
 falls back to the second authored group when the component has fewer than two of them.

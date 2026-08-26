@@ -12,7 +12,7 @@ let base: string
 let errorSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  base = await mkdtemp(join(tmpdir(), 'pdocs-cli-build-cmd-'))
+  base = await mkdtemp(join(tmpdir(), 'docouture-cli-build-cmd-'))
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 })
 
@@ -62,7 +62,7 @@ describe('runBuild', () => {
     expect(code).toBe(3)
   })
 
-  it('forwards --log-level=info so pdocs-* extension logs are actually emitted (GH-44 follow-up)', async () => {
+  it('forwards --log-level=info so docouture-* extension logs are actually emitted (GH-44 follow-up)', async () => {
     await mkdir(join(base, 'docs'), { recursive: true })
     await writeFile(
       join(base, 'docs', 'package.json'),

@@ -1,4 +1,4 @@
-# pdocs — developer workflow entrypoint.
+# docouture — developer workflow entrypoint.
 #
 # The Nx workspace root is `code/`, not the repository root: `.tool-versions` is
 # resolved by walking up from the current directory, so `pnpm` only works from
@@ -11,7 +11,8 @@
 set working-directory := 'code'
 
 nx := 'pnpm nx'
-name := 'pdocs'
+tooling := 'pnpm exec docouture-tooling'
+name := 'docouture'
 version := `awk -F'"' '/"version"/ { print $4; exit }' package.json`
 
 # List the available commands. Private: it is what a bare `just` runs, so
@@ -23,7 +24,12 @@ default: (_hdr "")
     # strip it, so it is written with ANSI-C quoting instead.
     just --list --unsorted --list-heading $'Available commands:\n\n'
 
-# Announce which command is about to run
+# Announce which command is about to run. Deliberately stays inline bash
+# rather than delegating to packages/tooling (GH-140) like the recipes below
+# it: `just bootstrap` prints one of these *before* `pnpm install` has ever
+# run, so this can't depend on a workspace package's build output existing —
+# a genuine zero-dependency requirement none of the other migrated recipes
+# have to satisfy, since they only ever run against an already-set-up repo.
 [private]
 _hdr cmd:
     #!/usr/bin/env bash
@@ -63,6 +69,14 @@ _hdr cmd:
 
     printf '%s\n\n' "$banner"
 
+# Ensures packages/tooling (GH-140) is built before any recipe below shells
+# out to it — `pnpm exec docouture-tooling` fails outright otherwise, e.g.
+# straight after a fresh clone. Routed through nx so repeat calls are a
+# cache hit, not a rebuild.
+[private]
+_tooling:
+    @{{ nx }} run @inditextech/docouture-tooling:build >/dev/null
+
 # ---------------------------------------------------------------- setup ------
 
 # Provision the toolchain and install dependencies
@@ -73,107 +87,21 @@ bootstrap: (_hdr "bootstrap")
     pnpm install
     @just doctor
 
-# Check that the workspace is in a state where builds will succeed
+# Check that the workspace is in a state where builds will succeed. The
+# checks themselves live in packages/tooling (GH-140) — see its own
+# src/commands/doctor.ts — as tested code instead of inline bash; pass
+# `--json` for a machine-readable report.
 [group('setup')]
 [no-exit-message]
-doctor: (_hdr "doctor")
-    #!/usr/bin/env bash
-    set -uo pipefail
-    status=0
-
-    if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
-      red=$'\033[31m'; green=$'\033[32m'; off=$'\033[0m'
-    else
-      red=''; green=''; off=''
-    fi
-
-    fail() { printf '  %sFAIL%s  %s\n' "$red" "$off" "$1"; status=1; }
-    ok()   { printf '  %s ok %s  %s\n' "$green" "$off" "$1"; }
-
-    echo "toolchain"
-    want_node=$(awk '/^nodejs /{print $2}' .tool-versions)
-    have_node=$(node --version 2>/dev/null | tr -d 'v')
-    if [ "$want_node" = "$have_node" ]; then
-      ok "node $have_node"
-    else
-      fail "node ${have_node:-missing}, expected $want_node — run 'asdf install'"
-    fi
-
-    want_pnpm=$(awk '/^pnpm /{print $2}' .tool-versions)
-    have_pnpm=$(pnpm --version 2>/dev/null)
-    if [ "$want_pnpm" = "$have_pnpm" ]; then
-      ok "pnpm $have_pnpm"
-    else
-      fail "pnpm ${have_pnpm:-missing}, expected $want_pnpm — run 'asdf install'"
-    fi
-
-    echo "dependencies"
-    if [ -d node_modules ]; then
-      ok "node_modules present"
-    else
-      fail "node_modules missing — run 'just bootstrap'"
-    fi
-
-    echo "registry"
-    if grep -qx 'registry=https://registry.npmjs.org/' .npmrc; then
-      ok "default registry pinned to npmjs"
-    else
-      fail "default registry not pinned in code/.npmrc"
-      cat <<'EOF'
-
-        Without the pin, installs inherit `registry=` from ~/.npmrc. A machine
-        that defaults to an internal mirror resolves every package through it,
-        and CI — which has no such default — resolves them from somewhere else.
-
-    EOF
-    fi
-
-    echo "ids"
-    # The IOP Design System never enters this workspace's install — see
-    # tools/ids/README.md — so there is nothing to resolve here. This just
-    # confirms the generated derivative it left behind is present; if it's
-    # missing the build's CSS pipeline has no tokens to work with.
-    if [ -f packages/ui-bundle/src/css/ids-tokens.css ] && [ -f packages/ui-bundle/src/css/ids-breakpoints.css ]; then
-      ok "IOP DS token derivative present (packages/ui-bundle/src/css/ids-tokens.css)"
-    else
-      fail "IOP DS token derivative missing"
-      cat <<'EOF'
-
-        packages/ui-bundle/src/css/ids-tokens.css and ids-breakpoints.css are
-        committed, generated files — this should not happen from a normal
-        clone. If you deleted them, regenerate with:
-
-          just ids-install && just ids-sync
-
-    EOF
-    fi
-
-    echo "content"
-    if git rev-parse HEAD >/dev/null 2>&1; then
-      ok "repository has at least one commit"
-    else
-      fail "repository has no commits"
-      cat <<'EOF'
-
-        Antora reads content from git. It picks up uncommitted working-tree
-        changes, but the repository must have at least one commit, or the
-        content source resolves to nothing and every site builds with zero
-        pages:
-
-          Start page specified for site not found: starter::index.adoc
-
-        Make an initial commit.
-    EOF
-    fi
-
-    exit $status
+doctor *args: (_hdr "doctor") _tooling
+    {{ tooling }} doctor {{ args }}
 
 # ------------------------------------------------------------------ dev ------
 
 # Live-reloading UI bundle preview on :5252
 [group('dev')]
 preview-ui: (_hdr "preview-ui")
-    pnpm --filter @inditextech/pdocs-ui-bundle preview
+    pnpm --filter @inditextech/docouture-ui-bundle preview
 
 # Stop the local Kroki service (GH-44) that kroki-prewarm.js starts automatically
 # for a kroki-enabled build — the manual counterpart to that auto-start, which
@@ -181,7 +109,7 @@ preview-ui: (_hdr "preview-ui")
 # Targets whichever compose file is actually in effect for `example` — an ejected
 # override at packages/example/kroki-compose.yml if one exists there, else the
 # bundled default in packages/antora-extensions/resources — same resolution order
-# kroki-docker.js itself uses. Scaffolded (non-monorepo) sites use `pdocs teardown
+# kroki-docker.js itself uses. Scaffolded (non-monorepo) sites use `docouture teardown
 # kroki` instead, which resolves the same way against their own docs/ directory.
 [group('dev')]
 kroki-down: (_hdr "kroki-down")
@@ -225,14 +153,14 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
     # `--log-level=info`: Antora's own default (`warn`, set by
     # @antora/playbook-builder's convict schema, not the `info` @antora/
     # logger falls back to on its own) would otherwise silently drop every
-    # pdocs-* extension's own observability logs — Kroki's auto-start/
+    # docouture-* extension's own observability logs — Kroki's auto-start/
     # render lifecycle (kroki-docker.js/kroki-prewarm.js), search-index's
     # per-component summary, llms-txt's, footer's, nav-modules', version-
     # report's, not-found-page's — before the grep below even sees them.
     # See asciidoc-extensions/README.md's own note on this for Kroki
-    # specifically; the same reasoning applies to every `getLogger('pdocs-
+    # specifically; the same reasoning applies to every `getLogger('docouture-
     # ...')` caller in antora-extensions/lib, which is why the filter below
-    # keys off the shared `pdocs-` logger-name prefix rather than naming
+    # keys off the shared `docouture-` logger-name prefix rather than naming
     # Kroki alone.
     #
     # `--log-format=pretty`: Antora's own default format is "pretty if
@@ -249,7 +177,7 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
       extra_args+=(--log-failure-level=none)
     fi
 
-    # Stream the build live, filtered to the same pdocs-*/warn/error signal
+    # Stream the build live, filtered to the same docouture-*/warn/error signal
     # the old buffer-then-print version only showed you once the whole
     # build was over. That buffering was invisible-by-design for the common
     # case (a cache hit is twenty lines describing 90ms) but it also meant
@@ -260,7 +188,7 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
     # indistinguishable from a hung process. `tee` keeps the full raw log
     # for the on-failure dump below while a parallel `grep` shows the
     # filtered subset AS it's written, not after — a cache hit with nothing
-    # pdocs-* to report still prints nothing, same as before.
+    # docouture-* to report still prints nothing, same as before.
     #
     # PIPESTATUS, not `pipefail` + `if ! pipeline`: grep legitimately exits 1
     # whenever nothing in this build matched (the common, good case), and a
@@ -272,9 +200,9 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
     logfile=$(mktemp)
     trap 'rm -f "$logfile"' EXIT
 
-    {{ nx }} run @inditextech/pdocs-{{ site }}:build --outputStyle=static {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- "${extra_args[@]}" 2>&1 \
+    {{ nx }} run @inditextech/docouture-{{ site }}:build --outputStyle=static {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- "${extra_args[@]}" 2>&1 \
       | tee "$logfile" \
-      | grep --line-buffered -E '\(pdocs-|\bWARN\b|\bERROR\b'
+      | grep --line-buffered -E '\(docouture-|\bWARN\b|\bERROR\b'
     build_status=${PIPESTATUS[0]}
 
     if [ "$build_status" -ne 0 ]; then
@@ -305,7 +233,7 @@ build *args: (_hdr "build")
 [group('build')]
 build-site site no_cache='false': (_hdr "build-site " + site)
     # `--log-level=info`: same reasoning as `dev`'s own recipe above — Antora's
-    # actual default (`warn`) would otherwise silently drop every pdocs-*
+    # actual default (`warn`) would otherwise silently drop every docouture-*
     # extension's own `info`-level observability logs (Kroki's lifecycle,
     # search-index's per-component summary, ...) before they're even
     # emitted. Unlike `dev`, this prints everything unfiltered already (no
@@ -317,7 +245,7 @@ build-site site no_cache='false': (_hdr "build-site " + site)
     # re-exercising Kroki's docker-compose auto-start after `just
     # kroki-down`, not just re-reading a cache entry that already has
     # "Kroki rendered N diagram(s)" baked into it from a prior run.
-    {{ nx }} run @inditextech/pdocs-{{ site }}:build {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- --log-level=info
+    {{ nx }} run @inditextech/docouture-{{ site }}:build {{ if no_cache == 'true' { '--skip-nx-cache' } else { '' } }} -- --log-level=info
 
 # ----------------------------------------------------------------- test ------
 
@@ -329,19 +257,8 @@ test *args: (_hdr "test")
 # Run tests for one or more packages (comma-separated short names, e.g. cli or cli,ui-bundle)
 [group('test')]
 [no-exit-message]
-test-package packages *args: (_hdr "test-package " + packages)
-    #!/usr/bin/env bash
-    set -euo pipefail
-    IFS=',' read -ra names <<< "{{ packages }}"
-    projects=()
-    for n in "${names[@]}"; do
-      # strip leading/trailing whitespace
-      n="$(echo "$n" | xargs)"
-      [ -z "$n" ] && continue
-      projects+=("@inditextech/pdocs-$n")
-    done
-    target_projects=$(IFS=,; echo "${projects[*]}")
-    {{ nx }} run-many -t test -p "$target_projects" {{ args }}
+test-package packages *args: (_hdr "test-package " + packages) _tooling
+    {{ tooling }} test-package {{ packages }} {{ args }}
 
 # ------------------------------------------------------------------- ids -----
 #
@@ -461,40 +378,8 @@ affected target='build': (_hdr "affected " + target)
 # Set the version of every package: major, minor, patch or an explicit X.Y.Z
 [group('maint')]
 [no-exit-message]
-bump level='patch': (_hdr "bump " + level)
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    case '{{ level }}' in
-      major | minor | patch | premajor | preminor | prepatch | prerelease) ;;
-      [0-9]*.[0-9]*.[0-9]*) ;;
-      *)
-        echo "  not a bump level or version: '{{ level }}'"
-        echo "  expected: major | minor | patch | premajor | preminor | prepatch | prerelease | X.Y.Z"
-        exit 2
-        ;;
-    esac
-
-    old=$(node -p "require('./package.json').version")
-
-    # The workspace root carries the version everything else follows. npm does
-    # the semver arithmetic and the validation; --loglevel error suppresses its
-    # complaints about the pnpm-specific keys in .npmrc.
-    pnpm version '{{ level }}' --no-git-tag-version --loglevel error >/dev/null
-
-    new=$(node -p "require('./package.json').version")
-
-    # Propagate the resulting literal rather than re-running the bump level in
-    # each package: a package that had drifted is pulled back into line instead
-    # of drifting further. `pnpm -r` excludes the workspace root, already done.
-    pnpm -r exec -- npm version "$new" \
-      --allow-same-version --no-git-tag-version --loglevel error >/dev/null
-
-    # npm rewrites these files itself; without this a bump can leave `just
-    # check` failing on formatting.
-    pnpm exec prettier --write --log-level warn package.json 'packages/*/package.json'
-
-    printf '  %s → %s\n\n' "$old" "$new"
+bump level='patch': (_hdr "bump " + level) _tooling
+    {{ tooling }} bump '{{ level }}'
 
 # Remove build outputs
 [group('maint')]
@@ -543,141 +428,17 @@ outdated: (_hdr "outdated")
 
 # Show the not-yet-released entries in CHANGELOG.md
 [group('release')]
-changelog: (_hdr "changelog")
-    #!/usr/bin/env bash
-    set -euo pipefail
-    awk '/^## \[Unreleased\]/{f=1; next} f && /^## \[/{exit} f' CHANGELOG.md
+changelog: (_hdr "changelog") _tooling
+    {{ tooling }} changelog
 
 # Start an ephemeral local npm registry (Verdaccio) on :4873, for release-local
 [group('release')]
 [no-exit-message]
-local-registry-start: (_hdr "local-registry-start")
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    tmpdir=$(mktemp -d)
-    storage="$tmpdir/storage"
-    config="$tmpdir/config.yaml"
-    mkdir -p "$storage"
-    trap 'rm -rf "$tmpdir"' EXIT
-
-    # Proxies everything except @inditextech/* to npmjs, so a consuming
-    # repo's other dependencies still resolve normally through this
-    # registry if pointed at it wholesale rather than scoped.
-    cat > "$config" <<CONFIG
-    storage: $storage
-    uplinks:
-      npmjs:
-        url: https://registry.npmjs.org/
-    packages:
-      '@inditextech/*':
-        access: \$all
-        publish: \$all
-        unpublish: \$all
-      '**':
-        access: \$all
-        proxy: npmjs
-    log:
-      - { type: stdout, format: pretty, level: warn }
-    CONFIG
-
-    echo "  Verdaccio starting on http://localhost:4873"
-    echo "  storage: $storage"
-    echo "  Ctrl-C to stop and remove the storage directory."
-    echo
-
-    npx --yes verdaccio --config "$config" --listen 4873
+local-registry-start: (_hdr "local-registry-start") _tooling
+    {{ tooling }} registry start
 
 # Snapshot-publish every non-private packages/* package to local-registry-start
 [group('release')]
 [no-exit-message]
-release-local: (_hdr "release-local")
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    registry='http://localhost:4873'
-    # Derived from packages/*/package.json's `private` field — the same
-    # source scripts/publishable-packages.mjs feeds to the CI release
-    # workflow, so the two can't silently drift apart.
-    mapfile -t packages < <(node scripts/publishable-packages.mjs)
-
-    if ! curl -fsS "$registry/-/ping" >/dev/null 2>&1; then
-      echo "  no registry responding at $registry"
-      echo "  run 'just local-registry-start' in another terminal first"
-      exit 1
-    fi
-
-    # Hard-abort on any uncommitted change to these files rather than stash
-    # or work around it: the revert step at the end trusts `git checkout` to
-    # put back exactly what was there before this ran, and an in-progress
-    # edit to one of these files should never be silently clobbered.
-    dirty=()
-    for pkg in "${packages[@]}"; do
-      path="packages/$pkg/package.json"
-      if ! git diff --quiet -- "$path" || ! git diff --quiet --cached -- "$path"; then
-        dirty+=("$path")
-      fi
-    done
-    if [ "${#dirty[@]}" -gt 0 ]; then
-      echo "  uncommitted changes in:"
-      printf '    %s\n' "${dirty[@]}"
-      echo "  commit or stash them first — release-local reverts these files to their committed state when it finishes."
-      exit 1
-    fi
-
-    snapshot="0.0.0-local.$(git rev-parse --short HEAD).$(date +%s)"
-    echo "  snapshot version: $snapshot"
-
-    # Runs on success, failure and interrupt alike, so a Ctrl-C mid-publish
-    # never leaves a package.json version bump behind.
-    restore() {
-      status=$?
-      echo
-      echo "  reverting package.json versions"
-      for pkg in "${packages[@]}"; do
-        git checkout -- "packages/$pkg/package.json"
-      done
-      exit $status
-    }
-    trap restore EXIT
-
-    for pkg in "${packages[@]}"; do
-      (cd "packages/$pkg" && npm version "$snapshot" --no-git-tag-version --allow-same-version --loglevel error >/dev/null)
-    done
-
-    # Only ui-bundle and cli have a build step; antora-extensions,
-    # asciidoc-extensions and publish-gh-pages publish their committed JS
-    # source directly.
-    {{ nx }} run-many -t build -p @inditextech/pdocs-ui-bundle @inditextech/pdocs-cli
-
-    for pkg in "${packages[@]}"; do
-      echo "  publishing $pkg"
-      # pnpm publish (not npm publish) is required here: it rewrites each
-      # package's "workspace:*" cross-references to the resolved $snapshot
-      # version at pack time. npm doesn't understand the workspace: protocol
-      # at all and would ship the literal string, breaking installs in any
-      # consuming repo that isn't itself a pnpm workspace.
-      (cd "packages/$pkg" && pnpm publish --registry "$registry" --tag local --no-git-checks --loglevel warn)
-    done
-
-    echo
-    echo "  Published to $registry as $snapshot:"
-    for pkg in "${packages[@]}"; do
-      name=$(node -p "require('./packages/$pkg/package.json').name")
-      echo "    $name"
-    done
-
-    cat <<EOF
-
-      To consume from another repo, add to its .npmrc:
-
-        @inditextech:registry=$registry/
-
-      Then install the snapshot, e.g.:
-
-        npm install @inditextech/pdocs-cli@$snapshot
-
-      package.json versions in this repo have already been reverted; the
-      snapshot stays installable from Verdaccio until local-registry-start's
-      storage directory is removed (Ctrl-C it).
-    EOF
+release-local: (_hdr "release-local") _tooling
+    {{ tooling }} release-local

@@ -82,7 +82,7 @@ function resolveLang(lang) {
 function highlightSource(source, lang) {
   const instance = shikiInstance.get()
   if (!instance) {
-    // The pre-warm listener (@inditextech/pdocs-antora-extensions'
+    // The pre-warm listener (@inditextech/docouture-antora-extensions'
     // shiki-prewarm.js) never ran — the ui-bundle preview harness, which has
     // no Antora pipeline at all (see extensions.md), or a future caller that
     // forgets to list the extension. Degrade to plain escaped text rather

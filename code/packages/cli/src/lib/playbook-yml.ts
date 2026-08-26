@@ -1,7 +1,7 @@
 'use strict'
 
-// Regex-based reader for the handful of `antora-playbook.yml` fields `pdocs
-// dev` and `pdocs doctor` need — deliberately not a YAML parser, matching
+// Regex-based reader for the handful of `antora-playbook.yml` fields `docouture
+// dev` and `docouture doctor` need — deliberately not a YAML parser, matching
 // the style of antora-yml.ts (this package) and scripts/dev.mjs's own
 // readSiteBasePath (the monorepo dev server this reasoning was lifted from).
 // Every value here is only ever read, never rewritten, so a full parse/dump
@@ -70,7 +70,7 @@ export function readStartPageComponent(content: string): string | null {
 /**
  * `content.sources[0].start_path` — repository-root relative directory
  * holding `docs/antora.yml`. Only the first source is read: every shape
- * `pdocs new` generates has exactly one, and doctor only needs to catch the
+ * `docouture new` generates has exactly one, and doctor only needs to catch the
  * common single-source misconfiguration, not aggregate every source in a
  * hand-authored multi-source playbook.
  */
@@ -86,8 +86,8 @@ export function readSourceUrl(content: string): string | null {
 
 /**
  * `output.dir` — where `antora build` writes the built site. Unset in every
- * playbook `pdocs new` scaffolds (Antora's own default, `build/site`,
- * applies), so `pdocs publish` falls back to that same default rather than
+ * playbook `docouture new` scaffolds (Antora's own default, `build/site`,
+ * applies), so `docouture publish` falls back to that same default rather than
  * treating a missing value as an error.
  */
 export function readOutputDir(content: string): string | null {

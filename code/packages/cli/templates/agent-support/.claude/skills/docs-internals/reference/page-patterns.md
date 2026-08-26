@@ -78,7 +78,7 @@ Answer.
 ```
 
 Block syntax for `[cards]`, `[feature-tabs]`, `[cta]` and `[accordion]` is in the
-`writing-docs-pages` skill's `reference/pdocs-blocks.md`; this file is the section-order
+`writing-docs-pages` skill's `reference/docouture-blocks.md`; this file is the section-order
 pattern, not the block reference.
 
 ## Content pages
@@ -194,15 +194,15 @@ const instance = new Thing() // <1>
 
 ## Mono-module vs. multi-module
 
-`pdocs new` scaffolds a **mono-module** site by default: a single `modules/ROOT/` holding
-both the landing page and all content, no `nav_modules:` in `docs/docs/antora.yml`. This
+`docouture new` scaffolds a **mono-module** site by default: a single `modules/ROOT/` holding
+both the landing page and all content, no `nav_modules:` in `docs/src/antora.yml`. This
 is the right shape for a small site with one coherent topic.
 
 A **multi-module** site splits content into several modules, each with its own
 `nav.adoc`/`pages/`, switchable from the UI's module selector. Growing into this shape:
 
-1. Create `docs/docs/modules/<name>/{nav.adoc,pages/}` for each module.
-2. List every module's `nav.adoc` under `docs/docs/antora.yml`'s top-level `nav:` — but
+1. Create `docs/src/modules/<name>/{nav.adoc,pages/}` for each module.
+2. List every module's `nav.adoc` under `docs/src/antora.yml`'s top-level `nav:` — but
    **not** `ROOT`'s: in a multi-module site, `ROOT` holds only the landing page and is
    deliberately absent from `nav:` (it has nothing to navigate; it borrows a module's own
    nav via `:page-nav-module:` on its `index.adoc`, as shown above).

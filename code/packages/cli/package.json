@@ -1,7 +1,7 @@
 {
-  "name": "@inditextech/pdocs-cli",
+  "name": "@inditextech/docouture-cli",
   "version": "0.1.0",
-  "description": "Command-line tool for pdocs documentation sites: scaffold a new site and set its Antora version outside the monorepo",
+  "description": "Command-line tool for docouture documentation sites: scaffold a new site and set its Antora version outside the monorepo",
   "repository": {
     "type": "git",
     "url": "https://github.com/InditexTech/test-antoradocs.git",
@@ -10,7 +10,7 @@
   "license": "MPL-2.0",
   "type": "module",
   "bin": {
-    "pdocs": "build/bin.js"
+    "docouture": "build/bin.js"
   },
   "files": [
     "build",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^7.0.0",
-    "picocolors": "^1.1.0"
+    "ora": "^8.2.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/copy-templates.mjs && node scripts/chmod-bin.mjs",

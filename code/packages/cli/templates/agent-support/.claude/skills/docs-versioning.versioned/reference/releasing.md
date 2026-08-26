@@ -4,11 +4,11 @@
 
 | name                | set in                                       | scope                                                       |
 | ------------------- | -------------------------------------------- | ----------------------------------------------------------- |
-| `version`           | `docs/docs/antora.yml`                       | per git ref — a ref's own checkout declares its own version |
-| `prerelease`        | `docs/docs/antora.yml`                       | per git ref — `true`/`false`                                |
+| `version`           | `docs/src/antora.yml`                        | per git ref — a ref's own checkout declares its own version |
+| `prerelease`        | `docs/src/antora.yml`                        | per git ref — `true`/`false`                                |
 | `branches` / `tags` | `antora-playbook.yml` → `content.sources[0]` | which refs the _build_ aggregates content from at all       |
 
-`docs/docs/antora.yml` is read once per matched ref — `main` and each release tag get
+`docs/src/antora.yml` is read once per matched ref — `main` and each release tag get
 their own checkout, and therefore their own copy of that file, even though it's "the same
 file" in the sense that both trace back to the same path in git history.
 
@@ -36,18 +36,18 @@ prerelease: false
 content:
   sources:
     - url: ..
-      start_path: docs/docs
+      start_path: docs/src
       branches: [main]
       tags: ['v*']
 ```
 
 `tags: ['v*']` matches every tag shaped `v1.2.0`, `v2.0.0`, etc. — each becomes its own
-version because each tag's own `docs/docs/antora.yml` carries a different `version:`.
+version because each tag's own `docs/src/antora.yml` carries a different `version:`.
 `branches: [main]` contributes the single prerelease version on top. How many past
 versions show up is purely a function of how many tags exist and match the glob — delete
 or rename a tag and it drops out of the aggregate on the next build.
 
-## Cutting a release: `pdocs-release.yml`
+## Cutting a release: `docouture-release.yml`
 
 **Triggers**, both deliberate acts rather than a side effect of an ordinary push:
 
@@ -64,10 +64,10 @@ form field for it; the `pull_request` trigger has none, so it reads
 `docs/.release-version` instead — the plain-text file committed as part of the
 merged PR, containing just the target version.
 
-**The release itself**: `pdocs version <value>` patches `docs/docs/antora.yml` on a
+**The release itself**: `docouture version <value>` patches `docs/src/antora.yml` on a
 one-off commit built on top of `main`'s current tip, `git tag v<value>` is created there,
 and the tag is pushed — a GitHub Release is also created from it. `main` itself is never
-advanced or touched by this step; its own `docs/docs/antora.yml` permanently keeps saying
+advanced or touched by this step; its own `docs/src/antora.yml` permanently keeps saying
 `version: prerelease`, `prerelease: true`.
 
 **Every release tag is force-recreated if it already exists** — a republish (fixing a
@@ -84,14 +84,14 @@ on a republish (the target tag already existed): that run's target version was t
 already superseded by whatever the file currently holds as the next planned target, so
 bumping forward from the republished version would clobber that already-planned value.
 
-## Why there's no `pdocs release` command
+## Why there's no `docouture release` command
 
-`pdocs-release.yml`'s own steps depend on CI-only concerns a portable local CLI command
+`docouture-release.yml`'s own steps depend on CI-only concerns a portable local CLI command
 would either have to assume or re-implement badly: a token with `contents: write` +
 `pull-requests: write`, reading which label a merged PR carried, creating a GitHub
 Release. None of that has a sane local equivalent. The CLI's release-adjacent surface
-stays deliberately narrow: `pdocs version` is the one piece of actual logic the workflow
-reuses locally-testable, because patching `docs/docs/antora.yml`'s fields genuinely is
+stays deliberately narrow: `docouture version` is the one piece of actual logic the workflow
+reuses locally-testable, because patching `docs/src/antora.yml`'s fields genuinely is
 portable; everything else about _cutting_ a release stays in the workflow.
 
 ## URL routing

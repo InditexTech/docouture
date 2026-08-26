@@ -6,7 +6,7 @@ description: "How to plan, populate and maintain documentation for this repo end
 # Documenting your repo
 
 This is the entry point for turning an empty (or half-empty) `docs/` site — scaffolded by
-`pdocs new` — into real, maintained documentation. It's a planning and orchestration
+`docouture new` — into real, maintained documentation. It's a planning and orchestration
 skill, not a syntax reference: once a decision is made here, it hands off to the two
 mechanics skills:
 
@@ -30,7 +30,7 @@ as the repo evolves, not a one-shot wizard that's done after the first pass.
 
 ## The loop, in short
 
-1. **Base check** — confirm identity/branding `pdocs new` already seeded (title, product
+1. **Base check** — confirm identity/branding `docouture new` already seeded (title, product
    name, description, favicon, light/dark logo). Look for existing brand assets elsewhere
    in the repo before asking the user to supply new ones.
 2. **Structure planning** — decide mono- vs. multi-module and which modules exist. See

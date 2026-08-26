@@ -1,5 +1,6 @@
 'use strict'
 
+const registerDuplicateLatestVersion = require('./lib/duplicate-latest-version')
 const registerFooter = require('./lib/footer')
 const registerKrokiPrewarm = require('./lib/kroki-prewarm')
 const registerLifecycleLog = require('./lib/lifecycle-log')
@@ -12,12 +13,12 @@ const registerShikiPrewarm = require('./lib/shiki-prewarm')
 const registerVersionReport = require('./lib/version-report')
 
 /**
- * Registers pdocs' Antora pipeline extensions.
+ * Registers docouture' Antora pipeline extensions.
  *
  * These are ANTORA extensions, not Asciidoctor ones — a different contract
  * and a different playbook key. They hook the site generator's own lifecycle
  * (`antora.extensions` in the playbook), where the sibling
- * @inditextech/pdocs-asciidoc-extensions package hooks the AsciiDoc processor
+ * @inditextech/docouture-asciidoc-extensions package hooks the AsciiDoc processor
  * per page (`asciidoc.extensions`). Antora tells the two apart by inspecting
  * `register.toString()` and warns when one is listed under the other's key.
  *
@@ -54,7 +55,7 @@ const registerVersionReport = require('./lib/version-report')
  * not `navigationBuilt`) and touches none of the state the other four
  * share, so its position in this list is not load-bearing the way theirs is
  * — it is simply registered here too because this file is the one place
- * `@antora/site-generator` is told about every pdocs Antora extension.
+ * `@antora/site-generator` is told about every docouture Antora extension.
  *
  * kroki-prewarm (GH-44) listens on the same `contentAggregated` event as
  * shiki-prewarm, for the same reason (async work that must finish before
@@ -88,7 +89,13 @@ const registerVersionReport = require('./lib/version-report')
  * redirects also listens on `navigationBuilt`, reading only real pages'
  * already-computed `pub.url` — nothing nav-modules/footer/search-index/
  * llms-txt/not-found-page write, and nothing that reads from it either — so
- * its position is not load-bearing. Listed last simply because it's the
+ * its position is not load-bearing.
+ *
+ * duplicate-latest-version (GH #137) listens on `pagesComposed`, reading
+ * only `contentCatalog`'s already-rendered pages (`file.contents`,
+ * `file.out`, `file.pub`) and writing only new files into `siteCatalog` —
+ * nothing any other extension here reads or writes overlaps with it, so its
+ * position is not load-bearing either. Listed last simply because it's the
  * newest addition.
  */
 module.exports.register = function (context, { config }) {
@@ -102,4 +109,5 @@ module.exports.register = function (context, { config }) {
   registerNotFoundPage(context)
   registerVersionReport(context)
   registerRedirects(context, config?.redirects)
+  registerDuplicateLatestVersion(context, config)
 }

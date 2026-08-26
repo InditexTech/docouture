@@ -6,9 +6,18 @@ import { join } from 'node:path'
 export interface TemplateValues {
   name: string
   title: string
+  // Antora's own component `name` (docs/antora.yml, and the component
+  // prefix in each playbook's site.start_page) — separate from `name`
+  // above once the two diverge: `new.ts`'s `urlSegment` wizard
+  // question/flag sets this to either the same value as `name` (component
+  // segment kept as a real URL segment) or the literal 'ROOT' (Antora's
+  // reserved component name, dropped from every published URL — see
+  // Antora's "How Antora Builds URLs" docs). `name` itself never changes:
+  // it still names package.json and the scaffolded directory regardless.
+  componentName: string
   // The exact version of the CLI binary doing the scaffolding (read from its
   // own package.json — see new.ts) — never a range. A scaffolded site's
-  // devDependency on @inditextech/pdocs-cli must match whatever actually
+  // devDependency on @inditextech/docouture-cli must match whatever actually
   // generated it, snapshot/local-release versions (0.0.0-local.<sha>.<ts>)
   // included, or npm install has nothing matching to resolve against on a
   // registry that only ever published that one exact version.
@@ -16,14 +25,14 @@ export interface TemplateValues {
   // Package-manager-aware bits of the scaffolded workflow templates — see
   // lib/detect-package-manager.ts, whose packageManagerPlan() output this
   // maps to token-for-token. 'npm' is always a safe, working default: these
-  // only change what CI caches/runs, never what `pdocs build`/`pdocs dev`
+  // only change what CI caches/runs, never what `docouture build`/`docouture dev`
   // themselves shell out to (still npm, regardless — see run-script.ts).
   pmName: string
   pmCacheName: string
   pmLockfile: string
   pmCiCmd: string
   pmSetupStepYaml: string
-  // A glob string for `package.json`'s scaffolded `pdocs.checkLinks.ignore`
+  // A glob string for `package.json`'s scaffolded `docouture.checkLinks.ignore`
   // (see scripts/check-links.mjs's own comment on that key) — either
   // `https://github.com/owner/repo*`, or, when there's no `origin` remote
   // yet configured, a sentinel string that can never realistically match a
@@ -39,35 +48,36 @@ export interface TemplateValues {
 }
 
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
-  __PDOCS_NAME__: 'name',
-  __PDOCS_TITLE__: 'title',
-  __PDOCS_CLI_VERSION__: 'cliVersion',
-  __PDOCS_PM__: 'pmName',
-  __PDOCS_PM_CACHE__: 'pmCacheName',
-  __PDOCS_LOCKFILE__: 'pmLockfile',
-  __PDOCS_INSTALL_CI__: 'pmCiCmd',
+  __DOCOUTURE_NAME__: 'name',
+  __DOCOUTURE_TITLE__: 'title',
+  __DOCOUTURE_COMPONENT_NAME__: 'componentName',
+  __DOCOUTURE_CLI_VERSION__: 'cliVersion',
+  __DOCOUTURE_PM__: 'pmName',
+  __DOCOUTURE_PM_CACHE__: 'pmCacheName',
+  __DOCOUTURE_LOCKFILE__: 'pmLockfile',
+  __DOCOUTURE_INSTALL_CI__: 'pmCiCmd',
   // The whole comment line (leading spaces, `#`, trailing newline) is the
   // token here, not just the bare placeholder name — a bare
-  // `__PDOCS_PM_SETUP_STEP__` sitting at the start of a YAML line with a
+  // `__DOCOUTURE_PM_SETUP_STEP__` sitting at the start of a YAML line with a
   // step's own `- name: …` right after it on the same line is not valid YAML
   // on its own (before substitution), which is exactly the form these
-  // template files are in until `pdocs new` runs — and `just fmt`/prettier
+  // template files are in until `docouture new` runs — and `just fmt`/prettier
   // parses them as real YAML. A `#`-prefixed placeholder is a comment,
   // valid on any line, so the *template* stays parseable; substituting the
   // whole line (not just the token inside it) is what lets the pnpm-only
   // value (which ends in its own `\n` — see packageManagerPlan) or the
   // empty npm value drop cleanly in its place.
-  '      # __PDOCS_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
+  '      # __DOCOUTURE_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
   // A bare token this time, unlike pmSetupStepYaml above — see
   // TemplateValues.repoIgnoreGlob's own comment for why the whole-segment
   // trick doesn't survive here.
-  __PDOCS_REPO_IGNORE_GLOB__: 'repoIgnoreGlob',
+  __DOCOUTURE_REPO_IGNORE_GLOB__: 'repoIgnoreGlob',
 }
 
 // `<!-- prettier-ignore -->` directives exist only to stop prettier mangling a
-// placeholder token in the template source (e.g. `__PDOCS_TITLE__` inside a
+// placeholder token in the template source (e.g. `__DOCOUTURE_TITLE__` inside a
 // markdown heading, which double-underscore emphasis would otherwise rewrite
-// to `**PDOCS_TITLE**`) — they are not meant to survive into scaffolded
+// to `**DOCOUTURE_TITLE**`) — they are not meant to survive into scaffolded
 // output, where the placeholder has already been substituted away.
 const PRETTIER_IGNORE_LINE = /^<!-- prettier-ignore -->\n/m
 
@@ -84,10 +94,18 @@ function substitute(text: string, values: TemplateValues): string {
 // `release-version.versioned` for a file with no natural extension to hang a
 // mid-name marker off) is a versioning-mode override — see
 // `writeTemplateFile`, which reads one explicitly to lay a versioned-mode
-// file down under its real name when `pdocs new --mode versioned` is used.
+// file down under its real name when `docouture new --mode versioned` is used.
 // It must never be copied under its own literal name by the generic walk
 // below, standalone or not.
 const VERSIONED_MARKER = '.versioned'
+
+// AGENTS.md needs its own merge logic (see lib/agents-md.ts) rather than a
+// blind overwrite — a repository may already have its own AGENTS.md, or a
+// human may have added notes around docouture' own section since the last
+// `docouture new`/`docouture upgrade`. `new.ts`/`upgrade.ts` read, merge and write
+// it themselves; the generic walk below must skip over it entirely rather
+// than clobbering it the same way it does every other template file.
+const SKIP_FILENAMES = new Set(['AGENTS.md'])
 
 // npm's publish step unconditionally strips any file matching `.git*`
 // (.gitignore, .gitattributes, .gitmodules, ...) from a package's tarball,
@@ -95,7 +113,7 @@ const VERSIONED_MARKER = '.versioned'
 // `npm pack --dry-run` on this very package, which silently drops
 // templates/starter/.gitignore while every sibling file in that directory
 // survives. That means a `.gitignore` template only ever worked when
-// `pdocs new` ran from a repo checkout, never from an npm-installed copy —
+// `docouture new` ran from a repo checkout, never from an npm-installed copy —
 // the real-world case. The fix (the same one create-react-app's own
 // template uses): the template source file has no leading dot at all
 // (`gitignore`), and this map renames it back to its real name only at
@@ -120,7 +138,7 @@ function isBinaryFile(name: string): boolean {
 export interface CopyTemplateOptions {
   /**
    * Walk the same tree and return the same paths without touching disk —
-   * used by `pdocs upgrade --dry-run` to preview which files a real run
+   * used by `docouture upgrade --dry-run` to preview which files a real run
    * would create/overwrite. Directories are still recursed into (their
    * existence on disk is never checked, only the source tree's shape), so
    * the returned list is identical to a real run's.
@@ -150,6 +168,7 @@ export async function copyTemplate(
 
   for (const entry of entries) {
     if (entry.name.includes(VERSIONED_MARKER)) continue
+    if (SKIP_FILENAMES.has(entry.name)) continue
 
     const from = join(srcDir, entry.name)
     const to = join(destDir, DOTFILE_RENAMES[entry.name] ?? entry.name)
@@ -183,6 +202,15 @@ export async function copyTemplate(
 export async function writeTemplateFile(srcFile: string, destFile: string, values: TemplateValues): Promise<void> {
   const content = await readFile(srcFile, 'utf8')
   await writeFile(destFile, substitute(content, values), 'utf8')
+}
+
+// Renders a single template file's placeholder-substituted content without
+// writing it anywhere — used for AGENTS.md (see lib/agents-md.ts), which
+// `new.ts`/`upgrade.ts` need as a string to merge against whatever's already
+// on disk, rather than a file copyTemplate can just write directly.
+export async function renderTemplateFile(srcFile: string, values: TemplateValues): Promise<string> {
+  const content = await readFile(srcFile, 'utf8')
+  return substitute(content, values)
 }
 
 export async function isEmptyOrMissing(dir: string): Promise<boolean> {

@@ -261,7 +261,7 @@
 }
 
 /*
- * `.pdocs-accordion-group` — GH-61 Part 2's `[accordion]` wrapper
+ * `.docouture-accordion-group` — GH-61 Part 2's `[accordion]` wrapper
  * (`asciidoc-extensions/lib/accordion.js`). Not a DS class: the real
  * `Accordion` component's own wrapper `<div>` (`accordion/accordion.js`)
  * carries no class of its own — see that extension's own header. No fill,
@@ -280,7 +280,7 @@
  * top margin (plain block div, no padding/border/overflow between them to
  * block collapsing) rather than doubling it.
  */
-.doc .pdocs-accordion-group {
+.doc .docouture-accordion-group {
   margin: var(--doc-space-block) 0 0;
 }
 

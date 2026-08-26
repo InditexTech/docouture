@@ -1,6 +1,6 @@
 # `code-release-preview`
 
-[`code-release_preview.yml`](../code-release_preview.yml) is the same workflow (name, filename, job shape, triggers) as weave.js's workflow of the same name, adapted to pdocs' own `release-type/*` label + `CHANGELOG.md` convention (already used identically by [`code-npm_node-publish-release-and-snapshot.yml`](../code-npm_node-publish-release-and-snapshot.yml)) and to pdocs being trunk-based only.
+[`code-release_preview.yml`](../code-release_preview.yml) is the same workflow (name, filename, job shape, triggers) as weave.js's workflow of the same name, adapted to docouture' own `release-type/*` label + `CHANGELOG.md` convention (already used identically by [`code-npm_node-publish-release-and-snapshot.yml`](../code-npm_node-publish-release-and-snapshot.yml)) and to docouture being trunk-based only.
 
 ## Triggers
 
@@ -22,8 +22,8 @@ None of these jobs release anything — they only comment on the PR with what _w
 
 ## Divergences from weave.js's workflow of the same name
 
-- **No merge-strategy preview**: weave.js's `release-preview` job also computes and comments a "Merge Strategy" line (squash vs. merge-commit), driven by a `DEVELOPMENT_FLOW` repo variable and hotfix-branch-name heuristics for its gitflow-style branching. pdocs is trunk-based only (main + PRs, no long-lived develop/hotfix branches to choose a strategy between — see `code-npm_node-publish-release-and-snapshot.md`'s "No gitflow sync-to-develop PR" note), so that step, its "Check merge strategy" logic and its comment line are dropped entirely.
-- **No `DEVELOPMENT_FLOW`-gated no-labels job**: weave.js only shows `release-preview-no-release-labels` when `vars.DEVELOPMENT_FLOW != 'trunk-based-development'`. Since pdocs is always trunk-based, this job always fires when a matching-path PR carries no `release-type/*` label — no variable to gate on.
+- **No merge-strategy preview**: weave.js's `release-preview` job also computes and comments a "Merge Strategy" line (squash vs. merge-commit), driven by a `DEVELOPMENT_FLOW` repo variable and hotfix-branch-name heuristics for its gitflow-style branching. docouture is trunk-based only (main + PRs, no long-lived develop/hotfix branches to choose a strategy between — see `code-npm_node-publish-release-and-snapshot.md`'s "No gitflow sync-to-develop PR" note), so that step, its "Check merge strategy" logic and its comment line are dropped entirely.
+- **No `DEVELOPMENT_FLOW`-gated no-labels job**: weave.js only shows `release-preview-no-release-labels` when `vars.DEVELOPMENT_FLOW != 'trunk-based-development'`. Since docouture is always trunk-based, this job always fires when a matching-path PR carries no `release-type/*` label — no variable to gate on.
 - **Explicit `GITHUB_TOKEN`/`pull-requests: write` per job**: weave.js's workflow leaves these implicit (no `permissions:` block, no job-level `env:` for the token in its `release-preview` job's final comment step). Ported here with an explicit `permissions: pull-requests: write` and job-level `GITHUB_TOKEN` env in all three jobs, matching the least-privilege style `code-npm_node-publish-release-and-snapshot.yml` already uses.
 - **Path filter**: `code/**` and `.github/workflows/code**`, not weave.js's bare `code/**` — matching the filter `code-npm_node-pr-verify.yml` already uses for its own `CHANGELOG.md` check.
 - **Action pins**: `dorny/paths-filter` and `release-flow/keep-a-changelog-action` are pinned to the same commit SHAs `code-npm_node-publish-release-and-snapshot.yml` already uses, rather than weave.js's own (potentially different) pins.

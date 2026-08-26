@@ -5,15 +5,15 @@ description: "How this Antora documentation site is put together: the playbook, 
 
 # Site structure
 
-This site was scaffolded by `pdocs new` (`@inditextech/pdocs-cli`). This skill covers the
+This site was scaffolded by `docouture new` (`@inditextech/docouture-cli`). This skill covers the
 pieces that make it hang together — where each name is set, how a page becomes reachable,
 and the two page patterns (home vs. content) worth copying rather than reinventing.
 
 - `reference/naming.md` — the four names that must agree, and how to fix them when they
-  don't (`pdocs doctor` checks this automatically).
+  don't (`docouture doctor` checks this automatically).
 - `reference/page-patterns.md` — the home-page block structure and the recurring
   content-page shapes, plus mono-module vs. multi-module layout.
-- `reference/antora-extensions.md` — what `@inditextech/pdocs-antora-extensions` (a
+- `reference/antora-extensions.md` — what `@inditextech/docouture-antora-extensions` (a
   different kind of extension from the authoring blocks in `writing-docs-pages`) provides:
   the module switcher, site footer, search index and `llms.txt` generation.
 
@@ -26,21 +26,21 @@ blocks — see the `writing-docs-pages` skill.
 docs/
   antora-playbook.yml          site title, content source, UI bundle, asciidoc/antora extensions
   antora-playbook.local.yml    same shape, but content.sources[] is just `branches: HEAD` —
-                                 what `pdocs dev` and PR verification build against, since a
+                                 what `docouture dev` and PR verification build against, since a
                                  PR/feature-branch checkout doesn't have `main` or a release tag
-  package.json                 name, devDependencies (pdocs-cli, ui-bundle, the two extension
+  package.json                 name, devDependencies (docouture-cli, ui-bundle, the two extension
                                  packages), the `build`/`dev` scripts
-  docs/
+  src/
     antora.yml                 component descriptor: name, title, version, nav
     modules/<module>/nav.adoc  navigation tree, one per module
 ```
 
-The whole starter template — `package.json`, both playbooks, the nested `docs/` — was
+The whole starter template — `package.json`, both playbooks, the nested `src/` — was
 copied under this repository's own `docs/`, so `antora-playbook.yml` lives at
 `<repo-root>/docs/antora-playbook.yml` and the component descriptor ends up one level
-further down, at `docs/docs/antora.yml`. That's why `antora-playbook.yml`'s
+further down, at `docs/src/antora.yml`. That's why `antora-playbook.yml`'s
 `content.sources[0]` reads `url: ..` (this repo's root, one level up from `docs/`) and
-`start_path: docs/docs`.
+`start_path: docs/src`.
 
 ## Versioning
 
@@ -49,5 +49,5 @@ which versioning mode this site uses (`version: prerelease`, `prerelease: true`)
 differs is only which git refs `antora-playbook.yml`'s `content.sources[0]` aggregates
 from (`tags: ['stable']` vs. `tags: ['v*']`). If this site was scaffolded with
 `--mode versioned`, see the `docs-versioning` skill for cutting a release; a
-**standalone**-mode site (the default) has no separate skill for this — `pdocs doctor`
-and the `pdocs-release.yml` workflow are all that's needed.
+**standalone**-mode site (the default) has no separate skill for this — `docouture doctor`
+and the `docouture-release.yml` workflow are all that's needed.

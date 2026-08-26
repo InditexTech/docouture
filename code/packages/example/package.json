@@ -1,5 +1,5 @@
 {
-  "name": "@inditextech/pdocs-example",
+  "name": "@inditextech/docouture-example",
   "version": "0.1.0",
   "private": true,
   "description": "Real-world documentation site — target for the Fumadocs migration",
@@ -14,9 +14,9 @@
     "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
   },
   "dependencies": {
-    "@inditextech/pdocs-antora-extensions": "workspace:*",
-    "@inditextech/pdocs-asciidoc-extensions": "workspace:*",
-    "@inditextech/pdocs-ui-bundle": "workspace:*"
+    "@inditextech/docouture-antora-extensions": "workspace:*",
+    "@inditextech/docouture-asciidoc-extensions": "workspace:*",
+    "@inditextech/docouture-ui-bundle": "workspace:*"
   },
   "devDependencies": {
     "antora": "~3.1.15"

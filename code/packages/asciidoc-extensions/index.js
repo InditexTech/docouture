@@ -7,7 +7,7 @@
 // shiki-config.js are shared helpers the extensions require directly.
 // kroki-config.js and kroki-instance.js are the same kind of helper, shared
 // between kroki.js (below) and the sibling
-// @inditextech/pdocs-antora-extensions package's kroki-prewarm.js — see
+// @inditextech/docouture-antora-extensions package's kroki-prewarm.js — see
 // kroki.js's own header. shiki-syntax-highlighter.js is the one exception
 // that DOES register something outside `registerAll` — see its own
 // `require(...)` below.
@@ -77,7 +77,7 @@ function registerAll(target) {
 }
 
 /**
- * Registers pdocs' AsciiDoc extensions.
+ * Registers docouture' AsciiDoc extensions.
  *
  * Antora calls this once per page with a fresh, per-page `registry` (see
  * @antora/asciidoc-loader's resolve-asciidoc-config.js) — the first
@@ -108,8 +108,8 @@ module.exports.register = function (registry) {
   const target = registry || this
   if (typeof target.inlineMacro === 'function') {
     registerAll(target)
-  } else if (!target.$pdocsAsciidocExtensionsRegistered) {
-    target.$pdocsAsciidocExtensionsRegistered = true
+  } else if (!target.$docoutureAsciidocExtensionsRegistered) {
+    target.$docoutureAsciidocExtensionsRegistered = true
     target.register(function () {
       registerAll(this)
     })

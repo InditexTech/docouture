@@ -56,7 +56,7 @@
  * `align-items: flex-end` is the frames' own: the label column is right-aligned
  * against the content column at every breakpoint, stacked or not.
  */
-.pdocs-feature-tabs {
+.docouture-feature-tabs {
   align-items: flex-end;
   display: flex;
   flex-direction: column;
@@ -90,7 +90,7 @@
  * column with its own gap (home.css), so it needs none — same split, and same
  * `.doc`-scoped rule, as card-grid.css and steps.css.
  */
-.doc .pdocs-feature-tabs {
+.doc .docouture-feature-tabs {
   margin: var(--doc-space-block) 0 0;
 }
 
@@ -105,7 +105,7 @@
  * stacks this block for exactly that reason.
  */
 @media screen and (--ids-breakpoints-l) {
-  .pdocs-feature-tabs {
+  .docouture-feature-tabs {
     align-items: flex-end;
     flex-direction: row;
     gap: var(--ids-size-350); /* 56 */
@@ -123,7 +123,7 @@
  * `max-inline-size: 100%` keeps it inside the column at xs (358px of content
  * at 390 viewport), where 254 fits but leaves little room.
  */
-.pdocs-feature-tabs__list {
+.docouture-feature-tabs__list {
   display: flex;
   flex-direction: column;
   gap: var(--ids-size-75); /* 12 */
@@ -135,7 +135,7 @@
 }
 
 @media screen and (--ids-breakpoints-l) {
-  .pdocs-feature-tabs__list {
+  .docouture-feature-tabs__list {
     flex: none;
   }
 }
@@ -151,7 +151,7 @@
  *
  * Everything else — the type, the two weights, the focus ring — is the DS's.
  */
-.pdocs-feature-tabs__tab {
+.docouture-feature-tabs__tab {
   block-size: auto;
   display: block;
   max-inline-size: none;
@@ -169,15 +169,15 @@
  * Qualifying with the list — which is where these anchors always live — makes
  * it (0,2,0), the same shape card-grid.css uses for a card's title anchor.
  */
-.pdocs-feature-tabs__list .pdocs-feature-tabs__tab,
-.pdocs-feature-tabs__list .pdocs-feature-tabs__tab:hover,
-.pdocs-feature-tabs__list .pdocs-feature-tabs__tab:focus {
+.docouture-feature-tabs__list .docouture-feature-tabs__tab,
+.docouture-feature-tabs__list .docouture-feature-tabs__tab:hover,
+.docouture-feature-tabs__list .docouture-feature-tabs__tab:focus {
   color: var(--ids-color-content-default);
   text-decoration: none;
 }
 
 @media (hover: hover) {
-  .pdocs-feature-tabs__list .pdocs-feature-tabs__tab:not(.ids-tabs-item--selected):hover {
+  .docouture-feature-tabs__list .docouture-feature-tabs__tab:not(.ids-tabs-item--selected):hover {
     color: var(--ids-color-content-states-hover);
   }
 }
@@ -191,7 +191,7 @@
  * happen in place, with the outgoing and incoming slides overlapping instead
  * of the block collapsing to nothing between them.
  */
-.pdocs-feature-tabs__panels {
+.docouture-feature-tabs__panels {
   display: flex;
   flex-direction: column;
   gap: var(--doc-space-block);
@@ -199,11 +199,11 @@
   min-inline-size: 0;
 }
 
-.is-enhanced .pdocs-feature-tabs__panels {
+.is-enhanced .docouture-feature-tabs__panels {
   display: grid;
 }
 
-.pdocs-feature-tabs__panel {
+.docouture-feature-tabs__panel {
   display: flex;
   flex-direction: column;
   gap: var(--ids-size-100); /* 16 */
@@ -227,7 +227,7 @@
  * of both the accessibility tree and the tab order, which `opacity: 0` alone
  * would not do.
  */
-.is-enhanced .pdocs-feature-tabs__panel {
+.is-enhanced .docouture-feature-tabs__panel {
   grid-area: 1 / 1;
   opacity: 0;
   transition: var(--ids-motion-micro-appear); /* all 0.35s */
@@ -235,7 +235,7 @@
   visibility: hidden;
 }
 
-.is-enhanced .pdocs-feature-tabs__panel.is-selected {
+.is-enhanced .docouture-feature-tabs__panel.is-selected {
   opacity: 1;
   transform: none;
   visibility: visible;
@@ -246,7 +246,7 @@
  * either way.
  */
 @media (prefers-reduced-motion: reduce) {
-  .is-enhanced .pdocs-feature-tabs__panel {
+  .is-enhanced .docouture-feature-tabs__panel {
     transform: none;
     transition: none;
   }
@@ -262,7 +262,7 @@
  * the list — `.doc h3` is (0,1,1) and sets both the type scale (`title/m`) and
  * that margin, so a single class here would lose to it.
  */
-.pdocs-feature-tabs__panel .pdocs-feature-tabs__heading {
+.docouture-feature-tabs__panel .docouture-feature-tabs__heading {
   color: var(--ids-color-content-default);
   font: var(--ids-typo-title-s);
   font-variant-numeric: var(--ids-typo-font-variant-numeric);
@@ -287,7 +287,7 @@
  * every other property of this rule applied, which is the one property the
  * pattern cannot do without.
  */
-.is-enhanced .pdocs-feature-tabs__panel .pdocs-feature-tabs__heading--redundant {
+.is-enhanced .docouture-feature-tabs__panel .docouture-feature-tabs__heading--redundant {
   block-size: 1px;
   border: 0;
   clip-path: inset(50%);
@@ -315,7 +315,7 @@
  * 20px inset keeps the artwork off that surface's edges — `border-box` sizing
  * so the padding comes out of the aspect box rather than growing it.
  */
-.pdocs-feature-tabs__media {
+.docouture-feature-tabs__media {
   aspect-ratio: 566 / 280;
   background-color: var(--ids-color-bg-low);
   box-sizing: border-box;
@@ -324,7 +324,7 @@
   padding: var(--ids-size-125); /* 20 */
 }
 
-.pdocs-feature-tabs__image {
+.docouture-feature-tabs__image {
   block-size: 100%;
   display: block;
   inline-size: 100%;
@@ -335,12 +335,12 @@
  * The themed pair. Only ever emitted together (feature-tabs.js), so a slide
  * with one still carries neither class and is shown in both themes.
  */
-.pdocs-feature-tabs__image--dark,
-.ids-theme-dark .pdocs-feature-tabs__image--light {
+.docouture-feature-tabs__image--dark,
+.ids-theme-dark .docouture-feature-tabs__image--light {
   display: none;
 }
 
-.ids-theme-dark .pdocs-feature-tabs__image--dark {
+.ids-theme-dark .docouture-feature-tabs__image--dark {
   display: block;
 }
 
@@ -357,7 +357,7 @@
  * the article view's own rhythm, which is what a slide's prose should read
  * like.
  */
-.pdocs-feature-tabs__body > :first-child {
+.docouture-feature-tabs__body > :first-child {
   margin-block-start: 0;
 }
 
@@ -368,13 +368,13 @@
  * because the panel is a stretch-aligned flex column and a button that spans
  * the panel is not what any frame draws.
  */
-.pdocs-feature-tabs__cta {
+.docouture-feature-tabs__cta {
   align-self: flex-start;
 }
 
-.doc .pdocs-feature-tabs__cta,
-.doc .pdocs-feature-tabs__cta:hover,
-.doc .pdocs-feature-tabs__cta:focus {
+.doc .docouture-feature-tabs__cta,
+.doc .docouture-feature-tabs__cta:hover,
+.doc .docouture-feature-tabs__cta:focus {
   text-decoration: none;
 }
 
@@ -384,7 +384,7 @@
  * address the sprite (icon-masks.css's own header states the same rule for
  * `[card]`).
  */
-.pdocs-feature-tabs__cta-icon {
+.docouture-feature-tabs__cta-icon {
   background: currentColor;
   block-size: var(--ids-size-125); /* 20 */
   inline-size: var(--ids-size-125);

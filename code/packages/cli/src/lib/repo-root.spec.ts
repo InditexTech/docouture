@@ -15,7 +15,7 @@ beforeEach(async () => {
   // realpath: on macOS, os.tmpdir() itself lives under a symlink (/var ->
   // /private/var) that `git rev-parse --show-toplevel` resolves through,
   // which would otherwise make the equality checks below fragile.
-  repo = await realpath(await mkdtemp(join(tmpdir(), 'pdocs-cli-repo-root-')))
+  repo = await realpath(await mkdtemp(join(tmpdir(), 'docouture-cli-repo-root-')))
 })
 
 describe('findRepoRoot', () => {

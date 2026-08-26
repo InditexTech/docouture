@@ -1,4 +1,4 @@
-# pdocs
+# docouture
 
 Documentation platform built on [Antora](https://docs.antora.org/antora/latest/).
 
@@ -49,7 +49,7 @@ $ just bump minor             # set the version of every package
 
 `just build` takes passthrough arguments — `just build --skip-nx-cache`. `just
 dev` and `just build-site` take a bare package name, so `example` rather than
-`@inditextech/pdocs-example`.
+`@inditextech/docouture-example`.
 
 `just bump` accepts `major`, `minor`, `patch`, a prerelease level or an explicit
 `X.Y.Z`, and moves the workspace root and all three packages together — one
@@ -92,7 +92,7 @@ justfile                    every command; runs everything inside code/
 code/                       the Nx workspace — see code/README.md
   packages/ui-bundle        the Antora UI bundle, published as a zip
   packages/example          real-world site; currently a stub
-  packages/cli              `pdocs` CLI — scaffolds a standalone site (`pdocs new`),
+  packages/cli              `docouture` CLI — scaffolds a standalone site (`docouture new`),
                              bundling its own starter template
 ```
 

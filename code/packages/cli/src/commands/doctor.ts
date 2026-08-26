@@ -6,6 +6,8 @@ import { dirname, join, relative, resolve, sep } from 'node:path'
 import { parseArgs } from '../lib/args.js'
 import { exists } from '../lib/copy-template.js'
 import { findRepoRoot } from '../lib/repo-root.js'
+import { getContext } from '../lib/cli-context.js'
+import { theme } from '../lib/theme.js'
 import { readSourceUrl, readStartPageComponent, readStartPath } from '../lib/playbook-yml.js'
 import {
   checkAgentFilesPresent,
@@ -22,6 +24,11 @@ interface PackageJson {
   engines?: { node?: string }
 }
 
+interface JsonCheckResult extends CheckResult {
+  section: string
+  severity: 'fail' | 'warn' | 'ok'
+}
+
 async function readJson<T>(file: string): Promise<T | null> {
   try {
     return JSON.parse(await readFile(file, 'utf8')) as T
@@ -35,24 +42,33 @@ function readAntoraYmlName(content: string): string | null {
   return match?.[1] ?? null
 }
 
-function printResult(result: CheckResult, colour: boolean): number {
-  const ok = colour ? '\u001b[32m ok \u001b[0m' : ' ok '
-  const fail = colour ? '\u001b[31mFAIL\u001b[0m' : 'FAIL'
+// Every check is recorded here as it runs, in section order, regardless of
+// whether the human-readable report or --json is what actually gets
+// printed — this is the one source of truth both output modes read from,
+// so they can never drift from each other on which checks ran or what they
+// found.
+function record(report: JsonCheckResult[], section: string, result: CheckResult, severity: 'fail' | 'warn'): number {
+  report.push({ ...result, section, severity: result.ok ? 'ok' : severity })
+  if (severity === 'fail') return result.ok ? 0 : 1
+  return 0
+}
+
+function printResult(result: CheckResult): void {
+  const ok = theme.success(' ok ')
+  const fail = theme.error('FAIL')
   console.log(`  ${result.ok ? ok : fail}  ${result.label} — ${result.message}`)
   if (!result.ok && result.detail) {
     console.log(`         ${result.detail}`)
   }
-  return result.ok ? 0 : 1
 }
 
 // Same rendering as printResult, but never contributes to the overall exit
-// code — used only for checkAgentFilesPresent, which is presence, not
-// something a build actually depends on (see that function's own comment).
-// 'warn' instead of 'FAIL' so a missing file reads as advisory, not as the
-// same severity as a broken build.
-function printAdvisory(result: CheckResult, colour: boolean): void {
-  const ok = colour ? '\u001b[32m ok \u001b[0m' : ' ok '
-  const warn = colour ? '\u001b[33mwarn\u001b[0m' : 'warn'
+// code — used only for advisory checks (agent files, release label): 'warn'
+// instead of 'FAIL' so a missing file reads as advisory, not as the same
+// severity as a broken build.
+function printAdvisory(result: CheckResult): void {
+  const ok = theme.success(' ok ')
+  const warn = theme.warn('warn')
   console.log(`  ${result.ok ? ok : warn}  ${result.label} — ${result.message}`)
   if (!result.ok && result.detail) {
     console.log(`         ${result.detail}`)
@@ -61,6 +77,7 @@ function printAdvisory(result: CheckResult, colour: boolean): void {
 
 export async function runDoctor(argv: string[]): Promise<number> {
   const { flags } = parseArgs(argv)
+  const json = getContext().json
   const startDir = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
   // --dir (or cwd) can be anywhere inside the repository — its root, inside
   // docs/, wherever — findRepoRoot walks up to find the actual repository
@@ -68,41 +85,47 @@ export async function runDoctor(argv: string[]): Promise<number> {
   // <repoRoot>/docs regardless of where it was invoked from.
   const target = await findRepoRoot(startDir)
   const siteRoot = join(target, 'docs')
-  const colour = process.stdout.isTTY === true && !process.env.NO_COLOR
 
   if (!(await exists(siteRoot))) {
     console.error(`no site found at '${siteRoot}'`)
-    console.error('pass --dir <path> to a component root (the parent of docs/), or run pdocs new first')
+    console.error('pass --dir <path> to a component root (the parent of docs/), or run docouture new first')
     return 1
   }
 
   let status = 0
+  const report: JsonCheckResult[] = []
+  const log = (line: string): void => {
+    if (!json) console.log(line)
+  }
 
-  console.log('toolchain')
+  log('toolchain')
   const pkg = await readJson<PackageJson>(join(siteRoot, 'package.json'))
-  status |= printResult(checkNodeVersion(pkg?.engines?.node, process.version), colour)
+  const nodeResult = checkNodeVersion(pkg?.engines?.node, process.version)
+  status |= record(report, 'toolchain', nodeResult, 'fail')
+  if (!json) printResult(nodeResult)
 
-  console.log('names')
+  log('names')
   const playbookFile = join(siteRoot, 'antora-playbook.yml')
-  const antoraYmlFile = join(siteRoot, 'docs', 'antora.yml')
+  const antoraYmlFile = join(siteRoot, 'src', 'antora.yml')
 
   const playbookContent = (await exists(playbookFile)) ? await readFile(playbookFile, 'utf8') : null
   const antoraYmlContent = (await exists(antoraYmlFile)) ? await readFile(antoraYmlFile, 'utf8') : null
 
   if (!playbookContent) {
-    status |= printResult(
-      { ok: false, label: 'antora-playbook.yml', message: `not found at '${playbookFile}'` },
-      colour
-    )
+    const result = { ok: false, label: 'antora-playbook.yml', message: `not found at '${playbookFile}'` }
+    status |= record(report, 'names', result, 'fail')
+    if (!json) printResult(result)
   }
   if (!antoraYmlContent) {
-    status |= printResult({ ok: false, label: 'docs/antora.yml', message: `not found at '${antoraYmlFile}'` }, colour)
+    const result = { ok: false, label: 'src/antora.yml', message: `not found at '${antoraYmlFile}'` }
+    status |= record(report, 'names', result, 'fail')
+    if (!json) printResult(result)
   }
 
   if (playbookContent && antoraYmlContent) {
     const sourceUrl = readSourceUrl(playbookContent)
     if (sourceUrl && sourceUrl !== '.') {
-      // The repository-root-relative form of `docs/antora.yml`'s real
+      // The repository-root-relative form of `src/antora.yml`'s real
       // location — see lib/playbook-yml.ts's own comment on why `url: .`
       // only works when the playbook itself sits at the repository root.
       const descriptorPath = relative(target, dirname(antoraYmlFile)).split(sep).join('/')
@@ -114,32 +137,47 @@ export async function runDoctor(argv: string[]): Promise<number> {
         descriptorPath,
         packageName: pkg?.name ?? null,
       })
-      for (const result of results) status |= printResult(result, colour)
+      for (const result of results) {
+        status |= record(report, 'names', result, 'fail')
+        if (!json) printResult(result)
+      }
     } else {
-      status |= printResult(
-        {
-          ok: false,
-          label: 'content source url',
-          message: `content.sources[0].url is '.' but the playbook does not sit at the repository root`,
-          detail:
-            "url: '.' only works when antora-playbook.yml sits at the repository root — use 'url: ..' (or however many levels reach it) otherwise",
-        },
-        colour
-      )
+      const result = {
+        ok: false,
+        label: 'content source url',
+        message: `content.sources[0].url is '.' but the playbook does not sit at the repository root`,
+        detail:
+          "url: '.' only works when antora-playbook.yml sits at the repository root — use 'url: ..' (or however many levels reach it) otherwise",
+      }
+      status |= record(report, 'names', result, 'fail')
+      if (!json) printResult(result)
     }
   }
 
-  console.log('content')
-  status |= printResult(await checkGitHasCommit(target), colour)
+  log('content')
+  const gitResult = await checkGitHasCommit(target)
+  status |= record(report, 'content', gitResult, 'fail')
+  if (!json) printResult(gitResult)
 
-  console.log('dependencies')
-  status |= printResult(checkAntoraAvailable(siteRoot), colour)
+  log('dependencies')
+  const antoraResult = checkAntoraAvailable(siteRoot)
+  status |= record(report, 'dependencies', antoraResult, 'fail')
+  if (!json) printResult(antoraResult)
 
-  console.log('agent files')
-  for (const result of checkAgentFilesPresent(target)) printAdvisory(result, colour)
+  log('agent files')
+  for (const result of checkAgentFilesPresent(target)) {
+    record(report, 'agent files', result, 'warn')
+    if (!json) printAdvisory(result)
+  }
 
-  console.log('release')
-  printAdvisory(await checkReleaseLabelExists(target), colour)
+  log('release')
+  const releaseResult = await checkReleaseLabelExists(target)
+  record(report, 'release', releaseResult, 'warn')
+  if (!json) printAdvisory(releaseResult)
+
+  if (json) {
+    process.stdout.write(`${JSON.stringify({ status: status === 0 ? 'ok' : 'fail', checks: report }, null, 2)}\n`)
+  }
 
   return status === 0 ? 0 : 1
 }

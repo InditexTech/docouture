@@ -5,23 +5,30 @@
 # Build with:  npx antora --fetch antora-playbook.yml
 # Output:      build/site
 #
-# Standalone (default) versioning — see the pdocs docs-site-package skill's
+# Standalone (default) versioning — see the docouture docs-site-package skill's
 # reference/versioning-modes.md for the full mechanism this playbook and
 # docs/antora.yml together implement.
 #
 
 site:
-  title: __PDOCS_TITLE__
+  title: __DOCOUTURE_TITLE__
   # Set this to the public URL of the deployed site. It is required for the
   # sitemap and for canonical links; leave it out while developing locally.
   #
-  # Publishing to GitHub Pages as a project page (https://<org>.github.io/
-  # <repo>/) needs the repo name baked into this as a path segment — Antora
-  # uses it to generate correct absolute asset URLs — e.g.:
+  # Publishing to GitHub Pages as a project page always publishes under
+  # https://<org>.github.io/<repo>/ — the repo name has to be baked into
+  # this as a path segment; Antora uses it to generate correct absolute
+  # asset URLs — e.g.:
   #
   # url: https://<org>.github.io/<repo>
   # url: https://docs.example.com
-  start_page: __PDOCS_NAME__::index.adoc
+  #
+  # A second /<component-name>/ segment only appears below (in
+  # site.start_page) if this site opted into one (`docouture new`'s "extra URL
+  # path segment" question, or `--url-segment`) — off by default, in which
+  # case docs/antora.yml's component name is Antora's reserved `ROOT` and
+  # contributes no segment.
+  start_page: __DOCOUTURE_COMPONENT_NAME__::index.adoc
   # Side-menu brand mark (nav-brand.hbs) and browser tab icon (head-icons.hbs)
   # — placeholder artwork under supplemental-ui/, wired via
   # ui.supplemental_files below. Supplemental files land under the UI's own
@@ -40,20 +47,20 @@ content:
     # the build's cwd — and requires the resolved path to be a git worktree
     # root itself, not merely nested inside one. This playbook lives at
     # <repo-root>/docs/antora-playbook.yml, one level below the repository
-    # root `pdocs new` scaffolded into, so `url: ..` is what reaches it —
+    # root `docouture new` scaffolded into, so `url: ..` is what reaches it —
     # `url: .` would point at this docs/ directory, which is not itself a
     # git repository, and the build fails with "Local content source must be
     # a git repository". (Only a playbook living AT the repository root can
     # use `url: .` — see the docs-site-package skill.)
     - url: ..
-      # Repository-root relative, hence `docs/docs`: the whole starter
-      # template — including its own nested `docs/` holding antora.yml — was
+      # Repository-root relative, hence `docs/src`: the whole starter
+      # template — including its own nested `src/` holding antora.yml — was
       # copied under this repository's `docs/`, so the descriptor ends up at
-      # `docs/docs/antora.yml`.
-      start_path: docs/docs
+      # `docs/src/antora.yml`.
+      start_path: docs/src
       # Standalone: `main` aggregates as the prerelease version —
       # docs/antora.yml on this branch permanently says `version: prerelease`,
-      # `prerelease: true`. `stable` is a rolling tag that pdocs-release.yml
+      # `prerelease: true`. `stable` is a rolling tag that docouture-release.yml
       # force-moves to a fresh one-off commit on every release, not a second
       # long-lived branch. Until the first release, `stable` does not exist
       # yet and this site builds with just the one (prerelease) version —
@@ -63,11 +70,11 @@ content:
 
 ui:
   bundle:
-    # The pdocs UI bundle, installed as a real npm dependency (see
+    # The docouture UI bundle, installed as a real npm dependency (see
     # package.json) rather than fetched from a URL at build time — `npm
     # install` puts it under node_modules, and Antora reads the zip straight
     # out of there. Pinned to the exact same version as
-    # @inditextech/pdocs-cli (both packages release in lockstep, one version
+    # @inditextech/docouture-cli (both packages release in lockstep, one version
     # per tag), so whatever generated this site is always what it builds
     # with.
     #
@@ -78,7 +85,7 @@ ui:
     #
     # Swap in a different bundle instead by pointing `url` at its zip
     # (a URL or another local path) and dropping the devDependency above.
-    url: ./node_modules/@inditextech/pdocs-ui-bundle/build/ui-bundle.zip
+    url: ./node_modules/@inditextech/docouture-ui-bundle/build/ui-bundle.zip
     snapshot: false
   # Serves the placeholder logo and favicon under site.keys above from a
   # root-relative URL — see the docs-site-package skill's reference/
@@ -87,10 +94,10 @@ ui:
   supplemental_files: ./supplemental-ui
 
 output:
-  # `pdocs publish <target>` (see .github/workflows/pdocs-publish.yml)
+  # `docouture publish <target>` (see .github/workflows/docouture-publish.yml)
   # publishes whatever is here, defaulting to this same value if the line
   # is removed. Its own configuration — which target, and that driver's
-  # options — lives in this package's own package.json under a "pdocs"
+  # options — lives in this package's own package.json under a "docouture"
   # key, not here: this file stays a plain, portable Antora playbook.
   dir: build/site
 
@@ -100,14 +107,14 @@ urls:
   # requirement; drop this line for Antora's plain default if the deployed
   # site sits behind something that prefers literal .html routes.
   html_extension_style: indexify
-  # In this standalone (stable/prerelease) versioning setup, `.../stable/…`
-  # is already a fixed segment that never moves on release — unlike
-  # versioned mode's per-tag URLs, it doesn't need a "latest" alias to stay
-  # stable. This just adds a second, redundant `.../latest/…` alias pointing
-  # at whatever Antora computes as latest (the `stable` version, once a
-  # first release exists), for the case something external specifically
-  # expects the literal word "latest" in a URL. Safe to remove if unused.
-  latest_version_segment: latest
+  # NOTE: deliberately no `latest_version_segment` here. Under Antora's own
+  # `latest_version_segment_strategy` (default `replace`), setting it turns
+  # `.../stable/…` into a permanent redirect stub the moment a release
+  # exists — the opposite of what this standalone (stable/prerelease) setup
+  # promises. A `/.../latest/…` alias is provided instead, further down,
+  # by @inditextech/docouture-antora-extensions' `duplicateLatestVersion` (GH
+  # #137) — it publishes `stable`'s content a second time under `/latest/…`
+  # as a genuinely independent copy, so BOTH URLs stay real.
 
 runtime:
   # Fail the build on broken xrefs and other content problems rather than
@@ -116,9 +123,9 @@ runtime:
     failure_level: warn
     # Antora's own default is 'warn' (@antora/playbook-builder's convict
     # schema, not @antora/logger's own 'info' default, which never actually
-    # applies here) — below that, @inditextech/pdocs-antora-extensions'
-    # diagnostic reports (pdocs-version-report: which versions Antora
-    # resolved and which it picked as latest; pdocs-search-index: how many
+    # applies here) — below that, @inditextech/docouture-antora-extensions'
+    # diagnostic reports (docouture-version-report: which versions Antora
+    # resolved and which it picked as latest; docouture-search-index: how many
     # pages/records were indexed) both log at 'info' and would otherwise be
     # silently dropped, not merely hard to find in the build output.
     level: info
@@ -135,9 +142,9 @@ asciidoc:
     idseparator: '-'
     # Static, build-time syntax highlighting via Shiki instead of Antora's own
     # default (highlight.js, client-side) — see
-    # @inditextech/pdocs-asciidoc-extensions's shiki-syntax-highlighter.js for
+    # @inditextech/docouture-asciidoc-extensions's shiki-syntax-highlighter.js for
     # the adapter this name resolves to, and
-    # @inditextech/pdocs-antora-extensions's shiki-prewarm.js (wired below,
+    # @inditextech/docouture-antora-extensions's shiki-prewarm.js (wired below,
     # under `antora.extensions`) for the async setup it depends on.
     source-highlighter: shiki
     # Turns on the ui-bundle's previous/next footer nav (pagination.hbs) for
@@ -148,12 +155,12 @@ asciidoc:
     # Renders `[mermaid]`/`[plantuml]`/etc. blocks as real diagrams instead of
     # literal source text, via a self-hosted Kroki service — enabled by
     # default (comment both lines below out to turn it off). Needs Docker
-    # available; @inditextech/pdocs-antora-extensions' kroki-prewarm.js
+    # available; @inditextech/docouture-antora-extensions' kroki-prewarm.js
     # starts the service itself, automatically, the first time a build needs
-    # it — no manual setup required. Run `pdocs eject kroki` to copy the
+    # it — no manual setup required. Run `docouture eject kroki` to copy the
     # bundled compose file into docs/kroki-compose.yml if you need to
     # customize it (a different image version, a companion for another
-    # diagram type, ...); `pdocs teardown kroki` stops it manually, since
+    # diagram type, ...); `docouture teardown kroki` stops it manually, since
     # nothing stops it automatically. `kroki-diagram-types` is a
     # comma-separated subset of kroki.js's `SUPPORTED_TYPES` (e.g. `mermaid`
     # or `mermaid,plantuml,bpmn,excalidraw`); omit it to enable every
@@ -164,9 +171,9 @@ asciidoc:
     # Authoring blocks with no plain AsciiDoc equivalent — [tabs], [cards],
     # [feature-tabs], [cta], [accordion] grouping, plus the label:[]/mono:[]
     # inline macros and a few table/video sizing attributes. See the
-    # writing-docs-pages skill's reference/pdocs-blocks.md for the full
+    # writing-docs-pages skill's reference/docouture-blocks.md for the full
     # syntax of each.
-    - '@inditextech/pdocs-asciidoc-extensions'
+    - '@inditextech/docouture-asciidoc-extensions'
 
 antora:
   extensions:
@@ -174,5 +181,9 @@ antora:
     # above — see the docs-internals skill's reference/antora-extensions.md):
     # nav_modules-driven module switcher, an authored site footer, the search
     # index the UI bundle's search dialog reads, and llms.txt/llms-full.txt
-    # generation for AI ingestion.
-    - '@inditextech/pdocs-antora-extensions'
+    # generation for AI ingestion. `duplicateLatestVersion` additionally
+    # publishes `stable`'s content a second time under `/latest/…` — a real,
+    # independent copy, not a redirect — once a first release exists (see
+    # the `urls` note above).
+    - require: '@inditextech/docouture-antora-extensions'
+      duplicate_latest_version: true

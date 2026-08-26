@@ -165,8 +165,8 @@ function renderTab(block, index, groupId, seenLabels, parent) {
 
   return chainAll(bodies, (parts) => {
     const tab =
-      '<li class="pdocs-tabs__item" role="presentation">' +
-      '<button type="button" class="ids-tabs-item pdocs-tabs__tab' +
+      '<li class="docouture-tabs__item" role="presentation">' +
+      '<button type="button" class="ids-tabs-item docouture-tabs__tab' +
       (selected ? ' ids-tabs-item--selected' : '') +
       '"' +
       attr('id', tabId) +
@@ -183,7 +183,7 @@ function renderTab(block, index, groupId, seenLabels, parent) {
       '</li>'
 
     const panel =
-      '<section class="pdocs-tabs__panel' +
+      '<section class="docouture-tabs__panel' +
       (selected ? ' is-selected' : '') +
       '"' +
       attr('id', panelId) +
@@ -221,11 +221,11 @@ function finish(parent, wrapper, attrs, self) {
 
   return chainAll(rendered, (tabs) => {
     const html =
-      '<div class="pdocs-tabs" data-tabs>' +
-      '<ul class="pdocs-tabs__list" role="tablist">' +
+      '<div class="docouture-tabs" data-tabs>' +
+      '<ul class="docouture-tabs__list" role="tablist">' +
       tabs.map((tab) => tab.tab).join('') +
       '</ul>' +
-      '<div class="pdocs-tabs__panels">' +
+      '<div class="docouture-tabs__panels">' +
       tabs.map((tab) => tab.panel).join('') +
       '</div>' +
       '</div>'

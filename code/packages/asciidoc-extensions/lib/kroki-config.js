@@ -7,7 +7,7 @@
 // config here (whether it runs at all, which diagram types) is an authored
 // `asciidoc.attributes` key a site can set — but the endpoint itself is a
 // single fixed value, `http://localhost:8500`, the one
-// @inditextech/pdocs-antora-extensions' `kroki-prewarm.js`/`kroki-docker.js`
+// @inditextech/docouture-antora-extensions' `kroki-prewarm.js`/`kroki-docker.js`
 // auto-start against, and the one baked into their bundled
 // `resources/kroki-compose.yml`. That was a deliberate call (see GH-44's own
 // thread): letting a site point this at an arbitrary URL turns a
@@ -28,7 +28,7 @@ const KROKI_URL = 'http://localhost:8500'
 //
 // Curated, not Kroki's entire catalogue: each entry here is a type this
 // project has actually verified end to end (see the sibling
-// `kroki-prewarm.js` and `@inditextech/pdocs-antora-extensions`'
+// `kroki-prewarm.js` and `@inditextech/docouture-antora-extensions`'
 // `resources/kroki-compose.yml`). Kroki supports more; add to this list —
 // and to that compose file's companions, for any type that needs one,
 // mermaid, bpmn and excalidraw being the three in Kroki's own catalogue
@@ -36,7 +36,7 @@ const KROKI_URL = 'http://localhost:8500'
 // fixed port — see that compose file's own header for the port each one
 // actually listens on, verified by inspecting the running container rather
 // than assumed) — before authors can rely on a new one. A site can
-// customize that compose file for itself via `pdocs eject kroki` without
+// customize that compose file for itself via `docouture eject kroki` without
 // forking this package.
 const SUPPORTED_TYPES = [
   'mermaid',

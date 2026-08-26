@@ -9,8 +9,8 @@ import { exists } from '../lib/copy-template.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { resolveEffectiveComposeFile } from '../lib/kroki-compose.js'
 
-// `pdocs teardown kroki` — the explicit, manual stop side of GH-44's Kroki
-// auto-start. `kroki-prewarm.js` (in @inditextech/pdocs-antora-extensions)
+// `docouture teardown kroki` — the explicit, manual stop side of GH-44's Kroki
+// auto-start. `kroki-prewarm.js` (in @inditextech/docouture-antora-extensions)
 // starts the service on demand but never stops it — see kroki-docker.js's
 // own header for why: a build has no natural "I'm completely done with this
 // machine for good" moment to hook, and stopping it mid-session would only
@@ -27,7 +27,9 @@ import { resolveEffectiveComposeFile } from '../lib/kroki-compose.js'
 // necessarily the package's un-customized default.
 const execFileAsync = promisify(execFile)
 
-const SUPPORTED_TARGETS = new Set(['kroki'])
+const SUPPORTED_TARGETS: Record<string, { description: string }> = {
+  kroki: { description: 'Kroki diagram rendering service (docker compose)' },
+}
 
 export async function runTeardown(
   argv: string[],
@@ -39,9 +41,12 @@ export async function runTeardown(
   const { positional, flags } = parseArgs(argv)
   const target = positional[0]
 
-  if (!target || !SUPPORTED_TARGETS.has(target)) {
-    console.error('usage: pdocs teardown <target> [--dir <path>]')
-    console.error(`supported targets: ${Array.from(SUPPORTED_TARGETS).join(', ')}`)
+  if (!target || !(target in SUPPORTED_TARGETS)) {
+    console.error('usage: docouture teardown <target> [--dir <path>]')
+    console.error('supported targets:')
+    for (const [name, { description }] of Object.entries(SUPPORTED_TARGETS)) {
+      console.error(`  ${name} — ${description}`)
+    }
     return 1
   }
 
@@ -51,7 +56,7 @@ export async function runTeardown(
 
   if (!(await exists(join(siteRoot, 'package.json')))) {
     console.error(`no package.json found at '${siteRoot}'`)
-    console.error('pass --dir <path> to a component root (the parent of docs/), or run pdocs new first')
+    console.error('pass --dir <path> to a component root (the parent of docs/), or run docouture new first')
     return 1
   }
 
@@ -59,9 +64,9 @@ export async function runTeardown(
   const composeFile = await resolveFile(siteRoot)
   if (!composeFile) {
     console.error(
-      `could not find @inditextech/pdocs-antora-extensions' bundled kroki-compose.yml, and no override exists at '${join(siteRoot, 'kroki-compose.yml')}'`
+      `could not find @inditextech/docouture-antora-extensions' bundled kroki-compose.yml, and no override exists at '${join(siteRoot, 'kroki-compose.yml')}'`
     )
-    console.error('add @inditextech/pdocs-antora-extensions to devDependencies, or run pdocs eject kroki first')
+    console.error('add @inditextech/docouture-antora-extensions to devDependencies, or run docouture eject kroki first')
     return 1
   }
 

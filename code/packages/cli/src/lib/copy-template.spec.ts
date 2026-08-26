@@ -22,7 +22,7 @@ const values: TemplateValues = {
 }
 
 beforeEach(async () => {
-  base = await realpath(await mkdtemp(join(tmpdir(), 'pdocs-cli-copy-template-')))
+  base = await realpath(await mkdtemp(join(tmpdir(), 'docouture-cli-copy-template-')))
 })
 
 afterEach(() => {})
@@ -30,8 +30,8 @@ afterEach(() => {})
 async function makeSrc(): Promise<string> {
   const src = join(base, 'src')
   await mkdir(join(src, 'nested'), { recursive: true })
-  await writeFile(join(src, 'top.txt'), 'hello __PDOCS_TITLE__', 'utf8')
-  await writeFile(join(src, 'nested', 'inner.txt'), 'name: __PDOCS_NAME__', 'utf8')
+  await writeFile(join(src, 'top.txt'), 'hello __DOCOUTURE_TITLE__', 'utf8')
+  await writeFile(join(src, 'nested', 'inner.txt'), 'name: __DOCOUTURE_NAME__', 'utf8')
   return src
 }
 

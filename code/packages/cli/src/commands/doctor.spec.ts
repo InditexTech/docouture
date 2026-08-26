@@ -8,20 +8,26 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { runDoctor } from './doctor.js'
+import { resetContext } from '../lib/cli-context.js'
 
 let repo: string
 let logSpy: ReturnType<typeof vi.spyOn>
 let errorSpy: ReturnType<typeof vi.spyOn>
+let stdoutSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  repo = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-cmd-'))
+  repo = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-cmd-'))
   logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+  stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true)
+  resetContext()
 })
 
 afterEach(() => {
   logSpy.mockRestore()
   errorSpy.mockRestore()
+  stdoutSpy.mockRestore()
+  resetContext()
 })
 
 function loggedLines(): string {
@@ -34,7 +40,7 @@ async function scaffoldGoodSite(root: string): Promise<void> {
   execFileSync('git', ['config', 'user.name', 'a'], { cwd: root })
 
   const siteRoot = join(root, 'docs')
-  await mkdir(join(siteRoot, 'docs'), { recursive: true })
+  await mkdir(join(siteRoot, 'src'), { recursive: true })
   await mkdir(join(siteRoot, 'node_modules', '.bin'), { recursive: true })
   await mkdir(join(siteRoot, 'node_modules', 'antora'), { recursive: true })
   await writeFile(join(siteRoot, 'node_modules', '.bin', 'antora'), '', 'utf8')
@@ -45,13 +51,13 @@ async function scaffoldGoodSite(root: string): Promise<void> {
     'utf8'
   )
   await writeFile(
-    join(siteRoot, 'docs', 'antora.yml'),
+    join(siteRoot, 'src', 'antora.yml'),
     'name: my-project-docs\ntitle: My Project Docs\nversion: ~\n',
     'utf8'
   )
   await writeFile(
     join(siteRoot, 'antora-playbook.yml'),
-    'site:\n  start_page: my-project-docs::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n',
+    'site:\n  start_page: my-project-docs::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/src\n',
     'utf8'
   )
 
@@ -86,12 +92,12 @@ describe('runDoctor', () => {
 
   it('fails on an uncommitted repository', async () => {
     const siteRoot = join(repo, 'docs')
-    await mkdir(join(siteRoot, 'docs'), { recursive: true })
+    await mkdir(join(siteRoot, 'src'), { recursive: true })
     await writeFile(join(siteRoot, 'package.json'), JSON.stringify({ name: 'x' }), 'utf8')
-    await writeFile(join(siteRoot, 'docs', 'antora.yml'), 'name: x\nversion: ~\n', 'utf8')
+    await writeFile(join(siteRoot, 'src', 'antora.yml'), 'name: x\nversion: ~\n', 'utf8')
     await writeFile(
       join(siteRoot, 'antora-playbook.yml'),
-      'site:\n  start_page: x::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n',
+      'site:\n  start_page: x::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/src\n',
       'utf8'
     )
 
@@ -104,7 +110,7 @@ describe('runDoctor', () => {
     await scaffoldGoodSite(repo)
     await writeFile(
       join(repo, 'docs', 'antora-playbook.yml'),
-      'site:\n  start_page: renamed::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/docs\n',
+      'site:\n  start_page: renamed::index.adoc\n\ncontent:\n  sources:\n    - url: ..\n      start_path: docs/src\n',
       'utf8'
     )
 
@@ -150,5 +156,20 @@ describe('runDoctor', () => {
     expect(codePresent).toBe(0)
     const outPresent = loggedLines()
     expect(outPresent).not.toContain('warn')
+  })
+
+  it('prints a machine-readable report to stdout and nothing via console.log under --json', async () => {
+    const { setContext } = await import('../lib/cli-context.js')
+    setContext({ json: true })
+    await scaffoldGoodSite(repo)
+
+    const code = await runDoctor(['--dir', repo])
+    expect(code).toBe(0)
+    expect(logSpy).not.toHaveBeenCalled()
+
+    const written = stdoutSpy.mock.calls.map((call) => String(call[0])).join('')
+    const parsed = JSON.parse(written) as { status: string; checks: { label: string; ok: boolean }[] }
+    expect(parsed.status).toBe('ok')
+    expect(parsed.checks.some((c) => c.label === 'component name')).toBe(true)
   })
 })

@@ -1,6 +1,6 @@
-# @inditextech/pdocs-asciidoc-extensions
+# @inditextech/docouture-asciidoc-extensions
 
-Asciidoctor extensions shared by the pdocs documentation sites.
+Asciidoctor extensions shared by the docouture documentation sites.
 
 They exist for one reason: **authored content that AsciiDoc has no syntax for**.
 A card grid, a set of steps, a landing hero, a tab switcher — none of these are
@@ -158,9 +158,9 @@ Two steps, both required. Doing only one fails silently.
 1. List it under `asciidoc.extensions` in the site's `antora-playbook.yml`
    (or, for the ui-bundle preview, in `preview-src/ui-model.yml`).
 2. Add it as a dependency with the workspace protocol:
-   `"@inditextech/pdocs-asciidoc-extensions": "workspace:*"`.
+   `"@inditextech/docouture-asciidoc-extensions": "workspace:*"`.
 
-Note the neighbouring package: `@inditextech/pdocs-antora-extensions` hooks
+Note the neighbouring package: `@inditextech/docouture-antora-extensions` hooks
 Antora's own pipeline under the **`antora.extensions`** key. Listing either
 package under the other's key makes Antora log a warning and skip it.
 
@@ -195,16 +195,16 @@ blanket, safely, for every type).
 
 It also needs a Kroki service reachable at build time, at the fixed local URL
 `kroki-config.js` hardcodes (not itself configurable — see that file's own
-header for why). No manual setup: the sibling `@inditextech/pdocs-antora-
+header for why). No manual setup: the sibling `@inditextech/docouture-antora-
 extensions` package's `kroki-prewarm.js` starts one itself, via `docker
 compose`, the first time a build needs it and finds nothing already
-listening — on every invocation path (`pdocs dev`/`pdocs build`, this
+listening — on every invocation path (`docouture dev`/`docouture build`, this
 monorepo's own `just dev`/`just build-site`, a raw `antora` call, any
 consumer's own CI) equally, with no automatic teardown (a stopped-and-
-restarted Kroki on every build would only add latency back). Run `pdocs
+restarted Kroki on every build would only add latency back). Run `docouture
 eject kroki` to copy the bundled compose file into a site's own repo for
 customization (a different image version, a companion container for
-another diagram type); run `pdocs teardown kroki` (or, in this monorepo,
+another diagram type); run `docouture teardown kroki` (or, in this monorepo,
 `just kroki-down`) to stop it manually once you're actually done with it.
 Without `kroki-enabled: true`, or if Docker/the service never becomes
 reachable, these blocks render exactly as plain AsciiDoc already would — a
@@ -216,10 +216,10 @@ file / `docker compose up -d` succeeded / became reachable after Ns /
 render summary) at `info`, so nothing about a working setup looks different
 from Nx quietly replaying a stale cached build. Antora's own default log
 level is `warn`, so these are invisible unless you ask for them — as is
-every other pdocs extension's own `getLogger('pdocs-...')` observability
+every other docouture extension's own `getLogger('docouture-...')` observability
 (search-index's per-component summary, llms-txt's, footer's, ...), same
 reasoning throughout. This monorepo's own `just dev`/`just build-site`
-recipes, and `pdocs dev`/`pdocs build` (`antora-log.ts` in the `cli`
+recipes, and `docouture dev`/`docouture build` (`antora-log.ts` in the `cli`
 package), all pass `--log-level=info` to every Antora invocation they make
 for exactly this reason, so no extra flag is needed there — a raw `antora`
 invocation of your own still needs `--log-level=info` (or
@@ -230,8 +230,8 @@ to render) still logs at `warn` unconditionally either way.
 ## Targets
 
 ```
-pnpm nx run @inditextech/pdocs-asciidoc-extensions:lint
-pnpm nx run @inditextech/pdocs-asciidoc-extensions:typecheck
+pnpm nx run @inditextech/docouture-asciidoc-extensions:lint
+pnpm nx run @inditextech/docouture-asciidoc-extensions:typecheck
 ```
 
 There is deliberately **no `build` and no `clean`**: the package is plain

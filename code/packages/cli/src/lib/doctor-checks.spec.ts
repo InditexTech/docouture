@@ -49,8 +49,8 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'my-project-docs',
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     expect(results.every((r) => r.ok)).toBe(true)
@@ -61,8 +61,8 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'renamed-docs',
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     const failed = results.filter((r) => !r.ok)
@@ -75,7 +75,7 @@ describe('checkNamesAgree', () => {
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'my-project-docs',
       startPath: 'docs',
-      descriptorPath: 'docs/docs',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     const failed = results.filter((r) => !r.ok)
@@ -87,8 +87,8 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: 'my-project-docs',
       startPageComponent: 'my-project-docs',
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'something-else',
     })
     const failed = results.filter((r) => !r.ok)
@@ -100,12 +100,25 @@ describe('checkNamesAgree', () => {
     const results = checkNamesAgree({
       antoraYmlName: null,
       startPageComponent: null,
-      startPath: 'docs/docs',
-      descriptorPath: 'docs/docs',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
       packageName: 'my-project-docs',
     })
     expect(results).toHaveLength(1)
     expect(results[0]?.label).toBe('content path')
+  })
+
+  it('passes the package name pair when the component is the reserved ROOT name, even though it differs from package.json', () => {
+    const results = checkNamesAgree({
+      antoraYmlName: 'ROOT',
+      startPageComponent: 'ROOT',
+      startPath: 'docs/src',
+      descriptorPath: 'docs/src',
+      packageName: 'my-project-docs',
+    })
+    expect(results.every((r) => r.ok)).toBe(true)
+    const packageNameResult = results.find((r) => r.label === 'package name')
+    expect(packageNameResult?.ok).toBe(true)
   })
 })
 
@@ -113,7 +126,7 @@ describe('checkGitHasCommit', () => {
   let dir: string
 
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-git-'))
+    dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-git-'))
   })
 
   it('fails when the directory is not a git repository', async () => {
@@ -142,7 +155,7 @@ describe('checkAntoraAvailable', () => {
   let dir: string
 
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-antora-'))
+    dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-antora-'))
   })
 
   it('fails when node_modules/antora is missing', () => {
@@ -161,7 +174,7 @@ describe('checkAgentFilesPresent', () => {
   let dir: string
 
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-agent-files-'))
+    dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-agent-files-'))
   })
 
   it('flags every path missing on a bare directory', () => {
@@ -186,7 +199,7 @@ describe('checkAgentFilesPresent', () => {
 
 describe('checkReleaseLabelExists', () => {
   it('is advisory-only (ok: true) when gh cannot answer for this directory — no GitHub remote/auth in a bare tmp dir', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'pdocs-cli-doctor-release-label-'))
+    const dir = await mkdtemp(join(tmpdir(), 'docouture-cli-doctor-release-label-'))
     execFileSync('git', ['init', '--quiet'], { cwd: dir })
 
     const result = await checkReleaseLabelExists(dir)

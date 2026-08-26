@@ -14,7 +14,7 @@ let errorSpy: ReturnType<typeof vi.spyOn>
 let logSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  base = await mkdtemp(join(tmpdir(), 'pdocs-cli-teardown-cmd-'))
+  base = await mkdtemp(join(tmpdir(), 'docouture-cli-teardown-cmd-'))
   siteRoot = join(base, 'docs')
   await mkdir(siteRoot, { recursive: true })
   await writeFile(join(siteRoot, 'package.json'), JSON.stringify({ name: 'my-project-docs' }))
@@ -31,17 +31,17 @@ describe('runTeardown', () => {
   it('fails when no target is given', async () => {
     const code = await runTeardown(['--dir', base])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs teardown'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture teardown'))
   })
 
   it('fails on an unsupported target', async () => {
     const code = await runTeardown(['not-a-real-target', '--dir', base])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs teardown'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture teardown'))
   })
 
   it('fails when no package.json is found under --dir/docs', async () => {
-    const empty = await mkdtemp(join(tmpdir(), 'pdocs-cli-teardown-cmd-empty-'))
+    const empty = await mkdtemp(join(tmpdir(), 'docouture-cli-teardown-cmd-empty-'))
     const code = await runTeardown(['kroki', '--dir', empty])
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('no package.json found'))

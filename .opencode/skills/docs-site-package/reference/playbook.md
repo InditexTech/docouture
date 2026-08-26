@@ -75,7 +75,7 @@ off, preferring the versioned name so the site records what it was built against
 ```yaml
 ui:
   bundle:
-    url: https://example.com/pdocs-ui-bundle/releases/0.1.0/ui-bundle-0.1.0.zip
+    url: https://example.com/docouture-ui-bundle/releases/0.1.0/ui-bundle-0.1.0.zip
     snapshot: false
 ```
 
@@ -139,7 +139,7 @@ migration has to preserve existing links.
 | --- | --- | --- |
 | `html_extension_style` | `indexify` | `page/` (a directory with `index.html`). `default` → `page.html`, `drop` → `page` |
 | `redirect_facility` | `static` | how `page-aliases` are implemented: `static` HTML redirects, or `netlify`/`nginx` config |
-| `latest_version_segment` | unset | a fixed segment such as `latest` aliasing the current version |
+| `latest_version_segment` | unset | a fixed segment such as `latest` aliasing the current version — DO NOT set this on a `docouture new`-scaffolded site: its `replace` strategy turns one real version segment into a redirect stub (GH #137); those sites instead opt `@inditextech/docouture-antora-extensions`'s `duplicateLatestVersion` into republishing the latest version's content a second time under `/latest/…`, keeping both segments real (see `reference/versioning-modes.md`) |
 
 `example` is versioned under standalone mode (Stable + Prerelease) — `content.sources[].branches`/
 `tags` and `docs/antora.yml`'s `version`/`prerelease` across multiple refs are covered in

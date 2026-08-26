@@ -13,7 +13,7 @@ let siteRoot: string
 let errorSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
-  base = await mkdtemp(join(tmpdir(), 'pdocs-cli-publish-cmd-'))
+  base = await mkdtemp(join(tmpdir(), 'docouture-cli-publish-cmd-'))
   siteRoot = join(base, 'docs')
   await mkdir(join(siteRoot, 'build', 'site'), { recursive: true })
   await writeFile(join(siteRoot, 'package.json'), JSON.stringify({ name: 'my-project-docs' }))
@@ -28,11 +28,11 @@ describe('runPublish', () => {
   it('fails when no target is given', async () => {
     const code = await runPublish(['--dir', base])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: pdocs publish'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('usage: docouture publish'))
   })
 
   it('fails when no package.json is found under --dir/docs', async () => {
-    const empty = await mkdtemp(join(tmpdir(), 'pdocs-cli-publish-cmd-empty-'))
+    const empty = await mkdtemp(join(tmpdir(), 'docouture-cli-publish-cmd-empty-'))
     const code = await runPublish(['gh-pages', '--dir', empty])
     expect(code).toBe(1)
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('no package.json found'))
@@ -46,14 +46,14 @@ describe('runPublish', () => {
     const code = await runPublish(['gh-pages', '--dir', base], { loadDriver })
 
     expect(code).toBe(1)
-    expect(loadDriver).toHaveBeenCalledWith(join(siteRoot, 'package.json'), '@inditextech/pdocs-publish-gh-pages')
+    expect(loadDriver).toHaveBeenCalledWith(join(siteRoot, 'package.json'), '@inditextech/docouture-publish-gh-pages')
     expect(errorSpy).toHaveBeenCalledWith(
-      expect.stringContaining("could not load publish driver '@inditextech/pdocs-publish-gh-pages'")
+      expect.stringContaining("could not load publish driver '@inditextech/docouture-publish-gh-pages'")
     )
   })
 
   it('fails when the site has not been built yet', async () => {
-    const unbuilt = await mkdtemp(join(tmpdir(), 'pdocs-cli-publish-cmd-unbuilt-'))
+    const unbuilt = await mkdtemp(join(tmpdir(), 'docouture-cli-publish-cmd-unbuilt-'))
     await mkdir(join(unbuilt, 'docs'), { recursive: true })
     await writeFile(join(unbuilt, 'docs', 'package.json'), JSON.stringify({ name: 'x' }))
     const driver = vi.fn().mockResolvedValue(true)
@@ -62,7 +62,7 @@ describe('runPublish', () => {
 
     expect(code).toBe(1)
     expect(driver).not.toHaveBeenCalled()
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("run 'pdocs build' first"))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("run 'docouture build' first"))
   })
 
   it('resolves and calls the driver with the built site directory', async () => {
@@ -75,12 +75,12 @@ describe('runPublish', () => {
     expect(driver.mock.calls[0]?.[0]).toBe(join(siteRoot, 'build', 'site'))
   })
 
-  it("merges docs/package.json's pdocs.publish.<target> config under CLI flags", async () => {
+  it("merges docs/package.json's docouture.publish.<target> config under CLI flags", async () => {
     await writeFile(
       join(siteRoot, 'package.json'),
       JSON.stringify({
         name: 'my-project-docs',
-        pdocs: { publish: { 'gh-pages': { branch: 'from-config', message: 'from-config' } } },
+        docouture: { publish: { 'gh-pages': { branch: 'from-config', message: 'from-config' } } },
       })
     )
     const driver = vi.fn().mockResolvedValue(true)
@@ -135,12 +135,12 @@ describe('runPublish', () => {
     // End-to-end sanity check of the actual createRequire-based resolver —
     // every other test injects loadDriver to sidestep a vitest quirk where
     // a bare require() of a name that ALSO happens to be a real published
-    // dependency of this monorepo (e.g. '@inditextech/pdocs-publish-gh-pages'
+    // dependency of this monorepo (e.g. '@inditextech/docouture-publish-gh-pages'
     // itself) can resolve to that real package regardless of the `from`
     // path, instead of failing as it would under plain Node. A name with no
     // real counterpart avoids that entirely, so this exercises the genuine
     // node_modules resolution path.
-    const driverDir = join(siteRoot, 'node_modules', '@inditextech', 'pdocs-publish-fixture-only-target')
+    const driverDir = join(siteRoot, 'node_modules', '@inditextech', 'docouture-publish-fixture-only-target')
     await mkdir(driverDir, { recursive: true })
     await writeFile(join(driverDir, 'package.json'), JSON.stringify({ name: 'fixture', main: 'index.js' }))
     await writeFile(

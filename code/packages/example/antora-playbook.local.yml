@@ -72,8 +72,8 @@ asciidoc:
     kroki-enabled: true
     kroki-diagram-types: mermaid
   extensions:
-    - '@inditextech/pdocs-asciidoc-extensions'
+    - '@inditextech/docouture-asciidoc-extensions'
 
 antora:
   extensions:
-    - '@inditextech/pdocs-antora-extensions'
+    - '@inditextech/docouture-antora-extensions'

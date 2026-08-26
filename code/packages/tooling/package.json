@@ -1,0 +1,26 @@
+{
+  "name": "@inditextech/docouture-tooling",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal CLI for this monorepo's own dev workflow — the logic behind the justfile's non-trivial recipes (doctor, bump, release-local, ...). Never published; see GH-140.",
+  "license": "MPL-2.0",
+  "type": "module",
+  "bin": {
+    "docouture-tooling": "build/bin.js"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/chmod-bin.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && vitest run",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
+  },
+  "devDependencies": {
+    "@types/node": "~24.10.1",
+    "typescript": "6.0.3"
+  }
+}

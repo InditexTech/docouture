@@ -1,7 +1,7 @@
 ;(function () {
   'use strict'
 
-  var STORAGE_KEY = 'pdocs-side-menu'
+  var STORAGE_KEY = 'docouture-side-menu'
   var SECT_CLASS_RX = /^sect(\d)$/
 
   var root = document.documentElement

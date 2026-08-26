@@ -1,7 +1,7 @@
 {
-  "name": "@inditextech/pdocs-antora-extensions",
+  "name": "@inditextech/docouture-antora-extensions",
   "version": "0.1.0",
-  "description": "Antora pipeline extensions shared by pdocs documentation sites — per-module navigation metadata (nav_modules)",
+  "description": "Antora pipeline extensions shared by docouture documentation sites — per-module navigation metadata (nav_modules)",
   "repository": {
     "type": "git",
     "url": "https://github.com/InditexTech/test-antoradocs.git",
@@ -24,7 +24,7 @@
   "dependencies": {
     "@antora/page-composer": "~3.1.15",
     "@antora/redirect-producer": "~3.1.15",
-    "@inditextech/pdocs-asciidoc-extensions": "workspace:*",
+    "@inditextech/docouture-asciidoc-extensions": "workspace:*",
     "@shikijs/langs": "~4.4.0",
     "@shikijs/themes": "~4.4.0",
     "node-html-parser": "^9.0.1",

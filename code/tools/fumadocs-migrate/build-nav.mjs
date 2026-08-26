@@ -260,7 +260,7 @@ writeNavModules()
 
 // Each module's own meta.json also carries the title, description and icon
 // Fumadocs showed in its sidebar's module switcher — data with no equivalent
-// anywhere in Antora's model, which is why the pdocs UI reads it from a
+// anywhere in Antora's model, which is why the docouture UI reads it from a
 // `nav_modules` key in the component descriptor instead (see that file's own
 // comment, and packages/antora-extensions/lib/nav-modules.js). Generated from
 // the same source as the nav files above so the two can't drift.

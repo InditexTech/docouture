@@ -8,8 +8,8 @@
  * (01-nav.ts / 05-nav-modules.ts both touch navigation but stay apart
  * because they own different controls). Like every pair of numbered files
  * here, this one and 12-search.ts are each their own IIFE with no shared
- * module system — `window.__pdocsSearchRecents` is the agreed surface
- * between them, the same pattern `window.__pdocsSearch` uses to cross the
+ * module system — `window.__docoutureSearchRecents` is the agreed surface
+ * between them, the same pattern `window.__docoutureSearch` uses to cross the
  * boundary into vendor/search.bundle.ts.
  *
  * What's remembered is the SEARCH TERM, not the page that was opened —
@@ -26,12 +26,12 @@
   var scriptConfig = (document.getElementById('site-script') || { dataset: {} as DOMStringMap }).dataset
   var uiRootPath = (scriptConfig.uiRootPath == null ? window.uiRootPath : scriptConfig.uiRootPath) || '.'
 
-  // Namespaced per site, not just per component version: two pdocs sites
+  // Namespaced per site, not just per component version: two docouture sites
   // hosted under different sub-paths of the same origin must not share a
   // history. `uiRootPath` alone is only ever relative ('.', '..', '../..'),
   // identical-looking from two different pages of two different sites — so
   // it's resolved to an absolute pathname first.
-  var STORAGE_KEY = 'pdocs-search-recents:' + siteId()
+  var STORAGE_KEY = 'docouture-search-recents:' + siteId()
 
   function siteId (): string {
     try {
@@ -173,5 +173,5 @@
     return svg
   }
 
-  window.__pdocsSearchRecents = { record: record, render: render }
+  window.__docoutureSearchRecents = { record: record, render: render }
 })()

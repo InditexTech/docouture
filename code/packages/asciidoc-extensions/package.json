@@ -1,7 +1,7 @@
 {
-  "name": "@inditextech/pdocs-asciidoc-extensions",
+  "name": "@inditextech/docouture-asciidoc-extensions",
   "version": "0.1.0",
-  "description": "Asciidoctor extensions shared by pdocs documentation sites — authored content that has no AsciiDoc equivalent, rendered as IOP DS markup",
+  "description": "Asciidoctor extensions shared by docouture documentation sites — authored content that has no AsciiDoc equivalent, rendered as IOP DS markup",
   "repository": {
     "type": "git",
     "url": "https://github.com/InditexTech/test-antoradocs.git",

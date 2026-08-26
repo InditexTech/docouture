@@ -49,6 +49,19 @@ jobs:
     outputs:
       detected: ${{ steps.changes.outputs.paths }}
     steps:
+      # dorny/paths-filter diffs github.event.before -> github.sha via local
+      # git history on a push trigger (unlike a pull_request trigger, where
+      # it can resolve the base from the GitHub API alone) — needs an actual
+      # checkout first, or there is no .git to diff against at all
+      # (`git` exits 128, "not a git repository"/"bad revision"). fetch-depth
+      # 0 rather than a shallow default: a batched push can carry more
+      # commits than a shallow clone's history would contain, and `before`
+      # must be reachable locally for the diff to succeed.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Check for changed files in specific paths
         id: changes
         uses: dorny/paths-filter@ebc4d7e9ebcb0b1eb21480bb8f43113e996ac77a # v3

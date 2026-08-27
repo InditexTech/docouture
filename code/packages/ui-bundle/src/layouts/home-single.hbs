@@ -1,0 +1,43 @@
+{{!--
+  Single-column landing, a bundle-added sibling of `home.hbs` — no Figma
+  frame of its own; the design only draws the two-column layout that file
+  renders. Selected the same way, with `:page-layout: home-single` on the
+  page itself.
+
+  Identical partial tree to `home.hbs` — same head, header, side menu, hero
+  (home-hero.hbs, unchanged) and site footer — and it reuses that file's own
+  `.home__hero` / `.home__main` markup verbatim rather than inventing new
+  classes. The ONLY difference is the `home--single` modifier on `<main>`:
+  home.css already stacks the hero above the content into one column below
+  breakpoint `s` (nothing to stick a sticky aside beside once the columns
+  become rows), so a single-column mode is that same stacked arrangement
+  held at every breakpoint instead of only the narrow ones. See
+  home-single.css for the (small) set of overrides that do it — it holds no
+  typography or spacing of its own, only column/stickiness overrides scoped
+  to `.home--single`.
+
+  Because the hero and content column classes are unchanged, every authoring
+  attribute `home-hero.hbs` documents (`:page-tags:`, `:page-action:`,
+  `:page-hero-image:`, …) and every content-block convention `home.css`
+  documents (the `.sect1`/`#preamble` heading rule, block rhythm) apply here
+  exactly as they do on the two-column landing — a page picks the column
+  count, not a different authoring surface.
+--}}
+<!DOCTYPE html>
+<html lang="en"{{#if page.home}} data-page-home{{/if}}>
+  <head>
+{{> head defaultPageTitle='Home'}}
+  </head>
+  <body class="home-page{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
+{{> header}}
+    <div class="body">
+{{> nav}}
+      <main class="home home--single ids-grid-layout ids-grid-layout--with-margin">
+        <aside class="home__hero">{{> home-hero}}</aside>
+        <div class="home__main doc">{{{page.contents}}}</div>
+      </main>
+    </div>
+{{> site-footer}}
+{{> footer-scripts}}
+  </body>
+</html>

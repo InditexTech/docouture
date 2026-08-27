@@ -296,9 +296,26 @@ function run(command, args, cwd) {
   })
 }
 
+// Some site packages (e.g. `example`, GH-80 Mode 2 versioning) ship a second,
+// dev-only playbook alongside the publish one: `antora-playbook.local.yml`
+// points its content source at `branches: HEAD` instead of a hardcoded
+// `branches: [main]`, so aggregation reads the actual worktree — whatever
+// branch is checked out — instead of requiring `main` to already have the
+// commit. That file's own header explains why: the publish playbook's
+// `branches: [main]` resolves nothing on a feature branch or PR checkout.
+// `package.json`'s own `build` script already prefers it per-package; this
+// picks the same file so the live-reload rebuild loop below doesn't
+// contradict the initial Nx-driven build that served the very first
+// response — without this, editing a page that only exists on the current
+// branch would build fine once, then 404 on the very next autosave-triggered
+// rebuild, silently falling back to `main`'s content instead.
+const LOCAL_PLAYBOOK = 'antora-playbook.local.yml'
+const PUBLISH_PLAYBOOK = 'antora-playbook.yml'
+const playbook = existsSync(join(siteDir, LOCAL_PLAYBOOK)) ? LOCAL_PLAYBOOK : PUBLISH_PLAYBOOK
+
 // `--fetch` belongs to the one-off build: on a watch loop it would re-fetch
 // every remote content source on every keystroke.
-const buildSite = () => run(antoraBin, ['antora-playbook.yml'], siteDir)
+const buildSite = () => run(antoraBin, [playbook], siteDir)
 const buildUi = () => run(gulpBin, ['bundle'], uiDir)
 
 let running = false

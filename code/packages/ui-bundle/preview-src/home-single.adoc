@@ -1,0 +1,69 @@
+= ATD Framework
+:page-layout: home-single
+:page-nav-module: sdk
+:description: Single-column landing view test page — the home-single layout's shell: header toolbar in its Home state, side menu, hero stacked above the content column, and the site footer.
+:page-tags: efficiency, speed, support
+:page-action: Go to tool
+:page-action-url: https://github.com/InditexTech/atd-docs
+:page-action-secondary: Quickstart
+:page-action-secondary-url: content.adoc
+:page-hero-image: /photo-medium.png
+:page-hero-image-alt: Placeholder still standing in for the product screenshot the design frames.
+
+Same page (`home.adoc`), same hero (`home-hero.hbs`, unchanged) and the same
+content-column conventions, but with `:page-layout: home-single` instead of
+`home`: the hero renders as a full-width block above the content rather than
+a sticky aside beside it, at every breakpoint rather than only below `s`. See
+home-single.css for what actually changes — a handful of column/stickiness
+overrides, nothing about the hero or block markup itself.
+
+== Quicklinks
+
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
+====
+[card,subheader="Long form"]
+.link:content.html[Content test page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The long-form doc kitchen sink, rendered through the `default` layout.
+--
+
+[card,subheader="Chrome"]
+.link:landing.html[Landing test page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+Site chrome around a normal doc page, hero opted out.
+--
+
+[card,subheader="Two-column"]
+.link:home.html[Two-column landing test page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The `home` layout: same hero, sticky aside beside the content column.
+--
+
+[card,subheader="Edge case"]
+.link:404.html[404 page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The not-found page.
+--
+====
+
+== Free & open source
+
+[cta]
+====
+image::product-logo.svg[ATD Framework mark]
+image::product-logo-dark.svg[role=dark]
+
+ATD Framework is actively maintained and open for contributions. It comes
+with best-in-class documentation and developer experience.
+
+[.primary]
+https://github.com/InditexTech/atd-docs[Create a fork]
+====

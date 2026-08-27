@@ -52,6 +52,15 @@ image::photo-medium.png[A canvas with a text node selected]
 Site chrome around a normal doc page, hero opted out.
 --
 
+[card,subheader="Single-column"]
+.link:home-single.html[Single-column landing test page]
+--
+image::photo-medium.png[A canvas with a text node selected]
+
+The `home-single` layout: same hero, stacked above the content column
+instead of beside it.
+--
+
 [card,subheader="Assets"]
 .link:icons.html[Icons catalog]
 --

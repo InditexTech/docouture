@@ -1,5 +1,8 @@
 name: docouture-kroki-cache-warm
 
+permissions:
+  contents: read
+
 # GitHub Actions' cache is scoped to the branch/ref a run executes under, not
 # just the key string — and a `pull_request`-triggered run (docouture-release.yml's
 # main trigger) is ALWAYS scoped to that PR's own ephemeral merge ref

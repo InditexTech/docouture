@@ -1,0 +1,11 @@
+= Versioning & publishing
+
+Taking a site from a local build to a published, versioned one: the mode chosen at
+scaffold time, cutting a release, and the workflows that actually publish it.
+
+* xref:main:guides-versioning-modes.adoc[Versioning modes] — Standalone (Stable + Prerelease)
+  vs. Versioned (Full History), decided once at scaffold time.
+* xref:main:guides-releasing-a-documentation.adoc[Releasing a documentation] — cutting a
+  release via `docouture-release.yml`, manually or on a labelled merge to `main`.
+* xref:main:guides-publishing-a-documentation.adoc[Publishing a documentation] — the
+  prerelease and release publish workflows that run `docouture publish gh-pages`.

@@ -22,7 +22,7 @@ real logos, same filenames, and rebuild.
 == Why two files
 
 The brand mark sits on whatever the current theme's background is — see
-xref:main:ui-bundle.adoc[]'s theme section. `product_logo_dark` is swapped in
+xref:main:reference-ui-bundle.adoc[]'s theme section. `product_logo_dark` is swapped in
 automatically under the dark theme; omit it and `product_logo` is reused unchanged for
 both, which only reads well if the artwork already works on both backgrounds (a
 monochrome or already-inverted mark, for instance).
@@ -33,6 +33,12 @@ The brand mark's slot is a small, roughly-square product mark next to a *separat
 rendered* text title (the site's `title` from `docs/src/antora.yml`) — not a wide
 wordmark. A logo that already contains the product name as text usually duplicates
 what's already there next to it.
+
+`nav-brand.hbs` renders both images at a fixed **40×40 CSS px** (`width="40"
+height="40"`), so export at **at least 80×80** (2x, for HiDPI screens) — the seeded
+placeholder ships as a 256×256 PNG, which is generous headroom rather than a
+requirement. A transparent-background PNG or an SVG both work; square canvas, no
+padding baked into the file itself (the 40×40 box already gives it breathing room).
 
 == Removing it entirely
 

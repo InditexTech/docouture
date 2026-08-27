@@ -5,43 +5,14 @@ xref:main:changelog/index.adoc[Changelog], the unabridged commit-level record.
 
 [NOTE]
 ====
-docouture is currently at `0.1.0` with no tagged release yet — the entry below is an
-*illustrative* first-stable-release summary of what already exists in the repository
-today, written ahead of an actual `v1.0.0` tag, not a claim that one has shipped.
-Replace it with the real notes once a release is actually cut (see
-xref:main:releasing-a-documentation.adoc[]).
+docouture is currently at `0.1.0` with no tagged release yet — the entry linked below is
+an *illustrative* first-stable-release summary of what already exists in the repository
+today, written ahead of an actual `v1.0.0` tag, not a claim that one has shipped. It will
+be replaced with the real notes once a release is actually cut (see
+xref:main:guides-releasing-a-documentation.adoc[]).
 ====
 
-== v1.0.0 (illustrative)
+== Versions
 
-*Scaffolding*
+* xref:main:release-notes/1-0-0.adoc[v1.0.0] (illustrative)
 
-* `docouture new` scaffolds a full https://antora.org[Antora] site — content tree,
-  https://github.com/features/actions[GitHub] workflows, an `AGENTS.md` briefing —
-  into an existing repository, interactively or with flags.
-* `docouture dev`/`build`/`publish`/`doctor`/`upgrade`/`eject`/`teardown`/`completion`
-  round out the CLI. See xref:main:cli-api.adoc[].
-
-*Versioning*
-
-* Two versioning modes: standalone (stable + prerelease) and versioned (full release
-  history) — see xref:main:versioning-modes.adoc[].
-
-*The UI bundle*
-
-* A themed fork of Antora's default UI: dark/light mode, a version switcher, full-text
-  search, and a set of authoring blocks with no plain
-  https://asciidoc.org[AsciiDoc] equivalent (`[tabs]`, `[cards]`, `[accordion]`,
-  `[feature-tabs]`, `[cta]`).
-
-*Content features*
-
-* https://kroki.io[Kroki]-rendered diagrams (mermaid/plantuml/bpmn/excalidraw),
-  build-time https://shiki.style[Shiki] syntax highlighting,
-  https://llmstxt.org[`llms.txt`]/`llms-full.txt` generation for AI ingestion, and
-  external link checking — see xref:main:features.adoc[].
-
-*Publishing*
-
-* `docouture publish gh-pages`, with a CNAME custom-domain option and automatic
-  `.nojekyll` handling — see xref:main:publishing-a-documentation.adoc[].

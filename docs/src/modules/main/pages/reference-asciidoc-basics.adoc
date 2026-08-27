@@ -1,0 +1,530 @@
+= AsciiDoc basics
+:page-toclevels: 3
+:experimental:
+
+Plain https://asciidoc.org[AsciiDoc] — nothing docouture-specific — every block this
+page shows is standard Asciidoctor syntax, documented in full in the
+`docouture-writing-docs-pages` skill's `reference/language-basics.md`. Each subsection
+below shows the raw markup first, then the same markup rendered live. See
+xref:main:reference-custom-asciidoc-components.adoc[] for this site's own custom
+blocks, and xref:main:reference-integrations.adoc[] for the build-time capabilities
+(diagrams, syntax highlighting) mentioned along the way.
+
+One exception: `== Includes` below uses a plain Asciidoctor directive
+(`include::`), but the `partial$`/`example$` targets it points at are Antora's own
+resource-family classification, not something core AsciiDoc knows about — noted there,
+not silently folded in with the rest.
+
+== Headings and structure
+
+Sections nest by repeating `=`, never by skipping a level:
+
+[,asciidoc]
+----
+= Page title
+== Section
+=== Subsection
+==== Sub-subsection
+----
+
+This page is itself at the first real section level (`==`); the next few
+subsections go one level deeper — the nav/TOC outline you see for this very page is
+the live rendering of that nesting.
+
+[discrete]
+==== A discrete heading
+
+[,asciidoc]
+----
+[discrete]
+==== A discrete heading
+----
+
+`[discrete]` above a heading keeps it out of both the navigation outline and the page's
+own TOC — useful for a heading that organizes the page visually without being a real
+subsection of it.
+
+== Text formatting
+
+[,asciidoc]
+----
+*bold* and **b*o*ld mid-word**, _italic_ and it__ali__c mid-word, `mono`, `+literal, no
+subs+`, #marked text#, [.underline]#a span with a role#. Chemical formula: H~2~0.
+Exponent: E = mc^2^. A footnote after this sentencefootnote:[The footnote text itself,
+rendered at the bottom of the page.].
+----
+
+*bold* and **b*o*ld mid-word**, _italic_ and it__ali__c mid-word, `mono`, `+literal, no
+subs+`, #marked text#, [.underline]#a span with a role#. Chemical formula: H~2~0.
+Exponent: E = mc^2^. A footnote after this sentencefootnote:[The footnote text itself,
+rendered at the bottom of the page.].
+
+== Lists
+
+Unordered, with a nested item carrying its own attached paragraph:
+
+[,asciidoc]
+----
+* first
+* second
+** nested
++
+Attached via the `+` continuation.
+----
+
+* first
+* second
+** nested
++
+Attached via the `+` continuation.
+
+Ordered, custom numbering:
+
+[,asciidoc]
+----
+[upperalpha]
+. first
+. second
+. third
+----
+
+[upperalpha]
+. first
+. second
+. third
+
+Custom unordered markers:
+
+[,asciidoc]
+----
+[square]
+* square-marked
+* another
+----
+
+[square]
+* square-marked
+* another
+
+[,asciidoc]
+----
+[circle]
+* circle-marked
+* another
+----
+
+[circle]
+* circle-marked
+* another
+
+Description list, then its horizontal variant:
+
+[,asciidoc]
+----
+term:: definition
+another term:: definition
+----
+
+term:: definition
+another term:: definition
+
+[,asciidoc]
+----
+[horizontal]
+term:: definition
+another term:: definition
+----
+
+[horizontal]
+term:: definition
+another term:: definition
+
+A checklist:
+
+[,asciidoc]
+----
+* [ ] not done yet
+* [x] done
+----
+
+* [ ] not done yet
+* [x] done
+
+== Links and cross references
+
+[,asciidoc]
+----
+https://example.com[An external link], https://example.com[same, opened in a new
+tab^], link:https://example.com[the explicit macro], mailto:docs@example.com[a mail
+link]. Referring to another page on this site: xref:main:guides-adding-a-page.adoc[] —
+empty xref text renders that page's own title, so it stays correct if the title
+changes. A fragment:
+xref:main:guides-adding-a-page.adoc#group-without-a-page-of-its-own[a specific section
+on that page].
+----
+
+https://example.com[An external link], https://example.com[same, opened in a new
+tab^], link:https://example.com[the explicit macro], mailto:docs@example.com[a mail
+link]. Referring to another page on this site: xref:main:guides-adding-a-page.adoc[] —
+empty xref text renders that page's own title, so it stays correct if the title
+changes. A fragment:
+xref:main:guides-adding-a-page.adoc#group-without-a-page-of-its-own[a specific section
+on that page].
+
+== Images and icons
+
+[,asciidoc]
+----
+.A block image, capped at its own natural size
+image::ROOT:hero-placeholder.png[A placeholder image,480]
+
+An inline image sits mid-paragraph: image:ROOT:card-placeholder.png[A small inline
+placeholder,20,20] like so. Font icons, keyboard shortcuts and UI paths:
+icon:check[] done, kbd:[Ctrl+C] to copy, btn:[Save] to save, menu:File[Save As] to open
+the save-as dialog.
+----
+
+.A block image, capped at its own natural size
+image::ROOT:hero-placeholder.png[A placeholder image,480]
+
+An inline image sits mid-paragraph: image:ROOT:card-placeholder.png[A small inline
+placeholder,20,20] like so. Font icons, keyboard shortcuts and UI paths:
+icon:check[] done, kbd:[Ctrl+C] to copy, btn:[Save] to save, menu:File[Save As] to open
+the save-as dialog.
+
+== Admonitions
+
+Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION — a sixth needs a role plus
+custom CSS, not a new admonition type. The one-line form is good for a single
+sentence; the multi-line (delimited) form can hold anything, including another block:
+
+[,asciidoc]
+----
+NOTE: The one-line form — good for a single sentence.
+
+[TIP]
+====
+The multi-line form — anything can go inside, including another block.
+
+[,console]
+----
+$ npm run build
+----
+====
+
+[IMPORTANT]
+====
+Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION.
+====
+
+[WARNING]
+====
+Multi-line WARNING.
+====
+
+[CAUTION]
+====
+Multi-line CAUTION.
+====
+----
+
+NOTE: The one-line form — good for a single sentence.
+
+[TIP]
+====
+The multi-line form — anything can go inside, including another block.
+
+[,console]
+----
+$ npm run build
+----
+====
+
+[IMPORTANT]
+====
+Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION. A sixth needs a role plus
+custom CSS, not a new admonition type.
+====
+
+[WARNING]
+====
+Multi-line WARNING.
+====
+
+[CAUTION]
+====
+Multi-line CAUTION.
+====
+
+== Source code
+
+[,asciidoc]
+----
+[,typescript]
+----
+const answer: number = 42
+----
+----
+
+[,typescript]
+----
+const answer: number = 42
+----
+
+A block with no language at all still gets the code surface and copy button, just no
+syntax colour:
+
+[source]
+----
+plain text, no highlighting
+----
+
+Callouts, explained in a colon list right after the block:
+
+[,asciidoc]
+----
+[,js]
+----
+const x = 1 // <1>
+const y = x + 1 // <2>
+----
+<1> Set `x` to `1`.
+<2> Derive `y` from it.
+----
+
+[,js]
+----
+const x = 1 // <1>
+const y = x + 1 // <2>
+----
+<1> Set `x` to `1`.
+<2> Derive `y` from it.
+
+The `.wrap` role lets long lines wrap instead of scrolling horizontally:
+
+[.wrap,js]
+----
+const config = { alpha: 1, beta: 2, gamma: 3, delta: 4, epsilon: 5, zeta: 6, eta: 7 }
+----
+
+== Tables
+
+A basic table with a header row:
+
+[,asciidoc]
+----
+[cols="1,2,1"]
+|===
+|Name |Description |Default
+
+|`retry.max-attempts`
+|Number of times a failed request is retried.
+|`3`
+
+|`retry.backoff`
+|Base delay between retries; doubles each attempt.
+|`200ms`
+|===
+----
+
+[cols="1,2,1"]
+|===
+|Name |Description |Default
+
+|`retry.max-attempts`
+|Number of times a failed request is retried.
+|`3`
+
+|`retry.backoff`
+|Base delay between retries; doubles each attempt.
+|`200ms`
+|===
+
+`%autowidth` shrinks the table to its content instead of filling the column:
+
+[,asciidoc]
+----
+[%autowidth]
+|===
+|Status |Value
+|Build |passing
+|Coverage |92%
+|===
+----
+
+[%autowidth]
+|===
+|Status |Value
+|Build |passing
+|Coverage |92%
+|===
+
+`%noheader` with a percentage width:
+
+[,asciidoc]
+----
+[%noheader,width=50%]
+|===
+|Node.js |`>= 24`
+|pnpm |`>= 10`
+|===
+----
+
+[%noheader,width=50%]
+|===
+|Node.js |`>= 24`
+|pnpm |`>= 10`
+|===
+
+An absolute pixel width via `table-width=` (bypasses https://asciidoctor.org[Asciidoctor]'s
+own percentage-only `width=`), with `nowrap-cols=` pinning specific columns so their
+tokens never break mid-word:
+
+[,asciidoc]
+----
+[table-width=520px,cols="2,1,2",nowrap-cols="1,2"]
+|===
+|Property |Type |Notes
+
+|`timeout.connect`
+|`duration`
+|Maximum time to wait for a connection.
+
+|`timeout.read`
+|`duration`
+|Maximum time to wait for a response once connected.
+|===
+----
+
+[table-width=520px,cols="2,1,2",nowrap-cols="1,2"]
+|===
+|Property |Type |Notes
+
+|`timeout.connect`
+|`duration`
+|Maximum time to wait for a connection.
+
+|`timeout.read`
+|`duration`
+|Maximum time to wait for a response once connected.
+|===
+
+Column/cell styles (`a` asciidoc, `l` literal, `m` monospace, `h` header, `s` strong) and
+a column span:
+
+[,asciidoc]
+----
+[cols="1,1,2"]
+|===
+|Name |Type |Values
+
+|size
+|enum
+|`small` \| `medium` \| `large`
+
+2+|spans two columns
+|third cell
+|===
+----
+
+[cols="1,1,2"]
+|===
+|Name |Type |Values
+
+|size
+|enum
+|`small` \| `medium` \| `large`
+
+2+|spans two columns
+|third cell
+|===
+
+== Includes
+
+Content lives once, in its own file, and gets pulled into a page with `include::`.
+Antora restricts the target to a resource ID naming one of its content families —
+`partial$` for a reusable AsciiDoc fragment under a module's own `partials/`
+directory (never rendered as a page of its own), `example$` for a file under
+`examples/` (source code, config, fixtures). A relative path
+(`include::../other.adoc[]`) or a URL does not work — only these resource-ID
+families do.
+
+[,asciidoc]
+----
+include::partial$example-partial.adoc[]
+
+A tagged region only, from the same file:
+
+include::partial$example-partial.adoc[tag=callout]
+----
+
+include::partial$example-partial.adoc[]
+
+A tagged region only, from the same file:
+
+include::partial$example-partial.adoc[tag=callout]
+
+Tagged regions are marked in the _included_ file with comments in that file's own
+comment syntax (`// tag::callout[]` / `// end::callout[]` for AsciiDoc). `leveloffset=+1`
+demotes every section title in an included file that carries its own `=` heading —
+required when the included file is a page-shaped fragment rather than a bare partial.
+
+== Quotes and sidebars
+
+[,asciidoc]
+----
+[quote,Grace Hopper]
+____
+The most dangerous phrase in the language is, "We've always done it this way."
+____
+
+[verse]
+____
+Two roads diverged in a wood, and I—
+I took the one less traveled by.
+____
+
+.A sidebar
+****
+Asides, pull quotes, or background information that supplements the main flow without
+interrupting it.
+****
+----
+
+[quote,Grace Hopper]
+____
+The most dangerous phrase in the language is, "We've always done it this way."
+____
+
+[verse]
+____
+Two roads diverged in a wood, and I—
+I took the one less traveled by.
+____
+
+.A sidebar
+****
+Asides, pull quotes, or background information that supplements the main flow without
+interrupting it.
+****
+
+== Collapsible
+
+A single, standalone collapsible — for grouping several together with proper `role=group`
+semantics and single-open behaviour, see xref:main:reference-custom-asciidoc-components.adoc[]'s
+`[accordion]` block instead.
+
+[,asciidoc]
+----
+.Click to expand
+[%collapsible]
+====
+Rendered as a native `<details>` element — works with JavaScript off.
+====
+----
+
+.Click to expand
+[%collapsible]
+====
+Rendered as a native `<details>` element — works with JavaScript off.
+====

@@ -1,8 +1,22 @@
-= AI Skills
+= AI-First approach
 
-`npx skills@latest add InditexTech/docouture --all` installs a set of agent skills for
-authoring and maintaining a docouture site with a coding agent — separate from, and
-not scaffolded by, `docouture new` itself.
+docouture treats a documentation site as something a coding agent both *reads* and
+*writes*, not just something a human authors and an agent happens to stumble into.
+
+* *Reads* — every build publishes `llms.txt`/`llms-full.txt`
+  (xref:main:reference-integrations.adoc[]), so an agent can load the whole site's
+  content directly instead of scraping rendered HTML.
+* *Writes* — `npx skills@latest add InditexTech/docouture --all` installs a set of
+  agent skills (below) that plan a site's structure, draft its first content from
+  whatever the repo already has, and keep it in sync as the repo changes —
+  separate from, and not scaffolded by, `docouture new` itself.
+* *Stays honest* — `docouture-documenting-changes` maintains a documentation-state
+  ledger in `AGENTS.md` (below), and `docouture doctor` advisory-checks that the
+  skills and `AGENTS.md` are still present, so "AI-assisted" doesn't quietly decay
+  into "AI-authored once and never touched again."
+
+This site you're reading was itself scaffolded and drafted this way — see
+xref:main:index.adoc[About].
 
 [cols="1,3"]
 |===
@@ -29,7 +43,7 @@ ledger honest.
 |`docouture-docs-versioning`
 |Cutting a release on a `versioned`-mode site: `docouture version`,
 `docs/.release-version`, and the release workflow. Relevant only in that mode — see
-xref:main:versioning-modes.adoc[].
+xref:main:guides-versioning-modes.adoc[].
 |===
 
 == The documentation-state ledger

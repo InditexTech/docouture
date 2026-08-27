@@ -1,11 +1,65 @@
 = Prerequisites
 
-Before following xref:main:publishing-a-documentation.adoc[Publishing a documentation]
+What has to be true before scaffolding a site, and — separately — before a scaffolded
+site can actually publish to a live URL.
+
+== Versions
+
+Tooling that has to be on your machine before running `docouture new`.
+
+* *https://nodejs.org[Node.js] 24 or newer* — the CLI, the UI bundle and both
+  extension packages all declare `"engines": { "node": ">=24.0.0" }`.
+* *https://www.npmjs.com[npm] or https://pnpm.io[pnpm]* — `docouture new` detects one
+  from an existing lockfile/`packageManager` field, or falls back to how it was itself
+  invoked; `--pm` overrides the guess.
+* *https://www.docker.com[Docker]* — only if you keep https://kroki.io[Kroki] diagrams
+  enabled (the default). `[mermaid]`/`[plantuml]`/`[bpmn]`/`[excalidraw]` blocks render
+  as plain literal text instead if Docker isn't available, rather than failing the
+  build.
+
+== Scaffold
+
+`docouture new` scaffolds *into* a repository that already has at least one commit —
+it does not create one, and https://antora.org[Antora] reads content from git, so a
+repository with zero commits builds a site with zero pages. With that in place, run it
+directly with either package manager, no install step first:
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,console]
+----
+$ pnpm dlx @inditextech/docouture-cli new my-docs
+----
+****
+
+[tab,label="npm"]
+****
+[,console]
+----
+$ npx @inditextech/docouture-cli new my-docs
+----
+****
+--
+
+See xref:main:quickstart.adoc[] for what it asks and what it writes, and
+xref:main:reference-cli.adoc[] for every flag.
+
+None of the above is required to try docouture locally: `docouture new` followed by
+`docouture dev` works against a private, unpublished repository just as well. A
+https://github.com[GitHub] repository only becomes necessary once the scaffolded
+publish workflows need somewhere to run — see <<Publish>> below for what a *public*
+https://pages.github.com[GitHub Pages] site specifically needs.
+
+== Publish
+
+Before following xref:main:guides-publishing-a-documentation.adoc[Publishing a documentation]
 through to a published site, three things need to be true about this repository and
 its https://github.com[GitHub] settings. None of them are things `docouture new` can do
 on your behalf — they all require repository-admin access this CLI never has.
 
-== The repository must be public
+=== The repository must be public
 
 https://pages.github.com[GitHub Pages] serves a `gh-pages` branch to the public
 internet on a free plan only for a public repository — a private one needs
@@ -15,20 +69,21 @@ flow `docouture-publish.yml` assumes). If this repository is private and is mean
 stay that way, publishing to GitHub Pages is not the right target — use
 `docouture build` and ship `build/site` some other way instead.
 
-== Enable GitHub Pages, serving from `gh-pages`
+=== Enable GitHub Pages, serving from `gh-pages`
 
-Settings → Pages → **Build and deployment** → **Source**: "Deploy from a branch" →
-**Branch**: `gh-pages` / `/ (root)`.
+The `gh-pages` branch doesn't exist yet on a brand-new repository, and GitHub Pages can
+only be pointed at a branch that already exists — so publish once *before* touching
+this setting, or the branch picker has nothing to select.
 
-The `gh-pages` branch does not exist yet on a brand-new repository — it is created the
-first time `docouture publish gh-pages` (or the scaffolded
-`.github/workflows/docouture-publish.yml`, which calls it) actually runs. Publish once
-first — either by pushing to `main` and letting that workflow run, or manually per
-xref:main:publishing-a-documentation.adoc[Publishing a documentation]'s own "Publishing
-manually" section — then come back and point Pages at the branch it created. Turning
-Pages on before that branch exists just leaves the picker with nothing to select.
+. Publish once, to create the `gh-pages` branch: push to `main` and let
+  `docouture-publish-prerelease.yml` run, or publish manually per
+  xref:main:guides-publishing-a-documentation.adoc[Publishing a documentation]'s "Publishing
+  manually" section.
+. In the repository, go to **Settings → Pages**.
+. Under **Build and deployment → Source**, choose **Deploy from a branch**.
+. Under **Branch**, choose `gh-pages` and `/ (root)`, then save.
 
-== Create the `docs/release` label
+=== Create the `docs/release` label
 
 `.github/workflows/docouture-release.yml` (scaffolded by `docouture new`) can cut a
 release two ways: `workflow_dispatch` (run it by hand from the

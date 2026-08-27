@@ -48,10 +48,23 @@ workflow) authenticates the push; running this locally needs a token of your own
 
 == A custom domain
 
-A `cname` string under `package.json`'s own `"docouture": { "publish": { "gh-pages":
-{ "cname": "docs.example.com" } } }` — `docouture publish` writes it as a `CNAME` file
-alongside the built site. Leave the block empty, as scaffolded, for a plain
-`github.io` URL.
+A `cname` string under `package.json`'s own `docouture.publish.gh-pages` block —
+`docouture publish` writes it as a `CNAME` file alongside the built site:
+
+[,json]
+----
+{
+  "docouture": {
+    "publish": {
+      "gh-pages": {
+        "cname": "docs.example.com"
+      }
+    }
+  }
+}
+----
+
+Leave the block empty, as scaffolded, for a plain `github.io` URL.
 
 == `.nojekyll` — not optional
 

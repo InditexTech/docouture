@@ -19,6 +19,17 @@ ui:
 not the site root — supplemental files land there, which is why the key isn't just
 `/favicon.ico`.
 
+== What actually reads at that size
+
+A favicon renders at 16–32px in a browser tab — full logo artwork (fine detail,
+gradients, a wordmark) turns to mush at that size. Use a flat, single-colour
+simplified mark instead: the product symbol alone (drop any text), filled solid in
+black, white, or the brand's own solid accent — no gradients, no thin strokes. The
+seeded placeholder is a multi-res `.ico` (16×16 + 32×32 embedded); that's still the
+safest container since browsers pick whichever embedded size fits, though a plain PNG
+works too — `head-icons.hbs` only ever emits a single `<link rel="icon">`, regardless
+of format.
+
 == Using a different filename
 
 Rename the file under `supplemental-ui/` and update `site.keys.favicon` to match — the

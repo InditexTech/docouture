@@ -16,6 +16,6 @@ change (not a tracking issue). Not every merged PR gets one — a PR labelled
 `skip-release`, or carrying only an internal/epic label with no real user-facing
 category, is intentionally left out.
 
-TIP: This page doesn't mirror the real file — it would go stale the moment it did. See
-`code/CHANGELOG.md` directly for the current `[Unreleased]` section and every past
-release.
+TIP: `[Unreleased]` — what's landed but not yet cut into a release — is never mirrored
+here; see `code/CHANGELOG.md` directly for that. Every *cut* version below, though, is
+generated straight from that same file at build time, so it can't drift from it.

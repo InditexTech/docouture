@@ -14,7 +14,7 @@ unreachable by browsing, and gets no breadcrumbs/previous-next pagination.
 == Group without a page of its own
 
 A bare list item with no `xref:` starts a new, unlinked heading in the side menu —
-this is how xref:main:modifying-the-navigation.adoc[]'s section grouping works, and how
+this is how xref:main:guides-modifying-the-navigation.adoc[]'s section grouping works, and how
 this site's own `main:nav.adoc` groups Overview/Getting started/Guides/Reference/etc.:
 
 [,asciidoc]
@@ -26,7 +26,7 @@ this site's own `main:nav.adoc` groups Overview/Getting started/Guides/Reference
 
 == Writing the page itself
 
-See xref:main:custom-asciidoc-components.adoc[] for the blocks this site's UI bundle
+See xref:main:reference-custom-asciidoc-components.adoc[] for the blocks this site's UI bundle
 adds on top of plain AsciiDoc (tabs, cards, accordions, feature-tabs, cta), and the
 `docouture-writing-docs-pages` agent skill's `reference/language-basics.md` for plain
 AsciiDoc itself — headings, lists, tables, code blocks, admonitions,

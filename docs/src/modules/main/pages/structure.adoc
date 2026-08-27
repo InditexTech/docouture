@@ -30,10 +30,6 @@ Kroki, Shiki).
 |`packages/publish-gh-pages`
 |`@inditextech/docouture-publish-gh-pages` — the `docouture publish gh-pages` driver.
 
-|`packages/example`
-|An in-workspace, real-world Antora site docouture's own maintainers use to trial
-features ahead of the CLI template.
-
 |`packages/tooling`
 |Internal workspace tooling (release bumps, changelog checks, a local snapshot
 registry) — not something a scaffolded site ever depends on.
@@ -45,20 +41,20 @@ registry) — not something a scaffolded site ever depends on.
 
 ....
 docs/
-  antora-playbook.yml           real build (main + stable/version tags)
-  antora-playbook.local.yml     HEAD-only build, used by `docouture dev` and PR checks
-  package.json                  devDependencies: the CLI, ui-bundle, both extension
-                                 packages, the gh-pages publish driver, antora itself
+  antora-playbook.yml               real build (main + stable/version tags)
+  antora-playbook.local.yml         HEAD-only build, used by `docouture dev` and PR checks
+  package.json                      devDependencies: the CLI, ui-bundle, both extension
+                                     packages, the gh-pages publish driver, antora itself
   src/
-    antora.yml                  component descriptor: name, title, version, nav
+    antora.yml                      component descriptor: name, title, version, nav
     modules/
-      ROOT/pages/index.adoc     the landing page only
-      main/nav.adoc             the navigation tree
-      main/pages/*.adoc         every other page
+      ROOT/pages/index.adoc         the landing page only
+      main/nav.adoc                 the navigation tree
+      main/pages/*.adoc             every other page
 .github/workflows/docouture-*.yml   PR verification, prerelease/release publish, release cutting
-AGENTS.md                        docouture's own managed section, merged into whatever
-                                  was already there
+AGENTS.md                           docouture's own managed section, merged into whatever
+                                     was already there
 ....
 
-This site you're reading is exactly that shape — see it directly under `docs/` at the
-repository root.
+This site you're reading is exactly that shape — see it directly at
+https://github.com/InditexTech/docouture/tree/main/docs[`docs/` on `main`].

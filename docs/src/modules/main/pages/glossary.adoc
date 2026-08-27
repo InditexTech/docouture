@@ -15,7 +15,7 @@ site starts with two: `ROOT` (the landing page only) and `main` (everything else
 
 `antora-playbook.yml` — Antora's single entry-point config file: which content to
 aggregate, which UI bundle to use, and which https://asciidoc.org[AsciiDoc]/Antora
-extensions to load. See xref:main:antora-playbook-configuration.adoc[].
+extensions to load. See xref:main:reference-antora-playbook-configuration.adoc[].
 
 == Component descriptor
 
@@ -23,7 +23,7 @@ extensions to load. See xref:main:antora-playbook-configuration.adoc[].
 title, version, navigation list, and the docouture-specific keys
 (`nav_modules`/`footer`/`llms`/`not_found_module`) that
 `@inditextech/docouture-antora-extensions` reads. See
-xref:main:antora-yml-configuration.adoc[].
+xref:main:reference-antora-descriptor-configuration.adoc[].
 
 == Resource ID
 
@@ -33,19 +33,41 @@ is a resource ID, not a file path.
 
 == Standalone / Versioned
 
-The two versioning modes `docouture new --mode` offers. Standalone keeps a rolling
-`stable` tag alongside `main`'s prerelease; Versioned keeps every release as its own
-immutable `vX.Y.Z` tag forever. See xref:main:versioning-modes.adoc[].
+The two versioning modes `docouture new --mode` offers, decided once at scaffold time.
+Standalone keeps `main` as a permanent *prerelease* build and moves a single rolling
+`stable` tag on each release — no historical archive, only "now" and "what's next".
+Versioned keeps `main` as prerelease too, but gives every release its own immutable
+`vX.Y.Z` tag forever, plus a `docs/.release-version` file tracking the next release's
+target version — appropriate when old releases (an SDK, a CLI) must keep resolving
+unchanged after a new one ships. See xref:main:guides-versioning-modes.adoc[].
 
-== Antora extension / Asciidoctor extension
+== Antora extension
 
-Two different things registered under two different playbook keys —
-`antora.extensions` hooks Antora's site-generation pipeline; `asciidoc.extensions`
-hooks the https://asciidoctor.org[Asciidoctor] content processor. See
+A package registered under the playbook's `antora.extensions` key — it hooks Antora's
+own site-generation pipeline, running over the whole aggregated site model rather than
+a single page. This is where docouture's module switcher, site footer, search index,
+`llms.txt` generation, Kroki/Shiki prewarm steps, legacy URL redirects and the
+`/latest/` alias live (`@inditextech/docouture-antora-extensions`). See
+xref:main:architecture.adoc[].
+
+== Asciidoctor extension
+
+A package registered under the playbook's `asciidoc.extensions` key — it hooks the
+https://asciidoctor.org[Asciidoctor] content processor itself, running per-page during
+AsciiDoc conversion. This is where docouture's custom syntax lives — `[tabs]`,
+`[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]`, the `label:`/`mono:` macros,
+table/video sizing attributes, and the Kroki/Shiki block implementations
+(`@inditextech/docouture-asciidoc-extensions`). Listing it under `antora.extensions`
+instead (or vice versa) makes Antora log a warning and skip it. See
 xref:main:architecture.adoc[].
 
 == Publish driver
 
-A package named `@inditextech/docouture-publish-<target>`, resolved from the site's own
-`node_modules` by `docouture publish <target>`. `gh-pages` is the only one docouture
-ships today.
+The package a publish target resolves to: named `@inditextech/docouture-publish-<target>`,
+looked up in the site's own `node_modules` when `docouture publish <target>` runs. It
+does the actual work of getting a built site live — for `gh-pages`, the only driver
+docouture ships today, that means pushing `output.dir` to a `gh-pages` branch, plus
+fixes the bare `gh-pages` npm package doesn't provide on its own: a default
+`github-actions[bot]` git identity, surfaced failures instead of silent ones, a clean
+orphan first commit, and an always-written `.nojekyll`. See
+xref:main:guides-publishing-a-documentation.adoc[].

@@ -123,4 +123,5 @@ npx skills@latest add InditexTech/docouture --all
 | custom-asciidoc-components.adoc          | `code/packages/asciidoc-extensions/lib/*.js` (via the starter's own `components.adoc`)  | current |
 | architecture.adoc                        | `code/README.md`, `code/packages/*/package.json`                                       | current |
 | structure.adoc                           | `code/README.md`, workspace `packages/` layout                                          | current |
-| release-notes/index.adoc (v1.0.0 entry)  | illustrative draft, not yet a real release — see the page's own note                    | new     |
+| release-notes/1-0-0.adoc (v1.0.0 entry)  | illustrative draft, not yet a real release — see the page's own note                    | new     |
+| changelog/index.adoc (generated sections) | `code/packages/antora-extensions/lib/changelog-pages.js` (parses `code/CHANGELOG.md` at build time) | current |

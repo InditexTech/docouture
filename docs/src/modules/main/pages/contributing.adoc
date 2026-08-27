@@ -21,12 +21,12 @@ what actually applies; see `CONTRIBUTING.md` in that repository for the full tex
   `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
 . Open a pull request linking the issue.
 
-== Contributing to *this* site specifically
+== Contributing to this site specifically
 
 If what needs fixing is a page under `docs/` (this site, not docouture itself), that's
 a normal docs PR against whatever repository this site was scaffolded into — see
-xref:main:adding-a-page.adoc[] for the mechanics, and
-xref:main:ai-skills.adoc[]'s `docouture-documenting-changes` skill for keeping content
+xref:main:guides-adding-a-page.adoc[] for the mechanics, and
+xref:main:reference-ai-first-approach.adoc[]'s `docouture-documenting-changes` skill for keeping content
 in sync as the underlying repo changes.
 
 == License

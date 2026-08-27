@@ -38,6 +38,6 @@ https://antora.org[Antora], but drift here usually means something else drifted 
 
 == Adding a new module's navigation
 
-Covered separately in xref:main:adding-a-module.adoc[] — a new module needs both a
+Covered separately in xref:main:guides-adding-a-module.adoc[] — a new module needs both a
 `nav.adoc` of its own *and* an entry in `docs/src/antora.yml`'s top-level `nav:` list
 and `nav_modules:`.

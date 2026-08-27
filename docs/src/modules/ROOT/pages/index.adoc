@@ -7,8 +7,8 @@
 :page-action-url: main:quickstart.adoc
 :page-action-secondary: About
 :page-action-secondary-url: main:index.adoc
-:page-hero-image: hero-placeholder.png
-:page-hero-image-alt: docouture — an Antora documentation site themed with the IOP Design System.
+:page-hero-image: hero.jpg
+:page-hero-image-alt: Diagram of scattered documents and content sources flowing through a build pipeline into a structured, themed documentation site.
 
 docouture turns an https://antora.org[Antora] content tree into a themed, searchable
 documentation site in one command — `docouture new` scaffolds it, `docouture dev`
@@ -21,7 +21,7 @@ serves it with live reload, and `docouture publish gh-pages` ships it.
 [card,subheader="Start here"]
 .xref:main:quickstart.adoc[Quickstart]
 --
-image::card-placeholder.png[Placeholder card image]
+image::card-quickstart.jpg[A scaffold command turning into a running site, shown as a staircase of steps leading to a browser window]
 
 Scaffold a site and see it running locally in a few commands.
 --
@@ -29,15 +29,15 @@ Scaffold a site and see it running locally in a few commands.
 [card,subheader="Overview"]
 .xref:main:index.adoc[About]
 --
-image::card-placeholder.png[Placeholder card image]
+image::card-about.jpg[A content pipeline diagram connecting a page, a grid and other inputs through a central hub]
 
 What docouture actually ships, and why it exists.
 --
 
 [card,subheader="Reference"]
-.xref:main:cli-api.adoc[CLI reference]
+.xref:main:reference-cli.adoc[CLI reference]
 --
-image::card-placeholder.png[Placeholder card image]
+image::card-cli-reference.png[A terminal-style browser window with a command palette and a folder navigation tree]
 
 Every `docouture` command, its flags, and what it actually does.
 --
@@ -45,7 +45,7 @@ Every `docouture` command, its flags, and what it actually does.
 [card,subheader="Design"]
 .xref:main:architecture.adoc[Architecture]
 --
-image::card-placeholder.png[Placeholder card image]
+image::card-architecture.jpg[Layered building blocks connecting content sources, a rendering pipeline and the assembled site]
 
 How the CLI, the Antora pipeline and the themed UI bundle fit together.
 --
@@ -57,8 +57,7 @@ How the CLI, the Antora pipeline and the themed UI bundle fit together.
 ====
 [feature,label="Scaffold in one command"]
 --
-image::feature-placeholder.png[Placeholder feature image]
-image::feature-placeholder-dark.png[role=dark]
+image::feature-scaffold.png[A `docouture new` terminal command producing a scaffolded docs/ directory with content, assets, ui, site.yml and automation folders]
 
 `docouture new` lays down a full Antora site — content tree,
 https://github.com/features/actions[GitHub] workflows, an AGENTS.md briefing for
@@ -71,21 +70,19 @@ xref:main:quickstart.adoc[Try it]
 
 [feature,label="Themed with the IOP Design System"]
 --
-image::feature-placeholder.png[Placeholder feature image]
-image::feature-placeholder-dark.png[role=dark]
+image::feature-iop-design-system.jpg[A grid of light and dark themed UI components — buttons, cards, navigation, dropdowns — shown side by side]
 
 The UI bundle is a themed fork of Antora's own default UI: dark/light mode, a version
 switcher, full-text search, and a set of authoring blocks — tabs, cards, accordions,
 feature tabs — with no plain https://asciidoc.org[AsciiDoc] equivalent.
 
 [.cta]
-xref:main:ui-bundle.adoc[See the UI bundle]
+xref:main:reference-ui-bundle.adoc[See the UI bundle]
 --
 
 [feature,label="Diagrams and search, built in"]
 --
-image::feature-placeholder.png[Placeholder feature image]
-image::feature-placeholder-dark.png[role=dark]
+image::feature-diagrams-search.jpg[A magnifying glass over search results feeding into a document and a linked network graph, representing search and diagrams]
 
 Mermaid/PlantUML/BPMN/Excalidraw diagrams render via a self-hosted https://kroki.io[Kroki]
 service, code blocks get build-time https://shiki.style[Shiki] highlighting, and a
@@ -93,20 +90,19 @@ full-text search index ships with every build — all with zero configuration be
 what `docouture new` already wrote.
 
 [.cta]
-xref:main:features.adoc[See what ships]
+xref:main:reference-integrations.adoc[See what ships]
 --
 
 [feature,label="AI-ready docs"]
 --
-image::feature-placeholder.png[Placeholder feature image]
-image::feature-placeholder-dark.png[role=dark]
+image::feature-ai-ready-docs.jpg[Documentation files being processed and split into a rendered site page and a structured, machine-readable text feed]
 
 Every build publishes https://llmstxt.org[`llms.txt`]/`llms-full.txt` for LLM
 ingestion, and `npx skills add InditexTech/docouture` installs a set of agent skills
 that plan, scaffold and keep a site's content in sync with the repo it documents.
 
 [.cta]
-xref:main:ai-skills.adoc[See the skills]
+xref:main:reference-ai-first-approach.adoc[See the skills]
 --
 ====
 
@@ -145,7 +141,7 @@ and publishes a site built on top of them. See xref:main:index.adoc[About].
 [%collapsible]
 ====
 Yes — standalone (stable + prerelease) or versioned (full release history). See
-xref:main:versioning-modes.adoc[Versioning modes].
+xref:main:guides-versioning-modes.adoc[Versioning modes].
 ====
 
 .Is docouture open source?

@@ -1,6 +1,11 @@
 = Architecture
 
-docouture is three cooperating pieces, each replaceable on its own.
+docouture turns a git repository into a themed https://antora.org[Antora] documentation
+site. It has no engine of its own — it wires together an existing content pipeline
+(Antora), a themed UI, two sets of build-time extensions, and a CLI that scaffolds and
+drives all of it. Each piece is independently replaceable: swap the UI bundle, drop an
+extension package, or skip the CLI and call Antora directly. The sections below cover
+each piece, then how a build actually strings them together.
 
 == The content pipeline: Antora
 
@@ -10,8 +15,8 @@ one *component descriptor* (`antora.yml`) per documentation component. docouture
 doesn't replace Antora's model — it generates a playbook and descriptor that already
 point at the right things, and layers extensions on top. See
 https://docs.antora.org/antora/latest/[Antora's own documentation] for the model
-itself, and xref:main:antora-playbook-configuration.adoc[]/
-xref:main:antora-yml-configuration.adoc[] for what this site's own copies of those two
+itself, and xref:main:reference-antora-playbook-configuration.adoc[]/
+xref:main:reference-antora-descriptor-configuration.adoc[] for what this site's own copies of those two
 files say.
 
 == The UI: a themed Antora UI bundle
@@ -21,40 +26,67 @@ https://gitlab.com/antora/antora-ui-default[antora-ui-default]: Handlebars layou
 partials, CSS built on the IOP Design System's tokens, and browser scripts for theme
 switching, search, tabs, accordions and the on-page table of contents. Antora reads it
 as a plain zip (`ui.bundle.url` in the playbook) — nothing about it is
-docouture-specific from Antora's point of view. See xref:main:ui-bundle.adoc[].
+docouture-specific from Antora's point of view. See xref:main:reference-ui-bundle.adoc[].
 
 == The extensions: two different seams
 
 Two packages hook two different parts of the pipeline, registered under two different
 playbook keys:
 
-* `@inditextech/docouture-antora-extensions` (`antora.extensions`) hooks Antora's own
-  site-generation pipeline — the module switcher, the site footer, the search index,
-  `llms.txt` generation, the https://kroki.io[Kroki]/https://shiki.style[Shiki] prewarm
-  steps, legacy URL redirects, and the `/latest/` alias.
-* `@inditextech/docouture-asciidoc-extensions` (`asciidoc.extensions`) hooks the
-  https://asciidoctor.org[Asciidoctor] processor itself — `[tabs]`, `[cards]`,
-  `[accordion]`, `[feature-tabs]`, `[cta]`, the `label:`/`mono:` macros, table/video
-  sizing attributes, and the Kroki/Shiki block implementations.
+* `@inditextech/docouture-antora-extensions` (`antora.extensions`) — site-level
+  behavior: it hooks Antora's own site-generation pipeline to add things Antora doesn't
+  do on its own — the module switcher, the site footer, the search index, `llms.txt`
+  generation, the https://kroki.io[Kroki]/https://shiki.style[Shiki] prewarm steps,
+  legacy URL redirects, and the `/latest/` alias.
+* `@inditextech/docouture-asciidoc-extensions` (`asciidoc.extensions`) — page-level
+  content: it hooks the https://asciidoctor.org[Asciidoctor] processor itself to add
+  AsciiDoc syntax docouture sites can write that stock Asciidoctor doesn't have —
+  `[tabs]`, `[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]`, the `label:`/`mono:`
+  macros, table/video sizing attributes, and the Kroki/Shiki block implementations.
 
 Listing either package under the other's key makes Antora log a warning and skip it —
-see xref:main:antora-playbook-configuration.adoc[].
+see xref:main:reference-antora-playbook-configuration.adoc[].
 
 == The CLI: scaffolding, not a build tool
 
 `docouture` (`@inditextech/docouture-cli`) doesn't build anything itself — `docouture
 build`/`dev` are thin wrappers around Antora, and `docouture publish` resolves a
 publish driver package (`@inditextech/docouture-publish-<target>`) from the site's own
-`node_modules`. What the CLI actually owns is scaffolding (`new`), version bookkeeping
-(`version`), diagnostics (`doctor`), and re-syncing generated files
-(`upgrade`/`eject`/`teardown`) — see xref:main:cli-api.adoc[].
+`node_modules`. What the CLI actually owns:
+
+[cols="1,2"]
+|===
+|Responsibility |Commands
+
+|Scaffolding |`new`
+|Build (wraps Antora, doesn't replace it) |`build`, `dev`
+|Publishing (resolves a `docouture-publish-<target>` driver) |`publish`
+|Version bookkeeping |`version`
+|Diagnostics |`doctor`
+|Re-syncing generated files |`upgrade`, `eject`, `teardown`
+|===
+
+See xref:main:reference-cli.adoc[].
 
 == How a build actually runs
 
-. `docouture build` (or `dev`) shells out to the site's own `npm run build`, which runs
-  `antora --fetch antora-playbook.yml`.
-. Antora aggregates content from `content.sources[]`, applies `asciidoc.extensions` to
-  every page, then runs `antora.extensions` over the resulting site model.
-. The UI bundle renders the result through its Handlebars layouts.
-. `docouture publish <target>` (a separate step) pushes whatever is at `output.dir`
-  (default `build/site`) using that target's driver package.
+Locally, `docouture build`/`dev` shells out to the site's own `npm run build`
+(`antora --fetch antora-playbook.yml`). Antora aggregates content from
+`content.sources[]`, applies `asciidoc.extensions` to every page, then runs
+`antora.extensions` over the resulting site model, and the UI bundle renders it through
+its Handlebars layouts.
+
+In CI it's the same pipeline through one of the workflows `docouture new` scaffolds,
+differing only in which playbook they read and what happens after:
+
+* **`docouture-pr-verify.yml`** — every pull request, builds `antora-playbook.local.yml`
+  (HEAD only — no other ref is reachable from a PR checkout), then runs link checking.
+  Never publishes.
+* **`docouture-publish-prerelease.yml`** — every push to `main` that touches content,
+  builds the real `antora-playbook.yml`, then calls `docouture-publish.yml` (`docouture
+  publish <target>`, pushing whatever lands at `output.dir`) to publish it.
+* **`docouture-release.yml`** — cutting a release, tags the version, then also calls
+  `docouture-publish.yml` for the definitive post-release build.
+
+See xref:main:guides-publishing-a-documentation.adoc[] and
+xref:main:guides-releasing-a-documentation.adoc[] for each workflow's own triggers.

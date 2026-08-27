@@ -11,16 +11,16 @@ It ships three things a documentation site actually needs:
   https://gitlab.com/antora/antora-ui-default[antora-ui-default] carrying dark/light
   mode, a version switcher, full-text search, and a set of authoring blocks
   (`[tabs]`, `[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]`) with no plain
-  https://asciidoc.org[AsciiDoc] equivalent — see xref:main:ui-bundle.adoc[] and
-  xref:main:custom-asciidoc-components.adoc[].
+  https://asciidoc.org[AsciiDoc] equivalent — see xref:main:reference-ui-bundle.adoc[] and
+  xref:main:reference-custom-asciidoc-components.adoc[].
 * *Power-up AsciiDoc and Antora extensions* — a module switcher, a site footer, a
   full-text search index, `llms.txt`/`llms-full.txt` generation,
   https://kroki.io[Kroki] diagram rendering and https://shiki.style[Shiki] syntax
-  highlighting, wired up by default — see xref:main:features.adoc[].
+  highlighting, wired up by default — see xref:main:reference-integrations.adoc[].
 * *Tooling and scaffolding* — `docouture new` scaffolds a site into an existing git
   repository; `docouture dev`/`build`/`publish` run it; `docouture doctor` checks it's
   healthy; `docouture version`/`upgrade`/`eject`/`teardown` cover the rest — see
-  xref:main:cli-api.adoc[].
+  xref:main:reference-cli.adoc[].
 
 == Who it's for
 

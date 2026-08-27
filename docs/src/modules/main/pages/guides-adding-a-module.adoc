@@ -25,7 +25,7 @@ nav:
 
 == 3. Describe it under `nav_modules`
 
-A **list**, not a map — see xref:main:antora-yml-configuration.adoc[] for why a map
+A **list**, not a map — see xref:main:reference-antora-descriptor-configuration.adoc[] for why a map
 silently breaks a hyphenated module slug:
 
 [,yaml]
@@ -45,5 +45,4 @@ Once a second entry exists, the UI's module switcher appears automatically — w
 one module, there's nothing to switch between.
 
 `icon` is `<group>/<name>` from the UI bundle's own vendored sprite, not a free-form
-name — search the design system's icon catalogue for a matching one, or browse
-`packages/ui-bundle/src/img/icons.yml` in the docouture source repository directly.
+name — see xref:main:guides-icon-gallery.adoc[] for every icon this site's UI bundle ships.

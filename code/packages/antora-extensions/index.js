@@ -1,5 +1,6 @@
 'use strict'
 
+const registerChangelogPages = require('./lib/changelog-pages')
 const registerDuplicateLatestVersion = require('./lib/duplicate-latest-version')
 const registerFooter = require('./lib/footer')
 const registerKrokiPrewarm = require('./lib/kroki-prewarm')
@@ -95,8 +96,14 @@ const registerVersionReport = require('./lib/version-report')
  * only `contentCatalog`'s already-rendered pages (`file.contents`,
  * `file.out`, `file.pub`) and writing only new files into `siteCatalog` —
  * nothing any other extension here reads or writes overlaps with it, so its
- * position is not load-bearing either. Listed last simply because it's the
- * newest addition.
+ * position is not load-bearing either.
+ *
+ * changelog-pages listens on the same `contentClassified` event as
+ * version-report, reading `contentCatalog` (for whichever `changelog/
+ * index.adoc` page(s) already exist) and appending generated release
+ * sections directly onto that page's own `.contents` — nothing any other
+ * extension here reads or writes, so its position is not load-bearing
+ * either. Listed last simply because it's the newest addition.
  */
 module.exports.register = function (context, { config }) {
   registerLifecycleLog(context)
@@ -110,4 +117,5 @@ module.exports.register = function (context, { config }) {
   registerVersionReport(context)
   registerRedirects(context, config?.redirects)
   registerDuplicateLatestVersion(context, config)
+  registerChangelogPages(context, config?.changelogPath)
 }

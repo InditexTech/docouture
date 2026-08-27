@@ -1,0 +1,170 @@
+= Landing page modifications
+
+The landing page (`ROOT/pages/index.adoc`) is the one page rendered through the UI
+bundle's `home` layout (`:page-layout: home`). The layout itself builds only the hero
+— everything below it is the page's own ordinary AsciiDoc body, using blocks that
+happen to have no plain-AsciiDoc equivalent. Its section order is therefore fixed —
+each block is optional, but present blocks appear in this order:
+
+. *Hero* — the page's own header attributes.
+. *Get started* — a `[cards]` block, typically 4 entry points.
+. *Key features* — a `[feature-tabs]` block, a handful of capability slides.
+. *A CTA* — a `[cta]` block, one pitch plus one action.
+. *FAQ* — an `[accordion]` block.
+
+`:page-nav-module: main` is what gives the landing page a side menu at all — `ROOT`
+itself has no `nav.adoc`, so it borrows whichever module this attribute names.
+
+Every block below is documented in full syntax in
+xref:main:reference-custom-asciidoc-components.adoc[] — this page is what's actually editable
+on *this* landing page and what each change does, not the block reference.
+
+== Hero
+
+Set as page attributes on `index.adoc` itself, not a block:
+
+[,asciidoc]
+----
+:description: One sentence, used as the page's meta description only — it is not
+              shown anywhere in the hero itself.
+:page-tags: antora, cli, design-system
+:page-action: Get started
+:page-action-url: main:quickstart.adoc
+:page-action-secondary: About
+:page-action-secondary-url: main:index.adoc
+:page-hero-image: hero-placeholder.png
+:page-hero-image-alt: A one-line description of the image, for screen readers.
+----
+
+* `:description:` is meta-only on the `home` layout — unlike the default page
+  layout's hero, it never renders as a visible subtitle. Write it for search engines
+  and link-preview cards, not as landing-page copy.
+* `:page-tags:` is a comma-separated list, rendered as chips under the title.
+* `:page-action:`/`:page-action-url:` is the primary button — **both halves are
+  required**; set only one and neither renders (a button that goes nowhere is worse
+  than no button).
+* `:page-action-secondary:`/`:page-action-secondary-url:` is the same rule, and it's
+  nested inside the primary action's markup — if the primary pair is unset, the
+  secondary button doesn't render either, even with both of its own halves set.
+* `:page-hero-image:`/`:page-hero-image-alt:` is optional — the hero renders fine as
+  text-only with no image. There's no dark-mode variant for it (unlike feature/CTA
+  images); pick artwork that reads on both themes, or skip it.
+* `:page-hero-video:`/`:page-hero-video-poster:` is the same media slot, for a video
+  instead of an image — if both `:page-hero-image:` and `:page-hero-video:` are set,
+  the video wins.
+
+== Get started
+
+The site's own real example:
+
+[,asciidoc]
+----
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
+====
+[card,subheader="Start here"]
+.xref:main:quickstart.adoc[Quickstart]
+--
+image::card-placeholder.png[Placeholder card image]
+
+Scaffold a site and see it running locally in a few commands.
+--
+====
+----
+
+What each attribute changes:
+
+* `type=` — `no-image` (default, text-only), `image-landscape`, `image-square`, or
+  `image-portrait`. An unknown value warns and falls back to `no-image`.
+* `columns=` — space-separated `breakpoint:count` tokens (bare `count` = the base/
+  mobile column count); breakpoints are `s`, `m`, `l` only, max 4 columns per
+  breakpoint. Defaults to `"1 s:2 m:3"` if omitted.
+* `width=` — `content` (default, matches the page's text measure) or `container`
+  (full page width — what this site's own Get started section uses).
+* Per-card `subheader=` and `icon=` share one header row and can be combined — they
+  are not alternatives to each other, despite how the two examples in
+  xref:main:reference-custom-asciidoc-components.adoc[] read side by side. `icon=` only
+  accepts a `group/name` string with a working CSS mask — see
+  xref:main:guides-icon-gallery.adoc[] for which ones actually render.
+* Per-card `labels=` is a comma-separated list rendered as small grey chips, separate
+  from `subheader=`.
+
+Adding, removing or reordering a card is just adding, removing or reordering a
+`[card]` block inside the `====`; there's no fixed count (4 is this template's
+starting point, not a limit).
+
+== Key features
+
+Each `[feature]` is one tab. At least one of `label=` (the tab's own text) or
+`.Title` (a heading shown in the panel) is required — set both when the tab label
+and the in-panel heading should read differently, set just one otherwise:
+
+[,asciidoc]
+----
+[feature,label="Scaffold in one command"]
+--
+image::feature-placeholder.png[Placeholder feature image]
+image::feature-placeholder-dark.png[role=dark]
+
+Prose for this slide.
+
+[.cta]
+xref:main:quickstart.adoc[Try it]
+--
+----
+
+The `role=dark` image is optional but recommended whenever the light one wouldn't
+read on a dark background — it's swapped in automatically under the dark theme. The
+`[.cta]` link is optional and limited to one per slide (a second one is dropped, not
+an error). Regardless of the order these are authored in, a slide always renders as
+media, then prose, then the call to action.
+
+Add, remove or reorder slides the same way as cards — one `[feature]` block per tab,
+no fixed count.
+
+== A CTA
+
+One pitch, one `[.primary]` action — and, less commonly needed, one `[.secondary]`
+action alongside it:
+
+[,asciidoc]
+----
+[cta]
+====
+A short pitch.
+
+[.primary]
+https://github.com/InditexTech/docouture[View the repository]
+
+[.secondary]
+xref:main:faq.adoc[Read the FAQ]
+====
+----
+
+`align=` (`center`, the default, or `start`) controls whether the pitch and actions
+centre or left-align. `title=` adds a second, larger heading line inside the band
+itself — most callers don't need it, since the `==` heading above the block (`Free &
+open source` on this site) already does that job.
+
+== FAQ
+
+Add or remove a question by adding or removing a `[%collapsible]` item inside the
+`[accordion]` block — see xref:main:reference-custom-asciidoc-components.adoc[] for the
+`[%collapsible]` syntax itself. `%single-open` (an option on the `[accordion]` block,
+not this site's current setting) closes whichever other item was open when a new one
+is expanded; without it, items toggle independently, which is what this landing page
+actually uses.
+
+== A different layout shape
+
+`:page-layout: home` (two-column: hero as a fixed side column, everything else
+scrolling in the main column) is one of two shipped landing shapes. `:page-layout:
+home-single` renders the identical hero and body content stacked in a single column
+instead — same attributes, same blocks, just a different arrangement. Switching is a
+one-line change on `index.adoc` itself.
+
+== Replacing the placeholder images
+
+`ROOT/images/{hero,card,feature,feature-dark}-placeholder.png` are stand-ins. Replace
+them with real artwork under the same filenames (or update the `image::` references
+to new ones) — they're a separate concern from the *site* logo/favicon, which
+xref:main:guides-setup-the-product-logo.adoc[] and xref:main:guides-setup-a-favicon.adoc[] cover.

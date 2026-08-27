@@ -66,6 +66,7 @@ at all).
 
 ### Documentation
 
+- [#150](https://github.com/InditexTech/docouture/pull/150) [documentation] Document docouture using docouture (dogfood the platform for its own docs)
 - [#149](https://github.com/InditexTech/docouture/pull/149) [skills] Externalize docs-authoring skills into standalone skill packages
 - [#115](https://github.com/InditexTech/test-antoradocs/pull/115) [cli] Scaffold AGENTS.md and agent skills (OpenCode & Claude) in docouture new
 - [#99](https://github.com/InditexTech/test-antoradocs/pull/99) [tooling] Document the two Antora versioning modes (Mode 1 & Mode 2)

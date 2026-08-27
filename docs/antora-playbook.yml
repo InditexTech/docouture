@@ -5,9 +5,9 @@
 # Build with:  npx antora --fetch antora-playbook.yml
 # Output:      build/site
 #
-# Standalone (default) versioning — see the docouture docs-site-package skill's
-# reference/versioning-modes.md for the full mechanism this playbook and
-# docs/antora.yml together implement.
+# Versioned (Full History) versioning — see the docouture docs-site-package
+# skill's reference/versioning-modes.md for the full mechanism this playbook
+# and docs/antora.yml together implement.
 #
 
 site:
@@ -47,26 +47,24 @@ content:
     # the build's cwd — and requires the resolved path to be a git worktree
     # root itself, not merely nested inside one. This playbook lives at
     # <repo-root>/docs/antora-playbook.yml, one level below the repository
-    # root `docouture new` scaffolded into, so `url: ..` is what reaches it —
-    # `url: .` would point at this docs/ directory, which is not itself a
-    # git repository, and the build fails with "Local content source must be
-    # a git repository". (Only a playbook living AT the repository root can
-    # use `url: .` — see the docs-site-package skill.)
+    # root `docouture new` scaffolded into, so `url: ..` is what reaches it — see
+    # the standalone playbook's own comment on this, and the
+    # docs-site-package skill.
     - url: ..
-      # Repository-root relative, hence `docs/src`: the whole starter
-      # template — including its own nested `src/` holding antora.yml — was
-      # copied under this repository's `docs/`, so the descriptor ends up at
-      # `docs/src/antora.yml`.
+      # Repository-root relative, hence `docs/src` — see the standalone
+      # playbook's comment: the starter template's own nested `src/` lands
+      # one level below this repository's `docs/`.
       start_path: docs/src
-      # Standalone: `main` aggregates as the prerelease version —
-      # docs/antora.yml on this branch permanently says `version: prerelease`,
-      # `prerelease: true`. `stable` is a rolling tag that docouture-release.yml
-      # force-moves to a fresh one-off commit on every release, not a second
-      # long-lived branch. Until the first release, `stable` does not exist
-      # yet and this site builds with just the one (prerelease) version —
-      # that is expected, not an error.
+      # Versioned (Full History): `main` aggregates as the prerelease
+      # version — docs/antora.yml on this branch says `version: prerelease`,
+      # `prerelease: true`, the same as the standalone mode's shape (this
+      # descriptor is identical for both modes on main — see docs/antora.yml's
+      # own comment). `tags: ['v*']` matches every release tag (v1.2.0,
+      # v2.0.0, ...) docouture-release.yml cuts, each an immutable version with
+      # its own copy of docs/antora.yml — the version dropdown grows by one
+      # every release and nothing here ever needs editing again.
       branches: [main]
-      tags: ['stable']
+      tags: ['v*']
 
 ui:
   bundle:
@@ -107,14 +105,6 @@ urls:
   # requirement; drop this line for Antora's plain default if the deployed
   # site sits behind something that prefers literal .html routes.
   html_extension_style: indexify
-  # NOTE: deliberately no `latest_version_segment` here. Under Antora's own
-  # `latest_version_segment_strategy` (default `replace`), setting it turns
-  # `.../stable/…` into a permanent redirect stub the moment a release
-  # exists — the opposite of what this standalone (stable/prerelease) setup
-  # promises. A `/.../latest/…` alias is provided instead, further down,
-  # by @inditextech/docouture-antora-extensions' `duplicateLatestVersion` (GH
-  # #137) — it publishes `stable`'s content a second time under `/latest/…`
-  # as a genuinely independent copy, so BOTH URLs stay real.
 
 runtime:
   # Fail the build on broken xrefs and other content problems rather than
@@ -152,19 +142,7 @@ asciidoc:
     # soft default, so an individual page can still opt out with
     # `:!page-pagination:` (e.g. a landing-style page).
     page-pagination: '@'
-    # Renders `[mermaid]`/`[plantuml]`/etc. blocks as real diagrams instead of
-    # literal source text, via a self-hosted Kroki service — enabled by
-    # default (comment both lines below out to turn it off). Needs Docker
-    # available; @inditextech/docouture-antora-extensions' kroki-prewarm.js
-    # starts the service itself, automatically, the first time a build needs
-    # it — no manual setup required. Run `docouture eject kroki` to copy the
-    # bundled compose file into docs/kroki-compose.yml if you need to
-    # customize it (a different image version, a companion for another
-    # diagram type, ...); `docouture teardown kroki` stops it manually, since
-    # nothing stops it automatically. `kroki-diagram-types` is a
-    # comma-separated subset of kroki.js's `SUPPORTED_TYPES` (e.g. `mermaid`
-    # or `mermaid,plantuml,bpmn,excalidraw`); omit it to enable every
-    # supported type.
+    # Same as the real antora-playbook.yml — see its own comment.
     kroki-enabled: true
     kroki-diagram-types: mermaid,plantuml,bpmn,excalidraw
   extensions:
@@ -181,9 +159,9 @@ antora:
     # above — see the docs-internals skill's reference/antora-extensions.md):
     # nav_modules-driven module switcher, an authored site footer, the search
     # index the UI bundle's search dialog reads, and llms.txt/llms-full.txt
-    # generation for AI ingestion. `duplicateLatestVersion` additionally
-    # publishes `stable`'s content a second time under `/latest/…` — a real,
-    # independent copy, not a redirect — once a first release exists (see
-    # the `urls` note above).
+    # generation for AI ingestion. `duplicateLatestVersion` (GH #137)
+    # additionally publishes whichever release tag Antora computes as
+    # latest a second time under `/latest/…` — a real, independent copy,
+    # not a redirect stub — once a first release tag exists.
     - require: '@inditextech/docouture-antora-extensions'
       duplicate_latest_version: true

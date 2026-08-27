@@ -19,6 +19,9 @@ name: docouture-pr-verify
 on:
   pull_request: {}
 
+permissions:
+  contents: read
+
 concurrency:
   group: docouture-pr-verify-${{ github.event.pull_request.number }}
   cancel-in-progress: true

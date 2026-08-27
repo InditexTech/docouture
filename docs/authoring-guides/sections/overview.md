@@ -10,7 +10,7 @@ Pages in this section:
 | `architecture` | 🔴 required | How the product is built and why |
 | `glossary` | ⚪ optional | The product's own vocabulary |
 
-This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)).
+This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)) — like a roadmap, or the product story (how and why the product came to be).
 
 The entry page of this section is `about` (see the naming conventions in the [README](../README.md)). The [sizing rule](../README.md#sizing-rule-one-page-or-many) applies: a small project can fold `architecture` (and `glossary`) into `about` as level-2 sections; a large project can grow `architecture` into a group of nested pages.
 
@@ -46,7 +46,6 @@ This page is prose-first: paragraphs, bullet lists, and xrefs cover it. Custom b
 
 | Use | Block |
 | --- | --- |
-| A short product demo after the intro | `video::` with the sizing attributes (`video::demo[youtube,640,360]`) |
 | A prerequisite or warning worth surfacing immediately | Standard `NOTE`/`IMPORTANT` admonition |
 
 Do **not** use `[feature-tabs]`, or `[cta]` here — they belong to the home page. If this page starts looking like a showcase, it is duplicating the home page (see Common mistakes).

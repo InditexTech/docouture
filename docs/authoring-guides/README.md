@@ -27,16 +27,16 @@ A DoCouture site scaffolds two Antora modules: `ROOT` (the home page only) and `
 - 🔵 **conditional** — include only if the repo actually has the surface it covers; skip cleanly (no stub) if it does not.
 - ⚪ **optional** — include when it adds value, otherwise leave out.
 
-These levels mark the **minimum, not a ceiling**. A product with more complex or more specific documentation needs can — and should — add more pages beyond the ones listed here: extra guides, extra reference pages, extra sections within a page. The guides define the floor every project must reach, and never forbid going further.
+These levels mark the **minimum, not a ceiling**. A product with more complex or more specific documentation needs can — and should — add more pages beyond the ones listed here: extra guides, extra reference pages, extra sections within a page. The guides define the floor every project must reach, and never forbid going further. Each section guide lists examples of these extra pages (basic installation and basic configuration in Getting started, a deployment guide per environment in Guides, a components catalog in Reference…).
 
 | Section | Pages | Guide |
 | --- | --- | --- |
 | 1. Overview | `about` 🔴 · `architecture` 🔴 · `glossary` ⚪ | [sections/overview.md](sections/overview.md) |
-| 2. Getting started | `prerequisites` 🔴 · `quickstart` 🔴 | *(follow-up PR)* |
-| 3. Guides | `overview` 🔴 · derived task pages 🔴 (≥1) · `development` 🟠 | *(follow-up PR)* |
-| 4. Reference | `overview` 🔴 · derived sub-catalog pages 🔵 (configuration, CLI/SDK/public API, integrations) | *(follow-up PR)* |
-| 5. Additional information | `overview` 🔴 · `changelog` 🔴 · `release-notes` 🔴 · `faq` 🟠 · `security` 🟠 · `eol`/migration guides 🔵 | *(follow-up PR)* |
-| 6. Contributing | `overview` 🔴 | *(follow-up PR)* |
+| 2. Getting started | `prerequisites` 🔴 · `quickstart` 🔴 | [sections/getting-started.md](sections/getting-started.md) |
+| 3. Guides | `overview` 🔴 · derived task pages 🔴 (≥1) · `development` 🟠 | [sections/guides.md](sections/guides.md) |
+| 4. Reference | `overview` 🔴 · derived sub-catalog pages 🔵 (configuration, CLI/SDK/public API, integrations) | [sections/reference.md](sections/reference.md) |
+| 5. Additional information | `overview` 🔴 (includes contact, support & security reporting) · `changelog` 🔴 · `release-notes` 🔴 · `faq` 🟠 · `eol`/migration guides 🔵 | [sections/additional-information.md](sections/additional-information.md) |
+| 6. Contributing | `overview` 🔴 | [sections/contributing.md](sections/contributing.md) |
 
 The **home page** (`ROOT`'s `index.adoc`) sits outside the six sections — it is the site's entry point, not a member of Overview. It has its own guide: *(follow-up PR)*.
 
@@ -58,6 +58,38 @@ Ask what the reader is trying to do at that moment:
 | Contribute to the project | **Contributing** |
 
 One piece of content, one home. If a topic seems to belong in two places, write it once in the section that matches the reader's intent and cross-reference it from the other.
+
+### Guides vs Reference
+
+The border where authors get lost most often — worth its own rule. Both sections talk about the same product surface, but they answer different questions:
+
+- **Guides are procedural**: they show the reader how to accomplish a specific goal by following a set of structured steps. The reader is *doing something* and follows the page top to bottom, once.
+- **Reference is informational**: it focuses on cause and effect — which actions produce which results. The reader is *looking something up*, lands mid-page from a search, reads one fact, and leaves.
+
+**The decision test** — ask these questions about the content in doubt:
+
+| Question | If yes → |
+| --- | --- |
+| Does it have a goal and an order? ("first…, then…") | **Guides** |
+| Would you sort it alphabetically (or by namespace) without losing anything? | **Reference** |
+| Does it cover *one* scenario, with choices made for the reader? | **Guides** |
+| Does it cover *every* option, including the ones most readers never use? | **Reference** |
+| Would a reader follow it start to finish, once? | **Guides** |
+| Would a reader return to it repeatedly to check one detail? | **Reference** |
+
+**Examples:**
+
+- "Configure authentication" (pick a method, set three properties, verify it works) → **guide**. The exhaustive table of all `auth.*` properties it mentions → **reference**, linked from the guide.
+- "Deploy to production" → **guide**. The complete list of CLI flags of the `deploy` command → **reference**.
+- What `pool-size` does and its default → **reference**. When and why to raise it for your workload, step by step → **guide**.
+
+**Antipatterns:**
+
+- **The tutorial-table hybrid.** A reference table interrupted by "now restart the server and check the logs" — the steps belong in a guide; the table states facts.
+- **The exhaustive guide.** A how-to that documents every flag "while we are here" becomes unfollowable; a guide makes choices for the reader and links the reference for the rest.
+- **Duplicated property docs.** The same option explained in a guide *and* in the reference table drifts apart within months. Facts live in Reference; guides link them.
+
+The rule of thumb when still in doubt: **steps go to Guides, tables go to Reference** — and each links the other.
 
 ### Sizing rule: one page or many?
 
@@ -83,6 +115,12 @@ On the other pages of the section:
 ```
 
 The rule works in both directions: a small project collapses a whole section into one page; a large project promotes a heavy H2 into its own page (or a page into a group of nested pages).
+
+### Variants always go in tabs
+
+Whenever the same content exists in equivalent variants — per operating system, package manager, language, or configuration format — present the variants with the `[tabs]` custom block: one tab per variant, same internal structure in every tab, the most common variant first. Never write sequential subsections per OS or parallel bullet lists; the reader cares about exactly one variant and tabs let them see only that one.
+
+This applies across the whole site (requirements, installation commands, code samples, config snippets), so the per-page guides mention `[tabs]` only where it is especially common and do not repeat this rule. 
 
 ### Naming conventions
 
@@ -118,5 +156,9 @@ Every page guide in `sections/` follows the same contract, so both humans and ag
 ## Index
 
 - [Overview section](sections/overview.md) — `about`, `architecture`, `glossary`
-- Getting started, Guides, Reference, Additional information, Contributing — *(follow-up PRs)*
+- [Getting started section](sections/getting-started.md) — `prerequisites`, `quickstart`
+- [Guides section](sections/guides.md) — `overview`, how-to task pages, `development`
+- [Reference section](sections/reference.md) — `overview`, `configuration`, API/CLI/SDK surface pages
+- [Additional information section](sections/additional-information.md) — `overview` (contact, support & security), `changelog`, `release-notes`, `faq`, `eol`/migrations
+- [Contributing section](sections/contributing.md) — `overview`
 - Home page — *(follow-up PR)*

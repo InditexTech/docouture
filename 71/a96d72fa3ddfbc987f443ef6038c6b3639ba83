@@ -1,0 +1,14 @@
+code/CHANGELOG.md
+  h_c93d154c7c7074 69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "71a96d72fa3ddfbc987f443ef6038c6b3639ba83",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

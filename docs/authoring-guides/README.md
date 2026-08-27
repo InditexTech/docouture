@@ -1,0 +1,120 @@
+# Documentation authoring guides
+
+These guides define **what to write** on each page of a DoCouture documentation site: the purpose of every page, the sections it needs, what to say in each one, and what a good result looks like.
+
+They complement the DoCouture skills, they do not replace them:
+
+- **The skills** (`skills/docouture-*`) explain how the site works — Antora mechanics, `nav.adoc`, page patterns, AsciiDoc syntax, versioning.
+- **These guides** explain the content — what each page must include, in which order, and to what quality bar.
+
+They serve two audiences at once:
+
+- **Human authors** who want to write or review a page and need to know what belongs in it.
+- **AI agents** generating a first draft of the documentation from the repository code. An agent reading a page guide has everything it needs to produce a reviewable draft: section skeleton, per-section instructions, a copyable AsciiDoc starting point, and a quality checklist to self-verify.
+
+## How to use these guides
+> To be agreed with @jesusmpc
+1. Plan the site structure first with the `docouture-getting-started` skill (`reference/structure-planning.md`). These guides assume that structure and never contradict it.
+2. For each page you are about to write, open the guide for its section (see the index below) and jump to that page.
+3. Follow the section-by-section instructions, start from the AsciiDoc skeleton, and check the result against the quality checklist before considering the draft done.
+
+## The minimal structure
+
+A DoCouture site scaffolds two modules: `ROOT` (the home page only) and `main` (all content). Inside `main`, the navigation groups the pages into six ordered sections. Each page is tagged with a requirement level:
+
+- 🔴 **required** — every documented repo should end up with this page.
+- 🟠 **recommended** — include unless there is a specific reason not to.
+- 🔵 **conditional** — include only if the repo actually has the surface it covers; skip cleanly (no stub) if it does not.
+- ⚪ **optional** — include when it adds value, otherwise leave out.
+
+| Section | Pages | Guide |
+| --- | --- | --- |
+| 1. Overview | `about` 🔴 · `architecture` 🔴 · `glossary` ⚪ | [modules/overview.md](modules/overview.md) |
+| 2. Getting started | `prerequisites` 🔴 · `quickstart` 🔴 | *(follow-up PR)* |
+| 3. Guides | `overview` 🔴 · derived task pages 🔴 (≥1) · `development` 🟠 | *(follow-up PR)* |
+| 4. Reference | `overview` 🔴 · derived sub-catalog pages 🔵 (configuration, CLI/SDK/public API, integrations) | *(follow-up PR)* |
+| 5. Additional information | `overview` 🔴 · `changelog` 🔴 · `release-notes` 🔴 · `faq` 🟠 · `security` 🟠 · `eol`/migration guides 🔵 | *(follow-up PR)* |
+| 6. Contributing | `overview` 🔴 | *(follow-up PR)* |
+
+The **home page** (`ROOT`'s `index.adoc`) sits outside the six sections — it is the site's entry point, not a member of Overview. It has its own guide: *(follow-up PR)*.
+
+## General rules
+
+These rules apply to every page. The per-page guides assume them and do not repeat them.
+
+### Routing rule: where does this content go?
+
+Ask what the reader is trying to do at that moment:
+
+| The reader wants to… | It goes in… |
+| --- | --- |
+| Understand what the product is and how it is built | **Overview** |
+| Get from zero to a first working result | **Getting started** |
+| Accomplish a specific task (goal → steps → verification) | **Guides** |
+| Look up an exact fact (an option, a command, a property, an API) | **Reference** |
+| Check version history, FAQ, security policy, migrations | **Additional information** |
+| Contribute to the project | **Contributing** |
+
+One piece of content, one home. If a topic seems to belong in two places, write it once in the section that matches the reader's intent and cross-reference it from the other.
+
+### Sizing rule: one page or many?
+
+The number of pages depends on the real volume of content, not on the structure map. Start small: if a section has little content, write everything on its entry page as level-2 sections and skip the separate page files. Split a section into its own page only when it exceeds roughly two screens of content, or when readers need to link to it or find it directly.
+
+The rule travels inside the AsciiDoc skeletons as comments, so authors and agents see it at the point of decision:
+
+On the entry page of each section:
+
+```asciidoc
+// SIZING RULE: Start small. If this section has little content, write
+// everything on this page as level-2 sections (== About, == Architecture...)
+// and delete the separate page files + their nav entries.
+// Split a section into its own page only when it exceeds ~2 screens
+// or needs to be linked/found directly.
+```
+
+On the other pages of the section:
+
+```asciidoc
+// PAGE OR SECTION: use standalone, or merge into the section entry page
+// demoting headings one level (= → ==). See the sizing rule there.
+```
+
+The rule works in both directions: a small project collapses a whole section into one page; a large project promotes a heavy H2 into its own page (or a page into a group of nested pages).
+
+### Naming conventions
+
+- The entry page of a section is named `overview` — it presents the section and links to its content. Two sections use a more natural entry page instead: **Overview** enters through `about`, and **Getting started** enters through `prerequisites`.
+- Page file names are lowercase kebab-case (`release-notes.adoc`, not `ReleaseNotes.adoc`).
+- Section and page titles use sentence case (`Getting started`, not `Getting Started`).
+- Task page titles use bare infinitives (`Create a repository`); conceptual page titles use noun phrases (`Migration to v2`). Avoid -ing forms as the first word of a heading.
+
+### Style guide
+
+All documentation follows the AMIGA Tech Docs style guide, completed by the [Google developer documentation style guide](https://developers.google.com/style) for anything not covered. When the two disagree, AMIGA Tech Docs wins. The rules that matter most in practice:
+
+- **Language:** American English, present tense, active voice. Prefer impersonal instructions (`Run the command`), and `you` over `we` when a pronoun is unavoidable. No contractions.
+- **Tone:** conversational and friendly without being frivolous. Short sentences. No filler words (`just`, `simply`, `please`). Never pre-announce future features.
+- **No cold opens:** every page starts with a descriptive title and a short introduction stating what the page covers.
+- **Formatting:** UI elements in **bold**; code-related text in `code font`; placeholders in `_ALL_UPPERCASE_` italics with underscores (`_PRODUCT_NAME_`); numbered lists for sequences, bullets otherwise; descriptive link text (never `click here`); serial comma in enumerations.
+- **Inclusive language:** neutral terms (`allowlist`/`denylist`, `primary`/`secondary`).
+- **Examples:** never use identifiable data (real names, tokens, emails).
+
+## Anatomy of a page guide
+
+Every page guide in `modules/` follows the same contract, so both humans and agents always know where to look:
+
+1. **Purpose & audience** — what the page is for and who reads it.
+2. **Requirement level** — 🔴 / 🟠 / 🔵 / ⚪.
+3. **Section-by-section instructions** — the H2 skeleton of the page, and for each section: what to say, what not to say, and its own requirement level.
+4. **Docouture blocks** — which of the site's custom blocks and extensions (`[tabs]`, `[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]`, `label:`, `mono:`, video/table sizing) the page typically uses — and which ones not to use there. Only clear-cut fits are listed; when in doubt, plain AsciiDoc wins. Block syntax lives in the `docouture-writing-docs-pages` skill (`reference/docouture-blocks.md`), not here.
+5. **AsciiDoc skeleton** — a copyable starting point with the embedded guidance comments.
+6. **Example** — a short excerpt of a good result.
+7. **Quality checklist** — what to verify before considering the page done.
+8. **Common mistakes** — the failure modes to avoid.
+
+## Index
+
+- [Overview section](modules/overview.md) — `about`, `architecture`, `glossary`
+- Getting started, Guides, Reference, Additional information, Contributing — *(follow-up PRs)*
+- Home page — *(follow-up PR)*

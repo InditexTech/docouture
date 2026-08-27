@@ -218,8 +218,17 @@
    * list) and read wrong centered — reset back to how every other view
    * already renders them.
    */
+  /*
+   * Bulleted/numbered lists read wrong centered too (each line ends up
+   * ragged on both sides, and the marker no longer sits flush against its
+   * own text) — same reasoning as the card-grid/feature-tabs reset above,
+   * just for plain-prose lists (Asciidoctor's own `.ulist`/`.olist` wrapper
+   * divs) instead of a block extension.
+   */
   .home--single .home__main .docouture-card-grid,
-  .home--single .home__main .docouture-feature-tabs {
+  .home--single .home__main .docouture-feature-tabs,
+  .home--single .home__main .ulist,
+  .home--single .home__main .olist {
     text-align: left;
   }
 

@@ -27,7 +27,7 @@ export interface PackageManagerPlan {
 
 const PNPM_ACTION_SETUP_STEP =
   '      - name: Setup pnpm\n' +
-  '        uses: pnpm/action-setup@a3252b78c470c02f7abfb6128aa3c1852013d47c # v4\n' +
+  '        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4\n' +
   '\n'
 
 // Reads the invoking package manager off npm's own user-agent env var — set

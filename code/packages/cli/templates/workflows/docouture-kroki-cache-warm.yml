@@ -29,6 +29,15 @@ on:
   push:
     branches: ['main*']
 
+# Least-privilege default: this job only checks out `main`, warms the
+# Docker/Kroki image cache and writes it via actions/cache (a separate,
+# token-independent cache API, not repository contents) — it never uses
+# GITHUB_TOKEN itself, so it never needs more than read access. Declared
+# explicitly rather than left to inherit whatever the repository/
+# organization's default token permissions happen to be.
+permissions:
+  contents: read
+
 concurrency:
   group: docouture-kroki-cache-warm
   cancel-in-progress: true

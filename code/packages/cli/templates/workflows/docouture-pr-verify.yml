@@ -19,6 +19,14 @@ name: docouture-pr-verify
 on:
   pull_request: {}
 
+# Least-privilege default: this job only checks out the PR's own HEAD,
+# builds it, and checks links — it never writes to the repository, comments
+# on the PR, or otherwise uses GITHUB_TOKEN, so it never needs more than
+# read access. Declared explicitly rather than left to inherit whatever the
+# repository/organization's default token permissions happen to be.
+permissions:
+  contents: read
+
 concurrency:
   group: docouture-pr-verify-${{ github.event.pull_request.number }}
   cancel-in-progress: true

@@ -4,10 +4,10 @@
   "description": "Antora pipeline extensions shared by docouture documentation sites — per-module navigation metadata (nav_modules)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/InditexTech/test-antoradocs.git",
+    "url": "https://github.com/InditexTech/docouture.git",
     "directory": "code/packages/antora-extensions"
   },
-  "license": "MPL-2.0",
+  "license": "Apache-2.0",
   "main": "index.js",
   "files": [
     "index.js",

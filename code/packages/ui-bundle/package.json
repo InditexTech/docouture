@@ -4,7 +4,7 @@
   "description": "Antora UI bundle for the docouture documentation platform",
   "repository": {
     "type": "git",
-    "url": "https://github.com/InditexTech/test-antoradocs.git",
+    "url": "https://github.com/InditexTech/docouture.git",
     "directory": "code/packages/ui-bundle"
   },
   "license": "MPL-2.0",

@@ -1,6 +1,22 @@
 # docouture
 
-Documentation platform built on [Antora](https://docs.antora.org/antora/latest/).
+Documentation platform built on [Antora](https://docs.antora.org/antora/latest/),
+themed with the IOP Design System. It's an Nx/pnpm monorepo that ships two
+things: a themed Antora UI bundle, and the `docouture` CLI for scaffolding and
+running standalone documentation sites outside this repository.
+
+## Packages
+
+| Package                        | Purpose                                                                                            |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `packages/ui-bundle`           | The Antora UI bundle — layouts, styles, browser scripts, Handlebars helpers — published as a zip.  |
+| `packages/example`             | Real-world documentation site built with this workspace's own packages.                            |
+| `packages/cli`                 | `@inditextech/docouture-cli` — the `docouture` CLI: scaffolds a standalone site (`docouture new`). |
+| `packages/antora-extensions`   | Antora pipeline extensions shared by docouture sites (navigation metadata, etc.).                  |
+| `packages/asciidoc-extensions` | Asciidoctor extensions shared by docouture sites (content with no AsciiDoc equivalent).            |
+
+See [`code/README.md`](code/README.md) for how the workspace itself is put
+together.
 
 ## Requirements
 
@@ -91,7 +107,7 @@ an Nx target or a package script, and the recipe only calls it.
 justfile                    every command; runs everything inside code/
 code/                       the Nx workspace — see code/README.md
   packages/ui-bundle        the Antora UI bundle, published as a zip
-  packages/example          real-world site; currently a stub
+  packages/example          real-world documentation site
   packages/cli              `docouture` CLI — scaffolds a standalone site (`docouture new`),
                              bundling its own starter template
 ```
@@ -114,8 +130,15 @@ If you see that on a fresh clone with no history, make an initial commit.
 `just doctor` checks for this, along with the toolchain versions and installed
 dependencies.
 
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the contribution workflow,
+including the CLA prerequisite and the `code/CHANGELOG.md` entry every PR
+touching `code/**` is expected to carry.
+
 ## License
 
-MPL-2.0. `code/packages/ui-bundle` is a fork of
-[antora-ui-default](https://gitlab.com/antora/antora-ui-default); see its
-`LICENSE` and `NOTICE`.
+Apache-2.0 — see [`LICENSE`](LICENSE), with one exception:
+`code/packages/ui-bundle` is a fork of
+[antora-ui-default](https://gitlab.com/antora/antora-ui-default) and remains
+under MPL-2.0; see its own `LICENSE` and `NOTICE`.

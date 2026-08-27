@@ -1,7 +1,7 @@
-name: pr-verify
+name: code-npm-pr-verify
 
 concurrency:
-  group: pr-verify-${{ github.event.pull_request.number }}
+  group: code-npm-pr-verify-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 # Least privilege: this workflow only ever checks out the PR and runs
@@ -43,8 +43,11 @@ jobs:
       # it's properly labeled — see the `changelog` skill for the full rules.
       # Six labels (`kind/enhancement`, `kind/bug`, `kind/documentation`,
       # `kind/deprecated`, `kind/removed`, `kind/security`) are "real"
-      # categories that require an entry; `skip-release`, `kind/internal` and
-      # `kind/epic` mean no entry is needed. The PR's own labels are checked
+      # categories that require an entry; `kind/internal` and `kind/epic` mean
+      # no entry is needed. `skip-release` is NOT exempt here — it only blocks
+      # the version bump (see `release-flow/keep-a-changelog-action`'s `bump`
+      # command in the publish workflow), it does not exempt a PR from still
+      # documenting its change in [Unreleased]. The PR's own labels are checked
       # first; if it carries none of the six real categories itself, this
       # falls back to the labels of any issue it closes (`closingIssuesReferences`
       # via the GraphQL API — not exposed by `gh pr view --json`), because the
@@ -60,7 +63,7 @@ jobs:
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
           CATEGORY_LABELS="kind/enhancement kind/bug kind/documentation kind/deprecated kind/removed kind/security"
-          EXEMPT_LABELS="skip-release kind/internal kind/epic"
+          EXEMPT_LABELS="kind/internal kind/epic"
 
           has_any() {
             local haystack=",$1," needle
@@ -100,20 +103,19 @@ jobs:
         if: ${{ steps.changelog-requirement.outputs.needs-entry == 'true' }}
         run: |
           if git diff --quiet "${{ github.event.pull_request.base.sha }}" HEAD -- code/CHANGELOG.md; then
-            echo "::error title=No CHANGELOG.md changes::code/CHANGELOG.md's [Unreleased] section wasn't updated. Add an entry describing this change, or label the PR (or the issue it closes) 'skip-release'/'kind/internal'/'kind/epic' if it has no user-facing effect."
+            echo "::error title=No CHANGELOG.md changes::code/CHANGELOG.md's [Unreleased] section wasn't updated. Add an entry describing this change, or label the PR (or the issue it closes) 'kind/internal'/'kind/epic' if it has no user-facing effect. (skip-release alone does not exempt it — that label only blocks the version bump.)"
             exit 1
           fi
 
       # Catches the labeling gap the requirement-resolution step above can't
-      # paper over: a PR that isn't exempt (not skip-release/kind-internal/
-      # kind-epic-only) but also has no real `kind/*` category anywhere —
-      # neither on itself nor on an issue it closes. Without this, such a PR
-      # would silently skip the CHANGELOG.md requirement above instead of
-      # failing loudly.
+      # paper over: a PR that isn't exempt (not kind-internal/kind-epic-only)
+      # but also has no real `kind/*` category anywhere — neither on itself
+      # nor on an issue it closes. Without this, such a PR would silently
+      # skip the CHANGELOG.md requirement above instead of failing loudly.
       - name: Require a changelog category label
         if: ${{ steps.changelog-requirement.outputs.needs-entry == 'false' && steps.changelog-requirement.outputs.exempt == 'false' }}
         run: |
-          echo "::error title=Missing changelog category label::This PR needs one of kind/enhancement, kind/bug, kind/documentation, kind/deprecated, kind/removed or kind/security — on the PR itself or on an issue it closes — or skip-release/kind/internal/kind/epic if it has no user-facing effect."
+          echo "::error title=Missing changelog category label::This PR needs one of kind/enhancement, kind/bug, kind/documentation, kind/deprecated, kind/removed or kind/security — on the PR itself or on an issue it closes — or kind/internal/kind/epic if it has no user-facing effect. (skip-release alone does not exempt it.)"
           exit 1
 
       # Homologated with weave.js's code-npm_node-PR_verify.yml: same asdf
@@ -175,4 +177,3 @@ jobs:
         working-directory: code
         run: |
           npm run verify
-

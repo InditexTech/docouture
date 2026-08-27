@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Internal CLI for this monorepo's own dev workflow — the logic behind the justfile's non-trivial recipes (doctor, bump, release-local, ...). Never published; see GH-140.",
-  "license": "MPL-2.0",
+  "license": "Apache-2.0",
   "type": "module",
   "bin": {
     "docouture-tooling": "build/bin.js"

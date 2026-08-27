@@ -16,12 +16,14 @@ docs/
   src/
     antora.yml                 component descriptor: name, title, version, nav
     modules/
-      ROOT/                    the default module
+      ROOT/                    the home page only — no nav.adoc of its own
+      main/                    the default content module — every other page starts here
         nav.adoc               the navigation tree
         pages/*.adoc           one page per file — these become site URLs
 ```
 
-The nesting (`docs/src/...`) is intentional — see the `docs-internals` skill.
+The nesting (`docs/src/...`) is intentional, and so is `ROOT` + `main` both existing from
+the start — see the `docouture-docs-internals` skill (below).
 
 ## Commands
 
@@ -49,23 +51,36 @@ go through the `docouture` CLI.
 
 ## Skills
 
-- **`documenting-your-repo`** — start here: planning what to document, sourcing content
-  from wherever it actually lives (existing docs, README, or the code itself), and the
-  long-term loop that keeps docs in sync as the repo grows. Hands off to the two skills
-  below for mechanics once a decision is made.
-- **`writing-docs-pages`** — authoring AsciiDoc content: the language itself, `xref:`
-  references, `nav.adoc`, admonitions, code blocks, and this site's own custom blocks
-  (`[tabs]`, `[cards]`, `[accordion]`, …).
-- **`docs-internals`** — the playbook, the component descriptor, the four names that must
-  agree, the home-page vs. content-page patterns, and mono-module vs. multi-module sites.
-- **`docs-versioning`** — only present when this site was scaffolded with
+Docs-authoring skills are not scaffolded here — `docouture new`/`docouture upgrade` only
+opinionate on the starter site and its GitHub workflows. Install them yourself, once, with:
+
+```
+npx skills@latest add InditexTech/docouture --all
+```
+
+(or `--skill <name>` for one at a time). This installs:
+
+- **`docouture-getting-started`** — start here on a brand-new site: scaffolding (if not done
+  yet), planning what to document, sourcing content from wherever it actually lives
+  (existing docs, README, or the code itself). Hands off to the two skills below for
+  mechanics once a decision is made.
+- **`docouture-documenting-changes`** — the re-entry point once the site exists: a feature,
+  change, deprecation or fix landed in the repo, and the docs need to catch up. This is
+  the one to reach for day to day, not `docouture-getting-started`.
+- **`docouture-writing-docs-pages`** — authoring AsciiDoc content: the language itself,
+  `xref:` references, `nav.adoc`, admonitions, code blocks, and this site's own custom
+  blocks (`[tabs]`, `[cards]`, `[accordion]`, …).
+- **`docouture-docs-internals`** — the playbook, the component descriptor, the four names
+  that must agree, the home-page vs. content-page patterns, and how a site grows beyond
+  its default `ROOT` + `main` modules.
+- **`docouture-docs-versioning`** — only relevant when this site was scaffolded with
   `--mode versioned`: cutting releases, `docouture version`, and `docs/.release-version`.
 
 <!-- docouture:end -->
 
 ## Documentation state
 
-<!-- maintained by the documenting-your-repo skill — do not hand-edit structure, only content -->
+<!-- maintained by the docouture-documenting-changes skill — do not hand-edit structure, only content -->
 
 | doc page          | derived from          | status |
 | ----------------- | --------------------- | ------ |

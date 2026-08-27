@@ -58,22 +58,6 @@ const WORKFLOW_NAMES = [
   'docouture-kroki-cache-warm.yml',
 ]
 
-// Repo-root-relative paths `templates/agent-support/` lands under (see
-// new.ts's own copyTemplate call below) — kept as a literal list, same
-// reasoning as WORKFLOW_NAMES above, so the pre-flight conflict check can
-// name exactly what would be overwritten. `docs-versioning` is deliberately
-// absent here: it is scaffolded only under `--mode versioned` (see the
-// `.versioned`-marker copy further down), so an existing standalone-mode
-// site with no such directory yet is never blocked by this check on it.
-const AGENT_SUPPORT_PATHS = [
-  join('.opencode', 'skills', 'documenting-your-repo'),
-  join('.opencode', 'skills', 'writing-docs-pages'),
-  join('.opencode', 'skills', 'docs-internals'),
-  join('.claude', 'skills', 'documenting-your-repo'),
-  join('.claude', 'skills', 'writing-docs-pages'),
-  join('.claude', 'skills', 'docs-internals'),
-]
-
 function titleCase(name: string): string {
   return name
     .split('-')
@@ -431,17 +415,11 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     }
   }
 
-  const existingSkills: string[] = []
-  for (const relativePath of AGENT_SUPPORT_PATHS) {
-    const absolutePath = join(target, relativePath)
-    if ((await exists(absolutePath)) && !(await isEmptyOrMissing(absolutePath))) existingSkills.push(relativePath)
-  }
-
-  // AGENTS.md is never an all-or-nothing conflict the way a workflow file or
-  // a skill directory is: a foreign/human-written file (no docouture-managed
-  // block yet — see lib/agents-md.ts) is always safe to append docouture' own
-  // section to without asking. Only a file that already HAS a managed
-  // block counts as something this run would actually overwrite.
+  // AGENTS.md is never an all-or-nothing conflict the way a workflow file
+  // is: a foreign/human-written file (no docouture-managed block yet — see
+  // lib/agents-md.ts) is always safe to append docouture' own section to
+  // without asking. Only a file that already HAS a managed block counts as
+  // something this run would actually overwrite.
   let existingAgentsMd: string | undefined
   let agentsMdConflict = false
   if (await exists(agentsMdFile)) {
@@ -449,7 +427,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     agentsMdConflict = hasManagedSection(existingAgentsMd)
   }
 
-  const conflicts = [...existingWorkflows, ...existingSkills, ...(agentsMdConflict ? [AGENTS_MD_FILENAME] : [])]
+  const conflicts = [...existingWorkflows, ...(agentsMdConflict ? [AGENTS_MD_FILENAME] : [])]
 
   if (conflicts.length > 0) {
     if (skipWizard) {
@@ -529,15 +507,14 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   await copyTemplate(starterDir, docsDir, values)
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
 
-  // AGENTS.md and both platforms' skill directories also land at the true
-  // repo root, same as workflows — an agent reads them from there, not from
-  // inside docs/. copyTemplate's own VERSIONED_MARKER/SKIP_FILENAMES skips
-  // (see copy-template.ts) leave docs-versioning.versioned and AGENTS.md
-  // untouched here; docs-versioning is copied under its real name below,
-  // only in versioned mode, and AGENTS.md is merged separately next — see
-  // lib/agents-md.ts for why it can't go through the generic overwrite walk
-  // every other file here does.
-  await copyTemplate(agentSupportDir, target, values)
+  // AGENTS.md lands at the true repo root, same as workflows — an agent
+  // reads it from there, not from inside docs/. Skill directories are
+  // deliberately not scaffolded here at all: docouture new only opinionates
+  // on the starter site and its GitHub workflows — skills are a separate,
+  // self-serve install via `npx skills add InditexTech/docouture`, kept
+  // decoupled from scaffolding so they can be installed, updated or removed
+  // independently of it (see /skills at this repo's own root).
+  await copyTemplate(workflowsTemplateDir, workflowsDir, values)
 
   const renderedAgentsMd = await renderTemplateFile(join(agentSupportDir, AGENTS_MD_FILENAME), values)
   await writeFile(agentsMdFile, mergeAgentsMd(existingAgentsMd, renderedAgentsMd), 'utf8')
@@ -553,14 +530,6 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
       join(docsDir, '.release-version'),
       values
     )
-
-    for (const platform of ['.opencode', '.claude']) {
-      await copyTemplate(
-        join(agentSupportDir, platform, 'skills', 'docs-versioning.versioned'),
-        join(target, platform, 'skills', 'docs-versioning'),
-        values
-      )
-    }
   }
 
   printNextSteps({ mode, pm, target, docsDir, workflowsDir, ghPagesUrl: githubPagesUrl(target) })
@@ -597,14 +566,19 @@ function printNextSteps(args: {
   console.log(created(writtenAt(docsDir)))
   console.log(created(writtenAt(workflowsDir)))
   console.log(created(writtenAt(join(target, 'AGENTS.md'))))
-  console.log(created(writtenAt(join(target, '.opencode', 'skills'))))
-  console.log(created(writtenAt(join(target, '.claude', 'skills'))))
 
   console.log('')
   console.log(theme.bold('Next steps:'))
   console.log('  cd docs')
   console.log(`  ${pm.installCmd}`)
   console.log(`  ${pm.devCmd}`)
+
+  console.log('')
+  console.log(theme.bold('Docs-authoring skills:'))
+  console.log('  npx skills@latest add InditexTech/docouture --all')
+  console.log('  (or --skill <name> for one at a time — installs docouture-getting-started,')
+  console.log('  docouture-documenting-changes, docouture-writing-docs-pages, docouture-docs-internals')
+  console.log('  and, for a versioned-mode site, docouture-docs-versioning)')
 
   console.log('')
   if (mode === 'versioned') {
@@ -620,7 +594,9 @@ function printNextSteps(args: {
     console.log('  (or skip the label/PR entirely: run docouture-release.yml manually via workflow_dispatch')
     console.log('  and type the version)')
     console.log('')
-    console.log('  See the docs-versioning skill (.opencode/skills, .claude/skills) for the full mechanism.')
+    console.log(
+      '  See the docouture-docs-versioning skill (npx skills add InditexTech/docouture) for the full mechanism.'
+    )
   } else {
     console.log(theme.bold('Versioning: Standalone (Stable + Prerelease)'))
     console.log('  main is the prerelease channel.')

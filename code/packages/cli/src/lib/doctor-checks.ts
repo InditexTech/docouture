@@ -187,33 +187,23 @@ export function checkAntoraAvailable(siteRoot: string): CheckResult {
   }
 }
 
-// Repo-root-relative paths `docouture new` scaffolds AGENTS.md/the skill
-// directories under — see new.ts's own AGENT_SUPPORT_PATHS, which this
-// mirrors. Kept as a separate literal here rather than imported: doctor-
-// checks.ts is a plain library module with fixture-driven unit tests (see
-// its own spec) and importing from commands/new.ts would pull the wizard
-// (@inquirer/prompts) into that dependency graph for no reason.
-const AGENT_SUPPORT_CHECK_PATHS = [
-  { path: 'AGENTS.md', label: 'AGENTS.md' },
-  { path: join('.opencode', 'skills', 'documenting-your-repo'), label: '.opencode/skills/documenting-your-repo' },
-  { path: join('.opencode', 'skills', 'writing-docs-pages'), label: '.opencode/skills/writing-docs-pages' },
-  { path: join('.opencode', 'skills', 'docs-internals'), label: '.opencode/skills/docs-internals' },
-  { path: join('.claude', 'skills', 'documenting-your-repo'), label: '.claude/skills/documenting-your-repo' },
-  { path: join('.claude', 'skills', 'writing-docs-pages'), label: '.claude/skills/writing-docs-pages' },
-  { path: join('.claude', 'skills', 'docs-internals'), label: '.claude/skills/docs-internals' },
-]
+// Repo-root-relative paths `docouture new` scaffolds under — see new.ts's own
+// AGENT_SUPPORT_PATHS, which this mirrors. Kept as a separate literal here
+// rather than imported: doctor-checks.ts is a plain library module with
+// fixture-driven unit tests (see its own spec) and importing from
+// commands/new.ts would pull the wizard (@inquirer/prompts) into that
+// dependency graph for no reason. Skills are deliberately absent here: the
+// CLI never scaffolds them (see new.ts's own comment) — a user installs
+// them independently via `npx skills add InditexTech/docouture`, which is
+// outside anything `docouture doctor` can or should check for.
+const AGENT_SUPPORT_CHECK_PATHS = [{ path: 'AGENTS.md', label: 'AGENTS.md' }]
 
 /**
- * Whether AGENTS.md and the two platform-mirrored skill directories `docouture
- * new` scaffolds are still present at the repository root — advisory only,
- * this is presence, not a content/drift diff (a site legitimately edits its
- * own skills after scaffolding), so `commands/doctor.ts` reports these
- * without folding them into the overall exit code the way the checks above
- * do. `docs-versioning` is intentionally not checked here: it exists only
- * under `--mode versioned`, and doctor has no reliable, cheap way to tell
- * which mode a site is on from this function alone (see
- * `commands/doctor.ts`'s own mode-detection comment, which reads the
- * playbook — a concern this function deliberately stays out of).
+ * Whether AGENTS.md is still present at the repository root — advisory
+ * only, this is presence, not a content/drift diff (a repository
+ * legitimately edits AGENTS.md's own free-form notes), so
+ * `commands/doctor.ts` reports this without folding it into the overall
+ * exit code the way the checks above do.
  */
 /** The label `docouture-release.yml`'s `pull_request.closed` trigger requires — see that workflow's own `if:` condition. */
 const RELEASE_LABEL = 'docs/release'

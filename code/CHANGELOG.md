@@ -66,6 +66,7 @@ at all).
 
 ### Documentation
 
+- [#149](https://github.com/InditexTech/docouture/pull/149) [skills] Externalize docs-authoring skills into standalone skill packages
 - [#115](https://github.com/InditexTech/test-antoradocs/pull/115) [cli] Scaffold AGENTS.md and agent skills (OpenCode & Claude) in docouture new
 - [#99](https://github.com/InditexTech/test-antoradocs/pull/99) [tooling] Document the two Antora versioning modes (Mode 1 & Mode 2)
 - [#47](https://github.com/InditexTech/test-antoradocs/pull/47) [internal] migrate Weave.js content to example package

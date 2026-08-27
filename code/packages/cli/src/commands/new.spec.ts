@@ -187,18 +187,6 @@ describe('runNew', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('docouture upgrade'))
   })
 
-  it('refuses to scaffold when a skill directory already exists and is non-empty (non-interactive)', async () => {
-    const repo = join(base, 'repo')
-    await initRepo(repo)
-    await mkdir(join(repo, '.opencode', 'skills', 'docs-internals'), { recursive: true })
-    await writeFile(join(repo, '.opencode', 'skills', 'docs-internals', 'SKILL.md'), 'existing', 'utf8')
-
-    const code = await runNew(['my-project-docs', '--dir', repo])
-    expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('refusing to overwrite existing file'))
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('docs-internals'))
-  })
-
   it('scaffolds docs/ (standalone by default, Stable + Prerelease) and .github/workflows/ into an existing repo', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
@@ -297,7 +285,7 @@ describe('runNew', () => {
     await expect(readFile(join(repo, 'docs', 'gitignore'), 'utf8')).rejects.toThrow()
   })
 
-  it('scaffolds AGENTS.md and mirrored .opencode/.claude skills at the repo root', async () => {
+  it('scaffolds AGENTS.md at the repo root, and never scaffolds skill directories (skills are a separate, self-serve install)', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
@@ -306,27 +294,16 @@ describe('runNew', () => {
 
     const agentsMd = await readFile(join(repo, 'AGENTS.md'), 'utf8')
     expect(agentsMd).toContain('My Project Docs')
+    expect(agentsMd).toContain('npx skills@latest add InditexTech/docouture')
 
     for (const platform of ['.opencode', '.claude']) {
-      for (const skill of ['documenting-your-repo', 'writing-docs-pages', 'docs-internals']) {
-        const skillMd = await readFile(join(repo, platform, 'skills', skill, 'SKILL.md'), 'utf8')
-        expect(skillMd).toContain(`name: ${skill}`)
-      }
-    }
-
-    // Standalone mode (the default) does not get the docs-versioning skill.
-    await expect(readFile(join(repo, '.opencode', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')).rejects.toThrow()
-    await expect(readFile(join(repo, '.claude', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')).rejects.toThrow()
-
-    // Both platforms' copies are byte-identical.
-    for (const skill of ['documenting-your-repo', 'writing-docs-pages', 'docs-internals']) {
-      const opencode = await readFile(join(repo, '.opencode', 'skills', skill, 'SKILL.md'), 'utf8')
-      const claude = await readFile(join(repo, '.claude', 'skills', skill, 'SKILL.md'), 'utf8')
-      expect(opencode).toBe(claude)
+      await expect(
+        readFile(join(repo, platform, 'skills', 'docouture-getting-started', 'SKILL.md'), 'utf8')
+      ).rejects.toThrow()
     }
   })
 
-  it('scaffolds the docs-versioning skill only under --mode versioned', async () => {
+  it('never scaffolds a docs-versioning skill directory, in either mode', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
@@ -334,13 +311,10 @@ describe('runNew', () => {
     expect(code).toBe(0)
 
     for (const platform of ['.opencode', '.claude']) {
-      const skillMd = await readFile(join(repo, platform, 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')
-      expect(skillMd).toContain('name: docs-versioning')
+      await expect(
+        readFile(join(repo, platform, 'skills', 'docouture-docs-versioning', 'SKILL.md'), 'utf8')
+      ).rejects.toThrow()
     }
-
-    const opencode = await readFile(join(repo, '.opencode', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')
-    const claude = await readFile(join(repo, '.claude', 'skills', 'docs-versioning', 'SKILL.md'), 'utf8')
-    expect(opencode).toBe(claude)
   })
 
   it('derives a title-cased default title from the name when --title is omitted', async () => {

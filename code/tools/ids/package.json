@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Sidecar install of the IOP Design System, kept outside the pnpm workspace so no package in code/packages ever needs Artifactory credentials to install. See README.md.",
-  "license": "MPL-2.0",
+  "license": "Apache-2.0",
   "scripts": {
     "sync": "node sync.mjs",
     "check": "node sync.mjs --check"

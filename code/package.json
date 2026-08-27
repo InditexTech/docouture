@@ -5,9 +5,9 @@
   "description": "Documentation platform built on Antora",
   "repository": {
     "type": "git",
-    "url": "https://github.com/InditexTech/test-antoradocs.git"
+    "url": "https://github.com/InditexTech/docouture.git"
   },
-  "license": "MPL-2.0",
+  "license": "Apache-2.0",
   "packageManager": "pnpm@10.24.0",
   "engines": {
     "node": ">=24.0.0",

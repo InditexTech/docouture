@@ -3,7 +3,7 @@
 // AGENTS.md is the one scaffolded file `docouture new`/`docouture upgrade` never
 // treat as all-or-nothing: unlike a workflow file or a skill directory, a
 // repository may well already have its own AGENTS.md before `docouture new`
-// ever runs, and the `documenting-your-repo` skill edits this file's own
+// ever runs, and the `docouture-documenting-changes` skill edits this file's own
 // '## Documentation state' table over time as a repo's docs grow — content
 // no template regenerates. Rather than clobber the whole file (today's
 // behavior for every other scaffolded file) or refuse outright, docouture' own

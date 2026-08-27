@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script>
+      /*
+       * Theme bootstrap. Runs before first paint so the page never flashes the
+       * wrong theme. Keep it inline, keep it tiny, and keep it in sync with
+       * src/js/08-theme.ts, which owns the same storage key and class names.
+       *
+       * IDS switches theme with a class on <html>, not a data attribute, so an
+       * attribute here would style nothing.
+       */
+      (function () {
+        var stored
+        try { stored = localStorage.getItem('ids-theme') } catch (e) {}
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        var root = document.documentElement
+        root.classList.add('ids-theme-' + theme, 'ids-scale-medium')
+        root.style.colorScheme = theme
+      })()
+    </script>
+    <script>
+      /*
+       * Side-menu collapse bootstrap (GH-8). Runs before first paint so the
+       * 320px column never flashes in and reflows the article on navigation.
+       * Keep it inline, keep it tiny, and keep it in sync with
+       * src/js/01-nav.ts, which owns the same storage key and class name.
+       *
+       * A stored choice always wins; absent one, the menu starts collapsed
+       * on the home/landing page (matching Figma's "State=Home" toolbar
+       * variant, which is the only one that shows the toggle) and open
+       * everywhere else. With JavaScript disabled this script never runs, so
+       * the class is never added and the menu stays open unconditionally —
+       * the toggle that would reopen it is also never unhidden.
+       */
+      (function () {
+        var stored
+        try { stored = localStorage.getItem('docouture-side-menu') } catch (e) {}
+        var collapsed = stored === 'collapsed' || stored === 'open'
+          ? stored === 'collapsed'
+          : document.documentElement.hasAttribute('data-page-home')
+        if (collapsed) document.documentElement.classList.add('is-side-menu-collapsed')
+      })()
+    </script>
+    <script>
+      /*
+       * ToC collapse bootstrap (GH-10). Runs before first paint so a closed
+       * choice never flashes open for an instant. Keep it in sync with
+       * src/js/02-on-this-page.ts, which owns the same storage key and class
+       * name.
+       *
+       * Deliberately does NOT add `has-toc` — only 02-on-this-page.ts knows
+       * whether this page actually has a usable ToC (headings found, page
+       * not `-toc`), and every effect of the class added here is itself
+       * gated behind `has-toc` in toc.css, so there is nothing to flash
+       * either way before that script runs. This one exists only so a
+       * *closed* choice is already in place the moment it does.
+       */
+      (function () {
+        var stored
+        try { stored = localStorage.getItem('docouture-toc') } catch (e) {}
+        if (stored === 'closed') document.documentElement.classList.add('is-toc-closed')
+      })()
+    </script>
+    <title>Changelog | docouture</title>
+    <link rel="prev" href="../additional-information-overview/">
+    <link rel="next" href="../release-notes/">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="preconnect" href="https://amgassets.inditex.com" crossorigin>
+    <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/zara-helvetica-now/zara-helvetica-now-sw10.css">
+    <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/noto-sans-mono/noto-sans-mono.css">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <link rel="icon" href="../../../_/favicon.ico">
+  </head>
+  <body class="article">
+<header class="header-toolbar">
+  <div class="ids-grid-layout ids-grid-layout--with-margin header-toolbar__grid">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__left">
+      <button class="ids-button ids-button--ghost ids-button--icon-only side-menu-toggle" type="button" aria-controls="side-menu" hidden>
+        <span class="ids-button__content">
+          <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-design-menu-tab-outlined"></use></svg></span>
+        </span>
+      </button>
+      <a class="header-toolbar__brand" href="../../../1.0.0/">
+        <img class="header-toolbar__logo header-toolbar__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
+        <img class="header-toolbar__logo header-toolbar__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
+        <span class="header-toolbar__product-name ids-text ids-text--label-l-high">docouture</span>
+      </a>
+    </div>
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__actions">
+      <button type="button" class="ids-button ids-button--ghost header-toolbar__search-trigger">
+        <span class="ids-button__content">
+          <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-search-outlined"></use></svg></span>
+          <span class="ids-text ids-text--label-l header-toolbar__search-label">Search</span>
+          <kbd class="header-toolbar__search-shortcut" aria-hidden="true">⌘K</kbd>
+        </span>
+      </button>
+<div class="page-versions">
+  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version header-toolbar__version--prerelease version-menu-toggle" title="Show other versions of page" aria-expanded="false">
+    <span class="ids-tag__label">prerelease</span>
+    <span class="ids-tag__icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg></span>
+  </button>
+  <div class="version-menu">
+    <span class="version is-current" aria-current="page">
+      <span class="version__label">prerelease</span>
+      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
+    </span>
+    <a class="version" href="../../../1.0.0/main/changelog/">
+      <span class="version__label">1.0.0</span>
+      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
+          </a>
+  </div>
+</div>
+<a class="ids-button ids-button--ghost ids-button--icon-only header-toolbar__repo" href="https://github.com/InditexTech/docouture" target="_blank" rel="noopener" aria-label="Repository">
+  <span class="ids-button__content">
+    <span class="ids-button__icon ids-button__icon-icon header-toolbar__repo-icon" aria-hidden="true"></span>
+  </span>
+</a>
+<button class="ids-button ids-button--ghost ids-button--icon-only theme-toggle" type="button" hidden>
+  <span class="ids-button__content">
+    <span class="ids-button__icon ids-button__icon-icon theme-toggle-icon theme-toggle-icon--light" aria-hidden="true"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-weather-sunny-outlined"></use></svg></span>
+    <span class="ids-button__icon ids-button__icon-icon theme-toggle-icon theme-toggle-icon--dark" aria-hidden="true"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-accessibility-moon-outlined"></use></svg></span>
+  </span>
+</button>
+    </div>
+  </div>
+</header>
+<dialog id="search-dialog" class="search-dialog" aria-label="Search" data-search-index="ROOT-prerelease.json">
+  <div class="ids-overlay ids-overlay--visible search-dialog__overlay">
+    <div class="ids-overlay__content"></div>
+    <div class="ids-modal ids-modal--small search-dialog__panel">
+      <div class="ids-modal__container search-dialog__container">
+        <div class="ids-search-field-minimal ids-search-field-minimal--full-width search-dialog__field">
+          <span class="ids-search-field-minimal__icon-start" aria-hidden="true"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-search-outlined"></use></svg></span>
+          <div class="ids-search-field-minimal__input-wrapper">
+            <div class="ids-search-field-minimal__input-container">
+              <input type="search" class="ids-search-field-minimal__input" placeholder="Search the docs" aria-label="Search the docs"
+                role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list"
+                aria-controls="search-dialog-listbox" disabled>
+            </div>
+          </div>
+          <button type="button" class="ids-button ids-button--ghost ids-button--icon-only search-dialog__close" aria-label="Close search" disabled>
+            <span class="ids-button__content">
+              <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-close-large-outlined"></use></svg></span>
+            </span>
+          </button>
+        </div>
+        <div id="search-dialog-listbox" class="ids-modal__content ids-modal__content--scrollable search-dialog__results" role="listbox" aria-label="Search results"></div>
+        <div class="search-dialog__status" aria-live="polite"></div>
+        <div class="ids-modal__footer ids-modal__footer--horizontal search-dialog__footer">
+          <span class="ids-modal__footer-left ids-text ids-text--detail-m search-dialog__hints">
+            <kbd>&uarr;&darr;</kbd> navigate &middot; <kbd>&crarr;</kbd> select &middot; <kbd>esc</kbd> close
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+<div class="ids-floating-button-wrapper ids-floating-button-wrapper--viewport ids-floating-button-wrapper--end search-fab">
+  <button type="button" class="ids-button ids-button--ghost ids-button--icon-only ids-floating-button search-fab__trigger" aria-label="Search" aria-haspopup="dialog" aria-controls="search-dialog">
+    <span class="ids-button__content">
+      <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-search-outlined"></use></svg></span>
+    </span>
+  </button>
+</div>
+<div class="body">
+<div id="side-menu" class="side-menu" data-component="ROOT" data-version="prerelease" data-module="main">
+  <div class="side-menu__header">
+    <div class="side-menu__header-start">
+      <img class="side-menu__header-logo side-menu__header-logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
+      <img class="side-menu__header-logo side-menu__header-logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
+      <span class="side-menu__header-title ids-text ids-text--title-s">docouture</span>
+    </div>
+    <button class="side-menu__close" type="button" aria-label="Close navigation"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-close-large-outlined"></use></svg></button>
+  </div>
+<div class="side-menu__brand">
+  <a class="side-menu__brand-link" href="../../../1.0.0/">
+    <img class="side-menu__brand-logo side-menu__brand-logo--light" src="../../../_/product-logo.png" width="40" height="40" alt="">
+    <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="../../../_/product-logo-dark.png" width="40" height="40" alt="">
+    <span class="side-menu__brand-title ids-text ids-text--title-m">docouture</span>
+  </a>
+</div>
+  <nav class="side-menu__nav" aria-label="Site navigation">
+<ul class="ids-list side-menu__list" data-depth="0">
+  <li class="side-menu__item side-menu__item--label">
+    <div class="side-menu__row">
+      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+      </span>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">About</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../architecture/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Architecture</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../structure/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Structure</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../glossary/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Glossary</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--label">
+    <div class="side-menu__row">
+      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Getting started</span></span>
+      </span>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../prerequisites/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Prerequisites</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../quickstart/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Quickstart</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--label">
+    <div class="side-menu__row">
+      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Guides</span></span>
+      </span>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../guides-overview/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--branch">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../guides-content-structure/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Content &amp; structure</span></span>
+      </a>
+      <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Content &amp;amp; structure">
+        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+      </button>
+    </div>
+<ul class="ids-list side-menu__list" data-depth="1">
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-adding-a-module/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Adding a module</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-adding-a-page/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Adding a page</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-modifying-the-navigation/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Modifying the navigation</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-icon-gallery/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Icon gallery</span></span>
+      </a>
+    </div>
+  </li>
+</ul>
+  </li>
+  <li class="side-menu__item side-menu__item--branch">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../guides-branding/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Branding &amp; customization</span></span>
+      </a>
+      <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Branding &amp;amp; customization">
+        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+      </button>
+    </div>
+<ul class="ids-list side-menu__list" data-depth="1">
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-landing-page-modifications/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Landing page modifications</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-setup-a-favicon/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Setup a favicon</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-setup-the-product-logo/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Setup the product logo</span></span>
+      </a>
+    </div>
+  </li>
+</ul>
+  </li>
+  <li class="side-menu__item side-menu__item--branch">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../guides-versioning-publishing/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Versioning &amp; publishing</span></span>
+      </a>
+      <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Versioning &amp;amp; publishing">
+        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+      </button>
+    </div>
+<ul class="ids-list side-menu__list" data-depth="1">
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-versioning-modes/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Versioning modes</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-releasing-a-documentation/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Releasing a documentation</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-publishing-a-documentation/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Publishing a documentation</span></span>
+      </a>
+    </div>
+  </li>
+</ul>
+  </li>
+  <li class="side-menu__item side-menu__item--label">
+    <div class="side-menu__row">
+      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Reference</span></span>
+      </span>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../reference-overview/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--branch">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../reference-configuration/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Configuration</span></span>
+      </a>
+      <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Configuration">
+        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+      </button>
+    </div>
+<ul class="ids-list side-menu__list" data-depth="1">
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../reference-antora-playbook-configuration/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Antora Playbook</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../reference-antora-descriptor-configuration/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Antora Descriptor</span></span>
+      </a>
+    </div>
+  </li>
+</ul>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../reference-cli/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">CLI</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../reference-ui-bundle/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">UI Bundle</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--branch">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../reference-asciidoc/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">AsciiDoc</span></span>
+      </a>
+      <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle AsciiDoc">
+        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+      </button>
+    </div>
+<ul class="ids-list side-menu__list" data-depth="1">
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../reference-asciidoc-basics/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">AsciiDoc basics</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../reference-custom-asciidoc-components/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Custom AsciiDoc components</span></span>
+      </a>
+    </div>
+  </li>
+</ul>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../reference-integrations/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Integrations</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../reference-ai-first-approach/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">AI-First approach</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--label">
+    <div class="side-menu__row">
+      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Additional information</span></span>
+      </span>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../additional-information-overview/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="./" aria-current="page">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Changelog</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--branch">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../release-notes/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Release notes</span></span>
+      </a>
+      <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Release notes">
+        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+      </button>
+    </div>
+<ul class="ids-list side-menu__list" data-depth="1">
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../release-notes/1-0-0/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">v1.0.0</span></span>
+      </a>
+    </div>
+  </li>
+</ul>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../faq/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">FAQ</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item side-menu__item--label">
+    <div class="side-menu__row">
+      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Contributing</span></span>
+      </span>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+        href="../contributing/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+      </a>
+    </div>
+  </li>
+</ul>
+  </nav>
+  <div class="side-menu__version">
+<div class="page-versions">
+  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version header-toolbar__version--prerelease version-menu-toggle" title="Show other versions of page" aria-expanded="false">
+    <span class="ids-tag__label">prerelease</span>
+    <span class="ids-tag__icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg></span>
+  </button>
+  <div class="version-menu">
+    <span class="version is-current" aria-current="page">
+      <span class="version__label">prerelease</span>
+      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
+    </span>
+    <a class="version" href="../../../1.0.0/main/changelog/">
+      <span class="version__label">1.0.0</span>
+      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
+          </a>
+  </div>
+</div>
+  </div>
+</div>
+<div class="side-menu-scrim"></div>
+<main class="article">
+<div class="hero">
+  <div class="ids-grid-layout ids-grid-layout--with-margin hero__grid">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-full hero__row">
+      <div class="hero__main">
+<nav class="ids-breadcrumbs" aria-label="Breadcrumb">
+  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="../../"><span class="ids-breadcrumb-item__content">docouture</span></a>
+  <div class="ids-breadcrumb-item ids-breadcrumb-item--active" aria-current="page"><span class="ids-breadcrumb-item__content">Changelog</span></div>
+</nav>
+        <h1 class="hero__title ids-text ids-text--title-xl">Changelog</h1>
+      </div>
+      <div class="hero__aside">
+        <button class="ids-button ids-button--ghost ids-button--icon-only toc-toggle" type="button" aria-controls="on-this-page" aria-expanded="true" hidden>
+          <span class="ids-button__content">
+            <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-design-sidebar-outlined"></use></svg></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="content ids-grid-layout ids-grid-layout--with-margin">
+<aside id="on-this-page" class="toc" data-title="On this page" data-levels="4">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>docouture&#8217;s own changelog is <code>code/CHANGELOG.md</code> in the
+<a href="https://github.com/InditexTech/docouture">source repository</a> — the unabridged,
+<a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>-format record, grouped into
+Added/Fixed/Documentation/Deprecated/Removed/Security sections under an
+<code>## [Unreleased]</code> heading until a version is actually cut.</p>
+</div>
+<div class="paragraph">
+<p>In contrast, <a href="../release-notes/" class="xref page">Release notes</a> summarizes what
+matters to <strong>users</strong> of a given release, not every commit-level entry.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="convention"><a class="anchor" href="#convention"></a>Convention</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every entry is <code>- [#PR_ID](PR_URL) PR_NAME</code>, linking the pull request that shipped the
+change (not a tracking issue). Not every merged PR gets one — a PR labelled
+<code>skip-release</code>, or carrying only an internal/epic label with no real user-facing
+category, is intentionally left out.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>[Unreleased]</code> — what&#8217;s landed but not yet cut into a release — is never mirrored
+here; see <code>code/CHANGELOG.md</code> directly for that. Every <strong>cut</strong> version below, though, is
+generated straight from that same file at build time, so it can&#8217;t drift from it.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="versions"><a class="anchor" href="#versions"></a>Versions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No tagged release yet — see <code>code/CHANGELOG.md&#8217;s `[Unreleased]</code> section for what has landed so far.</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="page-footer">
+  <div class="page-footer__nav">
+<div class="ids-grid-layout ids-grid-layout--with-margin pagination">
+  <div class="ids-grid-layout__item ids-grid-layout__item--span-full pagination__row">
+    <div class="pagination__buttons">
+    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-icon pagination__prev" href="../additional-information-overview/">
+      <span class="ids-button__content">
+        <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-arrow-left-outlined"></use></svg></span>
+        <span class="pagination__label-full">Overview</span>
+        <span class="pagination__label-short">Prev</span>
+      </span>
+    </a>
+    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action pagination__next" href="../release-notes/">
+      <span class="ids-button__content">
+        <span class="pagination__label-full">Release notes</span>
+        <span class="pagination__label-short">Next</span>
+        <span class="ids-button__icon ids-button__icon-action"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-arrow-right-outlined"></use></svg></span>
+      </span>
+    </a>
+    </div>
+  </div>
+</div>
+  </div>
+  <div class="ids-grid-layout ids-grid-layout--with-margin page-footer__feedback">
+    <div class="ids-grid-layout__item ids-grid-layout__item--span-full page-footer__contribute">
+      <div class="page-footer__contribute-copy">
+        <p class="ids-text ids-text--title-s">Help us make these docs great!</p>
+        <p class="ids-text ids-text--body-m">See something that is wrong or unclear? Collaborate with us! Submit a pull request</p>
+      </div>
+      <div class="page-footer__contribute-buttons">
+<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/edit/main/docs/src/modules/main/pages/changelog/index.adoc">
+  <span class="ids-button__content">
+    Propose a change
+    <span class="ids-button__icon ids-button__icon-action"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-connectivity-link-external-outlined"></use></svg></span>
+  </span>
+</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<footer class="site-footer">
+  <div class="ids-grid-layout ids-grid-layout--with-margin site-footer__grid">
+    <div class="ids-grid-layout__item site-footer__col site-footer__brand">
+      <a class="site-footer__brand-link" href="../../../1.0.0/">
+        <img class="site-footer__logo site-footer__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
+        <img class="site-footer__logo site-footer__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
+        <span class="ids-text ids-text--label-l-high">docouture</span>
+      </a>
+      <span class="ids-text ids-text--detail-m site-footer__legal">&#169; 2026 InditexTech</span>
+    </div>
+    <div class="ids-grid-layout__item site-footer__col site-footer__links">
+      <span class="ids-text ids-text--label-l site-footer__heading">Resources</span>
+      <a class="ids-text ids-text--body-l site-footer__link" href="../../">Home</a>
+      <a class="ids-text ids-text--body-l site-footer__link" href="../quickstart/">Quickstart</a>
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

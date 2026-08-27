@@ -136,7 +136,19 @@ jobs:
       # specifically (unused, and unnecessary to set, for any other publish
       # target). See this file's own header comment for the `<target>`
       # naming convention and where its options come from.
+
+      # Mints an installation token for the GitHub App that's on this repo's
+      # branch-ruleset bypass list (main* and gh-pages*) — see issue #157.
+      # The plain GITHUB_TOKEN identity isn't bypass-listed, so pushing the
+      # `gh-pages` branch below is otherwise rejected (GH013).
+      - name: Git app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Publish
         run: npx docouture publish gh-pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}

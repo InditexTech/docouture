@@ -110,6 +110,11 @@ jobs:
           # either way, and full history is harmless for that case.
           fetch-depth: 0
           ref: main
+          # Don't persist the ambient GITHUB_TOKEN's credentials — it isn't
+          # on this repo's branch-ruleset bypass list, and a local credential
+          # from actions/checkout would otherwise win over the app token's
+          # own credentials (set up below) when the git-push steps run.
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4
@@ -197,6 +202,25 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Mints an installation token for the GitHub App that's on this repo's
+      # branch-ruleset bypass list (main* and gh-pages*) — see issue #157.
+      # `Push release tag` and `Bump release descriptor` below both push
+      # straight to `main`/a ref, and the plain GITHUB_TOKEN identity isn't
+      # bypass-listed, so those pushes are rejected (GH013) without this.
+      - name: Git app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Git app credentials
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git config --global credential.helper store
+          echo "https://x-access-token:${APP_TOKEN}@github.com" >> ~/.git-credentials
 
       # The one signal this workflow trusts: docs/antora-playbook.yml's own
       # content.sources[] tags permanently say `tags: ['v*']` (versioned) or

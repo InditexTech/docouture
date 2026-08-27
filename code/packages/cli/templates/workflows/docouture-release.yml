@@ -110,6 +110,11 @@ jobs:
           # either way, and full history is harmless for that case.
           fetch-depth: 0
           ref: main
+          # Don't persist the ambient GITHUB_TOKEN's credentials — it isn't
+          # on this repo's branch-ruleset bypass list, and a local credential
+          # from actions/checkout would otherwise win over the app token's
+          # own credentials (set up below) when the git-push steps run.
+          persist-credentials: false
 
       # __DOCOUTURE_PM_SETUP_STEP__
       - name: Setup Node
@@ -193,6 +198,30 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Mints an installation token for a GitHub App that's on this repo's
+      # branch-ruleset bypass list, if `main`/`gh-pages` are protected by
+      # one (branch rulesets requiring PRs / status checks) — see issue #157
+      # in InditexTech/docouture. `Push release tag` and `Bump release
+      # descriptor` below both push straight to a branch/ref, and the plain
+      # GITHUB_TOKEN identity is never on a ruleset's own bypass list, so
+      # those pushes are rejected (GH013) on a protected repo without this.
+      # `APP_CLIENT_ID` (a variable) and `APP_PRIVATE_KEY` (a secret) are
+      # organization-level in InditexTech — set both at the org or repo
+      # level for whichever GitHub App is bypass-listed on this site's rules.
+      - name: Git app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Git app credentials
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git config --global credential.helper store
+          echo "https://x-access-token:${APP_TOKEN}@github.com" >> ~/.git-credentials
 
       # The one signal this workflow trusts: docs/antora-playbook.yml's own
       # content.sources[] tags permanently say `tags: ['v*']` (versioned) or

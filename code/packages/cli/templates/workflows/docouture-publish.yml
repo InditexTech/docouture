@@ -132,7 +132,24 @@ jobs:
       # specifically (unused, and unnecessary to set, for any other publish
       # target). See this file's own header comment for the `<target>`
       # naming convention and where its options come from.
+
+      # Mints an installation token for a GitHub App that's on this repo's
+      # branch-ruleset bypass list, if `gh-pages` is protected by one
+      # (branch rulesets requiring PRs / status checks) — see issue #157 in
+      # InditexTech/docouture. The plain GITHUB_TOKEN identity is never on a
+      # ruleset's own bypass list, so pushing `gh-pages` below is otherwise
+      # rejected (GH013) on a protected repo without this. `APP_CLIENT_ID`
+      # (a variable) and `APP_PRIVATE_KEY` (a secret) are organization-level
+      # in InditexTech — set both at the org or repo level for whichever
+      # GitHub App is bypass-listed on this site's rules.
+      - name: Git app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Publish
         run: npx docouture publish gh-pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}

@@ -1,5 +1,6 @@
 'use strict'
 
+import { execFileSync } from 'node:child_process'
 import { readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -23,12 +24,45 @@ export interface PackageManagerPlan {
    * action (not setup-node) provides.
    */
   setupStepYaml: string
+  /**
+   * The scaffolded package.json's own `packageManager` field (corepack
+   * convention, e.g. 'pnpm@10.24.0') — `pnpm/action-setup`'s
+   * `package_json_file` input (pointed at docs/package.json in
+   * setupStepYaml above) reads exactly this field to know which pnpm to
+   * install; without it present, that step fails outright with "No pnpm
+   * version is specified" rather than degrading to some default.
+   */
+  packageManagerField: string
 }
 
 const PNPM_ACTION_SETUP_STEP =
   '      - name: Setup pnpm\n' +
   '        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4\n' +
+  '        with:\n' +
+  // `package_json_file` "must be relative to the repository root
+  // (GITHUB_WORKSPACE)" per the action's own action.yml — its default
+  // ('package.json') looks at the true repo root, not this site's own
+  // docs/package.json, even though `defaults.run.working-directory: docs`
+  // applies everywhere else in this workflow. Same gotcha, same fix as
+  // setup-node's `cache-dependency-path` a few lines below.
+  '          package_json_file: docs/package.json\n' +
   '\n'
+
+// The exact pnpm/npm version actually available wherever `docouture new` is
+// running — queried directly rather than guessed, so the `packageManager`
+// field this writes into the scaffolded package.json (see
+// packageManagerPlan below) is always a real, installable version. Falls
+// back to a pinned last-known-good version only if the binary can't be
+// queried at all (e.g. a test sandbox with neither on PATH) — degrading
+// gracefully rather than leaving the scaffold without a value that
+// `pnpm/action-setup` (CI) and corepack (locally) both need.
+function detectPackageManagerVersion(pm: PackageManager): string {
+  try {
+    return execFileSync(pm, ['--version'], { encoding: 'utf8' }).trim()
+  } catch {
+    return pm === 'pnpm' ? '10.24.0' : '10.9.2'
+  }
+}
 
 // Reads the invoking package manager off npm's own user-agent env var — set
 // by npm, pnpm and yarn alike on every script/exec they run, e.g.
@@ -88,6 +122,7 @@ export function packageManagerPlan(pm: PackageManager): PackageManagerPlan {
       lockfile: 'pnpm-lock.yaml',
       cacheName: 'pnpm',
       setupStepYaml: PNPM_ACTION_SETUP_STEP,
+      packageManagerField: `pnpm@${detectPackageManagerVersion('pnpm')}`,
     }
   }
   return {
@@ -98,5 +133,6 @@ export function packageManagerPlan(pm: PackageManager): PackageManagerPlan {
     lockfile: 'package-lock.json',
     cacheName: 'npm',
     setupStepYaml: '',
+    packageManagerField: `npm@${detectPackageManagerVersion('npm')}`,
   }
 }

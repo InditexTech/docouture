@@ -10,6 +10,8 @@ Pages in this section:
 | `architecture` | 🔴 required | How the product is built and why |
 | `glossary` | ⚪ optional | The product's own vocabulary |
 
+This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)).
+
 The entry page of this section is `about` (see the naming conventions in the [README](../README.md)). The [sizing rule](../README.md#sizing-rule-one-page-or-many) applies: a small project can fold `architecture` (and `glossary`) into `about` as level-2 sections; a large project can grow `architecture` into a group of nested pages.
 
 ---

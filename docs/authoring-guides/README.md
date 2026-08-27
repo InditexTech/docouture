@@ -20,16 +20,18 @@ They serve two audiences at once:
 
 ## The minimal structure
 
-A DoCouture site scaffolds two modules: `ROOT` (the home page only) and `main` (all content). Inside `main`, the navigation groups the pages into six ordered sections. Each page is tagged with a requirement level:
+A DoCouture site scaffolds two Antora modules: `ROOT` (the home page only) and `main` (all content) — that is the only place where the word "module" applies; the documentation structure itself is organized in **sections**. Inside `main`, the navigation groups the pages into six ordered sections. Each page is tagged with a requirement level:
 
 - 🔴 **required** — every documented repo should end up with this page.
 - 🟠 **recommended** — include unless there is a specific reason not to.
 - 🔵 **conditional** — include only if the repo actually has the surface it covers; skip cleanly (no stub) if it does not.
 - ⚪ **optional** — include when it adds value, otherwise leave out.
 
+These levels mark the **minimum, not a ceiling**. A product with more complex or more specific documentation needs can — and should — add more pages beyond the ones listed here: extra guides, extra reference pages, extra sections within a page. The guides define the floor every project must reach, and never forbid going further.
+
 | Section | Pages | Guide |
 | --- | --- | --- |
-| 1. Overview | `about` 🔴 · `architecture` 🔴 · `glossary` ⚪ | [modules/overview.md](modules/overview.md) |
+| 1. Overview | `about` 🔴 · `architecture` 🔴 · `glossary` ⚪ | [sections/overview.md](sections/overview.md) |
 | 2. Getting started | `prerequisites` 🔴 · `quickstart` 🔴 | *(follow-up PR)* |
 | 3. Guides | `overview` 🔴 · derived task pages 🔴 (≥1) · `development` 🟠 | *(follow-up PR)* |
 | 4. Reference | `overview` 🔴 · derived sub-catalog pages 🔵 (configuration, CLI/SDK/public API, integrations) | *(follow-up PR)* |
@@ -102,7 +104,7 @@ All documentation follows the AMIGA Tech Docs style guide, completed by the [Goo
 
 ## Anatomy of a page guide
 
-Every page guide in `modules/` follows the same contract, so both humans and agents always know where to look:
+Every page guide in `sections/` follows the same contract, so both humans and agents always know where to look:
 
 1. **Purpose & audience** — what the page is for and who reads it.
 2. **Requirement level** — 🔴 / 🟠 / 🔵 / ⚪.
@@ -115,6 +117,6 @@ Every page guide in `modules/` follows the same contract, so both humans and age
 
 ## Index
 
-- [Overview section](modules/overview.md) — `about`, `architecture`, `glossary`
+- [Overview section](sections/overview.md) — `about`, `architecture`, `glossary`
 - Getting started, Guides, Reference, Additional information, Contributing — *(follow-up PRs)*
 - Home page — *(follow-up PR)*

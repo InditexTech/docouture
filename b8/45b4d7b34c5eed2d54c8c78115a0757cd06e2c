@@ -1,0 +1,20 @@
+.github/workflows/docouture-publish.yml
+  h_c93d154c7c7074 139-150,154
+.github/workflows/docouture-release.yml
+  h_c93d154c7c7074 113-117,206-224
+code/packages/cli/templates/workflows/docouture-publish.yml
+  h_c93d154c7c7074 135-151,155
+code/packages/cli/templates/workflows/docouture-release.yml
+  h_c93d154c7c7074 113-117,202-225
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b845b4d7b34c5eed2d54c8c78115a0757cd06e2c",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

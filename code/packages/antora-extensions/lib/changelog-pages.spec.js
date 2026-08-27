@@ -151,6 +151,29 @@ describe('registerChangelogPages', () => {
     )
   })
 
+  it('drops trailing Keep a Changelog reference-style link definitions silently', async () => {
+    // Mirrors what `release-flow/keep-a-changelog-action`'s `bump` command
+    // appends at the bottom of the file on every release cut.
+    const { dir } = writeChangelog(
+      '# Changelog\n\n' +
+        '## [Unreleased]\n\n' +
+        '## [0.1.0] - 2026-01-15\n\n' +
+        '### Added\n\n' +
+        '- [#1](https://github.com/InditexTech/x/pull/1) thing\n\n' +
+        '[Unreleased]: https://github.com/InditexTech/docouture/compare/0.1.0...HEAD\n' +
+        '[0.1.0]: https://github.com/InditexTech/docouture/releases/tag/0.1.0\n'
+    )
+    const logger = { warn: vi.fn(), info: vi.fn() }
+    const indexFile = createIndexFile('ROOT', 'prerelease', 'main')
+    await run('CHANGELOG.md', { files: [indexFile], logger, playbookDir: dir })
+
+    const source = indexFile.contents.toString()
+    expect(source).toContain('== v0.1.0')
+    expect(source).not.toContain('[Unreleased]: https://')
+    expect(source).not.toContain('[0.1.0]: https://github.com/InditexTech/docouture/releases')
+    expect(logger.warn).not.toHaveBeenCalled()
+  })
+
   it('resolves the default code/CHANGELOG.md path relative to playbook.dir when unconfigured', async () => {
     const dir = mkdtempSync(join(tmpdir(), 'changelog-pages-'))
     dirs.push(dir)

@@ -158,6 +158,13 @@ function convertBody(lines, logger, versionLabel) {
       out.push(`* link:${bullet[2]}[#${bullet[1]}] ${bullet[3]}`.trimEnd())
       continue
     }
+    // Keep a Changelog reference-style link definitions, e.g.
+    // `[Unreleased]: https://.../compare/0.1.0...HEAD` or
+    // `[0.1.0]: https://.../releases/tag/0.1.0` — `release-flow/keep-a-changelog-action`
+    // appends these at the bottom of the file on every `bump`, so they land in
+    // the last cut release's body here. They're changelog-file plumbing, not
+    // release content, so they're dropped silently rather than warned about.
+    if (/^\[.+?\]:\s*\S+/.test(line.trim())) continue
     logger.warn(
       "changelog entry for '%s' doesn't match the known Keep a Changelog shape, copying verbatim: %s",
       versionLabel,

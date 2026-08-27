@@ -1,0 +1,25 @@
+.github/workflows/docouture-kroki-cache-warm.yml
+  s_1dfaea158c11e5::t_505024c9cec497 58-59
+.github/workflows/docouture-pr-verify.yml
+  s_1dfaea158c11e5::t_d95b893b2a39d1 48-49
+.github/workflows/docouture-publish.yml
+  s_1dfaea158c11e5::t_957dfe081a1f80 70-71
+.github/workflows/docouture-release.yml
+  s_1dfaea158c11e5::t_7e8499f039165a 116-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a9719ae8185f7659a2ebda74f1b5591acae67dcc",
+  "prompts": {},
+  "sessions": {
+    "s_1dfaea158c11e5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbd323240ffeUps2ltadDL8OG8",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

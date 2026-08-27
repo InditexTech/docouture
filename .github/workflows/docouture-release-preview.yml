@@ -31,6 +31,9 @@ jobs:
   check-changes-in-paths:
     name: Check for changes in corresponding paths
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     if: ${{ github.event.pull_request.draft == false || contains(github.event.pull_request.labels.*.name, 'docs/release') }}
     outputs:
       detected: ${{ steps.changes.outputs.paths }}

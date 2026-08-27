@@ -91,7 +91,7 @@ gh api graphql -f query='
         closingIssuesReferences(first:5){ nodes { number title labels(first:10){nodes{name}} } }
       }
     }
-  }' -f owner=InditexTech -f repo=test-antoradocs -F num=<PR_NUMBER>
+  }' -f owner=InditexTech -f repo=docouture -F num=<PR_NUMBER>
 ```
 
 (`gh pr view --json closingIssuesReferences` doesn't expose this field; it has to go
@@ -106,7 +106,7 @@ match the issue **verbatim, scope tag included**, before writing the CHANGELOG e
 ```bash
 # gh pr edit can fail on this workspace's pinned gh CLI version (2.20.2) with a
 # "Projects (classic)" GraphQL error even for pure title edits — use the REST API instead:
-gh api repos/InditexTech/test-antoradocs/pulls/<PR_NUMBER> -X PATCH -f title="<issue title>"
+gh api repos/InditexTech/docouture/pulls/<PR_NUMBER> -X PATCH -f title="<issue title>"
 ```
 
 ## Adding a CHANGELOG entry for a new PR — checklist

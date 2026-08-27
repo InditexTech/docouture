@@ -4,7 +4,7 @@
   "description": "Command-line tool for docouture documentation sites: scaffold a new site and set its Antora version outside the monorepo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/InditexTech/test-antoradocs.git",
+    "url": "https://github.com/InditexTech/docouture.git",
     "directory": "code/packages/cli"
   },
   "license": "Apache-2.0",

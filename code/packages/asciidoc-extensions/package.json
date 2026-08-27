@@ -4,7 +4,7 @@
   "description": "Asciidoctor extensions shared by docouture documentation sites — authored content that has no AsciiDoc equivalent, rendered as IOP DS markup",
   "repository": {
     "type": "git",
-    "url": "https://github.com/InditexTech/test-antoradocs.git",
+    "url": "https://github.com/InditexTech/docouture.git",
     "directory": "code/packages/asciidoc-extensions"
   },
   "license": "Apache-2.0",

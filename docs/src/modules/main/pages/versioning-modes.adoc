@@ -1,0 +1,55 @@
+= Versioning modes
+
+`docouture new --mode` offers two shapes, both real and releasable — decided once, at
+scaffold time (`docouture upgrade` never changes it).
+
+== Standalone (Stable + Prerelease) — the default
+
+`main` always builds as the *prerelease* version (`docs/src/antora.yml`:
+`version: prerelease`, `prerelease: true`, permanently). A release force-moves a
+single rolling `stable` tag to a fresh commit — no historical archive, appropriate
+when only "now" and "what's next" matter.
+
+[,yaml]
+----
+content:
+  sources:
+    - url: ..
+      start_path: docs/src
+      branches: [main]
+      tags: ['stable']
+----
+
+== Versioned (Full History)
+
+`main` still builds as the prerelease version — `docs/src/antora.yml` is
+byte-identical to the standalone shape on `main` — but every release is instead its
+own immutable `vX.Y.Z` git tag, kept forever. Appropriate for a library/SDK whose
+consumers pin an old version.
+
+[,yaml]
+----
+content:
+  sources:
+    - url: ..
+      start_path: docs/src
+      branches: [main]
+      tags: ['v*']
+----
+
+A versioned-mode site additionally gets `docs/.release-version` — a plain-text file
+holding the *next* release's target version, read by `docouture-release.yml` instead
+of a workflow input.
+
+== On a release tag, `docs/src/antora.yml` changes
+
+Standalone's `stable` tag says `version: stable`, `prerelease: false`. A versioned
+release tag says `version: '1.2.0'` (or whatever was released), `prerelease: false`.
+Neither mode ever rewrites `main`'s own copy.
+
+== Which one to pick
+
+Standalone if there's one thing to document and only "current" matters. Versioned if
+past releases need to keep resolving unchanged after a new one ships — an SDK, a CLI,
+anything consumers pin a version of. See xref:main:releasing-a-documentation.adoc[]
+for how a release is actually cut in either mode.

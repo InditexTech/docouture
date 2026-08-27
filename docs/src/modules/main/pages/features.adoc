@@ -1,0 +1,82 @@
+= Features
+
+Build-time and content capabilities that ship with every scaffolded site — as opposed
+to xref:main:ui-bundle.adoc[]'s site chrome, or
+xref:main:custom-asciidoc-components.adoc[]'s authoring blocks.
+
+== Diagrams — Kroki
+
+`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and more render as
+real diagrams via a self-hosted https://kroki.io[Kroki] service, enabled by default
+(`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see
+xref:main:antora-playbook-configuration.adoc[]). The service starts itself
+automatically the first time a build needs it (https://www.docker.com[Docker]
+required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its
+compose definition out for customization. Mermaid diagrams get IOP Design
+System-aligned theming baked in server-side. `format=png` renders a transparent raster
+image instead of inline SVG for types that support it. Without Docker, or with the
+feature disabled, a diagram block renders as its own literal source text rather than
+failing the build. Full syntax: xref:main:custom-asciidoc-components.adoc[].
+
+== Syntax highlighting — Shiki
+
+`source-highlighter: shiki` in `antora-playbook.yml` switches every code block from
+https://antora.org[Antora]'s own client-side default (https://highlightjs.org[highlight.js])
+to build-time, static highlighting. `@inditextech/docouture-antora-extensions`'
+https://shiki.style[Shiki] prewarm step builds the highlighter once up front rather
+than per-block.
+
+== Full-text search
+
+`@inditextech/docouture-antora-extensions` builds a search index at build time,
+published per component version, that the UI bundle's search dialog reads directly
+(xref:main:ui-bundle.adoc[]). No manual wiring — registering the extension is enough.
+
+== AI ingestion — `llms.txt`
+
+Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full
+aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the
+https://llmstxt.org[llms.txt convention], letting an agent read the site without
+scraping rendered HTML. Configured under `docs/src/antora.yml`'s `llms` key (see
+xref:main:antora-yml-configuration.adoc[]) — `summary` becomes the blockquote under
+the site title; `exclude` leaves specific pages out of both files.
+
+== External link checking
+
+A scaffolded site ships `scripts/check-links.mjs` (via
+https://github.com/JustinBeckwith/linkinator[linkinator]) and a `check-links`
+https://www.npmjs.com[npm] script. `package.json`'s own `docouture.checkLinks.ignore`
+is a list of URL globs to skip — pre-seeded with this repository's own URL, so a build
+doesn't fail checking a link to itself before it's ever been published.
+
+== URL routing: the `/latest/` alias
+
+Rather than Antora's own `urls.latest_version_segment` (whose default `replace`
+strategy turns one real version segment into a permanent redirect stub the moment a
+release exists — see xref:main:versioning-modes.adoc[]), `duplicate_latest_version:
+true` on the `antora.extensions` registration entry republishes whichever version
+Antora computes as latest a *second* time, under `/latest/…`, as a genuinely
+independent copy — so both the real version segment and `/latest/` stay real content.
+
+== Legacy URL redirects
+
+For a site migrated from another documentation tool, arbitrary literal legacy URLs can
+redirect to whatever real page now answers the equivalent URL — configured as
+`from`/`to` URL templates on the `@inditextech/docouture-antora-extensions`
+registration entry itself (not `antora.yml`, since these apply across every ref a
+build aggregates, not per-version):
+
+[,yaml]
+----
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      redirects:
+        - from: '/docs/main/old-page'
+          to: '/main/new-page'
+        - from: '/docs/**'
+          to: '/main/**'
+----
+
+`*` captures one path segment, `**` captures the remainder. Rules are first-match-wins
+in authoring order — an exact override belongs ahead of a broad `**` catch-all.

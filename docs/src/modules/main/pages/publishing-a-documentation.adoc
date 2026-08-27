@@ -1,0 +1,71 @@
+= Publishing a documentation
+
+`docouture new` already scaffolds two workflows that build the site and run
+`docouture publish gh-pages`:
+
+* *`docouture-publish-prerelease.yml`* — runs on every ordinary push to `main` that
+  touches docs content, no label needed. Keeps the prerelease version current.
+* *`docouture-publish.yml`* — not triggered by push; `docouture-release.yml` calls it
+  directly once a release is cut, and it's also available for a manual
+  rebuild+republish via its own `workflow_dispatch`.
+
+Before either actually publishes anything, see xref:main:prerequisites.adoc[] for the
+repository/https://pages.github.com[GitHub Pages] side (public repository, `gh-pages`
+branch selected in Settings → Pages, the `docs/release` label created), plus:
+
+. `@inditextech/docouture-publish-gh-pages` in `devDependencies` — already present in
+  the scaffolded `package.json`.
+. `site.url` set in `antora-playbook.yml` to the site's real public URL — for a GitHub
+  Pages project page, `https://<org>.github.io/<repo>` (the repo name has to be baked
+  in as a path segment, or generated asset URLs come out wrong).
+
+== Publishing manually
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,console]
+----
+$ pnpm run build
+$ pnpm exec docouture publish gh-pages
+----
+****
+
+[tab,label="npm"]
+****
+[,console]
+----
+$ npm run build
+$ npx docouture publish gh-pages
+----
+****
+--
+
+`GITHUB_TOKEN` (set automatically inside the https://github.com/features/actions[Actions]
+workflow) authenticates the push; running this locally needs a token of your own with
+`repo` scope, passed as the `GITHUB_TOKEN` environment variable.
+
+== A custom domain
+
+A `cname` string under `package.json`'s own `"docouture": { "publish": { "gh-pages":
+{ "cname": "docs.example.com" } } }` — `docouture publish` writes it as a `CNAME` file
+alongside the built site. Leave the block empty, as scaffolded, for a plain
+`github.io` URL.
+
+== `.nojekyll` — not optional
+
+`@inditextech/docouture-publish-gh-pages` writes a `.nojekyll` file at the published
+branch's root regardless of configuration. Without it, GitHub Pages' own Jekyll
+processing silently drops every `_`-prefixed path — exactly where the UI bundle's own
+assets live (`/_/css/...`, `/_/js/...`) — and the published site loads unstyled. Pass
+`"nojekyll": false` in that same `package.json` block only if something else genuinely
+needs Jekyll on.
+
+== What the driver fixes for you
+
+`@inditextech/docouture-publish-gh-pages` wraps the underlying `gh-pages` package with
+three fixes: a default `github-actions[bot]` git identity (a fresh CI runner has
+none), surfacing failures the underlying package would otherwise swallow silently,
+and pre-creating the target branch as a clean orphan commit on first publish
+(avoiding a dirty first commit inherited from `main`).

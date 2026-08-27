@@ -1,0 +1,14 @@
+= Guides
+
+Task-oriented how-tos for a scaffolded site: growing its structure, changing its
+branding, and taking it from a local build to a published one.
+
+* xref:main:adding-a-module.adoc[Adding a module]
+* xref:main:adding-a-page.adoc[Adding a page]
+* xref:main:landing-page-modifications.adoc[Landing page modifications]
+* xref:main:modifying-the-navigation.adoc[Modifying the navigation]
+* xref:main:setup-a-favicon.adoc[Setup a favicon]
+* xref:main:setup-the-product-logo.adoc[Setup the product logo]
+* xref:main:versioning-modes.adoc[Versioning modes]
+* xref:main:releasing-a-documentation.adoc[Releasing a documentation]
+* xref:main:publishing-a-documentation.adoc[Publishing a documentation]

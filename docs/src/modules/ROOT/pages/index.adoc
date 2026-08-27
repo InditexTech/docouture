@@ -1,0 +1,159 @@
+= docouture
+:page-layout: home
+:page-nav-module: main
+:description: A documentation platform built on Antora, themed with the IOP Design System — scaffold, write and publish a real documentation site with one CLI.
+:page-tags: antora, cli, design-system, documentation
+:page-action: Get started
+:page-action-url: main:quickstart.adoc
+:page-action-secondary: About
+:page-action-secondary-url: main:index.adoc
+:page-hero-image: hero-placeholder.png
+:page-hero-image-alt: docouture — an Antora documentation site themed with the IOP Design System.
+
+docouture turns an https://antora.org[Antora] content tree into a themed, searchable
+documentation site in one command — `docouture new` scaffolds it, `docouture dev`
+serves it with live reload, and `docouture publish gh-pages` ships it.
+
+== Get started
+
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
+====
+[card,subheader="Start here"]
+.xref:main:quickstart.adoc[Quickstart]
+--
+image::card-placeholder.png[Placeholder card image]
+
+Scaffold a site and see it running locally in a few commands.
+--
+
+[card,subheader="Overview"]
+.xref:main:index.adoc[About]
+--
+image::card-placeholder.png[Placeholder card image]
+
+What docouture actually ships, and why it exists.
+--
+
+[card,subheader="Reference"]
+.xref:main:cli-api.adoc[CLI reference]
+--
+image::card-placeholder.png[Placeholder card image]
+
+Every `docouture` command, its flags, and what it actually does.
+--
+
+[card,subheader="Design"]
+.xref:main:architecture.adoc[Architecture]
+--
+image::card-placeholder.png[Placeholder card image]
+
+How the CLI, the Antora pipeline and the themed UI bundle fit together.
+--
+====
+
+== Key features
+
+[feature-tabs]
+====
+[feature,label="Scaffold in one command"]
+--
+image::feature-placeholder.png[Placeholder feature image]
+image::feature-placeholder-dark.png[role=dark]
+
+`docouture new` lays down a full Antora site — content tree,
+https://github.com/features/actions[GitHub] workflows, an AGENTS.md briefing for
+coding agents — into an existing repository. `docouture dev`, `docouture build` and
+`docouture publish` take it from there.
+
+[.cta]
+xref:main:quickstart.adoc[Try it]
+--
+
+[feature,label="Themed with the IOP Design System"]
+--
+image::feature-placeholder.png[Placeholder feature image]
+image::feature-placeholder-dark.png[role=dark]
+
+The UI bundle is a themed fork of Antora's own default UI: dark/light mode, a version
+switcher, full-text search, and a set of authoring blocks — tabs, cards, accordions,
+feature tabs — with no plain https://asciidoc.org[AsciiDoc] equivalent.
+
+[.cta]
+xref:main:ui-bundle.adoc[See the UI bundle]
+--
+
+[feature,label="Diagrams and search, built in"]
+--
+image::feature-placeholder.png[Placeholder feature image]
+image::feature-placeholder-dark.png[role=dark]
+
+Mermaid/PlantUML/BPMN/Excalidraw diagrams render via a self-hosted https://kroki.io[Kroki]
+service, code blocks get build-time https://shiki.style[Shiki] highlighting, and a
+full-text search index ships with every build — all with zero configuration beyond
+what `docouture new` already wrote.
+
+[.cta]
+xref:main:features.adoc[See what ships]
+--
+
+[feature,label="AI-ready docs"]
+--
+image::feature-placeholder.png[Placeholder feature image]
+image::feature-placeholder-dark.png[role=dark]
+
+Every build publishes https://llmstxt.org[`llms.txt`]/`llms-full.txt` for LLM
+ingestion, and `npx skills add InditexTech/docouture` installs a set of agent skills
+that plan, scaffold and keep a site's content in sync with the repo it documents.
+
+[.cta]
+xref:main:ai-skills.adoc[See the skills]
+--
+====
+
+== Free & open source
+
+[cta]
+====
+The CLI, the Antora/https://asciidoctor.org[Asciidoctor] extensions and the release
+tooling are Apache-2.0. The UI bundle itself is themed with Inditex's proprietary IOP
+Design System, which makes a site built with it internal-only for now — see the FAQ
+below for the full story.
+
+[.primary]
+https://github.com/InditexTech/docouture[View the repository]
+====
+
+== Frequently asked questions
+
+[accordion,aria-label="Frequently asked questions"]
+--
+.What is docouture?
+[%collapsible]
+====
+An Antora documentation platform: a themed UI bundle (IOP Design System), a set of
+Antora/Asciidoctor extensions, and the `docouture` CLI that scaffolds, serves, builds
+and publishes a site built on top of them. See xref:main:index.adoc[About].
+====
+
+.How do I create a new site?
+[%collapsible]
+====
+`npx @inditextech/docouture-cli new <name>` — see xref:main:quickstart.adoc[Quickstart].
+====
+
+.Can documentation be versioned?
+[%collapsible]
+====
+Yes — standalone (stable + prerelease) or versioned (full release history). See
+xref:main:versioning-modes.adoc[Versioning modes].
+====
+
+.Is docouture open source?
+[%collapsible]
+====
+The CLI and extensions are Apache-2.0, but the UI bundle depends on a proprietary
+design system — see the xref:main:faq.adoc[full FAQ] for the details.
+====
+--
+
+See the xref:main:faq.adoc[full FAQ] for more, including diagrams, search and publishing.

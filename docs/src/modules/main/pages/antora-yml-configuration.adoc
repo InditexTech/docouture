@@ -1,0 +1,81 @@
+= antora.yml
+
+`docs/src/antora.yml` is the component descriptor — every directory Antora treats as
+documentation needs one. Upstream reference:
+https://docs.antora.org/antora/latest/component-version/[Antora's component-version
+docs].
+
+== Core keys
+
+[,yaml]
+----
+name: ROOT
+title: docouture
+version: prerelease
+prerelease: true
+start_page: ROOT:index.adoc
+nav:
+  - modules/main/nav.adoc
+----
+
+`name` is either a real URL segment, or Antora's reserved `ROOT`, which contributes no
+segment at all — decided by `docouture new`'s "extra URL path segment?" question
+(default: no/`ROOT`). `version`/`prerelease` differ per git ref — see
+xref:main:versioning-modes.adoc[]. `nav` lists every module's `nav.adoc` — `ROOT` is
+deliberately absent; the landing page borrows a module's nav instead (see
+xref:main:landing-page-modifications.adoc[]).
+
+== `nav_modules` — read by `@inditextech/docouture-antora-extensions`
+
+[,yaml]
+----
+nav_modules:
+  - module: main
+    title: Documentation
+    description: One-line description.
+    icon: design/grid-outlined
+----
+
+A **list**, not a map keyed by module — deliberately. Antora's content aggregator runs
+the whole descriptor through `camelCaseKeys`, which recurses into nested objects and
+rewrites their *keys*; a map keyed by a hyphenated module slug (`store-standalone`)
+would arrive renamed (`storeStandalone`) and match nothing. `icon` is `<group>/<name>`
+from the UI bundle's own vendored sprite, not a free-form name.
+
+== `not_found_module`
+
+Which module's navigation the generated 404 page's side menu shows. With one module
+there's only one sensible value; update it alongside `nav_modules` if a second module
+is added and the 404 page should point elsewhere.
+
+== `footer` — read by `@inditextech/docouture-antora-extensions`
+
+[,yaml]
+----
+footer:
+  groups:
+    - title: Resources
+      links:
+        - text: Home
+          url: ROOT:index.adoc
+        - text: Quickstart
+          url: main:quickstart.adoc
+----
+
+A list of link groups, positional (index 0 → column 2, 1 → column 3's fallback — used
+only with fewer than two switchable modules, 2 → column 4), not keyed. `url` is either
+a page ID or a literal URL; one that resolves to no page is dropped with a warning
+rather than rendered dead.
+
+== `llms` — read by `@inditextech/docouture-antora-extensions`
+
+Optional. `summary` becomes the blockquote under the site title in the generated
+`llms.txt`; `exclude` is a list of page IDs left out of both generated files. See
+xref:main:features.adoc[].
+
+== Why these three live here, not in the playbook
+
+`site.keys` in the playbook is declared a flat primitive map — it cannot carry a
+nested list. The component descriptor is the one place a nested structure can be
+authored per-component, which is why `nav_modules`/`footer`/`llms` all live here
+instead.

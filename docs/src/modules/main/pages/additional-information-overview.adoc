@@ -1,0 +1,5 @@
+= Additional information
+
+* xref:main:changelog/index.adoc[Changelog]
+* xref:main:release-notes/index.adoc[Release notes]
+* xref:main:faq.adoc[FAQ]

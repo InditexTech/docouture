@@ -1,0 +1,64 @@
+= Structure
+
+docouture is an https://nx.dev[Nx]/https://pnpm.io[pnpm] monorepo. What a scaffolded
+site actually depends on is a small slice of it — the rest is how docouture itself is
+built.
+
+[cols="1,3"]
+|===
+|Path |What's there
+
+|`packages/cli`
+|`@inditextech/docouture-cli` — the `docouture` binary. Bundles its own scaffolding
+template (`templates/starter`) and https://github.com/features/actions[GitHub] workflow
+templates (`templates/workflows`).
+
+|`packages/ui-bundle`
+|`@inditextech/docouture-ui-bundle` — the themed https://antora.org[Antora] UI, built
+to a zip (`build/ui-bundle-<version>.zip` plus an unversioned alias).
+
+|`packages/antora-extensions`
+|`@inditextech/docouture-antora-extensions` — the Antora pipeline extensions (module
+switcher, footer, search index, llms.txt, https://kroki.io[Kroki]/https://shiki.style[Shiki]
+prewarm, redirects).
+
+|`packages/asciidoc-extensions`
+|`@inditextech/docouture-asciidoc-extensions` — the https://asciidoctor.org[Asciidoctor]
+content extensions (tabs, cards, accordion, feature-tabs, cta, label/mono macros,
+Kroki, Shiki).
+
+|`packages/publish-gh-pages`
+|`@inditextech/docouture-publish-gh-pages` — the `docouture publish gh-pages` driver.
+
+|`packages/example`
+|An in-workspace, real-world Antora site docouture's own maintainers use to trial
+features ahead of the CLI template.
+
+|`packages/tooling`
+|Internal workspace tooling (release bumps, changelog checks, a local snapshot
+registry) — not something a scaffolded site ever depends on.
+|===
+
+== What a scaffolded site actually contains
+
+`docouture new` writes into the *target* repository, not into this one:
+
+....
+docs/
+  antora-playbook.yml           real build (main + stable/version tags)
+  antora-playbook.local.yml     HEAD-only build, used by `docouture dev` and PR checks
+  package.json                  devDependencies: the CLI, ui-bundle, both extension
+                                 packages, the gh-pages publish driver, antora itself
+  src/
+    antora.yml                  component descriptor: name, title, version, nav
+    modules/
+      ROOT/pages/index.adoc     the landing page only
+      main/nav.adoc             the navigation tree
+      main/pages/*.adoc         every other page
+.github/workflows/docouture-*.yml   PR verification, prerelease/release publish, release cutting
+AGENTS.md                        docouture's own managed section, merged into whatever
+                                  was already there
+....
+
+This site you're reading is exactly that shape — see it directly under `docs/` at the
+repository root.

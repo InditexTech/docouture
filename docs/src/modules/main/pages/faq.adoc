@@ -1,0 +1,80 @@
+= FAQ
+
+.What is docouture?
+[%collapsible]
+====
+A documentation platform: a themed https://antora.org[Antora] UI bundle (IOP Design
+System), a set of Antora/https://asciidoctor.org[Asciidoctor] extensions, and the
+`docouture` CLI that scaffolds, serves, builds and publishes a site on top of them. See
+xref:main:index.adoc[About].
+====
+
+.Do I need to know Antora or AsciiDoc already?
+[%collapsible]
+====
+Only the basics of https://asciidoc.org[AsciiDoc] for writing pages — the CLI scaffolds
+everything else (playbook, component descriptor, navigation, workflows). See
+xref:main:quickstart.adoc[].
+====
+
+.How do I create a new site?
+[%collapsible]
+====
+`npx @inditextech/docouture-cli new <name>` from an existing git repository. See
+xref:main:quickstart.adoc[] and xref:main:cli-api.adoc[].
+====
+
+.Can documentation be versioned?
+[%collapsible]
+====
+Yes — standalone (a rolling stable tag alongside a prerelease) or versioned (every
+release its own immutable tag, kept forever). See xref:main:versioning-modes.adoc[].
+====
+
+.Does it support diagrams?
+[%collapsible]
+====
+Yes, via a self-hosted https://kroki.io[Kroki] service: mermaid, plantuml, bpmn,
+excalidraw and more, enabled by default. See xref:main:features.adoc[].
+====
+
+.What about syntax highlighting?
+[%collapsible]
+====
+Build-time, via https://shiki.style[Shiki] — set with `source-highlighter: shiki` in
+the playbook, already the default a scaffolded site ships with.
+====
+
+.Is search included?
+[%collapsible]
+====
+Yes — a full-text search index is built at build time and read directly by the UI
+bundle's own search dialog, no extra wiring required.
+====
+
+.How do I publish the site?
+[%collapsible]
+====
+`docouture publish gh-pages`, or the https://github.com/features/actions[GitHub]
+workflows `docouture new` already scaffolds. See
+xref:main:publishing-a-documentation.adoc[].
+====
+
+.Can AI agents help write the docs?
+[%collapsible]
+====
+Yes — `npx skills@latest add InditexTech/docouture --all` installs a set of agent
+skills that plan structure, draft content from the repo, and keep it in sync as the
+repo changes. See xref:main:ai-skills.adoc[].
+====
+
+.Is docouture open source?
+[%collapsible]
+====
+The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0 (the
+UI bundle's own fork of
+https://gitlab.com/antora/antora-ui-default[antora-ui-default] remains MPL-2.0, per its
+own LICENSE). The UI bundle is themed with Inditex's proprietary IOP Design System,
+though, which is *not* open source — a site built with this UI bundle is internal-only
+until that changes, regardless of the code's own license.
+====

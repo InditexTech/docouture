@@ -1,0 +1,43 @@
+= Modifying the navigation
+
+Each module's `nav.adoc` is a plain https://asciidoc.org[AsciiDoc] unordered list.
+Nesting is list depth
+(`*`, `**`, `***`); a linked item is `+xref:page.adoc[Title]+`; an unlinked item starts a
+new, unlinked heading in the side menu:
+
+[,asciidoc]
+----
+* Overview
+* xref:main:index.adoc[About]
+* xref:main:architecture.adoc[Architecture]
+* Getting started
+* xref:main:prerequisites.adoc[Prerequisites]
+* xref:main:quickstart.adoc[Quickstart]
+----
+
+This is exactly how this site's own `main:nav.adoc` groups Overview / Getting started /
+Guides / Reference / Additional information / Contributing — six headings, none of
+them a page of their own, each grouping a run of real pages underneath it.
+
+== The four names a rename has to keep in agreement
+
+Renaming a component (not just adding/removing nav entries) touches four places that
+all have to agree, or the site builds with zero pages — `docouture doctor` checks all
+four:
+
+[cols="1,2"]
+|===
+|Name |Set in
+
+|Component name |`docs/src/antora.yml` → `name`
+|Start page |`antora-playbook.yml` → `site.start_page`'s `<component>::` prefix
+|Content path |`antora-playbook.yml` → `content.sources[0].start_path`
+|Package name |`docs/package.json` → `name` (not load-bearing for
+https://antora.org[Antora], but drift here usually means something else drifted too)
+|===
+
+== Adding a new module's navigation
+
+Covered separately in xref:main:adding-a-module.adoc[] — a new module needs both a
+`nav.adoc` of its own *and* an entry in `docs/src/antora.yml`'s top-level `nav:` list
+and `nav_modules:`.

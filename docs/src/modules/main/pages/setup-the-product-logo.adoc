@@ -1,0 +1,40 @@
+= Setup the product logo
+
+The side-menu brand mark next to the site title is `site.keys.product_logo` (and, for
+the dark theme, `product_logo_dark`), served the same way the favicon is — from
+`ui.supplemental_files`:
+
+[,yaml]
+----
+site:
+  keys:
+    product_logo: /_/product-logo.png
+    product_logo_dark: /_/product-logo-dark.png
+
+ui:
+  supplemental_files: ./supplemental-ui
+----
+
+`docouture new` seeds both keys with placeholder artwork under
+`docs/supplemental-ui/product-logo.png` / `product-logo-dark.png`. Replace them with
+real logos, same filenames, and rebuild.
+
+== Why two files
+
+The brand mark sits on whatever the current theme's background is — see
+xref:main:ui-bundle.adoc[]'s theme section. `product_logo_dark` is swapped in
+automatically under the dark theme; omit it and `product_logo` is reused unchanged for
+both, which only reads well if the artwork already works on both backgrounds (a
+monochrome or already-inverted mark, for instance).
+
+== Sizing
+
+The brand mark's slot is a small, roughly-square product mark next to a *separately
+rendered* text title (the site's `title` from `docs/src/antora.yml`) — not a wide
+wordmark. A logo that already contains the product name as text usually duplicates
+what's already there next to it.
+
+== Removing it entirely
+
+Delete both keys — the side menu falls back to a text-only brand block (the site title
+alone, no mark) rather than failing the build.

@@ -1,0 +1,23 @@
+= Requirements
+
+What you need before scaffolding a site with `docouture new`.
+
+* *https://nodejs.org[Node.js] 24 or newer* — the CLI, the UI bundle and both
+  extension packages all declare `"engines": { "node": ">=24.0.0" }`.
+* *https://www.npmjs.com[npm] or https://pnpm.io[pnpm]* — `docouture new` detects one
+  from an existing lockfile/`packageManager` field, or falls back to how it was itself
+  invoked; `--pm` overrides the guess.
+* *An existing git repository* — `docouture new` scaffolds *into* a repository that
+  already has at least one commit; it does not create one. https://antora.org[Antora]
+  reads content from git, so a repository with zero commits builds a site with zero
+  pages.
+* *https://www.docker.com[Docker]* — only if you keep https://kroki.io[Kroki] diagrams
+  enabled (the default). `[mermaid]`/`[plantuml]`/`[bpmn]`/`[excalidraw]` blocks render
+  as plain literal text instead if Docker isn't available, rather than failing the
+  build.
+* *A https://github.com[GitHub] repository*, for the scaffolded publish workflows to
+  have somewhere to run — see xref:main:prerequisites.adoc[Prerequisites] for what a
+  *public* https://pages.github.com[GitHub Pages] site specifically needs.
+
+None of the above is required to try docouture locally: `docouture new` followed by
+`docouture dev` works against a private, unpublished repository just as well.

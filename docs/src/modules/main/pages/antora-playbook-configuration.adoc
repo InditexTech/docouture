@@ -1,0 +1,119 @@
+= Antora Playbook
+
+`antora-playbook.yml` is Antora's single entry-point config file — this site's own
+copy is the ground truth; what follows is what each key it sets actually does.
+Upstream reference: https://docs.antora.org/antora/latest/playbook/[Antora's playbook
+docs].
+
+== `site`
+
+[,yaml]
+----
+site:
+  title: docouture
+  start_page: ROOT::index.adoc
+  keys:
+    product_logo: /_/product-logo.png
+    product_logo_dark: /_/product-logo-dark.png
+    favicon: /_/favicon.ico
+----
+
+`start_page` is a resource ID — `<component>::index.adoc` — generating the redirect at
+the site root. `keys` is a flat map of arbitrary values the UI bundle reads (see
+xref:main:ui-bundle.adoc[] and xref:main:setup-the-product-logo.adoc[]/
+xref:main:setup-a-favicon.adoc[]) — it *cannot* hold a nested list, which is why
+`nav_modules`/`footer`/`llms` live in `antora.yml` instead
+(xref:main:antora-yml-configuration.adoc[]).
+
+== `content`
+
+[,yaml]
+----
+content:
+  sources:
+    - url: ..
+      start_path: docs/src
+      branches: [main]
+      tags: ['stable']
+----
+
+`url` names a git repository — `..` here, since the playbook sits one level below the
+repository root `docouture new` scaffolded into. `start_path` is repo-root relative.
+`branches`/`tags` decide which refs are aggregated — see
+xref:main:versioning-modes.adoc[] for what standalone vs. versioned mode sets here.
+
+== `ui`
+
+[,yaml]
+----
+ui:
+  bundle:
+    url: ./node_modules/@inditextech/docouture-ui-bundle/build/ui-bundle.zip
+    snapshot: false
+  supplemental_files: ./supplemental-ui
+----
+
+The UI bundle is installed as a real npm dependency and read straight out of
+`node_modules` — no build-time fetch from a URL. `supplemental_files` overlays
+`docs/supplemental-ui/*` onto the bundle at build time (the logo/favicon mechanism).
+
+== `output`
+
+`dir: build/site` — where `docouture publish` looks by default.
+
+== `urls`
+
+`html_extension_style: indexify` — every page publishes as `.../page/index.html`
+rather than `.../page.html`. Deliberately *no* `latest_version_segment` — see
+xref:main:versioning-modes.adoc[] and xref:main:features.adoc[] for why the
+`/latest/` alias is implemented differently here.
+
+== `runtime`
+
+`log.failure_level: warn` — a broken xref, a missing include target, or an unresolved
+attribute reference fails the build rather than shipping a gap. `log.level: info` —
+without it, every docouture extension's own diagnostic logging (search-index counts,
+version-report, https://kroki.io[Kroki]'s lifecycle) is silently dropped, since
+Antora's own default is `warn`.
+
+== `asciidoc`
+
+[,yaml]
+----
+asciidoc:
+  attributes:
+    experimental: ''
+    icons: font
+    sectanchors: ''
+    idprefix: ''
+    idseparator: '-'
+    source-highlighter: shiki
+    page-pagination: '@'
+    kroki-enabled: true
+    kroki-diagram-types: mermaid,plantuml,bpmn,excalidraw
+  extensions:
+    - '@inditextech/docouture-asciidoc-extensions'
+----
+
+`idprefix: ''`/`idseparator: '-'` mean a heading `== Getting Started` gets the ID
+`getting-started`, not https://asciidoctor.org[Asciidoctor]'s own default
+`_getting_started`. `page-pagination:
+'@'` turns on previous/next footer links for every page by default (`@` makes it a
+soft default — a page can still opt out with `:!page-pagination:`). `kroki-enabled`/
+`kroki-diagram-types` and `source-highlighter: shiki` are covered in
+xref:main:features.adoc[]. `asciidoc.extensions` is a different key from
+`antora.extensions` below — see xref:main:architecture.adoc[].
+
+== `antora`
+
+[,yaml]
+----
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      duplicate_latest_version: true
+----
+
+Registers the module switcher, footer, search index and llms.txt generation together
+— they can't be enabled individually. `duplicate_latest_version: true` is covered in
+xref:main:features.adoc[].

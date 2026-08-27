@@ -1,0 +1,16 @@
+= Reference
+
+What each piece of docouture actually is, not how to use it task-by-task — see
+xref:main:guides-overview.adoc[Guides] for the how-tos.
+
+* xref:main:cli-api.adoc[CLI API] — every `docouture` command and its flags.
+* Configuration — xref:main:antora-playbook-configuration.adoc[Antora Playbook],
+  xref:main:antora-yml-configuration.adoc[antora.yml]
+* xref:main:ui-bundle.adoc[UI Bundle] — the themed UI's configuration and built-in
+  chrome (theme, search, navigation, 404 page).
+* xref:main:custom-asciidoc-components.adoc[Custom AsciiDoc components] — tabs,
+  cards, accordions, feature-tabs, cta, and the inline macros.
+* xref:main:features.adoc[Features] — diagrams, syntax highlighting, AI ingestion,
+  link checking, URL routing.
+* xref:main:ai-skills.adoc[AI Skills] — the agent skill set that plans and drafts a
+  site's content.

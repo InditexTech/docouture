@@ -1,0 +1,51 @@
+= Glossary
+
+== Component
+
+An https://antora.org[Antora] unit of documentation: a directory with its own
+`antora.yml`, one or more `modules/`, and (optionally) several *versions*. A scaffolded
+site starts with exactly one component.
+
+== Module
+
+A subdivision of a component with its own `nav.adoc` and `pages/` tree. A scaffolded
+site starts with two: `ROOT` (the landing page only) and `main` (everything else).
+
+== Playbook
+
+`antora-playbook.yml` — Antora's single entry-point config file: which content to
+aggregate, which UI bundle to use, and which https://asciidoc.org[AsciiDoc]/Antora
+extensions to load. See xref:main:antora-playbook-configuration.adoc[].
+
+== Component descriptor
+
+`antora.yml` (this site's own lives at `docs/src/antora.yml`) — a component's name,
+title, version, navigation list, and the docouture-specific keys
+(`nav_modules`/`footer`/`llms`/`not_found_module`) that
+`@inditextech/docouture-antora-extensions` reads. See
+xref:main:antora-yml-configuration.adoc[].
+
+== Resource ID
+
+How Antora addresses content — `version@component:module:family$relative/path.adoc`,
+most of which defaults to the current page's own context. `xref:main:quickstart.adoc[]`
+is a resource ID, not a file path.
+
+== Standalone / Versioned
+
+The two versioning modes `docouture new --mode` offers. Standalone keeps a rolling
+`stable` tag alongside `main`'s prerelease; Versioned keeps every release as its own
+immutable `vX.Y.Z` tag forever. See xref:main:versioning-modes.adoc[].
+
+== Antora extension / Asciidoctor extension
+
+Two different things registered under two different playbook keys —
+`antora.extensions` hooks Antora's site-generation pipeline; `asciidoc.extensions`
+hooks the https://asciidoctor.org[Asciidoctor] content processor. See
+xref:main:architecture.adoc[].
+
+== Publish driver
+
+A package named `@inditextech/docouture-publish-<target>`, resolved from the site's own
+`node_modules` by `docouture publish <target>`. `gh-pages` is the only one docouture
+ships today.

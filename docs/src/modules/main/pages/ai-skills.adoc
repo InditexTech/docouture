@@ -1,0 +1,41 @@
+= AI Skills
+
+`npx skills@latest add InditexTech/docouture --all` installs a set of agent skills for
+authoring and maintaining a docouture site with a coding agent — separate from, and
+not scaffolded by, `docouture new` itself.
+
+[cols="1,3"]
+|===
+|Skill |What it's for
+
+|`docouture-getting-started`
+|The entry point for a repo with no site yet: scaffolding it if needed, planning its
+module/page structure, and drafting first content from whatever the repo actually
+has. This site was drafted this way — see xref:main:index.adoc[About].
+
+|`docouture-docs-internals`
+|The mechanics once a page/module needs to exist: the playbook, the component
+descriptor, the four names that must agree, the home-page vs. content-page patterns.
+
+|`docouture-writing-docs-pages`
+|https://asciidoc.org[AsciiDoc] itself: the language, `xref:` references, `nav.adoc`,
+and this site's own custom blocks (`[tabs]`, `[cards]`, `[accordion]`, …).
+
+|`docouture-documenting-changes`
+|The re-entry point once a site exists and is evolving: figuring out what a diff/PR
+changed, whether it needs a docs update, and keeping `AGENTS.md`'s documentation-state
+ledger honest.
+
+|`docouture-docs-versioning`
+|Cutting a release on a `versioned`-mode site: `docouture version`,
+`docs/.release-version`, and the release workflow. Relevant only in that mode — see
+xref:main:versioning-modes.adoc[].
+|===
+
+== The documentation-state ledger
+
+`docouture-documenting-changes` maintains a `## Documentation state` table in
+`AGENTS.md`: which pages were drafted straight from the repo's own code (and from
+what), versus hand-written — so a later pass can tell "still matches the code" apart
+from "needs a look" without re-deriving every page from scratch. This site's own
+`AGENTS.md` carries exactly that table.

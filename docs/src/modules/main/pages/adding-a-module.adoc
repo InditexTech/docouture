@@ -1,0 +1,49 @@
+= Adding a module
+
+A scaffolded site starts with two modules: `ROOT` (the landing page only) and `main`
+(everything else). Add a module when a section of the site earns its own switchable
+navigation, rather than living grouped inside `main`.
+
+== 1. Create the module's tree
+
+....
+docs/src/modules/<name>/
+  nav.adoc
+  pages/
+....
+
+== 2. List it in `docs/src/antora.yml`
+
+Add its `nav.adoc` alongside `main`'s own entry — never remove `main`'s:
+
+[,yaml]
+----
+nav:
+  - modules/main/nav.adoc
+  - modules/<name>/nav.adoc
+----
+
+== 3. Describe it under `nav_modules`
+
+A **list**, not a map — see xref:main:antora-yml-configuration.adoc[] for why a map
+silently breaks a hyphenated module slug:
+
+[,yaml]
+----
+nav_modules:
+  - module: main
+    title: Documentation
+    description: The core product story.
+    icon: design/grid-outlined
+  - module: <name>
+    title: <Title>
+    description: One-line description of this module.
+    icon: <group>/<name>
+----
+
+Once a second entry exists, the UI's module switcher appears automatically — with just
+one module, there's nothing to switch between.
+
+`icon` is `<group>/<name>` from the UI bundle's own vendored sprite, not a free-form
+name — search the design system's icon catalogue for a matching one, or browse
+`packages/ui-bundle/src/img/icons.yml` in the docouture source repository directly.

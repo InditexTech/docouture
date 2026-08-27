@@ -1,0 +1,36 @@
+* Overview
+* xref:main:index.adoc[About]
+* xref:main:architecture.adoc[Architecture]
+* xref:main:structure.adoc[Structure]
+* xref:main:glossary.adoc[Glossary]
+* Getting started
+* xref:main:prerequisites.adoc[Prerequisites]
+* xref:main:requirements.adoc[Requirements]
+* xref:main:quickstart.adoc[Quickstart]
+* Guides
+* xref:main:guides-overview.adoc[Overview]
+* xref:main:adding-a-module.adoc[Adding a module]
+* xref:main:adding-a-page.adoc[Adding a page]
+* xref:main:landing-page-modifications.adoc[Landing page modifications]
+* xref:main:modifying-the-navigation.adoc[Modifying the navigation]
+* xref:main:setup-a-favicon.adoc[Setup a favicon]
+* xref:main:setup-the-product-logo.adoc[Setup the product logo]
+* xref:main:versioning-modes.adoc[Versioning modes]
+* xref:main:releasing-a-documentation.adoc[Releasing a documentation]
+* xref:main:publishing-a-documentation.adoc[Publishing a documentation]
+* Reference
+* xref:main:reference-overview.adoc[Overview]
+* xref:main:cli-api.adoc[CLI API]
+* xref:main:antora-playbook-configuration.adoc[Antora Playbook]
+* xref:main:antora-yml-configuration.adoc[antora.yml]
+* xref:main:ui-bundle.adoc[UI Bundle]
+* xref:main:custom-asciidoc-components.adoc[Custom AsciiDoc components]
+* xref:main:features.adoc[Features]
+* xref:main:ai-skills.adoc[AI Skills]
+* Additional information
+* xref:main:additional-information-overview.adoc[Overview]
+* xref:main:changelog/index.adoc[Changelog]
+* xref:main:release-notes/index.adoc[Release notes]
+* xref:main:faq.adoc[FAQ]
+* Contributing
+* xref:main:contributing.adoc[Overview]

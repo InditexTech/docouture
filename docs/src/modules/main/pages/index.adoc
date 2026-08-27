@@ -1,0 +1,40 @@
+= About
+
+docouture is a documentation platform: an https://antora.org[Antora] content pipeline, a
+UI bundle themed with Inditex's IOP Design System, and the `docouture` CLI that ties them
+together — scaffolding, serving, building and publishing a site without hand-wiring an
+Antora playbook from scratch.
+
+It ships three things a documentation site actually needs:
+
+* *Consistent themed UI* — `@inditextech/docouture-ui-bundle`, a themed fork of
+  https://gitlab.com/antora/antora-ui-default[antora-ui-default] carrying dark/light
+  mode, a version switcher, full-text search, and a set of authoring blocks
+  (`[tabs]`, `[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]`) with no plain
+  https://asciidoc.org[AsciiDoc] equivalent — see xref:main:ui-bundle.adoc[] and
+  xref:main:custom-asciidoc-components.adoc[].
+* *Power-up AsciiDoc and Antora extensions* — a module switcher, a site footer, a
+  full-text search index, `llms.txt`/`llms-full.txt` generation,
+  https://kroki.io[Kroki] diagram rendering and https://shiki.style[Shiki] syntax
+  highlighting, wired up by default — see xref:main:features.adoc[].
+* *Tooling and scaffolding* — `docouture new` scaffolds a site into an existing git
+  repository; `docouture dev`/`build`/`publish` run it; `docouture doctor` checks it's
+  healthy; `docouture version`/`upgrade`/`eject`/`teardown` cover the rest — see
+  xref:main:cli-api.adoc[].
+
+== Who it's for
+
+Mainly InditexTech teams documenting an InditexTech Open Source project — this site
+you're reading is itself one, scaffolded the same way xref:main:quickstart.adoc[Quickstart]
+describes. Nothing about the CLI or the Antora pipeline underneath enforces that
+audience, but the themed UI bundle depends on Inditex's proprietary IOP Design System
+(see xref:main:faq.adoc[the FAQ]), which is what actually keeps a site built with it
+internal to InditexTech for now.
+
+== What it isn't
+
+docouture is not a general-purpose static site generator — it's opinionated about
+being an Antora site built with this specific UI bundle. Antora's own content model
+(components, versions, modules, resource IDs) is the model docouture builds on, not one
+it hides; see xref:main:architecture.adoc[] and xref:main:glossary.adoc[] for the
+vocabulary.

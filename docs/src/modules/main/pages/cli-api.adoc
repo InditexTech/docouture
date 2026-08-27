@@ -1,0 +1,97 @@
+= CLI API
+
+Every `docouture` command (`@inditextech/docouture-cli`), reproduced from its own
+`--help` text. All ten accept `--dir <path>` to run from anywhere inside the target
+repository — the actual root is found by walking up, same as `git` itself.
+
+Global flags, valid before or after the command name: `-h`/`--help`, `-v`/`--version`,
+`--json` (machine-readable output where supported — currently `doctor`), `--verbose`
+(same as `DEBUG=docouture`), `--no-color`.
+
+== `docouture new <name>`
+
+Scaffold an https://antora.org[Antora] documentation site into `docs/` (and its
+workflows into `.github/workflows/`), plus `AGENTS.md`, into the root of an existing
+git repository. Prompts interactively for anything not given as a flag, in a terminal;
+`--yes` skips the wizard and uses defaults for everything unset.
+
+[cols="1,2"]
+|===
+|Flag |Effect
+
+|`--dir <path>` |Repository root to scaffold into (default: cwd, or its enclosing repo)
+|`--title <title>` |Site title (default: title-cased from `<name>`)
+|`--mode <mode>` |`standalone` (default) or `versioned` — see
+xref:main:versioning-modes.adoc[]
+|`--pm <pm>` |`npm` or `pnpm` (default: auto-detected)
+|`--yes` |Skip the interactive wizard
+|===
+
+== `docouture version <value>`
+
+Set the version recorded in `docs/src/antora.yml`. `--file <path>` overrides `--dir`
+with a literal path. `--prerelease`/`--stable` are mutually exclusive. See
+xref:main:releasing-a-documentation.adoc[].
+
+== `docouture dev`
+
+Build the site and serve it with live reload on every change under `docs/` or to
+`antora-playbook.local.yml`. `--port <port>` (default `5000`).
+
+== `docouture build`
+
+Build the site once — a thin wrapper around the site's own `npm run build`
+(`antora --fetch antora-playbook.yml`).
+
+== `docouture publish <target>`
+
+Publish whatever is already at `output.dir` (default `build/site`) using the
+`@inditextech/docouture-publish-<target>` driver — that package must be a
+devDependency of the site itself. Options come from `docs/package.json`'s own
+`"docouture".publish.<target>` object, overridden by any `--<option>` flags given
+here; `--user-name`/`--user-email` combine into a nested `{user:{name,email}}` option.
+See xref:main:publishing-a-documentation.adoc[].
+
+[,console]
+----
+$ docouture publish gh-pages --branch gh-pages
+----
+
+== `docouture doctor`
+
+Check environment and site health: https://nodejs.org[Node] version, the four names
+that must agree (see xref:main:modifying-the-navigation.adoc[]), git history, that
+Antora is installed, and (advisory only) whether `AGENTS.md`/the scaffolded skills are
+still present and the `docs/release` label exists. `--json` for a machine-readable
+report.
+
+== `docouture upgrade`
+
+Re-sync `.github/workflows/` and agent support files (`AGENTS.md`, skills) from the
+CLI's current templates. Workflows are fully overwritten; `AGENTS.md` is merged — only
+docouture's own managed section is replaced. Never touches `docs/` content itself.
+`--title <title>` overrides the title read back from `antora.yml`; `--dry-run` lists
+what would be written without writing it.
+
+== `docouture eject <target>`
+
+Copy a bundled default file out into `docs/` for local customization. Today: `kroki` —
+`docs/kroki-compose.yml`, the https://www.docker.com[Docker] Compose definition the
+https://kroki.io[Kroki] prewarm step starts automatically. Refuses to overwrite an
+existing file.
+
+== `docouture teardown <target>`
+
+Stop a service docouture started for you. Today: `kroki` — runs `docker compose down`
+against whichever `kroki-compose.yml` is actually in effect (an ejected one if it
+exists, else the bundled default).
+
+== `docouture completion <bash|zsh>`
+
+Print a shell completion script to stdout.
+
+[,console]
+----
+$ eval "$(docouture completion bash)"
+$ docouture completion zsh > "${fpath[1]}/_docouture"
+----

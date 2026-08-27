@@ -1,0 +1,57 @@
+= Quickstart
+
+Scaffold a site and see it running locally.
+
+== 1. Scaffold
+
+[,console]
+----
+$ npx @inditextech/docouture-cli new my-docs
+----
+
+Answers `Site slug`/`Site title`/`Add an extra URL segment?`/`Versioning mode`/
+`Package manager` interactively, or take every default non-interactively with
+`--yes`. Writes `docs/`, `.github/workflows/docouture-*.yml`, and merges a managed
+section into `AGENTS.md` — see xref:main:cli-api.adoc[] for every flag.
+
+== 2. Install and run
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,console]
+----
+$ cd docs
+$ pnpm install
+$ pnpm run dev
+----
+****
+
+[tab,label="npm"]
+****
+[,console]
+----
+$ cd docs
+$ npm install
+$ npm run dev
+----
+****
+--
+
+`pnpm run dev`/`npm run dev` wraps `docouture dev`: it builds the site once, serves it
+on http://localhost:5000, and rebuilds/reloads on every change under `docs/` or to
+`antora-playbook.local.yml`.
+
+== 3. Verify
+
+Open http://localhost:5000 — the landing page (`ROOT/pages/index.adoc`) and a
+placeholder `main` module should both be there. Run `docouture doctor` from the
+repository root at any point to check the four names that must agree, that
+https://antora.org[Antora] resolves, and that the repository has at least one commit.
+
+== Next
+
+* xref:main:adding-a-page.adoc[Add a page]
+* xref:main:landing-page-modifications.adoc[Replace the landing page's placeholders]
+* xref:main:publishing-a-documentation.adoc[Publish it]

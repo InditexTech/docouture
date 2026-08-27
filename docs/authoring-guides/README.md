@@ -38,7 +38,7 @@ These levels mark the **minimum, not a ceiling**. A product with more complex or
 | 5. Additional information | `overview` 🔴 (includes contact, support & security reporting) · `changelog` 🔴 · `release-notes` 🔴 · `faq` 🟠 · `eol`/migration guides 🔵 | [sections/additional-information.md](sections/additional-information.md) |
 | 6. Contributing | `overview` 🔴 | [sections/contributing.md](sections/contributing.md) |
 
-The **home page** (`ROOT`'s `index.adoc`) sits outside the six sections — it is the site's entry point, not a member of Overview. It has its own guide: *(follow-up PR)*.
+The **home page** (`ROOT`'s `index.adoc`) sits outside the six sections — it is the site's entry point, not a member of Overview. It has its own guide: [home.md](home.md).
 
 ## General rules
 
@@ -161,4 +161,4 @@ Every page guide in `sections/` follows the same contract, so both humans and ag
 - [Reference section](sections/reference.md) — `overview`, `configuration`, API/CLI/SDK surface pages
 - [Additional information section](sections/additional-information.md) — `overview` (contact, support & security), `changelog`, `release-notes`, `faq`, `eol`/migrations
 - [Contributing section](sections/contributing.md) — `overview`
-- Home page — *(follow-up PR)*
+- [Home page](home.md) — `ROOT`'s `index.adoc`, the site's storefront

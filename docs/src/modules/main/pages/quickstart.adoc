@@ -1,0 +1,92 @@
+= Quickstart
+
+Scaffold a site and see it running locally.
+
+== 1. Scaffold
+
+[,console]
+----
+$ npx @inditextech/docouture-cli new my-docs
+----
+
+Asks five questions interactively, or take every default non-interactively with `--yes`
+(see xref:main:reference-cli.adoc[] for every flag to script them individually):
+
+* **Site slug** — lowercase, hyphenated. Names `package.json` and, unless the next
+  question opts in, the Antora component too.
+* **Site title** — shown in the page title and the nav header.
+* **Add an extra URL segment?** — off by default. GitHub Pages project sites already
+  publish under `https://<org>.github.io/<repo>/`; a real component name would add a
+  further `/<name>/` segment on top of that. Only answer yes if this repository will
+  host more than one documentation component later.
+* **Versioning mode** — `Standalone` (main always builds as the prerelease/preview
+  version; a release moves a rolling `stable` tag, no historical archive) or
+  `Versioned` (main always builds as the prerelease/preview version; every release is
+  an immutable `vX.Y.Z` git tag) — see xref:main:guides-versioning-modes.adoc[] for the
+  difference in full.
+* **Package manager** — `npm` or `pnpm`, pre-filled from an existing lockfile or
+  however `docouture` itself was invoked.
+
+Writes `docs/`, `.github/workflows/docouture-*.yml`, and merges a managed section into
+`AGENTS.md`.
+
+== 2. Install and run
+
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,console]
+----
+$ cd docs
+$ pnpm install
+$ pnpm run dev
+----
+****
+
+[tab,label="npm"]
+****
+[,console]
+----
+$ cd docs
+$ npm install
+$ npm run dev
+----
+****
+--
+
+`pnpm run dev`/`npm run dev` wraps `docouture dev`: it builds the site once, serves it
+on http://localhost:5000, and rebuilds/reloads on every change under `docs/` or to
+`antora-playbook.local.yml`.
+
+== 3. Check the setup with `docouture doctor`
+
+Open http://localhost:5000 — the landing page (`ROOT/pages/index.adoc`) and a
+placeholder `main` module should both be there.
+
+Run `docouture doctor` from the repository root at any point to catch the mistakes
+that otherwise only surface as a confusing build failure later:
+
+* **Node version** — the Node actually running `docouture` against the site's own
+  `engines.node` floor (the same Node `npm run build`/`docouture dev` will use).
+* **The four names agree** — `docs/antora.yml`'s `name` against the playbook's
+  `site.start_page` component, the playbook's `start_path` against where
+  `docs/antora.yml` actually lives, and `package.json`'s `name` against the component
+  name (skipped when the component is the reserved `ROOT`, i.e. no URL segment was
+  chosen). Any mismatch here is what makes a site build to zero pages or fail with
+  "start page not found".
+* **Git history** — Antora reads content from git; a repository with no commits
+  resolves the content source to nothing and silently builds zero pages.
+* **`antora` is installed** — that `npm install`/`pnpm install` was actually run in
+  `docs/`, rather than letting a raw `MODULE_NOT_FOUND` be the first sign of it.
+* **`AGENTS.md` is present** (advisory) — regenerate it with `docouture upgrade` if
+  missing, or restore it from version control.
+* **The `docs/release` GitHub label exists** (advisory, needs the `gh` CLI) — without
+  it, `docouture-release.yml`'s merge-triggers-a-release path is a silent no-op; only
+  its `workflow_dispatch` path still works.
+
+== Next
+
+* xref:main:guides-adding-a-page.adoc[Add a page]
+* xref:main:guides-landing-page-modifications.adoc[Replace the landing page's placeholders]
+* xref:main:guides-publishing-a-documentation.adoc[Publish it]

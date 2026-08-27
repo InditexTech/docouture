@@ -1,0 +1,118 @@
+= Antora Descriptor
+
+`docs/src/antora.yml` is the component descriptor — every directory Antora treats as
+documentation needs one. It's still a file literally named `antora.yml` on disk; this
+page just gives it a clearer name than the filename itself does. Upstream reference:
+https://docs.antora.org/antora/latest/component-version/[Antora's component-version
+docs].
+
+== Core keys
+
+[,yaml]
+----
+name: ROOT
+title: docouture
+version: prerelease
+prerelease: true
+start_page: ROOT:index.adoc
+nav:
+  - modules/main/nav.adoc
+----
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`name` |Either a real URL segment, or Antora's reserved `ROOT`, which contributes no
+segment at all — decided by `docouture new`'s "extra URL path segment?" question
+(default: no/`ROOT`).
+|`title` |The component's own display title (distinct from the playbook's `site.title`).
+|`version` / `prerelease` |Differ per git ref — see xref:main:guides-versioning-modes.adoc[].
+|`start_page` |This component's own default page, resource-ID form.
+|`nav` |Lists every module's `nav.adoc` — `ROOT` is deliberately absent; the landing
+page borrows a module's nav instead (see xref:main:guides-landing-page-modifications.adoc[]).
+|===
+
+== `nav_modules` — read by `@inditextech/docouture-antora-extensions`
+
+[,yaml]
+----
+nav_modules:
+  - module: main
+    title: Documentation
+    description: One-line description.
+    icon: design/grid-outlined
+----
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`module` |Which module (a directory under `modules/`) this entry describes.
+|`title` |Label shown in the module switcher.
+|`description` |One-line description shown alongside the title in the switcher.
+|`icon` |`<group>/<name>` from the UI bundle's own vendored sprite, not a free-form name.
+|===
+
+A **list**, not a map keyed by module — deliberately. Antora's content aggregator runs
+the whole descriptor through `camelCaseKeys`, which recurses into nested objects and
+rewrites their *keys*; a map keyed by a hyphenated module slug (`store-standalone`)
+would arrive renamed (`storeStandalone`) and match nothing.
+
+== `not_found_module`
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`not_found_module` |Which module's navigation the generated 404 page's side menu
+shows. With one module there's only one sensible value; update it alongside
+`nav_modules` if a second module is added and the 404 page should point elsewhere.
+|===
+
+== `footer` — read by `@inditextech/docouture-antora-extensions`
+
+[,yaml]
+----
+footer:
+  groups:
+    - title: Resources
+      links:
+        - text: Home
+          url: ROOT:index.adoc
+        - text: Quickstart
+          url: main:quickstart.adoc
+----
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`groups[].title` |Column heading for this group of links.
+|`groups[].links[].text` |Visible link label.
+|`groups[].links[].url` |Either a page ID or a literal URL; one that resolves to no
+page is dropped with a warning rather than rendered dead.
+|===
+
+A list of link groups, positional (index 0 → column 2, 1 → column 3's fallback — used
+only with fewer than two switchable modules, 2 → column 4), not keyed.
+
+== `llms` — read by `@inditextech/docouture-antora-extensions`
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`summary` |Becomes the blockquote under the site title in the generated `llms.txt`.
+|`exclude` |A list of page IDs left out of both generated files (`llms.txt`,
+`llms-full.txt`).
+|===
+
+Both keys are optional. See xref:main:reference-integrations.adoc[].
+
+== Why these three live here, not in the playbook
+
+`site.keys` in the playbook is declared a flat primitive map — it cannot carry a
+nested list. The component descriptor is the one place a nested structure can be
+authored per-component, which is why `nav_modules`/`footer`/`llms` all live here
+instead.

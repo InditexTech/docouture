@@ -14,7 +14,7 @@ let server: DevServer | undefined
 async function writeFixtureSite(root: string, opts: { siteUrl?: string } = {}): Promise<void> {
   await mkdir(join(root, 'build', 'site'), { recursive: true })
   await writeFile(join(root, 'build', 'site', 'index.html'), '<html><body><h1>hi</h1></body></html>', 'utf8')
-  await mkdir(join(root, 'docs'), { recursive: true })
+  await mkdir(join(root, 'src'), { recursive: true })
   const siteBlock = opts.siteUrl ? `site:\n  url: ${opts.siteUrl}\n` : 'site:\n  title: Fixture\n'
   await writeFile(
     join(root, 'antora-playbook.local.yml'),
@@ -48,7 +48,7 @@ describe('startDevServer', () => {
   })
 
   it('builds once up front when there is no build output yet', async () => {
-    await mkdir(join(siteRoot, 'docs'), { recursive: true })
+    await mkdir(join(siteRoot, 'src'), { recursive: true })
     await writeFile(join(siteRoot, 'antora-playbook.local.yml'), 'site:\n  title: Fixture\n', 'utf8')
     const runBuild = vi.fn(async () => {
       await mkdir(join(siteRoot, 'build', 'site'), { recursive: true })
@@ -64,7 +64,7 @@ describe('startDevServer', () => {
   })
 
   it('throws when the initial build fails and there is no prior output', async () => {
-    await mkdir(join(siteRoot, 'docs'), { recursive: true })
+    await mkdir(join(siteRoot, 'src'), { recursive: true })
     await writeFile(join(siteRoot, 'antora-playbook.local.yml'), 'site:\n  title: Fixture\n', 'utf8')
     const runBuild = vi.fn(async () => false)
 
@@ -125,7 +125,7 @@ describe('startDevServer', () => {
 
     // Give the SSE connection a moment to register before triggering a change.
     await new Promise((r) => setTimeout(r, 100))
-    await writeFile(join(siteRoot, 'docs', 'touched.adoc'), 'x', 'utf8')
+    await writeFile(join(siteRoot, 'src', 'touched.adoc'), 'x', 'utf8')
 
     await Promise.race([
       streamPromise,

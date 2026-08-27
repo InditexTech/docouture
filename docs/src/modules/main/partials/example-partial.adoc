@@ -1,0 +1,8 @@
+This paragraph lives in its own file under `modules/main/partials/` and is pulled
+into whichever page includes it — edit it once, and every page that includes it
+picks up the change.
+
+// tag::callout[]
+This line is wrapped in a tagged region — a page can include just this part with
+`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+// end::callout[]

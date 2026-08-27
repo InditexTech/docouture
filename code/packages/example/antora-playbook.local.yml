@@ -76,4 +76,10 @@ asciidoc:
 
 antora:
   extensions:
-    - '@inditextech/docouture-antora-extensions'
+    # `changelog_path` overridden here: this playbook lives at
+    # packages/example, three levels below the repo root, not one level
+    # below it like docs/antora-playbook.yml — the default
+    # `playbook.dir/../code/CHANGELOG.md` resolution only holds for the
+    # latter. See changelog-pages.js's own header comment.
+    - require: '@inditextech/docouture-antora-extensions'
+      changelog_path: ../../CHANGELOG.md

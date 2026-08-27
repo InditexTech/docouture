@@ -126,6 +126,10 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     pmLockfile: pm.lockfile,
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
+    // Same reasoning as repoIgnoreGlob below: package.json (the only
+    // template file this placeholder appears in) is never re-copied by
+    // upgrade either, so there's nothing meaningful to compute it from.
+    pmPackageManagerField: 'unused-by-upgrade',
     // upgrade never re-copies docs/ (see below) — package.json, the only
     // template file this placeholder appears in, is never touched here — so
     // there's nothing meaningful to compute it from. Not an empty string:

@@ -1,0 +1,21 @@
+= Changelog
+
+docouture's own changelog is `code/CHANGELOG.md` in the
+https://github.com/InditexTech/docouture[source repository] — the unabridged,
+https://keepachangelog.com/en/1.1.0/[Keep a Changelog]-format record, grouped into
+Added/Fixed/Documentation/Deprecated/Removed/Security sections under an
+`## [Unreleased]` heading until a version is actually cut.
+
+In contrast, xref:main:release-notes/index.adoc[Release notes] summarizes what
+matters to *users* of a given release, not every commit-level entry.
+
+== Convention
+
+Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipped the
+change (not a tracking issue). Not every merged PR gets one — a PR labelled
+`skip-release`, or carrying only an internal/epic label with no real user-facing
+category, is intentionally left out.
+
+TIP: `[Unreleased]` — what's landed but not yet cut into a release — is never mirrored
+here; see `code/CHANGELOG.md` directly for that. Every *cut* version below, though, is
+generated straight from that same file at build time, so it can't drift from it.

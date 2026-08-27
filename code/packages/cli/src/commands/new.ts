@@ -496,6 +496,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     pmLockfile: pm.lockfile,
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
+    pmPackageManagerField: pm.packageManagerField,
     repoIgnoreGlob: repoIgnoreGlob(target),
   }
 

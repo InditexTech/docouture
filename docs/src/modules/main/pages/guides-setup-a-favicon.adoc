@@ -1,0 +1,41 @@
+= Setup a favicon
+
+The browser tab icon is a `site.keys.favicon` value in `antora-playbook.yml`, served
+from a file under `ui.supplemental_files`:
+
+[,yaml]
+----
+site:
+  keys:
+    favicon: /_/favicon.ico
+
+ui:
+  supplemental_files: ./supplemental-ui
+----
+
+`docouture new` already wires this up with a placeholder — replace
+`docs/supplemental-ui/favicon.ico` with a real one, same filename, and rebuild. The
+`/_/` prefix is the UI bundle's own output directory (`ui.output_dir`, default `_`),
+not the site root — supplemental files land there, which is why the key isn't just
+`/favicon.ico`.
+
+== What actually reads at that size
+
+A favicon renders at 16–32px in a browser tab — full logo artwork (fine detail,
+gradients, a wordmark) turns to mush at that size. Use a flat, single-colour
+simplified mark instead: the product symbol alone (drop any text), filled solid in
+black, white, or the brand's own solid accent — no gradients, no thin strokes. The
+seeded placeholder is a multi-res `.ico` (16×16 + 32×32 embedded); that's still the
+safest container since browsers pick whichever embedded size fits, though a plain PNG
+works too — `head-icons.hbs` only ever emits a single `<link rel="icon">`, regardless
+of format.
+
+== Using a different filename
+
+Rename the file under `supplemental-ui/` and update `site.keys.favicon` to match — the
+path is a literal, not a convention https://antora.org[Antora] infers.
+
+== Removing it entirely
+
+Delete the `favicon` key (and the file, if nothing else in `supplemental-ui/`
+references it) — the UI bundle falls back to no favicon rather than failing the build.

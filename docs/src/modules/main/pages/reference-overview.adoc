@@ -1,0 +1,19 @@
+= Reference
+
+What each piece of docouture actually is, not how to use it task-by-task — see
+xref:main:guides-overview.adoc[Guides] for the how-tos. Grouped by what it is:
+
+* xref:main:reference-configuration.adoc[Configuration] — every key in the Antora
+  playbook and the component descriptor, what it does.
+* xref:main:reference-cli.adoc[CLI] — every `docouture` command, its
+  arguments and flags.
+* xref:main:reference-ui-bundle.adoc[UI Bundle] — the themed UI's built-in chrome
+  (theme, search, navigation, 404 page) and what of it is configurable.
+* xref:main:reference-asciidoc.adoc[AsciiDoc] — the language itself, and this
+  site's own custom blocks, each with a live rendered example.
+* xref:main:reference-integrations.adoc[Integrations] — diagrams, syntax
+  highlighting, search, AI ingestion, link checking and URL routing, grouped by
+  what they're for.
+* xref:main:reference-ai-first-approach.adoc[AI-First approach] — the philosophy
+  behind treating docs as something an agent reads and writes, and the skill set
+  that does it.

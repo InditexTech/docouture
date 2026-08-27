@@ -1,6 +1,6 @@
 ---
-name: writing-docs-pages
-description: "How to author AsciiDoc content in this Antora documentation site — the content tree, xref: references, nav.adoc, admonitions, code blocks, and this site's own custom blocks (tabs, cards, accordion, feature-tabs, cta, label:/mono: macros). USE WHEN writing or editing a .adoc page, adding a page to the nav, fixing a broken xref, or reaching for a block like tabs/cards/accordion. EXAMPLES: 'add a page', 'my xref doesn't resolve', 'the build fails on a warning', 'add tabs for pnpm/npm/yarn commands', 'group these FAQ items', 'add a card grid'."
+name: docouture-writing-docs-pages
+description: "How to author AsciiDoc content in a docouture Antora documentation site — the content tree, xref: references, nav.adoc, admonitions, code blocks, and this site's own custom blocks (tabs, cards, accordion, feature-tabs, cta, label:/mono: macros). USE WHEN writing or editing a .adoc page, adding a page to the nav, fixing a broken xref, or reaching for a block like tabs/cards/accordion. EXAMPLES: 'add a page', 'my xref doesn't resolve', 'the build fails on a warning', 'add tabs for pnpm/npm/yarn commands', 'group these FAQ items', 'add a card grid'."
 ---
 
 # Writing docs pages
@@ -19,7 +19,7 @@ where this skill and the upstream Asciidoctor docs differ, follow this skill.
   `label:`/`mono:` inline macros, and a few table/video sizing attributes.
 
 For the home page vs. content page patterns, mono- vs. multi-module sites, and the
-playbook/component-descriptor mechanics, see the `docs-internals` skill.
+playbook/component-descriptor mechanics, see the `docouture-docs-internals` skill.
 
 ## Where content lives
 
@@ -27,7 +27,8 @@ playbook/component-descriptor mechanics, see the `docs-internals` skill.
 docs/src/
   antora.yml                  component descriptor: name, title, version, nav
   modules/
-    ROOT/                     the default module; its name is omitted from resource IDs
+    ROOT/                     the home page only — see docouture-docs-internals
+    main/                     the default content module; every other section starts here
       nav.adoc                the navigation tree for this module
       pages/*.adoc            one page per file — these become site URLs
 ```
@@ -37,7 +38,7 @@ created when first needed, with these exact names — Antora keys off them and i
 anything else:
 
 | directory      | family        | referenced as                  |
-| -------------- | ------------- | ------------------------------ |
+| -------------- | ------------- | ------------------------------- |
 | `pages/`       | `page$`       | `xref:name.adoc[]`             |
 | `partials/`    | `partial$`    | `include::partial$name.adoc[]` |
 | `examples/`    | `example$`    | `include::example$name.json[]` |
@@ -56,10 +57,10 @@ Everything left of the filename is optional and defaults to the current page's c
 Inside the same module:
 
 | reference                        | means                                                                        |
-| -------------------------------- | ---------------------------------------------------------------------------- |
+| --------------------------------- | ------------------------------------------------------------------------------ |
 | `xref:index.adoc[Home]`          | a page in the same module                                                    |
 | `xref:guide/setup.adoc[]`        | a page in a subdirectory of `pages/` — empty text uses the target's title    |
-| `xref:other-module:index.adoc[]` | a page in another module — only in a multi-module site, see `docs-internals` |
+| `xref:other-module:index.adoc[]` | a page in another module — see `docouture-docs-internals` for when a repo has more than `ROOT` + `main` |
 | `xref:index.adoc#install[]`      | a fragment on another page                                                   |
 | `include::partial$intro.adoc[]`  | a partial from the same module                                               |
 
@@ -70,7 +71,7 @@ file-relative.
 ## Where a change goes
 
 | you want to                    | do                                                                                                                                             |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | add a page                     | create `docs/src/modules/<module>/pages/name.adoc` **and** add an `xref:` to that module's `nav.adoc`                                          |
 | add a section to the nav       | edit `nav.adoc` — nesting is list depth (`*`, `**`, `***`); a bare, unlinked list item can group xrefs under a heading with no page of its own |
 | reuse a chunk of prose         | `docs/src/modules/<module>/partials/name.adoc`, included as `partial$name.adoc`                                                                |
@@ -94,19 +95,19 @@ file-relative.
 - **Unconstrained formatting needs doubled marks.** `**bold**` mid-word, `__italic__`
   mid-word. The single-mark form adjacent to a word character is not formatting at all.
 - **A cross-module xref only resolves inside a multi-module site**, and only once both
-  modules are listed under `docs/src/antora.yml`'s `nav:` — see `docs-internals`.
+  modules are listed under `docs/src/antora.yml`'s `nav:` — see `docouture-docs-internals`.
 
 ## Page attributes the UI reads
 
 | attribute                                             | effect                                                                                                                                                  |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `description`                                         | hero excerpt (below the title) AND `<meta name="description">`                                                                                          |
 | `page-tags`                                           | comma-separated; one label pill each in the hero                                                                                                        |
 | `page-action` / `page-action-url`                     | primary hero button — renders only when BOTH are set                                                                                                    |
 | `page-action-secondary` / `page-action-secondary-url` | secondary hero button, same rule                                                                                                                        |
 | `page-hero-image` / `page-hero-image-alt`             | hero illustration                                                                                                                                       |
-| `page-nav-module`                                     | which module's nav tree the side menu shows for this page — set on `ROOT`'s own landing page in a multi-module site, since `ROOT` has no nav of its own |
-| `page-layout: home`                                   | the marketing home-page layout — see `docs-internals`'s page-patterns reference                                                                         |
+| `page-nav-module`                                     | which module's nav tree the side menu shows for this page — set on `ROOT`'s own landing page, since `ROOT` never has its own nav.adoc                  |
+| `page-layout: home`                                   | the marketing home-page layout — see `docouture-docs-internals`'s page-patterns reference                                                               |
 | `page-role: -hero`                                    | suppresses the hero entirely                                                                                                                            |
 | `page-role: -toc`                                     | suppresses the right-hand table of contents                                                                                                             |
 | `page-pagination`                                     | enables the previous/next footer links                                                                                                                  |

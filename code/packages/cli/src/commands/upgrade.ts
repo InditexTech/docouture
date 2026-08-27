@@ -139,29 +139,31 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const agentsMdFile = join(target, AGENTS_MD_FILENAME)
 
   // Unlike `new.ts`, this command's whole purpose is to overwrite what's
-  // already there — workflows and agent skills are meant to be regenerable
-  // from the template on every upgrade, not merged with local edits (there
-  // is no content-hash/diff tracking anywhere in this CLI to tell a stock
-  // file from a user-edited one). `docs/` itself — the starter content a
-  // site has since written its own pages into — is never touched here.
-  // AGENTS.md is the one exception: copyTemplate's own SKIP_FILENAMES skip
-  // (see copy-template.ts) leaves it untouched by the walk above, and it's
-  // merged instead — see lib/agents-md.ts for why a blind overwrite here
-  // would silently destroy the 'Documentation state' table
-  // `documenting-your-repo` maintains outside docouture' own managed section.
+  // already there — workflows are meant to be regenerable from the
+  // template on every upgrade, not merged with local edits (there is no
+  // content-hash/diff tracking anywhere in this CLI to tell a stock file
+  // from a user-edited one). `docs/` itself — the starter content a site
+  // has since written its own pages into — is never touched here. Skills
+  // are never touched here either: `docouture upgrade` only re-syncs the
+  // starter site and its GitHub workflows, same as `docouture new` only
+  // scaffolds them — skills are a separate, self-serve install via
+  // `npx skills add InditexTech/docouture`. AGENTS.md is the one exception:
+  // copyTemplate's own SKIP_FILENAMES skip (see copy-template.ts) leaves it
+  // untouched by the walk above, and it's merged instead — see
+  // lib/agents-md.ts for why a blind overwrite here would silently destroy
+  // the 'Documentation state' table the docouture-documenting-changes skill
+  // maintains outside docouture' own managed section.
   if (dryRun) {
     const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
-    const plannedAgentSupport = await copyTemplate(agentSupportDir, target, values, { dryRun: true })
 
     console.log('would write:')
-    for (const path of [...plannedWorkflows, ...plannedAgentSupport, agentsMdFile]) {
+    for (const path of [...plannedWorkflows, agentsMdFile]) {
       console.log(`  ${relative(target, path)}`)
     }
     return 0
   }
 
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
-  await copyTemplate(agentSupportDir, target, values)
 
   const existingAgentsMd = (await exists(agentsMdFile)) ? await readFile(agentsMdFile, 'utf8') : undefined
   const renderedAgentsMd = await renderTemplateFile(join(agentSupportDir, AGENTS_MD_FILENAME), values)
@@ -173,8 +175,6 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // are actually just '.github/workflows', 'AGENTS.md' etc. at the root.
   console.log(`updated ${relative(target, workflowsDir)}`)
   console.log(`updated ${relative(target, agentsMdFile)}`)
-  console.log(`updated ${relative(target, join(target, '.opencode', 'skills'))}`)
-  console.log(`updated ${relative(target, join(target, '.claude', 'skills'))}`)
 
   return 0
 }

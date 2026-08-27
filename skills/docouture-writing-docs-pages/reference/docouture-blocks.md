@@ -99,7 +99,7 @@ Answer two.
 ## Feature tabs
 
 A media-plus-prose switcher for a handful of top-level capabilities — used on the home
-page (see the `docs-internals` skill's `reference/page-patterns.md`).
+page (see the `docouture-docs-internals` skill's `reference/page-patterns.md`).
 
 ```adoc
 [feature-tabs]

@@ -1,14 +1,14 @@
 ---
-name: docs-versioning
-description: "How to cut a release or a prerelease on this Antora documentation site, scaffolded with Versioned (Full History) mode: docouture version, docs/.release-version, and the docouture-release.yml workflow. USE WHEN bumping a version, cutting a release, configuring what a release tag contains, or asking how versioning works on this site. EXAMPLES: 'cut a release', 'bump the docs version', 'what does docs/.release-version do', 'how do I release a new version of the docs'."
+name: docouture-docs-versioning
+description: "How to cut a release or a prerelease on a docouture Antora documentation site scaffolded with Versioned (Full History) mode: docouture version, docs/.release-version, and the docouture-release.yml workflow. USE WHEN bumping a version, cutting a release, configuring what a release tag contains, or asking how versioning works on this site. EXAMPLES: 'cut a release', 'bump the docs version', 'what does docs/.release-version do', 'how do I release a new version of the docs'."
 ---
 
 # Docs versioning (Versioned — Full History)
 
-This site was scaffolded with `docouture new --mode versioned`. `main` is permanently the
-prerelease/preview channel; every release is its own immutable `vX.Y.Z` git tag, and all
-of them stay in the version dropdown forever — the shape to use when consumers pin an old
-version and need its docs to keep existing unchanged.
+Applies to a site scaffolded with `docouture new --mode versioned`. `main` is permanently
+the prerelease/preview channel; every release is its own immutable `vX.Y.Z` git tag, and
+all of them stay in the version dropdown forever — the shape to use when consumers pin an
+old version and need its docs to keep existing unchanged.
 
 See `reference/releasing.md` for the full mechanism (what each file says on `main` vs. on
 a release tag, and what the release workflow actually does).

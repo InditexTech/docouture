@@ -126,7 +126,7 @@ https://example.com[Link text^]              open in a new tab
 link:https://example.com[Text]               explicit macro; needed when the URL is not bare
 mailto:a@example.com[Mail us]
 
-xref:page.adoc[Text]                          Antora resource ID — see writing-docs-pages SKILL.md
+xref:page.adoc[Text]                          Antora resource ID — see docouture-writing-docs-pages SKILL.md
 xref:page.adoc#section-id[Text]
 xref:#local-section[Text]                     same page
 <<local-section,Text>>                        same page, alternate form

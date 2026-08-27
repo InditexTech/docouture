@@ -1,6 +1,6 @@
 ---
-name: docs-internals
-description: "How this Antora documentation site is put together: the playbook, the docs/antora.yml component descriptor, the four names that must agree, mono-module vs. multi-module layout, and the home-page vs. content-page patterns. USE WHEN adding a page or module, renaming the site/component, choosing between a single-module and multi-module layout, building a landing/home page, or diagnosing a site that builds with zero pages or fails with 'start page not found'. EXAMPLES: 'add a new module', 'rename this docs site', 'build a marketing home page', 'the site builds but has no pages', 'start page not found', 'should this be one module or several'."
+name: docouture-docs-internals
+description: "How a docouture Antora documentation site is put together: the playbook, the docs/antora.yml component descriptor, the four names that must agree, the ROOT+main default layout, promoting Guides/Reference to their own modules, the per-artifact-module strategy for a monorepo, and the home-page vs. content-page patterns. USE WHEN adding a page or module, renaming the site/component, deciding whether a section or artifact earns its own module, building a landing/home page, or diagnosing a site that builds with zero pages or fails with 'start page not found'. EXAMPLES: 'add a new module', 'rename this docs site', 'build a marketing home page', 'the site builds but has no pages', 'start page not found', 'should this artifact get its own module'."
 ---
 
 # Site structure
@@ -11,14 +11,17 @@ and the two page patterns (home vs. content) worth copying rather than reinventi
 
 - `reference/naming.md` — the four names that must agree, and how to fix them when they
   don't (`docouture doctor` checks this automatically).
-- `reference/page-patterns.md` — the home-page block structure and the recurring
-  content-page shapes, plus mono-module vs. multi-module layout.
+- `reference/page-patterns.md` — the home-page block structure, the recurring content-page
+  shapes, the always-present `ROOT` + `main` layout, and how a site grows more modules
+  (promoted sections, or one per artifact in a monorepo).
 - `reference/antora-extensions.md` — what `@inditextech/docouture-antora-extensions` (a
-  different kind of extension from the authoring blocks in `writing-docs-pages`) provides:
-  the module switcher, site footer, search index and `llms.txt` generation.
+  different kind of extension from the authoring blocks in `docouture-writing-docs-pages`)
+  provides: the module switcher, site footer, search index and `llms.txt` generation.
 
 For AsciiDoc authoring itself — xrefs, admonitions, code blocks, this site's custom
-blocks — see the `writing-docs-pages` skill.
+blocks — see the `docouture-writing-docs-pages` skill. For *which* modules/pages a site
+should have in the first place, see `docouture-getting-started` (new site) or
+`docouture-documenting-changes` (an existing site gaining a new module/artifact).
 
 ## The moving pieces
 
@@ -48,6 +51,6 @@ further down, at `docs/src/antora.yml`. That's why `antora-playbook.yml`'s
 which versioning mode this site uses (`version: prerelease`, `prerelease: true`) — what
 differs is only which git refs `antora-playbook.yml`'s `content.sources[0]` aggregates
 from (`tags: ['stable']` vs. `tags: ['v*']`). If this site was scaffolded with
-`--mode versioned`, see the `docs-versioning` skill for cutting a release; a
+`--mode versioned`, see the `docouture-docs-versioning` skill for cutting a release; a
 **standalone**-mode site (the default) has no separate skill for this — `docouture doctor`
 and the `docouture-release.yml` workflow are all that's needed.

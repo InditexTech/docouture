@@ -11,9 +11,9 @@ For each planned page, look in this order and use the first thing that actually 
 
 1. **Existing docs** — a pre-existing `docs/` tree, wiki export, Notion/Confluence dump
    committed somewhere, or hand-written prose already sitting in the repo. Adapt it into
-   the page structure/blocks from `writing-docs-pages`, don't just paste it verbatim if the
-   shape doesn't fit (e.g. a wall of prose where a `[tabs]` or ordered steps would serve
-   the reader better).
+   the page structure/blocks from `docouture-writing-docs-pages`, don't just paste it verbatim
+   if the shape doesn't fit (e.g. a wall of prose where a `[tabs]` or ordered steps would
+   serve the reader better).
 2. **README / CONTRIBUTING / inline package docs** — often covers getting-started and
    contributing ground well, rarely covers the full API/reference surface.
 3. **The code itself, directly** — when neither of the above exists, or doesn't cover a
@@ -49,7 +49,8 @@ against one expected shape.
 ## Recording what a page is based on
 
 Once a page is drafted from the code itself (step 3 above, not steps 1/2/4), record it in
-`AGENTS.md`'s documentation-state ledger — see `maintenance-loop.md` for the exact shape.
-This is what lets a later pass tell "still matches the code" apart from "needs a look"
-without re-deriving every page from scratch each time, and what stops a later pass from
-overwriting a page a human has since hand-edited.
+`AGENTS.md`'s documentation-state ledger — see the `docouture-documenting-changes` skill's
+`reference/maintenance-loop.md` for the exact shape. This is what lets that skill's later
+passes tell "still matches the code" apart from "needs a look" without re-deriving every
+page from scratch each time, and what stops a later pass from overwriting a page a human
+has since hand-edited.

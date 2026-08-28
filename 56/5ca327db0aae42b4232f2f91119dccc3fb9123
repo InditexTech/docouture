@@ -1,0 +1,18 @@
+.github/workflows/docouture-release.yml
+  h_c93d154c7c7074 372-388
+.opencode/skills/docs-site-package/reference/versioning-modes.md
+  h_c93d154c7c7074 198-220,390-391,393-401,409-410
+code/packages/cli/templates/workflows/docouture-release.yml
+  h_c93d154c7c7074 373-389
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "565ca327db0aae42b4232f2f91119dccc3fb9123",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

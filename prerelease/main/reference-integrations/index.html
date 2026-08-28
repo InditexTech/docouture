@@ -646,17 +646,28 @@ than per-block.</p>
 <div class="paragraph">
 <p><a href="../changelog/" class="xref page">Changelog</a>'s per-version sections are generated at build time from
 <code>code/CHANGELOG.md</code>, not hand-copied: <code>@inditextech/docouture-antora-extensions</code> parses
-every cut <code><mark> [x.y.z]</code> section, converts its <code></mark># Section</code> headings and <code>- [<mark>PR](url)
+every cut <code><mark> [x.y.z]</code> section, converts its <code></mark># Section</code> headings and <code>- [#PR](url)
 text</code> bullets to AsciiDoc, and appends each one as a <code>== vX.Y.Z</code> section directly onto
 whatever page already lives at <code>changelog/index.adoc</code> — only on a site that has one; a
-site with no changelog page is left untouched. <code></mark># [Unreleased]</code> is deliberately
-excluded, the same way Keep a Changelog itself doesn&#8217;t consider it a version.</p>
+site with no changelog page is left untouched.</p>
+</div>
+<div class="paragraph">
+<p><code>## [Unreleased]</code> is handled differently from a real cut release: it never becomes a
+<code>== vX.Y.Z</code> section (Keep a Changelog doesn&#8217;t consider "unreleased" a version either),
+but its content still renders as a plain <code>== Unreleased</code> section — and only on the
+component version Antora resolved as <code>prerelease</code> (the version built from <code>main</code>,
+never itself tagged). Any real, tagged release&#8217;s own changelog page never shows it: a
+tag is an immutable snapshot, and <code>[Unreleased]</code> is by definition whatever has landed
+on <code>main</code> since. An empty <code>[Unreleased]</code> heading (nothing merged since the last cut)
+renders no section at all rather than an empty one.</p>
 </div>
 <div class="paragraph">
 <p>The file is read once per build, off disk, applied identically to every component
-version being built — not resolved per-ref through git, so a future build that
-aggregates two real docs versions side by side will show the same (current) changelog
-content on both until that gets revisited. Override the default <code>code/CHANGELOG.md</code>
+version being built — not resolved per-ref through git, so a real release tag&#8217;s own
+changelog page reflects whatever <code>code/CHANGELOG.md</code> says on disk right now, not that
+tag&#8217;s own historical copy of the file. In practice this only matters for the cut
+releases: a tagged version&#8217;s page shows every <code>## [x.y.z]</code> section on disk, no more and
+no less, regardless of which ref cut it. Override the default <code>code/CHANGELOG.md</code>
 location (resolved relative to the playbook&#8217;s own directory) with <code>changelog_path</code> on
 the extension&#8217;s registration entry:</p>
 </div>

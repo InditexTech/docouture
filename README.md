@@ -5,18 +5,23 @@ themed with the IOP Design System. It's an Nx/pnpm monorepo that ships two
 things: a themed Antora UI bundle, and the `docouture` CLI for scaffolding and
 running standalone documentation sites outside this repository.
 
-## Packages
+## Contributing vs. using this project
 
-| Package                        | Purpose                                                                                            |
-| ------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `packages/ui-bundle`           | The Antora UI bundle — layouts, styles, browser scripts, Handlebars helpers — published as a zip.  |
-| `packages/example`             | Real-world documentation site built with this workspace's own packages.                            |
-| `packages/cli`                 | `@inditextech/docouture-cli` — the `docouture` CLI: scaffolds a standalone site (`docouture new`). |
-| `packages/antora-extensions`   | Antora pipeline extensions shared by docouture sites (navigation metadata, etc.).                  |
-| `packages/asciidoc-extensions` | Asciidoctor extensions shared by docouture sites (content with no AsciiDoc equivalent).            |
+Contributing to this repository is open: it's public, licensed Apache-2.0, and
+accepts external contributions (CLA-gated — see [Contributing](#contributing)
+below).
 
-See [`code/README.md`](code/README.md) for how the workspace itself is put
-together.
+Using the output is not, today: sites built with the current
+`packages/ui-bundle` and `packages/asciidoc-extensions` are for
+**Inditex-internal distribution only**. `ui-bundle` embeds proprietary IOP
+Design System CSS and icons; `asciidoc-extensions` emits markup and class
+names copied from the same design system. Both are licensed for internal use
+only — publishing a site built with either package, or the packages
+themselves, anywhere public isn't permitted until that dependency is stripped
+out (tracked separately as a full licensing review). See
+[`code/packages/ui-bundle/NOTICE`](code/packages/ui-bundle/NOTICE) and
+[`code/packages/asciidoc-extensions/NOTICE`](code/packages/asciidoc-extensions/NOTICE)
+for exactly what's embedded.
 
 ## Requirements
 
@@ -29,26 +34,10 @@ $ brew install just     # or: cargo install just, mise use -g just
 $ just bootstrap        # asdf install + pnpm install + preflight checks
 ```
 
-Every command below works from anywhere in the repository.
-
-### Registry credentials
-
-Dependencies come from the public npm registry, with one exception: the IOP
-Design System packages (`@inditex/sewingiopdsweb-*`) are published to Inditex
-Artifactory. `code/.npmrc` routes that scope there and pins everything else to
-`registry.npmjs.org`; the pin matters because a machine whose `~/.npmrc` sets a
-different default would otherwise resolve all 790-odd packages through it, and
-CI would resolve them from somewhere else.
-
-Credentials are deliberately not in `code/.npmrc`, which is committed. Put them
-in `~/.npmrc`:
-
-```
-//inditex.jfrog.io/artifactory/api/npm/node-public/:_auth=<base64 user:token>
-```
-
-Without them `pnpm install` fails with `ERR_PNPM_FETCH_401` against
-`inditex.jfrog.io`. `just doctor` reports it as a missing design system.
+Every command below works from anywhere in the repository. Dependencies come
+entirely from the public npm registry — nothing here needs Artifactory
+credentials or a VPN (see `code/tools/ids/README.md` if you're looking for the
+IOP Design System sidecar, which does).
 
 ## Commands
 
@@ -116,6 +105,19 @@ All toolchain configuration lives in `code/`, so `pnpm`, `nx` and `asdf` must be
 invoked from there. `just` handles that for you, which is why the commands above
 work from anywhere.
 
+## Packages
+
+| Package                        | Purpose                                                                                            |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `packages/ui-bundle`           | The Antora UI bundle — layouts, styles, browser scripts, Handlebars helpers — published as a zip.  |
+| `packages/example`             | Real-world documentation site built with this workspace's own packages.                            |
+| `packages/cli`                 | `@inditextech/docouture-cli` — the `docouture` CLI: scaffolds a standalone site (`docouture new`). |
+| `packages/antora-extensions`   | Antora pipeline extensions shared by docouture sites (navigation metadata, etc.).                  |
+| `packages/asciidoc-extensions` | Asciidoctor extensions shared by docouture sites (content with no AsciiDoc equivalent).            |
+
+See [`code/README.md`](code/README.md) for how the workspace itself is put
+together.
+
 ## Content requires at least one commit
 
 Antora reads content from a git repository. It will pick up **uncommitted**
@@ -138,7 +140,9 @@ touching `code/**` is expected to carry.
 
 ## License
 
-Apache-2.0 — see [`LICENSE`](LICENSE), with one exception:
+Apache-2.0 — see [`LICENSE`](LICENSE), with two exceptions:
 `code/packages/ui-bundle` is a fork of
 [antora-ui-default](https://gitlab.com/antora/antora-ui-default) and remains
-under MPL-2.0; see its own `LICENSE` and `NOTICE`.
+under MPL-2.0; `code/packages/asciidoc-extensions` is licensed MPL-2.0
+alongside it because its extensions emit copied IOP Design System markup. See
+each package's own `LICENSE` and `NOTICE`.

@@ -4,8 +4,8 @@ The Contributing section explains how to take part in the project and where the 
 
 Pages in this section:
 
-| Page | Level | One-line purpose |
-| --- | --- | --- |
+| Page       | Level       | One-line purpose                                               |
+| ---------- | ----------- | -------------------------------------------------------------- |
 | `overview` | 🔴 required | The ways to contribute + links to the canonical repo documents |
 
 This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)) — like separate guidelines for third-party contributors and for product (core) developers.
@@ -20,17 +20,17 @@ A warm, short page that tells a potential contributor the ways they can help and
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | A welcoming paragraph: contributions are wanted, and this page shows where to start. |
-| `== Ways to contribute` | 🔴 | The concrete entry doors, easiest first: report bugs (link to the issue tracker), suggest features, improve the documentation, contribute code. One line each with its direct link. |
-| `== Before you start` | 🔴 | Links to the canonical documents with one line on what each covers: `CONTRIBUTING.md` (the process), the code of conduct, the license. Summarize in one sentence; never copy their content. |
-| `== Development setup` | 🔵 | Only a link to the development guide in Guides (when it exists) — not the setup itself. |
+| Section                 | Level | What to write                                                                                                                                                                               |
+| ----------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_   | 🔴    | A welcoming paragraph: contributions are wanted, and this page shows where to start.                                                                                                        |
+| `== Ways to contribute` | 🔴    | The concrete entry doors, easiest first: report bugs (link to the issue tracker), suggest features, improve the documentation, contribute code. One line each with its direct link.         |
+| `== Before you start`   | 🔴    | Links to the canonical documents with one line on what each covers: `CONTRIBUTING.md` (the process), the code of conduct, the license. Summarize in one sentence; never copy their content. |
+| `== Development setup`  | 🔵    | Only a link to the development guide in Guides (when it exists) — not the setup itself.                                                                                                     |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
+| Use                                       | Block                                                                                     |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------- |
 | Entry doors, when you want them prominent | `[cards]` (one card per way to contribute) — a plain list is equally valid for sober docs |
 
 ### AsciiDoc skeleton

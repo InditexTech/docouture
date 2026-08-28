@@ -4,11 +4,11 @@ The Overview section is the **conceptual documentation** of the product: it help
 
 Pages in this section:
 
-| Page | Level | One-line purpose |
-| --- | --- | --- |
-| `about` | 🔴 required | What the product is, for whom, and why it exists |
-| `architecture` | 🔴 required | How the product is built and why |
-| `glossary` | ⚪ optional | The product's own vocabulary |
+| Page           | Level       | One-line purpose                                 |
+| -------------- | ----------- | ------------------------------------------------ |
+| `about`        | 🔴 required | What the product is, for whom, and why it exists |
+| `architecture` | 🔴 required | How the product is built and why                 |
+| `glossary`     | ⚪ optional | The product's own vocabulary                     |
 
 This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)) — like a roadmap, or the product story (how and why the product came to be).
 
@@ -29,14 +29,14 @@ Both are evaluating, not yet using. Everything on this page should help them ans
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | Two or three paragraphs: what the product is, a rough idea of how it works, and its purpose — what problem it solves and why it is necessary. If adopting it changes how teams work, say so roughly and link to the page that covers it. |
-| `== Key features` | 🔴 | A bulleted list of the product's main capabilities, each one line, each cross-referenced to the page that covers it in depth. Features, not marketing: name what it does, not how great it is. |
-| `== Benefits` | 🟠 | Why choose this over the alternatives or the previous situation. A bulleted list — `*Benefit:* how and why` — with the value proposition of each. This is the section for the reader assessing whether onboarding effort will pay off. |
-| `== What _PRODUCT_NAME_ is not` | ⚪ | Honest scope boundaries: the use cases the product does not cover and, when possible, what to use instead. Saves the reader a wrong adoption — one of the most valuable sections on the page. |
-| `== Status and roadmap` | 🟠 | Current maturity (stable, beta, active development), what exists today, and the direction ahead. Present tense, no promises with dates: describe the direction, not a delivery plan. If the product is adapted from an existing technology, say which one and which version it is based on. |
-| `== Vision` | ⚪ | How the team imagines the product growing in the mid/long term. Only if there is a real vision to tell — otherwise fold it into Status and roadmap. |
+| Section                         | Level | What to write                                                                                                                                                                                                                                                                               |
+| ------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_           | 🔴    | Two or three paragraphs: what the product is, a rough idea of how it works, and its purpose — what problem it solves and why it is necessary. If adopting it changes how teams work, say so roughly and link to the page that covers it.                                                    |
+| `== Key features`               | 🔴    | A bulleted list of the product's main capabilities, each one line, each cross-referenced to the page that covers it in depth. Features, not marketing: name what it does, not how great it is.                                                                                              |
+| `== Benefits`                   | 🟠    | Why choose this over the alternatives or the previous situation. A bulleted list — `*Benefit:* how and why` — with the value proposition of each. This is the section for the reader assessing whether onboarding effort will pay off.                                                      |
+| `== What _PRODUCT_NAME_ is not` | ⚪    | Honest scope boundaries: the use cases the product does not cover and, when possible, what to use instead. Saves the reader a wrong adoption — one of the most valuable sections on the page.                                                                                               |
+| `== Status and roadmap`         | 🟠    | Current maturity (stable, beta, active development), what exists today, and the direction ahead. Present tense, no promises with dates: describe the direction, not a delivery plan. If the product is adapted from an existing technology, say which one and which version it is based on. |
+| `== Vision`                     | ⚪    | How the team imagines the product growing in the mid/long term. Only if there is a real vision to tell — otherwise fold it into Status and roadmap.                                                                                                                                         |
 
 Add as many other sections as the product genuinely needs — these are the floor, not the ceiling.
 
@@ -44,8 +44,8 @@ Add as many other sections as the product genuinely needs — these are the floo
 
 This page is prose-first: paragraphs, bullet lists, and xrefs cover it. Custom blocks with a clear fit:
 
-| Use | Block |
-| --- | --- |
+| Use                                                   | Block                                  |
+| ----------------------------------------------------- | -------------------------------------- |
 | A prerequisite or warning worth surfacing immediately | Standard `NOTE`/`IMPORTANT` admonition |
 
 Do **not** use `[feature-tabs]`, or `[cta]` here — they belong to the home page. If this page starts looking like a showcase, it is duplicating the home page (see Common mistakes).
@@ -128,7 +128,7 @@ on their domain features.
 
 ### Common mistakes
 
-- **Starting with how to install it.** Installation belongs in Getting started; this page answers *what* and *why*, not *how*.
+- **Starting with how to install it.** Installation belongs in Getting started; this page answers _what_ and _why_, not _how_.
 - **Describing the repository instead of the product.** The reader cares about what the product does for them, not about the folder layout (that is `architecture`).
 - **Feature list without cross-references.** A feature name alone is a dead end; every claim should lead somewhere.
 - **Hiding the limitations.** Readers who discover scope boundaries after adopting the product become detractors; readers who learn them here self-select correctly.
@@ -144,21 +144,21 @@ Explains how the product is built and why: components, how they communicate, and
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | One short paragraph stating what this page covers. |
-| `== Overview` | 🔴 | The architecture diagram plus its explanation. Some sort of flow diagram is crucial — the reader must visualize the product's role within its ecosystem. Never paste the diagram alone: walk through the flow stages and how the pieces communicate and work together. Explain the key technical decisions and the determinants behind them. |
-| `== Project structure` | 🟠 | How the codebase is organized. When the product ships several artifacts (packages, services, binaries), detail each artifact and its purpose separately. |
-| `== <Lifecycle / Plugins / Data flow / …>` | 🔵 | As many extra sections as the architecture genuinely needs, one concern per section, each explaining a piece of the process separately. |
+| Section                                    | Level | What to write                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------------------ | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_                      | 🔴    | One short paragraph stating what this page covers.                                                                                                                                                                                                                                                                                           |
+| `== Overview`                              | 🔴    | The architecture diagram plus its explanation. Some sort of flow diagram is crucial — the reader must visualize the product's role within its ecosystem. Never paste the diagram alone: walk through the flow stages and how the pieces communicate and work together. Explain the key technical decisions and the determinants behind them. |
+| `== Project structure`                     | 🟠    | How the codebase is organized. When the product ships several artifacts (packages, services, binaries), detail each artifact and its purpose separately.                                                                                                                                                                                     |
+| `== <Lifecycle / Plugins / Data flow / …>` | 🔵    | As many extra sections as the architecture genuinely needs, one concern per section, each explaining a piece of the process separately.                                                                                                                                                                                                      |
 
 If the H2 sections grow heavy, keep `== Overview` (with the diagram) on this page and promote the other sections to nested pages under it — the sizing rule in the other direction.
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| The architecture diagram (required) and screenshots | Standard `image::` macro |
-| Component/artifact tables | Standard tables; `mono:[]` for columns where every cell is a bare name (component, package), `nowrap-cols` to keep those columns on one line |
+| Use                                                 | Block                                                                                                                                        |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| The architecture diagram (required) and screenshots | Standard `image::` macro                                                                                                                     |
+| Component/artifact tables                           | Standard tables; `mono:[]` for columns where every cell is a bare name (component, package), `nowrap-cols` to keep those columns on one line |
 
 No switcher blocks here: `[tabs]` is for equivalent alternatives (package managers, config formats), and architecture explanations are not alternatives.
 
@@ -241,15 +241,15 @@ Write each definition in its own partial (`partials/glossary/<term>.adoc`) and b
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | One short paragraph: what this glossary covers and an invitation to use this terminology for clarity and consistency. |
-| `== <Term>` (repeated) | 🔴 | One section per term, **in alphabetical order**. Define the term in one or two sentences, in this product's context — the definition itself lives in the term's partial (see above). Nest sub-concepts as `===` under their parent term. |
+| Section                | Level | What to write                                                                                                                                                                                                                            |
+| ---------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_  | 🔴    | One short paragraph: what this glossary covers and an invitation to use this terminology for clarity and consistency.                                                                                                                    |
+| `== <Term>` (repeated) | 🔴    | One section per term, **in alphabetical order**. Define the term in one or two sentences, in this product's context — the definition itself lives in the term's partial (see above). Nest sub-concepts as `===` under their parent term. |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
+| Use                                         | Block                                                                        |
+| ------------------------------------------- | ---------------------------------------------------------------------------- |
 | Marking a term's status next to its heading | `label:` pill — for example, `label:red[Deprecated]` or `label:orange[Beta]` |
 
 Nothing else: a glossary is plain sections and prose by design.

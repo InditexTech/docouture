@@ -1,6 +1,6 @@
 # Guides section — authoring guide
 
-The Guides section is the **procedural documentation** of the product: it shows readers how to accomplish a specific goal by following a set of structured steps. Where Overview explains and Reference describes, Guides *does*.
+The Guides section is the **procedural documentation** of the product: it shows readers how to accomplish a specific goal by following a set of structured steps. Where Overview explains and Reference describes, Guides _does_.
 
 Two kinds of common procedural content live here:
 
@@ -9,11 +9,11 @@ Two kinds of common procedural content live here:
 
 Pages in this section:
 
-| Page | Level | One-line purpose |
-| --- | --- | --- |
-| `overview` | 🔴 required | Catalog of the available guides |
-| `<`guide`-name>` (≥1, repeatable pattern) | 🔴 required | One guide per real task or capability |
-| `development` | 🟠 recommended | Set up and work on the product's own codebase |
+| Page                                      | Level          | One-line purpose                              |
+| ----------------------------------------- | -------------- | --------------------------------------------- |
+| `overview`                                | 🔴 required    | Catalog of the available guides               |
+| `<`guide`-name>` (≥1, repeatable pattern) | 🔴 required    | One guide per real task or capability         |
+| `development`                             | 🟠 recommended | Set up and work on the product's own codebase |
 
 This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)) — like installation and upgrade, configuration (defining and reading it), deployment (per environment, with its checklist), authentication and authorization, observability (logging, metrics, tracing, alerts), permissions management, testing, tutorials, use cases, or best practices.
 
@@ -31,16 +31,16 @@ The catalog of the section: it tells the reader which guides exist and which one
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | One or two sentences: what kind of content this section holds and how to use it. |
-| *(the catalog)* | 🔴 | A card per guide. The title (bare infinitive) already states the goal — add a short description only when the title alone is not enough. When the catalog grows, group the guides by **set of actions** — management, observability, authentication… — one `== <Action set>` heading per group, matching how users think about tasks. |
+| Section               | Level | What to write                                                                                                                                                                                                                                                                                                                         |
+| --------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_ | 🔴    | One or two sentences: what kind of content this section holds and how to use it.                                                                                                                                                                                                                                                      |
+| _(the catalog)_       | 🔴    | A card per guide. The title (bare infinitive) already states the goal — add a short description only when the title alone is not enough. When the catalog grows, group the guides by **set of actions** — management, observability, authentication… — one `== <Action set>` heading per group, matching how users think about tasks. |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| The guide catalog | `[cards]` — the default presentation of this page |
+| Use                                               | Block                                                                                                                |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| The guide catalog                                 | `[cards]` — the default presentation of this page                                                                    |
 | Documenting a visual tool (a UI, a design system) | Cards **with an image**: a screenshot of the interface for that task, or — in a design system — the component itself |
 
 ### AsciiDoc skeleton
@@ -105,6 +105,7 @@ guide states its goal, the prerequisites, and the steps to follow.
 - [ ] Style guide respected (see the [README](../README.md#style-guide)).
 
 ### Common mistakes
+
 - **Premature grouping.** Five guides in three groups is harder to scan than five bullets.
 - **Content on the catalog page.** The moment this page starts explaining a task, that content is a guide waiting to be extracted.
 
@@ -122,22 +123,22 @@ Show the **minimal implementation** that accomplishes the goal — the smallest 
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | The core concepts and overview information required for this guide: what the reader accomplishes, and any context needed to follow it. Two or three sentences — deeper concepts link to Overview. |
-| `== Prerequisites` | 🔴 | What the user must do or have before following the steps: completed guides, installed tools, permissions, product state. Link, do not repeat. |
-| `== Steps` | 🔴 | The numbered procedure. Each step: one action with real, copy-pasteable code, and its observable result — show the output the reader should see if it worked, as a `[source]` block with the expected output, or a screenshot when the result is visual. Conditional clauses before instructions ("To enable X, set…", not "Set… if you want X"). |
-| `== Verify` | 🟠 | How to confirm the goal was reached: a command with its expected output, or a screenshot of the expected state. |
-| `== Next steps` | 🟠 | Links to the documentation the user should follow after this guide — related guides, or the Reference pages for the options just used. |
+| Section               | Level | What to write                                                                                                                                                                                                                                                                                                                                     |
+| --------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_ | 🔴    | The core concepts and overview information required for this guide: what the reader accomplishes, and any context needed to follow it. Two or three sentences — deeper concepts link to Overview.                                                                                                                                                 |
+| `== Prerequisites`    | 🔴    | What the user must do or have before following the steps: completed guides, installed tools, permissions, product state. Link, do not repeat.                                                                                                                                                                                                     |
+| `== Steps`            | 🔴    | The numbered procedure. Each step: one action with real, copy-pasteable code, and its observable result — show the output the reader should see if it worked, as a `[source]` block with the expected output, or a screenshot when the result is visual. Conditional clauses before instructions ("To enable X, set…", not "Set… if you want X"). |
+| `== Verify`           | 🟠    | How to confirm the goal was reached: a command with its expected output, or a screenshot of the expected state.                                                                                                                                                                                                                                   |
+| `== Next steps`       | 🟠    | Links to the documentation the user should follow after this guide — related guides, or the Reference pages for the options just used.                                                                                                                                                                                                            |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Equivalent alternatives inside a step (package managers, config formats, languages) | `[tabs]` |
-| The expected output of a step or of the verification | `[source]` block with the real output — searchable, unlike a screenshot |
-| The expected result in a visual tool | A screenshot (image) of the state the reader should see |
-| A destructive or irreversible action warning | `WARNING`/`CAUTION` admonition |
+| Use                                                                                 | Block                                                                   |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Equivalent alternatives inside a step (package managers, config formats, languages) | `[tabs]`                                                                |
+| The expected output of a step or of the verification                                | `[source]` block with the real output — searchable, unlike a screenshot |
+| The expected result in a visual tool                                                | A screenshot (image) of the state the reader should see                 |
+| A destructive or irreversible action warning                                        | `WARNING`/`CAUTION` admonition                                          |
 
 ### AsciiDoc skeleton
 
@@ -240,23 +241,23 @@ scenarios.
 
 ### Purpose & audience
 
-How to work on the product's own codebase: environment setup, development process, and testing. Written for a developer who wants to modify or extend the product — including future maintainers. This page complements `CONTRIBUTING.md`: the contribution *process* (issues, PRs, conventions) belongs to the [Contributing section](contributing.md); this page covers the *technical* workflow.
+How to work on the product's own codebase: environment setup, development process, and testing. Written for a developer who wants to modify or extend the product — including future maintainers. This page complements `CONTRIBUTING.md`: the contribution _process_ (issues, PRs, conventions) belongs to the [Contributing section](contributing.md); this page covers the _technical_ workflow.
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | One or two sentences: what this page covers and who it is for. |
-| `== Environment setup` | 🔴 | Tools and versions needed to build the product locally, and the commands to clone, install dependencies, and build. Copy-pasteable. |
-| `== Development process` | 🟠 | The day-to-day workflow: how to run the product locally, watch mode, useful scripts/targets, project layout pointers. |
-| `== Testing` | 🟠 | How to run the test suite (all and a subset), and what is expected before submitting changes. |
+| Section                  | Level | What to write                                                                                                                       |
+| ------------------------ | ----- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_    | 🔴    | One or two sentences: what this page covers and who it is for.                                                                      |
+| `== Environment setup`   | 🔴    | Tools and versions needed to build the product locally, and the commands to clone, install dependencies, and build. Copy-pasteable. |
+| `== Development process` | 🟠    | The day-to-day workflow: how to run the product locally, watch mode, useful scripts/targets, project layout pointers.               |
+| `== Testing`             | 🟠    | How to run the test suite (all and a subset), and what is expected before submitting changes.                                       |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Equivalent setup commands (package managers, OSs) | `[tabs]` |
-| A caveat about the dev environment | Standard `NOTE` admonition |
+| Use                                               | Block                      |
+| ------------------------------------------------- | -------------------------- |
+| Equivalent setup commands (package managers, OSs) | `[tabs]`                   |
+| A caveat about the dev environment                | Standard `NOTE` admonition |
 
 ### AsciiDoc skeleton
 

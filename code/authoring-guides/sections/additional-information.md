@@ -4,13 +4,13 @@ The Additional information section gathers the product's **evolving information*
 
 Pages in this section:
 
-| Page | Level | One-line purpose |
-| --- | --- | --- |
-| `overview` | 🔴 required | Entry page: contact and support (including security reporting) + the map of the section |
-| `changelog` (overview + one page per version) | 🔴 required | The complete record of every change |
-| `release-notes` (overview + one page per version) | 🔴 required | The curated highlights of each release |
-| `faq` | 🟠 recommended | Real frequently asked questions + troubleshooting |
-| `eol` / `migration-guides` | 🔵 conditional | Supported versions and how to move between them |
+| Page                                              | Level          | One-line purpose                                                                        |
+| ------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------- |
+| `overview`                                        | 🔴 required    | Entry page: contact and support (including security reporting) + the map of the section |
+| `changelog` (overview + one page per version)     | 🔴 required    | The complete record of every change                                                     |
+| `release-notes` (overview + one page per version) | 🔴 required    | The curated highlights of each release                                                  |
+| `faq`                                             | 🟠 recommended | Real frequently asked questions + troubleshooting                                       |
+| `eol` / `migration-guides`                        | 🔵 conditional | Supported versions and how to move between them                                         |
 
 This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)) — like a dependencies page (the product's third-party dependencies and licenses).
 
@@ -20,12 +20,12 @@ This list is the minimum, not a ceiling: a product with more complex or more spe
 
 Both are 🔴 and they coexist because they answer different questions:
 
-|  | Changelog | Release notes |
-| --- | --- | --- |
-| **Question it answers** | "What exactly changed in each version?" | "What is new and what does it mean for users?" |
-| **Nature** | Exhaustive, factual record: every addition, change, fix, and deprecation | Curated highlights: the features worth telling to the tool users, explained and illustrated |
-| **Tone** | Neutral, list-like | Engaging — an opportunity to connect with users |
-| **Reader** | Someone auditing, debugging, or pinning versions | Someone wanting to know what's new or deciding whether and how to upgrade |
+|                         | Changelog                                                                | Release notes                                                                               |
+| ----------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| **Question it answers** | "What exactly changed in each version?"                                  | "What is new and what does it mean for users?"                                              |
+| **Nature**              | Exhaustive, factual record: every addition, change, fix, and deprecation | Curated highlights: the features worth telling to the tool users, explained and illustrated |
+| **Tone**                | Neutral, list-like                                                       | Engaging — an opportunity to connect with users                                             |
+| **Reader**              | Someone auditing, debugging, or pinning versions                         | Someone wanting to know what's new or deciding whether and how to upgrade                   |
 
 **When to link instead of duplicate:** if the repo already maintains a `CHANGELOG.md` or uses GitHub Releases as the complete record, the `changelog` overview page links there instead of copying it — never maintain the same list in two places. Release notes, being curated content, are best written in the docs.
 
@@ -44,19 +44,19 @@ The page works in two modes, per the sizing rule:
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | One or two sentences: this is the most up-to-date information about the product — changes, versions, support deadlines, and contact. |
-| `== <Topic>` (short-content mode, repeated) | 🔵 | The topic's content itself, written here as a section (a `== Changelog` with the external link, a short `== End of life` policy…). |
-| `== Contact and support` | 🔴 | Every channel the user can use, each with its preferred purpose (email → incidents, discussions → questions and ideas…). A channel without a stated purpose generates misrouted requests. Include a **Security** paragraph or `=== Security` subsection: report vulnerabilities **privately** through the stated channel (link `SECURITY.md` / GitHub private reporting), never through public issues. |
-| `== Sections` (separate-pages mode) | 🔴 | The closing grid of the pages documented separately in this section, as cards. Always the last section of the page. |
+| Section                                     | Level | What to write                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _(intro, no heading)_                       | 🔴    | One or two sentences: this is the most up-to-date information about the product — changes, versions, support deadlines, and contact.                                                                                                                                                                                                                                                                   |
+| `== <Topic>` (short-content mode, repeated) | 🔵    | The topic's content itself, written here as a section (a `== Changelog` with the external link, a short `== End of life` policy…).                                                                                                                                                                                                                                                                     |
+| `== Contact and support`                    | 🔴    | Every channel the user can use, each with its preferred purpose (email → incidents, discussions → questions and ideas…). A channel without a stated purpose generates misrouted requests. Include a **Security** paragraph or `=== Security` subsection: report vulnerabilities **privately** through the stated channel (link `SECURITY.md` / GitHub private reporting), never through public issues. |
+| `== Sections` (separate-pages mode)         | 🔴    | The closing grid of the pages documented separately in this section, as cards. Always the last section of the page.                                                                                                                                                                                                                                                                                    |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| The Sections grid | `[cards]` — one card per page of the section |
-| Channel list | Plain bulleted list — one channel, one purpose |
+| Use               | Block                                          |
+| ----------------- | ---------------------------------------------- |
+| The Sections grid | `[cards]` — one card per page of the section   |
+| Channel list      | Plain bulleted list — one channel, one purpose |
 
 ### AsciiDoc skeleton
 
@@ -165,25 +165,25 @@ The complete, factual record of every change, version by version: additions, cha
 
 **Overview page:**
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | What the changelog records, and the link to the release notes for the curated view. |
-| *(the index table)* | 🔴 | A table relating everything, newest first: Version (linked to its page) · Date (`YYYY/MM/DD`) · Changelog link. If the product is **not versioned**, a changelog barely makes sense — if kept anyway, replace versions with `YYYY-MM-DD` dates. |
+| Section               | Level | What to write                                                                                                                                                                                                                                   |
+| --------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_ | 🔴    | What the changelog records, and the link to the release notes for the curated view.                                                                                                                                                             |
+| _(the index table)_   | 🔴    | A table relating everything, newest first: Version (linked to its page) · Date (`YYYY/MM/DD`) · Changelog link. If the product is **not versioned**, a changelog barely makes sense — if kept anyway, replace versions with `YYYY-MM-DD` dates. |
 
 **Per-version page:**
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(header)* | 🔴 | Version and release date as a label pill: `label:[Released YYYY-MM-DD]`. |
-| `== Added` / `== Changed` / `== Fixed` / `== Removed` | 🔴 | The complete list, one bullet per change, factual. Include only the categories that apply. For changes that affect users, expand the bullet with: **Summary** · **Impact** (who/what is affected) · **Reasoning** (why the change) · **Actions required** (what the user must do — or "none"). |
-| `== Contributors` | 🟠 | Open source is people: thank the release's contributors and link their GitHub profiles ([as Spring does](https://github.com/spring-projects/spring-framework/releases)). |
+| Section                                               | Level | What to write                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(header)_                                            | 🔴    | Version and release date as a label pill: `label:[Released YYYY-MM-DD]`.                                                                                                                                                                                                                       |
+| `== Added` / `== Changed` / `== Fixed` / `== Removed` | 🔴    | The complete list, one bullet per change, factual. Include only the categories that apply. For changes that affect users, expand the bullet with: **Summary** · **Impact** (who/what is affected) · **Reasoning** (why the change) · **Actions required** (what the user must do — or "none"). |
+| `== Contributors`                                     | 🟠    | Open source is people: thank the release's contributors and link their GitHub profiles ([as Spring does](https://github.com/spring-projects/spring-framework/releases)).                                                                                                                       |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Release date in the header | `label:[Released YYYY-MM-DD]` pill |
-| Marking breaking changes | `label:red[Breaking]` pill on the bullet |
+| Use                        | Block                                    |
+| -------------------------- | ---------------------------------------- |
+| Release date in the header | `label:[Released YYYY-MM-DD]` pill       |
+| Marking breaking changes   | `label:red[Breaking]` pill on the bullet |
 
 ### AsciiDoc skeleton
 
@@ -294,27 +294,27 @@ The curated highlights of each release: the features and improvements worth tell
 
 **Overview page:**
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | Cadence of releases when regular, and the link to the changelog for the complete list. |
-| *(the index list)* | 🔴 | One bullet per release, newest first, linked to its page: `vX.Y.Z — <one-sentence release title>`. If the product is **not versioned**, use `YYYY-MM-DD — <title>` instead. |
+| Section               | Level | What to write                                                                                                                                                               |
+| --------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_ | 🔴    | Cadence of releases when regular, and the link to the changelog for the complete list.                                                                                      |
+| _(the index list)_    | 🔴    | One bullet per release, newest first, linked to its page: `vX.Y.Z — <one-sentence release title>`. If the product is **not versioned**, use `YYYY-MM-DD — <title>` instead. |
 
 **Per-version page:**
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(header)* | 🔴 | Release date as a label pill: `label:[Released YYYY-MM-DD]`, then one welcoming paragraph introducing the release's main theme. |
-| `== New & improved` | 🔴 | The heart of the page. One `=== <Feature title>` per highlight, in descending order of importance: what it is, how it works, why it was built — with images, videos, or snippets when they help, and links to the docs pages that cover it. |
-| `== Fixed & Removed` | 🔵 | Only what is worth announcing: critical or widely requested fixes, and removals or deprecations that affect users. |
-| `== Migration` | 🔵 | Link to the migration guide when upgrading requires action. |
-| `== Changelog` | 🔵 | Closing link to the complete changelog for this version. |
+| Section              | Level | What to write                                                                                                                                                                                                                               |
+| -------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(header)_           | 🔴    | Release date as a label pill: `label:[Released YYYY-MM-DD]`, then one welcoming paragraph introducing the release's main theme.                                                                                                             |
+| `== New & improved`  | 🔴    | The heart of the page. One `=== <Feature title>` per highlight, in descending order of importance: what it is, how it works, why it was built — with images, videos, or snippets when they help, and links to the docs pages that cover it. |
+| `== Fixed & Removed` | 🔵    | Only what is worth announcing: critical or widely requested fixes, and removals or deprecations that affect users.                                                                                                                          |
+| `== Migration`       | 🔵    | Link to the migration guide when upgrading requires action.                                                                                                                                                                                 |
+| `== Changelog`       | 🔵    | Closing link to the complete changelog for this version.                                                                                                                                                                                    |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Release date in the header | `label:[Released YYYY-MM-DD]` pill |
-| Feature status | `label:orange[Beta]`, `label:red[Deprecated]` pills |
+| Use                        | Block                                               |
+| -------------------------- | --------------------------------------------------- |
+| Release date in the header | `label:[Released YYYY-MM-DD]` pill                  |
+| Feature status             | `label:orange[Beta]`, `label:red[Deprecated]` pills |
 
 ### AsciiDoc skeleton
 
@@ -420,7 +420,7 @@ For the complete list of changes, see the xref:../changelog/v2-5-0.adoc[v2.5.0 c
 ### Common mistakes
 
 - **Pasting the changelog.** If the page reads like a bullet dump, it is the changelog wearing a costume; curate and explain.
-- **Highlights nobody asked about.** Internal refactors are changelog material; release notes tell users what changes *for them*.
+- **Highlights nobody asked about.** Internal refactors are changelog material; release notes tell users what changes _for them_.
 - **No pointer to action.** Every release notes page should end with the next step: upgrade command, migration guide, or the feature's docs.
 
 ---
@@ -437,18 +437,18 @@ Is best to include real questions: collected from issues, support channels, and 
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | What the page gathers and where to ask when the answer is not here (link to Contact and support). |
-| `== FAQ` | 🔴 | One question, one collapsible answer. Group by topic (`=== <group>`) only when the list grows. Questions verbatim as users ask them. |
-| `== Troubleshooting` | 🟠 | One `=== <issue title>` per known issue, following the issue pattern: **Description** (the situation, when it occurs, the exact error message) → **Steps to fix** (numbered solution or workaround). Group error messages together on this single page rather than scattering them across the docs. |
+| Section               | Level | What to write                                                                                                                                                                                                                                                                                       |
+| --------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_ | 🔴    | What the page gathers and where to ask when the answer is not here (link to Contact and support).                                                                                                                                                                                                   |
+| `== FAQ`              | 🔴    | One question, one collapsible answer. Group by topic (`=== <group>`) only when the list grows. Questions verbatim as users ask them.                                                                                                                                                                |
+| `== Troubleshooting`  | 🟠    | One `=== <issue title>` per known issue, following the issue pattern: **Description** (the situation, when it occurs, the exact error message) → **Steps to fix** (numbered solution or workaround). Group error messages together on this single page rather than scattering them across the docs. |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| The FAQ list | `[accordion]` grouping `[%collapsible]` questions (with `aria-label`) |
-| The exact error message in an issue | `[source]` block — searchable text, never a screenshot |
+| Use                                 | Block                                                                 |
+| ----------------------------------- | --------------------------------------------------------------------- |
+| The FAQ list                        | `[accordion]` grouping `[%collapsible]` questions (with `aria-label`) |
+| The exact error message in an issue | `[source]` block — searchable text, never a screenshot                |
 
 ### AsciiDoc skeleton
 
@@ -548,7 +548,7 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 
 ### Common mistakes
 
-- **Invented questions.** "What makes *PRODUCT* so fast?" is marketing, not FAQ.
+- **Invented questions.** "What makes _PRODUCT_ so fast?" is marketing, not FAQ.
 - **Screenshots of errors.** Unsearchable; paste the text.
 - **Workarounds that outlive the fix.** When a release fixes an issue, remove or annotate its entry — stale workarounds cause new problems.
 - **Answering with essays.** Two sentences and a link beat four paragraphs.
@@ -565,19 +565,19 @@ Only for products with deprecations or a major-version history. **EoL** answers 
 
 **`eol`:**
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | The support policy in one paragraph: release cadence, how many versions receive support, and a warning to read the latest docs version. |
-| `== Supported versions` | 🔴 | The table: Version · GA · End of full support · End of life, one row per version, discontinued ones marked. Dates in `YYYY-MM-DD`; state estimates as estimates. |
+| Section                 | Level | What to write                                                                                                                                                    |
+| ----------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_   | 🔴    | The support policy in one paragraph: release cadence, how many versions receive support, and a warning to read the latest docs version.                          |
+| `== Supported versions` | 🔴    | The table: Version · GA · End of full support · End of life, one row per version, discontinued ones marked. Dates in `YYYY-MM-DD`; state estimates as estimates. |
 
 **`migration-guides`:** one `== Migrate to vX` per major migration, newest first, each with **Prerequisites** → **Steps to update** → **Considerations**. When a migration needs no action, say so explicitly ("No changes are needed") — silence reads as missing docs. Split heavy migrations into nested pages per the sizing rule.
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Support table | Standard table; `label:red[Discontinued]` pill for dead versions |
-| Migration steps | Numbered lists; `[tabs]` for per-platform variants |
+| Use             | Block                                                            |
+| --------------- | ---------------------------------------------------------------- |
+| Support table   | Standard table; `label:red[Discontinued]` pill for dead versions |
+| Migration steps | Numbered lists; `[tabs]` for per-platform variants               |
 
 ### AsciiDoc skeleton
 

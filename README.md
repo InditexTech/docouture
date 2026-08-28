@@ -105,7 +105,7 @@ work from anywhere.
 ## Packages
 
 | Package                        | Purpose                                                                                            |
-| ------------------------------- | -------------------------------------------------------------------------------------------- |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
 | `packages/ui-bundle`           | The Antora UI bundle — layouts, styles, browser scripts, Handlebars helpers — published as a zip.  |
 | `packages/example`             | Real-world documentation site built with this workspace's own packages.                            |
 | `packages/cli`                 | `@inditextech/docouture-cli` — the `docouture` CLI: scaffolds a standalone site (`docouture new`). |

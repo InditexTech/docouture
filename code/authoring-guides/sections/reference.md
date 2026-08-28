@@ -4,11 +4,11 @@ The Reference section documents **what things are**: it focuses on cause and eff
 
 Pages in this section:
 
-| Page | Level | One-line purpose |
-| --- | --- | --- |
-| `overview` | 🔴 required | Map of the available reference material |
-| `configuration` | 🔵 conditional | Every configuration property, exhaustively |
-| `<api / cli / sdk / integrations>` (repeatable pattern) | 🔵 conditional | One page per real surface, exhaustively |
+| Page                                                    | Level          | One-line purpose                           |
+| ------------------------------------------------------- | -------------- | ------------------------------------------ |
+| `overview`                                              | 🔴 required    | Map of the available reference material    |
+| `configuration`                                         | 🔵 conditional | Every configuration property, exhaustively |
+| `<api / cli / sdk / integrations>` (repeatable pattern) | 🔵 conditional | One page per real surface, exhaustively    |
 
 This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)) — like a components catalog (one page per component), a features catalog, a commands catalog (one page per command), or roles and permissions tables.
 
@@ -26,15 +26,15 @@ The map of the section: which reference material exists and what each page cover
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | One or two sentences: what kind of material this section holds. |
-| *(the map)* | 🔴 | A card per reference page. The title states what the page documents — add a short description only when the title alone is not enough. When the catalog grows, group the pages by **type of reference** — configuration, APIs, catalogs (commands, components)… — one `== <Type>` heading per group. |
+| Section               | Level | What to write                                                                                                                                                                                                                                                                                        |
+| --------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_ | 🔴    | One or two sentences: what kind of material this section holds.                                                                                                                                                                                                                                      |
+| _(the map)_           | 🔴    | A card per reference page. The title states what the page documents — add a short description only when the title alone is not enough. When the catalog grows, group the pages by **type of reference** — configuration, APIs, catalogs (commands, components)… — one `== <Type>` heading per group. |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
+| Use                        | Block                                             |
+| -------------------------- | ------------------------------------------------- |
 | The map of reference pages | `[cards]` — the default presentation of this page |
 
 ### AsciiDoc skeleton
@@ -111,29 +111,29 @@ The exhaustive list of the product's configuration properties and how to apply t
 
 Every property is documented in a table with **at least these columns** (if more columns are needed, keep them the minimal possible).
 
-| Column | Content |
-| --- | --- |
-| **Key** | The property name, in `code font`, exactly as written in the config file |
-| **Type** | The data type (String, Boolean, Integer, List…) |
-| **Default value** | The literal default; state it explicitly when empty or none |
-| **Description** | What the property does and its effect. Start with `#Required#` (highlight) when the property is mandatory |
+| Column            | Content                                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------------- |
+| **Key**           | The property name, in `code font`, exactly as written in the config file                                  |
+| **Type**          | The data type (String, Boolean, Integer, List…)                                                           |
+| **Default value** | The literal default; state it explicitly when empty or none                                               |
+| **Description**   | What the property does and its effect. Start with `#Required#` (highlight) when the property is mandatory |
 
 Recommended column widths: `[cols="20%,20%,20%,40%"]`. Group properties by namespace or functional area (one table per `== ` section) when the list grows.
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | Where configuration lives (file, env vars, flags), the precedence order when there are several sources, and how to apply changes. |
-| `== Full example` | 🟠 | A complete, commented configuration file with the options in use together. Readers reach for examples before tables — lead with it. This is the **maximal** counterpart of the minimal snippets shown in Guides. |
-| `== <Namespace / area>` (repeated) | 🔴 | The properties table for that group. Exhaustive: every property, including the obscure ones — this is the page's whole reason to exist. |
+| Section                            | Level | What to write                                                                                                                                                                                                    |
+| ---------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_              | 🔴    | Where configuration lives (file, env vars, flags), the precedence order when there are several sources, and how to apply changes.                                                                                |
+| `== Full example`                  | 🟠    | A complete, commented configuration file with the options in use together. Readers reach for examples before tables — lead with it. This is the **maximal** counterpart of the minimal snippets shown in Guides. |
+| `== <Namespace / area>` (repeated) | 🔴    | The properties table for that group. Exhaustive: every property, including the obscure ones — this is the page's whole reason to exist.                                                                          |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| The properties tables | Standard tables with the spec above; `mono:[]` for the Key column when the code-chip styling adds noise; `nowrap-cols` to keep keys on one line |
-| Equivalent config formats (YAML/JSON/env) | `[tabs]` in the intro example |
+| Use                                       | Block                                                                                                                                           |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| The properties tables                     | Standard tables with the spec above; `mono:[]` for the Key column when the code-chip styling adds noise; `nowrap-cols` to keep keys on one line |
+| Equivalent config formats (YAML/JSON/env) | `[tabs]` in the intro example                                                                                                                   |
 
 ### AsciiDoc skeleton
 
@@ -252,20 +252,20 @@ Examples here complement the guides: a guide shows the minimal implementation of
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | What this surface is, when to use it, and how it is organized. |
-| `== <Element>` (API/SDK, repeated) | 🔴 | One section per method/endpoint/class: description → signature → parameters table (Name · Type · Required · Description) → returns/output → example (request **and** response, call **and** output) → errors. |
-| `== <command>` (CLI, repeated) | 🔴 | One section per command, in plain text: what it does, the usage line, the options as a simple list (`--option` — what it controls and its default), and an example with its output. |
-| `== Status codes and errors` | 🟠 | The status codes and error messages this surface produces, each defined, with its cause and the action to take. Group them here rather than scattering them. |
+| Section                            | Level | What to write                                                                                                                                                                                                 |
+| ---------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_              | 🔴    | What this surface is, when to use it, and how it is organized.                                                                                                                                                |
+| `== <Element>` (API/SDK, repeated) | 🔴    | One section per method/endpoint/class: description → signature → parameters table (Name · Type · Required · Description) → returns/output → example (request **and** response, call **and** output) → errors. |
+| `== <command>` (CLI, repeated)     | 🔴    | One section per command, in plain text: what it does, the usage line, the options as a simple list (`--option` — what it controls and its default), and an example with its output.                           |
+| `== Status codes and errors`       | 🟠    | The status codes and error messages this surface produces, each defined, with its cause and the action to take. Group them here rather than scattering them.                                                  |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Parameters and error tables | Standard tables; `mono:[]` for name/code columns |
-| Example call in several languages | `[tabs]` |
-| Marking element status | `label:` pill (`label:red[Deprecated]`, `label:orange[Beta]`) |
+| Use                               | Block                                                         |
+| --------------------------------- | ------------------------------------------------------------- |
+| Parameters and error tables       | Standard tables; `mono:[]` for name/code columns              |
+| Example call in several languages | `[tabs]`                                                      |
+| Marking element status            | `label:` pill (`label:red[Deprecated]`, `label:orange[Beta]`) |
 
 ### AsciiDoc skeleton — API / SDK / integrations
 

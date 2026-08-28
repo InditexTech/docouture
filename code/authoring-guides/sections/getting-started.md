@@ -4,10 +4,10 @@ The Getting started section takes the reader from zero to a first working result
 
 Pages in this section:
 
-| Page | Level | One-line purpose |
-| --- | --- | --- |
+| Page            | Level       | One-line purpose                      |
+| --------------- | ----------- | ------------------------------------- |
 | `prerequisites` | 🔴 required | What the reader needs before starting |
-| `quickstart` | 🔴 required | A first working result in minutes |
+| `quickstart`    | 🔴 required | A first working result in minutes     |
 
 This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see the [README](../README.md#the-minimal-structure)) — like a basic installation, basic configuration, basic development, basic deployment, basic observability, or basic concepts.
 
@@ -25,19 +25,19 @@ Do not assume anything is preinstalled: list every language, runtime, and tool t
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | One or two sentences: what this page lists and what the reader will be able to do once they meet it (start the quickstart). |
-| `== Requirements` | 🔴 | The tools, versions, accounts, and permissions required, as a checkable list. Be exact about versions (`Node.js 20 or later`, not `a recent Node.js`). If requirements differ per operating system, present the variants with a `[tabs]` block (see the [tabs rule](../README.md#variants-always-go-in-tabs) in the README). |
-| `== Installation` | 🔴 | The basic installation of the product itself, with copy-pasteable commands. If installation differs per package manager or OS, use a `[tabs]` block. |
-| `== Verify the installation` | 🟠 | One command (or check) that confirms everything is in place, with its expected output. Saves a support ticket per reader. |
+| Section                      | Level | What to write                                                                                                                                                                                                                                                                                                                |
+| ---------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_        | 🔴    | One or two sentences: what this page lists and what the reader will be able to do once they meet it (start the quickstart).                                                                                                                                                                                                  |
+| `== Requirements`            | 🔴    | The tools, versions, accounts, and permissions required, as a checkable list. Be exact about versions (`Node.js 20 or later`, not `a recent Node.js`). If requirements differ per operating system, present the variants with a `[tabs]` block (see the [tabs rule](../README.md#variants-always-go-in-tabs) in the README). |
+| `== Installation`            | 🔴    | The basic installation of the product itself, with copy-pasteable commands. If installation differs per package manager or OS, use a `[tabs]` block.                                                                                                                                                                         |
+| `== Verify the installation` | 🟠    | One command (or check) that confirms everything is in place, with its expected output. Saves a support ticket per reader.                                                                                                                                                                                                    |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Equivalent install commands (package managers, OSs) | `[tabs]` — one tab per alternative |
-| A version or permission caveat worth surfacing | Standard `NOTE`/`IMPORTANT` admonition |
+| Use                                                 | Block                                  |
+| --------------------------------------------------- | -------------------------------------- |
+| Equivalent install commands (package managers, OSs) | `[tabs]` — one tab per alternative     |
+| A version or permission caveat worth surfacing      | Standard `NOTE`/`IMPORTANT` admonition |
 
 ### AsciiDoc skeleton
 
@@ -163,20 +163,20 @@ Present a sample scenario rather than abstract instructions: readers relate to "
 
 ### Section-by-section instructions
 
-| Section | Level | What to write |
-| --- | --- | --- |
-| *(intro, no heading)* | 🔴 | What the reader will build/achieve, in how long, and a link back to the prerequisites. State the scenario in one sentence. |
-| `== Step by step` | 🔴 | Numbered steps as `=== 1. <Step>` subsections, in strict order. Each step: what to do (copy-pasteable), what happens, and — when useful — why. Keep each step small enough that failure is easy to locate. |
-| `== <Result / See it working>` | 🔴 | The moment of truth: what the reader should see now (output, screenshot, running URL). Make success unambiguous. |
-| `== Next steps` | 🟠 | Where to go from here: two or three links to the guides that deepen what the quickstart touched. |
-| `== Known issues` | 🔵 | Only if the quickstart has known failure points: list them or link to the troubleshooting content in Additional information. |
+| Section                        | Level | What to write                                                                                                                                                                                              |
+| ------------------------------ | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(intro, no heading)_          | 🔴    | What the reader will build/achieve, in how long, and a link back to the prerequisites. State the scenario in one sentence.                                                                                 |
+| `== Step by step`              | 🔴    | Numbered steps as `=== 1. <Step>` subsections, in strict order. Each step: what to do (copy-pasteable), what happens, and — when useful — why. Keep each step small enough that failure is easy to locate. |
+| `== <Result / See it working>` | 🔴    | The moment of truth: what the reader should see now (output, screenshot, running URL). Make success unambiguous.                                                                                           |
+| `== Next steps`                | 🟠    | Where to go from here: two or three links to the guides that deepen what the quickstart touched.                                                                                                           |
+| `== Known issues`              | 🔵    | Only if the quickstart has known failure points: list them or link to the troubleshooting content in Additional information.                                                                               |
 
 ### Docouture blocks
 
-| Use | Block |
-| --- | --- |
-| Equivalent commands (package managers, OSs, config formats) | `[tabs]` |
-| A caveat that would break the flow if missed | Standard `NOTE`/`IMPORTANT` admonition |
+| Use                                                         | Block                                  |
+| ----------------------------------------------------------- | -------------------------------------- |
+| Equivalent commands (package managers, OSs, config formats) | `[tabs]`                               |
+| A caveat that would break the flow if missed                | Standard `NOTE`/`IMPORTANT` admonition |
 
 Steps are written as plain `=== 1. <Step>` numbered subsections.
 

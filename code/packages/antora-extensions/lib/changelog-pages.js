@@ -25,9 +25,16 @@ const path = require('node:path')
  * component version this build produces. Revisit once a real second version
  * actually exists side-by-side with `main` and this stops being accurate.
  *
- * Only real cut `## [x.y.z]` sections become a section — `## [Unreleased]`
- * is deliberately excluded, the same way Keep a Changelog itself doesn't
- * consider "unreleased" a version.
+ * Every real cut `## [x.y.z]` section becomes a `== vX.Y.Z` section on
+ * every component version's page. `## [Unreleased]` is different: Keep a
+ * Changelog doesn't consider "unreleased" a version, so it never becomes
+ * one here either — but its content is still real and current, so it's
+ * rendered as a plain `== Unreleased` section, and ONLY on the component
+ * version Antora resolved as `prerelease` (built from `main`, never
+ * itself tagged — see `isPrereleaseVersion`). Any real, tagged release's
+ * page never shows it: a tag is an immutable snapshot of the past, and
+ * `[Unreleased]` is by definition whatever has landed on `main` since —
+ * content that tag never contained (GH #160).
  *
  * Hooked on `contentClassified` — same event version-report.js uses: late
  * enough that every component/version Antora resolved is final, early
@@ -77,14 +84,18 @@ module.exports = function registerChangelogPages(context, changelogPath) {
       return
     }
 
-    const releases = parseReleases(raw, logger)
-    const appended = buildAppendedSource(releases)
+    const parsed = parseReleases(raw, logger)
 
     for (const indexFile of indexFiles) {
-      indexFile.contents = Buffer.concat([indexFile.contents, Buffer.from(appended)])
+      const isPrerelease = isPrereleaseVersion(contentCatalog, indexFile.src.component, indexFile.src.version)
+      indexFile.contents = Buffer.concat([indexFile.contents, Buffer.from(buildAppendedSource(parsed, isPrerelease))])
     }
 
-    logger.info('Appended %s release section(s) from %s to changelog/index.adoc', releases.length, resolvedPath)
+    logger.info(
+      'Appended %s release section(s) (+ Unreleased where applicable) from %s to changelog/index.adoc',
+      parsed.releases.length,
+      resolvedPath
+    )
   })
 }
 
@@ -100,15 +111,25 @@ function resolveChangelogPath(playbook, changelogPath) {
 
 // Splits on the '## [x.y.z]' / '## [Unreleased]' H2 boundary — the same
 // boundary release-flow/keep-a-changelog-action and `docouture changelog`
-// (packages/tooling/src/commands/changelog.ts) already key off — and drops
-// Unreleased entirely, per this file's own header.
+// (packages/tooling/src/commands/changelog.ts) already key off.
+//
+// `[Unreleased]` is parsed out separately from `releases` rather than
+// dropped outright: it is never a release section in its own right (Keep a
+// Changelog doesn't consider "unreleased" a version, and it carries no
+// date), but its body is still real, current content — what's landed on
+// `main` since the last cut — that `buildAppendedSource` renders on the
+// `prerelease` component version only. See that function's own comment.
 function parseReleases(raw, logger) {
   const headingRe = /^##\s+\[(.+?)\](?:\s*-\s*(.+))?\s*$/
   const releases = []
+  let unreleased = null
   let current = null
 
   const flush = () => {
-    if (current && current.version.toLowerCase() !== 'unreleased') {
+    if (!current) return
+    if (current.version.toLowerCase() === 'unreleased') {
+      unreleased = { body: convertBody(current.lines, logger, 'Unreleased') }
+    } else {
       releases.push({
         version: current.version,
         date: current.date,
@@ -129,7 +150,21 @@ function parseReleases(raw, logger) {
   }
   flush()
 
-  return releases
+  return { releases, unreleased }
+}
+
+// Whether the component version a given changelog/index.adoc page belongs
+// to is the `prerelease` one — the version built from `main`, per every
+// docs/antora.yml this tooling scaffolds (see this file's own header and
+// docs/antora.yml's own comment) — as opposed to a real, tagged release.
+//
+// Reads the flag Antora itself computed (`componentVersion.prerelease`,
+// resolved off that version's own antora.yml), the same signal
+// version-report.js and duplicate-latest-version.js already key off,
+// rather than string-matching the `prerelease` version label: the label
+// happens to be a fixed convention here, but the boolean is the real API.
+function isPrereleaseVersion(contentCatalog, component, version) {
+  return Boolean(contentCatalog.getComponentVersion?.(component, version)?.prerelease)
 }
 
 // Converts one release's body — restricted, by this repo's own changelog
@@ -175,18 +210,44 @@ function convertBody(lines, logger, versionLabel) {
   return out.join('\n')
 }
 
-function buildAppendedSource(releases) {
-  if (!releases.length) {
+// `isPrerelease` is only true for the component version Antora flagged
+// `prerelease: true` (see `isPrereleaseVersion` above) — the version built
+// from `main`, still under active development and never itself tagged. Its
+// changelog page is the one place `[Unreleased]`'s own content is useful:
+// it's what's landed since the last cut, on the exact build where "no
+// tagged release yet" would otherwise be the whole story (GH #160). Any
+// real, tagged release's page never gets it — a tag is an immutable
+// snapshot; showing content that landed on `main` AFTER that tag was cut
+// would misrepresent what that version actually contains.
+//
+// An `[Unreleased]` heading with no entries under it (a fresh cut, nothing
+// merged since) renders no section at all rather than an empty `==
+// Unreleased` — falls through to the real releases below it, or to the
+// placeholder if there are none of those either.
+function buildAppendedSource({ releases, unreleased }, isPrerelease) {
+  const sections = []
+
+  if (isPrerelease && unreleased && unreleased.body.trim() !== '') {
+    sections.push(`\n\n== Unreleased\n\n${unreleased.body}`)
+  }
+
+  if (releases.length) {
+    sections.push(
+      releases
+        .map((release) => {
+          const title = release.date ? `v${release.version} — ${release.date}` : `v${release.version}`
+          return `\n\n== ${title}\n\n${release.body}`
+        })
+        .join('')
+    )
+  }
+
+  if (!sections.length) {
     return (
       '\n\n== Versions\n\n' +
       "No tagged release yet — see `code/CHANGELOG.md`'s `[Unreleased]` section for what has landed so far.\n"
     )
   }
-  return releases
-    .map((release) => {
-      const title = release.date ? `v${release.version} — ${release.date}` : `v${release.version}`
-      return `\n\n== ${title}\n\n${release.body}`
-    })
-    .join('')
-    .concat('\n')
+
+  return sections.join('').concat('\n')
 }

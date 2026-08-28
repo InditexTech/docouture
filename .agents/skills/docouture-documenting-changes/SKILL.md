@@ -12,6 +12,24 @@ this every time something changes, not just once — it's the loop, not a one-sh
 If there's no site yet at all, this is the wrong skill — see `docouture-getting-started`
 first.
 
+## Non-negotiable trigger check
+
+Before considering ANY code change in this repo done — not just when the user explicitly
+asks to "update the docs" — check whether it needs this skill:
+
+1. List the file(s) you just touched.
+2. Grep the root `AGENTS.md`'s "Documentation state" table for each one, against every
+   row's `derived from` column (globs like `antora-extensions/lib/*.js` count — check the
+   directory, not just the exact filename).
+3. Any hit means that row's doc page now describes stale behaviour and this skill applies
+   to this change, right now, as part of the same piece of work — not a follow-up, not
+   something to wait to be asked for a second time.
+4. No hit doesn't necessarily mean "skip it" either — the table is hand-maintained and can
+   itself be stale (see `reference/maintenance-loop.md`); a change to something clearly
+   user-facing (a new CLI flag, a config key, a changed extension behaviour) still warrants
+   a quick check of whether a doc page describes the old behaviour even if nothing in the
+   table points at the file you touched.
+
 This skill decides *what* changed and *whether* it needs a docs update; once it knows
 which page(s) to touch, it hands off to the same two mechanics skills `docouture-getting-started`
 does:

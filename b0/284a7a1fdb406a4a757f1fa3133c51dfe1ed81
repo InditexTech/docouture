@@ -1,0 +1,18 @@
+AGENTS.md
+  h_c93d154c7c7074 126
+docs/src/modules/main/pages/release-notes/1-0-0.adoc
+  h_c93d154c7c7074 1,3
+docs/src/modules/main/pages/release-notes/index.adoc
+  h_c93d154c7c7074 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b0284a7a1fdb406a4a757f1fa3133c51dfe1ed81",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

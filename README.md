@@ -12,13 +12,16 @@ accepts external contributions (CLA-gated — see [Contributing](#contributing)
 below).
 
 Using the output is not, today: sites built with the current
-`packages/ui-bundle` are for **Inditex-internal distribution only**. The
-bundle embeds proprietary IOP Design System CSS and icons, licensed for
-internal use only — publishing such a site, or the bundle itself, anywhere
-public isn't permitted until that derivative is stripped out (tracked
-separately as a full licensing review). See
-[`code/packages/ui-bundle/NOTICE`](code/packages/ui-bundle/NOTICE) for exactly
-what's embedded.
+`packages/ui-bundle` and `packages/asciidoc-extensions` are for
+**Inditex-internal distribution only**. `ui-bundle` embeds proprietary IOP
+Design System CSS and icons; `asciidoc-extensions` emits markup and class
+names copied from the same design system. Both are licensed for internal use
+only — publishing a site built with either package, or the packages
+themselves, anywhere public isn't permitted until that dependency is stripped
+out (tracked separately as a full licensing review). See
+[`code/packages/ui-bundle/NOTICE`](code/packages/ui-bundle/NOTICE) and
+[`code/packages/asciidoc-extensions/NOTICE`](code/packages/asciidoc-extensions/NOTICE)
+for exactly what's embedded.
 
 ## Requirements
 
@@ -137,7 +140,9 @@ touching `code/**` is expected to carry.
 
 ## License
 
-Apache-2.0 — see [`LICENSE`](LICENSE), with one exception:
+Apache-2.0 — see [`LICENSE`](LICENSE), with two exceptions:
 `code/packages/ui-bundle` is a fork of
 [antora-ui-default](https://gitlab.com/antora/antora-ui-default) and remains
-under MPL-2.0; see its own `LICENSE` and `NOTICE`.
+under MPL-2.0; `code/packages/asciidoc-extensions` is licensed MPL-2.0
+alongside it because its extensions emit copied IOP Design System markup. See
+each package's own `LICENSE` and `NOTICE`.

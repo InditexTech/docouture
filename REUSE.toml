@@ -1,6 +1,6 @@
 version = 1
 SPDX-PackageName = "docouture"
-SPDX-PackageSupplier = "2025 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
+SPDX-PackageSupplier = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-PackageDownloadLocation = "https://github.com/InditexTech/docouture"
 
 [[annotations]]
@@ -9,6 +9,11 @@ path = [
     ".github/**",
     "REUSE.toml",
     "repolinter.json",
+    "README.md",
+    "CONTRIBUTING.md",
+    "justfile",
+    "opencode.json",
+    "skills-lock.json",
 
     # repeated files licensing
     "**/.gitignore",
@@ -18,7 +23,20 @@ path = [
 
     # code/ directory licensing
     "code/packages/antora-extensions/**",
-    "code/packages/ui-bundle/**",
+    "code/packages/example/**",
+    "code/packages/cli/**",
+    "code/packages/tooling/**",
+    "code/packages/publish-gh-pages/**",
+    "code/tools/fumadocs-migrate/**",
+    "code/tools/ids/**",
+    "code/scripts/**",
+    "code/authoring-guides/**",
+    "code/README.md",
+    "code/CHANGELOG.md",
+    "code/pnpm-lock.yaml",
+    "code/pnpm-workspace.yaml",
+    "code/eslint.config.mjs",
+    "code/.npmrc",
     "code/.editorconfig",
     "code/.gitignore",
     "code/.eslintignore",
@@ -37,5 +55,17 @@ path = [
     ".opencode/**",
     "skills/**",
 ]
-SPDX-FileCopyrightText = "2025 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
+SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+# ui-bundle: literal fork of antora-ui-default (MPL-2.0 upstream).
+# asciidoc-extensions: emits markup/class names copied from the IOP Design
+# System, licensed MPL-2.0 to match ui-bundle's internal-distribution
+# posture — see each package's own LICENSE and NOTICE.
+path = [
+    "code/packages/ui-bundle/**",
+    "code/packages/asciidoc-extensions/**",
+]
+SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
+SPDX-License-Identifier = "MPL-2.0"

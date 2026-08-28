@@ -46,7 +46,15 @@ async function run(changelogPath, { files = [], logger, playbookDir } = {}) {
   const context = createContext(logger)
   registerChangelogPages(context, changelogPath)
 
-  const contentCatalog = { getFiles: () => files }
+  const contentCatalog = {
+    getFiles: () => files,
+    // Mirrors real docouture antora.yml convention (and version-report.js /
+    // duplicate-latest-version.js's own use of the same Antora-resolved
+    // flag): the 'prerelease' version string is the one built from `main`
+    // and flagged prerelease; anything else ('stable', a tagged '1.0.0', …)
+    // is a real, tagged release.
+    getComponentVersion: (component, version) => ({ prerelease: version === 'prerelease' }),
+  }
   const playbook = { dir: playbookDir }
 
   await context.emit('contentClassified', { contentCatalog, playbook })
@@ -100,21 +108,37 @@ describe('registerChangelogPages', () => {
     expect(indexFile.contents.toString()).toBe('= Changelog\n\nSome intro.\n') // untouched
   })
 
-  it('appends one == section per cut release, newest first, skipping Unreleased', async () => {
+  it('shows Unreleased above the cut releases on the prerelease version, newest first', async () => {
     const { dir } = writeChangelog(SAMPLE)
     const indexFile = createIndexFile('ROOT', 'prerelease', 'main')
     await run('CHANGELOG.md', { files: [indexFile], playbookDir: dir })
 
     const source = indexFile.contents.toString()
     expect(source).toContain('Some intro.') // original prose preserved
+    expect(source).toContain('== Unreleased')
     expect(source).toContain('== v1.0.0 — 2026-01-15')
     expect(source).toContain('== v0.9.0 — 2025-11-01')
-    expect(source).not.toContain('Unreleased')
+    expect(source).toContain(
+      '* link:https://github.com/InditexTech/docouture/pull/150[#150] [documentation] Document docouture using docouture'
+    )
 
+    const unreleasedPos = source.indexOf('== Unreleased')
     const v1Pos = source.indexOf('== v1.0.0')
     const v0Pos = source.indexOf('== v0.9.0')
-    expect(v1Pos).toBeGreaterThan(-1)
-    expect(v0Pos).toBeGreaterThan(v1Pos) // authored newest-first order preserved
+    expect(unreleasedPos).toBeGreaterThan(-1)
+    expect(v1Pos).toBeGreaterThan(unreleasedPos) // Unreleased leads, authored newest-first order preserved below it
+    expect(v0Pos).toBeGreaterThan(v1Pos)
+  })
+
+  it('never shows Unreleased on a real, tagged version\u2019s page, even with the same CHANGELOG.md', async () => {
+    const { dir } = writeChangelog(SAMPLE)
+    const indexFile = createIndexFile('ROOT', 'stable', 'main')
+    await run('CHANGELOG.md', { files: [indexFile], playbookDir: dir })
+
+    const source = indexFile.contents.toString()
+    expect(source).not.toContain('Unreleased')
+    expect(source).toContain('== v1.0.0 — 2026-01-15')
+    expect(source).toContain('== v0.9.0 — 2025-11-01')
   })
 
   it('converts ### headings and bullet entries to nested AsciiDoc (=== / * link:)', async () => {
@@ -129,12 +153,22 @@ describe('registerChangelogPages', () => {
     expect(source).toContain('* link:https://github.com/InditexTech/x/pull/98[#98] [cli] Fix a crash')
   })
 
-  it('appends a "no tagged release yet" placeholder when only Unreleased exists', async () => {
+  it('appends a "no tagged release yet" placeholder on a real version when nothing has been cut', async () => {
     const { dir } = writeChangelog('# Changelog\n\n## [Unreleased]\n\n### Added\n\n- [#1](url) thing\n')
-    const indexFile = createIndexFile('ROOT', 'prerelease', 'main')
+    const indexFile = createIndexFile('ROOT', 'stable', 'main') // a real, tagged version — never shows Unreleased
     await run('CHANGELOG.md', { files: [indexFile], playbookDir: dir })
 
     expect(indexFile.contents.toString()).toContain('No tagged release yet')
+  })
+
+  it('appends the placeholder on the prerelease version too when Unreleased itself is empty', async () => {
+    const { dir } = writeChangelog('# Changelog\n\n## [Unreleased]\n')
+    const indexFile = createIndexFile('ROOT', 'prerelease', 'main')
+    await run('CHANGELOG.md', { files: [indexFile], playbookDir: dir })
+
+    const source = indexFile.contents.toString()
+    expect(source).toContain('No tagged release yet')
+    expect(source).not.toContain('== Unreleased')
   })
 
   it('warns and copies a malformed entry verbatim instead of failing', async () => {
@@ -197,5 +231,9 @@ describe('registerChangelogPages', () => {
 
     expect(prerelease.contents.toString()).toContain('== v1.0.0')
     expect(stable.contents.toString()).toContain('== v1.0.0')
+
+    // Only the prerelease version's own page gets Unreleased.
+    expect(prerelease.contents.toString()).toContain('== Unreleased')
+    expect(stable.contents.toString()).not.toContain('Unreleased')
   })
 })

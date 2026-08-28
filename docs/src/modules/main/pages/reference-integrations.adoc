@@ -36,15 +36,26 @@ xref:main:changelog/index.adoc[]'s per-version sections are generated at build t
 every cut `## [x.y.z]` section, converts its `### Section` headings and `- [#PR](url)
 text` bullets to AsciiDoc, and appends each one as a `== vX.Y.Z` section directly onto
 whatever page already lives at `changelog/index.adoc` — only on a site that has one; a
-site with no changelog page is left untouched. `## [Unreleased]` is deliberately
-excluded, the same way Keep a Changelog itself doesn't consider it a version.
+site with no changelog page is left untouched.
+
+`## [Unreleased]` is handled differently from a real cut release: it never becomes a
+`== vX.Y.Z` section (Keep a Changelog doesn't consider "unreleased" a version either),
+but its content still renders as a plain `== Unreleased` section — and only on the
+component version Antora resolved as `prerelease` (the version built from `main`,
+never itself tagged). Any real, tagged release's own changelog page never shows it: a
+tag is an immutable snapshot, and `[Unreleased]` is by definition whatever has landed
+on `main` since. An empty `[Unreleased]` heading (nothing merged since the last cut)
+renders no section at all rather than an empty one.
 
 The file is read once per build, off disk, applied identically to every component
-version being built — not resolved per-ref through git, so a future build that
-aggregates two real docs versions side by side will show the same (current) changelog
-content on both until that gets revisited. Override the default `code/CHANGELOG.md`
+version being built — not resolved per-ref through git, so a real release tag's own
+changelog page reflects whatever `code/CHANGELOG.md` says on disk right now, not that
+tag's own historical copy of the file. In practice this only matters for the cut
+releases: a tagged version's page shows every `## [x.y.z]` section on disk, no more and
+no less, regardless of which ref cut it. Override the default `code/CHANGELOG.md`
 location (resolved relative to the playbook's own directory) with `changelog_path` on
 the extension's registration entry:
+
 
 [,yaml]
 ----

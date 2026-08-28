@@ -119,7 +119,7 @@ npx skills@latest add InditexTech/docouture --all
 | antora-playbook-configuration.adoc       | `code/packages/cli/templates/starter/antora-playbook.yml`                              | current |
 | antora-yml-configuration.adoc            | `code/packages/cli/templates/starter/src/antora.yml` + `antora-extensions/lib/{nav-modules,footer,llms-txt}.js` | current |
 | ui-bundle.adoc                           | `code/packages/ui-bundle/src/partials/*`, `src/js/*`                                    | current |
-| features.adoc                            | `code/packages/antora-extensions/lib/*.js`, `code/packages/asciidoc-extensions/lib/*.js` | current |
+| reference-integrations.adoc              | `code/packages/antora-extensions/lib/*.js`, `code/packages/asciidoc-extensions/lib/*.js` | current |
 | custom-asciidoc-components.adoc          | `code/packages/asciidoc-extensions/lib/*.js` (via the starter's own `components.adoc`)  | current |
 | architecture.adoc                        | `code/README.md`, `code/packages/*/package.json`                                       | current |
 | structure.adoc                           | `code/README.md`, workspace `packages/` layout                                          | current |

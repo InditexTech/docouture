@@ -1,0 +1,28 @@
+code/packages/antora-extensions/index.js
+  h_c93d154c7c7074 9,56-60,69
+code/packages/antora-extensions/lib/search-index.js
+  h_c93d154c7c7074 58-67,70-77,79-83,108-113,116-122
+code/packages/antora-extensions/lib/search-index.spec.js
+  h_c93d154c7c7074 1-104
+code/packages/antora-extensions/lib/version-report.js
+  h_c93d154c7c7074 1-40
+code/packages/antora-extensions/lib/version-report.spec.js
+  h_c93d154c7c7074 1-83
+code/packages/cli/src/commands/new.ts
+  h_c93d154c7c7074 39
+code/packages/publish-gh-pages/index.js
+  h_c93d154c7c7074 17-118,136-140,142-144,152-155,158,183-184,190-202,205-206,209,211,216-237
+code/packages/publish-gh-pages/index.spec.js
+  h_c93d154c7c7074 7-15,17-21,26-33,45,59,68,72,92-93,113-114,119-245
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1dd5cec0f61c8abe72b928fc58dd78252e3b4b4b",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

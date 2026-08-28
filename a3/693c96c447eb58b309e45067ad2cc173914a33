@@ -1,0 +1,22 @@
+.opencode/skills/starter-package/SKILL.md
+  h_c93d154c7c7074 3,11-13,16-24,35-36,62,71-72,76-83,92-94
+code/packages/cli/templates/starter/antora-playbook.local.yml
+  h_c93d154c7c7074 45-48
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  h_c93d154c7c7074 47-53,55-63
+code/packages/cli/templates/starter/antora-playbook.yml
+  h_c93d154c7c7074 49-55,57-65
+code/packages/cli/templates/starter/package.json
+  h_c93d154c7c7074 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a3693c96c447eb58b309e45067ad2cc173914a33",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

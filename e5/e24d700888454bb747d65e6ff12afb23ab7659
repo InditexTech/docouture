@@ -1,0 +1,157 @@
+code/packages/example/docs/modules/main/pages/build/actions/align-nodes-tool.adoc
+  s_fec47c4e2d265d::t_d78743a1b1de20 18,26,41,71
+code/packages/example/docs/modules/main/pages/build/actions/arrow-tool.adoc
+  s_fec47c4e2d265d::t_1433ba59dba6a1 19,27,42,69
+code/packages/example/docs/modules/main/pages/build/actions/brush-tool.adoc
+  s_fec47c4e2d265d::t_e7cd5a8a9c6c08 25,33,48,75
+code/packages/example/docs/modules/main/pages/build/actions/comment-tool.adoc
+  s_fec47c4e2d265d::t_516dd70f77b3dd 35,43,72,99
+code/packages/example/docs/modules/main/pages/build/actions/connector-tool.adoc
+  s_fec47c4e2d265d::t_0d7cdf17a4befe 18,26,41,68
+code/packages/example/docs/modules/main/pages/build/actions/ellipse-tool.adoc
+  s_fec47c4e2d265d::t_4991297a6d0405 18,26,41,68
+code/packages/example/docs/modules/main/pages/build/actions/eraser-tool.adoc
+  s_fec47c4e2d265d::t_7aedfa91fa6cf3 12,20,35,62
+code/packages/example/docs/modules/main/pages/build/actions/export-node-tool.adoc
+  s_fec47c4e2d265d::t_cdfc0bfe9e999f 19,27,42,82
+code/packages/example/docs/modules/main/pages/build/actions/export-stage-tool.adoc
+  s_fec47c4e2d265d::t_45fe14cf6ccb12 20,28,43,80
+code/packages/example/docs/modules/main/pages/build/actions/fit-to-screen-tool.adoc
+  s_fec47c4e2d265d::t_241c89627cab92 20,28,43,70
+code/packages/example/docs/modules/main/pages/build/actions/fit-to-selection-tool.adoc
+  s_fec47c4e2d265d::t_ed690d3e85565f 20,28,43,70
+code/packages/example/docs/modules/main/pages/build/actions/frame-tool.adoc
+  s_fec47c4e2d265d::t_784793b901c59a 20,28,43,79
+code/packages/example/docs/modules/main/pages/build/actions/image-tool.adoc
+  s_fec47c4e2d265d::t_26f205d50f5566 29,37,52,142
+code/packages/example/docs/modules/main/pages/build/actions/images-tool.adoc
+  s_fec47c4e2d265d::t_d85c2a6bc86e96 30,38,53,172
+code/packages/example/docs/modules/main/pages/build/actions/index.adoc
+  s_fec47c4e2d265d::t_48a98f493a4b6f 42,45,48
+code/packages/example/docs/modules/main/pages/build/actions/line-tool.adoc
+  s_fec47c4e2d265d::t_88ca524136fb22 22,30,45,72
+code/packages/example/docs/modules/main/pages/build/actions/measure-tool.adoc
+  s_fec47c4e2d265d::t_9efa47206a258a 18,26,41,68
+code/packages/example/docs/modules/main/pages/build/actions/move-tool.adoc
+  s_fec47c4e2d265d::t_f59a76073501e5 18,26,41,68
+code/packages/example/docs/modules/main/pages/build/actions/pen-tool.adoc
+  s_fec47c4e2d265d::t_20adf944716ec5 23,31,46,73
+code/packages/example/docs/modules/main/pages/build/actions/polygon-tool.adoc
+  s_fec47c4e2d265d::t_7563e199492294 17,25,49,83
+code/packages/example/docs/modules/main/pages/build/actions/rectangle-tool.adoc
+  s_fec47c4e2d265d::t_97462f5b26129a 18,26,41,68
+code/packages/example/docs/modules/main/pages/build/actions/regular-polygon-tool.adoc
+  s_fec47c4e2d265d::t_3f35f08868e89a 24,32,47,74
+code/packages/example/docs/modules/main/pages/build/actions/selection-tool.adoc
+  s_fec47c4e2d265d::t_1b98fa9c68be91 18,26,41,68
+code/packages/example/docs/modules/main/pages/build/actions/star-tool.adoc
+  s_fec47c4e2d265d::t_2068fa5441efc7 18,26,41,68
+code/packages/example/docs/modules/main/pages/build/actions/stroke-tool.adoc
+  s_fec47c4e2d265d::t_02a81e832ac054 22,30,45,72
+code/packages/example/docs/modules/main/pages/build/actions/text-tool.adoc
+  s_fec47c4e2d265d::t_691d6bc3f87928 24,32,47,74
+code/packages/example/docs/modules/main/pages/build/actions/video-tool.adoc
+  s_fec47c4e2d265d::t_78f353347afac4 30,38,53,134
+code/packages/example/docs/modules/main/pages/build/actions/zoom-in-tool.adoc
+  s_fec47c4e2d265d::t_b8f9139c0a7b6a 20,28,43,70
+code/packages/example/docs/modules/main/pages/build/actions/zoom-out-tool.adoc
+  s_fec47c4e2d265d::t_35144d02c6e897 20,28,43,70
+code/packages/example/docs/modules/main/pages/build/nodes/arrow.adoc
+  s_fec47c4e2d265d::t_aa92f699b60361 15,23,38
+code/packages/example/docs/modules/main/pages/build/nodes/comment.adoc
+  s_fec47c4e2d265d::t_afd823bd523315 29,37,66
+code/packages/example/docs/modules/main/pages/build/nodes/connector.adoc
+  s_fec47c4e2d265d::t_25422870da7512 11,19,34
+code/packages/example/docs/modules/main/pages/build/nodes/ellipse.adoc
+  s_fec47c4e2d265d::t_28780ee0237193 15,23,38
+code/packages/example/docs/modules/main/pages/build/nodes/frame.adoc
+  s_fec47c4e2d265d::t_cc500297a27c3a 16,24,39
+code/packages/example/docs/modules/main/pages/build/nodes/group.adoc
+  s_fec47c4e2d265d::t_0804b72295dc81 17,25,40
+code/packages/example/docs/modules/main/pages/build/nodes/image.adoc
+  s_fec47c4e2d265d::t_8a29371cf08485 16,24,39
+code/packages/example/docs/modules/main/pages/build/nodes/layer.adoc
+  s_fec47c4e2d265d::t_71d62b362077bb 15,23,38
+code/packages/example/docs/modules/main/pages/build/nodes/line.adoc
+  s_fec47c4e2d265d::t_3fc566993eae29 17,25,40
+code/packages/example/docs/modules/main/pages/build/nodes/measure.adoc
+  s_fec47c4e2d265d::t_4b811f0ea92aa0 16,24,39
+code/packages/example/docs/modules/main/pages/build/nodes/polygon.adoc
+  s_fec47c4e2d265d::t_2a7f91b33c79b7 33,41,56
+code/packages/example/docs/modules/main/pages/build/nodes/rectangle.adoc
+  s_fec47c4e2d265d::t_2c3bdf6276f03b 17,25,40
+code/packages/example/docs/modules/main/pages/build/nodes/regular-polygon.adoc
+  s_fec47c4e2d265d::t_306d944e70f1a6 22,30,45
+code/packages/example/docs/modules/main/pages/build/nodes/stage.adoc
+  s_fec47c4e2d265d::t_6b3615f3e69094 14,22,37
+code/packages/example/docs/modules/main/pages/build/nodes/star.adoc
+  s_fec47c4e2d265d::t_19aec353f8e4a6 16,24,39
+code/packages/example/docs/modules/main/pages/build/nodes/stroke-single.adoc
+  s_fec47c4e2d265d::t_eafb5a0e1c66da 12,20,35
+code/packages/example/docs/modules/main/pages/build/nodes/stroke.adoc
+  s_fec47c4e2d265d::t_d4e4dea087e774 11,19,34
+code/packages/example/docs/modules/main/pages/build/nodes/text.adoc
+  s_fec47c4e2d265d::t_99c01e85889641 16,24,39
+code/packages/example/docs/modules/main/pages/build/nodes/video.adoc
+  s_fec47c4e2d265d::t_439f902a5f1e6b 12,20,35
+code/packages/example/docs/modules/main/pages/build/plugins/comments-renderer.adoc
+  s_fec47c4e2d265d::t_525873dd49342e 20,28,57
+code/packages/example/docs/modules/main/pages/build/plugins/connected-users.adoc
+  s_fec47c4e2d265d::t_e1cd99f6d24a3e 21,29,63
+code/packages/example/docs/modules/main/pages/build/plugins/context-menu.adoc
+  s_fec47c4e2d265d::t_baafaf2d586ce9 25,33,48
+code/packages/example/docs/modules/main/pages/build/plugins/copy-paste-nodes.adoc
+  s_fec47c4e2d265d::t_c498b27afc8668 21,29,44
+code/packages/example/docs/modules/main/pages/build/plugins/nodes-multi-selection-feedback.adoc
+  s_fec47c4e2d265d::t_665fbb56790be9 12,20,42
+code/packages/example/docs/modules/main/pages/build/plugins/nodes-selection.adoc
+  s_fec47c4e2d265d::t_d38b84fc6475de 19,27,50
+code/packages/example/docs/modules/main/pages/build/plugins/nodes-snapping.adoc
+  s_fec47c4e2d265d::t_9baae8c4d156ed 23,31,46
+code/packages/example/docs/modules/main/pages/build/plugins/stage-drop-area.adoc
+  s_fec47c4e2d265d::t_c0e2785fbedb18 20,28,43
+code/packages/example/docs/modules/main/pages/build/plugins/stage-grid.adoc
+  s_fec47c4e2d265d::t_fa9651f28d3e72 17,25,49
+code/packages/example/docs/modules/main/pages/build/plugins/stage-keyboard-move.adoc
+  s_fec47c4e2d265d::t_fc1d64fac3468f 12,20,35
+code/packages/example/docs/modules/main/pages/build/plugins/stage-minimap.adoc
+  s_fec47c4e2d265d::t_c9a1431b1714a2 17,25,54
+code/packages/example/docs/modules/main/pages/build/plugins/stage-panning.adoc
+  s_fec47c4e2d265d::t_729a2871084198 25,33,48
+code/packages/example/docs/modules/main/pages/build/plugins/stage-resize.adoc
+  s_fec47c4e2d265d::t_884da096ce305f 16,24,39
+code/packages/example/docs/modules/main/pages/build/plugins/stage-zoom.adoc
+  s_fec47c4e2d265d::t_2c96787fa237ef 25,33,56
+code/packages/example/docs/modules/main/pages/build/plugins/users-pointers.adoc
+  s_fec47c4e2d265d::t_86c294e1af4404 19,27,82
+code/packages/example/docs/modules/main/pages/build/plugins/users-presence.adoc
+  s_fec47c4e2d265d::t_ffed4ea77edc2d 19,27,60
+code/packages/example/docs/modules/main/pages/build/plugins/users-selector.adoc
+  s_fec47c4e2d265d::t_de2179c158c5bb 19,27,65
+code/packages/example/docs/modules/main/pages/build/stores/azure-web-pubsub-store.adoc
+  s_fec47c4e2d265d::t_ac5d44880c976e 46,54,90,98
+code/packages/example/docs/modules/react/pages/index.adoc
+  s_fec47c4e2d265d::t_2b48ff6a86298a 16,24
+code/packages/example/docs/modules/sdk/pages/index.adoc
+  s_fec47c4e2d265d::t_26f53dd01359d2 18,26,152
+code/packages/example/docs/modules/store-azure-web-pubsub/pages/index.adoc
+  s_fec47c4e2d265d::t_b6a31226febec2 19,27,63,71
+code/packages/example/docs/modules/store-websockets/pages/index.adoc
+  s_fec47c4e2d265d::t_0ad4e4adb1031f 21,29,66,74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e5e24d700888454bb747d65e6ff12afb23ab7659",
+  "prompts": {},
+  "sessions": {
+    "s_fec47c4e2d265d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe65faf06ffeYsvlWzZYvpCixN",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

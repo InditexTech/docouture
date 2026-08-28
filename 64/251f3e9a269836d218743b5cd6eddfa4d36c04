@@ -1,0 +1,19 @@
+docs/antora-playbook.yml
+  s_1dfaea158c11e5::t_09319a2fbc620b 8-10,50-52,54-56,58-65,67,145,162-165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "64251f3e9a269836d218743b5cd6eddfa4d36c04",
+  "prompts": {},
+  "sessions": {
+    "s_1dfaea158c11e5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbd323240ffeUps2ltadDL8OG8",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

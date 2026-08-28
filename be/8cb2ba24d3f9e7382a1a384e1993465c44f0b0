@@ -1,0 +1,41 @@
+.github/workflows/docouture-kroki-cache-warm.yml
+  s_1dfaea158c11e5::t_1d02feb6149672 1-103
+.github/workflows/docouture-pr-verify.yml
+  s_1dfaea158c11e5::t_bef81e4df5a909 1-122
+.github/workflows/docouture-publish-prerelease.yml
+  s_1dfaea158c11e5::t_833b79871ec988 1-122
+.github/workflows/docouture-publish.yml
+  s_1dfaea158c11e5::t_4bf2533447655c 1-140
+.github/workflows/docouture-release-preview.yml
+  s_1dfaea158c11e5::t_b2642864a6cd4b 1-198
+.github/workflows/docouture-release.yml
+  s_1dfaea158c11e5::t_a39a7f5d2f3698 1-416
+code/packages/cli/src/lib/dev-server.ts
+  s_1dfaea158c11e5::t_4c179fb7c2cdb0 360
+docs/.gitignore
+  s_1dfaea158c11e5::t_5575c398a87167 1-3
+docs/antora-playbook.local.yml
+  s_1dfaea158c11e5::t_6a9388e9b110fc 1-99
+docs/antora-playbook.yml
+  s_1dfaea158c11e5::t_841a4d6a6d6a63 1-189
+docs/package.json
+  s_1dfaea158c11e5::t_847d4928923123 1-37
+docs/scripts/check-links.mjs
+  s_1dfaea158c11e5::t_3181665ef994a2 1-178
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "be8cb2ba24d3f9e7382a1a384e1993465c44f0b0",
+  "prompts": {},
+  "sessions": {
+    "s_1dfaea158c11e5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbd323240ffeUps2ltadDL8OG8",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

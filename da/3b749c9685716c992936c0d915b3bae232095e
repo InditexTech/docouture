@@ -1,0 +1,27 @@
+code/packages/cli/templates/workflows/pdocs-pr-verify.yml
+  s_e2b1f69264dc45::t_7bc6d0e29fbad2 43,50,54,57
+code/packages/cli/templates/workflows/pdocs-publish.yml
+  s_e2b1f69264dc45::t_159a8130404c2a 69,76,80,83,86
+code/packages/cli/templates/workflows/pdocs-release.yml
+  s_e2b1f69264dc45::t_f877c4ccdf568a 114,121,125,128
+code/packages/example/docs/modules/main/examples/build/stores/azure-web-pubsub-server.ts
+  s_e2b1f69264dc45::t_6cc1dd748e63f5 70-79,81
+code/packages/example/docs/modules/store-azure-web-pubsub/examples/build/stores/azure-web-pubsub-server.ts
+  s_e2b1f69264dc45::t_67426f56d8e4a3 70-79,81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "da3b749c9685716c992936c0d915b3bae232095e",
+  "prompts": {},
+  "sessions": {
+    "s_e2b1f69264dc45": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcc678775ffecYDufVHctGDb3K",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+code/packages/cli/templates/starter/package.json
+  s_cbdd421f8b92f4::t_94843118f8decd 28-34
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  s_cbdd421f8b92f4::t_79afcf95b6e585 25-29,40,53-131,136-146,151-152,158-163,172,175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "db8b3dadfa637fff0e7a1494289f4b3c04523f46",
+  "prompts": {},
+  "sessions": {
+    "s_cbdd421f8b92f4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcbe3b3dfffeyM2gWCV7mYe7es",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

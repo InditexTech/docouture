@@ -1,0 +1,14 @@
+code/packages/ui-bundle/src/partials/page-versions.hbs
+  h_c93d154c7c7074 20-34,47,81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "af206f2f6eb94a91f88cfc43dae3b053f82d7422",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

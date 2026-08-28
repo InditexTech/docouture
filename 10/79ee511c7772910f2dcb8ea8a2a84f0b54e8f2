@@ -1,0 +1,23 @@
+code/packages/cli/src/commands/new.spec.ts
+  s_d7119b9e1cd4c5::t_fb83704ce2d034 169,267
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  s_d7119b9e1cd4c5::t_9bc65bd19aed3c 160
+code/packages/cli/templates/starter/antora-playbook.yml
+  s_d7119b9e1cd4c5::t_2acea4fdba109d 182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1079ee511c7772910f2dcb8ea8a2a84f0b54e8f2",
+  "prompts": {},
+  "sessions": {
+    "s_d7119b9e1cd4c5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fc6709c7cffeZqZS0yn0FYBdg0",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

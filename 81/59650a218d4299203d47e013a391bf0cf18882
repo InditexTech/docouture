@@ -1,0 +1,25 @@
+code/packages/cli/templates/agent-support/.claude/skills/docs-versioning.versioned/SKILL.md
+  s_cbdd421f8b92f4::t_1fa9f05215cdb8 25,33,35
+code/packages/cli/templates/agent-support/.claude/skills/docs-versioning.versioned/reference/releasing.md
+  s_cbdd421f8b92f4::t_9e04a0cfbf6fb0 64,77
+code/packages/cli/templates/agent-support/.opencode/skills/docs-versioning.versioned/SKILL.md
+  s_cbdd421f8b92f4::t_73b0af081c05d9 25,33,35
+code/packages/cli/templates/agent-support/.opencode/skills/docs-versioning.versioned/reference/releasing.md
+  s_cbdd421f8b92f4::t_29bf1feca75f2a 64,77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8159650a218d4299203d47e013a391bf0cf18882",
+  "prompts": {},
+  "sessions": {
+    "s_cbdd421f8b92f4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcbe3b3dfffeyM2gWCV7mYe7es",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+.opencode/skills/docs-site-package/reference/versioning-modes.md
+  h_c93d154c7c7074 128-134
+.opencode/skills/starter-package/SKILL.md
+  h_c93d154c7c7074 46
+code/packages/cli/templates/workflows/pdocs-publish.yml
+  h_c93d154c7c7074 26-32,34
+code/packages/cli/templates/workflows/pdocs-release.yml
+  h_c93d154c7c7074 359-378
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8cae1cd21cb52cd23c9a1121100f4b656b19383a",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+docs/src/modules/main/pages/architecture.adoc
+  s_2de194ab94069f::t_ed467b06c9fb6a 3-8,18-19,29,36-45,48,55-69,73-92
+docs/src/modules/main/pages/faq.adoc
+  s_3cf6a0303dd5a2::t_a38f60b9abf831 3,12,20,24,27,31,34,38,41,48,55,60,63,68,71
+docs/src/modules/main/pages/glossary.adoc
+  s_2de194ab94069f::t_cf2048be0d34b1 18,26,36-51,53,55-61,66-73
+docs/src/modules/main/pages/guides-adding-a-module.adoc
+  s_2de194ab94069f::t_0c49d9cdb65a8f 28,48
+docs/src/modules/main/pages/guides-adding-a-page.adoc
+  s_2de194ab94069f::t_a58e7bcfb90133 17,29
+docs/src/modules/main/pages/guides-branding.adoc
+  s_2de194ab94069f::t_d8b0822b40ab1d 1-11
+docs/src/modules/main/pages/guides-content-structure.adoc
+  s_2de194ab94069f::t_238c3cfaaadc61 1-13
+docs/src/modules/main/pages/guides-icon-gallery.adoc
+  s_2de194ab94069f::t_bf257a3f361106 1-169
+docs/src/modules/main/pages/guides-landing-page-modifications.adoc
+  s_2de194ab94069f::t_e55e099962cf6c 4-7,9,18-163,168-170
+docs/src/modules/main/pages/guides-modifying-the-navigation.adoc
+  s_2de194ab94069f::t_2b323048b0a56c 41
+docs/src/modules/main/pages/guides-overview.adoc
+  s_237af282e1b298::t_41e963e945729e 3-10
+docs/src/modules/main/pages/guides-versioning-modes.adoc
+  s_2de194ab94069f::t_1c13a89f00e752 54
+docs/src/modules/main/pages/guides-versioning-publishing.adoc
+  s_2de194ab94069f::t_ecd454dc3db8dd 1-11
+docs/src/modules/main/pages/index.adoc
+  s_2de194ab94069f::t_c67e27da8f1239 14-15,19,23
+docs/src/modules/main/pages/prerequisites.adoc
+  s_2de194ab94069f::t_f61732b8c0097b 3-57,62,72,74-76,78-84,86
+docs/src/modules/main/pages/quickstart.adoc
+  s_2de194ab94069f::t_441438a11cfc89 12-31,62,65-86,90-92
+docs/src/modules/main/pages/structure.adoc
+  s_237af282e1b298::t_95e6439e2f929f 44-47,49,51-53,55-56,59-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1c8e9744c89a6438eb515fa0935f4fd3dbbb699f",
+  "prompts": {},
+  "sessions": {
+    "s_237af282e1b298": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbc98b974ffenS8FzYo05hZ0j5",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_2de194ab94069f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbc7c6f11ffeuJY0wISbGRa1X6",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_3cf6a0303dd5a2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fbc6280eeffebI1wAp63BzlSNx",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

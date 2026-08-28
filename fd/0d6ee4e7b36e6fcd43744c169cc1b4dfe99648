@@ -1,0 +1,16 @@
+code/packages/cli/src/lib/doctor-checks.ts
+  h_c93d154c7c7074 154,243
+code/packages/cli/vitest.config.ts
+  h_c93d154c7c7074 7-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fd0d6ee4e7b36e6fcd43744c169cc1b4dfe99648",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

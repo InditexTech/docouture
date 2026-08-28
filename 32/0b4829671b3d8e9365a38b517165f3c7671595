@@ -1,0 +1,20 @@
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  h_c93d154c7c7074 1-11,15-18,21-24,26,38-49,51-52,54-56,58-83,85,87-112,115-122,124-125,127-129,131-146,148-150,156-160,162-168,179,181,184,186-188,190-195,206,213-215,280-287,295,298,316,319-352,355,358-364,367-368,376-380,384-399,401-407,409-425,427,430-437,439-440,442-444,446-461,463-465,471-539,544-548,550-556,567,638-642,650,653,671,674-691,693-708
+.github/workflows/docs/code-npm_node-publish-release-and-snapshot.md
+  h_c93d154c7c7074 1-79
+.github/workflows/pr-verify.yml
+  h_c93d154c7c7074 29-33
+justfile
+  h_c93d154c7c7074 439-440
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "320b4829671b3d8e9365a38b517165f3c7671595",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+code/CHANGELOG.md
+  h_c93d154c7c7074 62
+code/packages/ui-bundle/src/css/hero.css
+  h_c93d154c7c7074 63-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8ade69cc258a33d3433581dc8a5f209fb36a2887",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

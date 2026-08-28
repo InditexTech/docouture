@@ -1,0 +1,16 @@
+code/CHANGELOG.md
+  h_c93d154c7c7074 12
+code/packages/cli/templates/workflows/pdocs-publish-prerelease.yml
+  h_c93d154c7c7074 52-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9daca8406c7585072accae4e9543d618d39f6261",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

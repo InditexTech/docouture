@@ -1,0 +1,14 @@
+code/nx.json
+  h_c93d154c7c7074 52-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d77de5c4b0f1705d2d7936e55533f6a98aa9c23d",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+.github/ISSUE_TEMPLATE/bug-report.md
+  h_c93d154c7c7074 1-22
+.github/ISSUE_TEMPLATE/feature-request.md
+  h_c93d154c7c7074 1-15
+CODE_OF_CONDUCT.md
+  h_c93d154c7c7074 1-11
+REUSE.toml
+  h_c93d154c7c7074 1-41
+SECURITY.md
+  h_c93d154c7c7074 1-29
+repolinter.json
+  h_c93d154c7c7074 1-311
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c3b743e90f01401bce0d0b229384011a1f0de138",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

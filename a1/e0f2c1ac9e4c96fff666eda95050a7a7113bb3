@@ -1,0 +1,16 @@
+code/packages/example/antora-playbook.local.yml
+  h_c93d154c7c7074 79-85
+code/packages/example/antora-playbook.yml
+  h_c93d154c7c7074 185-192
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a1e0f2c1ac9e4c96fff666eda95050a7a7113bb3",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+code/packages/cli/templates/agent-support/.claude/skills/docs-internals/reference/antora-extensions.md
+  h_c93d154c7c7074 14-15,17
+code/packages/cli/templates/agent-support/.claude/skills/docs-internals/reference/naming.md
+  h_c93d154c7c7074 9,11
+code/packages/cli/templates/agent-support/.claude/skills/docs-versioning.versioned/reference/releasing.md
+  h_c93d154c7c7074 7-8
+code/packages/cli/templates/agent-support/.claude/skills/writing-docs-pages/SKILL.md
+  h_c93d154c7c7074 74,76-77,79
+code/packages/cli/templates/agent-support/.opencode/skills/docs-internals/reference/antora-extensions.md
+  h_c93d154c7c7074 14-15,17
+code/packages/cli/templates/agent-support/.opencode/skills/docs-internals/reference/naming.md
+  h_c93d154c7c7074 9,11
+code/packages/cli/templates/agent-support/.opencode/skills/docs-versioning.versioned/reference/releasing.md
+  h_c93d154c7c7074 7-8
+code/packages/cli/templates/agent-support/.opencode/skills/writing-docs-pages/SKILL.md
+  h_c93d154c7c7074 74,76-77,79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ef75792c59ac63a6854dd6e52c6828842c50654f",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

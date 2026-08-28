@@ -1,0 +1,22 @@
+code/packages/cli/templates/starter/package.json
+  h_c93d154c7c7074 13-14,22-23
+code/packages/cli/templates/workflows/pdocs-pr-verify.yml
+  h_c93d154c7c7074 61-69
+code/packages/cli/templates/workflows/pdocs-publish.yml
+  h_c93d154c7c7074 88-94
+code/packages/cli/templates/workflows/pdocs-release.yml
+  h_c93d154c7c7074 130-152
+justfile
+  h_c93d154c7c7074 181,190-201,203-209
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0bd8d85efa3760f34c50eaea1397e4c2f24c06ed",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

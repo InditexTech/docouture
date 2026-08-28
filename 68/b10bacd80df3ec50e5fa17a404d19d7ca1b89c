@@ -1,0 +1,22 @@
+code/packages/cli/src/commands/new.ts
+  h_c93d154c7c7074 103-117,357
+code/packages/cli/src/commands/upgrade.ts
+  h_c93d154c7c7074 111-115
+code/packages/cli/src/lib/copy-template.ts
+  h_c93d154c7c7074 26-37,61-64
+code/packages/cli/templates/starter/docs/modules/main/pages/getting-started.adoc
+  h_c93d154c7c7074 126-133
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  h_c93d154c7c7074 95-97,102-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "68b10bacd80df3ec50e5fa17a404d19d7ca1b89c",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

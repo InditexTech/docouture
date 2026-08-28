@@ -1,0 +1,30 @@
+.opencode/skills/docs-site-package/SKILL.md
+  h_c93d154c7c7074 124-129,136-139
+.opencode/skills/docs-site-package/reference/playbook.md
+  h_c93d154c7c7074 142
+.opencode/skills/docs-site-package/reference/versioning-modes.md
+  h_c93d154c7c7074 227-239,242-245,248-277
+code/packages/antora-extensions/index.js
+  h_c93d154c7c7074 3,92-98,112
+code/packages/antora-extensions/lib/duplicate-latest-version.js
+  h_c93d154c7c7074 1-141
+code/packages/antora-extensions/lib/duplicate-latest-version.spec.js
+  h_c93d154c7c7074 1-204
+code/packages/cli/src/commands/new.spec.ts
+  h_c93d154c7c7074 162-169,263-267
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  h_c93d154c7c7074 155-160
+code/packages/cli/templates/starter/antora-playbook.yml
+  h_c93d154c7c7074 103-110,177-182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "cf753f727de5cfe3b9ed2bd0d9507a8536458eb2",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+code/packages/antora-extensions/index.js
+  h_c93d154c7c7074 4,29-40,43,52
+code/packages/antora-extensions/lib/html-to-markdown.js
+  h_c93d154c7c7074 1-253
+code/packages/antora-extensions/lib/html-to-markdown.spec.js
+  h_c93d154c7c7074 1-73
+code/packages/antora-extensions/lib/llms-txt.js
+  h_c93d154c7c7074 1-185
+code/packages/antora-extensions/lib/llms-txt.spec.js
+  h_c93d154c7c7074 1-172
+code/packages/antora-extensions/package.json
+  h_c93d154c7c7074 15-16
+code/packages/antora-extensions/vitest.config.js
+  h_c93d154c7c7074 1-10
+code/packages/example/docs/antora.yml
+  h_c93d154c7c7074 85-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "112a3713db31eb3658457e71baa8516e117ccc60",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

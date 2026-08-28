@@ -1,0 +1,16 @@
+docs/package.json
+  h_c93d154c7c7074 18-22
+docs/pnpm-lock.yaml
+  h_c93d154c7c7074 12-13,15-16,18-19,21-22,24-25,111-112,115-116,119-120,124-125,128-129,1454,1458,1467,1472,1479,1483
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3fca9af36d1d8acd4cc417db1c3436993030b85e",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

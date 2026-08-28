@@ -1,0 +1,35 @@
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/SKILL.md
+  s_7a1242b600b2b0::t_da7e1ca27df9ed 53-54
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/reference/content-sourcing.md
+  s_7a1242b600b2b0::t_c9607e3ddf8c22 4
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/reference/maintenance-loop.md
+  s_7a1242b600b2b0::t_ab53937080ab9f 14,17-21,28
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/reference/structure-planning.md
+  s_7a1242b600b2b0::t_4a8bf74aa6c26b 28-29,32,38,41,96,100
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/SKILL.md
+  s_7a1242b600b2b0::t_f6952efb7fbce5 53-54
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/reference/content-sourcing.md
+  s_7a1242b600b2b0::t_50df68db3918fc 4
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/reference/maintenance-loop.md
+  s_7a1242b600b2b0::t_acd62d8177cbb1 14,17-21,28
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/reference/structure-planning.md
+  s_7a1242b600b2b0::t_8572d7de8e0e64 28-29,32,38,41,96,100
+code/packages/cli/templates/agent-support/AGENTS.md
+  s_7a1242b600b2b0::t_d239d92cf2172c 64,67-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "17f0ccbf57c73cc733a49f6c06cb7a91e291e852",
+  "prompts": {},
+  "sessions": {
+    "s_7a1242b600b2b0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fccde4995ffeJIB1RKzWDEAUdI",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

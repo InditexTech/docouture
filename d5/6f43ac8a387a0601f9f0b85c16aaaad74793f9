@@ -1,0 +1,24 @@
+code/CHANGELOG.md
+  h_c93d154c7c7074 17
+code/packages/ui-bundle/preview-src/home.adoc
+  h_c93d154c7c7074 12
+code/packages/ui-bundle/src/css/home-hero.css
+  h_c93d154c7c7074 118,123-126,137-155
+code/packages/ui-bundle/src/partials/home-hero.hbs
+  h_c93d154c7c7074 24,69-76,134,137
+docs/src/modules/ROOT/pages/index.adoc
+  h_c93d154c7c7074 12
+docs/src/modules/main/pages/guides-landing-page-modifications.adoc
+  h_c93d154c7c7074 37,53-57,60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d56f43ac8a387a0601f9f0b85c16aaaad74793f9",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

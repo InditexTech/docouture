@@ -1,0 +1,40 @@
+code/packages/example/docs/modules/main/pages/index.adoc
+  h_c93d154c7c7074 30,51
+code/packages/example/docs/modules/main/pages/manual-installation/backend.adoc
+  h_c93d154c7c7074 20,30,42-43,167,228
+code/packages/example/docs/modules/main/pages/manual-installation/frontend/enter-room-page.adoc
+  h_c93d154c7c7074 18-19,39-40,51,53,75-76
+code/packages/example/docs/modules/main/pages/manual-installation/frontend/index.adoc
+  h_c93d154c7c7074 26-27,37-38,53-54,74-75,92-93,96-97
+code/packages/example/docs/modules/main/pages/manual-installation/frontend/room-page.adoc
+  h_c93d154c7c7074 18-19,45-46,68-69,124,255
+code/packages/example/docs/modules/main/pages/manual-installation/index.adoc
+  h_c93d154c7c7074 32,34,36,138-139,142-143,146-147,183-185,194-198,203-204
+code/packages/example/docs/modules/main/pages/quickstart.adoc
+  h_c93d154c7c7074 21-22,106,213-215,224-228,233-234
+code/packages/ui-bundle/preview-src/content.adoc
+  h_c93d154c7c7074 16-17,22-23
+code/packages/ui-bundle/src/css/card-grid.css
+  h_c93d154c7c7074 85-92,99
+code/packages/ui-bundle/src/css/cta.css
+  h_c93d154c7c7074 37-42,45
+code/packages/ui-bundle/src/css/doc.css
+  h_c93d154c7c7074 38-47,50-101,794-796,802,1112-1114,1116,1118,1267,1312,1318-1323,1326-1327,1703-1714,1736-1738,1741,1789-1791,1800-1805,1813
+code/packages/ui-bundle/src/css/feature-tabs.css
+  h_c93d154c7c7074 74-77,84
+code/packages/ui-bundle/src/js/02-on-this-page.ts
+  h_c93d154c7c7074 10
+code/packages/ui-bundle/src/partials/toc.hbs
+  h_c93d154c7c7074 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "85b8d887a8f7c2b9a8f12ee34dea46621d2b81fd",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

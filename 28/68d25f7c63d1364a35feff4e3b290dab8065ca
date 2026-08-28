@@ -1,0 +1,61 @@
+code/packages/cli/src/commands/doctor.spec.ts
+  s_53235de8325510::t_ace098964d6427 142
+code/packages/cli/src/commands/new.spec.ts
+  s_53235de8325510::t_d4d24ec8804e66 105-106,111,185,196
+code/packages/cli/src/commands/new.ts
+  s_53235de8325510::t_7b6de5a0d4cee2 49,51-52,54,361-362
+code/packages/cli/src/lib/doctor-checks.spec.ts
+  s_53235de8325510::t_ab1cee911c61c6 176
+code/packages/cli/src/lib/doctor-checks.ts
+  s_53235de8325510::t_77c007a2e8e572 181,183-184,186
+code/packages/cli/templates/agent-support/.claude/skills/docs-internals/SKILL.md
+  s_53235de8325510::t_8b9a6ba1ca651b 2
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/SKILL.md
+  s_53235de8325510::t_d1c65c8cae7a7b 1-55
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/reference/content-sourcing.md
+  s_53235de8325510::t_8388f8338b90aa 1-55
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/reference/maintenance-loop.md
+  s_53235de8325510::t_9aeffa33c3d3d9 1-67
+code/packages/cli/templates/agent-support/.claude/skills/documenting-your-repo/reference/structure-planning.md
+  s_53235de8325510::t_8031298b8553e7 1-103
+code/packages/cli/templates/agent-support/.claude/skills/writing-docs-pages/SKILL.md
+  s_53235de8325510::t_1d52b696488770 22,62,97,109
+code/packages/cli/templates/agent-support/.claude/skills/writing-docs-pages/reference/pdocs-blocks.md
+  s_53235de8325510::t_d425b4614c5529 102
+code/packages/cli/templates/agent-support/.opencode/skills/docs-internals/SKILL.md
+  s_53235de8325510::t_67c85c301a0475 2
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/SKILL.md
+  s_53235de8325510::t_0ac1093d62cc0f 1-55
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/reference/maintenance-loop.md
+  s_53235de8325510::t_d24141466f6a10 1-67
+code/packages/cli/templates/agent-support/.opencode/skills/documenting-your-repo/reference/structure-planning.md
+  s_53235de8325510::t_059bf0f138448d 1-103
+code/packages/cli/templates/agent-support/.opencode/skills/writing-docs-pages/SKILL.md
+  s_53235de8325510::t_e74162e228cadc 22,62,97,109
+code/packages/cli/templates/agent-support/.opencode/skills/writing-docs-pages/reference/pdocs-blocks.md
+  s_53235de8325510::t_7b718a6beebab7 102
+code/packages/cli/templates/agent-support/AGENTS.md
+  s_53235de8325510::t_e6f539c27d9db3 23,51-54,58,62-68
+code/packages/cli/templates/starter/antora-playbook.local.yml
+  s_53235de8325510::t_4cc79f1ea5e923 90
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  s_53235de8325510::t_155e790f72f611 141
+code/packages/cli/templates/starter/antora-playbook.yml
+  s_53235de8325510::t_d497aff5d5e936 143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2868d25f7c63d1364a35feff4e3b290dab8065ca",
+  "prompts": {},
+  "sessions": {
+    "s_53235de8325510": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcd10470effe6pu1lgaSTtDWGO",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

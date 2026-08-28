@@ -1,0 +1,18 @@
+code/packages/cli/templates/starter/antora-playbook.local.yml
+  h_c93d154c7c7074 72-76
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  h_c93d154c7c7074 107-114
+code/packages/cli/templates/starter/antora-playbook.yml
+  h_c93d154c7c7074 103-110,117-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fd2053eee577185b5783bff589c177348bf19546",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

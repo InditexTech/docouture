@@ -1,0 +1,18 @@
+.opencode/skills/docs-site-package/SKILL.md
+  h_c93d154c7c7074 3,145-154,161-162
+.opencode/skills/docs-site-package/reference/playbook.md
+  h_c93d154c7c7074 143-146
+.opencode/skills/docs-site-package/reference/versioning-modes.md
+  h_c93d154c7c7074 1-195
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bf72b9a31cfc19c53f4f70250c18bccde34f222b",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

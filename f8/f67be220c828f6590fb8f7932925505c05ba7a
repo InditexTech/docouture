@@ -1,0 +1,20 @@
+.github/workflows/code-npm_node-pr-verify.yml
+  h_c93d154c7c7074 88,91
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  h_c93d154c7c7074 188-199,538-547
+.github/workflows/docs/code-npm_node-publish-release-and-snapshot.md
+  h_c93d154c7c7074 31,53,73
+code/package.json
+  h_c93d154c7c7074 19-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f8f67be220c828f6590fb8f7932925505c05ba7a",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

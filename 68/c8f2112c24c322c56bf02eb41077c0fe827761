@@ -1,0 +1,18 @@
+code/packages/example/docs/modules/ROOT/pages/index-single.adoc
+  h_c93d154c7c7074 13-19,88-112,126-190
+code/packages/ui-bundle/src/css/home-single.css
+  h_c93d154c7c7074 221-227,229-231
+code/scripts/dev.mjs
+  h_c93d154c7c7074 299-315,318
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "68c8f2112c24c322c56bf02eb41077c0fe827761",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+code/packages/asciidoc-extensions/lib/accordion.js
+  h_c93d154c7c7074 93-98
+code/packages/example/docs/modules/ROOT/pages/index.adoc
+  h_c93d154c7c7074 127-161,163-190
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4f22a3823c53c3ee4468d9fdc553e8094c7a735c",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

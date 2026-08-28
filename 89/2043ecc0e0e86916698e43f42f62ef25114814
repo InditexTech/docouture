@@ -1,0 +1,110 @@
+.agents/skills/codebase-design/DEEPENING.md
+  h_c93d154c7c7074 1-37
+.agents/skills/codebase-design/DESIGN-IT-TWICE.md
+  h_c93d154c7c7074 1-44
+.agents/skills/codebase-design/SKILL.md
+  h_c93d154c7c7074 1-114
+.agents/skills/codebase-design/agents/openai.yaml
+  h_c93d154c7c7074 1-3
+.agents/skills/domain-modeling/ADR-FORMAT.md
+  h_c93d154c7c7074 1-47
+.agents/skills/domain-modeling/CONTEXT-FORMAT.md
+  h_c93d154c7c7074 1-60
+.agents/skills/domain-modeling/SKILL.md
+  h_c93d154c7c7074 1-74
+.agents/skills/domain-modeling/agents/openai.yaml
+  h_c93d154c7c7074 1-3
+.agents/skills/grill-me/SKILL.md
+  h_c93d154c7c7074 1-7
+.agents/skills/grill-me/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/grill-with-docs/SKILL.md
+  h_c93d154c7c7074 1-7
+.agents/skills/grill-with-docs/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/grilling/SKILL.md
+  h_c93d154c7c7074 1-28
+.agents/skills/grilling/agents/openai.yaml
+  h_c93d154c7c7074 1-3
+.agents/skills/handoff/SKILL.md
+  h_c93d154c7c7074 1-16
+.agents/skills/handoff/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/implement/SKILL.md
+  h_c93d154c7c7074 1-15
+.agents/skills/implement/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/improve-codebase-architecture/HTML-REPORT.md
+  h_c93d154c7c7074 1-123
+.agents/skills/improve-codebase-architecture/SKILL.md
+  h_c93d154c7c7074 1-71
+.agents/skills/improve-codebase-architecture/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/loop-me/SKILL.md
+  h_c93d154c7c7074 1-32
+.agents/skills/loop-me/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/prototype/LOGIC.md
+  h_c93d154c7c7074 1-67
+.agents/skills/prototype/SKILL.md
+  h_c93d154c7c7074 1-26
+.agents/skills/prototype/UI.md
+  h_c93d154c7c7074 1-112
+.agents/skills/prototype/agents/openai.yaml
+  h_c93d154c7c7074 1-3
+.agents/skills/research/SKILL.md
+  h_c93d154c7c7074 1-12
+.agents/skills/research/agents/openai.yaml
+  h_c93d154c7c7074 1-3
+.agents/skills/to-questionnaire/SKILL.md
+  h_c93d154c7c7074 1-54
+.agents/skills/to-questionnaire/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/to-spec/SKILL.md
+  h_c93d154c7c7074 1-75
+.agents/skills/to-spec/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/to-tickets/SKILL.md
+  h_c93d154c7c7074 1-105
+.agents/skills/to-tickets/agents/openai.yaml
+  h_c93d154c7c7074 1-5
+.agents/skills/wizard/SKILL.md
+  h_c93d154c7c7074 1-44
+.agents/skills/wizard/agents/openai.yaml
+  h_c93d154c7c7074 1-3
+.agents/skills/wizard/template.sh
+  h_c93d154c7c7074 1-204
+.agents/skills/writing-for-agents/SKILL-MECHANICS.md
+  h_c93d154c7c7074 1-22
+.agents/skills/writing-for-agents/SKILL.md
+  h_c93d154c7c7074 1-81
+.agents/skills/writing-for-agents/agents/openai.yaml
+  h_c93d154c7c7074 1-3
+.opencode/skills/changelog/SKILL.md
+  h_c93d154c7c7074 94,109
+code/package.json
+  h_c93d154c7c7074 8
+code/packages/antora-extensions/package.json
+  h_c93d154c7c7074 7
+code/packages/asciidoc-extensions/package.json
+  h_c93d154c7c7074 7
+code/packages/cli/package.json
+  h_c93d154c7c7074 7
+code/packages/publish-gh-pages/package.json
+  h_c93d154c7c7074 7
+code/packages/ui-bundle/package.json
+  h_c93d154c7c7074 7
+skills-lock.json
+  h_c93d154c7c7074 1-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "892043ecc0e0e86916698e43f42f62ef25114814",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

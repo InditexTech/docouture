@@ -357,7 +357,7 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
   log(`  http://localhost:${port}${basePath}/`)
 
   const watchers = [
-    watchPath(join(siteRoot, 'docs')),
+    watchPath(join(siteRoot, 'src')),
     watchPath(join(siteRoot, 'antora-playbook.local.yml'), { recursive: false }),
   ]
   void Promise.all(watchers)

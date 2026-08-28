@@ -1,0 +1,53 @@
+= Releasing a documentation
+
+A release is cut by running `.github/workflows/docouture-release.yml` (scaffolded by
+`docouture new`), not by hand-editing anything under `docs/`. Two triggers:
+
+* *Manually* — Actions tab → "docouture-release" → Run workflow. Works immediately.
+* *Automatically* — merge a pull request into `main` carrying the `docs/release`
+  label. That label isn't created automatically — see xref:main:prerequisites.adoc[] —
+  so until it exists, only the manual trigger works; a merge without it is a silent
+  no-op, not an error.
+
+Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a one-off
+commit built on `main`'s current tip, `git tag v<value>` is created there, and the tag
+is pushed — `main` itself is never advanced.
+
+== Standalone mode
+
+Every release retargets the same `stable` tag — force-moved, not appended to. Nothing
+to set beforehand; the workflow's default input is fine.
+
+== Versioned mode
+
+The target version comes from `docs/.release-version`, not a form field, when
+triggered by a labelled PR merge:
+
+. Edit `docs/.release-version` to the target version (e.g. `1.0.0`)
+. Open a PR with that change, labelled `docs/release`
+. Merge it — the workflow tags `v1.0.0`, then bumps the file forward to the next patch
+  version so it's always ready for whatever comes next
+
+(Or skip the PR: run the workflow manually via `workflow_dispatch` and type the
+version directly — its form field is what a versioned-mode release actually requires
+there, unlike standalone's, where the default is fine.)
+
+== `docouture version` vs. a real release
+
+`docouture version <value>` is the narrower tool the workflow itself calls internally
+— it only rewrites `docs/src/antora.yml`'s `version:`/`prerelease:` fields in place.
+Useful for local, throwaway testing of how a version renders; it does not cut a
+release on either mode, and never touches `docs/.release-version`:
+
+[,console]
+----
+$ docouture version 1.0.0
+$ docouture version 1.1.0-rc.0 --prerelease
+----
+
+== Every release tag is force-recreated
+
+Republishing an already-released version (fixing a docs typo caught after the tag
+went out) is a deliberate, ordinary act — no separate flag needed. The one
+difference: the `docs/.release-version` forward-bump step is skipped on a republish,
+since that file's current value was typically already the next planned target.

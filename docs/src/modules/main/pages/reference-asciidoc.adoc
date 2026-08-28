@@ -1,0 +1,13 @@
+= AsciiDoc
+
+Every block and macro this scaffold's toolchain understands, each rendered live so
+you can see what it actually looks like before reaching for it in real content.
+
+* xref:main:reference-asciidoc-basics.adoc[AsciiDoc basics] — plain
+  https://asciidoc.org[AsciiDoc], nothing docouture-specific: headings, text
+  formatting, lists, links, images, admonitions, source code, tables, includes,
+  quotes and collapsibles.
+* xref:main:reference-custom-asciidoc-components.adoc[Custom AsciiDoc components]
+  — this site's own blocks, registered by
+  `@inditextech/docouture-asciidoc-extensions`: tabs, cards, accordions,
+  feature-tabs, cta, diagrams, and the inline macros.

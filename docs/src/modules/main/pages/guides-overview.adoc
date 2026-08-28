@@ -1,0 +1,11 @@
+= Guides
+
+Task-oriented how-tos for a scaffolded site, grouped by what they're for:
+
+* xref:main:guides-content-structure.adoc[Content & structure] — growing the site's
+  shape: modules, pages, navigation.
+* xref:main:guides-branding.adoc[Branding & customization] — the landing page,
+  favicon, and product logo.
+* xref:main:guides-versioning-publishing.adoc[Versioning & publishing] — taking a
+  local build to a published, versioned one.
+

@@ -57,6 +57,7 @@ describe('packageManagerPlan', () => {
     expect(plan.lockfile).toBe('package-lock.json')
     expect(plan.cacheName).toBe('npm')
     expect(plan.setupStepYaml).toBe('')
+    expect(plan.packageManagerField).toMatch(/^npm@\d+\.\d+\.\d+/)
   })
 
   it('returns pnpm commands for pnpm, including a pnpm/action-setup step', () => {
@@ -67,5 +68,10 @@ describe('packageManagerPlan', () => {
     expect(plan.lockfile).toBe('pnpm-lock.yaml')
     expect(plan.cacheName).toBe('pnpm')
     expect(plan.setupStepYaml).toContain('pnpm/action-setup')
+    // `package_json_file` must point at this site's own package.json, not
+    // the repo root pnpm/action-setup otherwise defaults to (GH regression:
+    // "No pnpm version is specified" — see this constant's own comment).
+    expect(plan.setupStepYaml).toContain('package_json_file: docs/package.json')
+    expect(plan.packageManagerField).toMatch(/^pnpm@\d+\.\d+\.\d+/)
   })
 })

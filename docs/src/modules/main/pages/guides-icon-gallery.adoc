@@ -1,0 +1,169 @@
+= Icon gallery
+
+Every icon this site's UI bundle actually ships, so you never have to guess a
+`group/name` string and find out only after a card renders with a blank header slot.
+
+The set below is fixed by whichever `@inditextech/docouture-ui-bundle` version this
+site depends on — a normal site cannot add to it. The icons come from Inditex's
+proprietary internal design-system mirror; the fetch/build tooling that vendors them
+(`src/img/icons.yml`, `just icons-fetch`/`icons-build`) only runs inside the
+`docouture` monorepo itself, against an internal asset host. Need one that isn't
+here? Open a request against the `docouture` repository — there's no way to add it
+from a site that just depends on the published bundle.
+
+== Two places an icon reference is read, two different rules
+
+* `nav_modules[].icon` (see xref:main:guides-adding-a-module.adoc[]) is resolved by a
+  Handlebars helper at *page-render* time, with full access to the icon sprite — any
+  icon in this gallery works there, both sections below.
+* `[card,icon="group/name"]` (see xref:main:reference-custom-asciidoc-components.adoc[]) is
+  resolved by the Asciidoctor extension itself at *build* time, which has no access
+  to the sprite at all — it can only emit a pre-generated CSS class. Only the icons in
+  the first section below have one. Reference one from the second section instead,
+  and nothing errors — the card just renders with an empty icon slot, silently.
+
+== Usable in `[card,icon=]`
+
+Every icon here has a generated CSS mask, so it's guaranteed to actually render in a
+card's header. Copy the `group/name` string as-is.
+
+[cards]
+====
+[card,icon="actions/check-circle-outlined",subheader="Copy button · admonition"]
+.xref:main:reference-custom-asciidoc-components.adoc[actions/check-circle-outlined]
+The check that flashes after a successful code-block copy, and the `IMPORTANT`
+admonition's icon.
+
+[card,icon="actions/code-block-outlined",subheader="Card icon example"]
+.xref:main:reference-custom-asciidoc-components.adoc[actions/code-block-outlined]
+Vendored specifically as a `[card,icon=]` example.
+
+[card,icon="alerts/warning-outlined",subheader="Admonition"]
+.xref:main:reference-custom-asciidoc-components.adoc[alerts/warning-outlined]
+The `WARNING` admonition's icon.
+
+[card,icon="alerts/warning-alt-outlined",subheader="Admonition"]
+.xref:main:reference-custom-asciidoc-components.adoc[alerts/warning-alt-outlined]
+The `CAUTION` admonition's icon.
+
+[card,icon="arrows/chevron-down-outlined",subheader="Accordion · nav switcher"]
+.xref:main:reference-custom-asciidoc-components.adoc[arrows/chevron-down-outlined]
+The disclosure marker on a `[%collapsible]` item, and the nav-switcher's own chevron.
+
+[card,icon="business/file-outlined",subheader="Card icon example"]
+.xref:main:reference-custom-asciidoc-components.adoc[business/file-outlined]
+Vendored specifically as a `[card,icon=]` example.
+
+[card,icon="business/sticker-outlined",subheader="Admonition"]
+.xref:main:reference-custom-asciidoc-components.adoc[business/sticker-outlined]
+The `NOTE` admonition's icon.
+
+[card,icon="business/store-outlined",subheader="Card icon example"]
+.xref:main:reference-custom-asciidoc-components.adoc[business/store-outlined]
+Vendored specifically as a `[card,icon=]` example.
+
+[card,icon="communication/comment-outlined",subheader="Admonition"]
+.xref:main:reference-custom-asciidoc-components.adoc[communication/comment-outlined]
+The `TIP` admonition's icon.
+
+[card,icon="connectivity/link-external-outlined",subheader="Feature tabs · hero"]
+.xref:main:reference-custom-asciidoc-components.adoc[connectivity/link-external-outlined]
+Auto-appended to a `[feature-tabs]` slide's `[.cta]` link, and to a hero action
+button, whenever the target isn't a resolvable internal page.
+
+[card,icon="design/grid-outlined",subheader="Card icon example"]
+.xref:main:reference-custom-asciidoc-components.adoc[design/grid-outlined]
+The icon on this very site's own Architecture quicklink card, and on `main`'s
+`nav_modules` entry — proof the same string works in both places.
+
+[card,icon="others/server-outlined",subheader="Card icon example"]
+.xref:main:reference-custom-asciidoc-components.adoc[others/server-outlined]
+Vendored specifically as a `[card,icon=]` example.
+
+[card,icon="others/fire-outlined",subheader="Card icon example"]
+.xref:main:reference-custom-asciidoc-components.adoc[others/fire-outlined]
+Vendored specifically as a `[card,icon=]` example.
+
+[card,icon="shapes/forms-outlined",subheader="Card icon example"]
+.xref:main:reference-custom-asciidoc-components.adoc[shapes/forms-outlined]
+Vendored specifically as a `[card,icon=]` example.
+====
+
+== Vendored, but not card-safe
+
+These exist in the sprite and work fine in `nav_modules[].icon`, but have no CSS mask
+— putting one in `[card,icon=]` renders no icon and no warning.
+
+[cols="1,2"]
+|===
+|Reference |Where it's actually used
+
+|`accessibility/moon-outlined`
+|Dark-mode icon on the light/dark theme toggle.
+
+|`actions/add-outlined`
+|Vendored; no current template use in this bundle version.
+
+|`actions/back-outlined`
+|Vendored; no current template use in this bundle version.
+
+|`actions/close-large-outlined`
+|Side-menu drawer's close button (mobile breakpoint).
+
+|`actions/close-small-outlined`
+|A recent-search entry's remove button.
+
+|`actions/copy-outlined`
+|A code block's copy-to-clipboard button, idle state.
+
+|`actions/full-screen-enter-outlined`
+|A code block's "view full screen" button.
+
+|`actions/full-screen-exit-outlined`
+|The same button, swapped in once full screen is active.
+
+|`actions/search-outlined`
+|The header toolbar's search trigger, and the search dialog itself.
+
+|`arrows/arrow-left-outlined`
+|Pagination's "previous page" link.
+
+|`arrows/arrow-right-outlined`
+|Pagination's "next page" link.
+
+|`arrows/chevron-up-outlined`
+|Vendored; no current template use in this bundle version.
+
+|`connectivity/cloud-outlined`
+|A `nav_modules[].icon` example (a "Store"-style module).
+
+|`connectivity/link-outlined`
+|A section heading's anchor / copy-link button.
+
+|`connectivity/wifi-outlined`
+|A `nav_modules[].icon` example (a "Websockets"-style module).
+
+|`controls/play-circle-outlined`
+|Vendored; no current template use in this bundle version.
+
+|`design/menu-tab-outlined`
+|The side-menu's open/close toggle.
+
+|`design/sidebar-outlined`
+|The "on this page" table-of-contents toggle.
+
+|`design/tool-outlined`
+|A `nav_modules[].icon` example (a "React Helper"-style module).
+
+|`others/home-outlined`
+|Vendored; no current template use in this bundle version.
+
+|`time/history-outlined`
+|The "recent searches" list heading.
+
+|`weather/sunny-outlined`
+|Light-mode icon on the light/dark theme toggle.
+|===
+
+See xref:main:guides-adding-a-module.adoc[] for `nav_modules[].icon` syntax and
+xref:main:reference-custom-asciidoc-components.adoc[] for `[card,icon=]` syntax.

@@ -1,0 +1,13 @@
+= Configuration
+
+The two files that configure a docouture site, and what every key in each one
+actually does — see xref:main:architecture.adoc[] for why there are two of them
+instead of one.
+
+* xref:main:reference-antora-playbook-configuration.adoc[Antora Playbook] —
+  `antora-playbook.yml`, Antora's single entry-point config file: site identity,
+  content sources, the UI bundle, output, URLs, runtime logging, and the
+  AsciiDoc/Antora extensions.
+* xref:main:reference-antora-descriptor-configuration.adoc[Antora Descriptor] —
+  `docs/src/antora.yml`, the per-component descriptor: version, navigation
+  modules, footer links, and `llms.txt` generation.

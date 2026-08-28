@@ -1,0 +1,13 @@
+= Content & structure
+
+How a scaffolded site's shape grows over time: new modules, new pages within them, and
+the `nav.adoc` list that makes both reachable from the side menu.
+
+* xref:main:guides-adding-a-module.adoc[Adding a module] — when a section of the site earns
+  its own switchable navigation instead of living grouped inside `main`.
+* xref:main:guides-adding-a-page.adoc[Adding a page] — create an AsciiDoc file under a
+  module's `pages/` directory and wire it into that module's `nav.adoc`.
+* xref:main:guides-modifying-the-navigation.adoc[Modifying the navigation] — `nav.adoc`'s list
+  syntax: nesting by depth, linked vs. unlinked items.
+* xref:main:guides-icon-gallery.adoc[Icon gallery] — every icon this site's UI bundle ships,
+  and which ones actually render in a `[card,icon=]`.

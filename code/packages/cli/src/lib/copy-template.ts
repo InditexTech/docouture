@@ -32,6 +32,11 @@ export interface TemplateValues {
   pmLockfile: string
   pmCiCmd: string
   pmSetupStepYaml: string
+  // The scaffolded package.json's own `packageManager` field (corepack
+  // convention, e.g. 'pnpm@10.24.0') — see packageManagerPlan's own comment
+  // on packageManagerField for why pnpm/action-setup (CI) needs this
+  // present, not just corepack (local installs).
+  pmPackageManagerField: string
   // A glob string for `package.json`'s scaffolded `docouture.checkLinks.ignore`
   // (see scripts/check-links.mjs's own comment on that key) — either
   // `https://github.com/owner/repo*`, or, when there's no `origin` remote
@@ -68,6 +73,7 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   // value (which ends in its own `\n` — see packageManagerPlan) or the
   // empty npm value drop cleanly in its place.
   '      # __DOCOUTURE_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
+  __DOCOUTURE_PM_PACKAGE_MANAGER__: 'pmPackageManagerField',
   // A bare token this time, unlike pmSetupStepYaml above — see
   // TemplateValues.repoIgnoreGlob's own comment for why the whole-segment
   // trick doesn't survive here.

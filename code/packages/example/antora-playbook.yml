@@ -182,4 +182,11 @@ antora:
     # extension: this one hooks Antora's own pipeline, that one hooks the
     # AsciiDoc processor. Listing either under the other's key makes Antora
     # log a warning and skip it.
-    - '@inditextech/docouture-antora-extensions'
+    #
+    # `changelog_path` overridden here: this playbook lives at
+    # packages/example, three levels below the repo root, not one level
+    # below it like docs/antora-playbook.yml — the default
+    # `playbook.dir/../code/CHANGELOG.md` resolution only holds for the
+    # latter. See changelog-pages.js's own header comment.
+    - require: '@inditextech/docouture-antora-extensions'
+      changelog_path: ../../CHANGELOG.md

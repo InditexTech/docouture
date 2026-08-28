@@ -1,0 +1,36 @@
+= Contributing
+
+docouture is developed at
+https://github.com/InditexTech/docouture[InditexTech/docouture]. Contributions there
+follow the repository's own guide, not this scaffolded site's — the summary below is
+what actually applies; see `CONTRIBUTING.md` in that repository for the full text.
+
+== Before contributing
+
+* Sign the https://github.com/InditexTech/foss/blob/main/CLA.md[Contributor License
+  Agreement (CLA)] — required before any code contribution is accepted.
+* Install `just`, `asdf`, and the pinned https://nodejs.org[Node]/https://pnpm.io[pnpm]
+  versions the repository's own `README.md` documents.
+
+== Workflow
+
+. Open an issue to discuss the change first.
+. Fork, branch, and make the change.
+. Run `just check` (lint, typecheck, formatting — what CI runs).
+. Update `code/CHANGELOG.md`'s `[Unreleased]` section — required on every PR touching
+  `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
+. Open a pull request linking the issue.
+
+== Contributing to this site specifically
+
+If what needs fixing is a page under `docs/` (this site, not docouture itself), that's
+a normal docs PR against whatever repository this site was scaffolded into — see
+xref:main:guides-adding-a-page.adoc[] for the mechanics, and
+xref:main:reference-ai-first-approach.adoc[]'s `docouture-documenting-changes` skill for keeping content
+in sync as the underlying repo changes.
+
+== License
+
+Apache-2.0, except `packages/ui-bundle` (a fork of
+https://gitlab.com/antora/antora-ui-default[antora-ui-default]), which remains
+MPL-2.0 under its own LICENSE/NOTICE.

@@ -59,6 +59,7 @@ at all).
 
 ### Fixed
 
+- [#158](https://github.com/InditexTech/docouture/pull/158) [tooling] Fix commit to main from docuture-* workflows that need it
 - [#117](https://github.com/InditexTech/test-antoradocs/pull/117) [ui-bundle] Version tag is missing at xs breakpoint in side-menu drawer
 - [#112](https://github.com/InditexTech/test-antoradocs/pull/112) [cli] Fix snapshot version pinning, implement Mode 1 versioning, add inquirer wizard + colored banner
 - [#90](https://github.com/InditexTech/test-antoradocs/pull/90) [ui-bundle] Navbar height (--navbar-height) diverges from IDS Header component height (~41px vs 56px)
@@ -66,6 +67,7 @@ at all).
 
 ### Documentation
 
+- [#150](https://github.com/InditexTech/docouture/pull/150) [documentation] Document docouture using docouture (dogfood the platform for its own docs)
 - [#149](https://github.com/InditexTech/docouture/pull/149) [skills] Externalize docs-authoring skills into standalone skill packages
 - [#115](https://github.com/InditexTech/test-antoradocs/pull/115) [cli] Scaffold AGENTS.md and agent skills (OpenCode & Claude) in docouture new
 - [#99](https://github.com/InditexTech/test-antoradocs/pull/99) [tooling] Document the two Antora versioning modes (Mode 1 & Mode 2)

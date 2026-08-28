@@ -1,0 +1,11 @@
+= Branding & customization
+
+Making a scaffolded site look like the product it documents: the landing page's
+content blocks, the browser tab icon, and the side-menu logo.
+
+* xref:main:guides-landing-page-modifications.adoc[Landing page modifications] — the fixed
+  section order of `ROOT/pages/index.adoc`, the home layout's one page.
+* xref:main:guides-setup-a-favicon.adoc[Setup a favicon] — the browser tab icon, served via
+  `site.keys.favicon` and `ui.supplemental_files`.
+* xref:main:guides-setup-the-product-logo.adoc[Setup the product logo] — the side-menu brand
+  mark, light and dark variants.

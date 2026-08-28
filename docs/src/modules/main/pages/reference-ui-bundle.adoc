@@ -1,0 +1,117 @@
+= UI Bundle
+
+`@inditextech/docouture-ui-bundle` — a themed fork of
+https://gitlab.com/antora/antora-ui-default[antora-ui-default], read by
+https://antora.org[Antora] as a plain zip via `ui.bundle.url`. What follows is what a
+site actually gets from it, beyond styling — each feature below, plus a
+`Configuration` subsection wherever there's actually a knob to turn.
+
+== Theme: dark / light
+
+A theme toggle persists the choice (localStorage), applied before first paint so
+there's no flash of the wrong theme.
+
+=== Configuration
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`site.keys.product_logo` / `product_logo_dark` |Side-menu brand logo; the dark
+variant is swapped in automatically under dark mode — see
+xref:main:guides-setup-the-product-logo.adoc[].
+|===
+
+== Navigation
+
+* *Module switcher* — appears once a component has more than one entry in
+  `nav_modules`; see xref:main:guides-adding-a-module.adoc[].
+* *Nav tree* — renders each module's own `nav.adoc`.
+* *Breadcrumbs* — derived from the navigation tree's ancestors of the current page.
+* *Pagination* — previous/next footer links, on by default site-wide; a page can opt
+  out with `:!page-pagination:`.
+* *"Edit this page"* — links to the content source's edit URL, inferred for known git
+  hosts.
+* *Header repo link* — reads `site.keys.repo_url`, or falls back to the content
+  source's own git remote if that key isn't set.
+
+=== Configuration
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`site.keys.repo_url` |Header toolbar repo link, overriding the git-remote fallback.
+|`asciidoc.attributes.page-pagination` |Turns pagination on/off site-wide (`'@'` as a
+soft default) — see xref:main:reference-antora-playbook-configuration.adoc[].
+|`nav_modules` |Drives the module switcher — see
+xref:main:reference-antora-descriptor-configuration.adoc[].
+|===
+
+== Table of contents
+
+An "on this page" scrollspy TOC tracks the current section as you scroll. Heading
+anchors are clickable (`sectanchors`).
+
+=== Configuration
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`:page-role: -toc` |Page-level attribute suppressing the TOC on that one page.
+|`asciidoc.attributes.sectanchors` |Site-wide switch for clickable heading anchors.
+|===
+
+== Search
+
+A search dialog reads the full-text search index
+`@inditextech/docouture-antora-extensions` builds at build time (see
+xref:main:reference-integrations.adoc[]) — without that extension registered, the
+dialog renders but has nothing to search. Recent searches persist locally. Nothing
+else to configure beyond registering the extension.
+
+== Version switcher
+
+A version dropdown renders once a component has more than one version — see
+xref:main:guides-versioning-modes.adoc[]. A single-version component (the common case
+before a first release) renders a plain version indicator instead of a dropdown. No
+UI-bundle-level configuration of its own — it follows directly from how many versions
+the playbook aggregates.
+
+== 404 page
+
+Antora's own generated 404 page has no component/module context at all — no side
+menu, no version tag, no footer. `@inditextech/docouture-antora-extensions` composes a
+real one instead, so every partial that reads page context renders exactly as it
+would on a real page.
+
+=== Configuration
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`not_found_module` |Which module's navigation the generated 404 page's side menu
+shows — see xref:main:reference-antora-descriptor-configuration.adoc[].
+|===
+
+== Copy-to-clipboard
+
+Every code block gets a copy button, regardless of whether it has a language set. No
+configuration.
+
+== Bundle-wide settings
+
+Keys that shape the bundle itself rather than one single feature above:
+
+[cols="1,2"]
+|===
+|Key |Effect
+
+|`site.keys.favicon` |Browser tab icon — see xref:main:guides-setup-a-favicon.adoc[].
+|`ui.bundle.url` / `snapshot` |Which bundle zip, and whether to cache it.
+|`ui.supplemental_files` |Overlay directory for the logo/favicon files above.
+|`ui.default_layout` |Layout for pages with no `page-layout` attribute (default `default`).
+|`ui.output_dir` |Where UI assets land inside the site (default `_`).
+|===

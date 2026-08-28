@@ -7,6 +7,36 @@
       "skillPath": "skills/engineering/codebase-design/SKILL.md",
       "computedHash": "5a17552cc1482f1a40124bf4e6c9dbd90ac0dbb47e71c07d47369f9e5f2ae3b5"
     },
+    "docouture-docs-internals": {
+      "source": "InditexTech/docouture",
+      "sourceType": "github",
+      "skillPath": "skills/docouture-docs-internals/SKILL.md",
+      "computedHash": "1192bddce70c48e09019950341f8d057152f35e49fc23b4fdf316935468d7475"
+    },
+    "docouture-docs-versioning": {
+      "source": "InditexTech/docouture",
+      "sourceType": "github",
+      "skillPath": "skills/docouture-docs-versioning/SKILL.md",
+      "computedHash": "6cee29bf5a64af68ab9c62ae58a4e65c3b07b166e0dfbadcafd46ea6ea070d95"
+    },
+    "docouture-documenting-changes": {
+      "source": "InditexTech/docouture",
+      "sourceType": "github",
+      "skillPath": "skills/docouture-documenting-changes/SKILL.md",
+      "computedHash": "eff450440ce58ad3b32d5fd406ac7f478047ab84a16784aaa2d08e0f7fcf25f9"
+    },
+    "docouture-getting-started": {
+      "source": "InditexTech/docouture",
+      "sourceType": "github",
+      "skillPath": "skills/docouture-getting-started/SKILL.md",
+      "computedHash": "a7ee9eebfeb826aaa844384f1fbf160bbc1a722161f99e2361dc0bbcd6c4853a"
+    },
+    "docouture-writing-docs-pages": {
+      "source": "InditexTech/docouture",
+      "sourceType": "github",
+      "skillPath": "skills/docouture-writing-docs-pages/SKILL.md",
+      "computedHash": "26d0aba3eab1a5b4cf5aaec71a5d479b4a1792f01096a2f86c4ea10880b7203f"
+    },
     "domain-modeling": {
       "source": "mattpocock/skills",
       "sourceType": "github",

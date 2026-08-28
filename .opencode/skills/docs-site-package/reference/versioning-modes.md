@@ -195,9 +195,29 @@ already-planned value instead of protecting it.
 **The rest of the job is genuinely shared, not two paths bolted together**: `Cut release`
 computes `value`/`tag` from the detected mode (`docs/v<version>` for versioned,
 `docs/stable` for standalone) and runs the same `docouture version` + commit-then-reset
-dance either way; `Create GitHub Release` is the one step that only runs for versioned
-mode (`if: steps.detect.outputs.mode == 'versioned'`), since standalone mode keeps no
-version history worth a Release object.
+dance either way; `Push release tag` is the last step for both — **neither mode creates a
+GitHub Release object** (GH #172).
+
+Versioned mode used to: a `Create GitHub Release` step ran `gh release delete "$TAG" --yes
+|| true` then `gh release create "$TAG" --title "$TAG" --generate-notes --target "$SHA"`
+right after the tag push, gated on `if: steps.detect.outputs.mode == 'versioned'`. That
+Release object turned out to be functionally inert — nothing reads it back: no workflow,
+no Antora extension, no CLI command. The version dropdown and `duplicate_latest_version`
+are driven purely by the tag itself plus Antora's own ref aggregation (see "URL routing"
+below), never by anything a Release object carries. Worse, it actively polluted the same
+Releases page/RSS/watch-notification feed as this repo's real npm semver releases
+(`code-npm_node-publish-release-and-snapshot.yml`) — GH #166 already fought this exact
+confusion once, by prefixing the *tag* itself (`docs/v*`), but a Release object still shows
+in that shared list regardless of what its tag is named, so the confusion #166 targeted
+wasn't fully solved while the Release object existed alongside it.
+
+`--generate-notes`'s auto-generated per-version PR list was dropped outright when this was
+removed, not relocated: this repo already carries two purpose-built homes for that same
+information — the hand-authored `release-notes/<version>.adoc` page (prose, not a raw PR
+dump) and the auto-generated `changelog/index.adoc` (built from `code/CHANGELOG.md` at
+build time) — so nothing unique was lost by dropping it. A pre-existing `docs/v1.0.0`
+Release object on this repo, cut before this decision, was deliberately left alone as a
+one-off predating the fix rather than retroactively deleted.
 
 ## Previewing a release before merge: docouture-release-preview.yml
 
@@ -367,14 +387,18 @@ generic `build` target.
 ## CLI orchestration: why there is no `docouture release` command
 
 GH #82 evaluated whether cutting a release should be a dedicated `@inditextech/docouture-cli`
-command (`docouture release`, wrapping git tag/branch/push and `gh release` itself) instead of
-the workflow-level orchestration described above. **Decision: keep it in the workflow.**
+command (`docouture release`, wrapping git tag/branch/push itself) instead of the
+workflow-level orchestration described above. **Decision: keep it in the workflow.**
 `docouture-release.yml`'s own steps depend on CI-only concerns a portable local CLI command
-would either have to assume or re-implement badly: a `GITHUB_TOKEN` with `contents: write` +
-`pull-requests: write`, reading which label a merged PR carried, `gh release
-create`/`delete`. None of that has a sane local equivalent — a person running `docouture
-release` on their laptop still couldn't create a GitHub Release without also handing the
-CLI a token and reimplementing the label-driven trigger logic.
+would either have to assume or re-implement badly: a `GITHUB_TOKEN`/app token with
+`contents: write`, reading which label a merged PR carried, force-pushing a tag past
+branch-ruleset protections via a bypass-listed GitHub App. None of that has a sane local
+equivalent — a person running `docouture release` on their laptop still couldn't force-push
+a protected tag without also handing the CLI a token and reimplementing the label-driven
+trigger logic. (This reasoning predates GH #172 dropping the `gh release create`/`delete`
+calls entirely — those, and the `pull-requests: write` permission they alone needed, were
+part of the original list of CI-only concerns and no longer apply, but the remaining ones
+above still hold.)
 
 The CLI's release-adjacent surface stays deliberately narrow: `docouture version` (already
 shipped) is the one piece of actual logic the workflow reuses — patching
@@ -382,8 +406,8 @@ shipped) is the one piece of actual logic the workflow reuses — patching
 portable, needed both from CI and by a person testing a mode change locally, and is now
 covered by unit tests (`src/lib/antora-yml.spec.ts`, `src/commands/version.spec.ts`) added
 as part of #82. Everything else — detecting the mode, resolving the target version,
-tagging, force-pushing, creating the Release, bumping `docs/.release-version` — stays exactly
-where it already lived after #80/#81: in `docouture-release.yml` itself.
+tagging, force-pushing, bumping `docs/.release-version` — stays exactly where it already
+lived after #80/#81: in `docouture-release.yml` itself.
 
 ## Follow-up work
 

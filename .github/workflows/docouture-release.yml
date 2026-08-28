@@ -56,7 +56,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
   group: docouture-release
@@ -370,23 +369,23 @@ jobs:
           git tag -f "$TAG" "$SHA"
           git push origin "refs/tags/${TAG}" --force
 
-      # Versioned only: every version is kept forever, so each one gets a
-      # real Release entry. Standalone deliberately skips this — `docs/stable` is
-      # a rolling pointer with no changelog value of its own, and that mode
-      # keeps no version history to attach one to (see versioning-modes.md).
-      # The delete-then-create is a no-op the first time a version is
-      # released (nothing to delete); on a republish it drops the stale
-      # Release object first so `create` doesn't just fail against one that
-      # already exists.
-      - name: Create GitHub Release
-        if: steps.detect.outputs.mode == 'versioned'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.cut.outputs.tag }}
-          SHA: ${{ steps.cut.outputs.sha }}
-        run: |
-          gh release delete "$TAG" --yes 2>/dev/null || true
-          gh release create "$TAG" --title "$TAG" --generate-notes --target "$SHA"
+      # Neither mode creates a GitHub Release object — `Push release tag` above
+      # is the last step of this dance for both. Versioned mode used to
+      # (`gh release create --generate-notes` here, deleting-then-recreating
+      # on a republish), but that Release was functionally inert: nothing
+      # reads it back — no workflow, no Antora extension, no CLI command; the
+      # version dropdown and `duplicate_latest_version` are driven purely by
+      # the tag itself plus Antora's own ref aggregation (see
+      # versioning-modes.md) — and it polluted the same Releases page/RSS/
+      # watch feed as this repo's real npm semver releases
+      # (code-npm_node-publish-release-and-snapshot.yml), which #166's `docs/`
+      # tag prefix alone didn't fully solve: a Release object still shows in
+      # that list regardless of what its tag is named. `--generate-notes`'s
+      # auto PR-list was dropped outright rather than relocated when this was
+      # removed — its value is already covered by the hand-authored
+      # `release-notes/<version>.adoc` page and the auto-generated
+      # `changelog/index.adoc` (built from CHANGELOG.md at build time). See
+      # GH #172.
 
       # Versioned only, and only on a genuine forward release (not a
       # republish of an already-released version — see "Check for existing

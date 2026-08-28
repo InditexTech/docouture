@@ -60,6 +60,17 @@
   margin: 0;
 }
 
+/*
+ * GH-159: `.hero__title` carries `ids-text--title-xl`, whose token
+ * (--ids-typo-title-xl-text-transform, ids-tokens.css) forces uppercase.
+ * Reset back to `none` so `.adoc` source case (`= My Title`) survives, same
+ * fix already applied to in-article headings — see doc.css's own `.doc
+ * h1..h6` rule and its GH-11 comment for the sibling case.
+ */
+.hero__title {
+  text-transform: none;
+}
+
 .hero__excerpt {
   max-width: var(--hero-excerpt-max-width);
 }

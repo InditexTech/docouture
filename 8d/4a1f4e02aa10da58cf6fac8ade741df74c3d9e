@@ -1,0 +1,73 @@
+.agents/skills/docouture-docs-internals/SKILL.md
+  s_3761b33c858e11::t_3f182c0caa2455 58
+.agents/skills/docouture-docs-versioning/SKILL.md
+  s_3761b33c858e11::t_9f817d4c1b6fe9 9
+.agents/skills/docouture-docs-versioning/reference/releasing.md
+  s_3761b33c858e11::t_2fc71baa7f4bda 41,44,68
+.github/workflows/docouture-release.yml
+  s_3761b33c858e11::t_ed5b2878014864 6-7,17-18,27,48-49,106,226-227,244,317,320,343,360-361,374
+code/packages/cli/src/commands/new.spec.ts
+  s_3761b33c858e11::t_8004a30ae29ebc 225,346,409
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_3761b33c858e11::t_59d5b4c73f0410 6-7,17-18,27,48-49,106,227-228,245,318,321,344,361-362,375
+skills/docouture-docs-internals/SKILL.md
+  s_3761b33c858e11::t_1d2de881e45b89 58
+skills/docouture-docs-versioning/SKILL.md
+  s_3761b33c858e11::t_2f6394a5011e4c 9
+skills/docouture-docs-versioning/reference/releasing.md
+  s_3761b33c858e11::t_9d5e1603a4605e 41,44,68
+.github/workflows/docouture-release-preview.yml
+  s_1e8921b8902502::t_9a6c9f080fd8d1 82,106,109
+code/packages/cli/src/commands/new.ts
+  s_1e8921b8902502::t_4c6cd42ebfd630 32,36,285,291,593
+code/packages/cli/templates/workflows/docouture-release-preview.yml
+  s_ada7db75307600::t_f84875e8604341 79,103,106
+code/packages/example/antora-playbook.local.yml
+  s_1e8921b8902502::t_d426e4fec886ef 12,15,20
+code/packages/example/antora-playbook.yml
+  s_1e8921b8902502::t_014dcff7f01dc7 65,69,81
+docs/antora-playbook.local.yml
+  s_1e8921b8902502::t_12ebb3af755ee0 14
+docs/antora-playbook.yml
+  s_1e8921b8902502::t_cdca6db4b0c2f8 62-63,67
+docs/src/modules/main/pages/glossary.adoc
+  s_1e8921b8902502::t_8a05e37034b581 38,40
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_1e8921b8902502::t_1ecc083e12ae3a 13,18,28
+docs/src/modules/main/pages/guides-versioning-modes.adoc
+  s_1e8921b8902502::t_4f18e4a8b51757 10,20,27,37,46,56-67
+docs/src/modules/main/pages/quickstart.adoc
+  s_1e8921b8902502::t_46742fca6a2b8a 23,25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8d4a1f4e02aa10da58cf6fac8ade741df74c3d9e",
+  "prompts": {},
+  "sessions": {
+    "s_1e8921b8902502": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a047b0-7803-7080-ad47-f889b743c129",
+        "model": "unknown"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_3761b33c858e11": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fb8297b4cffexzRqxobPhnfVS5",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_ada7db75307600": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a047e0-bace-7771-b101-71deb57b213b",
+        "model": "unknown"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -37,7 +37,7 @@
 - [UI Bundle](/prerelease/main/reference-ui-bundle/)
 - [Structure](/prerelease/main/structure/)
 - [Changelog](/prerelease/main/changelog/)
-- [v1.0.0 (illustrative)](/prerelease/main/release-notes/1-0-0/)
+- [v1.0.0](/prerelease/main/release-notes/1-0-0/)
 - [Release notes](/prerelease/main/release-notes/)
 - [Additional information](/1.0.0/main/additional-information-overview/)
 - [Architecture](/1.0.0/main/architecture/)

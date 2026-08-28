@@ -2438,12 +2438,11 @@ No tagged release yet — see `code/CHANGELOG.md’s `[Unreleased]` section for 
 
 ---
 
-# v1.0.0 (illustrative)
+# v1.0.0
 
 Source: /prerelease/main/release-notes/1-0-0/
 
-> **Note**
-> Illustrative — docouture has no tagged release yet (still `0.1.0`, see [Release notes](../)). This is what a first stable release summary would say about what already exists in the repository today, written ahead of an actual `v1.0.0` tag.
+![Pipeline diagram showing docouture’s four stages — scaffold](../../_images/v1.0.0-release-notes-hero.jpg)
 
 docouture turns "we should really document this" into a real, versioned documentation site in minutes, not weeks — scaffolded straight into the repository the product it documents already lives in, themed with Inditex’s own design system, and built to be written and kept in sync by AI agents just as easily as by hand.
 
@@ -2475,12 +2474,9 @@ Source: /prerelease/main/release-notes/
 
 What changed for users in each release, newest first — in contrast to [Changelog](../changelog/), the unabridged commit-level record.
 
-> **Note**
-> docouture is currently at `0.1.0` with no tagged release yet — the entry linked below is an **illustrative** first-stable-release summary of what already exists in the repository today, written ahead of an actual `v1.0.0` tag, not a claim that one has shipped. It will be replaced with the real notes once a release is actually cut (see [Releasing a documentation](../guides-releasing-a-documentation/)).
-
 ## Versions
 
-- [v1.0.0](1-0-0/) (illustrative)
+- [v1.0.0](1-0-0/)
 
 ---
 

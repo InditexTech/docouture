@@ -42,7 +42,7 @@ content:
     - url: ..
       start_path: docs/src
       branches: [main]
-      tags: ['stable']
+      tags: ['docs/stable']
 ----
 
 [cols="1,2"]

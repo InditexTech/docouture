@@ -44,11 +44,11 @@ number or `'next'`) — it is what a reader sees and links against
 ## Versioned — Full History (Versioned Tags)
 
 `main` is the prerelease/preview version, same shape as standalone. Every release tag
-(`v1.2.0`, `v1.3.0`, …) is an immutable, independently-served version, and all of them
+(`docs/v1.2.0`, `docs/v1.3.0`, …) is an immutable, independently-served version, and all of them
 appear in the version dropdown — appropriate for a library whose consumers pin an old
 version and need its docs to keep existing unchanged.
 
-**On a release tag** (e.g. checked out at `v1.2.0`), `docs/antora.yml`:
+**On a release tag** (e.g. checked out at `docs/v1.2.0`), `docs/antora.yml`:
 
 ```yaml
 name: weavejs
@@ -65,10 +65,10 @@ content:
     - url: https://github.com/example/weavejs
       start_path: docs
       branches: [main]
-      tags: ['v*']
+      tags: ['docs/v*']
 ```
 
-`tags: ['v*']` matches every tag shaped `v1.2.0`, `v2.0.0`, etc. — each becomes its own
+`tags: ['docs/v*']` matches every tag shaped `docs/v1.2.0`, `docs/v2.0.0`, etc. — each becomes its own
 version because each tag's own `docs/antora.yml` carries a different `version:`. `branches:
 [main]` contributes the single prerelease version on top. Nothing here says how many past
 versions show up; that is entirely a function of how many tags exist and match the glob —
@@ -83,13 +83,13 @@ runs the right steps for each.
 
 ## Standalone — Stable + Prerelease (rolling tag)
 
-`main` is the prerelease/preview/work-in-progress docs; a rolling `stable` **tag**, force-
+`main` is the prerelease/preview/work-in-progress docs; a rolling `docs/stable` **tag**, force-
 moved on each release rather than re-created, holds whatever was last published. The
 selector offers exactly two entries — Stable and Prerelease — never a long historical
 list. Appropriate for a product where only "what's out now" and "what's coming" matter to
 a reader, and where a long tag history would be noise.
 
-**On `stable`**, `docs/antora.yml`:
+**On `docs/stable`**, `docs/antora.yml`:
 
 ```yaml
 name: weavejs
@@ -106,26 +106,26 @@ content:
     - url: https://github.com/example/weavejs
       start_path: docs
       branches: [main]
-      tags: ['stable']
+      tags: ['docs/stable']
 ```
 
 One branch and one pinned tag name (not a glob) — this mode has nothing else to
-aggregate from tags, so `tags: ['stable']` matching exactly one literal name is the
+aggregate from tags, so `tags: ['docs/stable']` matching exactly one literal name is the
 signal that history is deliberately not being kept.
 
-Cutting a release under this mode is: force-move the `stable` tag to whatever commit on
+Cutting a release under this mode is: force-move the `docs/stable` tag to whatever commit on
 `main` is being released, so its own `docs/antora.yml` copy at that point says
 `version: stable`, `prerelease: false`. The same single **docouture-release.yml** workflow
 (`.github/workflows/`, templated by `docouture new`) that handles versioned mode handles this
 too: it patches `docs/antora.yml` via the `docouture version` CLI command on a one-off commit
-built on top of `main`'s current tip, then force-moves the `stable` tag to that commit —
+built on top of `main`'s current tip, then force-moves the `docs/stable` tag to that commit —
 `main` itself is never advanced or touched by the release step; its own `docs/antora.yml`
 permanently says `version: prerelease`, `prerelease: true`. This is the operational
 difference from versioned mode: there "release" means create a new immutable ref (a tag)
 and a new version *entry*; here it means move an existing tag and keep the same two
 version entries.
 
-Moving `stable` does trigger a rebuild: docouture-release.yml's last job calls the sibling
+Moving `docs/stable` does trigger a rebuild: docouture-release.yml's last job calls the sibling
 **docouture-publish.yml** workflow (`.github/workflows/docouture-publish.yml`, also templated by
 `docouture new`) directly — as a reusable job (`needs: release` + `uses:`), not via a push
 trigger — once release has actually cut something. Publish then builds the site fresh —
@@ -140,8 +140,8 @@ told, and branches its steps accordingly.
 
 **Detection.** After checkout, a `Detect mode` step reads `docs/antora-playbook.yml`'s own
 `content.sources[]` **tags**, not `docs/antora.yml` — that descriptor is identical for both
-modes on `main`, so it carries no mode signal at all. A `tags:` line containing `v*` means
-versioned; containing `stable` means standalone. That line is exactly what each mode's
+modes on `main`, so it carries no mode signal at all. A `tags:` line containing `docs/v*` means
+versioned; containing `docs/stable` means standalone. That line is exactly what each mode's
 "Prerequisite" above says is set once, at adoption time, and never changes afterwards, so
 it doubles as a permanent, self-describing marker — nothing else in the repository has to
 declare which mode is in effect.
@@ -151,7 +151,7 @@ declare which mode is in effect.
 - `workflow_dispatch` — run by hand. Its `version` input defaults to `'stable'`. A
   versioned-mode run must override it with a real version (e.g. `1.2.0`) or the workflow
   fails before touching anything; a standalone run leaves the default, since standalone
-  always targets `stable` regardless of what's typed there.
+  always targets the `docs/stable` tag regardless of what's typed there.
 - `pull_request`, `types: [closed]`, `branches: ['main*']` — fires automatically when a
   pull request merges into a branch matching that glob, but only actually proceeds
   (checked in the job's own `if:`) when `github.event.pull_request.merged == true` **and**
@@ -163,15 +163,15 @@ differs by trigger rather than by mode: `workflow_dispatch` has a form field for
 `pull_request` doesn't, so versioned mode reads a plain-text file instead —
 **`docs/.release-version`** — committed by the PR being merged, containing just the target
 version (e.g. `1.2.0`). Reviewed as part of that PR's diff like any other change; there is
-no analogous file for standalone mode, since that mode's target is always the literal
-`stable`. A `Resolve version` step picks whichever source applies before a shared
+no analogous file for standalone mode, since that mode's target is always the `docs/stable`
+tag. A `Resolve version` step picks whichever source applies before a shared
 `Validate version` step checks it: empty on versioned mode fails with a message naming
 which of the two ways to supply one was missed; `'stable'` on versioned mode fails too
 (it's standalone's name, not a version); standalone mode with a non-empty value just gets
 a warning that it's being ignored.
 
 **Every release tag is force-recreated if it already exists — both modes, unconditionally,
-no separate flag or label needed.** Standalone's `stable` is a rolling pointer by design.
+no separate flag or label needed.** Standalone's `docs/stable` is a rolling pointer by design.
 Versioned mode's tags are normally immutable, but a republish (fixing a released version,
 e.g. a docs typo caught after the tag went out) is a deliberate, ordinary act here — a
 `Check for existing release` step (versioned mode only) just records whether the target
@@ -193,8 +193,8 @@ planned target, so bumping forward from the republished version would clobber th
 already-planned value instead of protecting it.
 
 **The rest of the job is genuinely shared, not two paths bolted together**: `Cut release`
-computes `value`/`tag` from the detected mode (`v<version>` for versioned,
-literal `stable` for standalone) and runs the same `docouture version` + commit-then-reset
+computes `value`/`tag` from the detected mode (`docs/v<version>` for versioned,
+`docs/stable` for standalone) and runs the same `docouture version` + commit-then-reset
 dance either way; `Create GitHub Release` is the one step that only runs for versioned
 mode (`if: steps.detect.outputs.mode == 'versioned'`), since standalone mode keeps no
 version history worth a Release object.
@@ -207,7 +207,7 @@ comments on a pull request the moment it carries the `docs/release` label (`labe
 `docs/antora.yml`. It reuses `docouture-release.yml`'s own "Detect mode" and "Resolve version"
 logic to state, before merge:
 
-- which target this PR will release (`stable`, or the `vX.Y.Z` read from
+- which target this PR will release (`docs/stable`, or the `docs/vX.Y.Z` read from
   `docs/.release-version` in versioned mode),
 - a `:warning:` if that tag already exists and will be **force-overwritten** on merge (a
   republish, see "Every release tag is force-recreated…" above),
@@ -308,9 +308,9 @@ controlled entirely from `docs/antora.yml`:
 | --- | --- | --- |
 | Good fit | libraries/SDKs whose consumers pin an old version | products where only "now" and "next" matter |
 | Version count in selector | grows with every release tag | fixed at two |
-| Cutting a release | new tag + its own `antora.yml` | move `stable` tag; `antora.yml` unchanged |
+| Cutting a release | new tag + its own `antora.yml` | move `docs/stable` tag; `antora.yml` unchanged |
 | Old docs after a release | still served, unchanged, forever | overwritten — no history kept |
-| Playbook `content.sources[]` | `branches: [main]` + `tags: ['v*']` | `branches: [main]` + `tags: ['stable']` |
+| Playbook `content.sources[]` | `branches: [main]` + `tags: ['docs/v*']` | `branches: [main]` + `tags: ['docs/stable']` |
 | `docs/antora.yml` on `main` | identical for both modes: `version: prerelease`, `prerelease: true` | same |
 
 Both are legitimate; the epic (GH #78) treats them as two supported flows, not a
@@ -333,7 +333,7 @@ in favour of always force-recreating a release tag that already exists.
 
 ## PR verification and local development
 
-Either mode's `content.sources[]` names refs — `main`, `stable`, `v*` — that a pull
+Either mode's `content.sources[]` names refs — `main`, `docs/stable`, `docs/v*` — that a pull
 request's own checkout does not have: a PR is built on a detached HEAD or a feature
 branch, neither of which is `main` or a release ref. The same is true of a local `docouture
 dev` session on a feature branch. Building the real `antora-playbook.yml` there either

@@ -60,13 +60,13 @@ content:
       start_path: docs/src
       # Standalone: `main` aggregates as the prerelease version —
       # docs/antora.yml on this branch permanently says `version: prerelease`,
-      # `prerelease: true`. `stable` is a rolling tag that docouture-release.yml
+      # `prerelease: true`. `docs/stable` is a rolling tag that docouture-release.yml
       # force-moves to a fresh one-off commit on every release, not a second
-      # long-lived branch. Until the first release, `stable` does not exist
+      # long-lived branch. Until the first release, `docs/stable` does not exist
       # yet and this site builds with just the one (prerelease) version —
       # that is expected, not an error.
       branches: [main]
-      tags: ['stable']
+      tags: ['docs/stable']
 
 ui:
   bundle:

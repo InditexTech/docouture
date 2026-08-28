@@ -55,7 +55,7 @@ it by hand) pulls the site out from under that running server.
 `docs/antora.yml`'s `version`/`prerelease` fields are identical on `main` regardless of
 which versioning mode this site uses (`version: prerelease`, `prerelease: true`) — what
 differs is only which git refs `antora-playbook.yml`'s `content.sources[0]` aggregates
-from (`tags: ['stable']` vs. `tags: ['v*']`). If this site was scaffolded with
+from (`tags: ['docs/stable']` vs. `tags: ['docs/v*']`). If this site was scaffolded with
 `--mode versioned`, see the `docouture-docs-versioning` skill for cutting a release; a
 **standalone**-mode site (the default) has no separate skill for this — `docouture doctor`
 and the `docouture-release.yml` workflow are all that's needed.

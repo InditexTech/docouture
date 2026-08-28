@@ -29,11 +29,11 @@ const NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/
 // releasable configurations handled by the templated docouture-release.yml — see
 // the docs-site-package skill's reference/versioning-modes.md. 'standalone'
 // (the default): `main` always builds as the prerelease/preview version, and
-// a release just force-moves a rolling `stable` tag — no historical archive,
+// a release just force-moves a rolling `docs/stable` tag — no historical archive,
 // appropriate for a product where only "now" and "what's next" matter.
 // 'versioned': `main` builds as the prerelease version too — docs/antora.yml
 // is identical to the standalone shape on main, for both modes — but every
-// release is instead its own immutable `vX.Y.Z` git tag, kept forever —
+// release is instead its own immutable `docs/vX.Y.Z` git tag, kept forever —
 // appropriate for a library/SDK whose consumers pin an old version. (A bare,
 // unversioned checkout — no prerelease/stable split at all — is not offered
 // here: it only ever comes up as an ad-hoc `docouture dev` preview before a mode
@@ -282,13 +282,13 @@ async function promptWizard(
             name: 'Standalone (Stable + Prerelease)',
             value: 'standalone',
             description:
-              "main always builds as the prerelease/preview version; a release moves a rolling 'stable' tag — no historical archive kept.",
+              "main always builds as the prerelease/preview version; a release moves a rolling 'docs/stable' tag — no historical archive kept.",
           },
           {
             name: 'Versioned (Full History)',
             value: 'versioned',
             description:
-              'main always builds as the prerelease/preview version; every release is an immutable vX.Y.Z git tag.',
+              'main always builds as the prerelease/preview version; every release is an immutable docs/vX.Y.Z git tag.',
           },
         ],
       },
@@ -590,7 +590,7 @@ function printNextSteps(args: {
     console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
     console.log('    2. Open a PR that sets the target version in docs/.release-version (e.g. "1.0.0")')
     console.log("    3. Label the PR 'docs/release'")
-    console.log('    4. Merge it — docouture-release.yml runs automatically and tags vX.Y.Z')
+    console.log('    4. Merge it — docouture-release.yml runs automatically and tags docs/vX.Y.Z')
     console.log('')
     console.log('  (or skip the label/PR entirely: run docouture-release.yml manually via workflow_dispatch')
     console.log('  and type the version)')

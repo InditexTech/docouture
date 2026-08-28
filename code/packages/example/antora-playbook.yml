@@ -62,11 +62,11 @@ content:
     #   - url: .
     #     start_path: docs
     #     branches: [main]
-    #     tags: ['stable']
+    #     tags: ['docs/stable']
     #
     # GH-80: Mode 2 (Stable + Prerelease) — see versioning-modes.md. `main`
     # aggregates as the prerelease version (docs/antora.yml there permanently
-    # says version: prerelease, prerelease: true); `tags: ['stable']` is a
+    # says version: prerelease, prerelease: true); `tags: ['docs/stable']` is a
     # single pinned tag name, not a glob — a rolling tag that docouture-release.yml
     # force-moves to a fresh one-off commit on every release, rather than a
     # second long-lived branch. Its own docs/antora.yml (at whatever commit the
@@ -78,7 +78,7 @@ content:
     - url: ../../..
       start_path: code/packages/example/docs
       branches: [main]
-      tags: ['stable']
+      tags: ['docs/stable']
 
 ui:
   bundle:

@@ -11,7 +11,7 @@
 # docouture docs-site-package skill's reference/versioning-modes.md), the real
 # `antora-playbook.yml` aggregates content from more than just whatever is
 # checked out right now — versioned matches `branches: [main]` +
-# `tags: ['v*']`, standalone matches `branches: [main]` + `tags: ['stable']`.
+# `tags: ['docs/v*']`, standalone matches `branches: [main]` + `tags: ['docs/stable']`.
 # A PR build (or a local build on a feature branch) is on a detached HEAD or
 # a branch that is neither of those, so `main` and the version tag(s) are
 # not resolved in that checkout — the real playbook either fails or silently

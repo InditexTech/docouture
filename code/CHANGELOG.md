@@ -14,6 +14,7 @@ at all).
 
 ### Added
 
+- [#168](https://github.com/InditexTech/docouture/pull/168) [tooling] Prefix versioned and standalone modes git tags with docs/ to avoid collision with code release tags
 - [#164](https://github.com/InditexTech/docouture/pull/164) [ui-bundle] Add opt-in bordered style for home hero image
 - [#147](https://github.com/InditexTech/test-antoradocs/pull/147) [ui-bundle] Alternative home page template version
 - [#141](https://github.com/InditexTech/test-antoradocs/pull/141) [cli] Polish the docouture CLI

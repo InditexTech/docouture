@@ -222,7 +222,7 @@ describe('runNew', () => {
     expect(playbook).toContain('url: ..')
     expect(playbook).toContain('start_path: docs/src')
     expect(playbook).toContain('branches: [main]')
-    expect(playbook).toContain("tags: ['stable']")
+    expect(playbook).toContain("tags: ['docs/stable']")
     expect(playbook).toContain('start_page: ROOT::index.adoc')
 
     // Workflows are peeled out to the true repo root — GitHub Actions never
@@ -343,7 +343,7 @@ describe('runNew', () => {
     expect(releaseVersion.trim()).toMatch(/^\d+\.\d+\.\d+$/)
 
     const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
-    expect(playbook).toContain("tags: ['v*']")
+    expect(playbook).toContain("tags: ['docs/v*']")
     expect(playbook).toContain('branches: [main]')
     expect(playbook).toContain('url: ..')
     expect(playbook).toContain('start_path: docs/src')
@@ -406,7 +406,7 @@ describe('runNew', () => {
     expect(antoraYml).toContain('version: prerelease')
 
     const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
-    expect(playbook).toContain("tags: ['v*']")
+    expect(playbook).toContain("tags: ['docs/v*']")
   })
 
   it('answering yes to the extra URL path segment question at the wizard keeps the site name as the component name', async () => {

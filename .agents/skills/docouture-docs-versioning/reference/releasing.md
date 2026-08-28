@@ -38,10 +38,10 @@ content:
     - url: ..
       start_path: docs/src
       branches: [main]
-      tags: ['v*']
+      tags: ['docs/v*']
 ```
 
-`tags: ['v*']` matches every tag shaped `v1.2.0`, `v2.0.0`, etc. — each becomes its own
+`tags: ['docs/v*']` matches every tag shaped `docs/v1.2.0`, `docs/v2.0.0`, etc. — each becomes its own
 version because each tag's own `docs/src/antora.yml` carries a different `version:`.
 `branches: [main]` contributes the single prerelease version on top. How many past
 versions show up is purely a function of how many tags exist and match the glob — delete
@@ -65,7 +65,7 @@ form field for it; the `pull_request` trigger has none, so it reads
 merged PR, containing just the target version.
 
 **The release itself**: `docouture version <value>` patches `docs/src/antora.yml` on a
-one-off commit built on top of `main`'s current tip, `git tag v<value>` is created there,
+one-off commit built on top of `main`'s current tip, `git tag docs/v<value>` is created there,
 and the tag is pushed — a GitHub Release is also created from it. `main` itself is never
 advanced or touched by this step; its own `docs/src/antora.yml` permanently keeps saying
 `version: prerelease`, `prerelease: true`.

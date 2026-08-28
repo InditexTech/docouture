@@ -10,12 +10,12 @@ A release is cut by running `.github/workflows/docouture-release.yml` (scaffolde
   no-op, not an error.
 
 Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a one-off
-commit built on `main`'s current tip, `git tag v<value>` is created there, and the tag
+commit built on `main`'s current tip, `git tag docs/v<value>` is created there, and the tag
 is pushed — `main` itself is never advanced.
 
 == Standalone mode
 
-Every release retargets the same `stable` tag — force-moved, not appended to. Nothing
+Every release retargets the same `docs/stable` tag — force-moved, not appended to. Nothing
 to set beforehand; the workflow's default input is fine.
 
 == Versioned mode
@@ -25,7 +25,7 @@ triggered by a labelled PR merge:
 
 . Edit `docs/.release-version` to the target version (e.g. `1.0.0`)
 . Open a PR with that change, labelled `docs/release`
-. Merge it — the workflow tags `v1.0.0`, then bumps the file forward to the next patch
+. Merge it — the workflow tags `docs/v1.0.0`, then bumps the file forward to the next patch
   version so it's always ready for whatever comes next
 
 (Or skip the PR: run the workflow manually via `workflow_dispatch` and type the

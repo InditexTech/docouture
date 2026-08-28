@@ -35,9 +35,9 @@ is a resource ID, not a file path.
 
 The two versioning modes `docouture new --mode` offers, decided once at scaffold time.
 Standalone keeps `main` as a permanent *prerelease* build and moves a single rolling
-`stable` tag on each release — no historical archive, only "now" and "what's next".
+`docs/stable` tag on each release — no historical archive, only "now" and "what's next".
 Versioned keeps `main` as prerelease too, but gives every release its own immutable
-`vX.Y.Z` tag forever, plus a `docs/.release-version` file tracking the next release's
+`docs/vX.Y.Z` tag forever, plus a `docs/.release-version` file tracking the next release's
 target version — appropriate when old releases (an SDK, a CLI) must keep resolving
 unchanged after a new one ships. See xref:main:guides-versioning-modes.adoc[].
 

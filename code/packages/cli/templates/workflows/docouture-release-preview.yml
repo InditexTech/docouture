@@ -76,7 +76,7 @@ jobs:
             *"v*"*) mode=versioned ;;
             *stable*) mode=standalone ;;
             *)
-              echo "::error::antora-playbook.yml's content.sources[] has tags: '${line}' — expected something matching 'v*' (versioned) or 'stable' (standalone)."
+              echo "::error::antora-playbook.yml's content.sources[] has tags: '${line}' — expected something matching 'docs/v*' (versioned) or 'docs/stable' (standalone)."
               exit 1
               ;;
           esac
@@ -100,10 +100,10 @@ jobs:
             else
               version=""
             fi
-            tag="v${version}"
+            tag="docs/v${version}"
           else
             version="stable"
-            tag="stable"
+            tag="docs/stable"
           fi
 
           echo "version=${version}" >> "$GITHUB_OUTPUT"

@@ -20,9 +20,9 @@ Asks five questions interactively, or take every default non-interactively with 
   further `/<name>/` segment on top of that. Only answer yes if this repository will
   host more than one documentation component later.
 * **Versioning mode** — `Standalone` (main always builds as the prerelease/preview
-  version; a release moves a rolling `stable` tag, no historical archive) or
+  version; a release moves a rolling `docs/stable` tag, no historical archive) or
   `Versioned` (main always builds as the prerelease/preview version; every release is
-  an immutable `vX.Y.Z` git tag) — see xref:main:guides-versioning-modes.adoc[] for the
+  an immutable `docs/vX.Y.Z` git tag) — see xref:main:guides-versioning-modes.adoc[] for the
   difference in full.
 * **Package manager** — `npm` or `pnpm`, pre-filled from an existing lockfile or
   however `docouture` itself was invoked.

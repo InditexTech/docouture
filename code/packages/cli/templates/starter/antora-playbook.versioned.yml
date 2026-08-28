@@ -59,12 +59,12 @@ content:
       # version — docs/antora.yml on this branch says `version: prerelease`,
       # `prerelease: true`, the same as the standalone mode's shape (this
       # descriptor is identical for both modes on main — see docs/antora.yml's
-      # own comment). `tags: ['v*']` matches every release tag (v1.2.0,
-      # v2.0.0, ...) docouture-release.yml cuts, each an immutable version with
+      # own comment). `tags: ['docs/v*']` matches every release tag (docs/v1.2.0,
+      # docs/v2.0.0, ...) docouture-release.yml cuts, each an immutable version with
       # its own copy of docs/antora.yml — the version dropdown grows by one
       # every release and nothing here ever needs editing again.
       branches: [main]
-      tags: ['v*']
+      tags: ['docs/v*']
 
 ui:
   bundle:

@@ -115,7 +115,7 @@ antora:
 ```
 
 Why the playbook and not the component descriptor: a single Antora run aggregates content
-from every matched ref at once (`main` + `stable`, or `main` + every `v*` tag) into one site,
+from every matched ref at once (`main` + `docs/stable`, or `main` + every `docs/v*` tag) into one site,
 so — unlike `nav_modules` — there's no per-ref build to duplicate the list onto; one copy, in
 the one playbook, is evaluated fresh against whatever pages any given build actually resolves.
 
@@ -192,7 +192,7 @@ four places. Details, and why `starter` isn't that template anymore:
 ## Versioning a site
 
 `example` is versioned under **standalone (Stable + Prerelease)** (GH #80): `main` permanently
-aggregates as the `prerelease` version, and a rolling `stable` tag — force-moved to a fresh
+aggregates as the `prerelease` version, and a rolling `docs/stable` tag — force-moved to a fresh
 commit on each release by the single `docouture-release.yml` workflow template
 (`.github/workflows/` in a site scaffolded by `docouture new`, which detects standalone vs
 versioned from `docs/antora-playbook.yml`'s own `content.sources[]` tags and branches its
@@ -202,14 +202,14 @@ same workflow already handles, but is not wired up on `example` or anywhere else
 (GH #81). Full guidance, playbook examples
 and URL-routing notes (`urls.latest_version_segment`): `reference/versioning-modes.md`.
 
-Either mode's `content.sources[]` names refs (`main`/`stable`/`v*`) that a PR checkout —
+Either mode's `content.sources[]` names refs (`main`/`docs/stable`/`docs/v*`) that a PR checkout —
 detached HEAD or a feature branch — doesn't have. A site scaffolded by `docouture new` gets a
 second playbook, `antora-playbook.pr-verify.yml` (one source, `branches: HEAD`, nothing
 version-specific), and `docouture-pr-verify.yml` builds with it on every PR instead of the real
 `antora-playbook.yml` — always validating whatever the PR actually changed, regardless of
 which mode (or none) the site has adopted. `example`'s own equivalent is
 `antora-playbook.local.yml`, wired into its `build` script (`package.json`) so `pnpm build`
-— what `pr-verify.yml` runs — never depends on `main`/`stable` either; its
+— what `pr-verify.yml` runs — never depends on `main`/`docs/stable` either; its
 `antora-playbook.yml` is built explicitly by `docs.yml` and the `build:publish` script
 instead.
 

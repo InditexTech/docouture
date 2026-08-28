@@ -6,7 +6,7 @@ description: "How to cut a release or a prerelease on a docouture Antora documen
 # Docs versioning (Versioned — Full History)
 
 Applies to a site scaffolded with `docouture new --mode versioned`. `main` is permanently
-the prerelease/preview channel; every release is its own immutable `vX.Y.Z` git tag, and
+the prerelease/preview channel; every release is its own immutable `docs/vX.Y.Z` git tag, and
 all of them stay in the version dropdown forever — the shape to use when consumers pin an
 old version and need its docs to keep existing unchanged.
 

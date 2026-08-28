@@ -9,15 +9,15 @@
 # Why this exists:
 # In Mode 2 (Stable + Prerelease, GH-80), `antora-playbook.yml` specifies:
 #   branches: [main]
-#   tags: ['stable']
+#   tags: ['docs/stable']
 #
 # When building in CI on pull requests (or in local feature branches),
-# git is on a detached HEAD or a feature branch, so `main` and `stable`
+# git is on a detached HEAD or a feature branch, so `main` and `docs/stable`
 # are not resolved in the checkout.
 #
 # This playbook points content aggregation at HEAD (the current worktree)
 # so PRs and local runs validate the current docs content without requiring
-# `main` or `stable`. `docs.yml` (push to main / publishing) uses the base
+# `main` or `docs/stable`. `docs.yml` (push to main / publishing) uses the base
 # `antora-playbook.yml`.
 #
 

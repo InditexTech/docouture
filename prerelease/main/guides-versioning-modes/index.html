@@ -85,7 +85,7 @@
           <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-design-menu-tab-outlined"></use></svg></span>
         </span>
       </button>
-      <a class="header-toolbar__brand" href="../../../1.0.0/">
+      <a class="header-toolbar__brand" href="../../">
         <img class="header-toolbar__logo header-toolbar__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="header-toolbar__logo header-toolbar__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="header-toolbar__product-name ids-text ids-text--label-l-high">docouture</span>
@@ -100,20 +100,9 @@
         </span>
       </button>
 <div class="page-versions">
-  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version header-toolbar__version--prerelease version-menu-toggle" title="Show other versions of page" aria-expanded="false">
+  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
     <span class="ids-tag__label">prerelease</span>
-    <span class="ids-tag__icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg></span>
-  </button>
-  <div class="version-menu">
-    <span class="version is-current" aria-current="page">
-      <span class="version__label">prerelease</span>
-      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
-    </span>
-    <a class="version" href="../../../1.0.0/main/guides-versioning-modes/">
-      <span class="version__label">1.0.0</span>
-      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
-          </a>
-  </div>
+  </span>
 </div>
 <a class="ids-button ids-button--ghost ids-button--icon-only header-toolbar__repo" href="https://github.com/InditexTech/docouture" target="_blank" rel="noopener" aria-label="Repository">
   <span class="ids-button__content">
@@ -178,7 +167,7 @@
     <button class="side-menu__close" type="button" aria-label="Close navigation"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-close-large-outlined"></use></svg></button>
   </div>
 <div class="side-menu__brand">
-  <a class="side-menu__brand-link" href="../../../1.0.0/">
+  <a class="side-menu__brand-link" href="../../">
     <img class="side-menu__brand-logo side-menu__brand-logo--light" src="../../../_/product-logo.png" width="40" height="40" alt="">
     <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="../../../_/product-logo-dark.png" width="40" height="40" alt="">
     <span class="side-menu__brand-title ids-text ids-text--title-m">docouture</span>
@@ -558,20 +547,9 @@
   </nav>
   <div class="side-menu__version">
 <div class="page-versions">
-  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version header-toolbar__version--prerelease version-menu-toggle" title="Show other versions of page" aria-expanded="false">
+  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
     <span class="ids-tag__label">prerelease</span>
-    <span class="ids-tag__icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg></span>
-  </button>
-  <div class="version-menu">
-    <span class="version is-current" aria-current="page">
-      <span class="version__label">prerelease</span>
-      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
-    </span>
-    <a class="version" href="../../../1.0.0/main/guides-versioning-modes/">
-      <span class="version__label">1.0.0</span>
-      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
-          </a>
-  </div>
+  </span>
 </div>
   </div>
 </div>
@@ -617,7 +595,7 @@ scaffold time (<code>docouture upgrade</code> never changes it).</p>
 <div class="paragraph">
 <p><code>main</code> always builds as the <strong>prerelease</strong> version (<code>docs/src/antora.yml</code>:
 <code>version: prerelease</code>, <code>prerelease: true</code>, permanently). A release force-moves a
-single rolling <code>stable</code> tag to a fresh commit — no historical archive, appropriate
+single rolling <code>docs/stable</code> tag to a fresh commit — no historical archive, appropriate
 when only "now" and "what&#8217;s next" matter.</p>
 </div>
 <div class="listingblock">
@@ -627,7 +605,7 @@ when only "now" and "what&#8217;s next" matter.</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">    - </span><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">url</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#B5CEA8;--shiki-dark:#B5CEA8">..</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      start_path</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">docs/src</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      branches</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: [</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">main</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">]</span></span>
-<span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      tags</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: [</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">'stable'</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">]</span></span></span></code></pre>
+<span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      tags</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: [</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">'docs/stable'</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">]</span></span></span></code></pre>
 </div>
 </div>
 </div>
@@ -638,7 +616,7 @@ when only "now" and "what&#8217;s next" matter.</p>
 <div class="paragraph">
 <p><code>main</code> still builds as the prerelease version — <code>docs/src/antora.yml</code> is
 byte-identical to the standalone shape on <code>main</code> — but every release is instead its
-own immutable <code>vX.Y.Z</code> git tag, kept forever. Appropriate for a library/SDK whose
+own immutable <code>docs/vX.Y.Z</code> git tag, kept forever. Appropriate for a library/SDK whose
 consumers pin an old version.</p>
 </div>
 <div class="listingblock">
@@ -648,7 +626,7 @@ consumers pin an old version.</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">    - </span><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">url</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#B5CEA8;--shiki-dark:#B5CEA8">..</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      start_path</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">docs/src</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      branches</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: [</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">main</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">]</span></span>
-<span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      tags</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: [</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">'v*'</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">]</span></span></span></code></pre>
+<span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">      tags</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: [</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">'docs/v*'</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">]</span></span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -662,7 +640,7 @@ of a workflow input.</p>
 <h2 id="on-a-release-tag-docssrcantora-yml-changes"><a class="anchor" href="#on-a-release-tag-docssrcantora-yml-changes"></a>On a release tag, <code>docs/src/antora.yml</code> changes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Standalone&#8217;s <code>stable</code> tag says <code>version: stable</code>, <code>prerelease: false</code>. A versioned
+<p>Standalone&#8217;s <code>docs/stable</code> tag says <code>version: stable</code>, <code>prerelease: false</code>. A versioned
 release tag says <code>version: '1.2.0'</code> (or whatever was released), <code>prerelease: false</code>.
 Neither mode ever rewrites `main&#8217;s own copy.</p>
 </div>
@@ -676,6 +654,22 @@ Neither mode ever rewrites `main&#8217;s own copy.</p>
 past releases need to keep resolving unchanged after a new one ships — an SDK, a CLI,
 anything consumers pin a version of. See <a href="../guides-releasing-a-documentation/" class="xref page">Releasing a documentation</a>
 for how a release is actually cut in either mode.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tag-names-are-prefixed-with-docs"><a class="anchor" href="#tag-names-are-prefixed-with-docs"></a>Tag names are prefixed with <code>docs/</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Release tags live under <code>docs/</code> — <code>docs/stable</code> and <code>docs/vX.Y.Z</code>, not bare <code>stable</code>/
+<code>vX.Y.Z</code> — so they don&#8217;t collide with a host monorepo&#8217;s own release tags. <code>docouture
+upgrade</code> refreshes the workflow files but never touches <code>antora-playbook.yml</code>, so a site
+scaffolded before this convention keeps its old <code>tags: ['stable']</code> / <code>tags: ['v*']</code>
+matcher until someone edits it by hand. After upgrading, update that matcher to
+<code>tags: ['docs/stable']</code> / <code>tags: ['docs/v*']</code> — and, if a release was already cut under
+the old bare name, re-push it under the new one (<code>git tag docs/stable &lt;sha&gt; &amp;&amp; git push
+origin refs/tags/docs/stable</code>, or the <code>docs/vX.Y.Z</code> equivalent per existing tag) — or the
+next release&#8217;s tag won&#8217;t match anything the playbook aggregates.</p>
 </div>
 </div>
 </div>
@@ -728,7 +722,7 @@ for how a release is actually cut in either mode.</p>
 <footer class="site-footer">
   <div class="ids-grid-layout ids-grid-layout--with-margin site-footer__grid">
     <div class="ids-grid-layout__item site-footer__col site-footer__brand">
-      <a class="site-footer__brand-link" href="../../../1.0.0/">
+      <a class="site-footer__brand-link" href="../../">
         <img class="site-footer__logo site-footer__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="site-footer__logo site-footer__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="ids-text ids-text--label-l-high">docouture</span>

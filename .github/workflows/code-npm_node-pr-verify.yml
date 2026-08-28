@@ -52,7 +52,10 @@ jobs:
       # falls back to the labels of any issue it closes (`closingIssuesReferences`
       # via the GraphQL API — not exposed by `gh pr view --json`), because the
       # real category commonly lives on the tracking issue while its
-      # implementing PR(s) are deliberately `skip-release`.
+      # implementing PR(s) are deliberately `skip-release`. The exemption
+      # (`kind/internal`/`kind/epic`) is resolved the same way — checked on
+      # the PR AND on any issue it closes — since that label just as often
+      # lives on the tracking issue rather than the implementing PR.
       - name: Resolve changelog requirement from labels
         id: changelog-requirement
         env:
@@ -73,24 +76,23 @@ jobs:
             return 1
           }
 
+          issue_labels=$(gh api graphql -f query='
+            query($owner:String!,$repo:String!,$num:Int!){
+              repository(owner:$owner,name:$repo){
+                pullRequest(number:$num){
+                  closingIssuesReferences(first:10){ nodes { labels(first:20){ nodes { name } } } }
+                }
+              }
+            }' -f owner="$REPO_OWNER" -f repo="$REPO_NAME" -F num="$PR_NUMBER" \
+            --jq '[.data.repository.pullRequest.closingIssuesReferences.nodes[].labels.nodes[].name] | join(",")')
+
           needs_entry=false
           has_any "$PR_LABELS" "$CATEGORY_LABELS" && needs_entry=true
-
-          if [[ "$needs_entry" == "false" ]]; then
-            issue_labels=$(gh api graphql -f query='
-              query($owner:String!,$repo:String!,$num:Int!){
-                repository(owner:$owner,name:$repo){
-                  pullRequest(number:$num){
-                    closingIssuesReferences(first:10){ nodes { labels(first:20){ nodes { name } } } }
-                  }
-                }
-              }' -f owner="$REPO_OWNER" -f repo="$REPO_NAME" -F num="$PR_NUMBER" \
-              --jq '[.data.repository.pullRequest.closingIssuesReferences.nodes[].labels.nodes[].name] | join(",")')
-            has_any "$issue_labels" "$CATEGORY_LABELS" && needs_entry=true
-          fi
+          has_any "$issue_labels" "$CATEGORY_LABELS" && needs_entry=true
 
           exempt=false
           has_any "$PR_LABELS" "$EXEMPT_LABELS" && exempt=true
+          has_any "$issue_labels" "$EXEMPT_LABELS" && exempt=true
 
           echo "needs-entry=$needs_entry" >> "$GITHUB_OUTPUT"
           echo "exempt=$exempt" >> "$GITHUB_OUTPUT"

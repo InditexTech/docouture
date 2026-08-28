@@ -1,0 +1,19 @@
+code/packages/cli/templates/starter/docs/modules/ROOT/pages/getting-started.adoc
+  s_50390976742d3a::t_33749b1c83088e 27,30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d7fb3bba2a94a98be2f97dbefadfc5b8ef005442",
+  "prompts": {},
+  "sessions": {
+    "s_50390976742d3a": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "f1452dcf-9c6e-44a2-9e58-99b0213b758c",
+        "model": "unknown"
+      },
+      "human_author": "Sabela Cereijo Vázquez <sabelacv@ext.inditex.com>"
+    }
+  }
+}

@@ -9,6 +9,7 @@
 :page-action-secondary-url: main:index.adoc
 :page-hero-image: hero.jpg
 :page-hero-image-alt: Diagram of scattered documents and content sources flowing through a build pipeline into a structured, themed documentation site.
+:page-hero-image-bordered:
 
 docouture turns an https://antora.org[Antora] content tree into a themed, searchable
 documentation site in one command — `docouture new` scaffolds it, `docouture dev`

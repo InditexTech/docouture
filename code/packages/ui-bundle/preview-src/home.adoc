@@ -9,6 +9,7 @@
 :page-action-secondary-url: content.adoc
 :page-hero-image: /photo-medium.png
 :page-hero-image-alt: Placeholder still standing in for the product screenshot the design frames.
+:page-hero-image-bordered:
 
 The landing's content column starts with a preamble: everything above the first
 `==` heading. The design uses it for a short lead-in, and it is the one block on

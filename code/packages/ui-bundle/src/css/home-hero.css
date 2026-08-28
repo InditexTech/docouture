@@ -115,14 +115,15 @@
  * Media slot: a still or a video, whichever the page authored, at the width
  * of the hero column and in its own intrinsic proportions.
  *
- * Deliberately unstyled beyond that. The frames draw the media inside a 6px
+ * Deliberately unstyled by default. The frames draw the media inside a 6px
  * black frame with a 10px radius and a centred play mark, but a frame here
  * would stack with whatever the supplied asset already carries — product
  * screenshots very often come with their own bezel — and a fixed ratio would
  * crop an asset that does not share it. So the bundle provides the slot and
- * the page provides the framing, rather than the bundle imposing one on
- * every landing sight unseen. A site that wants the drawn frame can add it
- * to its own image.
+ * the page provides the framing by default, rather than the bundle imposing
+ * one on every landing sight unseen. `:page-hero-image-bordered:` (below)
+ * opts a page into the frame the Figma draws, for artwork that has no
+ * framing of its own.
  *
  * A video's play control is the browser's own (`controls`) — see
  * home-hero.hbs's note on why not the frames' ghost button.
@@ -131,6 +132,25 @@
   display: block;
   height: auto;
   max-width: 100%;
+}
+
+/*
+ * Opt-in frame, `:page-hero-image-bordered:` — the Figma's 6px black/white
+ * border and 10px radius. Colour is the design system's own theme-aware
+ * token (`--ids-color-border-default` — `#000` light, `#fff` dark,
+ * ids-tokens.css). Border width uses `--ids-size-border-high` (2px, the
+ * thicker of the two border tokens) rather than the literal 6px the Figma
+ * draws — no border token goes that high, and a decorative frame is a
+ * closer fit for the "high emphasis" token than the 1px
+ * `--ids-size-border-default` used for hairline dividers elsewhere. The
+ * radius is a literal 10px because no token in ids-tokens.css matches it
+ * either (only `--ids-size-radius-none`/`-full` exist) — precedented
+ * elsewhere in the bundle (base.css's own literal 12px/6px radii) rather
+ * than stretching an unrelated token to fit.
+ */
+.home-hero__media--bordered {
+  border: var(--ids-size-border-high) solid var(--ids-color-border-default);
+  border-radius: 10px;
 }
 
 @media screen and (--ids-breakpoints-m) {

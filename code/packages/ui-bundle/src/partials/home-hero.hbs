@@ -21,6 +21,7 @@
     :page-action-secondary-url: quickstart.adoc
     :page-hero-image: hero.png              media slot: a still…
     :page-hero-image-alt: A canvas…         …and its alternative text
+    :page-hero-image-bordered:               opt-in black/white frame, 10px radius
     :page-hero-video: hero.mp4               …or a video, with an optional
     :page-hero-video-poster: hero.png        still shown before it plays
 
@@ -65,9 +66,14 @@
      centred ghost `play-circle` button the frames draw over the panel.
      Native controls are keyboard accessible, localised, and work with
      JavaScript disabled, none of which a bespoke control gets for free.
-  3. The media is a bare slot, not the frames' 6px-bordered, 10px-radius,
-     713x425 panel — see home-hero.css for why the bundle leaves the framing
-     to the page.
+  3. The media is a bare slot by default, not the frames' 6px-bordered,
+     10px-radius, 713x425 panel — see home-hero.css for why the bundle leaves
+     the framing to the page unless `:page-hero-image-bordered:` opts in.
+     That attribute is checked with `(eq … undefined)` rather than a plain
+     `{{#if}}`: it is the first presence-only boolean on this partial, and a
+     bare `:attr:` (no value) is an empty string in Asciidoctor's own
+     attributes map, which Handlebars' `{{#if}}` treats as falsy same as JS
+     — only absence (`undefined`) should turn the modifier off.
 --}}
 <div class="home-hero">
   <div class="home-hero__intro">
@@ -125,10 +131,10 @@
     `relativize`, same as `site.keys.productLogo` above.
 --}}
 {{#with page.attributes.[hero-video]}}
-  <video class="home-hero__media" src="{{{relativize (resolveResourceURL this)}}}" controls preload="metadata"{{#with @root.page.attributes.[hero-video-poster]}} poster="{{{relativize (resolveResourceURL this)}}}"{{/with}}></video>
+  <video class="home-hero__media{{#unless (eq @root.page.attributes.[hero-image-bordered] undefined)}} home-hero__media--bordered{{/unless}}" src="{{{relativize (resolveResourceURL this)}}}" controls preload="metadata"{{#with @root.page.attributes.[hero-video-poster]}} poster="{{{relativize (resolveResourceURL this)}}}"{{/with}}></video>
 {{else}}
   {{#with page.attributes.[hero-image]}}
-  <img class="home-hero__media" src="{{{relativize (resolveResourceURL this)}}}" alt="{{@root.page.attributes.[hero-image-alt]}}">
+  <img class="home-hero__media{{#unless (eq @root.page.attributes.[hero-image-bordered] undefined)}} home-hero__media--bordered{{/unless}}" src="{{{relativize (resolveResourceURL this)}}}" alt="{{@root.page.attributes.[hero-image-alt]}}">
   {{/with}}
 {{/with}}
 </div>

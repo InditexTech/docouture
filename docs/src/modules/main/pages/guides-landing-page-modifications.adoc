@@ -34,6 +34,7 @@ Set as page attributes on `index.adoc` itself, not a block:
 :page-action-secondary-url: main:index.adoc
 :page-hero-image: hero-placeholder.png
 :page-hero-image-alt: A one-line description of the image, for screen readers.
+:page-hero-image-bordered:
 ----
 
 * `:description:` is meta-only on the `home` layout — unlike the default page
@@ -49,9 +50,14 @@ Set as page attributes on `index.adoc` itself, not a block:
 * `:page-hero-image:`/`:page-hero-image-alt:` is optional — the hero renders fine as
   text-only with no image. There's no dark-mode variant for it (unlike feature/CTA
   images); pick artwork that reads on both themes, or skip it.
+* `:page-hero-image-bordered:` is an opt-in, presence-only switch (no value needed) —
+  set it and the media slot (image or video) renders with a black/white frame and a
+  10px radius, instead of the bare slot the layout renders by default. Turn it on
+  for artwork that carries no framing of its own; leave it off for a screenshot that
+  already has its own bezel, which a second frame would just stack on top of.
 * `:page-hero-video:`/`:page-hero-video-poster:` is the same media slot, for a video
   instead of an image — if both `:page-hero-image:` and `:page-hero-video:` are set,
-  the video wins.
+  the video wins. `:page-hero-image-bordered:` applies to whichever one renders.
 
 == Get started
 

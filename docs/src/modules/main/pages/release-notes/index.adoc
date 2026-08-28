@@ -3,16 +3,7 @@
 What changed for users in each release, newest first — in contrast to
 xref:main:changelog/index.adoc[Changelog], the unabridged commit-level record.
 
-[NOTE]
-====
-docouture is currently at `0.1.0` with no tagged release yet — the entry linked below is
-an *illustrative* first-stable-release summary of what already exists in the repository
-today, written ahead of an actual `v1.0.0` tag, not a claim that one has shipped. It will
-be replaced with the real notes once a release is actually cut (see
-xref:main:guides-releasing-a-documentation.adoc[]).
-====
-
 == Versions
 
-* xref:main:release-notes/1-0-0.adoc[v1.0.0] (illustrative)
+* xref:main:release-notes/1-0-0.adoc[v1.0.0]
 

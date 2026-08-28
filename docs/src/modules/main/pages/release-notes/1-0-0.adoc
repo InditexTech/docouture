@@ -1,12 +1,6 @@
-= v1.0.0 (illustrative)
+= v1.0.0
 
-[NOTE]
-====
-Illustrative — docouture has no tagged release yet (still `0.1.0`, see
-xref:main:release-notes/index.adoc[]). This is what a first stable release summary would
-say about what already exists in the repository today, written ahead of an actual
-`v1.0.0` tag.
-====
+image::v1.0.0-release-notes-hero.jpg[Pipeline diagram showing docouture's four stages — scaffold, version, theme/search/diagrams, publish — turning scattered source documents into a published, versioned documentation site,role=text-center]
 
 [.lead]
 docouture turns "we should really document this" into a real, versioned documentation

@@ -146,7 +146,7 @@ jobs:
 
           MESSAGE="
           ### :rocket: Docs Release Preview
-          Merging this Pull Request will release **\`${TAG}\`**."
+          Merging this Pull Request will release the docs site as **\`${TAG}\`**."
 
           if [ "$EXISTED" = "true" ]; then
             MESSAGE="${MESSAGE}
@@ -194,5 +194,5 @@ jobs:
       - name: Add PR comment with release preview
         run: |
           gh pr comment ${{ github.event.number }} --body "
-          ### :exclamation: This Pull Request will not trigger a release
-          A Pull Request with no \`docs/release\` label will not trigger a release — label it \`docs/release\` if you want this merge to release the docs site."
+          ### :exclamation: This Pull Request will not trigger a docs release
+          A Pull Request with no \`docs/release\` label will not trigger a docs site release — label it \`docs/release\` if you want this merge to release the docs site."

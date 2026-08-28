@@ -65,16 +65,20 @@ package name in the playbook; pnpm's workspace link makes them resolvable.
 
 ## The IOP Design System
 
-The UI bundle is themed with the IOP Design System (IDS), consumed as npm
-packages from the Inditex registry rather than reimplemented from Figma:
+The UI bundle is themed with the IOP Design System (IDS) rather than
+reimplemented from Figma. IDS itself is not a dependency of this workspace —
+it's consumed through an isolated sidecar (`code/tools/ids`) that generates a
+small derivative committed into `src/css/`; see `code/tools/ids/README.md` for
+why and how. What it provides:
 
 | package                                    | what it provides                                                                                                                                                          |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@inditex/sewingiopdsweb-styles`           | every `--ids-*` token, light and dark palettes, the density scale, resolution tiers, motion, z-index, and a PostCSS plugin supplying the breakpoint `@custom-media` names |
 | `@inditex/sewingiopdsweb-react-components` | per-component BEM stylesheets. Only the CSS is used — no React reaches the browser                                                                                        |
 
-Both are proprietary and are compiled into `ui-bundle.zip`, which makes sites
-built with this bundle **internal-only**. See `packages/ui-bundle/NOTICE`.
+Both are proprietary, which is why the root README calls out sites built with
+this bundle as internal-only distribution. See `packages/ui-bundle/NOTICE` for
+exactly what's embedded.
 
 Three rules follow from this, and the build enforces the third:
 

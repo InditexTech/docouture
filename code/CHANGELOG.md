@@ -14,6 +14,7 @@ at all).
 
 ### Added
 
+- [#164](https://github.com/InditexTech/docouture/pull/164) [ui-bundle] Add opt-in bordered style for home hero image
 - [#147](https://github.com/InditexTech/test-antoradocs/pull/147) [ui-bundle] Alternative home page template version
 - [#141](https://github.com/InditexTech/test-antoradocs/pull/141) [cli] Polish the docouture CLI
 - [#138](https://github.com/InditexTech/test-antoradocs/pull/138) [tooling] Standalone/versioned docs: /stable (or latest release tag) becomes a redirect stub instead of real content

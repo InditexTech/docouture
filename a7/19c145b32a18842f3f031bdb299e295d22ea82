@@ -1,0 +1,17 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a719c145b32a18842f3f031bdb299e295d22ea82",
+  "prompts": {},
+  "sessions": {
+    "s_50390976742d3a": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "f1452dcf-9c6e-44a2-9e58-99b0213b758c",
+        "model": "unknown"
+      },
+      "human_author": "Sabela Cereijo Vázquez <sabelacv@ext.inditex.com>"
+    }
+  }
+}

@@ -440,6 +440,7 @@ Set as page attributes on `index.adoc` itself, not a block:
 :page-action-secondary-url: main:index.adoc
 :page-hero-image: hero-placeholder.png
 :page-hero-image-alt: A one-line description of the image, for screen readers.
+:page-hero-image-bordered:
 ```
 
 - `:description:` is meta-only on the `home` layout — unlike the default page layout’s hero, it never renders as a visible subtitle. Write it for search engines and link-preview cards, not as landing-page copy.
@@ -447,7 +448,8 @@ Set as page attributes on `index.adoc` itself, not a block:
 - `:page-action:`/`:page-action-url:` is the primary button — **both halves are required**; set only one and neither renders (a button that goes nowhere is worse than no button).
 - `:page-action-secondary:`/`:page-action-secondary-url:` is the same rule, and it’s nested inside the primary action’s markup — if the primary pair is unset, the secondary button doesn’t render either, even with both of its own halves set.
 - `:page-hero-image:`/`:page-hero-image-alt:` is optional — the hero renders fine as text-only with no image. There’s no dark-mode variant for it (unlike feature/CTA images); pick artwork that reads on both themes, or skip it.
-- `:page-hero-video:`/`:page-hero-video-poster:` is the same media slot, for a video instead of an image — if both `:page-hero-image:` and `:page-hero-video:` are set, the video wins.
+- `:page-hero-image-bordered:` is an opt-in, presence-only switch (no value needed) — set it and the media slot (image or video) renders with a black/white frame and a 10px radius, instead of the bare slot the layout renders by default. Turn it on for artwork that carries no framing of its own; leave it off for a screenshot that already has its own bezel, which a second frame would just stack on top of.
+- `:page-hero-video:`/`:page-hero-video-poster:` is the same media slot, for a video instead of an image — if both `:page-hero-image:` and `:page-hero-video:` are set, the video wins. `:page-hero-image-bordered:` applies to whichever one renders.
 
 ## Get started
 
@@ -4920,21 +4922,6 @@ No tagged release yet — see `code/CHANGELOG.md’s `[Unreleased]` section for 
 
 ---
 
-# Release notes
-
-Source: /1.0.0/main/release-notes/
-
-What changed for users in each release, newest first — in contrast to [Changelog](../changelog/), the unabridged commit-level record.
-
-> **Note**
-> docouture is currently at `0.1.0` with no tagged release yet — the entry linked below is an **illustrative** first-stable-release summary of what already exists in the repository today, written ahead of an actual `v1.0.0` tag, not a claim that one has shipped. It will be replaced with the real notes once a release is actually cut (see [Releasing a documentation](../guides-releasing-a-documentation/)).
-
-## Versions
-
-- [v1.0.0](1-0-0/) (illustrative)
-
----
-
 # v1.0.0 (illustrative)
 
 Source: /1.0.0/main/release-notes/1-0-0/
@@ -4963,3 +4950,18 @@ Diagrams render for real — [Kroki](https://kroki.io)-backed mermaid, plantuml,
 ## Publish and move on
 
 `docouture publish gh-pages` — a CNAME custom-domain option and automatic `.nojekyll` handling included — is the entire path from a finished build to a live URL. See [Publishing a documentation](../../guides-publishing-a-documentation/).
+
+---
+
+# Release notes
+
+Source: /1.0.0/main/release-notes/
+
+What changed for users in each release, newest first — in contrast to [Changelog](../changelog/), the unabridged commit-level record.
+
+> **Note**
+> docouture is currently at `0.1.0` with no tagged release yet — the entry linked below is an **illustrative** first-stable-release summary of what already exists in the repository today, written ahead of an actual `v1.0.0` tag, not a claim that one has shipped. It will be replaced with the real notes once a release is actually cut (see [Releasing a documentation](../guides-releasing-a-documentation/)).
+
+## Versions
+
+- [v1.0.0](1-0-0/) (illustrative)

@@ -74,5 +74,5 @@
 - [UI Bundle](/1.0.0/main/reference-ui-bundle/)
 - [Structure](/1.0.0/main/structure/)
 - [Changelog](/1.0.0/main/changelog/)
-- [Release notes](/1.0.0/main/release-notes/)
 - [v1.0.0 (illustrative)](/1.0.0/main/release-notes/1-0-0/)
+- [Release notes](/1.0.0/main/release-notes/)

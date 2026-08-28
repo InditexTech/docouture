@@ -658,7 +658,8 @@ on <strong>this</strong> landing page and what each change does, not the block r
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:page-action-secondary:</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> About</span></span>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:page-action-secondary-url:</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> main:index.adoc</span></span>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:page-hero-image:</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> hero-placeholder.png</span></span>
-<span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:page-hero-image-alt:</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> A one-line description of the image, for screen readers.</span></span></span></code></pre>
+<span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:page-hero-image-alt:</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> A one-line description of the image, for screen readers.</span></span>
+<span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:page-hero-image-bordered:</span></span></span></code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -687,9 +688,16 @@ text-only with no image. There&#8217;s no dark-mode variant for it (unlike featu
 images); pick artwork that reads on both themes, or skip it.</p>
 </li>
 <li>
+<p><code>:page-hero-image-bordered:</code> is an opt-in, presence-only switch (no value needed) —
+set it and the media slot (image or video) renders with a black/white frame and a
+10px radius, instead of the bare slot the layout renders by default. Turn it on
+for artwork that carries no framing of its own; leave it off for a screenshot that
+already has its own bezel, which a second frame would just stack on top of.</p>
+</li>
+<li>
 <p><code>:page-hero-video:</code>/<code>:page-hero-video-poster:</code> is the same media slot, for a video
 instead of an image — if both <code>:page-hero-image:</code> and <code>:page-hero-video:</code> are set,
-the video wins.</p>
+the video wins. <code>:page-hero-image-bordered:</code> applies to whichever one renders.</p>
 </li>
 </ul>
 </div>

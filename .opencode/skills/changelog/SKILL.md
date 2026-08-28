@@ -5,6 +5,16 @@ description: "How code/CHANGELOG.md is written and grouped in this monorepo — 
 
 # CHANGELOG.md conventions
 
+> **Common mistake — read this before deciding "no entry needed":**
+> `skip-release` is NOT a stop condition. It only tells the release-flow bump action to
+> defer the version bump; it says nothing about whether a CHANGELOG entry is needed. The
+> **only** labels that mean "no entry" are `kind/internal` and/or `kind/epic`, and only
+> when checked on the right thing: the PR's own label if it carries a real category, else
+> the label(s) of the **issue the PR closes** — never the PR's `skip-release` label taken
+> in isolation. If you catch yourself writing "labeled skip-release → no entry", stop:
+> go check the closing issue's `kind/*` label instead (see "Two-tier" below for the
+> lookup command).
+
 `code/CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) +
 [SemVer](https://semver.org/). Version bumps are performed by
 `release-flow/keep-a-changelog-action`'s `bump` command, called from

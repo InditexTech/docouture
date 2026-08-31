@@ -356,6 +356,14 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-branching-model/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Branching model</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
         href="../guides-releasing-a-documentation/">
         <span class="ids-list-item__text"><span class="ids-list-item__label">Releasing a documentation</span></span>
       </a>
@@ -682,8 +690,11 @@ playbook sits one level below the repository root <code>docouture new</code> sca
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sources[].branches</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Which branches are aggregated as versions — see
-<a href="../guides-versioning-modes/" class="xref page">Versioning modes</a> for what standalone vs. versioned mode sets here.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Which branch is aggregated as the live prerelease version — <code>main</code>
+for a trunk-based site, or an independently-named integration branch (e.g. <code>develop</code>)
+for a git-flow one — see <a href="../guides-branching-model/" class="xref page">Branching model</a> for what sets this, and
+<a href="../guides-versioning-modes/" class="xref page">Versioning modes</a> for what standalone vs. versioned mode sets for
+<code>tags</code> below.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sources[].tags</code></p></td>

@@ -9,6 +9,7 @@
 - [Glossary](/prerelease/main/glossary/)
 - [Adding a module](/prerelease/main/guides-adding-a-module/)
 - [Adding a page](/prerelease/main/guides-adding-a-page/)
+- [Branching model](/prerelease/main/guides-branching-model/)
 - [Branding &amp; customization](/prerelease/main/guides-branding/)
 - [Content &amp; structure](/prerelease/main/guides-content-structure/)
 - [Icon gallery](/prerelease/main/guides-icon-gallery/)

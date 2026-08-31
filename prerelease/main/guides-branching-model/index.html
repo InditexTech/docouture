@@ -66,9 +66,9 @@
         if (stored === 'closed') document.documentElement.classList.add('is-toc-closed')
       })()
     </script>
-    <title>Additional information | docouture</title>
-    <link rel="prev" href="../reference-ai-first-approach/">
-    <link rel="next" href="../changelog/">
+    <title>Branching model | docouture</title>
+    <link rel="prev" href="../guides-versioning-modes/">
+    <link rel="next" href="../guides-releasing-a-documentation/">
     <meta name="generator" content="Antora 3.1.15">
     <link rel="preconnect" href="https://amgassets.inditex.com" crossorigin>
     <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/zara-helvetica-now/zara-helvetica-now-sw10.css">
@@ -356,7 +356,7 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
-        href="../guides-branching-model/">
+        href="./" aria-current="page">
         <span class="ids-list-item__text"><span class="ids-list-item__label">Branching model</span></span>
       </a>
     </div>
@@ -494,7 +494,7 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
-        href="./" aria-current="page">
+        href="../additional-information-overview/">
         <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
       </a>
     </div>
@@ -569,9 +569,10 @@
       <div class="hero__main">
 <nav class="ids-breadcrumbs" aria-label="Breadcrumb">
   <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="../../"><span class="ids-breadcrumb-item__content">docouture</span></a>
-  <div class="ids-breadcrumb-item ids-breadcrumb-item--active" aria-current="page"><span class="ids-breadcrumb-item__content">Overview</span></div>
+  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="../guides-versioning-publishing/"><span class="ids-breadcrumb-item__content">Versioning &amp; publishing</span></a>
+  <div class="ids-breadcrumb-item ids-breadcrumb-item--active" aria-current="page"><span class="ids-breadcrumb-item__content">Branching model</span></div>
 </nav>
-        <h1 class="hero__title ids-text ids-text--title-xl">Additional information</h1>
+        <h1 class="hero__title ids-text ids-text--title-xl">Branching model</h1>
       </div>
       <div class="hero__aside">
         <button class="ids-button ids-button--ghost ids-button--icon-only toc-toggle" type="button" aria-controls="on-this-page" aria-expanded="true" hidden>
@@ -588,18 +589,206 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>docouture new --flow</code> offers two shapes — decided at scaffold time, switchable later
+with <code>docouture branch-model</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trunk-based-the-default"><a class="anchor" href="#trunk-based-the-default"></a>Trunk-based — the default</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One long-lived branch (<code>main</code> by default) plays <strong>both</strong> roles: it&#8217;s the branch Antora
+tracks live as the <strong>prerelease</strong> version, and it&#8217;s the branch <code>docouture-release.yml</code>
+requires, checks out, and cuts tags from. There is no second code path anywhere for
+this — it&#8217;s the degenerate case where the two roles below happen to be the same
+branch.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="git-flow"><a class="anchor" href="#git-flow"></a>Git-flow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two independently-named branches, e.g. <code>develop</code> and <code>main</code>:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="../changelog/" class="xref page">Changelog</a></p>
+<p><strong>prerelease branch</strong> (<code>develop</code>) — what <code>antora-playbook.yml&#8217;s
+`content.sources[].branches</code> aggregates as the live prerelease version, and what
+<code>docouture-publish-prerelease.yml</code> watches (pushes to it republish automatically).</p>
 </li>
 <li>
-<p><a href="../release-notes/" class="xref page">Release notes</a></p>
-</li>
-<li>
-<p><a href="../faq/" class="xref page">FAQ</a></p>
+<p><strong>release branch</strong> (<code>main</code>) — what <code>docouture-release.yml</code> requires/checks
+out/pushes bump commits to, and what <code>docouture-release-preview.yml</code> watches
+(pull requests targeting it get a release preview comment).</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Adopting git-flow maps directly onto the existing "merge a <code>docs/release</code>-labelled PR"
+release trigger — no event change, only the branch name it&#8217;s filtered against.
+Hotfix/<code>release/*</code> short-lived branches get no dedicated handling: they&#8217;re ordinary
+feature-branch-shaped PRs into <code>develop</code>/<code>main</code> from docouture&#8217;s perspective, already
+covered by the two roles above.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="which-workflow-watches-which-branch"><a class="anchor" href="#which-workflow-watches-which-branch"></a>Which workflow watches which branch</h2>
+<div class="sectionbody">
+<div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Workflow</th>
+<th class="tableblock halign-left valign-top">Branch role it watches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-pr-verify.yml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Neither — branch-agnostic, builds every PR&#8217;s own HEAD via
+<code>antora-playbook.local.yml</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-publish-prerelease.yml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">prerelease branch (push trigger)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-kroki-cache-warm.yml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>both</strong>, unconditionally (push trigger — see below)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-release-preview.yml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">release branch (pull_request trigger)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-release.yml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">release branch (pull_request:closed + workflow_dispatch)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-publish.yml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Neither — never push-triggered, only <code>workflow_call</code>-chained
+from <code>docouture-release.yml</code> or manually dispatched</p></td>
+</tr>
+</tbody>
+</table></div></div>
+<div class="paragraph">
+<p><code>docouture-kroki-cache-warm.yml</code> triggers on both branches unconditionally, not just
+one: GitHub&#8217;s cache-access rule only ever writes a trusted, cross-run cache entry from
+a push to the repository&#8217;s actual <strong>configured default branch</strong> — and there&#8217;s no
+reliable way to know at scaffold time which of the two a git-flow repo has set as
+that. Warming both means whichever one really is the default gets its cache entry
+written either way; the other branch&#8217;s push still produces a normal
+base-branch-scoped cache, so nothing is wasted. (On a trunk-based site this
+collapses to a single entry — both roles are the same branch.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="a-release-under-git-flow-end-to-end"><a class="anchor" href="#a-release-under-git-flow-end-to-end"></a>A release under git-flow, end to end</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Feature branch → <code>develop</code>: only <code>docouture-pr-verify.yml</code> fires on the PR (it&#8217;s
+branch-agnostic). On merge, <code>docouture-publish-prerelease.yml</code> republishes the
+prerelease docs from <code>develop</code>.</p>
+</li>
+<li>
+<p><code>develop</code> → <code>main</code>, labelled <code>docs/release</code>: <code>docouture-pr-verify.yml</code> fires (always)
+and <code>docouture-release-preview.yml</code> now fires too (targets <code>main</code>), posting a preview
+comment. On merge, <code>docouture-release.yml</code> cuts the release (checks out <code>main</code>, tags
+it, pushes the tag) and calls <code>docouture-publish.yml</code> to build and publish.</p>
+</li>
+<li>
+<p>The merge to <code>main</code> is also an ordinary push — but <code>docouture-publish-prerelease.yml</code>
+does <strong>not</strong> fire a second time: its trigger is <code>develop</code>-only, so there&#8217;s no overlap
+with `docouture-release.yml&#8217;s own publish. (Under trunk-based, where both roles are
+the same branch, this same-push double-trigger risk is real, and
+`docouture-release.yml&#8217;s own header comment documents the mitigation.)</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="antora-playbook-ymls-content-sources-never-lists-the-release-branch"><a class="anchor" href="#antora-playbook-ymls-content-sources-never-lists-the-release-branch"></a><code>antora-playbook.yml&#8217;s `content.sources[]</code> never lists the release branch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Only the prerelease branch appears under <code>branches:</code> — the release branch is never a
+<strong>live, content-tracked</strong> branch, only the checkout target <code>docouture-release.yml</code> cuts
+tags <strong>from</strong>. A tag is just a pointer to a commit; Antora&#8217;s <code>tags:</code> matcher doesn&#8217;t care
+which branch produced it. So <code>docs/stable</code>/<code>docs/vX.Y.Z</code> genuinely reflect whatever was
+on the release branch each time a release was cut, even though the release branch
+itself is never named in the playbook. See <a href="../guides-versioning-modes/" class="xref page">Versioning modes</a>
+for what <code>tags:</code> is set to in each versioning mode.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="switching-later-docouture-branch-model"><a class="anchor" href="#switching-later-docouture-branch-model"></a>Switching later: <code>docouture branch-model</code></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="shiki highlight"><code data-lang="console"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4;--shiki-light-bg:#1E1E1E;--shiki-dark-bg:#1E1E1E"><span class="line"><span>$ docouture branch-model git-flow --integration-branch develop</span></span>
+<span class="line"><span>$ docouture branch-model trunk-based --branch main</span></span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Trunk-based → git-flow: the current single branch becomes the <strong>release</strong> branch by
+default (least disruption to anything already tagged off it) — <code>--integration-branch</code>
+(the new prerelease branch) is required, since there&#8217;s nothing on disk to infer that
+name from.</p>
+</div>
+<div class="paragraph">
+<p>Git-flow → trunk-based: lossy — <code>--branch</code> is required and must match one of the two
+current branches exactly; a third, invented name is refused.</p>
+</div>
+<div class="paragraph">
+<p>Either direction re-renders <code>.github/workflows/</code> (the same machinery <code>docouture
+upgrade</code> uses) and patches <code>antora-playbook.yml&#8217;s `content.sources[0].branches</code> and
+<code>docs/package.json&#8217;s `docouture.branching</code> field. It does <strong>not</strong> rename actual git
+branches, touch branch-protection/ruleset rules, or change GitHub&#8217;s configured default
+branch — those stay manual steps, printed as a reminder after every real run.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="docouture-branching-is-a-declared-signal-not-the-source-of-truth"><a class="anchor" href="#docouture-branching-is-a-declared-signal-not-the-source-of-truth"></a><code>docouture.branching</code> is a declared signal, not the source of truth</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>docs/package.json&#8217;s `"docouture": {"branching": "trunk-based"}</code> (or <code>"git-flow"</code>) is
+cheap and redundant by design — the actual branch names are never persisted anywhere.
+<code>docouture branch-model</code>/<code>docouture doctor</code> always re-derive them live, from
+<code>antora-playbook.yml&#8217;s `content.sources[0].branches</code> and <code>docouture-release.yml&#8217;s
+checkout `ref:</code>, the same way standalone-vs-versioned mode is already derived live
+(<code>docouture-release.yml&#8217;s own "Detect mode" step) rather than stored anywhere. This
+field only exists so `docouture doctor</code> has something to compare that derivation
+against — a mismatch between the two is reported as an advisory warning, not a hard
+failure, since it can only ever be <strong>stale</strong>, never a build-breaking config error the
+way the four names in <a href="../guides-modifying-the-navigation/" class="xref page">Modifying the navigation</a> are.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="which-one-to-pick"><a class="anchor" href="#which-one-to-pick"></a>Which one to pick</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Trunk-based if one branch is genuinely enough — most sites. Git-flow if the
+repository this docs site lives alongside already reserves <code>main</code> for
+release/hotfix merges and uses <code>develop</code> as its integration branch — matching the
+docs site&#8217;s branching to the code&#8217;s avoids a confusing mismatch between the two.</p>
+</div>
+</div>
 </div>
 </article>
   </div>
@@ -610,16 +799,16 @@
 <div class="ids-grid-layout ids-grid-layout--with-margin pagination">
   <div class="ids-grid-layout__item ids-grid-layout__item--span-full pagination__row">
     <div class="pagination__buttons">
-    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-icon pagination__prev" href="../reference-ai-first-approach/">
+    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-icon pagination__prev" href="../guides-versioning-modes/">
       <span class="ids-button__content">
         <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-arrow-left-outlined"></use></svg></span>
-        <span class="pagination__label-full">AI-First approach</span>
+        <span class="pagination__label-full">Versioning modes</span>
         <span class="pagination__label-short">Prev</span>
       </span>
     </a>
-    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action pagination__next" href="../changelog/">
+    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action pagination__next" href="../guides-releasing-a-documentation/">
       <span class="ids-button__content">
-        <span class="pagination__label-full">Changelog</span>
+        <span class="pagination__label-full">Releasing a documentation</span>
         <span class="pagination__label-short">Next</span>
         <span class="ids-button__icon ids-button__icon-action"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-arrow-right-outlined"></use></svg></span>
       </span>
@@ -635,7 +824,7 @@
         <p class="ids-text ids-text--body-m">See something that is wrong or unclear? Collaborate with us! Submit a pull request</p>
       </div>
       <div class="page-footer__contribute-buttons">
-<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/edit/main/docs/src/modules/main/pages/additional-information-overview.adoc">
+<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/edit/main/docs/src/modules/main/pages/guides-branching-model.adoc">
   <span class="ids-button__content">
     Propose a change
     <span class="ids-button__icon ids-button__icon-action"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-connectivity-link-external-outlined"></use></svg></span>

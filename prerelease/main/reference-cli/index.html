@@ -356,6 +356,14 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+        href="../guides-branching-model/">
+        <span class="ids-list-item__text"><span class="ids-list-item__label">Branching model</span></span>
+      </a>
+    </div>
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
         href="../guides-releasing-a-documentation/">
         <span class="ids-list-item__text"><span class="ids-list-item__label">Releasing a documentation</span></span>
       </a>
@@ -584,7 +592,7 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Every <code>docouture</code> command (<code>@inditextech/docouture-cli</code>), reproduced from its own
-<code>--help</code> text. All ten accept <code>--dir &lt;path&gt;</code> to run from anywhere inside the target
+<code>--help</code> text. All eleven accept <code>--dir &lt;path&gt;</code> to run from anywhere inside the target
 repository — the actual root is found by walking up, same as <code>git</code> itself.</p>
 </div>
 <div class="paragraph">
@@ -631,6 +639,23 @@ git repository. Prompts interactively for anything not given as a flag, in a ter
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mode &lt;mode&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>standalone</code> (default) or <code>versioned</code> — see
 <a href="../guides-versioning-modes/" class="xref page">Versioning modes</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--flow &lt;flow&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trunk-based</code> (default) or <code>git-flow</code> — see
+<a href="../guides-branching-model/" class="xref page">Branching model</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--branch &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trunk-based only: the one branch (default: <code>main</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--integration-branch &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Git-flow only: the prerelease branch (default: <code>develop</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--release-branch &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Git-flow only: the release branch (default: <code>main</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--pm &lt;pm&gt;</code></p></td>
@@ -774,8 +799,11 @@ devDependency of the site itself. See <a href="../guides-publishing-a-documentat
 <div class="paragraph">
 <p>Check environment and site health: <a href="https://nodejs.org">Node</a> version, the four names
 that must agree (see <a href="../guides-modifying-the-navigation/" class="xref page">Modifying the navigation</a>), git history, that
-Antora is installed, and (advisory only) whether <code>AGENTS.md</code> is still present and the
-<code>docs/release</code> label exists. Does not check for the agent skills — see
+Antora is installed, and (advisory only) whether <code>AGENTS.md</code> is still present, whether the
+<code>docs/release</code> label exists, and whether the declared branching model
+(<code>docs/package.json&#8217;s `docouture.branching</code>) agrees with what
+<code>antora-playbook.yml</code>/<code>docouture-release.yml</code> actually say — see
+<a href="../guides-branching-model/" class="xref page">Branching model</a>. Does not check for the agent skills — see
 <a href="../reference-ai-first-approach/" class="xref page">AI-First approach</a>, those are a separate, self-serve install
 this CLI never scaffolds or verifies.</p>
 </div>
@@ -822,6 +850,69 @@ docouture&#8217;s own managed section is replaced. Never touches <code>docs/</co
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--title &lt;title&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Overrides the title read back from <code>antora.yml</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dry-run</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lists what would be written without writing it</p></td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="docouture-branch-model-model"><a class="anchor" href="#docouture-branch-model-model"></a><code>docouture branch-model &lt;model&gt;</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Switch an already-scaffolded repository between the trunk-based and git-flow
+branching models — see <a href="../guides-branching-model/" class="xref page">Branching model</a> for the full mechanism.
+Direction is inferred from the site&#8217;s current branch names (read live from
+<code>antora-playbook.yml</code>/<code>docouture-release.yml</code>, never from a stored config) versus the
+<code>&lt;model&gt;</code> argument given here — the same command handles both directions.</p>
+</div>
+<div class="paragraph">
+<p>Trunk-based → git-flow: the current single branch becomes the release branch by
+default (least disruption to anything already tagged off it) — <code>--integration-branch</code>
+(the new prerelease branch) is required, since there is nothing on disk to infer that
+name from.</p>
+</div>
+<div class="paragraph">
+<p>Git-flow → trunk-based: lossy — <code>--branch</code> is required and must match one of the two
+current branches exactly; a third, invented name is refused.</p>
+</div>
+<div class="paragraph">
+<p>Re-renders <code>.github/workflows/</code> (same machinery <code>docouture upgrade</code> uses) and patches
+<code>antora-playbook.yml&#8217;s `content.sources[0].branches</code> and <code>docs/package.json&#8217;s
+`docouture.branching</code> field. Does NOT rename actual git branches, touch
+branch-protection/ruleset rules, or change GitHub&#8217;s configured default branch — these
+stay manual steps, printed as a reminder after every real run.</p>
+</div>
+<div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Argument/Flag</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;model&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target model: <code>trunk-based</code> or <code>git-flow</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--branch &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trunk-based target only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--integration-branch &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Git-flow target only: the new prerelease branch</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--release-branch &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Git-flow target only: overrides the release branch&#8217;s name</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dry-run</code></p></td>

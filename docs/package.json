@@ -20,7 +20,7 @@
     "@inditextech/docouture-asciidoc-extensions": "0.1.0-SNAPSHOT.71.1",
     "@inditextech/docouture-antora-extensions": "0.1.0-SNAPSHOT.71.1",
     "@inditextech/docouture-publish-gh-pages": "0.1.0-SNAPSHOT.71.1",
-    "antora": "3.1.15",
+    "antora": "3.2.0",
     "linkinator": "8.0.4"
   },
   "docouture": {

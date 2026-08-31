@@ -20,7 +20,7 @@
     "@inditextech/docouture-asciidoc-extensions": "__DOCOUTURE_CLI_VERSION__",
     "@inditextech/docouture-antora-extensions": "__DOCOUTURE_CLI_VERSION__",
     "@inditextech/docouture-publish-gh-pages": "__DOCOUTURE_CLI_VERSION__",
-    "antora": "3.1.15",
+    "antora": "3.2.0",
     "linkinator": "8.0.4"
   },
   "docouture": {

@@ -63,6 +63,7 @@ at all).
 
 ### Fixed
 
+- [#181](https://github.com/InditexTech/docouture/pull/181) [tooling] Upgrade Antora to 3.2.0 to resolve open js-yaml Dependabot alerts
 - [#167](https://github.com/InditexTech/docouture/pull/167) [tooling] Published v1.0.0 docs show "No tagged release yet" on the Changelog page
 - [#163](https://github.com/InditexTech/docouture/pull/163) [ui-bundle] Content page titles rendered uppercase via hero.hbs, ignoring source case
 - [#158](https://github.com/InditexTech/docouture/pull/158) [tooling] Fix commit to main from docuture-* workflows that need it

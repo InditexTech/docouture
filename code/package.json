@@ -42,7 +42,6 @@
   },
   "pnpm": {
     "overrides": {
-      "js-yaml": "^4.3.1",
       "send": "^0.19.2"
     }
   }

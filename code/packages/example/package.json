@@ -19,6 +19,6 @@
     "@inditextech/docouture-ui-bundle": "workspace:*"
   },
   "devDependencies": {
-    "antora": "~3.1.15"
+    "antora": "~3.2.0"
   }
 }

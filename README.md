@@ -121,10 +121,14 @@ touching `code/**` is expected to carry.
 
 ## License
 
-Apache-2.0 — see [`LICENSE`](LICENSE), with one exception:
+Apache-2.0 — see [`LICENSE`](LICENSE), with two exceptions:
 `code/packages/ui-bundle` is a fork of
 [antora-ui-default](https://gitlab.com/antora/antora-ui-default) and mixes
 MPL-2.0 (files that are a Modification of an upstream file) with
-Apache-2.0 (files with no upstream counterpart). See that package's own
-`LICENSE` and `NOTICE`, and each file's own SPDX header for which license
-applies to it.
+Apache-2.0 (files with no upstream counterpart); and
+`code/packages/antora-extensions/lib/kroki-include-line-filters.js` is a
+Modification of a file from
+[Antora's own asciidoc-loader](https://gitlab.com/antora/antora/-/tree/v3.2.0/packages/asciidoc-loader)
+and stays MPL-2.0 for the same reason. See each package's own `LICENSE`
+and `NOTICE`, and each file's own SPDX header for which license applies to
+it.

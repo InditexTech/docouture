@@ -87,14 +87,18 @@ See `.opencode/skills/` for the deeper conventions behind each of these
 
 ## License
 
-docouture is licensed under [Apache-2.0](LICENSE), with one exception:
+docouture is licensed under [Apache-2.0](LICENSE), with two exceptions:
 `code/packages/ui-bundle` is a fork of
 [antora-ui-default](https://gitlab.com/antora/antora-ui-default) and mixes
 MPL-2.0 (files that are a Modification of an upstream file) with
 Apache-2.0 (files with no upstream counterpart) — see its own `LICENSE`
-and `NOTICE`, and each file's own SPDX header. Contribute to a file under
-whichever license its own header already declares; everywhere else,
-Apache-2.0.
+and `NOTICE`, and each file's own SPDX header. And
+`code/packages/antora-extensions/lib/kroki-include-line-filters.js` is a
+Modification of a file from
+[Antora's own asciidoc-loader](https://gitlab.com/antora/antora/-/tree/v3.2.0/packages/asciidoc-loader)
+and stays MPL-2.0 for the same reason — see that package's own `LICENSE`
+and `NOTICE`. Contribute to a file under whichever license its own header
+already declares; everywhere else, Apache-2.0.
 
 ## Helpful Resources
 

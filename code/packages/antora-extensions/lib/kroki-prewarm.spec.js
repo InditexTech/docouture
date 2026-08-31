@@ -6,6 +6,8 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+const path = require('node:path')
+const classifyContent = require('@antora/content-classifier')
 const registerKrokiPrewarm = require('./kroki-prewarm')
 const kroki = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-instance')
 const { applyDefaultMermaidTheme } = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-mermaid-theme')
@@ -27,8 +29,22 @@ function createContext() {
   }
 }
 
-function file(path, contents) {
-  return { path, contents: Buffer.from(contents, 'utf8') }
+/**
+ * A raw-aggregate-shaped file, pre-populated with the `src` fields
+ * `@antora/content-aggregator`'s own `assignFileProperties` would set
+ * (`path`/`basename`/`stem`/`extname`) — `classifyContent` (real
+ * `@antora/content-classifier`, not a hand-mocked stand-in) needs those
+ * present to allocate `family`/`module`/`component`/`version`/`relative`
+ * onto each file the same way a real build does.
+ */
+function file(relPath, contents) {
+  const extname = path.extname(relPath)
+  const f = { path: relPath, contents: Buffer.from(contents, 'utf8') }
+  f.basename = path.basename(relPath)
+  f.extname = extname
+  f.stem = path.basename(relPath, extname)
+  f.src = { path: relPath, basename: f.basename, stem: f.stem, extname }
+  return f
 }
 
 function block(type, source, format) {
@@ -36,7 +52,12 @@ function block(type, source, format) {
   return `[${style}]\n....\n${source}\n....\n`
 }
 
-async function run({ attributes, files }) {
+/** A real `ContentCatalog`, built by the real `@antora/content-classifier`. */
+function buildCatalog(files) {
+  return classifyContent({ site: {} }, [{ name: 'test', version: '1.0', files }])
+}
+
+async function run({ attributes, files, extraFiles = [] }) {
   const context = createContext()
   // GH-44: `ensureKrokiRunning` (auto-start) is exercised on its own, in
   // kroki-docker.spec.js — stubbed out here via the same dependency-
@@ -46,9 +67,10 @@ async function run({ attributes, files }) {
   // `fetch` mock these tests set up for the DIAGRAM fetch, throwing off
   // every call-count assertion below.
   registerKrokiPrewarm(context, { ensureKrokiRunning: async () => undefined })
-  await context.emit('contentAggregated', {
+  const contentCatalog = buildCatalog([...files, ...extraFiles])
+  await context.emit('contentClassified', {
     playbook: { asciidoc: { attributes } },
-    contentAggregate: [{ files }],
+    contentCatalog,
   })
   return context
 }
@@ -177,6 +199,41 @@ describe('registerKrokiPrewarm', () => {
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
+  it('does not crash on a catalog alias entry, which has no .path of its own', async () => {
+    // GH-189 regression: ContentCatalog#getFiles() also yields `family:
+    // 'alias'` entries (redirects registered via registerPageAlias/
+    // addSplatAlias) that have no `.path` at all — a naive
+    // `candidate.path.endsWith('.adoc')` filter throws on one of these the
+    // moment a real site registers any page alias (e.g. every site with a
+    // `startPage`, or any renamed page).
+    const svg = '<svg>alias-safe</svg>'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const context = createContext()
+    registerKrokiPrewarm(context, { ensureKrokiRunning: async () => undefined })
+    const source = 'stateDiagram-v2\nA --> B (alias case)'
+    const contentCatalog = buildCatalog([file('modules/main/pages/a.adoc', block('mermaid', source))])
+    const page = contentCatalog.getById({
+      component: 'test',
+      version: '1.0',
+      module: 'main',
+      family: 'page',
+      relative: 'a.adoc',
+    })
+    contentCatalog.registerPageAlias('old-a.adoc', page)
+
+    await context.emit('contentClassified', {
+      playbook: { asciidoc: { attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'mermaid' } } },
+      contentCatalog,
+    })
+
+    expect(kroki.get(kroki.keyFor('mermaid', applyDefaultMermaidTheme(source), 'svg'))).toEqual({
+      format: 'svg',
+      data: svg,
+    })
+  })
+
   it('requests and base64-caches a png diagram for a type that supports it', async () => {
     const bytes = new Uint8Array([137, 80, 78, 71]) // a PNG magic-number prefix is enough for this test
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, arrayBuffer: async () => bytes.buffer })
@@ -209,5 +266,159 @@ describe('registerKrokiPrewarm', () => {
     expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/bpmn/svg')
     expect(kroki.get(kroki.keyFor('bpmn', source, 'svg'))).toEqual({ format: 'svg', data: svg })
     expect(context.warnings.some(([msg]) => msg.includes('unsupported format'))).toBe(true)
+  })
+
+  describe('GH-189: include:: resolution inside a diagram block', () => {
+    it('resolves a whole-file include::partial$...[] to the same source real conversion would hash', async () => {
+      const svg = '<svg>partial</svg>'
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const partialSource = 'skinparam shape1\nA -> B'
+      await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', 'include::partial$shapes.puml[]'))],
+        extraFiles: [file('modules/main/partials/shapes.puml', partialSource)],
+      })
+
+      expect(fetchMock).toHaveBeenCalledTimes(1)
+      expect(fetchMock.mock.calls[0][1].body).toBe(partialSource)
+      expect(kroki.get(kroki.keyFor('plantuml', partialSource, 'svg'))).toEqual({ format: 'svg', data: svg })
+    })
+
+    it("resolves the issue's own repro shape: two concatenated includes forming one diagram", async () => {
+      const svg = '<svg>concatenated</svg>'
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const shapes = 'skinparam shape1'
+      const diagramA = 'A -> B'
+      await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [
+          file(
+            'modules/main/pages/a.adoc',
+            block('plantuml', 'include::partial$shapes.puml[]\ninclude::partial$diagram-a.puml[]')
+          ),
+        ],
+        extraFiles: [
+          file('modules/main/partials/shapes.puml', shapes),
+          file('modules/main/partials/diagram-a.puml', diagramA),
+        ],
+      })
+
+      const expectedSource = `${shapes}\n${diagramA}`
+      expect(fetchMock.mock.calls[0][1].body).toBe(expectedSource)
+      expect(kroki.get(kroki.keyFor('plantuml', expectedSource, 'svg'))).toEqual({ format: 'svg', data: svg })
+    })
+
+    it('resolves a partial that itself includes another partial (nested)', async () => {
+      const svg = '<svg>nested</svg>'
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const icons = 'sprite $icon'
+      await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', 'include::partial$shapes.puml[]'))],
+        extraFiles: [
+          file('modules/main/partials/shapes.puml', 'include::partial$icons.puml[]\nskinparam shape1'),
+          file('modules/main/partials/icons.puml', icons),
+        ],
+      })
+
+      const expectedSource = `${icons}\nskinparam shape1`
+      expect(fetchMock.mock.calls[0][1].body).toBe(expectedSource)
+      expect(kroki.get(kroki.keyFor('plantuml', expectedSource, 'svg'))).toEqual({ format: 'svg', data: svg })
+    })
+
+    it('applies lines= filtering to the resolved include target', async () => {
+      const svg = '<svg>lines</svg>'
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const partialSource = ['one', 'two', 'three', 'four'].join('\n')
+      await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', 'include::partial$shapes.puml[lines=2..3]'))],
+        extraFiles: [file('modules/main/partials/shapes.puml', partialSource)],
+      })
+
+      expect(fetchMock.mock.calls[0][1].body).toBe('two\nthree')
+    })
+
+    it('applies tag= filtering to the resolved include target', async () => {
+      const svg = '<svg>tags</svg>'
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const partialSource = ['intro', 'tag::keep[]', 'kept', 'end::keep[]', 'outro'].join('\n')
+      await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', 'include::partial$shapes.puml[tag=keep]'))],
+        extraFiles: [file('modules/main/partials/shapes.puml', partialSource)],
+      })
+
+      expect(fetchMock.mock.calls[0][1].body).toBe('kept')
+    })
+
+    it('leaves an include:: with an unsupported attribute unexpanded and warns', async () => {
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '<svg/>' })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const rawBody = 'include::partial$shapes.puml[indent=0]'
+      const context = await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', rawBody))],
+        extraFiles: [file('modules/main/partials/shapes.puml', 'skinparam shape1')],
+      })
+
+      expect(fetchMock.mock.calls[0][1].body).toBe(rawBody)
+      expect(context.warnings.some(([msg]) => msg.includes("aren't all lines=/tag=/tags=/leveloffset=/opts="))).toBe(
+        true
+      )
+    })
+
+    it('leaves an include:: target needing attribute substitution unexpanded and warns', async () => {
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '<svg/>' })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const rawBody = 'include::partial${diagram-name}.puml[]'
+      const context = await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', rawBody))],
+      })
+
+      expect(fetchMock.mock.calls[0][1].body).toBe(rawBody)
+      expect(context.warnings.some(([msg]) => msg.includes('attribute substitution'))).toBe(true)
+    })
+
+    it('leaves an unresolvable include:: target unexpanded and warns, without throwing', async () => {
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '<svg/>' })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const rawBody = 'include::partial$does-not-exist.puml[]'
+      const context = await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', rawBody))],
+      })
+
+      expect(fetchMock.mock.calls[0][1].body).toBe(rawBody)
+      expect(context.warnings.some(([msg]) => msg.includes('Could not resolve include::'))).toBe(true)
+    })
+
+    it('leaves an escaped \\include:: line as literal text', async () => {
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '<svg/>' })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const rawBody = '\\include::partial$shapes.puml[]'
+      await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [file('modules/main/pages/a.adoc', block('plantuml', rawBody))],
+        extraFiles: [file('modules/main/partials/shapes.puml', 'skinparam shape1')],
+      })
+
+      expect(fetchMock.mock.calls[0][1].body).toBe(rawBody)
+    })
   })
 })

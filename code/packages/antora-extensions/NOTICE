@@ -1,0 +1,27 @@
+This package is Apache-2.0, with one file that carries a Modification of a
+third-party MPL-2.0 file — each file's own SPDX header is authoritative;
+this NOTICE just explains the split (see root README.md's "with two
+exceptions" for the project-wide policy this establishes alongside
+code/packages/ui-bundle's own, separate exception).
+
+  Antora asciidoc-loader
+  https://gitlab.com/antora/antora/-/tree/v3.2.0/packages/asciidoc-loader
+  Copyright (C) OpenDevise Inc. and individual contributors to Antora
+  Licensed under the Mozilla Public License, v. 2.0 (see LICENSE)
+
+lib/kroki-include-line-filters.js adapts that package's own
+lib/include/include-processor.js (its lines=/tag=/tags= include-selection
+functions, `getLines`/`filterLinesByLineNumbers`/`getTags`/
+`filterLinesByTags`) to operate on plain JS strings and objects instead of
+Opal/Asciidoctor's Reader and Hash — needed so kroki-prewarm.js can filter a
+diagram's include::-resolved source the same way real Asciidoctor conversion
+would, before Asciidoctor itself has run (see that file's own header for
+why). Per MPL-2.0 §1.10(a), a Modification of Covered Software remains
+MPL-2.0 regardless of how much of it has changed — see that file's own
+header for exactly what was adapted.
+
+Every other file in this package — including kroki-prewarm.js itself, which
+only calls the upstream package's own public API
+(@antora/asciidoc-loader/include/resolve-include-file) as a normal npm
+dependency rather than copying from it — is wholly Inditex's own work and
+licensed Apache-2.0.

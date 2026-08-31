@@ -24,6 +24,7 @@
     "linkinator": "8.0.4"
   },
   "docouture": {
+    "branching": "__DOCOUTURE_BRANCHING__",
     "publish": {
       "gh-pages": {}
     },

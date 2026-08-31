@@ -10,20 +10,22 @@
 # Once this site adopts one of the two documented versioning modes (see the
 # docouture docs-site-package skill's reference/versioning-modes.md), the real
 # `antora-playbook.yml` aggregates content from more than just whatever is
-# checked out right now — versioned matches `branches: [main]` +
-# `tags: ['docs/v*']`, standalone matches `branches: [main]` + `tags: ['docs/stable']`.
-# A PR build (or a local build on a feature branch) is on a detached HEAD or
-# a branch that is neither of those, so `main` and the version tag(s) are
-# not resolved in that checkout — the real playbook either fails or silently
-# builds fewer versions than it should.
+# checked out right now — versioned matches `branches: [<prerelease branch>]` +
+# `tags: ['docs/v*']`, standalone matches `branches: [<prerelease branch>]` +
+# `tags: ['docs/stable']` (see the guides-branching-model guide for what
+# "prerelease branch" means — `main` for a trunk-based site, `develop` for a
+# git-flow one). A PR build (or a local build on a feature branch) is on a
+# detached HEAD or a branch that is neither of those, so the prerelease
+# branch and the version tag(s) are not resolved in that checkout — the real
+# playbook either fails or silently builds fewer versions than it should.
 #
 # This playbook points content aggregation at HEAD (the current worktree)
 # instead, so `docouture dev` (see src/lib/dev-server.ts) and
 # `docouture-pr-verify.yml` (see .github/workflows/) validate the current docs
-# content without needing `main` or any release ref. It intentionally never
-# changes shape when a site switches versioning mode, or adds a release:
-# there is always exactly one thing to validate, whatever is currently
-# checked out.
+# content without needing the prerelease branch or any release ref. It
+# intentionally never changes shape when a site switches versioning mode or
+# branching model, or adds a release: there is always exactly one thing to
+# validate, whatever is currently checked out.
 #
 # Publishing (`docouture-publish.yml`) uses the real `antora-playbook.yml`.
 #

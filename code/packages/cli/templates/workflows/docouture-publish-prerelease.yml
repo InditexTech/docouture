@@ -1,23 +1,25 @@
 name: docouture-publish-prerelease
 
-# Rebuilds and republishes the prerelease (main-branch) docs automatically on
-# every ordinary push to main* that actually touches content — no
-# docs/release label needed, unlike docouture-release.yml. This exists
-# specifically so ordinary content merges show up without anyone having to
-# fall back to docouture-publish.yml's own workflow_dispatch every time.
+# Rebuilds and republishes the prerelease (prerelease-branch) docs
+# automatically on every ordinary push to the prerelease branch that
+# actually touches content — no docs/release label needed, unlike
+# docouture-release.yml. This exists specifically so ordinary content merges
+# show up without anyone having to fall back to docouture-publish.yml's own
+# workflow_dispatch every time.
 #
-# A plain `on: push: branches: [main*]` used to live directly on
-# docouture-publish.yml and was removed for two reasons — see that file's own
-# header comment. Both are avoided here by construction rather than by
-# reintroducing the same trigger in the same place:
+# A plain `on: push: branches: [<prerelease branch>*]` used to live directly
+# on docouture-publish.yml and was removed for two reasons — see that
+# file's own header comment. Both are avoided here by construction rather
+# than by reintroducing the same trigger in the same place:
 #
 #   1. An unrelated commit shouldn't kick off a rebuild with nothing new to
 #      publish. `check-changes-in-paths` (below) gates on real content paths
 #      only. In particular this deliberately excludes docs/.release-version:
 #      that file is the ONLY thing docouture-release.yml's own "Bump release
-#      descriptor" step pushes straight to main directly (see that
-#      workflow's own comment on that step) — a bot commit that is not new
-#      docs content and would otherwise fire this workflow for nothing.
+#      descriptor" step pushes straight to the release branch directly (see
+#      that workflow's own comment on that step) — a bot commit that is not
+#      new docs content, and (trunk-based only, where prerelease and release
+#      are the same branch) would otherwise fire this workflow for nothing.
 #
 #   2. Firing twice for one release — once from a docs/release-labeled
 #      merge's own content, and again from docouture-release.yml's chained
@@ -29,10 +31,13 @@ name: docouture-publish-prerelease
 #      from a merged pull request carrying the docs/release label,
 #      docouture-release.yml is already about to publish the definitive
 #      post-release build itself, so this workflow skips rather than
-#      duplicate it.
+#      duplicate it. (Only reachable at all in a trunk-based site, where the
+#      prerelease and release branches are the same one — under git-flow
+#      they're different branches, so a docs/release-labeled PR never
+#      targets the prerelease branch this workflow watches.)
 on:
   push:
-    branches: ['main*']
+    branches: ['__DOCOUTURE_PRERELEASE_BRANCH__*']
 
 permissions:
   contents: read
@@ -89,9 +94,9 @@ jobs:
       # rebase) — GitHub tracks this association itself rather than this
       # step having to guess from the SHA, see
       # https://docs.github.com/en/rest/commits/commits#list-pull-requests-associated-with-a-commit.
-      # A direct push to main with no associated pull request (e.g. an admin
-      # pushing straight to main) simply resolves no labels and is never
-      # skipped here.
+      # A direct push to the prerelease branch with no associated pull
+      # request (e.g. an admin pushing straight to it) simply resolves no
+      # labels and is never skipped here.
       - name: Check for docs/release label
         id: check
         run: |

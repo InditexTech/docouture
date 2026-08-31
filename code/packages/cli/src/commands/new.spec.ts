@@ -107,6 +107,78 @@ describe('runNew', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("invalid --pm: 'bogus'"))
   })
 
+  it('rejects an invalid --flow value', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--flow', 'bogus'])
+    expect(code).toBe(1)
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('invalid --flow'))
+  })
+
+  it('scaffolds git-flow shape with --flow git-flow, --integration-branch and --release-branch', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew([
+      'my-project-docs',
+      '--dir',
+      repo,
+      '--flow',
+      'git-flow',
+      '--integration-branch',
+      'develop',
+      '--release-branch',
+      'main',
+    ])
+    expect(code).toBe(0)
+
+    const playbook = await readFile(join(repo, 'docs', 'antora-playbook.yml'), 'utf8')
+    expect(playbook).toContain('branches: [develop]')
+
+    const releaseWorkflow = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
+    expect(releaseWorkflow).toContain('ref: main')
+    expect(releaseWorkflow).toContain("branches: ['main*']")
+
+    const releasePreview = await readFile(join(repo, '.github', 'workflows', 'docouture-release-preview.yml'), 'utf8')
+    expect(releasePreview).toContain("branches: ['main*']")
+
+    const publishPrerelease = await readFile(
+      join(repo, '.github', 'workflows', 'docouture-publish-prerelease.yml'),
+      'utf8'
+    )
+    expect(publishPrerelease).toContain("branches: ['develop*']")
+
+    const krokiWarm = await readFile(join(repo, '.github', 'workflows', 'docouture-kroki-cache-warm.yml'), 'utf8')
+    expect(krokiWarm).toContain("branches: ['main*', 'develop*']")
+
+    const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
+      docouture?: { branching?: string }
+    }
+    expect(pkg.docouture?.branching).toBe('git-flow')
+
+    for (const file of [playbook, releaseWorkflow, releasePreview, publishPrerelease, krokiWarm]) {
+      expect(file).not.toContain('__DOCOUTURE_')
+    }
+  })
+
+  it('scaffolds trunk-based shape by default, with a single collapsed branches: entry in docouture-kroki-cache-warm.yml', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo])
+    expect(code).toBe(0)
+
+    const krokiWarm = await readFile(join(repo, '.github', 'workflows', 'docouture-kroki-cache-warm.yml'), 'utf8')
+    expect(krokiWarm).toContain("branches: ['main*']")
+    expect(krokiWarm).not.toContain('develop')
+
+    const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
+      docouture?: { branching?: string }
+    }
+    expect(pkg.docouture?.branching).toBe('trunk-based')
+  })
+
   it('honours --pm pnpm in both the scaffolded workflows and the printed next steps', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
@@ -251,6 +323,12 @@ describe('runNew', () => {
     // real, independent copy.
     expect(playbook).not.toContain('latest_version_segment:')
     expect(playbook).toContain('duplicate_latest_version: true')
+
+    // Never a leftover placeholder token, whatever the actual value is —
+    // same catch-all upgrade.spec.ts already has.
+    expect(playbook).not.toContain('__DOCOUTURE_')
+    const pkg2 = await readFile(join(repo, 'docs', 'package.json'), 'utf8')
+    expect(pkg2).not.toContain('__DOCOUTURE_')
   })
 
   it('keeps the site name as a real URL segment with --url-segment', async () => {
@@ -393,6 +471,10 @@ describe('runNew', () => {
     input.write('\n') // Enter — accept the default (no, i.e. ROOT)
     await waitForPrompt('Versioning mode')
     input.write('2\n') // Versioned mode (second choice)
+    await waitForPrompt('Branching model')
+    input.write('\n') // Enter — accept the default (trunk-based)
+    await waitForPrompt('Branch (plays both')
+    input.write('\n') // Enter — accept the default (main)
     await waitForPrompt('Package manager')
     input.write('\n') // Enter — accept the default (npm, or whatever was auto-guessed)
 
@@ -425,6 +507,10 @@ describe('runNew', () => {
     input.write('y\n')
     await waitForPrompt('Versioning mode')
     input.write('\n')
+    await waitForPrompt('Branching model')
+    input.write('\n')
+    await waitForPrompt('Branch (plays both')
+    input.write('\n')
     await waitForPrompt('Package manager')
     input.write('\n')
 
@@ -451,6 +537,10 @@ describe('runNew', () => {
     await waitForPrompt('extra URL path segment')
     input.write('\n')
     await waitForPrompt('Versioning mode')
+    input.write('\n')
+    await waitForPrompt('Branching model')
+    input.write('\n')
+    await waitForPrompt('Branch (plays both')
     input.write('\n')
     await waitForPrompt('Package manager')
     input.write('2\n') // pnpm (second choice)
@@ -519,6 +609,10 @@ describe('runNew', () => {
     input.write('\n')
     await waitForPrompt('Versioning mode')
     input.write('\n')
+    await waitForPrompt('Branching model')
+    input.write('\n')
+    await waitForPrompt('Branch (plays both')
+    input.write('\n')
     await waitForPrompt('Package manager')
     input.write('\n')
     await waitForPrompt('Overwrite them?')
@@ -556,6 +650,10 @@ describe('runNew', () => {
     await waitForPrompt('extra URL path segment')
     input.write('\n')
     await waitForPrompt('Versioning mode')
+    input.write('\n')
+    await waitForPrompt('Branching model')
+    input.write('\n')
+    await waitForPrompt('Branch (plays both')
     input.write('\n')
     await waitForPrompt('Package manager')
     input.write('\n')

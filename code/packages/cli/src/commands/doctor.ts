@@ -9,9 +9,11 @@ import { findRepoRoot } from '../lib/repo-root.js'
 import { getContext } from '../lib/cli-context.js'
 import { theme } from '../lib/theme.js'
 import { readSourceUrl, readStartPageComponent, readStartPath } from '../lib/playbook-yml.js'
+import { detectBranches, inferBranching } from '../lib/branch-detect.js'
 import {
   checkAgentFilesPresent,
   checkAntoraAvailable,
+  checkBranchingAgrees,
   checkGitHasCommit,
   checkNamesAgree,
   checkNodeVersion,
@@ -22,6 +24,7 @@ import {
 interface PackageJson {
   name?: string
   engines?: { node?: string }
+  docouture?: { branching?: string }
 }
 
 interface JsonCheckResult extends CheckResult {
@@ -174,6 +177,15 @@ export async function runDoctor(argv: string[]): Promise<number> {
   const releaseResult = await checkReleaseLabelExists(target)
   record(report, 'release', releaseResult, 'warn')
   if (!json) printAdvisory(releaseResult)
+
+  log('branching')
+  const detectedBranches = await detectBranches(siteRoot, target)
+  const branchingResult = checkBranchingAgrees({
+    declaredBranching: pkg?.docouture?.branching ?? null,
+    actualBranching: inferBranching(detectedBranches),
+  })
+  record(report, 'branching', branchingResult, 'warn')
+  if (!json) printAdvisory(branchingResult)
 
   if (json) {
     process.stdout.write(`${JSON.stringify({ status: status === 0 ? 'ok' : 'fail', checks: report }, null, 2)}\n`)

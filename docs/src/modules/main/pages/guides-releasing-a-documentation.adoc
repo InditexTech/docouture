@@ -4,14 +4,15 @@ A release is cut by running `.github/workflows/docouture-release.yml` (scaffolde
 `docouture new`), not by hand-editing anything under `docs/`. Two triggers:
 
 * *Manually* — Actions tab → "docouture-release" → Run workflow. Works immediately.
-* *Automatically* — merge a pull request into `main` carrying the `docs/release`
-  label. That label isn't created automatically — see xref:main:prerequisites.adoc[] —
-  so until it exists, only the manual trigger works; a merge without it is a silent
-  no-op, not an error.
+* *Automatically* — merge a pull request into the release branch (`main` on a
+  trunk-based site — see xref:main:guides-branching-model.adoc[] for a git-flow one)
+  carrying the `docs/release` label. That label isn't created automatically — see
+  xref:main:prerequisites.adoc[] — so until it exists, only the manual trigger works;
+  a merge without it is a silent no-op, not an error.
 
 Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a one-off
-commit built on `main`'s current tip, `git tag docs/v<value>` is created there, and the tag
-is pushed — `main` itself is never advanced.
+commit built on the release branch's current tip, `git tag docs/v<value>` is created
+there, and the tag is pushed — the release branch itself is never advanced.
 
 == Standalone mode
 

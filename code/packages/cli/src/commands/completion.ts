@@ -20,6 +20,7 @@ export const COMMANDS = [
   'publish',
   'doctor',
   'upgrade',
+  'branch-model',
   'eject',
   'teardown',
   'completion',

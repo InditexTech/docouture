@@ -50,6 +50,36 @@ export interface TemplateValues {
   // anything else. Always present as an array element either way — no
   // "empty means the element vanishes" case to get wrong.
   repoIgnoreGlob: string
+  // Git-flow support (GH #175) — see the guides-branching-model guide for
+  // the full mechanism. Two independently-named branch *roles*, not a
+  // single hardcoded name: prereleaseBranch is what antora-playbook.yml's
+  // content.sources[] aggregates as the "prerelease" docs version, and what
+  // docouture-publish-prerelease.yml's push trigger watches; releaseBranch
+  // is what docouture-release.yml requires/checks out/pushes bump commits
+  // to, and what docouture-release-preview.yml's pull_request trigger
+  // watches. Trunk-based (the default) is the degenerate case where both
+  // equal the same branch name — not a second code path anywhere either of
+  // these is substituted.
+  prereleaseBranch: string
+  releaseBranch: string
+  // The scaffolded package.json's own `docouture.branching` field
+  // ('trunk-based' | 'git-flow') — a cheap, redundant-by-design declared
+  // signal only, never the source of truth for the actual branch names
+  // above: those are always re-derived live from antora-playbook.yml and
+  // docouture-release.yml (see lib/branch-detect.ts), the same way
+  // versioning mode is already derived live rather than stored anywhere
+  // (docouture-release.yml's own "Detect mode" step).
+  branching: string
+  // docouture-kroki-cache-warm.yml's `on.push.branches` array content,
+  // already comma/quote-formatted (e.g. `'main*'` or `'main*', 'develop*'`)
+  // — see that workflow's own comment on why it triggers on BOTH roles
+  // unconditionally (GitHub's cache-access rule only ever writes into
+  // whichever branch is the repo's actual configured default branch, and
+  // there is no reliable way to know which of the two that is at scaffold
+  // time). Collapses to a single entry when prereleaseBranch equals
+  // releaseBranch (trunk-based) rather than a pointless literal duplicate —
+  // see lib/branch-detect.ts's cacheWarmBranchesYaml().
+  cacheWarmBranchesYaml: string
 }
 
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
@@ -78,6 +108,10 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   // TemplateValues.repoIgnoreGlob's own comment for why the whole-segment
   // trick doesn't survive here.
   __DOCOUTURE_REPO_IGNORE_GLOB__: 'repoIgnoreGlob',
+  __DOCOUTURE_PRERELEASE_BRANCH__: 'prereleaseBranch',
+  __DOCOUTURE_RELEASE_BRANCH__: 'releaseBranch',
+  __DOCOUTURE_BRANCHING__: 'branching',
+  __DOCOUTURE_CACHE_WARM_BRANCHES__: 'cacheWarmBranchesYaml',
 }
 
 // `<!-- prettier-ignore -->` directives exist only to stop prettier mangling a

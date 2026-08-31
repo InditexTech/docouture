@@ -1,0 +1,65 @@
+code/packages/asciidoc-extensions/index.js
+  s_1d4a5257321709::t_61b7972d85ab17 1-4
+code/packages/asciidoc-extensions/lib/accordion.js
+  s_1d4a5257321709::t_efc74b606db77c 1-4
+code/packages/asciidoc-extensions/lib/async-compat.js
+  s_1d4a5257321709::t_c50fb04c1a24b5 1-4
+code/packages/asciidoc-extensions/lib/card-grid.js
+  s_1d4a5257321709::t_96e64f7d9c06ef 1-4
+code/packages/asciidoc-extensions/lib/cta.js
+  s_1d4a5257321709::t_2719efb40c7937 1-4
+code/packages/asciidoc-extensions/lib/feature-tabs.js
+  s_1d4a5257321709::t_5a6d49c68f8175 1-4
+code/packages/asciidoc-extensions/lib/first-positional.js
+  s_1d4a5257321709::t_e656113b641888 1-4
+code/packages/asciidoc-extensions/lib/html.js
+  s_1d4a5257321709::t_eb5b430186c818 1-4
+code/packages/asciidoc-extensions/lib/kroki-config.js
+  s_1d4a5257321709::t_13dd89b1ac88e4 1-4
+code/packages/asciidoc-extensions/lib/kroki-instance.js
+  s_1d4a5257321709::t_c2fb3f758e86ee 1-4
+code/packages/asciidoc-extensions/lib/kroki-mermaid-theme.js
+  s_1d4a5257321709::t_2801bc11af5507 1-4
+code/packages/asciidoc-extensions/lib/kroki.js
+  s_1d4a5257321709::t_25918feb9d4f33 1-4
+code/packages/asciidoc-extensions/lib/label-macro.js
+  s_1d4a5257321709::t_1f6af11259725d 1-4
+code/packages/asciidoc-extensions/lib/mono-macro.js
+  s_1d4a5257321709::t_db619950544807 1-4
+code/packages/asciidoc-extensions/lib/nowrap-cols.js
+  s_1d4a5257321709::t_99f5c97b86fef9 1-4
+code/packages/asciidoc-extensions/lib/shiki-config.js
+  s_1d4a5257321709::t_3e2fd8544e1792 1-4
+code/packages/asciidoc-extensions/lib/shiki-instance.js
+  s_1d4a5257321709::t_1dd7f758c13620 1-4
+code/packages/asciidoc-extensions/lib/shiki-syntax-highlighter.js
+  s_1d4a5257321709::t_8452ff8c2b7e3c 1-4
+code/packages/asciidoc-extensions/lib/table-container.js
+  s_1d4a5257321709::t_e43c0d61273319 1-4
+code/packages/asciidoc-extensions/lib/table-width.js
+  s_1d4a5257321709::t_8aaae5bb38bfed 1-4
+code/packages/asciidoc-extensions/lib/tabs.js
+  s_1d4a5257321709::t_edaa511973bfab 1-4
+code/packages/asciidoc-extensions/lib/unique-id.js
+  s_1d4a5257321709::t_cb1782c5d6a7b8 1-4
+code/packages/asciidoc-extensions/lib/video-size.js
+  s_1d4a5257321709::t_9eafa9a17054a6 1-4
+code/packages/asciidoc-extensions/lib/warn.js
+  s_1d4a5257321709::t_45a4f1d63e1e9d 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9e046a7b62eee74ac57bacdb429f8c8121c87494",
+  "prompts": {},
+  "sessions": {
+    "s_1d4a5257321709": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa822a89dffexHNiRI27Z88ZwQ",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

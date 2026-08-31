@@ -1,20 +1,14 @@
 /*
  * Icons.
  *
- * Sizing matches the design system's own icon rule (one `--ids-size-125`
- * square), so a `.ids-icon` here is the same box as a `.ids-icon` rendered by
- * the design system's React components — copied inline rather than imported
- * because it is the only rule this bundle needs from
- * @inditex/sewingiopdsweb-react-components/icon/icon.css, and importing it
- * would pull that whole (proprietary, Artifactory-only) package into this
- * bundle's dependency tree for one declaration. See tools/ids/README.md. The
- * markup is produced by the `{{icon}}` helper and references the vendored
- * sprite; see src/img/icons.yml.
+ * Sizing matches this project's own icon rule (one `--dt-size-125` square).
+ * The markup is produced by the `{{icon}}` helper and references the
+ * vendored sprite; see src/img/icons.yml.
  */
-.ids-icon {
+.dt-icon {
   display: block;
-  height: var(--ids-size-125);
-  width: var(--ids-size-125);
+  height: var(--dt-size-125);
+  width: var(--dt-size-125);
 
   /*
    * The sprite's paths are authored with `fill="currentColor"`, which

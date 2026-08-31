@@ -1,0 +1,2949 @@
+/*
+ * Component stylesheets for this project's own design system. Originally
+ * generated from the IOP Design System via a since-removed sync sidecar and
+ * manifest (GH-177); the declarations below are carried over from that
+ * source and are now hand-maintained — there is no regeneration step, and
+ * the former per-component manifest (ids-components.yml) has been retired,
+ * its per-component rationale folded inline as the comment above each
+ * section below.
+ *
+ * Organised one component at a time, in the order components were added.
+ */
+
+/* text component: typography utilities (.dt-text--*) — chrome copy only, not doc prose (see vars.css) */
+.dt-text {
+  color: var(--dt-color-content-default);
+  margin: 0
+}
+.dt-text--detail-m {
+  font: var(--dt-typo-detail-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  text-transform: var(--dt-typo-detail-m-text-transform)
+}
+.dt-text--detail-m-high {
+  font: var(--dt-typo-detail-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-detail-m-high-letter-spacing);
+  text-transform: var(--dt-typo-detail-m-high-text-transform)
+}
+.dt-text--body-m {
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  text-transform: var(--dt-typo-body-m-text-transform)
+}
+.dt-text--body-m-high {
+  font: var(--dt-typo-body-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-high-letter-spacing);
+  text-transform: var(--dt-typo-body-m-high-text-transform)
+}
+.dt-text--body-l {
+  font: var(--dt-typo-body-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-l-letter-spacing);
+  text-transform: var(--dt-typo-body-l-text-transform)
+}
+.dt-text--body-l-high {
+  font: var(--dt-typo-body-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-l-high-letter-spacing);
+  text-transform: var(--dt-typo-body-l-high-text-transform)
+}
+.dt-text--code-m {
+  font: var(--dt-typo-code-m);
+  letter-spacing: var(--dt-typo-code-m-letter-spacing);
+  text-transform: var(--dt-typo-code-m-text-transform)
+}
+.dt-text--label-m {
+  font: var(--dt-typo-label-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
+  text-transform: var(--dt-typo-label-m-text-transform)
+}
+.dt-text--label-m-high {
+  font: var(--dt-typo-label-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-high-letter-spacing);
+  text-transform: var(--dt-typo-label-m-high-text-transform)
+}
+.dt-text--label-l {
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+.dt-text--label-l-high {
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-transform: var(--dt-typo-label-l-high-text-transform)
+}
+.dt-text--title-xs {
+  font: var(--dt-typo-title-xs);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-xs-letter-spacing);
+  text-transform: var(--dt-typo-title-xs-text-transform)
+}
+.dt-text--title-s {
+  font: var(--dt-typo-title-s);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-s-letter-spacing);
+  text-transform: var(--dt-typo-title-s-text-transform)
+}
+.dt-text--title-m {
+  font: var(--dt-typo-title-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-m-letter-spacing);
+  text-transform: var(--dt-typo-title-m-text-transform)
+}
+.dt-text--title-l {
+  font: var(--dt-typo-title-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-l-letter-spacing);
+  text-transform: var(--dt-typo-title-l-text-transform)
+}
+.dt-text--title-xl {
+  font: var(--dt-typo-title-xl);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-xl-letter-spacing);
+  text-transform: var(--dt-typo-title-xl-text-transform)
+}
+.dt-text--display-s {
+  font: var(--dt-typo-display-s);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-display-s-letter-spacing);
+  text-transform: var(--dt-typo-display-s-text-transform)
+}
+.dt-text--display-m {
+  font: var(--dt-typo-display-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-display-m-letter-spacing);
+  text-transform: var(--dt-typo-display-m-text-transform)
+}
+
+/* button component (.dt-button): --ghost/--icon-only variants for header toolbar actions (GH-7, GH-8); also the [card] call to action (GH-20) */
+.dt-button {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  min-height: var(--dt-size-250);
+  padding-inline-end: var(--dt-size-150);
+  padding-bottom: var(--dt-size-50);
+  padding-top: var(--dt-size-50);
+  padding-inline-start: var(--dt-size-150);
+  position: relative;
+  transition: var(--dt-motion-micro-states),outline 0s,outline-offset 0s
+}
+.dt-button.dt-button--large {
+  min-height: var(--dt-size-350)
+}
+.dt-button.dt-button--icon-icon {
+  padding-inline-start: var(--dt-size-125)
+}
+.dt-button.dt-button--icon-action {
+  padding-inline-end: var(--dt-size-125)
+}
+.dt-button:focus-visible {
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: 1px
+}
+.dt-button.dt-button--full-width {
+  justify-content: center;
+  width: 100%
+}
+.dt-button.dt-button--icon-and-label .dt-button__icon {
+  width: var(--dt-size-125)
+}
+.dt-button.dt-button--icon-and-label .dt-button__icon-icon {
+  margin-inline-end: var(--dt-size-25)
+}
+.dt-button.dt-button--icon-and-label .dt-button__icon-action {
+  margin-inline-start: var(--dt-size-25)
+}
+.dt-button.dt-button--icon-only {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--dt-size-0);
+  justify-content: center;
+  padding: 0;
+  width: var(--dt-size-250)
+}
+.dt-button.dt-button--icon-only.dt-button--large {
+  width: var(--dt-size-350)
+}
+.dt-button.dt-button--icon-only.dt-button--ghost {
+  width: var(--dt-size-125)
+}
+.dt-button.dt-button--loading {
+  pointer-events: none
+}
+.dt-button.dt-button--loading .dt-button__loader {
+  margin: 0 auto;
+  position: absolute
+}
+.dt-button.dt-button--loading .dt-button__content {
+  visibility: hidden
+}
+.dt-button:disabled {
+  background-color: transparent;
+  border: none;
+  color: var(--dt-color-content-states-disabled);
+  cursor: default
+}
+.dt-button:disabled .dt-button__loader {
+  display: none
+}
+.dt-button:disabled .dt-button__content {
+  visibility: visible
+}
+.dt-button__content {
+  align-items: center;
+  display: inline-flex;
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  overflow-wrap: break-word;
+  position: relative;
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+.dt-button__content .dt-button__icon {
+  display: inline-flex
+}
+.dt-button__content .dt-badge {
+  inset-inline-start: calc(100% - var(--dt-size-50));
+  position: absolute;
+  top: calc(var(--dt-size-50)*-1)
+}
+.dt-button.dt-button--primary {
+  background-color: var(--dt-comp-button-primary-default);
+  color: var(--dt-color-content-inverse)
+}
+.dt-button.dt-button--primary.dt-button--danger {
+  background-color: var(--dt-color-alt-red-high)
+}
+@media (hover:hover) {
+  .dt-button.dt-button--primary:hover {
+    background-color: var(--dt-comp-button-primary-hover)
+  }
+  .dt-button.dt-button--primary:hover.dt-button--danger {
+    background-color: var(--dt-comp-button-danger-hover)
+  }
+}
+.dt-button.dt-button--primary:focus-visible {
+  background-color: var(--dt-comp-button-primary-hover)
+}
+.dt-button.dt-button--primary:focus-visible.dt-button--danger {
+  background-color: var(--dt-comp-button-danger-hover)
+}
+.dt-button.dt-button--primary.dt-button--loading,.dt-button.dt-button--primary:active {
+  background-color: var(--dt-comp-button-primary-pressed)
+}
+.dt-button.dt-button--primary.dt-button--loading.dt-button--danger,.dt-button.dt-button--primary:active.dt-button--danger {
+  background-color: var(--dt-comp-button-danger-pressed)
+}
+.dt-button.dt-button--primary:disabled {
+  background-color: var(--dt-color-bg-states-disabled);
+  border: none;
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-button.dt-button--secondary {
+  background-color: transparent;
+  border: var(--dt-size-border-default) solid var(--dt-color-border-default);
+  box-sizing: border-box;
+  color: var(--dt-color-content-default)
+}
+.dt-button.dt-button--secondary.dt-button--danger {
+  border-color: var(--dt-color-alt-red-high);
+  color: var(--dt-color-alt-red-high)
+}
+@media (hover:hover) {
+  .dt-button.dt-button--secondary:hover {
+    border-color: var(--dt-color-border-states-hover);
+    color: var(--dt-color-content-states-hover)
+  }
+  .dt-button.dt-button--secondary:hover.dt-button--danger {
+    border-color: var(--dt-comp-button-danger-hover);
+    color: var(--dt-comp-button-danger-hover)
+  }
+}
+.dt-button.dt-button--secondary:focus-visible {
+  border-color: var(--dt-color-border-states-hover);
+  color: var(--dt-color-content-states-hover)
+}
+.dt-button.dt-button--secondary:focus-visible.dt-button--danger {
+  border-color: var(--dt-comp-button-danger-hover);
+  color: var(--dt-comp-button-danger-hover)
+}
+.dt-button.dt-button--secondary.dt-button--loading,.dt-button.dt-button--secondary:active {
+  border-color: var(--dt-color-border-states-pressed);
+  color: var(--dt-color-content-states-pressed)
+}
+.dt-button.dt-button--secondary.dt-button--loading.dt-button--danger,.dt-button.dt-button--secondary:active.dt-button--danger {
+  border-color: var(--dt-comp-button-danger-pressed);
+  color: var(--dt-comp-button-danger-pressed)
+}
+.dt-button.dt-button--secondary:disabled {
+  background-color: transparent;
+  border-color: var(--dt-color-border-states-disabled);
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-button.dt-button--ghost {
+  background-color: transparent;
+  color: var(--dt-color-content-default);
+  padding-inline: var(--dt-size-0)
+}
+.dt-button.dt-button--ghost.dt-button--danger {
+  color: var(--dt-color-alt-red-high)
+}
+@media (hover:hover) {
+  .dt-button.dt-button--ghost:hover {
+    color: var(--dt-color-content-states-hover)
+  }
+  .dt-button.dt-button--ghost:hover.dt-button--danger {
+    color: var(--dt-comp-button-danger-hover)
+  }
+}
+.dt-button.dt-button--ghost:focus-visible {
+  color: var(--dt-color-content-states-hover)
+}
+.dt-button.dt-button--ghost:focus-visible.dt-button--danger {
+  color: var(--dt-comp-button-danger-hover)
+}
+.dt-button.dt-button--ghost.dt-button--loading,.dt-button.dt-button--ghost:active {
+  color: var(--dt-color-content-states-pressed)
+}
+.dt-button.dt-button--ghost.dt-button--loading.dt-button--danger,.dt-button.dt-button--ghost:active.dt-button--danger {
+  color: var(--dt-comp-button-danger-pressed)
+}
+.dt-button.dt-button--ghost:disabled {
+  background-color: transparent;
+  border: none;
+  color: var(--dt-color-content-states-disabled)
+}
+
+/* tag component (.dt-tag): --solid/--selected — header toolbar version tag (GH-7) */
+.dt-tag {
+  background: transparent;
+  display: inline-flex;
+  padding: var(--dt-size-25) var(--dt-size-0)
+}
+.dt-tag__label {
+  color: var(--dt-color-content-default);
+  display: inline-block;
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+.dt-tag__icon--interactive {
+  border-radius: var(--dt-size-25);
+  cursor: pointer
+}
+.dt-tag__icon--interactive:focus-visible {
+  outline: 1px solid var(--dt-color-border-states-focus)
+}
+.dt-tag--solid {
+  background-color: var(--dt-color-bg-low);
+  padding-inline: var(--dt-size-50)
+}
+.dt-tag--solid:has(.dt-tag__icon) {
+  padding-inline-end: var(--dt-size-25)
+}
+.dt-tag--selected .dt-tag__label {
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-transform: var(--dt-typo-label-l-high-text-transform)
+}
+.dt-tag--read-only.dt-tag--solid {
+  background-color: var(--dt-color-bg-states-disabled)
+}
+.dt-tag--disabled .dt-tag__icon,.dt-tag--disabled .dt-tag__label {
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-tag--disabled.dt-tag--solid {
+  background-color: var(--dt-color-bg-states-disabled)
+}
+@media (hover:hover) {
+  .dt-tag:hover:not(.dt-tag--read-only):not(.dt-tag--disabled) {
+    cursor: pointer
+  }
+  .dt-tag:hover:not(.dt-tag--read-only):not(.dt-tag--disabled) .dt-tag__icon,.dt-tag:hover:not(.dt-tag--read-only):not(.dt-tag--disabled) .dt-tag__label {
+    color: var(--dt-color-content-states-hover)
+  }
+  .dt-tag:hover:not(.dt-tag--read-only):not(.dt-tag--disabled).dt-tag--solid {
+    background-color: var(--dt-color-bg-states-hover)
+  }
+}
+.dt-tag:focus-visible {
+  outline: 1px solid var(--dt-color-border-states-focus)
+}
+
+/* option-picker component (.dt-option-picker): group wrapper */
+.dt-option-picker {
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--dt-size-25);
+  margin: 0;
+  min-inline-size: 0;
+  min-width: 0;
+  padding: 0
+}
+.dt-option-picker--wrap {
+  flex-wrap: wrap
+}
+.dt-option-picker--full {
+  gap: var(--dt-size-25);
+  width: 100%
+}
+.dt-option-picker--full .dt-option-picker-item {
+  flex: 1;
+  min-width: 0
+}
+.dt-option-picker--full .dt-option-picker-item>.dt-option-picker-item__button {
+  min-width: 0;
+  width: 100%
+}
+.dt-option-picker--full .dt-option-picker-item>.dt-option-picker-item__button .dt-option-picker-button__icon-icon {
+  flex-shrink: 0
+}
+
+/* option-picker-item (.dt-option-picker-item): per-option outline/selection state */
+.dt-option-picker-item {
+  display: flex;
+  justify-content: center;
+  outline: var(--dt-size-border-default) solid var(--dt-color-border-low);
+  outline-offset: calc(var(--dt-size-border-default)*-1);
+  transition: var(--dt-motion-micro-states)
+}
+@media (hover:hover) {
+  .dt-option-picker-item--hover:hover {
+    outline-color: var(--dt-color-border-states-hover)
+  }
+}
+.dt-option-picker-item--selected {
+  outline-color: var(--dt-color-border-states-pressed)
+}
+.dt-option-picker-item--disabled {
+  outline-color: var(--dt-color-border-states-disabled)
+}
+.dt-option-picker-item--vertical>.dt-option-picker-item__button {
+  height: auto;
+  padding: var(--dt-size-50)
+}
+.dt-option-picker-item--vertical>.dt-option-picker-item__button>.dt-option-picker-button__content {
+  flex-direction: column;
+  gap: var(--dt-size-50)
+}
+.dt-option-picker-item--vertical>.dt-option-picker-item__button>.dt-option-picker-button__content>.dt-option-picker-button__icon.dt-option-picker-button__icon-icon {
+  margin-inline-end: 0
+}
+.dt-option-picker-item--vertical>.dt-option-picker-item__button>.dt-option-picker-button__content>.dt-option-picker-button__icon.dt-option-picker-button__icon-action {
+  margin-inline-start: 0
+}
+.dt-option-picker-item--vertical>.dt-option-picker-item__button.dt-option-picker-button--icon-only>.dt-option-picker-button__content .dt-option-picker-button__icon-icon {
+  margin-inline: var(--dt-size-12)
+}
+
+/* option-picker-button (.dt-option-picker-button): the clickable control itself */
+.dt-option-picker-button {
+  align-items: center;
+  background-color: transparent;
+  color: var(--dt-color-content-low);
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  justify-content: center;
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  max-width: 100%;
+  min-height: var(--dt-size-250);
+  padding-inline: var(--dt-size-0);
+  padding: var(--dt-size-50);
+  position: relative;
+  text-transform: var(--dt-typo-label-l-text-transform);
+  transition: var(--dt-motion-micro-states),outline 0s,outline-offset 0s
+}
+.dt-option-picker-button:focus-visible {
+  color: var(--dt-color-content-states-hover);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: 1px
+}
+@media (hover:hover) {
+  .dt-option-picker-button:hover {
+    color: var(--dt-color-content-states-hover)
+  }
+}
+.dt-option-picker-button:active {
+  color: var(--dt-color-content-states-pressed)
+}
+.dt-option-picker-button:disabled {
+  background-color: transparent;
+  border: none;
+  color: var(--dt-color-content-states-disabled);
+  cursor: not-allowed;
+  pointer-events: none
+}
+.dt-option-picker-button__content {
+  align-items: center;
+  display: inline-flex;
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+.dt-option-picker-button__content,.dt-option-picker-button__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.dt-option-picker-button__icon {
+  display: inline-flex;
+  width: var(--dt-size-125)
+}
+.dt-option-picker-button__icon-icon {
+  margin-inline-end: var(--dt-size-25)
+}
+.dt-option-picker-button__icon-action {
+  width: auto
+}
+.dt-option-picker-button--icon-and-label .dt-option-picker-button__icon-action {
+  margin-inline-start: var(--dt-size-50)
+}
+.dt-option-picker-button--icon-only {
+  width: auto
+}
+.dt-option-picker-button--icon-only .dt-option-picker-button__icon-icon {
+  margin-inline: var(--dt-size-12)
+}
+.dt-option-picker-button--selected {
+  color: var(--dt-color-content-default)
+}
+.dt-option-picker-button--selected>.dt-option-picker-button__content .dt-option-picker-button__label {
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-transform: var(--dt-typo-label-l-high-text-transform)
+}
+
+/* list component (.dt-list): nav <ul> reset (GH-8) */
+.dt-list {
+  list-style: none;
+  margin: 0;
+  padding: 0
+}
+
+/* list-item (.dt-list-item[--tree--level-N], GH-8): layout/indent only, no --clickable/--selected (state colours are ours, see side-menu.css) */
+.dt-list-item {
+  --dt-list-item-tree-indent: 12px;
+  align-items: center;
+  color: var(--dt-color-content-default);
+  cursor: default;
+  display: flex;
+  gap: var(--dt-size-50);
+  min-height: var(--dt-size-250);
+  padding-block: var(--dt-size-50);
+  position: relative;
+  transition: var(--dt-motion-micro-states);
+  transition-property: background-color,box-shadow
+}
+.dt-list-item.dt-list-item--clickable {
+  cursor: pointer
+}
+.dt-list-item.dt-list-item--clickable.dt-list-item--cursor,.dt-list-item.dt-list-item--clickable:focus-visible {
+  background-color: var(--dt-color-bg-states-hover);
+  box-shadow: calc(var(--dt-size-50)*-1) 0 0 0 var(--dt-color-bg-states-hover),var(--dt-size-50) 0 0 0 var(--dt-color-bg-states-hover)
+}
+@media (hover:hover) {
+  .dt-list-item.dt-list-item--clickable:hover {
+    background-color: var(--dt-color-bg-states-hover);
+    box-shadow: calc(var(--dt-size-50)*-1) 0 0 0 var(--dt-color-bg-states-hover),var(--dt-size-50) 0 0 0 var(--dt-color-bg-states-hover)
+  }
+}
+.dt-list-item.dt-list-item--clickable:focus-visible {
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: calc(var(--dt-size-border-high)*-1)
+}
+.dt-list-item.dt-list-item--selected {
+  background-color: var(--dt-color-bg-states-pressed);
+  box-shadow: calc(var(--dt-size-50)*-1) 0 0 0 var(--dt-color-bg-states-pressed),var(--dt-size-50) 0 0 0 var(--dt-color-bg-states-pressed)
+}
+.dt-list-item.dt-list-item--selected.dt-list-item--cursor,.dt-list-item.dt-list-item--selected:focus-visible {
+  background-color: var(--dt-color-bg-states-pressed);
+  box-shadow: calc(var(--dt-size-50)*-1) 0 0 0 var(--dt-color-bg-states-pressed),var(--dt-size-50) 0 0 0 var(--dt-color-bg-states-pressed)
+}
+@media (hover:hover) {
+  .dt-list-item.dt-list-item--selected:hover {
+    background-color: var(--dt-color-bg-states-pressed);
+    box-shadow: calc(var(--dt-size-50)*-1) 0 0 0 var(--dt-color-bg-states-pressed),var(--dt-size-50) 0 0 0 var(--dt-color-bg-states-pressed)
+  }
+}
+.dt-list-item.dt-list-item--tree--level-0 {
+  padding-inline-start: calc(0*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-1 {
+  padding-inline-start: calc(1*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-2 {
+  padding-inline-start: calc(2*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-3 {
+  padding-inline-start: calc(3*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-4 {
+  padding-inline-start: calc(4*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-5 {
+  padding-inline-start: calc(5*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-6 {
+  padding-inline-start: calc(6*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-7 {
+  padding-inline-start: calc(7*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-8 {
+  padding-inline-start: calc(8*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-9 {
+  padding-inline-start: calc(9*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--tree--level-10 {
+  padding-inline-start: calc(10*var(--dt-list-item-tree-indent))
+}
+.dt-list-item.dt-list-item--disabled {
+  color: var(--dt-color-content-states-disabled);
+  cursor: not-allowed
+}
+.dt-list-item.dt-list-item--disabled * {
+  pointer-events: none
+}
+.dt-list-item.dt-list-item--disabled .dt-list-item__content-end-caption,.dt-list-item.dt-list-item--disabled .dt-list-item__description,.dt-list-item.dt-list-item--disabled .dt-list-item__label {
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-list-item.dt-list-item--divider {
+  box-shadow: inset 0 calc(var(--dt-size-border-default)*-1) 0 var(--dt-color-border-low)
+}
+.dt-list-item__tree-icon {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  height: var(--dt-size-125);
+  justify-content: center;
+  width: var(--dt-size-125)
+}
+.dt-list-item__content-start {
+  gap: var(--dt-size-50)
+}
+.dt-list-item__checkbox,.dt-list-item__content-start,.dt-list-item__icon-start {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0
+}
+.dt-list-item__icon-start {
+  height: var(--dt-size-125);
+  justify-content: center
+}
+.dt-list-item__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0
+}
+.dt-list-item__text.dt-list-item__text--truncate .dt-list-item__description,.dt-list-item__text.dt-list-item__text--truncate .dt-list-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.dt-list-item__text.dt-list-item__text--nowrap {
+  flex: 1;
+  min-width: 0
+}
+.dt-list-item__text.dt-list-item__text--nowrap .dt-list-item__description,.dt-list-item__text.dt-list-item__text--nowrap .dt-list-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.dt-list-item__text.dt-list-item__text--clamp {
+  overflow: hidden
+}
+.dt-list-item__text.dt-list-item__text--clamp .dt-list-item__description,.dt-list-item__text.dt-list-item__text--clamp .dt-list-item__label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+.dt-list-item__text.dt-list-item__text--clamp .dt-list-item__label {
+  -webkit-line-clamp: 1;
+  -webkit-line-clamp: var(--dt-list-item-label-line-clamp,1);
+  line-clamp: 1;
+  line-clamp: var(--dt-list-item-label-line-clamp,1)
+}
+.dt-list-item__text.dt-list-item__text--clamp .dt-list-item__description {
+  -webkit-line-clamp: 1;
+  -webkit-line-clamp: var(--dt-list-item-description-line-clamp,1);
+  line-clamp: 1;
+  line-clamp: var(--dt-list-item-description-line-clamp,1)
+}
+.dt-list-item__label {
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  overflow-wrap: break-word;
+  text-transform: var(--dt-typo-body-m-text-transform)
+}
+.dt-list-item.dt-list-item--nowrap .dt-list-item__label {
+  overflow-wrap: normal
+}
+.dt-list-item__description {
+  color: var(--dt-color-content-low);
+  font: var(--dt-typo-detail-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  overflow-wrap: break-word;
+  text-transform: var(--dt-typo-detail-m-text-transform)
+}
+.dt-list-item.dt-list-item--nowrap .dt-list-item__description {
+  overflow-wrap: normal
+}
+.dt-list-item__drag-handle,.dt-list-item__loader {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0
+}
+.dt-list-item__drag-handle {
+  cursor: grab;
+  height: var(--dt-size-125);
+  justify-content: center;
+  width: var(--dt-size-125)
+}
+.dt-list-item__drag-handle:active {
+  cursor: grabbing
+}
+
+/* logo component (.dt-logo): product symbol fill (GH-8) */
+.dt-logo path {
+  fill: currentcolor
+}
+
+/* grid-layout component (.dt-grid-layout[--with-margin]): header/toolbar/hero container (GH-8, GH-9); also the content/ToC container (GH-10, main.hbs) — `.doc`/`.toc`'s own column spans are bundle CSS, not this file's `__item[--span-N]` utility classes (doc.css/toc.css explain why) */
+.dt-grid-layout {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(6,minmax(0,1fr));
+  width: 100%;
+  grid-gap: var(--dt-size-100);
+  gap: var(--dt-size-100)
+}
+@media (min-width:513px) {
+  .dt-grid-layout {
+    gap: var(--dt-size-150);
+    grid-template-columns: repeat(12,minmax(0,1fr))
+  }
+}
+@media (min-width:1024px) {
+  .dt-grid-layout {
+    gap: var(--dt-size-300)
+  }
+}
+@media (min-width:1680px) {
+  .dt-grid-layout {
+    gap: var(--dt-size-350)
+  }
+}
+.dt-grid-layout--with-margin {
+  padding-inline: var(--comp-grid-margin-xs)
+}
+@media (min-width:513px) {
+  .dt-grid-layout--with-margin {
+    padding-inline: var(--comp-grid-margin-s)
+  }
+}
+@media (min-width:1024px) {
+  .dt-grid-layout--with-margin {
+    padding-inline: var(--comp-grid-margin-m)
+  }
+}
+@media (min-width:1680px) {
+  .dt-grid-layout--with-margin {
+    padding-inline: var(--comp-grid-margin-l)
+  }
+}
+.dt-grid-layout--gap-xs {
+  gap: var(--dt-size-100)!important
+}
+.dt-grid-layout--gap-s {
+  gap: var(--dt-size-150)!important
+}
+.dt-grid-layout--gap-m {
+  gap: var(--dt-size-300)!important
+}
+.dt-grid-layout--gap-l {
+  gap: var(--dt-size-350)!important
+}
+.dt-grid-layout--cols-1 {
+  grid-template-columns: repeat(1,minmax(0,1fr))
+}
+.dt-grid-layout--cols-2 {
+  grid-template-columns: repeat(2,minmax(0,1fr))
+}
+.dt-grid-layout--cols-3 {
+  grid-template-columns: repeat(3,minmax(0,1fr))
+}
+.dt-grid-layout--cols-4 {
+  grid-template-columns: repeat(4,minmax(0,1fr))
+}
+.dt-grid-layout--cols-5 {
+  grid-template-columns: repeat(5,minmax(0,1fr))
+}
+.dt-grid-layout--cols-6 {
+  grid-template-columns: repeat(6,minmax(0,1fr))
+}
+.dt-grid-layout--cols-7 {
+  grid-template-columns: repeat(7,minmax(0,1fr))
+}
+.dt-grid-layout--cols-8 {
+  grid-template-columns: repeat(8,minmax(0,1fr))
+}
+.dt-grid-layout--cols-9 {
+  grid-template-columns: repeat(9,minmax(0,1fr))
+}
+.dt-grid-layout--cols-10 {
+  grid-template-columns: repeat(10,minmax(0,1fr))
+}
+.dt-grid-layout--cols-11 {
+  grid-template-columns: repeat(11,minmax(0,1fr))
+}
+.dt-grid-layout--cols-12 {
+  grid-template-columns: repeat(12,minmax(0,1fr))
+}
+@media (max-width:512px) {
+  .dt-grid-layout--cols-xs-1 {
+    grid-template-columns: repeat(1,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-2 {
+    grid-template-columns: repeat(2,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-3 {
+    grid-template-columns: repeat(3,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-4 {
+    grid-template-columns: repeat(4,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-5 {
+    grid-template-columns: repeat(5,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-6 {
+    grid-template-columns: repeat(6,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-7 {
+    grid-template-columns: repeat(7,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-8 {
+    grid-template-columns: repeat(8,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-9 {
+    grid-template-columns: repeat(9,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-10 {
+    grid-template-columns: repeat(10,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-11 {
+    grid-template-columns: repeat(11,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-xs-12 {
+    grid-template-columns: repeat(12,minmax(0,1fr))
+  }
+}
+@media (min-width:513px) {
+  .dt-grid-layout--cols-s-1 {
+    grid-template-columns: repeat(1,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-2 {
+    grid-template-columns: repeat(2,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-3 {
+    grid-template-columns: repeat(3,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-4 {
+    grid-template-columns: repeat(4,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-5 {
+    grid-template-columns: repeat(5,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-6 {
+    grid-template-columns: repeat(6,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-7 {
+    grid-template-columns: repeat(7,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-8 {
+    grid-template-columns: repeat(8,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-9 {
+    grid-template-columns: repeat(9,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-10 {
+    grid-template-columns: repeat(10,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-11 {
+    grid-template-columns: repeat(11,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-s-12 {
+    grid-template-columns: repeat(12,minmax(0,1fr))
+  }
+}
+@media (min-width:1024px) {
+  .dt-grid-layout--cols-m-1 {
+    grid-template-columns: repeat(1,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-2 {
+    grid-template-columns: repeat(2,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-3 {
+    grid-template-columns: repeat(3,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-4 {
+    grid-template-columns: repeat(4,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-5 {
+    grid-template-columns: repeat(5,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-6 {
+    grid-template-columns: repeat(6,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-7 {
+    grid-template-columns: repeat(7,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-8 {
+    grid-template-columns: repeat(8,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-9 {
+    grid-template-columns: repeat(9,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-10 {
+    grid-template-columns: repeat(10,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-11 {
+    grid-template-columns: repeat(11,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-m-12 {
+    grid-template-columns: repeat(12,minmax(0,1fr))
+  }
+}
+@media (min-width:1680px) {
+  .dt-grid-layout--cols-l-1 {
+    grid-template-columns: repeat(1,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-2 {
+    grid-template-columns: repeat(2,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-3 {
+    grid-template-columns: repeat(3,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-4 {
+    grid-template-columns: repeat(4,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-5 {
+    grid-template-columns: repeat(5,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-6 {
+    grid-template-columns: repeat(6,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-7 {
+    grid-template-columns: repeat(7,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-8 {
+    grid-template-columns: repeat(8,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-9 {
+    grid-template-columns: repeat(9,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-10 {
+    grid-template-columns: repeat(10,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-11 {
+    grid-template-columns: repeat(11,minmax(0,1fr))
+  }
+  .dt-grid-layout--cols-l-12 {
+    grid-template-columns: repeat(12,minmax(0,1fr))
+  }
+}
+.dt-grid-layout--align-start {
+  align-items: start
+}
+.dt-grid-layout--align-center {
+  align-items: center
+}
+.dt-grid-layout--align-end {
+  align-items: end
+}
+.dt-grid-layout--align-stretch {
+  align-items: stretch
+}
+.dt-grid-layout--align-baseline {
+  align-items: baseline
+}
+.dt-grid-layout__item {
+  min-width: 0
+}
+.dt-grid-layout__item--span-1 {
+  grid-column-end: span 1
+}
+.dt-grid-layout__item--span-2 {
+  grid-column-end: span 2
+}
+.dt-grid-layout__item--span-3 {
+  grid-column-end: span 3
+}
+.dt-grid-layout__item--span-4 {
+  grid-column-end: span 4
+}
+.dt-grid-layout__item--span-5 {
+  grid-column-end: span 5
+}
+.dt-grid-layout__item--span-6 {
+  grid-column-end: span 6
+}
+.dt-grid-layout__item--span-7 {
+  grid-column-end: span 7
+}
+.dt-grid-layout__item--span-8 {
+  grid-column-end: span 8
+}
+.dt-grid-layout__item--span-9 {
+  grid-column-end: span 9
+}
+.dt-grid-layout__item--span-10 {
+  grid-column-end: span 10
+}
+.dt-grid-layout__item--span-11 {
+  grid-column-end: span 11
+}
+.dt-grid-layout__item--span-12 {
+  grid-column-end: span 12
+}
+.dt-grid-layout__item--span-full {
+  grid-column: 1/-1
+}
+@media (max-width:512px) {
+  .dt-grid-layout__item--span-xs-1 {
+    grid-column-end: span 1
+  }
+  .dt-grid-layout__item--span-xs-2 {
+    grid-column-end: span 2
+  }
+  .dt-grid-layout__item--span-xs-3 {
+    grid-column-end: span 3
+  }
+  .dt-grid-layout__item--span-xs-4 {
+    grid-column-end: span 4
+  }
+  .dt-grid-layout__item--span-xs-5 {
+    grid-column-end: span 5
+  }
+  .dt-grid-layout__item--span-xs-6 {
+    grid-column-end: span 6
+  }
+  .dt-grid-layout__item--span-xs-7 {
+    grid-column-end: span 7
+  }
+  .dt-grid-layout__item--span-xs-8 {
+    grid-column-end: span 8
+  }
+  .dt-grid-layout__item--span-xs-9 {
+    grid-column-end: span 9
+  }
+  .dt-grid-layout__item--span-xs-10 {
+    grid-column-end: span 10
+  }
+  .dt-grid-layout__item--span-xs-11 {
+    grid-column-end: span 11
+  }
+  .dt-grid-layout__item--span-xs-12 {
+    grid-column-end: span 12
+  }
+  .dt-grid-layout__item--span-xs-full {
+    grid-column: 1/-1
+  }
+}
+@media (min-width:513px) {
+  .dt-grid-layout__item--span-s-1 {
+    grid-column-end: span 1
+  }
+  .dt-grid-layout__item--span-s-2 {
+    grid-column-end: span 2
+  }
+  .dt-grid-layout__item--span-s-3 {
+    grid-column-end: span 3
+  }
+  .dt-grid-layout__item--span-s-4 {
+    grid-column-end: span 4
+  }
+  .dt-grid-layout__item--span-s-5 {
+    grid-column-end: span 5
+  }
+  .dt-grid-layout__item--span-s-6 {
+    grid-column-end: span 6
+  }
+  .dt-grid-layout__item--span-s-7 {
+    grid-column-end: span 7
+  }
+  .dt-grid-layout__item--span-s-8 {
+    grid-column-end: span 8
+  }
+  .dt-grid-layout__item--span-s-9 {
+    grid-column-end: span 9
+  }
+  .dt-grid-layout__item--span-s-10 {
+    grid-column-end: span 10
+  }
+  .dt-grid-layout__item--span-s-11 {
+    grid-column-end: span 11
+  }
+  .dt-grid-layout__item--span-s-12 {
+    grid-column-end: span 12
+  }
+  .dt-grid-layout__item--span-s-full {
+    grid-column: 1/-1
+  }
+}
+@media (min-width:1024px) {
+  .dt-grid-layout__item--span-m-1 {
+    grid-column-end: span 1
+  }
+  .dt-grid-layout__item--span-m-2 {
+    grid-column-end: span 2
+  }
+  .dt-grid-layout__item--span-m-3 {
+    grid-column-end: span 3
+  }
+  .dt-grid-layout__item--span-m-4 {
+    grid-column-end: span 4
+  }
+  .dt-grid-layout__item--span-m-5 {
+    grid-column-end: span 5
+  }
+  .dt-grid-layout__item--span-m-6 {
+    grid-column-end: span 6
+  }
+  .dt-grid-layout__item--span-m-7 {
+    grid-column-end: span 7
+  }
+  .dt-grid-layout__item--span-m-8 {
+    grid-column-end: span 8
+  }
+  .dt-grid-layout__item--span-m-9 {
+    grid-column-end: span 9
+  }
+  .dt-grid-layout__item--span-m-10 {
+    grid-column-end: span 10
+  }
+  .dt-grid-layout__item--span-m-11 {
+    grid-column-end: span 11
+  }
+  .dt-grid-layout__item--span-m-12 {
+    grid-column-end: span 12
+  }
+  .dt-grid-layout__item--span-m-full {
+    grid-column: 1/-1
+  }
+}
+@media (min-width:1680px) {
+  .dt-grid-layout__item--span-l-1 {
+    grid-column-end: span 1
+  }
+  .dt-grid-layout__item--span-l-2 {
+    grid-column-end: span 2
+  }
+  .dt-grid-layout__item--span-l-3 {
+    grid-column-end: span 3
+  }
+  .dt-grid-layout__item--span-l-4 {
+    grid-column-end: span 4
+  }
+  .dt-grid-layout__item--span-l-5 {
+    grid-column-end: span 5
+  }
+  .dt-grid-layout__item--span-l-6 {
+    grid-column-end: span 6
+  }
+  .dt-grid-layout__item--span-l-7 {
+    grid-column-end: span 7
+  }
+  .dt-grid-layout__item--span-l-8 {
+    grid-column-end: span 8
+  }
+  .dt-grid-layout__item--span-l-9 {
+    grid-column-end: span 9
+  }
+  .dt-grid-layout__item--span-l-10 {
+    grid-column-end: span 10
+  }
+  .dt-grid-layout__item--span-l-11 {
+    grid-column-end: span 11
+  }
+  .dt-grid-layout__item--span-l-12 {
+    grid-column-end: span 12
+  }
+  .dt-grid-layout__item--span-l-full {
+    grid-column: 1/-1
+  }
+}
+.dt-grid-layout__item--start-1 {
+  grid-column-start: 1
+}
+.dt-grid-layout__item--start-2 {
+  grid-column-start: 2
+}
+.dt-grid-layout__item--start-3 {
+  grid-column-start: 3
+}
+.dt-grid-layout__item--start-4 {
+  grid-column-start: 4
+}
+.dt-grid-layout__item--start-5 {
+  grid-column-start: 5
+}
+.dt-grid-layout__item--start-6 {
+  grid-column-start: 6
+}
+.dt-grid-layout__item--start-7 {
+  grid-column-start: 7
+}
+.dt-grid-layout__item--start-8 {
+  grid-column-start: 8
+}
+.dt-grid-layout__item--start-9 {
+  grid-column-start: 9
+}
+.dt-grid-layout__item--start-10 {
+  grid-column-start: 10
+}
+.dt-grid-layout__item--start-11 {
+  grid-column-start: 11
+}
+.dt-grid-layout__item--start-12 {
+  grid-column-start: 12
+}
+.dt-grid-layout__item--end-1 {
+  grid-column-end: 1
+}
+.dt-grid-layout__item--end-2 {
+  grid-column-end: 2
+}
+.dt-grid-layout__item--end-3 {
+  grid-column-end: 3
+}
+.dt-grid-layout__item--end-4 {
+  grid-column-end: 4
+}
+.dt-grid-layout__item--end-5 {
+  grid-column-end: 5
+}
+.dt-grid-layout__item--end-6 {
+  grid-column-end: 6
+}
+.dt-grid-layout__item--end-7 {
+  grid-column-end: 7
+}
+.dt-grid-layout__item--end-8 {
+  grid-column-end: 8
+}
+.dt-grid-layout__item--end-9 {
+  grid-column-end: 9
+}
+.dt-grid-layout__item--end-10 {
+  grid-column-end: 10
+}
+.dt-grid-layout__item--end-11 {
+  grid-column-end: 11
+}
+.dt-grid-layout__item--end-12 {
+  grid-column-end: 12
+}
+.dt-grid-layout__item--end-13 {
+  grid-column-end: 13
+}
+.dt-grid-layout__item--align-self-start {
+  align-self: start
+}
+.dt-grid-layout__item--align-self-center {
+  align-self: center
+}
+.dt-grid-layout__item--align-self-end {
+  align-self: end
+}
+.dt-grid-layout__item--align-self-stretch {
+  align-self: stretch
+}
+.dt-grid-layout__item--align-self-baseline {
+  align-self: baseline
+}
+.dt-grid-layout__item--hidden {
+  display: none
+}
+@media (max-width:512px) {
+  .dt-grid-layout__item--hidden-xs {
+    display: none
+  }
+}
+@media (min-width:513px) {
+  .dt-grid-layout__item--hidden-s {
+    display: none
+  }
+}
+@media (min-width:1024px) {
+  .dt-grid-layout__item--hidden-m {
+    display: none
+  }
+}
+@media (min-width:1680px) {
+  .dt-grid-layout__item--hidden-l {
+    display: none
+  }
+}
+@media (max-width:512px) {
+  .dt-grid-layout--align-xs-start {
+    align-items: start
+  }
+  .dt-grid-layout--align-xs-center {
+    align-items: center
+  }
+  .dt-grid-layout--align-xs-end {
+    align-items: end
+  }
+  .dt-grid-layout--align-xs-stretch {
+    align-items: stretch
+  }
+  .dt-grid-layout--align-xs-baseline {
+    align-items: baseline
+  }
+  .dt-grid-layout__item--align-self-xs-start {
+    align-self: start
+  }
+  .dt-grid-layout__item--align-self-xs-center {
+    align-self: center
+  }
+  .dt-grid-layout__item--align-self-xs-end {
+    align-self: end
+  }
+  .dt-grid-layout__item--align-self-xs-stretch {
+    align-self: stretch
+  }
+  .dt-grid-layout__item--align-self-xs-baseline {
+    align-self: baseline
+  }
+  .dt-grid-layout__item--start-xs-1 {
+    grid-column-start: 1
+  }
+  .dt-grid-layout__item--start-xs-2 {
+    grid-column-start: 2
+  }
+  .dt-grid-layout__item--start-xs-3 {
+    grid-column-start: 3
+  }
+  .dt-grid-layout__item--start-xs-4 {
+    grid-column-start: 4
+  }
+  .dt-grid-layout__item--start-xs-5 {
+    grid-column-start: 5
+  }
+  .dt-grid-layout__item--start-xs-6 {
+    grid-column-start: 6
+  }
+  .dt-grid-layout__item--start-xs-7 {
+    grid-column-start: 7
+  }
+  .dt-grid-layout__item--start-xs-8 {
+    grid-column-start: 8
+  }
+  .dt-grid-layout__item--start-xs-9 {
+    grid-column-start: 9
+  }
+  .dt-grid-layout__item--start-xs-10 {
+    grid-column-start: 10
+  }
+  .dt-grid-layout__item--start-xs-11 {
+    grid-column-start: 11
+  }
+  .dt-grid-layout__item--start-xs-12 {
+    grid-column-start: 12
+  }
+  .dt-grid-layout__item--end-xs-1 {
+    grid-column-end: 1
+  }
+  .dt-grid-layout__item--end-xs-2 {
+    grid-column-end: 2
+  }
+  .dt-grid-layout__item--end-xs-3 {
+    grid-column-end: 3
+  }
+  .dt-grid-layout__item--end-xs-4 {
+    grid-column-end: 4
+  }
+  .dt-grid-layout__item--end-xs-5 {
+    grid-column-end: 5
+  }
+  .dt-grid-layout__item--end-xs-6 {
+    grid-column-end: 6
+  }
+  .dt-grid-layout__item--end-xs-7 {
+    grid-column-end: 7
+  }
+  .dt-grid-layout__item--end-xs-8 {
+    grid-column-end: 8
+  }
+  .dt-grid-layout__item--end-xs-9 {
+    grid-column-end: 9
+  }
+  .dt-grid-layout__item--end-xs-10 {
+    grid-column-end: 10
+  }
+  .dt-grid-layout__item--end-xs-11 {
+    grid-column-end: 11
+  }
+  .dt-grid-layout__item--end-xs-12 {
+    grid-column-end: 12
+  }
+  .dt-grid-layout__item--end-xs-13 {
+    grid-column-end: 13
+  }
+}
+@media (min-width:513px) {
+  .dt-grid-layout--align-s-start {
+    align-items: start
+  }
+  .dt-grid-layout--align-s-center {
+    align-items: center
+  }
+  .dt-grid-layout--align-s-end {
+    align-items: end
+  }
+  .dt-grid-layout--align-s-stretch {
+    align-items: stretch
+  }
+  .dt-grid-layout--align-s-baseline {
+    align-items: baseline
+  }
+  .dt-grid-layout__item--align-self-s-start {
+    align-self: start
+  }
+  .dt-grid-layout__item--align-self-s-center {
+    align-self: center
+  }
+  .dt-grid-layout__item--align-self-s-end {
+    align-self: end
+  }
+  .dt-grid-layout__item--align-self-s-stretch {
+    align-self: stretch
+  }
+  .dt-grid-layout__item--align-self-s-baseline {
+    align-self: baseline
+  }
+  .dt-grid-layout__item--start-s-1 {
+    grid-column-start: 1
+  }
+  .dt-grid-layout__item--start-s-2 {
+    grid-column-start: 2
+  }
+  .dt-grid-layout__item--start-s-3 {
+    grid-column-start: 3
+  }
+  .dt-grid-layout__item--start-s-4 {
+    grid-column-start: 4
+  }
+  .dt-grid-layout__item--start-s-5 {
+    grid-column-start: 5
+  }
+  .dt-grid-layout__item--start-s-6 {
+    grid-column-start: 6
+  }
+  .dt-grid-layout__item--start-s-7 {
+    grid-column-start: 7
+  }
+  .dt-grid-layout__item--start-s-8 {
+    grid-column-start: 8
+  }
+  .dt-grid-layout__item--start-s-9 {
+    grid-column-start: 9
+  }
+  .dt-grid-layout__item--start-s-10 {
+    grid-column-start: 10
+  }
+  .dt-grid-layout__item--start-s-11 {
+    grid-column-start: 11
+  }
+  .dt-grid-layout__item--start-s-12 {
+    grid-column-start: 12
+  }
+  .dt-grid-layout__item--end-s-1 {
+    grid-column-end: 1
+  }
+  .dt-grid-layout__item--end-s-2 {
+    grid-column-end: 2
+  }
+  .dt-grid-layout__item--end-s-3 {
+    grid-column-end: 3
+  }
+  .dt-grid-layout__item--end-s-4 {
+    grid-column-end: 4
+  }
+  .dt-grid-layout__item--end-s-5 {
+    grid-column-end: 5
+  }
+  .dt-grid-layout__item--end-s-6 {
+    grid-column-end: 6
+  }
+  .dt-grid-layout__item--end-s-7 {
+    grid-column-end: 7
+  }
+  .dt-grid-layout__item--end-s-8 {
+    grid-column-end: 8
+  }
+  .dt-grid-layout__item--end-s-9 {
+    grid-column-end: 9
+  }
+  .dt-grid-layout__item--end-s-10 {
+    grid-column-end: 10
+  }
+  .dt-grid-layout__item--end-s-11 {
+    grid-column-end: 11
+  }
+  .dt-grid-layout__item--end-s-12 {
+    grid-column-end: 12
+  }
+  .dt-grid-layout__item--end-s-13 {
+    grid-column-end: 13
+  }
+}
+@media (min-width:1024px) {
+  .dt-grid-layout--align-m-start {
+    align-items: start
+  }
+  .dt-grid-layout--align-m-center {
+    align-items: center
+  }
+  .dt-grid-layout--align-m-end {
+    align-items: end
+  }
+  .dt-grid-layout--align-m-stretch {
+    align-items: stretch
+  }
+  .dt-grid-layout--align-m-baseline {
+    align-items: baseline
+  }
+  .dt-grid-layout__item--align-self-m-start {
+    align-self: start
+  }
+  .dt-grid-layout__item--align-self-m-center {
+    align-self: center
+  }
+  .dt-grid-layout__item--align-self-m-end {
+    align-self: end
+  }
+  .dt-grid-layout__item--align-self-m-stretch {
+    align-self: stretch
+  }
+  .dt-grid-layout__item--align-self-m-baseline {
+    align-self: baseline
+  }
+  .dt-grid-layout__item--start-m-1 {
+    grid-column-start: 1
+  }
+  .dt-grid-layout__item--start-m-2 {
+    grid-column-start: 2
+  }
+  .dt-grid-layout__item--start-m-3 {
+    grid-column-start: 3
+  }
+  .dt-grid-layout__item--start-m-4 {
+    grid-column-start: 4
+  }
+  .dt-grid-layout__item--start-m-5 {
+    grid-column-start: 5
+  }
+  .dt-grid-layout__item--start-m-6 {
+    grid-column-start: 6
+  }
+  .dt-grid-layout__item--start-m-7 {
+    grid-column-start: 7
+  }
+  .dt-grid-layout__item--start-m-8 {
+    grid-column-start: 8
+  }
+  .dt-grid-layout__item--start-m-9 {
+    grid-column-start: 9
+  }
+  .dt-grid-layout__item--start-m-10 {
+    grid-column-start: 10
+  }
+  .dt-grid-layout__item--start-m-11 {
+    grid-column-start: 11
+  }
+  .dt-grid-layout__item--start-m-12 {
+    grid-column-start: 12
+  }
+  .dt-grid-layout__item--end-m-1 {
+    grid-column-end: 1
+  }
+  .dt-grid-layout__item--end-m-2 {
+    grid-column-end: 2
+  }
+  .dt-grid-layout__item--end-m-3 {
+    grid-column-end: 3
+  }
+  .dt-grid-layout__item--end-m-4 {
+    grid-column-end: 4
+  }
+  .dt-grid-layout__item--end-m-5 {
+    grid-column-end: 5
+  }
+  .dt-grid-layout__item--end-m-6 {
+    grid-column-end: 6
+  }
+  .dt-grid-layout__item--end-m-7 {
+    grid-column-end: 7
+  }
+  .dt-grid-layout__item--end-m-8 {
+    grid-column-end: 8
+  }
+  .dt-grid-layout__item--end-m-9 {
+    grid-column-end: 9
+  }
+  .dt-grid-layout__item--end-m-10 {
+    grid-column-end: 10
+  }
+  .dt-grid-layout__item--end-m-11 {
+    grid-column-end: 11
+  }
+  .dt-grid-layout__item--end-m-12 {
+    grid-column-end: 12
+  }
+  .dt-grid-layout__item--end-m-13 {
+    grid-column-end: 13
+  }
+}
+@media (min-width:1680px) {
+  .dt-grid-layout--align-l-start {
+    align-items: start
+  }
+  .dt-grid-layout--align-l-center {
+    align-items: center
+  }
+  .dt-grid-layout--align-l-end {
+    align-items: end
+  }
+  .dt-grid-layout--align-l-stretch {
+    align-items: stretch
+  }
+  .dt-grid-layout--align-l-baseline {
+    align-items: baseline
+  }
+  .dt-grid-layout__item--align-self-l-start {
+    align-self: start
+  }
+  .dt-grid-layout__item--align-self-l-center {
+    align-self: center
+  }
+  .dt-grid-layout__item--align-self-l-end {
+    align-self: end
+  }
+  .dt-grid-layout__item--align-self-l-stretch {
+    align-self: stretch
+  }
+  .dt-grid-layout__item--align-self-l-baseline {
+    align-self: baseline
+  }
+  .dt-grid-layout__item--start-l-1 {
+    grid-column-start: 1
+  }
+  .dt-grid-layout__item--start-l-2 {
+    grid-column-start: 2
+  }
+  .dt-grid-layout__item--start-l-3 {
+    grid-column-start: 3
+  }
+  .dt-grid-layout__item--start-l-4 {
+    grid-column-start: 4
+  }
+  .dt-grid-layout__item--start-l-5 {
+    grid-column-start: 5
+  }
+  .dt-grid-layout__item--start-l-6 {
+    grid-column-start: 6
+  }
+  .dt-grid-layout__item--start-l-7 {
+    grid-column-start: 7
+  }
+  .dt-grid-layout__item--start-l-8 {
+    grid-column-start: 8
+  }
+  .dt-grid-layout__item--start-l-9 {
+    grid-column-start: 9
+  }
+  .dt-grid-layout__item--start-l-10 {
+    grid-column-start: 10
+  }
+  .dt-grid-layout__item--start-l-11 {
+    grid-column-start: 11
+  }
+  .dt-grid-layout__item--start-l-12 {
+    grid-column-start: 12
+  }
+  .dt-grid-layout__item--end-l-1 {
+    grid-column-end: 1
+  }
+  .dt-grid-layout__item--end-l-2 {
+    grid-column-end: 2
+  }
+  .dt-grid-layout__item--end-l-3 {
+    grid-column-end: 3
+  }
+  .dt-grid-layout__item--end-l-4 {
+    grid-column-end: 4
+  }
+  .dt-grid-layout__item--end-l-5 {
+    grid-column-end: 5
+  }
+  .dt-grid-layout__item--end-l-6 {
+    grid-column-end: 6
+  }
+  .dt-grid-layout__item--end-l-7 {
+    grid-column-end: 7
+  }
+  .dt-grid-layout__item--end-l-8 {
+    grid-column-end: 8
+  }
+  .dt-grid-layout__item--end-l-9 {
+    grid-column-end: 9
+  }
+  .dt-grid-layout__item--end-l-10 {
+    grid-column-end: 10
+  }
+  .dt-grid-layout__item--end-l-11 {
+    grid-column-end: 11
+  }
+  .dt-grid-layout__item--end-l-12 {
+    grid-column-end: 12
+  }
+  .dt-grid-layout__item--end-l-13 {
+    grid-column-end: 13
+  }
+}
+
+/* breadcrumbs component — deliberately 2 of the source's 4 files, not all.
+ * breadcrumb-ellipsis(-list) only back a JS-driven overflow-collapse trigger
+ * this bundle never renders — hero.hbs lays out every crumb in a plain flex
+ * row and lets breadcrumb-item.css's own `text-overflow: ellipsis` handle
+ * narrow viewports, no collapse trigger markup at all (GH-9).
+ * breadcrumb.css (.dt-breadcrumbs): flex row container
+ */
+.dt-breadcrumbs {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  width: 100%
+}
+
+/* breadcrumb-item.css (.dt-breadcrumb-item[--link/--active]): the crumb + its divider */
+.dt-breadcrumb-item {
+  font: var(--dt-typo-label-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
+  text-transform: var(--dt-typo-label-m-text-transform)
+}
+.dt-breadcrumb-item:after {
+  background-color: var(--dt-color-border-low);
+  content: " ";
+  display: inline-block;
+  flex-shrink: 0;
+  height: var(--dt-size-75);
+  margin-left: var(--dt-size-50);
+  margin-right: var(--dt-size-50);
+  width: var(--dt-size-border-default)
+}
+.dt-breadcrumb-item:last-child:after {
+  content: none;
+  display: none
+}
+.dt-breadcrumb-item {
+  align-items: center;
+  color: var(--dt-color-content-default);
+  display: inline-flex;
+  flex-grow: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  text-decoration: none!important
+}
+.dt-breadcrumb-item__content {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.dt-breadcrumb-item--link {
+  cursor: pointer
+}
+.dt-breadcrumb-item--link:hover {
+  color: var(--dt-color-content-states-hover)
+}
+.dt-breadcrumb-item--active {
+  color: var(--dt-color-content-low);
+  cursor: default
+}
+
+/* label component: .dt-label--white — hero page tags (GH-9); .dt-label--grey — [card,labels=…] meta chips (GH-20); .dt-label--green/--orange — "Latest"/"Prerelease" pill on the version dropdown's current-row (GH-103) */
+.dt-label {
+  align-items: center;
+  display: inline-flex;
+  flex-direction: row;
+  gap: var(--dt-size-25);
+  min-height: var(--dt-size-150);
+  padding: var(--dt-size-0) var(--dt-size-50)
+}
+.dt-label__content {
+  align-items: center;
+  display: flex;
+  font: var(--dt-typo-label-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-high-letter-spacing);
+  overflow-wrap: break-word;
+  text-transform: var(--dt-typo-label-m-high-text-transform)
+}
+.dt-label--white {
+  background-color: var(--dt-color-bg-default)
+}
+.dt-label--white .dt-label__content {
+  color: var(--dt-color-content-default)
+}
+.dt-label--white .dt-label__icon svg * {
+  fill: var(--dt-color-content-default)
+}
+.dt-label--grey {
+  background-color: var(--dt-color-bg-low)
+}
+.dt-label--grey .dt-label__content {
+  color: var(--dt-color-content-default)
+}
+.dt-label--grey .dt-label__icon svg * {
+  fill: var(--dt-color-content-default)
+}
+.dt-label--red {
+  background-color: var(--dt-color-alt-red-low)
+}
+.dt-label--red .dt-label__content {
+  color: var(--dt-color-alt-red-high)
+}
+.dt-label--red .dt-label__icon svg * {
+  fill: var(--dt-color-alt-red-high)
+}
+.dt-label--orange {
+  background-color: var(--dt-color-alt-orange-low)
+}
+.dt-label--orange .dt-label__content {
+  color: var(--dt-color-alt-orange-high)
+}
+.dt-label--orange .dt-label__icon svg * {
+  fill: var(--dt-color-alt-orange-high)
+}
+.dt-label--green {
+  background-color: var(--dt-color-alt-green-low)
+}
+.dt-label--green .dt-label__content {
+  color: var(--dt-color-alt-green-high)
+}
+.dt-label--green .dt-label__icon svg * {
+  fill: var(--dt-color-alt-green-high)
+}
+.dt-label--blue {
+  background-color: var(--dt-color-alt-blue-low)
+}
+.dt-label--blue .dt-label__content {
+  color: var(--dt-color-alt-blue-high)
+}
+.dt-label--blue .dt-label__icon svg * {
+  fill: var(--dt-color-alt-blue-high)
+}
+.dt-label--purple {
+  background-color: var(--dt-color-alt-purple-low)
+}
+.dt-label--purple .dt-label__content {
+  color: var(--dt-color-alt-purple-high)
+}
+.dt-label--purple .dt-label__icon svg * {
+  fill: var(--dt-color-alt-purple-high)
+}
+.dt-label--pink {
+  background-color: var(--dt-color-alt-pink-low)
+}
+.dt-label--pink .dt-label__content {
+  color: var(--dt-color-alt-pink-high)
+}
+.dt-label--pink .dt-label__icon svg * {
+  fill: var(--dt-color-alt-pink-high)
+}
+.dt-label--teal {
+  background-color: var(--dt-color-alt-teal-low)
+}
+.dt-label--teal .dt-label__content {
+  color: var(--dt-color-alt-teal-high)
+}
+.dt-label--teal .dt-label__icon svg * {
+  fill: var(--dt-color-alt-teal-high)
+}
+
+/* card component: .dt-card--vertical/__image/__content — the card behind the [cards] block (GH-20, asciidoc-extensions/lib/card-grid.js); its own hover state and surface are what make that block theme-agnostic */
+.dt-card__alert-slot {
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: var(--dt-z-sticky)
+}
+.dt-card {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  padding-bottom: var(--dt-size-50);
+  padding-top: var(--dt-size-50);
+  position: relative
+}
+.dt-card:hover {
+  box-shadow: inset 0 var(--dt-size-border-default) 0 0 var(--dt-color-border-states-hover),inset 0 calc(var(--dt-size-border-default)*-1) 0 0 var(--dt-color-border-states-hover)
+}
+.dt-card:focus-visible {
+  border: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline: none
+}
+.dt-card--selected {
+  box-shadow: inset 0 var(--dt-size-border-high) 0 0 var(--dt-color-border-default),inset 0 calc(var(--dt-size-border-high)*-1) 0 0 var(--dt-color-border-default)
+}
+.dt-card__image {
+  display: flex;
+  flex-basis: 50%;
+  flex-grow: 1;
+  position: relative
+}
+@media (min-width:1024px) {
+  .dt-card__image {
+    flex-basis: 38%
+  }
+}
+.dt-card__image__slots-row {
+  display: flex;
+  left: 0;
+  padding-left: var(--dt-size-75);
+  padding-right: var(--dt-size-75);
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  z-index: calc(var(--dt-z-sticky) - 1)
+}
+.dt-card__image__slots-row-top {
+  top: var(--dt-size-75)
+}
+.dt-card__image__slots-row-bottom {
+  bottom: var(--dt-size-75)
+}
+.dt-card__image__slot {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  pointer-events: auto
+}
+.dt-card__image__slot-content {
+  max-width: 100%;
+  min-width: 0;
+  width: 100%
+}
+.dt-card__image__slot-top-left {
+  justify-content: flex-start
+}
+.dt-card__image__slot-top-right {
+  justify-content: flex-end
+}
+.dt-card__image__slot-bottom-left {
+  justify-content: flex-start
+}
+.dt-card__image__slot-bottom-right {
+  justify-content: flex-end
+}
+.dt-card__content {
+  background-color: var(--dt-color-bg-default);
+  flex-basis: 100%;
+  flex-grow: 1;
+  padding-bottom: var(--dt-size-100);
+  padding-top: var(--dt-size-100);
+  position: relative
+}
+.dt-card__carousel {
+  flex-basis: 50%;
+  flex-grow: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%
+}
+.dt-card--vertical {
+  display: flex;
+  flex-direction: column
+}
+.dt-card--horizontal {
+  display: flex;
+  gap: var(--dt-size-150)
+}
+
+/* timeline component — vendored previously; its --expandable variant is what accordion.css (below) gives a real base to render against (GH-61); no other markup in this bundle uses timeline directly */
+.dt-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dt-size-25)
+}
+
+/* timeline-item.css — see timeline.css above */
+.dt-timeline-item {
+  display: flex;
+  min-height: var(--dt-size-350);
+  position: relative;
+  transition: var(--dt-motion-micro-states)
+}
+.dt-timeline-item-indicator {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-inline-end: var(--dt-size-75);
+  min-width: var(--dt-size-50);
+  width: var(--dt-size-50)
+}
+.dt-timeline-item-marker {
+  border: var(--dt-size-border-high) solid var(--dt-color-border-low);
+  box-sizing: border-box;
+  height: var(--dt-size-50);
+  min-height: var(--dt-size-50);
+  width: var(--dt-size-50)
+}
+.dt-timeline-item-connector {
+  background-color: var(--dt-color-border-low);
+  flex-grow: 1;
+  margin-bottom: var(--dt-size-0);
+  margin-top: var(--dt-size-25);
+  width: var(--dt-size-border-high)
+}
+.dt-timeline-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dt-size-25);
+  margin-top: -6px;
+  width: 100%
+}
+.dt-timeline-item-content:focus-visible {
+  outline: var(--dt-size-border-default) solid var(--dt-color-border-states-focus);
+  outline-offset: var(--dt-size-12)
+}
+.dt-timeline-item-label {
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+.dt-timeline-item-detail,.dt-timeline-item-label {
+  color: var(--dt-color-content-default);
+  overflow-wrap: break-word
+}
+.dt-timeline-item-detail {
+  font: var(--dt-typo-detail-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  margin-top: var(--dt-size-25);
+  text-transform: var(--dt-typo-detail-m-text-transform)
+}
+.dt-timeline-item--completed .dt-timeline-item-marker {
+  border-color: var(--dt-color-border-default)
+}
+.dt-timeline-item--completed .dt-timeline-item-connector {
+  background-color: var(--dt-color-border-default)
+}
+.dt-timeline-item--incompleted .dt-timeline-item-marker {
+  border-color: var(--dt-color-border-low)
+}
+.dt-timeline-item--incompleted .dt-timeline-item-connector {
+  background-color: var(--dt-color-border-low)
+}
+.dt-timeline-item--current .dt-timeline-item-marker {
+  background-color: var(--dt-color-content-default);
+  border-color: var(--dt-color-content-default)
+}
+.dt-timeline-item--current .dt-timeline-item-connector {
+  background-color: var(--dt-color-border-low)
+}
+.dt-timeline-item--current .dt-timeline-item-label {
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-transform: var(--dt-typo-label-l-high-text-transform)
+}
+.dt-timeline-item--current:hover .dt-timeline-item-marker {
+  background-color: var(--dt-color-content-states-hover)
+}
+.dt-timeline-item--completed.dt-timeline-item--current .dt-timeline-item-connector {
+  background-color: var(--dt-color-border-default)
+}
+.dt-timeline-item--error .dt-timeline-item-marker {
+  border-color: var(--dt-color-alt-red-high)
+}
+.dt-timeline-item--error .dt-timeline-item-connector,.dt-timeline-item--error.dt-timeline-item--current .dt-timeline-item-marker {
+  background-color: var(--dt-color-alt-red-high)
+}
+.dt-timeline-item:hover {
+  color: var(--dt-color-content-states-hover)
+}
+.dt-timeline-item:hover .dt-timeline-item-marker {
+  border-color: var(--dt-color-border-states-hover)
+}
+.dt-timeline-item:hover .dt-timeline-item-detail,.dt-timeline-item:hover .dt-timeline-item-label {
+  color: var(--dt-color-content-states-hover)
+}
+.dt-timeline-item--clickable .dt-timeline-item-content {
+  cursor: pointer
+}
+.dt-timeline-item--expandable .dt-accordion {
+  width: 100%
+}
+.dt-timeline-item--expandable .dt-accordion__toggle {
+  height: var(--dt-size-125);
+  min-height: var(--dt-size-125)
+}
+.dt-timeline-item--expandable .dt-timeline-item-detail {
+  margin-top: 0
+}
+.dt-timeline-item--expandable.dt-timeline-item--current .dt-accordion__toggle-label {
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-transform: var(--dt-typo-label-l-high-text-transform)
+}
+.dt-timeline-item--secondary .dt-timeline-item-marker {
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  justify-content: center
+}
+.dt-timeline-item--secondary .dt-timeline-item-marker:after {
+  border: var(--dt-size-border-high) solid var(--dt-color-border-low);
+  box-sizing: border-box;
+  content: "";
+  height: var(--dt-size-25);
+  width: var(--dt-size-25)
+}
+.dt-timeline-item--secondary.dt-timeline-item--completed .dt-timeline-item-marker:after {
+  border-color: var(--dt-color-border-default)
+}
+.dt-timeline-item--secondary.dt-timeline-item--incompleted .dt-timeline-item-marker:after {
+  border-color: var(--dt-color-border-low)
+}
+.dt-timeline-item--secondary.dt-timeline-item--current .dt-timeline-item-marker {
+  background-color: transparent
+}
+.dt-timeline-item--secondary.dt-timeline-item--current .dt-timeline-item-marker:after {
+  background-color: var(--dt-color-content-default);
+  border-color: var(--dt-color-content-default)
+}
+.dt-timeline-item--secondary.dt-timeline-item--error .dt-timeline-item-marker:after {
+  border-color: var(--dt-color-alt-red-high)
+}
+.dt-timeline-item--secondary.dt-timeline-item--error.dt-timeline-item--current .dt-timeline-item-marker {
+  background-color: transparent
+}
+.dt-timeline-item--secondary.dt-timeline-item--error.dt-timeline-item--current .dt-timeline-item-marker:after {
+  background-color: var(--dt-color-alt-red-high)
+}
+.dt-timeline-item--secondary:hover .dt-timeline-item-marker {
+  border-color: transparent
+}
+.dt-timeline-item--secondary:hover .dt-timeline-item-marker:after {
+  border-color: var(--dt-color-border-states-hover)
+}
+.dt-timeline-item--secondary.dt-timeline-item--current:hover .dt-timeline-item-marker {
+  background-color: transparent
+}
+.dt-timeline-item--secondary.dt-timeline-item--current:hover .dt-timeline-item-marker:after {
+  background-color: var(--dt-color-content-states-hover)
+}
+.dt-timeline-item:last-child .dt-timeline-item-connector {
+  visibility: hidden
+}
+
+/* tabs component — deliberately 1 of the source's 2 files. The Key features
+ * switcher (GH-22, Figma 2696:54801) never renders the flex ROW + sliding
+ * indicator (a React-measured element) the other file styles — its labels
+ * are a right-aligned COLUMN with no indicator at all, laid out in
+ * feature-tabs.css. What's vendored is the item itself, an exact match:
+ * `.dt-tabs-item` is label/l and `.dt-tabs-item--selected` is label/l-high,
+ * precisely the two states the frames draw, bringing the source's own
+ * `:focus-visible` ring and hover colour with it.
+ * tabs-item.css (.dt-tabs-item[--selected]): [feature-tabs] labels
+ * (asciidoc-extensions/lib/feature-tabs.js)
+ */
+.dt-tabs-item {
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--dt-color-content-default);
+  cursor: pointer;
+  display: flex;
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  gap: var(--dt-size-25);
+  height: var(--dt-size-250);
+  justify-content: center;
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  max-width: 200px;
+  position: relative;
+  text-transform: var(--dt-typo-label-l-text-transform);
+  z-index: var(--dt-z-sticky)
+}
+.dt-tabs-item:focus-visible {
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: 1px
+}
+.dt-tabs-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.dt-tabs-item__icon-badge {
+  align-items: center;
+  display: flex;
+  justify-content: center
+}
+.dt-tabs-item--selected {
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-transform: var(--dt-typo-label-l-high-text-transform)
+}
+@media (hover:hover) {
+  .dt-tabs-item.dt-tabs-item--underlined:hover:not(.dt-tabs-item--disabled) {
+    color: var(--dt-color-content-states-hover)
+  }
+}
+.dt-tabs-item--disabled {
+  color: var(--dt-color-content-states-disabled);
+  cursor: default
+}
+.dt-tabs-item--solid {
+  padding-inline: var(--dt-size-75)
+}
+
+/* accordion component (GH-61) — backs the `.dt-accordion*` selectors
+ * timeline's own --expandable variant already ships but left dangling above
+ * (no base .dt-accordion rule to match against). Native [%collapsible]/
+ * <details> can't carry these BEM classes itself (Asciidoctor owns that
+ * markup), so the bundle's own accordion.css (ui-bundle/src/css) restyles
+ * `.doc details` against this file's real values rather than applying its
+ * selectors — see that file's own header.
+ */
+.dt-accordion {
+  display: block
+}
+.dt-accordion__toggle {
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--dt-color-content-default);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  min-height: var(--dt-size-250);
+  text-align: left;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  width: 100%
+}
+.dt-accordion__toggle:focus-visible {
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: var(--dt-size-border-high)
+}
+.dt-accordion__toggle-content {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  gap: var(--dt-size-50);
+  justify-content: flex-end;
+  text-transform: none
+}
+.dt-accordion__toggle-detail {
+  color: var(--dt-color-content-low);
+  font: var(--dt-typo-detail-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  text-transform: var(--dt-typo-detail-m-text-transform)
+}
+.dt-accordion__toggle-icon {
+  margin-left: var(--dt-size-50)
+}
+.dt-accordion__toggle-icon path {
+  fill: var(--dt-color-content-default)
+}
+.dt-accordion__toggle-label {
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+.dt-accordion__toggle-label--ellipsis {
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical
+}
+.dt-accordion__content-wrapper {
+  overflow: hidden
+}
+.dt-accordion__content {
+  padding-bottom: var(--dt-size-50)
+}
+.dt-accordion:not(.dt-accordion--expanded) .dt-accordion__content-wrapper {
+  display: none
+}
+.dt-accordion__divider {
+  border-bottom: var(--dt-size-border-high) solid var(--dt-color-border-low)
+}
+@media (hover:hover) {
+  .dt-accordion:hover>.dt-accordion__toggle>.dt-accordion__toggle-label {
+    color: var(--dt-color-content-states-hover)
+  }
+  .dt-accordion:hover>.dt-accordion__toggle>.dt-accordion__toggle-icon path {
+    fill: var(--dt-color-content-states-hover)
+  }
+}
+.dt-accordion--disabled .dt-accordion__toggle {
+  cursor: not-allowed
+}
+.dt-accordion--disabled>.dt-accordion__toggle>.dt-accordion__toggle-label {
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-accordion--disabled>.dt-accordion__toggle>.dt-accordion__toggle-icon path {
+  fill: var(--dt-color-content-states-disabled)
+}
+.dt-accordion-toggle-icon {
+  transition: var(--dt-motion-micro-appear)
+}
+.dt-accordion-toggle-icon--expanded {
+  transform: rotate(180deg)
+}
+
+/* modal component (GH-66) — the search dialog shell, native <dialog> carrying
+ * .dt-modal instead of a React portal: a top-layer <dialog> already gives the
+ * stacking, focus trap and Esc-to-close the portal exists for, so
+ * search-dialog.css only resets the UA dialog box model onto .dt-modal's
+ * flex-centering layout — it doesn't reimplement the portal.
+ * .dt-modal__container gets its background, border and padding from
+ * modal-inline.css alone; without it the panel renders transparent and
+ * borderless.
+ *
+ * Deliberately 5 of the source's 6 files — modal-draggable.css is left out:
+ * this dialog isn't draggable or resizable (true of modal-header.css too,
+ * kept anyway below for completeness).
+ * modal.css (.dt-modal[--small] / __container): panel sizing
+ */
+#dt-modal-root {
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: var(--dt-z-modal)
+}
+.dt-modal {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  pointer-events: none;
+  width: 100%
+}
+.dt-modal__container {
+  max-height: calc(100vh - var(--dt-size-200)*2);
+  max-width: calc(100vw - var(--dt-size-200)*2);
+  min-width: 320px
+}
+.dt-modal.dt-modal--small .dt-modal__container {
+  width: 560px
+}
+.dt-modal.dt-modal--medium .dt-modal__container {
+  width: 800px
+}
+.dt-modal.dt-modal--large .dt-modal__container {
+  width: 1200px
+}
+.dt-modal.dt-modal--draggable .dt-modal__container,.dt-modal.dt-modal--fullscreen .dt-modal__container {
+  height: 100%;
+  max-height: none;
+  max-width: none;
+  min-height: 280px;
+  min-width: 320px;
+  width: 100%
+}
+.dt-modal.dt-modal--fullscreen .dt-modal__container {
+  border: none;
+  padding-block: 0px;
+  padding-inline: 0px
+}
+.dt-modal--resizing {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none
+}
+.dt-modal.dt-modal--anchored {
+  background: transparent;
+  border: none;
+  color: inherit;
+  display: block;
+  height: auto;
+  inset: auto;
+  margin: 0;
+  max-height: none;
+  max-width: none;
+  padding: 0;
+  pointer-events: auto;
+  width: auto
+}
+.dt-modal.dt-modal--anchored .dt-modal__container {
+  height: 100%;
+  max-height: none;
+  max-width: none;
+  min-height: 0;
+  min-width: 0;
+  width: 100%
+}
+@media (max-width:512px) {
+  .dt-modal {
+    align-items: flex-end
+  }
+  .dt-modal__container {
+    border-bottom: none;
+    border-inline: none;
+    max-width: 100%
+  }
+}
+@media (min-width:513px) {
+  .dt-modal.dt-modal--fullscreen .dt-modal__container {
+    padding-inline: 0px;
+    padding-block: 0px
+  }
+}
+@media (min-width:1024px) {
+  .dt-modal.dt-modal--fullscreen .dt-modal__container {
+    padding-inline: 0px
+  }
+}
+@media (min-width:1680px) {
+  .dt-modal.dt-modal--fullscreen .dt-modal__container {
+    padding-inline: var(--comp-grid-margin-l)
+  }
+}
+
+/* modal-content.css (.dt-modal__content[--scrollable]): results area */
+.dt-modal__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--dt-size-50);
+  min-height: 0;
+  overflow: hidden
+}
+.dt-modal__content--scrollable {
+  overflow: auto
+}
+.dt-modal__content-children {
+  height: 100%;
+  width: 100%
+}
+.dt-modal__content-label {
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  text-transform: var(--dt-typo-body-m-text-transform)
+}
+@media (max-width:512px) {
+  .dt-modal__content--scrollable {
+    overscroll-behavior-y: contain
+  }
+}
+
+/* modal-header.css (.dt-modal__header/__title/__actions): unused today (no header row in the sketch), kept for completeness */
+.dt-modal__header {
+  align-items: center;
+  display: flex;
+  gap: var(--dt-size-100);
+  justify-content: space-between;
+  margin-bottom: var(--dt-size-100)
+}
+.dt-modal__title-container {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  gap: var(--dt-size-50)
+}
+.dt-modal__title {
+  color: var(--dt-color-content-default);
+  flex-grow: 1;
+  font: var(--dt-typo-title-s);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-s-letter-spacing);
+  min-height: var(--dt-typo-line-height-32);
+  overflow-wrap: break-word;
+  text-transform: var(--dt-typo-title-s-text-transform)
+}
+.dt-modal__title--ellipsis {
+  display: -webkit-box;
+  line-clamp: var(--modal-title-line-clamp);
+  -webkit-line-clamp: var(--modal-title-line-clamp);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  overflow-wrap: break-word
+}
+.dt-modal__actions {
+  align-items: center;
+  display: flex;
+  gap: var(--dt-size-50)
+}
+
+/* modal-footer.css (.dt-modal__footer[--horizontal]): the ↑↓ · ↵ · esc hint row */
+.dt-modal__footer {
+  gap: var(--dt-size-50);
+}
+.dt-modal__footer--horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  padding: var(--dt-size-75) var(--dt-size-150);
+  border-top: var(--dt-size-border-default) solid var(--dt-color-border-low);
+  justify-content: space-between
+}
+@media screen and (--dt-breakpoints-xs-s) {
+  .dt-modal__footer--horizontal {
+    display: none;
+  }
+}
+
+.dt-modal__footer--horizontal .dt-modal__footer-right {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--dt-size-50);
+  justify-content: flex-end
+}
+.dt-modal__footer--vertical,.dt-modal__footer--vertical .dt-modal__footer-left,.dt-modal__footer--vertical .dt-modal__footer-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dt-size-50)
+}
+.dt-modal__footer--vertical .dt-button {
+  width: 100%
+}
+
+/* modal-inline.css: .dt-modal__container's actual background/border/padding */
+.dt-modal__container {
+  background-color: var(--dt-color-bg-default);
+  border: var(--dt-size-border-default) solid var(--dt-color-border-default);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dt-size-0);
+  overflow: hidden;
+  /* padding: var(--dt-size-150); */
+  pointer-events: auto
+}
+.dt-modal__content {
+  flex-grow: 1;
+  min-height: 0
+}
+@media (max-width:512px) {
+  .dt-modal__container {
+    padding: var(--dt-size-100);
+    position: relative;
+    transform: none;
+    transform: var(--dt-sheet-drag-transform,none);
+    transition: transform 0s var(--dt-motion-easing-standard-3);
+    transition: transform var(--dt-sheet-drag-transition-duration,0s) var(--dt-motion-easing-standard-3)
+  }
+}
+
+/* overlay component (.dt-overlay/__content): the dialog's backdrop */
+.dt-overlay {
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: all var(--dt-motion-easing-standard-3) var(--dt-motion-duration-l);
+  visibility: hidden
+}
+.dt-overlay--visible {
+  opacity: 1;
+  pointer-events: none;
+  visibility: visible
+}
+.dt-overlay__content {
+  background-color: var(--dt-color-bg-default);
+  bottom: 0;
+  left: 0;
+  opacity: .9;
+  pointer-events: auto;
+  position: absolute;
+  right: 0;
+  top: 0
+}
+.dt-overlay__content+* {
+  position: relative
+}
+.dt-overlay--transparent .dt-overlay__content {
+  background-color: transparent;
+  opacity: 0
+}
+.dt-viewport-fit-cover .dt-overlay,.dt-viewport-fit-cover .dt-overlay__content {
+  bottom: env(safe-area-inset-bottom);
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
+  top: env(safe-area-inset-top)
+}
+
+/* search-field component (.dt-search-field-minimal): the dialog's input row; also styles preview-src/layouts/icons.hbs's filter box (GH-66) */
+.dt-placeholder-rotation {
+  display: flex;
+  flex-direction: column;
+  will-change: transform
+}
+.dt-placeholder-rotation--animated {
+  transition: transform var(--dt-placeholder-rotation-duration) var(--dt-motion-easing-standard-4)
+}
+.dt-placeholder-rotation__item {
+  flex-shrink: 0;
+  height: var(--dt-placeholder-rotation-line);
+  line-height: var(--dt-placeholder-rotation-line);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
+.dt-search-field-minimal {
+  --dt-placeholder-rotation-line: var(--dt-typo-line-height-22);
+  --dt-placeholder-rotation-duration: 0.6s;
+  align-items: center;
+  display: inline-flex;
+  flex-shrink: 0;
+  max-width: 100%;
+  padding: var(--dt-size-75) var(--dt-size-150);
+  border-bottom: var(--dt-size-border-default) solid var(--dt-color-border-low);
+  min-width: 10px
+}
+.dt-search-field-minimal__hidden-measure {
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  left: -9999px;
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  pointer-events: none;
+  position: absolute;
+  text-transform: var(--dt-typo-body-m-text-transform);
+  top: -9999px;
+  visibility: hidden;
+  white-space: pre
+}
+.dt-search-field-minimal__input-container {
+  align-items: center;
+  background: transparent;
+  border: none;
+  display: flex;
+  outline: none;
+  width: 100%
+}
+.dt-search-field-minimal__icon-start {
+  align-items: center;
+  color: var(--dt-color-content-default);
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  margin-inline-end: var(--dt-size-50)
+}
+.dt-search-field-minimal__input {
+  background: transparent;
+  border: none;
+  caret-color: var(--dt-color-content-default);
+  color: var(--dt-color-content-default);
+  flex: 1;
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  min-width: 0;
+  outline: none;
+  padding: 0;
+  text-transform: var(--dt-typo-body-m-text-transform)
+}
+.dt-search-field-minimal__input::-moz-placeholder {
+  color: var(--dt-color-content-low)
+}
+.dt-search-field-minimal__input::placeholder {
+  color: var(--dt-color-content-low)
+}
+.dt-search-field-minimal__input::-webkit-search-cancel-button {
+  display: none
+}
+.dt-search-field-minimal__input--rotating::-moz-placeholder {
+  color: transparent
+}
+.dt-search-field-minimal__input--rotating::placeholder {
+  color: transparent
+}
+.dt-search-field-minimal__input-wrapper {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  position: relative
+}
+.dt-search-field-minimal__placeholder {
+  color: var(--dt-color-content-low);
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  height: var(--dt-placeholder-rotation-line);
+  inset-inline-start: 0;
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  text-transform: var(--dt-typo-body-m-text-transform);
+  top: 50%;
+  transform: translateY(-50%)
+}
+.dt-search-field-minimal__right-content {
+  align-items: center;
+  display: flex;
+  margin-inline-start: var(--dt-size-50)
+}
+.dt-search-field-minimal__icons {
+  align-items: center;
+  display: flex;
+  gap: var(--dt-size-25)
+}
+.dt-search-field-minimal--disabled {
+  pointer-events: none
+}
+.dt-search-field-minimal--disabled,.dt-search-field-minimal--disabled .dt-search-field-minimal__icon-start,.dt-search-field-minimal--disabled .dt-search-field-minimal__input {
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-search-field-minimal--disabled .dt-search-field-minimal__input::-moz-placeholder {
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-search-field-minimal--disabled .dt-search-field-minimal__input::placeholder {
+  color: var(--dt-color-content-states-disabled)
+}
+.dt-search-field-minimal--readonly .dt-search-field-minimal__input {
+  pointer-events: none
+}
+.dt-search-field-minimal--full-width {
+  flex-shrink: 1;
+  width: 100%
+}
+.dt-search-field-minimal--has-value:not(.dt-search-field-minimal--focused) .dt-search-field-minimal__input {
+  font: var(--dt-typo-body-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-high-letter-spacing);
+  text-transform: var(--dt-typo-body-m-high-text-transform)
+}
+@media (hover:hover) {
+  .dt-search-field-minimal:hover:not(.dt-search-field-minimal--disabled) .dt-search-field-minimal__icon-start {
+    color: var(--dt-color-content-states-hover)
+  }
+  .dt-search-field-minimal:hover:not(.dt-search-field-minimal--disabled) .dt-search-field-minimal__input::-moz-placeholder {
+    color: var(--dt-color-content-states-hover)
+  }
+  .dt-search-field-minimal:hover:not(.dt-search-field-minimal--disabled) .dt-search-field-minimal__input::placeholder {
+    color: var(--dt-color-content-states-hover)
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .dt-search-field-minimal {
+    --dt-placeholder-rotation-duration: 0.01ms
+  }
+}
+
+/* highlight component (.dt-highlight__mark): matched-term highlight in results */
+.dt-highlight__mark {
+  background-color: inherit;
+  color: var(--dt-color-content-default);
+  font-weight: var(--dt-typo-font-weight-mid)
+}
+
+/* empty-state component (.dt-empty-state): "no results" state */
+.dt-theme-dark .dt-empty-state img[src*=".svg"] {
+  filter: brightness(0) invert(1)
+}
+.dt-empty-state {
+  align-items: center;
+  color: var(--dt-color-content-default);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: var(--dt-size-100)
+}
+.dt-empty-state__message {
+  align-items: inherit;
+  display: inherit;
+  flex-direction: inherit;
+  row-gap: var(--dt-size-50)
+}
+.dt-empty-state__title {
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-align: center;
+  text-transform: var(--dt-typo-label-l-high-text-transform)
+}
+.dt-empty-state__description {
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-align: center;
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+
+/* empty-state-footer.css (.dt-empty-state-footer) */
+.dt-empty-state-footer {
+  display: flex;
+  gap: var(--dt-size-50)
+}
+
+/* loader component (.dt-loader): index-loading state */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(1turn)
+  }
+}
+.dt-loader {
+  align-items: center;
+  display: flex;
+  flex-direction: column
+}
+.dt-loader__circle {
+  align-items: center;
+  display: flex;
+  justify-content: center
+}
+.dt-loader__circle--large {
+  height: var(--dt-size-500);
+  width: var(--dt-size-500)
+}
+.dt-loader__circle--large>span {
+  height: var(--dt-size-350);
+  width: var(--dt-size-350)
+}
+.dt-loader__circle--medium {
+  height: var(--dt-size-250);
+  width: var(--dt-size-250)
+}
+.dt-loader__circle--medium>span {
+  height: var(--dt-size-150);
+  width: var(--dt-size-150)
+}
+.dt-loader__circle--small {
+  height: var(--dt-size-125);
+  width: var(--dt-size-125)
+}
+.dt-loader__circle--small>span {
+  height: var(--dt-size-100);
+  width: var(--dt-size-100)
+}
+.dt-loader__circle>span {
+  animation: spin 1.3s cubic-bezier(.53,.21,.29,.67) infinite;
+  border: var(--dt-size-border-high) solid var(--dt-color-border-low);
+  border-radius: var(--dt-size-radius-full);
+  border-top-color: var(--dt-color-border-default);
+  box-sizing: border-box;
+  display: block
+}
+.dt-loader__label {
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform)
+}
+.dt-loader__circle--large+.dt-loader__label {
+  margin-top: var(--dt-size-75)
+}
+.dt-loader__circle--medium+.dt-loader__label {
+  margin-top: var(--dt-size-50)
+}
+.dt-loader__circle--small+.dt-loader__label {
+  margin-top: var(--dt-size-25)
+}
+
+/* floating-button component (.dt-floating-button): XS search trigger (S4, GH-68) */
+.dt-floating-button-wrapper {
+  align-items: center;
+  backdrop-filter: blur(var(--dt-size-125));
+  background-color: var(--dt-color-bg-default);
+  border: var(--dt-size-border-default) solid var(--dt-color-border-low);
+  border-radius: var(--dt-size-radius-full);
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.05);
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  min-height: var(--dt-size-300);
+  min-width: var(--dt-size-300);
+  overflow: hidden;
+  padding: var(--dt-size-25)
+}
+.dt-floating-button-wrapper--viewport {
+  position: fixed
+}
+.dt-floating-button-wrapper--container {
+  position: absolute
+}
+.dt-floating-button-wrapper--start {
+  bottom: var(--dt-size-150);
+  left: var(--dt-size-100)
+}
+@media (min-width:513px) {
+  .dt-floating-button-wrapper--start {
+    left: var(--dt-size-150)
+  }
+}
+.dt-floating-button-wrapper--end {
+  bottom: var(--dt-size-150);
+  right: var(--dt-size-100)
+}
+@media (min-width:513px) {
+  .dt-floating-button-wrapper--end {
+    right: var(--dt-size-150)
+  }
+}
+.dt-floating-button {
+  border-radius: var(--dt-size-radius-full);
+  min-height: var(--dt-size-250);
+  min-width: var(--dt-size-250)
+}
+.dt-floating-button--selected.dt-button--ghost {
+  background-color: var(--dt-color-bg-states-pressed)
+}

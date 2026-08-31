@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: MPL-2.0
+
 import { posix as path } from 'node:path'
 
 import type { HelperOptions } from '../../types/ui'

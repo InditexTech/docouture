@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/*
  * ToC panel (GH-10), Figma node 2610:27801 / component 2686:47569 —
  * "TABLE OF CONTENTS" renamed "On this page" per this issue's own decision
  * (see toc.hbs). Colours and type come straight off `--dt-*` tokens, like

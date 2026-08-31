@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 'use strict'
 
 // `[cols="1,3,2",nowrap-cols="1,2"]` — an author-facing way to pin

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // Shared plumbing for the icon pipeline: `build-sprite` and `search-icons`
 // both speak in terms of the manifest (icons.yml) and Lucide's own installed
 // package (node_modules/lucide-static).

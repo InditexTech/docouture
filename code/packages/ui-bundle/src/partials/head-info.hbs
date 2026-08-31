@@ -1,4 +1,10 @@
-    {{#with page.canonicalUrl}}
+{{!--
+SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+
+SPDX-License-Identifier: MPL-2.0
+--}}
+
+{{#with page.canonicalUrl}}
     <link rel="canonical" href="{{{this}}}">
     {{/with}}
     {{#unless (eq page.attributes.pagination undefined)}}

@@ -1,4 +1,10 @@
-    {{#with site.keys.googleAnalytics}}
+{{!--
+SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+
+SPDX-License-Identifier: MPL-2.0
+--}}
+
+{{#with site.keys.googleAnalytics}}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{this}}"></script>
     <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','{{this}}')</script>
     {{/with}}

@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * Page hero (GH-9), Figma node 3615:59150. Gutter comes from the same DS
  * grid container the header toolbar uses (`.dt-grid-layout--with-margin`,
  * grid-layout/grid-layout.css — see header-content.hbs's own comment), so

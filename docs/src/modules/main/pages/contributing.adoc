@@ -32,5 +32,6 @@ in sync as the underlying repo changes.
 == License
 
 Apache-2.0, except `packages/ui-bundle` (a fork of
-https://gitlab.com/antora/antora-ui-default[antora-ui-default]), which remains
-MPL-2.0 under its own LICENSE/NOTICE.
+https://gitlab.com/antora/antora-ui-default[antora-ui-default]), which mixes
+MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each
+file's own SPDX header for which applies to it.

@@ -112,8 +112,8 @@ xref:main:reference-ai-first-approach.adoc[See the skills]
 [cta]
 ====
 The CLI, the Antora/https://asciidoctor.org[Asciidoctor] extensions, the UI bundle
-(MPL-2.0, being a fork of antora-ui-default) and the release tooling are all open —
-see the FAQ below for the licence breakdown.
+(Apache-2.0/MPL-2.0 split, being a fork of antora-ui-default) and the release tooling
+are all open — see the FAQ below for the licence breakdown.
 
 [.primary]
 https://github.com/InditexTech/docouture[View the repository]

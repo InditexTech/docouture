@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /*
  * Module switcher (nav-switcher.hbs) — opens and closes the popover that
  * moves between one module's navigation and another's.

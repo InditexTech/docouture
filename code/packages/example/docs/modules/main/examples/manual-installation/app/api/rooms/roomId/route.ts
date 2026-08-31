@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { fetchRoom } from '@/weave/persistence'
 
 export async function GET(req: Request, { params }: { params: { roomId: string } }) {

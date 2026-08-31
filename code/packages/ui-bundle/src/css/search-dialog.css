@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * GH-66/GH-69 — the search dialog shell (search-dialog.hbs).
  *
  * 1. `.search-dialog` (the `<dialog>` itself) only resets the UA default box

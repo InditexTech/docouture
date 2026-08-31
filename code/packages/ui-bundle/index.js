@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: MPL-2.0
+
 'use strict'
 
 // This placeholder script allows this package to be discovered using require.resolve.

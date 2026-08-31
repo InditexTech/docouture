@@ -7,7 +7,7 @@
     "url": "https://github.com/InditexTech/docouture.git",
     "directory": "code/packages/ui-bundle"
   },
-  "license": "MPL-2.0",
+  "license": "SEE LICENSE IN NOTICE",
   "main": "index.js",
   "files": [
     "index.js",

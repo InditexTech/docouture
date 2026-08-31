@@ -21,15 +21,31 @@ path = [
     "**/package*.json",
     "**/.eslintrc",
 
-    # code/ directory licensing
-    "code/packages/antora-extensions/**",
-    "code/packages/example/**",
-    "code/packages/cli/**",
-    "code/packages/tooling/**",
-    "code/packages/publish-gh-pages/**",
-    "code/tools/fumadocs-migrate/**",
-    "code/tools/ids/**",
-    "code/scripts/**",
+    # code/ directory licensing — only the files below still lack an inline
+    # header; everything else under these packages (.ts/.js/.mjs/.cjs/.css/
+    # .hbs) is now self-annotated. code/scripts/** and
+    # code/packages/{tooling,publish-gh-pages}/** dropped entirely: their
+    # only remaining files (package.json, tsconfig.json) are already
+    # covered by the repeated-files patterns above.
+    "code/packages/antora-extensions/**/*.yml",
+    "code/packages/example/**/*.adoc",
+    "code/packages/example/**/*.gif",
+    "code/packages/example/**/*.ico",
+    "code/packages/example/**/*.jpg",
+    "code/packages/example/**/*.png",
+    "code/packages/example/**/*.yml",
+    "code/packages/example/docs/modules/main/examples/manual-installation/nodemon.json",
+    "code/packages/example/docs/modules/main/examples/manual-installation/server.mod-0",
+    "code/packages/example/docs/modules/main/examples/manual-installation/server.mod-1",
+    "code/packages/cli/**/*.adoc",
+    "code/packages/cli/**/*.ico",
+    "code/packages/cli/**/*.md",
+    "code/packages/cli/**/*.png",
+    "code/packages/cli/**/*.yml",
+    "code/packages/cli/templates/starter/gitignore",
+    "code/packages/cli/templates/starter/antora-playbook.versioned.yml",
+    "code/packages/cli/templates/starter/src/release-version.versioned",
+    "code/packages/asciidoc-extensions/README.md",
     "code/authoring-guides/**",
     "code/README.md",
     "code/CHANGELOG.md",
@@ -46,26 +62,43 @@ path = [
     "code/nx.json",
     "code/tsconfig.base.json",
 
-    # docs/ directory licensing
-    "docs/**",
+    # docs/ directory licensing — only non-code files (.adoc, images, config)
+    "docs/.npmrc",
+    "docs/.release-version",
+    "docs/.tool-versions",
+    "docs/**/*.adoc",
+    "docs/**/*.ico",
+    "docs/**/*.jpg",
+    "docs/**/*.png",
+    "docs/**/*.yml",
+    "docs/**/*.yaml",
 
-    # agents files
+    # agents files — .opencode/** narrowed to its non-.md/.mjs content;
+    # the *.mjs scripts under skills/monitor-ci/scripts/ are self-annotated
     "AGENTS.md",
     ".agents/**",
-    ".opencode/**",
+    ".opencode/**/*.md",
     "skills/**",
 ]
 SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
-# ui-bundle: literal fork of antora-ui-default (MPL-2.0 upstream).
-# asciidoc-extensions: emits markup/class names copied from the IOP Design
-# System, licensed MPL-2.0 to match ui-bundle's internal-distribution
-# posture — see each package's own LICENSE and NOTICE.
+# ui-bundle: literal fork of antora-ui-default (MPL-2.0 upstream). Only the
+# files below still lack an inline SPDX header — everything else in the
+# package (.ts/.js/.css/.hbs) is now self-annotated; see each file's own
+# header (MPL-2.0 or Apache-2.0 per its NOTICE-documented split).
 path = [
-    "code/packages/ui-bundle/**",
-    "code/packages/asciidoc-extensions/**",
+    "code/packages/ui-bundle/.stylelintignore",
+    "code/packages/ui-bundle/.stylelintrc.json",
+    "code/packages/ui-bundle/LICENSE",
+    "code/packages/ui-bundle/NOTICE",
+    "code/packages/ui-bundle/preview-src/**",
+    "code/packages/ui-bundle/src/img/**",
+    "code/packages/ui-bundle/src/static/.nojekyll",
+    "code/packages/ui-bundle/src/ui.yml",
+    "code/packages/ui-bundle/tsconfig.browser.json",
+    "code/packages/ui-bundle/tsconfig.helpers.json",
 ]
 SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "MPL-2.0"

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /*
  * Key features switcher (GH-22) — the behaviour half of the `[feature-tabs]`
  * block (asciidoc-extensions/lib/feature-tabs.js).

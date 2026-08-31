@@ -33,18 +33,22 @@ afterEach(async () => {
 })
 
 describe('startDevServer', () => {
-  it('serves the existing build output without rebuilding', async () => {
+  it('always rebuilds up front, even when a prior build/site already exists on disk', async () => {
     await writeFixtureSite(siteRoot)
-    const runBuild = vi.fn(async () => true)
+    const runBuild = vi.fn(async () => {
+      await writeFile(join(siteRoot, 'build', 'site', 'index.html'), '<html><body>rebuilt</body></html>', 'utf8')
+      return true
+    })
 
     server = await startDevServer({ siteRoot, port: 0, runBuild, log: () => {}, logError: () => {} })
 
+    expect(runBuild).toHaveBeenCalledTimes(1)
     const res = await fetch(`http://localhost:${server.port}/`)
-    expect(res.status).toBe(200)
     const body = await res.text()
-    expect(body).toContain('<h1>hi</h1>')
-    expect(body).toContain('/__dev/client.js')
-    expect(runBuild).not.toHaveBeenCalled()
+    // The prior fixture's <h1>hi</h1> is gone — this is the freshly built
+    // output, not the stale one left over on disk.
+    expect(body).not.toContain('<h1>hi</h1>')
+    expect(body).toContain('rebuilt')
   })
 
   it('builds once up front when there is no build output yet', async () => {
@@ -71,6 +75,20 @@ describe('startDevServer', () => {
     await expect(startDevServer({ siteRoot, port: 0, runBuild, log: () => {}, logError: () => {} })).rejects.toThrow(
       'initial build failed'
     )
+  })
+
+  it('falls back to serving the stale build when the initial rebuild fails but prior output exists', async () => {
+    await writeFixtureSite(siteRoot)
+    const runBuild = vi.fn(async () => false)
+    const logError = vi.fn()
+
+    server = await startDevServer({ siteRoot, port: 0, runBuild, log: () => {}, logError })
+
+    expect(runBuild).toHaveBeenCalledTimes(1)
+    expect(logError).toHaveBeenCalledWith(expect.stringContaining('initial rebuild failed'))
+    const res = await fetch(`http://localhost:${server.port}/`)
+    // Stale fixture content, still served rather than a crashed server.
+    expect(await res.text()).toContain('<h1>hi</h1>')
   })
 
   it('404s outside the site root, including path traversal attempts', async () => {

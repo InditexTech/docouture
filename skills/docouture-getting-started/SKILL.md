@@ -13,12 +13,17 @@ repo grows; re-entering this skill after that point should be rare (a full restr
 routine maintenance).
 
 This is a planning and orchestration skill, not a syntax reference. Once a decision is
-made here, it hands off to two mechanics skills:
+made here, it hands off to three skills:
 
 - **`docouture-docs-internals`** — once you know a module/page needs to exist, this is how
   `antora.yml`, `nav.adoc` and the home-page pattern actually work.
-- **`docouture-writing-docs-pages`** — once you know what a page should say, this is the
-  AsciiDoc syntax, xrefs and this site's custom blocks (`[tabs]`, `[cards]`, `[accordion]`, …).
+- **`docouture-authoring-guides`** — once you know a page needs to exist, this is *what it
+  should say*: the section skeleton, per-section instructions, a copyable AsciiDoc
+  skeleton and a quality checklist, for every page in the standard six-section structure
+  plus the home page.
+- **`docouture-writing-docs-pages`** — once you know what a page should say, this is *how*
+  to write it in AsciiDoc: the syntax, xrefs and this site's custom blocks (`[tabs]`,
+  `[cards]`, `[accordion]`, …).
 
 - `reference/structure-planning.md` — mono- vs. multi-module decision, the default nav
   structure, how Guides/Reference get derived from the repo rather than assumed, the
@@ -44,8 +49,12 @@ made here, it hands off to two mechanics skills:
    is not, see below.
 4. **Content sourcing & drafting** — for every planned page, find where its content
    actually lives (don't assume — a repo with no `README` at all still has an API surface,
-   a CLI, a config schema) and draft it. See `reference/content-sourcing.md`. Draft a rough
-   home page early from whatever one-line description exists; treat it as unfinished.
+   a CLI, a config schema) and draft it. See `reference/content-sourcing.md`. Before
+   writing, open that page's guide in `docouture-authoring-guides` for its section-by-section
+   contract (what to say, what not to say, the copyable skeleton and quality checklist) —
+   content-sourcing decides *where the facts come from*, the authoring guide decides *what
+   shape the page takes*. Draft a rough home page early from whatever one-line description
+   exists; treat it as unfinished.
 5. **Record what was sourced from code** in `AGENTS.md`'s documentation-state ledger — see
    the `docouture-documenting-changes` skill's `reference/maintenance-loop.md` for the exact
    shape. This is what lets that skill pick up the loop from here, later.

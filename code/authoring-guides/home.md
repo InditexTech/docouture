@@ -11,6 +11,8 @@ Two audiences at once:
 
 **The product name and logo are not written on this page.** The hero's title renders the **site title** from `antora-playbook.yml`, and the product mark comes from the playbook's `productLogo` key (with `productLogoDark` for dark mode) — the `= Home` title is required by Antora but never shown. Set the site title to the product name: it is the biggest text on the page.
 
+**Two layouts render this same content.** `:page-layout: home` is the default, two-column shape (hero beside the content column); `:page-layout: home-single` is a single-column sibling — same authoring surface, same blocks, same attributes, only the hero stacks above the content instead of sitting beside it at every breakpoint. Pick per site: `home-single` when the two-column split doesn't earn its keep for this product's content, `home` otherwise.
+
 ---
 
 ## `index.adoc` (ROOT) 🔴
@@ -21,32 +23,34 @@ Convert an interested visitor into a user in one screen: answer the four questio
 
 ### Section-by-section instructions
 
-The `home` layout renders the blocks in a proposed **order (try to respect it)**. Some blocks may be optional, but when present they appear in this order:
+The `home`/`home-single` layouts render the blocks in a proposed **order (try to respect it)**. Some blocks may be optional, but when present they appear in this order:
 
-| Section               | Level | What to write                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| --------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _(header attributes)_ | 🔴    | The hero. The title itself is the **site title** (the product name) plus the playbook's `productLogo` — not authored here. `:description:` is the couple-lines value proposition. `:page-action:` is the primary CTA — the quickstart, or the product itself when it is an app; `:page-action-secondary:` the quickstart when the product is an app. Skip the actions you don't need. The media slot: prefer `:page-hero-video:` (a short video or gif showing the product in motion, with `:page-hero-video-poster:` as the still shown before it plays) over `:page-hero-image:` — use the image only when no motion visual exists. |
-| _(intro, no heading)_ | 🔴    | Engaging paragraphs: who the product is for and what it lets them do. Mention the core capabilities. This is the elevator pitch — distilled from `about`, not copied.                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `== Key capabilities` | 🔴    | The `[feature-tabs]` showcase: a handful of top-level capabilities framed as **what the product lets the user do**, not as technical components — "build collaborative canvases", not "nodes, stores, and plugins". Each with a visual (gif, screenshot, or a short code block that summarizes it) and short prose ending in a "Learn more" link into the docs. If you have no visuals, use cards.                                                                                                                                                                                                                                    |
-| `== Get started`      | 🔴    | The entry-point cards: the shortcuts into the most relevant pages of the documentation, quickstart is always first (subheader "Start here").                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `== <CTA>`            | 🟠    | One `[cta]` block making the case for a single action. In open source, this is the community door: fork, star, or contribute — you can link to the project repo or, better, request starring and following the repo.                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `== FAQ`              | 🔴    | **Pre-adoption** questions: what can I build with it, is it free, can I use it commercially, which license, how do I request a feature. Usage questions belong in the `faq` page of Additional information — link there instead of duplicating. Same SEO/GEO rules as that page: questions phrased as people search them, self-contained answers.                                                                                                                                                                                                                                                                                     |
+| Section               | Level | What to write                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| --------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(header attributes)_ | 🔴    | The hero. The title itself is the **site title** (the product name) plus the playbook's `productLogo` — not authored here. `:description:` is the couple-lines value proposition. `:page-action:` is the primary CTA — the quickstart, or the product itself when it is an app; `:page-action-secondary:` the quickstart when the product is an app. Skip the actions you don't need. The media slot: prefer `:page-hero-video:` (a short video or gif showing the product in motion, with `:page-hero-video-poster:` as the still shown before it plays) over `:page-hero-image:` — use the image only when no motion visual exists. Either media form can opt into `:page-hero-image-bordered:` (a bare, presence-only attribute — no value) for a framed 10px-radius panel instead of the default bare media slot. |
+| _(intro, no heading)_ | 🔴    | Engaging paragraphs: who the product is for and what it lets them do. Mention the core capabilities. This is the elevator pitch — distilled from `about`, not copied.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `== Get started`      | 🔴    | The entry-point cards: the shortcuts into the most relevant pages of the documentation, quickstart is always first (subheader "Start here").                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `== Key capabilities` | 🔴    | The `[feature-tabs]` showcase: a handful of top-level capabilities framed as **what the product lets the user do**, not as technical components — "build collaborative canvases", not "nodes, stores, and plugins". Each with a visual (gif, screenshot, or a short code block that summarizes it) and short prose ending in a "Learn more" link into the docs. If you have no visuals, use cards.                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `== <CTA>`            | 🟠    | One `[cta]` block making the case for a single action. In open source, this is the community door: fork, star, or contribute — you can link to the project repo or, better, request starring and following the repo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `== FAQ`              | 🔴    | **Pre-adoption** questions: what can I build with it, is it free, can I use it commercially, which license, how do I request a feature. Usage questions belong in the `faq` page of Additional information — link there instead of duplicating. Same SEO/GEO rules as that page: questions phrased as people search them, self-contained answers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 ### Docouture blocks
 
-| Use                       | Block                                                                                       |
-| ------------------------- | ------------------------------------------------------------------------------------------- |
-| Hero media                | `:page-hero-video:` + `:page-hero-video-poster:` (preferred) or `:page-hero-image:` + alt   |
-| Entry-point shortcuts     | `[cards,type=image-square,columns="1 s:2 m:4",width=container]` with `subheader=` per card  |
-| Capability showcase       | `[feature-tabs]` — one `[feature,label="…"]` per capability, visual + prose + `[.cta]` link |
-| The single call to action | `[cta]` with a `[.primary]` link                                                            |
-| Pre-adoption FAQ          | `[accordion,aria-label="Frequently asked questions"]` + `[%collapsible]` items              |
+| Use                       | Block                                                                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hero media                | `:page-hero-video:` + `:page-hero-video-poster:` (preferred) or `:page-hero-image:` + alt; either with `:page-hero-image-bordered:` to opt into a framed panel |
+| Entry-point shortcuts     | `[cards,type=image-square,columns="1 s:2 m:4",width=container]` with `subheader=` per card                                                                     |
+| Capability showcase       | `[feature-tabs]` — one `[feature,label="…"]` per capability, visual + prose + `[.cta]` link                                                                    |
+| The single call to action | `[cta]` with a `[.primary]` link                                                                                                                               |
+| Pre-adoption FAQ          | `[accordion,aria-label="Frequently asked questions"]` + `[%collapsible]` items                                                                                 |
 
 ### AsciiDoc skeleton
 
 ```asciidoc
 = Home
 :page-layout: home
+// or :page-layout: home-single for the single-column sibling — same
+// authoring surface below either way.
 :page-nav-module: <module>
 :description: <Couple-lines value proposition.>
 :page-tags: <tag-one>, <tag-two>
@@ -57,9 +61,32 @@ The `home` layout renders the blocks in a proposed **order (try to respect it)**
 :page-hero-video: <hero.mp4 — a short video or gif of the product in motion>
 :page-hero-video-poster: <hero.png — the still shown before it plays>
 // No motion visual? Use :page-hero-image: + :page-hero-image-alt: instead.
+// Either media form can add :page-hero-image-bordered: (no value) for a
+// framed panel instead of the default bare media slot.
 // The hero title is the site title (the product name) from antora-playbook.yml.
 
 <Engaging paragraphs: who the product is for and what it lets them do.>
+
+== Get started
+
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
+====
+[card,subheader="Start here"]
+.xref:<module>:quickstart.adoc[Quickstart]
+--
+image::<card-image>.png["<Alt text>"]
+
+<From zero to a first working result.>
+--
+
+[card,subheader="<Category>"]
+.xref:<module>:<page>.adoc[<Entry point>]
+--
+image::<card-image>.png["<Alt text>"]
+
+<Short description.>
+--
+====
 
 == Key capabilities
 
@@ -80,27 +107,6 @@ xref:<module>:<page>.adoc[Learn more]
 image::<feature-two>.png[<Alt text>]
 
 <Prose describing this capability.>
---
-====
-
-== Get started
-
-[cards,type=image-square,columns="1 s:2 m:4",width=container]
-====
-[card,subheader="Start here"]
-.xref:<module>:quickstart.adoc[Quickstart]
---
-image::<card-image>.png["<Alt text>"]
-
-<From zero to a first working result.>
---
-
-[card,subheader="<Category>"]
-.xref:<module>:<page>.adoc[<Entry point>]
---
-image::<card-image>.png["<Alt text>"]
-
-<Short description.>
 --
 ====
 
@@ -151,40 +157,6 @@ write API and UI tests in plain, readable Gherkin — no glue code required.
 - *Parallel execution built in*. Split suites across workers with one flag.
 - *Reports people actually read*. HTML reports with per-step timings.
 
-== Key capabilities
-
-[feature-tabs]
-====
-[feature,label="Write tests your whole team can read"]
---
-[source,gherkin]
-----
-Scenario: get a user
-  Given url 'https://api.example.com/users/42'
-  When method get
-  Then status 200
-  And match response.name == 'Ada'
-----
-
-Tests are plain Gherkin: anyone on the team can read and review them,
-and most scenarios need no Java code at all.
-
-[.cta]
-xref:main:guides/write-your-first-suite.adoc[Learn more]
---
-
-[feature,label="Cut your suite time with parallel runs"]
---
-image::feature-parallel.gif[A suite splitting across five workers]
-
-One flag splits your suite across workers, cutting execution time on
-large suites by up to 70%.
-
-[.cta]
-xref:main:reference/cli.adoc[Learn more]
---
-====
-
 == Get started
 
 [cards,type=image-square,columns="1 s:2 m:4",width=container]
@@ -219,6 +191,40 @@ Every option, command, and API — exact and complete.
 image::card-contributing.png["Abstract study of folded paper, slate"]
 
 Report bugs, improve the docs, or contribute code.
+--
+====
+
+== Key capabilities
+
+[feature-tabs]
+====
+[feature,label="Write tests your whole team can read"]
+--
+[source,gherkin]
+----
+Scenario: get a user
+  Given url 'https://api.example.com/users/42'
+  When method get
+  Then status 200
+  And match response.name == 'Ada'
+----
+
+Tests are plain Gherkin: anyone on the team can read and review them,
+and most scenarios need no Java code at all.
+
+[.cta]
+xref:main:guides/write-your-first-suite.adoc[Learn more]
+--
+
+[feature,label="Cut your suite time with parallel runs"]
+--
+image::feature-parallel.gif[A suite splitting across five workers]
+
+One flag splits your suite across workers, cutting execution time on
+large suites by up to 70%.
+
+[.cta]
+xref:main:reference/cli.adoc[Learn more]
 --
 ====
 
@@ -260,7 +266,7 @@ xref:main:getting-started/quickstart.adoc[Quickstart].
 ### Quality checklist
 
 - [ ] The page answers the four questions in one screen: what is this, what is it for, what does it do, is it what I'm looking for.
-- [ ] `:page-layout: home` and `:page-nav-module:` are set; the primary action points to the quickstart (or a live demo); the site title in `antora-playbook.yml` is the product name.
+- [ ] `:page-layout: home` (or `home-single`) and `:page-nav-module:` are set; the primary action points to the quickstart (or a live demo); the site title in `antora-playbook.yml` is the product name.
 - [ ] The hero has a media: a video or gif of the product in motion when possible, an image otherwise.
 - [ ] Capabilities are framed as what the product lets the user do, not as technical components.
 - [ ] Every block carries a visual: video, gif, screenshot, or a summarizing code block.

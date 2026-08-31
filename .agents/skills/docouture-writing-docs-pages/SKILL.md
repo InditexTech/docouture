@@ -122,8 +122,11 @@ a reader to.
 | `page-action` / `page-action-url`                     | primary hero button — renders only when BOTH are set                                                                                                    |
 | `page-action-secondary` / `page-action-secondary-url` | secondary hero button, same rule                                                                                                                        |
 | `page-hero-image` / `page-hero-image-alt`             | hero illustration                                                                                                                                       |
+| `page-hero-video` / `page-hero-video-poster`          | hero video (wins over `page-hero-image` if both are set), with a still shown before it plays                                                           |
+| `page-hero-image-bordered`                            | bare, presence-only attribute (no value) — opts either hero media form into a framed panel instead of the default bare slot                             |
 | `page-nav-module`                                     | which module's nav tree the side menu shows for this page — set on `ROOT`'s own landing page, since `ROOT` never has its own nav.adoc                  |
-| `page-layout: home`                                   | the marketing home-page layout — see `docouture-docs-internals`'s page-patterns reference                                                               |
+| `page-layout: home`                                   | the marketing home-page layout, two-column (hero beside content) — see `docouture-docs-internals`'s page-patterns reference                             |
+| `page-layout: home-single`                            | the same home-page authoring surface, single-column (hero stacked above content) — pick per site, not a different set of attributes                    |
 | `page-role: -hero`                                    | suppresses the hero entirely                                                                                                                            |
 | `page-role: -toc`                                     | suppresses the right-hand table of contents                                                                                                             |
 | `page-pagination`                                     | enables the previous/next footer links                                                                                                                  |

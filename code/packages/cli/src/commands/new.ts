@@ -578,8 +578,8 @@ function printNextSteps(args: {
   console.log(theme.bold('Docs-authoring skills:'))
   console.log('  npx skills@latest add InditexTech/docouture --all')
   console.log('  (or --skill <name> for one at a time — installs docouture-getting-started,')
-  console.log('  docouture-documenting-changes, docouture-writing-docs-pages, docouture-docs-internals')
-  console.log('  and, for a versioned-mode site, docouture-docs-versioning)')
+  console.log('  docouture-documenting-changes, docouture-authoring-guides, docouture-writing-docs-pages,')
+  console.log('  docouture-docs-internals and, for a versioned-mode site, docouture-docs-versioning)')
 
   console.log('')
   if (mode === 'versioned') {

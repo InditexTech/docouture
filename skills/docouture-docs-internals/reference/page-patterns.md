@@ -80,6 +80,14 @@ Block syntax for `[cards]`, `[feature-tabs]`, `[cta]` and `[accordion]` is in th
 `docouture-writing-docs-pages` skill's `reference/docouture-blocks.md`; this file is the
 section-order pattern, not the block reference.
 
+**`home-single`**: a single-column sibling of this layout, selected with
+`:page-layout: home-single` instead of `:page-layout: home` on the same `index.adoc`. Same
+authoring surface exactly — same attributes, same blocks, same section order — the only
+difference is the hero stacks above the content column instead of sitting beside it at
+every breakpoint (`home` already does this below the narrow breakpoints; `home-single`
+holds that arrangement everywhere). Pick one per site, not per page: use `home-single`
+when the two-column split doesn't earn its keep for this product's content.
+
 ## Content pages
 
 Three shapes cover most content. Pick whichever fits, don't force every page into one.

@@ -9,20 +9,20 @@ importers:
   .:
     devDependencies:
       '@inditextech/docouture-antora-extensions':
-        specifier: 0.1.0-SNAPSHOT.64.1
-        version: 0.1.0-SNAPSHOT.64.1
+        specifier: 0.1.0-SNAPSHOT.68.1
+        version: 0.1.0-SNAPSHOT.68.1
       '@inditextech/docouture-asciidoc-extensions':
-        specifier: 0.1.0-SNAPSHOT.64.1
-        version: 0.1.0-SNAPSHOT.64.1
+        specifier: 0.1.0-SNAPSHOT.68.1
+        version: 0.1.0-SNAPSHOT.68.1
       '@inditextech/docouture-cli':
-        specifier: 0.1.0-SNAPSHOT.64.1
-        version: 0.1.0-SNAPSHOT.64.1
+        specifier: 0.1.0-SNAPSHOT.68.1
+        version: 0.1.0-SNAPSHOT.68.1
       '@inditextech/docouture-publish-gh-pages':
-        specifier: 0.1.0-SNAPSHOT.64.1
-        version: 0.1.0-SNAPSHOT.64.1
+        specifier: 0.1.0-SNAPSHOT.68.1
+        version: 0.1.0-SNAPSHOT.68.1
       '@inditextech/docouture-ui-bundle':
-        specifier: 0.1.0-SNAPSHOT.64.1
-        version: 0.1.0-SNAPSHOT.64.1
+        specifier: 0.1.0-SNAPSHOT.68.1
+        version: 0.1.0-SNAPSHOT.68.1
       antora:
         specifier: 3.1.15
         version: 3.1.15
@@ -108,25 +108,25 @@ packages:
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
-  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.64.1':
-    resolution: {integrity: sha512-fZbAQjYLxpWg8ckTI1RD/gEi8TMcm+gi7BBwO+Pke+mhkb76Wbzv+C0GG/0pJV2WPrHGjIyni3ckuB429BW36A==}
+  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.68.1':
+    resolution: {integrity: sha512-knZCaoflkHNYKxlzZb6DwjljqEp3l5OgB6GbHHNE0qpWeMaNA6nR5Y0FJZsOZ9FTSMi7x9spNEpKtHzoWCNmkA==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.64.1':
-    resolution: {integrity: sha512-GcqT8HQZbetOv6EdnecMAEBfbjCI0fs/yTfMJ5jaDOeSdStwRkuBo3CoE4fcxhmUnysjaa/qUwAhld4jgdklLg==}
+  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.68.1':
+    resolution: {integrity: sha512-Xkq67bXPBxbx8Ho/LRf9cnSXeh6ghWUIqbThHB+I1fHOPd65Ma8WqQwOfGKfjTLSEhGVIiBJdxCQEhuylwOa6w==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.64.1':
-    resolution: {integrity: sha512-cmjqrhLbMz16Dgw+kDQUecHZI05TX+WocGBdS6IrFkjZx5wXA6xPxB/0loSTO+FLsgkr645WA08E7CSs+yPDGw==}
+  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.68.1':
+    resolution: {integrity: sha512-rxjd/pvx89x2OVSUa6xUaHcnq5m0RlWIUu4DBAxusEcq8BwpceXcApuEj2Bv0SY64J/Oiw0hg9xUVGr5oc02Kg==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
-  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.64.1':
-    resolution: {integrity: sha512-RBIR4I2vDIDPXNe5Bscn0VfW1eLqgacdbcWK5D6reXzgEFXIJRj0sDB7orASpVL1Sa1v4E49rRdrvs4q8Dw6ZQ==}
+  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.68.1':
+    resolution: {integrity: sha512-Bd68XgHS+5hMUzmgeRUiI19hcTchrHWaYq53QstZJz8yOvi8dhw9ie1S82Wp5sei/yQLAoQOC8YjvsMpG6ZOWg==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.64.1':
-    resolution: {integrity: sha512-FVA1ke2UZ7ilif4j8JqhbjEX4Rc3Ghj0c4dqJ6FM4ugDOBayIh7W22e/kRVmxXs4rOxe9KySDzXutMoS//N/Mw==}
+  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.68.1':
+    resolution: {integrity: sha512-glYThQ+GtEXO06nvnm6XefcoCCgIKK1umX1qWC8d30lgK4Qn5DG3wBJmQqBcezA5B9Yyck4RkIPufPdqSkrQBg==}
     engines: {node: '>=24.0.0'}
 
   '@inquirer/ansi@1.0.2':
@@ -608,8 +608,8 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
-  fast-copy@3.0.2:
-    resolution: {integrity: sha512-dl0O9Vhju8IrcLndv2eU4ldt1ftXMqqfgN4H1cpmGV7P6jeB9FwpN9a2c8DPGE1Ys88rNUJVYDHq73CGAGOPfQ==}
+  fast-copy@3.1.0:
+    resolution: {integrity: sha512-IuCOCDFM1F/s4LtG7Bjr3yUUwPHybyhqN74xk2cMYoP51vVeErMy8+6HGFchi/+45lW8uzhs6lBeEqks2GWt6A==}
 
   fast-fifo@1.3.2:
     resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
@@ -625,8 +625,8 @@ packages:
   fast-safe-stringify@2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
 
-  fastq@1.20.2:
-    resolution: {integrity: sha512-UpGiiODyCGprM8EPP6JodP6jC9Rws6TCuiDOD+nn0CJhR8guI3g/ozo4ugL0vJ+Yz1UtJuuRPqvQuybVOF1VQA==}
+  fastq@1.20.3:
+    resolution: {integrity: sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==}
 
   filename-reserved-regex@2.0.0:
     resolution: {integrity: sha512-lc1bnsSr4L4Bdif8Xb/qrtokGbq5zlsms/CYH8PP+WtCkGNF65DPiQY8vG3SakEdRn8Dlnm+gW/qWKKjS5sZzQ==}
@@ -1451,11 +1451,11 @@ snapshots:
 
   '@iarna/toml@2.2.5': {}
 
-  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.64.1':
+  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.68.1':
     dependencies:
       '@antora/page-composer': 3.1.15
       '@antora/redirect-producer': 3.1.15
-      '@inditextech/docouture-asciidoc-extensions': 0.1.0-SNAPSHOT.64.1
+      '@inditextech/docouture-asciidoc-extensions': 0.1.0-SNAPSHOT.68.1
       '@shikijs/langs': 4.4.3
       '@shikijs/themes': 4.4.3
       node-html-parser: 9.0.2
@@ -1464,23 +1464,23 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
-  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.64.1':
+  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.68.1':
     dependencies:
       asciidoctor-core-2.2: '@asciidoctor/core@2.2.9'
       shiki: 4.4.3
 
-  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.64.1':
+  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.68.1':
     dependencies:
       '@inquirer/prompts': 7.10.1
       ora: 8.2.0
     transitivePeerDependencies:
       - '@types/node'
 
-  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.64.1':
+  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.68.1':
     dependencies:
       gh-pages: 6.3.0
 
-  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.64.1': {}
+  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.68.1': {}
 
   '@inquirer/ansi@1.0.2': {}
 
@@ -1589,7 +1589,7 @@ snapshots:
   '@nodelib/fs.walk@1.2.8':
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.20.2
+      fastq: 1.20.3
 
   '@shikijs/core@4.4.3':
     dependencies:
@@ -1887,7 +1887,7 @@ snapshots:
 
   events@3.3.0: {}
 
-  fast-copy@3.0.2: {}
+  fast-copy@3.1.0: {}
 
   fast-fifo@1.3.2: {}
 
@@ -1903,7 +1903,7 @@ snapshots:
 
   fast-safe-stringify@2.1.1: {}
 
-  fastq@1.20.2:
+  fastq@1.20.3:
     dependencies:
       reusify: 1.1.0
 
@@ -2299,7 +2299,7 @@ snapshots:
     dependencies:
       colorette: 2.0.20
       dateformat: 4.6.3
-      fast-copy: 3.0.2
+      fast-copy: 3.1.0
       fast-safe-stringify: 2.1.1
       help-me: 5.0.0
       joycon: 3.1.1

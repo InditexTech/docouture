@@ -31,11 +31,13 @@ asks to "update the docs" — check whether it needs this skill:
    table points at the file you touched.
 
 This skill decides *what* changed and *whether* it needs a docs update; once it knows
-which page(s) to touch, it hands off to the same two mechanics skills `docouture-getting-started`
-does:
+which page(s) to touch, it hands off to the same skills `docouture-getting-started` does:
 
 - **`docouture-docs-internals`** — module/page/nav mechanics.
 - **`docouture-writing-docs-pages`** — AsciiDoc authoring itself.
+- **`docouture-authoring-guides`** — the touched page's content contract: what that section
+  says, in what order, and its quality bar — so an edit to an existing `reference` or
+  `guides` page still matches its section's pattern rather than drifting from it.
 
 See `reference/maintenance-loop.md` for the full mechanism: the `AGENTS.md`
 documentation-state ledger, what counts as drift, and when to revisit the home page.
@@ -58,7 +60,8 @@ documentation-state ledger, what counts as drift, and when to revisit the home p
    skill doesn't re-litigate structure on its own, it flags when structure planning is
    needed and hands back to that skill for the decision).
 4. **Write the update**, following whatever page pattern already fits
-   (`docouture-docs-internals`'s `reference/page-patterns.md`) and the site's existing voice —
+   (`docouture-docs-internals`'s `reference/page-patterns.md`), the content contract for
+   that page's section (`docouture-authoring-guides`), and the site's existing voice —
    a code-derived reference page reads differently from a hand-written guide, don't force
    one to imitate the other.
 5. **Update the ledger** in `AGENTS.md` — mark the touched page(s) `current` again, add a

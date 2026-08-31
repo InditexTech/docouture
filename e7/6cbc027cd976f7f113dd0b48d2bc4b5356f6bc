@@ -1,0 +1,16 @@
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  h_c93d154c7c7074 113-116,121-137,143,148-191,198,361-381
+code/packages/antora-extensions/lib/kroki-prewarm.spec.js
+  h_c93d154c7c7074 117-169,366-400
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e76cbc027cd976f7f113dd0b48d2bc4b5356f6bc",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -62,11 +62,14 @@ npx skills@latest add InditexTech/docouture --all
 
 - **`docouture-getting-started`** — start here on a brand-new site: scaffolding (if not done
   yet), planning what to document, sourcing content from wherever it actually lives
-  (existing docs, README, or the code itself). Hands off to the two skills below for
-  mechanics once a decision is made.
+  (existing docs, README, or the code itself). Hands off to the skills below for mechanics
+  and content once a decision is made.
 - **`docouture-documenting-changes`** — the re-entry point once the site exists: a feature,
   change, deprecation or fix landed in the repo, and the docs need to catch up. This is
   the one to reach for day to day, not `docouture-getting-started`.
+- **`docouture-authoring-guides`** — what to actually write on each page: purpose, section
+  skeleton, per-section instructions, a copyable AsciiDoc starting point and a quality
+  checklist, for every page in the standard structure plus the home page.
 - **`docouture-writing-docs-pages`** — authoring AsciiDoc content: the language itself,
   `xref:` references, `nav.adoc`, admonitions, code blocks, and this site's own custom
   blocks (`[tabs]`, `[cards]`, `[accordion]`, …).

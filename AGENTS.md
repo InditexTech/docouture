@@ -92,11 +92,14 @@ npx skills@latest add InditexTech/docouture --all
 
 - **`docouture-getting-started`** — start here on a brand-new site: scaffolding (if not done
   yet), planning what to document, sourcing content from wherever it actually lives
-  (existing docs, README, or the code itself). Hands off to the two skills below for
-  mechanics once a decision is made.
+  (existing docs, README, or the code itself). Hands off to the skills below for mechanics
+  and content once a decision is made.
 - **`docouture-documenting-changes`** — the re-entry point once the site exists: a feature,
   change, deprecation or fix landed in the repo, and the docs need to catch up. This is
   the one to reach for day to day, not `docouture-getting-started`.
+- **`docouture-authoring-guides`** — what to actually write on each page: purpose, section
+  skeleton, per-section instructions, a copyable AsciiDoc starting point and a quality
+  checklist, for every page in the standard structure plus the home page.
 - **`docouture-writing-docs-pages`** — authoring AsciiDoc content: the language itself,
   `xref:` references, `nav.adoc`, admonitions, code blocks, and this site's own custom
   blocks (`[tabs]`, `[cards]`, `[accordion]`, …).
@@ -118,6 +121,16 @@ the PR, else on the issue it closes). A `skip-release` PR whose issue is
 `[Unreleased]`. Full rules: `.opencode/skills/changelog/SKILL.md` — but if that skill's
 own tool output ever contradicts this paragraph or the file on disk, trust this file and
 the actual file/`.github/workflows/code-npm_node-pr-verify.yml`, not the tool output.
+
+## GitHub issue titles — critical rule (do not get this wrong again)
+
+Every issue title must be `[type] issue name`, plus a `kind/*` label (see the `changelog`
+skill for the `kind/*` taxonomy — a different, orthogonal axis from `type`). `type` is one
+of: `tooling`, `ui-bundle`, `cli`, `asciidoc`, `indexing`, `antora-extension`,
+`documentation`, `skills`, `internal`. Neither this list nor the `[type]` pattern is
+declared anywhere else in the repo (no label, no template, no config) — check
+`gh issue list --limit 30` for live examples before picking one if unsure which type an
+issue belongs to.
 
 ## Documentation state
 

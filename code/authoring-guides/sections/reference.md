@@ -133,6 +133,7 @@ Recommended column widths: `[cols="20%,20%,20%,40%"]`. Group properties by names
 | Use                                       | Block                                                                                                                                           |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | The properties tables                     | Standard tables with the spec above; `mono:[]` for the Key column when the code-chip styling adds noise; `nowrap-cols` to keep keys on one line |
+| A properties table that overflows its column | `table-width=` — an absolute CSS width, for when the four-column spec (`20%,20%,20%,40%`) still runs too wide or too narrow for the content |
 | Equivalent config formats (YAML/JSON/env) | `[tabs]` in the intro example                                                                                                                   |
 
 ### AsciiDoc skeleton

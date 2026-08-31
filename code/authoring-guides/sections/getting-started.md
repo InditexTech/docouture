@@ -177,6 +177,7 @@ Present a sample scenario rather than abstract instructions: readers relate to "
 | ----------------------------------------------------------- | -------------------------------------- |
 | Equivalent commands (package managers, OSs, config formats) | `[tabs]`                               |
 | A caveat that would break the flow if missed                | Standard `NOTE`/`IMPORTANT` admonition |
+| A recorded walkthrough of the whole scenario                | `video::demo[youtube,640,360]` — locks the aspect ratio at any viewport width; use alongside the written steps, never instead of them |
 
 Steps are written as plain `=== 1. <Step>` numbered subsections.
 

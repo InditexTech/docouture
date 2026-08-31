@@ -89,8 +89,10 @@ $ docouture publish gh-pages --branch gh-pages
 
 Check environment and site health: https://nodejs.org[Node] version, the four names
 that must agree (see xref:main:guides-modifying-the-navigation.adoc[]), git history, that
-Antora is installed, and (advisory only) whether `AGENTS.md`/the scaffolded skills are
-still present and the `docs/release` label exists.
+Antora is installed, and (advisory only) whether `AGENTS.md` is still present and the
+`docs/release` label exists. Does not check for the agent skills — see
+xref:main:reference-ai-first-approach.adoc[], those are a separate, self-serve install
+this CLI never scaffolds or verifies.
 
 [cols="1,2"]
 |===
@@ -101,7 +103,7 @@ still present and the `docs/release` label exists.
 
 == `docouture upgrade`
 
-Re-sync `.github/workflows/` and agent support files (`AGENTS.md`, skills) from the
+Re-sync `.github/workflows/` and agent support files (`AGENTS.md`) from the
 CLI's current templates. Workflows are fully overwritten; `AGENTS.md` is merged — only
 docouture's own managed section is replaced. Never touches `docs/` content itself.
 

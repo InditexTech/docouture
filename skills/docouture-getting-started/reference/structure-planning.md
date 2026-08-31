@@ -23,48 +23,19 @@ a heading with no page of its own (see `docouture-docs-internals`'s
 ## The target nav structure (inside `main`, to start)
 
 This is the default shape to aim for — six ordered sections, each page tagged with how
-essential it is. Not every repo needs every page in one pass; the tags say which ones to
-skip without asking and which ones to check for before skipping:
+essential it is (🔴 required, 🟠 recommended, 🔵 conditional, ⚪ optional). The full page
+list, per-section requirement levels and the routing/sizing rules that decide where a
+given piece of content belongs live in `docouture-authoring-guides`'s `SKILL.md` — the
+single copy of that table; this file only adds the *structural* decisions the content
+guide doesn't cover (mono- vs. multi-module, the monorepo per-artifact axis, promoting a
+section out of `main`). Skim that table before planning a site's structure so the tags
+below aren't quoted from memory against a copy that may have moved on.
 
-- 🔴 required — every documented repo should end up with this page.
-- 🟠 recommended — include unless there's a specific reason not to.
-- 🔵 conditional — include only if the repo actually has the surface it covers; skip
-  cleanly (no stub) if it doesn't.
-- ⚪ optional — nice to have, include when it adds value, otherwise leave out.
+Two shorthands worth knowing before reading it: only **Guides** and **Reference** are ever
+candidates for their own module (see "Promoting Guides/Reference" below) — Overview,
+Getting started, Additional information and Contributing stay grouped inside `main`
+permanently, even in a mature, heavily-modularized site.
 
-```
-main (docs/src/modules/main/nav.adoc)
-├── 1. Overview
-│   ├── about                              🔴
-│   ├── architecture                       🔴
-│   └── glossary (or basic terms)          ⚪
-├── 2. Getting started
-│   ├── prerequisites                      🔴
-│   └── quickstart                         🔴
-├── 3. Guides
-│   ├── overview                           🔴
-│   └── <derived tutorial pages>           🔴 (see "Deriving Guides" below)
-├── 4. Reference
-│   ├── overview                           🔴
-│   └── <derived sub-catalog pages>        🔵 (see "The Reference sub-catalog" below)
-├── 5. Additional information
-│   ├── overview                           🔴
-│   ├── changelog                          🔴
-│   │   ├── overview                       🔴 (menu to each changelog, grouped by major if possible if standalone version, by date of publishing)
-│   │   └── vX.Y.Z / stable / prerelease   🔴 (the changelog notes of the version)
-│   ├── release-notes                      🔴
-│   │   ├── overview                       🔴 (menu to each release, grouped by major if possible if standalone version, by date of publishing)
-│   │   └── vX.Y.Z / stable / prerelease   🔴 (the real release notes of a version)
-│   ├── faq                                🟠
-│   ├── security                           🟠
-│   └── eol / migration-guides             🔵 (repo has deprecations/major-version history)
-└── 6. Contributing
-    └── overview                           🔴
-```
-
-Sections 1, 2, 5 and 6 stay grouped inside `main` forever, even in a site that's grown
-several other modules — none of them ever need a landing page of their own, since a reader
-always arrives at them via `ROOT`'s home page or `main`'s own nav.
 
 ## Deriving Guides — don't assume a fixed list
 

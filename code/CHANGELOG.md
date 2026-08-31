@@ -57,8 +57,8 @@ at all).
 - [#36](https://github.com/InditexTech/docouture/pull/36) [ui-bundle] Page hero: breadcrumbs, title, lead and labels
 - [#35](https://github.com/InditexTech/docouture/pull/35) [ui-bundle] Side menu: logo, title and IDS list navigation tree
 - [#34](https://github.com/InditexTech/docouture/pull/34) [ui-bundle] Header toolbar
-- [#32](https://github.com/InditexTech/docouture/pull/32) [iop-ds] Preview harness: two views, page-layout support, realistic UI model, live reload
-- [#31](https://github.com/InditexTech/docouture/pull/31) [iop-ds] Wire IOP DS component stylesheets into site.css and shrink bridge.css
+- [#32](https://github.com/InditexTech/docouture/pull/32) [ui-bundle] Preview harness: two views, page-layout support, realistic UI model, live reload
+- [#31](https://github.com/InditexTech/docouture/pull/31) [ui-bundle] Wire IOP DS component stylesheets into site.css and shrink bridge.css
 
 ### Fixed
 
@@ -72,9 +72,10 @@ at all).
 
 ### Documentation
 
+- [#174](https://github.com/InditexTech/docouture/pull/174) [skills] Internalize authoring-guides content into the docouture-* skills as AsciiDoc
 - [#150](https://github.com/InditexTech/docouture/pull/150) [documentation] Document docouture using docouture (dogfood the platform for its own docs)
 - [#149](https://github.com/InditexTech/docouture/pull/149) [skills] Externalize docs-authoring skills into standalone skill packages
 - [#115](https://github.com/InditexTech/docouture/pull/115) [cli] Scaffold AGENTS.md and agent skills (OpenCode & Claude) in docouture new
 - [#99](https://github.com/InditexTech/docouture/pull/99) [tooling] Document the two Antora versioning modes (Mode 1 & Mode 2)
 - [#47](https://github.com/InditexTech/docouture/pull/47) [internal] migrate Weave.js content to example package
-- [#33](https://github.com/InditexTech/docouture/pull/33) [iop-ds] Correct the iop-ds-components skill against the shipped package
+- [#33](https://github.com/InditexTech/docouture/pull/33) [skills] Correct the iop-ds-components skill against the shipped package

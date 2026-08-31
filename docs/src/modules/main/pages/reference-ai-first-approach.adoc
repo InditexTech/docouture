@@ -2,21 +2,28 @@
 
 docouture treats a documentation site as something a coding agent both *reads* and
 *writes*, not just something a human authors and an agent happens to stumble into.
+Three things make that real: the site publishes itself in a form an agent can read
+directly, a set of agent skills can write and maintain it, and a ledger keeps that
+writing honest instead of letting it decay into "AI-authored once and never touched
+again."
 
-* *Reads* — every build publishes `llms.txt`/`llms-full.txt`
-  (xref:main:reference-integrations.adoc[]), so an agent can load the whole site's
-  content directly instead of scraping rendered HTML.
-* *Writes* — `npx skills@latest add InditexTech/docouture --all` installs a set of
-  agent skills (below) that plan a site's structure, draft its first content from
-  whatever the repo already has, and keep it in sync as the repo changes —
-  separate from, and not scaffolded by, `docouture new` itself.
-* *Stays honest* — `docouture-documenting-changes` maintains a documentation-state
-  ledger in `AGENTS.md` (below), and `docouture doctor` advisory-checks that the
-  skills and `AGENTS.md` are still present, so "AI-assisted" doesn't quietly decay
-  into "AI-authored once and never touched again."
+== Reading the site — `llms.txt`
 
-This site you're reading was itself scaffolded and drafted this way — see
-xref:main:index.adoc[About].
+Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full
+aggregated Markdown dump) at the site root, the https://llmstxt.org[llms.txt
+convention] — so an agent can load the whole site's content directly instead of
+scraping rendered HTML. Configuration (the `summary` blockquote, excluding specific
+pages) lives with the rest of this site's build-time integrations, not here — see
+xref:main:reference-integrations.adoc[].
+
+== Writing the site — agent skills
+
+`npx skills@latest add InditexTech/docouture --all` installs a set of agent skills that
+plan a site's structure, draft its first content from whatever the repo already has,
+and keep it in sync as the repo changes. Skill installation is deliberately separate
+from, and never scaffolded by, `docouture new`/`docouture upgrade` themselves — a
+repository picks up, updates, or drops these skills on its own schedule, independent of
+scaffolding.
 
 [cols="1,3"]
 |===
@@ -30,6 +37,12 @@ has. This site was drafted this way — see xref:main:index.adoc[About].
 |`docouture-docs-internals`
 |The mechanics once a page/module needs to exist: the playbook, the component
 descriptor, the four names that must agree, the home-page vs. content-page patterns.
+
+|`docouture-authoring-guides`
+|What to actually write on each page: purpose, section skeleton, per-section
+instructions, a copyable AsciiDoc starting point and a quality checklist — for the
+six standard sections (Overview, Getting started, Guides, Reference, Additional
+information, Contributing) and the home page.
 
 |`docouture-writing-docs-pages`
 |https://asciidoc.org[AsciiDoc] itself: the language, `xref:` references, `nav.adoc`,
@@ -46,10 +59,68 @@ ledger honest.
 xref:main:guides-versioning-modes.adoc[].
 |===
 
-== The documentation-state ledger
+=== Setting up the skills
+
+The skills are installed with https://github.com/vercel-labs/skills[`skills`], a
+third-party CLI for the open agent-skills ecosystem (not part of docouture itself) that
+works across dozens of coding-agent harnesses — OpenCode and Claude Code among them.
+
+. **Install them** from the repository root:
++
+[source,bash]
+----
+npx skills@latest add InditexTech/docouture --all
+----
++
+`--all` installs every skill listed above to every agent harness the CLI finds; pass
+`--skill <name>` one or more times to install only specific skills, or `-a/--agent
+<agent>` to target one harness instead of all detected ones.
++
+. **Let it detect your harness.** The CLI scans the repository for installed coding
+agents (OpenCode, Claude Code, Codex, Cursor, and others) and installs to each one it
+finds; if it finds none, it prompts for which to install to instead.
++
+. **Know where the files land.** Each harness reads skills from its own project-scoped
+directory — for example `.claude/skills/` for Claude Code or `.agents/skills/` for
+OpenCode, Codex, Cursor, and several others. By default the CLI symlinks every
+harness's copy back to one canonical install rather than duplicating the files, so a
+later update only has to touch one place.
++
+. **Verify the install:**
++
+[source,bash]
+----
+npx skills list
+----
++
+. **Reload the agent session.** A skill's `description` is what lets an agent reach for
+it on its own; that only takes effect once the agent (re)reads its skill directory, so
+restart or reload the session after installing before expecting a skill to fire
+automatically.
++
+. **Keep them current** as this repository's skills evolve:
++
+[source,bash]
+----
+npx skills update
+----
+
+See the `skills` CLI's own https://github.com/vercel-labs/skills#readme[documentation]
+for the full command reference (removing skills, global vs. project scope, and the
+complete list of supported agent harnesses).
+
+== Staying honest — the documentation-state ledger
 
 `docouture-documenting-changes` maintains a `## Documentation state` table in
 `AGENTS.md`: which pages were drafted straight from the repo's own code (and from
 what), versus hand-written — so a later pass can tell "still matches the code" apart
 from "needs a look" without re-deriving every page from scratch. This site's own
 `AGENTS.md` carries exactly that table.
+
+`docouture doctor` advisory-checks that `AGENTS.md` is still present (not the skills
+themselves — see xref:main:reference-cli.adoc[], installing and maintaining them is
+entirely the `skills` CLI's job), so a repository that loses its ledger notices rather
+than silently drifting into undocumented territory.
+
+This site you're reading was itself scaffolded and drafted this way — see
+xref:main:index.adoc[About].

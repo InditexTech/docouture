@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/*
  * Grid placement (GH-10): `.doc` is a track in the same `.dt-grid-layout`
  * `main.hbs` gives `.content`, sharing its container with the ToC
  * (toc.css) — full width by default (both `.content`'s grid and no ToC

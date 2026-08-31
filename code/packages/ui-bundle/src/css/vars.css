@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/*
  * Layout metrics the design tokens do not model.
  *
  * Colours, fonts, weights and stacking live in bridge.css, expressed as

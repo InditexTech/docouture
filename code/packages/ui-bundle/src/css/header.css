@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/*
  * Header toolbar (see GH issue #7), fixed above the content column. Its left
  * edge follows the side menu (see GH issue #8): `left: var(--side-menu-
  * offset)` instead of a flat 100% width, so it starts where the content

@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/*
  * Design token layer: every --dt-* custom property this bundle's CSS
  * references (palette, size and typography scales, motion, stacking). See
  * dt-tokens.css's own header.

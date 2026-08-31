@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/*
  * The content column shrinks when the side menu is visible rather than the
  * menu overlaying it (see GH issue #8): `margin-left: var(--side-menu-
  * offset)`, the same variable header.css offsets by. 0 below breakpoint l

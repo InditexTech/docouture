@@ -1,0 +1,16 @@
+code/packages/ui-bundle/src/css/dt-breakpoints.css
+  h_c93d154c7c7074 1-15
+code/packages/ui-bundle/src/css/dt-tokens.css
+  h_c93d154c7c7074 2-5,7-9,12-35,40-57,60-83,88-105,108-148,151,154-193,197-275,278-285,288-295,299-306,311-318,324-331
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f7f9b36c2ca175d483e4ba10a69458d5d72f2be8",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

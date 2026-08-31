@@ -1,6 +1,8 @@
 ---
 name: cli-best-practices
 description: How the docouture CLI (code/packages/cli) is built to Node.js CLI best practices — global flags, colour/output discipline, the banner, signal handling for spawned children, and config precedence. USE WHEN adding or editing a command in code/packages/cli, wiring a new flag, touching bin.ts, or reviewing a change to that package for polish/consistency.
+metadata:
+  internal: true
 ---
 
 ## House rules for the docouture CLI

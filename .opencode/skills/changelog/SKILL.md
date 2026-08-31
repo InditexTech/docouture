@@ -1,6 +1,8 @@
 ---
 name: changelog
 description: "How code/CHANGELOG.md is written and grouped in this monorepo — the entry format, which GitHub label puts a change under which Keep a Changelog section, and the issue/PR two-tier convention that decides what gets an entry at all. USE WHEN adding or editing a CHANGELOG.md entry, deciding whether a PR needs one, choosing which section (Added/Fixed/Documentation/...) an entry belongs in, labeling a PR or issue, or touching the pr-verify CHANGELOG gate. EXAMPLES: 'add a changelog entry for this PR', 'does this PR need a changelog line', 'which section does a kind/internal change go in', 'why does pr-verify say my CHANGELOG entry is missing a label', 'the changelog action failed to bump the version'."
+metadata:
+  internal: true
 ---
 
 # CHANGELOG.md conventions

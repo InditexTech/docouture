@@ -1,6 +1,8 @@
 ---
 name: starter-package
 description: "The `code/packages/cli/templates/starter` template: what it contains, why it deliberately differs from `code/packages/example`, and how `docouture new` turns it into a new standalone documentation site. USE WHEN editing the CLI's starter template, deciding whether a change belongs in the template or in `example`, or working out why a scaffolded site looks different from an in-monorepo one. EXAMPLES: 'what does docouture new scaffold', 'why does the scaffolded site depend on the docouture UI bundle via npm instead of the sibling workspace package', 'can I add a page to the starter template', 'edit the CLI's starter template', 'why was code/packages/starter removed'."
+metadata:
+  internal: true
 ---
 
 # The starter template

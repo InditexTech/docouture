@@ -1,0 +1,46 @@
+.opencode/skills/asciidoc/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/changelog/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/cli-best-practices/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/docouture-components/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/docouture-foundations/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/docs-site-package/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/link-workspace-packages/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/monitor-ci/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/nx-generate/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/nx-import/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/nx-plugins/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/nx-run-tasks/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/nx-workspace/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/skills-authoring/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/starter-package/SKILL.md
+  h_c93d154c7c7074 4-5
+.opencode/skills/ui-bundle-anatomy/SKILL.md
+  h_c93d154c7c7074 4-5
+code/CHANGELOG.md
+  h_c93d154c7c7074 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "acf29fa8a7db9fd9cf072c731496e16b7744ad42",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

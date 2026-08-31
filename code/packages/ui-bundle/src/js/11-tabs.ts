@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /*
  * Content tabs (GH-45) — the behaviour half of the `[tabs]` block
  * (asciidoc-extensions/lib/tabs.js).

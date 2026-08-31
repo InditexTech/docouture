@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * The [tabs] block — asciidoc-extensions/lib/tabs.js (GH-45). IDS Tabs,
  * `Kind=Underlined` (Figma 2735:69397 light, 2735:69401 dark) — both frames
  * are the same component with only the ink swapped (`#000000` / `#FFFFFF`,

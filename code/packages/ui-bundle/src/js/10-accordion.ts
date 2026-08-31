@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /*
  * `<details>` height animation (GH-61 Part 1 follow-up) + `[accordion]`
  * group keyboard nav (Part 2) — layered onto the server-rendered markup

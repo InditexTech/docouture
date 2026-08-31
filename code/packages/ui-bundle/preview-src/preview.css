@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * Styles for the preview-only pages: hub (index.html) and icons (icons.html).
  * Neither preview-src/layouts/*.hbs is packed into the published UI bundle
  * (see build-preview-pages.js), so this stylesheet never ships either — it is

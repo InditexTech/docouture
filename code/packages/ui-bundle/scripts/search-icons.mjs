@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 //
 // Search Lucide's icon catalogue (offline, from the installed lucide-static
 // devDependency — nothing to fetch).

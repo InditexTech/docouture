@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /*
  * Search dialog (GH-67/GH-68/GH-69, S3/S4/S5 of the search epic, #64) — the
  * behaviour half of the static shell GH-66 (S2) shipped: header-content.hbs's

@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * Single-column landing (home-single.hbs) — the two-column layout's own
  * hero (home-hero.hbs) and content column (home.css's `.home__main`),
  * unchanged, held in one full-width column at every breakpoint instead of

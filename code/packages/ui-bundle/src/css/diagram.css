@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * The `[mermaid]`/`[plantuml]`/etc. blocks — asciidoc-extensions/lib/kroki.js.
  * `[mermaid,format=png]` (or any other `PNG_SUPPORTED_TYPES` entry —
  * kroki-config.js) renders a transparent `<img>` instead; everything below

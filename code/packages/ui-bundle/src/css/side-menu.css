@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * Side menu (see GH issue #8): logo, product title and the IDS list
  * navigation tree. Colours come straight off --dt-* tokens, like
  * header.css — this is a new DS-composed component, not upstream chrome

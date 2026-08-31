@@ -1,0 +1,183 @@
+code/packages/asciidoc-extensions/lib/card-grid.js
+  s_0883d3a68f040d::t_1ba50a39c9ad14 41,85-92,158,160
+code/packages/asciidoc-extensions/lib/cta.js
+  s_0883d3a68f040d::t_41ee3c164e0192 97-98
+code/packages/asciidoc-extensions/lib/feature-tabs.js
+  s_0883d3a68f040d::t_134e8b2374f114 240
+code/packages/cli/templates/starter/src/antora.yml
+  s_0883d3a68f040d::t_79e697a62d673d 52,58
+code/packages/cli/templates/starter/src/modules/main/pages/components.adoc
+  s_0883d3a68f040d::t_2f15c734b42853 331
+code/packages/example/docs/modules/main/pages/build/index.adoc
+  s_0883d3a68f040d::t_c6b0aee95a8377 12,20,28,36
+code/packages/ui-bundle/gulp.d/lib/dt-custom-media.js
+  s_0883d3a68f040d::t_176f032b4e5395 7-9,13,15,21,26,29-30,34
+code/packages/ui-bundle/gulp.d/tasks/build.js
+  s_0883d3a68f040d::t_959f717c42656f 7,47,49-50
+code/packages/ui-bundle/preview-src/content.adoc
+  s_0883d3a68f040d::t_6e50d461bef95d 321
+code/packages/ui-bundle/preview-src/home.adoc
+  s_0883d3a68f040d::t_c714e8d9724489 102,143
+code/packages/ui-bundle/preview-src/icons.adoc
+  s_0883d3a68f040d::t_6a1505fb8f11c7 3
+code/packages/ui-bundle/preview-src/layouts/hub.hbs
+  s_0883d3a68f040d::t_658d1eae54512e 21-23,28-30,35-37,42-44,49-51,56-58
+code/packages/ui-bundle/preview-src/layouts/icons.hbs
+  s_0883d3a68f040d::t_8ac88434620abc 3-7,21,25-29,34-37,40-42,45-47,51,53-65,67,69-70,72,75-77,101,104,107-108,119
+code/packages/ui-bundle/preview-src/layouts/search-dialog.hbs
+  s_0883d3a68f040d::t_120e64321e1bf7 8,10-11,43,47-54,58-60,67-74,78,80-84,86-89,94-97,99-102,109-110,117-124,128-131,134-135,142-149,154-155,157-158,160-161,164-165,168-171,173-174,179-182,184-185,191-194,200-201,208-215,220-221,223-224,226-227,230-231,233-237,239-240,245-249,251-252,258-259,266-273,277-281,285-286
+code/packages/ui-bundle/preview-src/preview.css
+  s_0883d3a68f040d::t_ff916998dc8ae9 8,25,30,47-48,52,54,61,73-74,79,83-85,89,101,108-109,120-123,135-137,145,156,163,167-169,174,185-186,192,196,201,205,209,211,215-216,220-221,233,241-244,247,263,270-271,283,294,300-301,305
+code/packages/ui-bundle/preview-src/ui-model.yml
+  s_0883d3a68f040d::t_a43fd77045f8d7 182,242
+code/packages/ui-bundle/src/css/accordion.css
+  s_0883d3a68f040d::t_697d786b7a1ce9 15-20,26-29,32,40,43,53-54,58,60,74-75,90,93-95,97-99,102,111-112,120-121,129-130,138,147,163-164,167,186-187,195,198,203-205,208,210-213,250,252-255
+code/packages/ui-bundle/src/css/base.css
+  s_0883d3a68f040d::t_cb3c7f13ae1047 24
+code/packages/ui-bundle/src/css/body.css
+  s_0883d3a68f040d::t_1be3ed673cb260 13,19
+code/packages/ui-bundle/src/css/bridge.css
+  s_0883d3a68f040d::t_11be3e7005e806 7,27,30-31,35,37,42-45,48-53,56-61,64-76,88,91-95,99,102,108,110,116
+code/packages/ui-bundle/src/css/card-grid.css
+  s_0883d3a68f040d::t_bf9ab643be55fb 6,14,16-20,28-29,35,41-42,44,55,114,123,130,137,151-152,166-167,177,184,187,191,214,250,256-257,267,272-273,280-284,292,296-299,311,335,345,357
+code/packages/ui-bundle/src/css/cta.css
+  s_0883d3a68f040d::t_5d96822d4ad136 11,13-14,16,18,27,30-31,74,111,120,128,137,152-153,177-178,181,185-186,192,195,202-204
+code/packages/ui-bundle/src/css/diagram.css
+  s_0883d3a68f040d::t_e09ac52350bfed 17-18,21,30,43,73-76,108,119-122,134-135,139,154,160-161
+code/packages/ui-bundle/src/css/doc.css
+  s_0883d3a68f040d::t_b835ccb948f31b 2,8,99,111,119,148,154,165,192,210-211,215-216,220-221,226-227,234,295,302,308,310-311,329,341,371,387,389,391-392,401,405,407,426-428,431,471-472,474,476,483-484,513,541,548,561-566,576,589,591,595,611,645,647-648,659-662,676,809-810,816-817,819,821,850-852,857-859,897-900,904-907,912,923,927,1054,1057,1088,1118,1122-1123,1127-1128,1132-1133,1137-1138,1142-1143,1156,1169,1179-1180,1187,1189-1190,1196-1197,1205,1216-1217,1219-1220,1225,1252,1254-1255,1335-1336,1394-1395,1411,1413-1414,1422-1424,1428-1429,1437,1440,1449-1450,1455-1457,1465-1466,1481,1496,1578,1583,1595,1615-1617,1619,1643-1644,1647,1675,1686-1688,1690,1695,1699-1700,1711,1725-1727,1733,1741,1754-1757,1781-1783,1809,1820-1821,1826-1828,1837,1839-1841,1859,1872-1874,1892,1927,1935,1940-1942,1946,1951,1956,1967,1971,1995,2036-2039,2054-2057,2064,2068,2111-2113,2126,2130,2135,2137
+code/packages/ui-bundle/src/css/feature-tabs.css
+  s_0883d3a68f040d::t_ee64b697a936f1 21-22,30,36-37,63,107,111,129,137,158,175,180-181,209,233-234,266-269,314,320,324,339,343,389-390
+code/packages/ui-bundle/src/css/footer.css
+  s_0883d3a68f040d::t_292f54cab02831 17,33-34,42,73,79,81,85,93-94,106-107,129,139,146,152,161,164
+code/packages/ui-bundle/src/css/header.css
+  s_0883d3a68f040d::t_ea3c4edc31d92e 11,21-22,36,49-50,54,64,87,103,107,124,144-146,149,160,172-175,179,188,196,204,206-207,209-211,215-216,220-221,225-226,231-235,238-239,242-243,246-247,250-251,254-255,258-259,273-274,284,288,293
+code/packages/ui-bundle/src/css/hero.css
+  s_0883d3a68f040d::t_d89df56d0b9381 3,13-14,24,30,36,46,53,64-65,86,90,103,106,112
+code/packages/ui-bundle/src/css/home-hero.css
+  s_0883d3a68f040d::t_b4464a0e01324b 7,11,15,27,39,44,60,64,70,72,75,84-87,89,103,110,140-141,145-147,152,156,158-160
+code/packages/ui-bundle/src/css/home-single.css
+  s_0883d3a68f040d::t_1ac716c1159dbb 66,100,123,133,278
+code/packages/ui-bundle/src/css/home.css
+  s_0883d3a68f040d::t_ea545fdde2216c 11,14,19,33,35,38,40,44,46,130,140,146,159,161,190,197,235,260,267,285-287,311,315-317,319,321,347,360,367,374,376,381,383,386,390,395
+code/packages/ui-bundle/src/css/icon-masks.css
+  s_0883d3a68f040d::t_3bc2a83193fe5a 2-5,8-9,11,13-20,22,28-41,44-45,48-49,52-53,56-57,60-61,64-65,68-69,72-73,76-77,80-81,84-85,88-89,92-93,96-97
+code/packages/ui-bundle/src/css/nav-switcher.css
+  s_0883d3a68f040d::t_23adead2ddeef3 17,37,39-40,53-55,61,63,68,73,78-79,91,116,118,130-131,137,140,143-146,169,171,176,192,200,223,230,237-238,252-253,258,271
+code/packages/ui-bundle/src/css/page-versions.css
+  s_0883d3a68f040d::t_3cf421bf7e15a2 11-12,16-17,20,45,48-49,52,79,82-83,85-87,94-95,97-98,102,114,116-117,121-122,126-127,141,144
+code/packages/ui-bundle/src/css/print.css
+  s_0883d3a68f040d::t_23216d63f9f8dd 11,14-22,156-158
+code/packages/ui-bundle/src/css/search-dialog.css
+  s_0883d3a68f040d::t_69f3fc255b5b88 8,11,13-14,18,26,39,42,47,50,52-53,56,67,69,88,93,125,132-134,138,140-141,147-149,156-157,164,168-169,179,188-189,198,230,233,237,241,245,248,250,253-254,259-260,267-270,272-273,283-285,287-288,291-294,296,300-302,305,309,311-312,315,319-323,327-331,334-339,346,350,353,356,360-366,372-373,379,391,393-394,397,448,450,454,457,459,472,474,478-483,488
+code/packages/ui-bundle/src/css/side-menu.css
+  s_0883d3a68f040d::t_a6e3fece9e2488 3,8-9,34,58,77,79,89,97,114,160,184,186,222,228,238,254,261,265,270,285,289,292-294,298-299,315,325,339,343,348,368,374,394-395,403,409,421,426,434-435,439-440,444-448,460-461,470-473,477,509,514,518-519,522-524,531
+code/packages/ui-bundle/src/css/site-footer.css
+  s_0883d3a68f040d::t_df63a27c3c8bc4 12,20,31,35,37-38,55,67,77,102,104,117,121,128,135,139,143,148
+code/packages/ui-bundle/src/css/site.css
+  s_0883d3a68f040d::t_9acbcbf818f0fc 2,5,11,13,17-18,26
+code/packages/ui-bundle/src/css/tabs.css
+  s_0883d3a68f040d::t_4a47b712fcea25 5,25,33,38,41,45,50,53,81,87,89,101,105,109-111,122,129-130,141,143-144,167,175
+code/packages/ui-bundle/src/css/toc.css
+  s_0883d3a68f040d::t_90a6606932e141 4,8,13,32,38,62,74,77,82-85,87,116,118-120,125,130-131,135-137,142,144-145,148,161,170-171,176,201,207
+code/packages/ui-bundle/src/css/vars.css
+  s_0883d3a68f040d::t_43c3f3f5b7f298 25-26,31,38,49,52-55,59-63,68-69,76,99,104,106-107,144,148,150-151,158,161-162,176,181-188,221,226,231-232
+code/packages/ui-bundle/src/helpers/icon.ts
+  s_6f86693e8c08e3::t_2b0ee7b70597a2 4,6-8,10,15-19,46-48,52,54
+code/packages/ui-bundle/src/img/icons.svg
+  s_0883d3a68f040d::t_30b6ab7859243f 1
+code/packages/ui-bundle/src/img/icons.yml
+  s_0883d3a68f040d::t_6c7b9f9332c0e9 1-2,4-9,11-13,15-16,18,21-54,56-58,72-85
+code/packages/ui-bundle/src/js/01-nav.ts
+  s_0883d3a68f040d::t_252c62f9ac9ca4 98,145,155,176
+code/packages/ui-bundle/src/js/02-on-this-page.ts
+  s_0883d3a68f040d::t_a5b44b91838f1b 54
+code/packages/ui-bundle/src/js/06-copy-to-clipboard.ts
+  s_0883d3a68f040d::t_59a518df712f51 15-17,25,29,65,69,71,73,92,97,99,101,117,142,146
+code/packages/ui-bundle/src/js/07-feature-tabs.ts
+  s_0883d3a68f040d::t_75d1c1b701e7b0 91,112
+code/packages/ui-bundle/src/js/08-theme.ts
+  s_0883d3a68f040d::t_873058403c9338 4,10,20
+code/packages/ui-bundle/src/js/09-heading-anchors.ts
+  s_6f86693e8c08e3::t_00e0e03dc4b803 33,37
+code/packages/ui-bundle/src/js/10-accordion.ts
+  s_0883d3a68f040d::t_6362570950755b 17,23,139-140,144,147
+code/packages/ui-bundle/src/js/11-tabs.ts
+  s_0883d3a68f040d::t_8b48f8d885940d 64
+code/packages/ui-bundle/src/js/12-search.ts
+  s_0883d3a68f040d::t_97b575ad81a73a 61,68-71,75,102-103,113,149,189,349,364,369,401,404,407,417,419,421,424,435,437,439,442,495,512,516,520,539,544,571,580,588,591,593,608
+code/packages/ui-bundle/src/js/13-search-recents.ts
+  s_0883d3a68f040d::t_04f937f45d9b8c 101,105,108,118,124,126,129,131,136,139,142,144-145,164-165,167,171
+code/packages/ui-bundle/src/layouts/home-single.hbs
+  s_0883d3a68f040d::t_5a08ecf00a4446 35
+code/packages/ui-bundle/src/layouts/home.hbs
+  s_0883d3a68f040d::t_efe6fd6b0a5346 40
+code/packages/ui-bundle/src/partials/breadcrumbs.hbs
+  s_0883d3a68f040d::t_b28f33fde77e1a 4-5,20,24,29,31,33
+code/packages/ui-bundle/src/partials/edit-this-page.hbs
+  s_0883d3a68f040d::t_797c1339c763ea 9-10,13,16-17,19,23-24,26
+code/packages/ui-bundle/src/partials/footer-content.hbs
+  s_0883d3a68f040d::t_4e046ecd98f761 28-29,31-32,36-37
+code/packages/ui-bundle/src/partials/head-prelude.hbs
+  s_0883d3a68f040d::t_e93c3c3586c7c8 14,19
+code/packages/ui-bundle/src/partials/head-styles.hbs
+  s_0883d3a68f040d::t_6ea1431d06c948 3
+code/packages/ui-bundle/src/partials/header-content.hbs
+  s_0883d3a68f040d::t_0493675e0554af 4,62-66,76,79,81-84
+code/packages/ui-bundle/src/partials/hero.hbs
+  s_0883d3a68f040d::t_92f2c47ccd0ca4 5-7,18,39,47-48,50-51,61-62,65,67,72-73,80-81,84-85,92-94
+code/packages/ui-bundle/src/partials/home-hero.hbs
+  s_0883d3a68f040d::t_4a2b7d767811f5 17,53,90-91,98-99,102-103
+code/packages/ui-bundle/src/partials/main.hbs
+  s_0883d3a68f040d::t_e26854cb41fcca 21
+code/packages/ui-bundle/src/partials/nav-brand.hbs
+  s_0883d3a68f040d::t_758ee7195e986b 4,19,52
+code/packages/ui-bundle/src/partials/nav-switcher.hbs
+  s_0883d3a68f040d::t_d9f399b4de570c 17-19,40,42,44,47,52,58,60,62
+code/packages/ui-bundle/src/partials/nav-tree.hbs
+  s_0883d3a68f040d::t_da9e2485f4fb45 2-3,9,14,37,46,57-58,67,72,76
+code/packages/ui-bundle/src/partials/nav.hbs
+  s_0883d3a68f040d::t_25b4fd78f62820 8,39,41
+code/packages/ui-bundle/src/partials/page-versions.hbs
+  s_0883d3a68f040d::t_47f96ad39a6107 2,36,38,47-49,71,73,80,82,89-90
+code/packages/ui-bundle/src/partials/pagination.hbs
+  s_0883d3a68f040d::t_ef93a37e95af60 13,22-24,31,49-50,55-57,68-69,72
+code/packages/ui-bundle/src/partials/repo-link.hbs
+  s_0883d3a68f040d::t_a3e7c4c08d657c 16-18
+code/packages/ui-bundle/src/partials/search-dialog.hbs
+  s_0883d3a68f040d::t_f0da82d9019ba8 21,28-30,32,35-36,38,43,49,52-53,88-89,91-92,94,97-103,108-110,116-117,121-122,128,130-131,139-142
+code/packages/ui-bundle/src/partials/site-footer.hbs
+  s_0883d3a68f040d::t_fbd6dc06186675 11,38-39,47,49,52,54,57,74-75,78,84,86,89,95,97,100
+code/packages/ui-bundle/src/partials/theme-toggle.hbs
+  s_0883d3a68f040d::t_204abb786dcc66 5-8
+code/packages/ui-bundle/src/partials/toc.hbs
+  s_0883d3a68f040d::t_3f5069635ef8e5 4
+code/pnpm-lock.yaml
+  s_0883d3a68f040d::t_954dbcda5a833e 186-188,2529-2531,6243-6244
+docs/src/antora.yml
+  s_0883d3a68f040d::t_a2d4ebabf849f5 52,58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "41de291885eff8eb9e632434ef98b10d87da442d",
+  "prompts": {},
+  "sessions": {
+    "s_0883d3a68f040d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa8e630f4ffe8sFNFQMRcn9J5B",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_6f86693e8c08e3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa8c38992fferHBKuNq60TYkfu",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

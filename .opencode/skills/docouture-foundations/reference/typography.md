@@ -1,23 +1,17 @@
-# IDS typography
+# Design tokens — typography
 
-Source of truth: `@inditex/sewingiopdsweb-styles/typography.css` and `mixins/index.css`.
+Hand-maintained in `code/packages/ui-bundle/src/css/dt-tokens.css`.
 
 ## How a text style is applied
 
-A style is **four** declarations, not one. Use the mixin:
-
-```css
-.thing { @mixin ids-body-m; }
-```
-
-which expands to:
+A style is **four** declarations, not one:
 
 ```css
 .thing {
-  font: var(--ids-typo-body-m);
-  letter-spacing: var(--ids-typo-body-m-letter-spacing);
-  text-transform: var(--ids-typo-body-m-text-transform);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
+  font: var(--dt-typo-body-m);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  text-transform: var(--dt-typo-body-m-text-transform);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
 }
 ```
 
@@ -54,9 +48,6 @@ whose numeric value depends on the resolution tier.
 `-high` is the emphasised variant of the same style — same size, heavier weight.
 Use it instead of setting `font-weight` yourself.
 
-Mixin names are the style names prefixed `ids-`: `ids-display-l`, `ids-title-m`,
-`ids-body-m-high`, `ids-code-m`, …
-
 ## Documentation deviation: uppercase titles
 
 Every `title-*` style is `text-transform: uppercase`. That is right for application
@@ -68,8 +59,10 @@ transform:
 
 ```css
 .doc h2 {
-  @mixin ids-title-m;
+  font: var(--dt-typo-title-m);
+  letter-spacing: var(--dt-typo-title-m-letter-spacing);
   text-transform: none;
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
 }
 ```
 
@@ -84,45 +77,38 @@ metadata are `detail-m`; code is `code-m`.
 
 Only reach for these when composing something the scale does not cover.
 
-- `--ids-typo-font-size-{11,12,13,14,15,16,18,20,24,28,32,36,40,48,56,64,72,80}`
-- `--ids-typo-line-height-{14,16,18,20,22,24,28,32,36,40,48,56,64,72,80,88,96,120}`
-- `--ids-typo-letter-spacing-{none,mid}` — `0px`, `0.4px`
-- `--ids-typo-text-transform-{none,lowercase,uppercase}`
-- `--ids-typo-font-weight-{default,mid,high}` — resolution-dependent, see `tokens.md`
+- `--dt-typo-font-size-{11,12,13,14,15,16,18,20,24,28,32,36,40,48,56,64,72,80}`
+- `--dt-typo-line-height-{14,16,18,20,22,24,28,32,36,40,48,56,64,72,80,88,96,120}`
+- `--dt-typo-letter-spacing-{none,mid}` — `0px`, `0.4px`
+- `--dt-typo-text-transform-{none,lowercase,uppercase}`
+- `--dt-typo-font-weight-{default,mid,high}` — resolution-dependent, see `tokens.md`
 
-Token numbers are px **at `.ids-scale-medium`**. At `.ids-scale-large`,
-`--ids-typo-font-size-16` is 21px. Never assume the number is the rendered size.
+Token numbers are px **at `.dt-scale-medium`**. At `.dt-scale-large`,
+`--dt-typo-font-size-16` is 21px. Never assume the number is the rendered size.
 
 ## Font families
 
 | token | family |
 | --- | --- |
-| `--ids-typo-font-family-primary` | `Helvetica Now Text SW10` |
-| `--ids-typo-font-family-monospace` | `NotoSansMono` |
+| `--dt-typo-font-family-primary` | `"Inter"` |
+| `--dt-typo-font-family-monospace` | `"Noto Sans Mono"` |
 
-Loaded from a public CDN as two stylesheets — no `@font-face` in this repo, no
-`@fontsource` packages:
+Loaded from Google Fonts as one variable-font stylesheet — no `@font-face` in this
+repo, no `@fontsource` packages:
 
 ```
-https://amgassets.inditex.com/amigaweb/typography/zara-helvetica-now/zara-helvetica-now-sw10.css
-https://amgassets.inditex.com/amigaweb/typography/noto-sans-mono/noto-sans-mono.css
+https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap
 ```
 
-Sites served from a `.cn` hostname must use `amgassets.inditex.cn` instead; the DS
-`fonts.js` does this by sniffing `location.hostname`, and the bundle replicates the
-rule in `head-styles.hbs`.
-
-The Figma Typography canvas also documents CJK, Ukrainian and Polish family tokens
-(`Noto Sans SC` / `TC` / `Noto Sans`). The package does **not** ship them. If docouture
-ever needs a CJK locale, that is a gap to raise with the DS team, not to fill locally.
+`head-styles.hbs` is the only place that references this URL.
 
 ## Fallback stack
 
-The CDN is a hard dependency of correct rendering, but must not break an offline
-`just preview` or an air-gapped CI. `bridge.css` therefore sets the bundle's own
-family variables with a fallback tail:
+Google Fonts is a hard dependency of correct rendering, but must not break an
+offline `just preview` or an air-gapped CI. `bridge.css` therefore sets the bundle's
+own family variables with a fallback tail:
 
 ```css
---body-font-family: var(--ids-typo-font-family-primary), "Helvetica Neue", Arial, sans-serif;
---monospace-font-family: var(--ids-typo-font-family-monospace), ui-monospace, monospace;
+--body-font-family: var(--dt-typo-font-family-primary), "Helvetica Neue", Arial, sans-serif;
+--monospace-font-family: var(--dt-typo-font-family-monospace), ui-monospace, monospace;
 ```

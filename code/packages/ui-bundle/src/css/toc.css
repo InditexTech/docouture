@@ -125,7 +125,7 @@
   color: var(--dt-color-content-default);
 }
 
-/* see .opencode/skills/iop-ds-components: the DS's own uniform focus ring */
+/* see .opencode/skills/docouture-components: the DS's own uniform focus ring */
 .toc-menu a:focus-visible {
   outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
   outline-offset: var(--dt-size-25);

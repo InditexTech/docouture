@@ -115,7 +115,7 @@
  * above for why that's a different token than the selected row's); text
  * colour reuses the same content-state token `.dt-tag`'s own hover rule
  * reads (dt-components.css). `:focus-visible` matches the DS's uniform
- * focus ring (iop-ds-components skill).
+ * focus ring (docouture-components skill).
  */
 .page-versions a.version:hover {
   background-color: var(--dt-color-bg-states-hover);

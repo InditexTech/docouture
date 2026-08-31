@@ -1,10 +1,10 @@
 /*
- * Layout metrics the design system does not model.
+ * Layout metrics the design tokens do not model.
  *
- * Colours, fonts, weights and stacking live in bridge.css, expressed as IOP
- * Design System tokens. What remains here is chrome geometry specific to a
+ * Colours, fonts, weights and stacking live in bridge.css, expressed as
+ * design tokens. What remains here is chrome geometry specific to a
  * documentation layout — bar heights, panel widths, measure — and the line
- * heights for long-form prose, which the design system's fixed px line-height
+ * heights for long-form prose, which the fixed px line-height
  * tokens cannot express.
  *
  * Do not add a colour, font or z-index to this file.
@@ -56,7 +56,7 @@
 
   /* dimensions and positioning */
   /*
-   * GH-77: matches the IOP DS `.dt-header` component's own ≥513px box
+   * GH-77: matches this project's own `.dt-header`-shaped component's ≥513px box
    * height exactly — `--dt-size-350` already equals its
    * `padding-block: var(--dt-size-50)` (top+bottom) around the
    * `--dt-size-250` content row, box-sized, so it's used directly rather

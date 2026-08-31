@@ -17,7 +17,7 @@ one this repository obeys.
   contract Antora enforces, and how to wire an extension into a playbook.
 
 For **what the rendered HTML looks like** read `ui-bundle-anatomy` (templates) and
-`iop-ds-components` (markup and classes the styling expects).
+`docouture-components` (markup and classes the styling expects).
 
 ## Where content lives
 

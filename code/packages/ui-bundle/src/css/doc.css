@@ -185,7 +185,7 @@ html.has-toc.is-toc-closed .doc {
 /*
  * GH-11 heading scale (Figma 3615:59166, mapped in the issue's own table):
  * `title-*` sizing, `text-transform` reset back to `none` — see
- * .opencode/skills/iop-ds-foundations/reference/typography.md's own
+ * .opencode/skills/docouture-foundations/reference/typography.md's own
  * "Documentation deviation" section for why article prose keeps every
  * `title-*` style's weight/size/line-height but not its uppercase default.
  * Each level is its own rule rather than a shared block plus overrides,
@@ -302,7 +302,7 @@ html.has-toc.is-toc-closed .doc {
  * No `.dt-divider` here despite the issue's own suggestion — the design
  * system's divider is a solid rule; this one is dashed 4/4, which nothing
  * in the DS models, so there is no component to compose from (see
- * .opencode/skills/iop-ds-components/SKILL.md's decision order, step 4).
+ * .opencode/skills/docouture-components/SKILL.md's decision order, step 4).
  */
 .doc h2:not(.discrete) {
   background-color: var(--dt-color-bg-default);
@@ -430,7 +430,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * a standalone square target here. Not the DS class either way: the DS
  * button needs `.dt-button__content`/`.dt-button__icon` wrapper spans
  * this plain `<a>` does not have, and adding the class without them would
- * be styling for markup that isn't there (see iop-ds-components skill,
+ * be styling for markup that isn't there (see docouture-components skill,
  * "BEM conventions").
  *
  * Floats over the band's own left gutter via `position: absolute`,
@@ -1409,7 +1409,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * field" construct shares: example blocks/collapsible results (below),
  * the preamble's abstract and sidebars. None of these has a DS component
  * of its own (no `.dt-sidebar` content block, `.dt-example` — see
- * .opencode/skills/iop-ds-components/SKILL.md's decision order, step 4),
+ * .opencode/skills/docouture-components/SKILL.md's decision order, step 4),
  * so every one of them is built from `--dt-color-bg-low` +
  * `--dt-size-250` (40px) padding here instead — nothing in the design
  * gives any of them a border or a radius, unlike antora-ui-default's own

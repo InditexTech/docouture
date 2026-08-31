@@ -34,7 +34,7 @@
  * through:
  *
  * - Mermaid has one (a `%%{init: {...}}%%` directive Mermaid's own renderer
- *   reads): kroki-mermaid-theme.js bakes IOP DS's light-theme colors and
+ *   reads): kroki-mermaid-theme.js bakes this project's light-theme colors and
  *   square corners into the diagram SERVER-SIDE, before it ever reaches
  *   Kroki — the SVG (or PNG: Kroki's mermaid companion renders PNG by
  *   screenshotting that same themed SVG in headless Chrome, so this applies
@@ -107,7 +107,7 @@
  * covers the HTML labels some tools (Mermaid's `.nodeLabel`/`.edgeLabel`)
  * render through instead of `<text>`. `--dt-typo-body-m` end to end (font
  * shorthand + the letter-spacing/text-transform/font-variant-numeric that
- * have to travel with it — see the iop-ds-foundations skill's own
+ * have to travel with it — see the docouture-foundations skill's own
  * typography section) rather than just `font-family`, so a diagram's text
  * actually matches the DS's body copy, not just borrows its typeface. Moot
  * for `format=png` — a raster image has no DOM for this to reach — but

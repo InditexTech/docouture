@@ -1,5 +1,5 @@
 /*
- * Bridge — the bundle's own variables, expressed in IOP Design System tokens.
+ * Bridge — the bundle's own variables, expressed in this project's own design tokens.
  *
  * This file is the single seam between antora-ui-default's variable vocabulary
  * and the design system. Every stylesheet in src/css keeps referring to
@@ -13,7 +13,7 @@
  *     chrome is restyled onto design system components, entries are deleted.
  *   - Layout metrics that the design system does not model stay in vars.css.
  *
- * See .opencode/skills/iop-ds-foundations for the token vocabulary.
+ * See .opencode/skills/docouture-foundations for the token vocabulary.
  */
 
 :root {

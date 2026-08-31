@@ -66,7 +66,7 @@ $ just build            # build everything
 The packages you'll most likely touch:
 
 - `packages/ui-bundle` — the Antora UI bundle (layouts, styles, browser
-  scripts, Handlebars helpers), themed with the IOP Design System.
+  scripts, Handlebars helpers), with its own design tokens.
 - `packages/example` — the real-world site content lives here.
 - `packages/cli` — the `docouture` CLI, which scaffolds a standalone site
   (`docouture new`) outside this monorepo.

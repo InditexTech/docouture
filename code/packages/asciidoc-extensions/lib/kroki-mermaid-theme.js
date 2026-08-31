@@ -17,9 +17,9 @@
 // COLORS ARE HARDCODED HEX, NOT `--dt-*` TOKENS — deliberately. This runs
 // server-side, at prewarm/render time, against a plain HTTP POST body; there
 // is no CSS custom-property resolution available there (no page, no
-// cascade, nothing). The values below are IOP DS's own light-theme
+// cascade, nothing). The values below are this project's own light-theme
 // `--dt-color-{bg,border,content}-default` (dt-tokens.css) copied
-// verbatim — same exception the iop-ds-foundations skill already carves out
+// verbatim — same exception the docouture-foundations skill already carves out
 // for `--hljs-*`'s own syntax palette, for the same reason: a value that
 // cannot be expressed as a token in the context it's actually used. DARK
 // MODE IS NOT BAKED HERE: the result is always this fixed, light-theme

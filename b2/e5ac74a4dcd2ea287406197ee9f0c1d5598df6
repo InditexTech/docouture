@@ -1,0 +1,47 @@
+.agents/skills/docouture-writing-docs-pages/SKILL.md
+  s_0883d3a68f040d::t_13ba7520c8455a 89
+.opencode/skills/asciidoc/SKILL.md
+  s_0883d3a68f040d::t_a78612fe5384c6 20
+.opencode/skills/asciidoc/reference/extensions.md
+  s_0883d3a68f040d::t_b9f4d1b6fa249c 89
+.opencode/skills/docouture-components/reference/extensions.md
+  s_0883d3a68f040d::t_548b6f7ac205c2 54,64,83-84,90
+.opencode/skills/docouture-foundations/reference/tokens.md
+  s_0883d3a68f040d::t_3afc836560aa68 1,3-5,16-21,27-33,39-49,55-57,75,79-83,87-88,93-95,99-100,104-125,128-129,135-140,146,153-155,158,165-174,177
+.opencode/skills/ui-bundle-anatomy/SKILL.md
+  s_0883d3a68f040d::t_a962727acb6de3 11,25-26,68,107-108
+.opencode/skills/ui-bundle-anatomy/reference/templates.md
+  s_0883d3a68f040d::t_a1632c61788326 37,109,111-112
+CONTRIBUTING.md
+  s_0883d3a68f040d::t_50e15e44f05e8a 69
+code/packages/asciidoc-extensions/lib/kroki-mermaid-theme.js
+  s_0883d3a68f040d::t_1d96b740ca9a74 20,22
+code/packages/ui-bundle/src/css/bridge.css
+  s_0883d3a68f040d::t_8a94e5d9fd51dc 2,16
+code/packages/ui-bundle/src/css/diagram.css
+  s_0883d3a68f040d::t_ce45a7f74ef3cd 37,110
+code/packages/ui-bundle/src/css/doc.css
+  s_0883d3a68f040d::t_7932c792e52995 188,305,433,1412
+code/packages/ui-bundle/src/css/page-versions.css
+  s_0883d3a68f040d::t_de17401ff240ba 118
+code/packages/ui-bundle/src/css/toc.css
+  s_0883d3a68f040d::t_fd52a20ca513f9 128
+skills/docouture-writing-docs-pages/SKILL.md
+  s_0883d3a68f040d::t_34af7880b0c413 89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b2e5ac74a4dcd2ea287406197ee9f0c1d5598df6",
+  "prompts": {},
+  "sessions": {
+    "s_0883d3a68f040d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa8e630f4ffe8sFNFQMRcn9J5B",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

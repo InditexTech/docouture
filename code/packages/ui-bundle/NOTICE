@@ -1,14 +1,27 @@
-This package is a fork of the Antora default UI.
+This package is a fork of the Antora default UI, and carries two licenses
+across its own source files — each file's own SPDX header is authoritative;
+this NOTICE just explains the split.
 
   Antora default UI
   https://gitlab.com/antora/antora-ui-default
   Copyright (C) OpenDevise Inc. and individual contributors to Antora
   Licensed under the Mozilla Public License, v. 2.0 (see LICENSE)
 
-Modifications from upstream are described in ../../README.md and cover the build
-pipeline (gulp 5, esbuild, svgo, TypeScript sources) and the upgrade from
-highlight.js 9 to 11. The Handlebars templates and stylesheets remain
-substantially upstream's work.
+Files that are a Modification of an antora-ui-default file at the same path —
+per MPL-2.0 §1.10(a), regardless of how much of the file's content has since
+changed — remain licensed MPL-2.0, matching upstream. This covers most of the
+Handlebars templates and stylesheets, several build helpers under gulp.d/,
+and the ported-to-TypeScript client-side scripts in src/js/.
+
+Files with no antora-ui-default counterpart at all — the Design-System
+integration (dt-*.css, the DS component stylesheets and partials), the
+home/landing layout, search, the icon build pipeline, and the rest of the
+gulp/esbuild build pipeline that has no upstream equivalent — are wholly
+Inditex's own work and licensed Apache-2.0.
+
+The build pipeline as a whole (gulp 5, esbuild, svgo, TypeScript sources)
+and the upgrade from highlight.js 9 to 11 are described further in
+../../README.md.
 
 The syntax-highlighting palette is highlight.js's own bundled themes, "GitHub
 Dark" and "GitHub Dark Dimmed" (highlight.js/styles/github-dark(-dimmed).css),

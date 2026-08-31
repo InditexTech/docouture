@@ -58,9 +58,21 @@ SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
-# ui-bundle: literal fork of antora-ui-default (MPL-2.0 upstream).
+# ui-bundle: literal fork of antora-ui-default (MPL-2.0 upstream). Only the
+# files below still lack an inline SPDX header — everything else in the
+# package (.ts/.js/.css/.hbs) is now self-annotated; see each file's own
+# header (MPL-2.0 or Apache-2.0 per its NOTICE-documented split).
 path = [
-    "code/packages/ui-bundle/**",
+    "code/packages/ui-bundle/.stylelintignore",
+    "code/packages/ui-bundle/.stylelintrc.json",
+    "code/packages/ui-bundle/LICENSE",
+    "code/packages/ui-bundle/NOTICE",
+    "code/packages/ui-bundle/preview-src/**",
+    "code/packages/ui-bundle/src/img/**",
+    "code/packages/ui-bundle/src/static/.nojekyll",
+    "code/packages/ui-bundle/src/ui.yml",
+    "code/packages/ui-bundle/tsconfig.browser.json",
+    "code/packages/ui-bundle/tsconfig.helpers.json",
 ]
 SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "MPL-2.0"

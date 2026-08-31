@@ -1,0 +1,22 @@
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  h_c93d154c7c7074 9-17
+.github/workflows/code-npm_node-publish-snapshot.yml
+  h_c93d154c7c7074 1-502
+.github/workflows/docs/code-npm_node-publish-release-and-snapshot.md
+  h_c93d154c7c7074 5-6,28,37
+.github/workflows/docs/code-npm_node-publish-snapshot.md
+  h_c93d154c7c7074 1-65
+code/CHANGELOG.md
+  h_c93d154c7c7074 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "15261cd05784bed18951e0a6bb5e56da3320edbc",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

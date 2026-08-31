@@ -1,0 +1,14 @@
+REUSE.toml
+  h_c93d154c7c7074 24-48,65-74,76-77,80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e1ae91ac88ebd5db6f6f4eecda3a78f147763d90",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

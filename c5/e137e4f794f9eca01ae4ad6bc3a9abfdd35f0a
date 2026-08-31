@@ -1,0 +1,20 @@
+code/authoring-guides/home.md
+  h_c93d154c7c7074 28-29,31-35,39-40,42-45
+code/authoring-guides/sections/getting-started.md
+  h_c93d154c7c7074 176-179
+code/authoring-guides/sections/guides.md
+  h_c93d154c7c7074 136-141
+code/authoring-guides/sections/reference.md
+  h_c93d154c7c7074 133-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c5e137e4f794f9eca01ae4ad6bc3a9abfdd35f0a",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

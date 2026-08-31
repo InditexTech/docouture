@@ -1,0 +1,46 @@
+.agents/skills/codebase-design/SKILL.md
+  h_c93d154c7c7074 4-5
+.agents/skills/domain-modeling/SKILL.md
+  h_c93d154c7c7074 4-5
+.agents/skills/grill-me/SKILL.md
+  h_c93d154c7c7074 5-6
+.agents/skills/grill-with-docs/SKILL.md
+  h_c93d154c7c7074 5-6
+.agents/skills/grilling/SKILL.md
+  h_c93d154c7c7074 4-5
+.agents/skills/handoff/SKILL.md
+  h_c93d154c7c7074 6-7
+.agents/skills/implement/SKILL.md
+  h_c93d154c7c7074 5-6
+.agents/skills/improve-codebase-architecture/SKILL.md
+  h_c93d154c7c7074 5-6
+.agents/skills/loop-me/SKILL.md
+  h_c93d154c7c7074 6-7
+.agents/skills/prototype/SKILL.md
+  h_c93d154c7c7074 4-5
+.agents/skills/research/SKILL.md
+  h_c93d154c7c7074 4-5
+.agents/skills/to-questionnaire/SKILL.md
+  h_c93d154c7c7074 5-6
+.agents/skills/to-spec/SKILL.md
+  h_c93d154c7c7074 5-6
+.agents/skills/to-tickets/SKILL.md
+  h_c93d154c7c7074 5-6
+.agents/skills/wizard/SKILL.md
+  h_c93d154c7c7074 4-5
+.agents/skills/writing-for-agents/SKILL.md
+  h_c93d154c7c7074 4-5
+code/CHANGELOG.md
+  h_c93d154c7c7074 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2ef2db0b513d48d319710829c1bb9e4e4654fcb5",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

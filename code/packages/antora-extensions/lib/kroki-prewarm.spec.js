@@ -114,6 +114,59 @@ describe('registerKrokiPrewarm', () => {
     })
   })
 
+  // GH-193: real, hand-authored blocks carry more than a bare `[type]` or
+  // `[type,format=X]` style — a positional id, a positional format
+  // shorthand (not `format=`), a `role=`, … — every one of which real
+  // Asciidoctor conversion (kroki.js's own block extension, a proper
+  // parser) still recognises and renders, but the raw-text regex here
+  // used to require the WHOLE bracket content to be exactly `type` or
+  // `type,format=<anything>`, so any other attribute silently made the
+  // block invisible to this scan — a permanent, guaranteed prewarm miss,
+  // reproduced verbatim from a real page (karatetools-oss's
+  // architecture.adoc): `[plantuml,architecture,png,role="no-border,
+  // zoom-in"]`. `png` there is POSITIONAL, not `format=png`, so this
+  // asserts the fetch still defaults to `svg` — matching kroki.js's own
+  // `attrs.format` lookup, which only ever reads a NAMED `format=`
+  // attribute too; treating a positional token as `format` here would be
+  // a NEW mismatch, not a fix.
+  it('detects a block styled with extra attributes beyond a bare [type] or [type,format=X]', async () => {
+    const svg = '<svg>extra-attrs</svg>'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = '@startuml\nBob -> Alice\n@enduml'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+      files: [
+        file(
+          'modules/main/pages/a.adoc',
+          `[plantuml,architecture,png,role="no-border, zoom-in"]\n....\n${source}\n....\n`
+        ),
+      ],
+    })
+
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/svg')
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'svg'))).toEqual({ format: 'svg', data: svg })
+  })
+
+  it('still honours a real named format= attribute mixed in with other attributes', async () => {
+    const png = 'ZmFrZQ=='
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, arrayBuffer: async () => Buffer.from(png, 'base64') })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = '@startuml\nBob -> Alice\n@enduml'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+      files: [
+        file('modules/main/pages/a.adoc', `[plantuml,architecture,role="x",format=png]\n....\n${source}\n....\n`),
+      ],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/png')
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'png'))).toEqual({ format: 'png', data: png })
+  })
+
   it('logs a success summary when every requested diagram renders', async () => {
     const svg = '<svg>rendered</svg>'
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
@@ -308,6 +361,41 @@ describe('registerKrokiPrewarm', () => {
       })
 
       const expectedSource = `${shapes}\n${diagramA}`
+      expect(fetchMock.mock.calls[0][1].body).toBe(expectedSource)
+      expect(kroki.get(kroki.keyFor('plantuml', expectedSource, 'svg'))).toEqual({ format: 'svg', data: svg })
+    })
+
+    // GH-193 (follow-up to GH-189): unlike every other fixture in this
+    // describe block, both partials here end with a trailing newline —
+    // the shape virtually every real file on disk has, but that none of
+    // the plain string literals above happen to carry. Real Asciidoctor
+    // conversion treats that trailing newline as a line terminator, not
+    // an extra blank line, when splicing the partial's own lines in place
+    // of the include:: directive — this asserts the prewarmed source
+    // matches that exactly, with no spurious blank line at the boundary
+    // between the two concatenated partials.
+    it('does not insert a spurious blank line when a concatenated partial ends with its own trailing newline', async () => {
+      const svg = '<svg>trailing-newline</svg>'
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+      vi.stubGlobal('fetch', fetchMock)
+
+      const shapes = 'skinparam shape1\n'
+      const diagramA = 'A -> B\n'
+      await run({
+        attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+        files: [
+          file(
+            'modules/main/pages/a.adoc',
+            block('plantuml', 'include::partial$shapes.puml[]\ninclude::partial$diagram-a.puml[]')
+          ),
+        ],
+        extraFiles: [
+          file('modules/main/partials/shapes.puml', shapes),
+          file('modules/main/partials/diagram-a.puml', diagramA),
+        ],
+      })
+
+      const expectedSource = 'skinparam shape1\nA -> B'
       expect(fetchMock.mock.calls[0][1].body).toBe(expectedSource)
       expect(kroki.get(kroki.keyFor('plantuml', expectedSource, 'svg'))).toEqual({ format: 'svg', data: svg })
     })

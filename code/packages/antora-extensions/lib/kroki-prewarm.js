@@ -110,30 +110,83 @@ const { ensureKrokiRunning } = require('./kroki-docker')
 const resolveIncludeFile = require('@antora/asciidoc-loader/include/resolve-include-file')
 const { getLines, getTags, filterLinesByLineNumbers, filterLinesByTags } = require('./kroki-include-line-filters')
 
-// Matches the exact shape kroki.js intercepts: a `[type]` (optionally
-// `,format=<anything>` — deliberately not restricted to `svg|png` here;
-// `resolveFormat` is the one place both this file and kroki.js validate the
-// value, so a typo (`format=jpeg`) is caught and warned about the same way
-// on both sides, rather than this regex silently failing to match the
-// whole block and this file treating it as not a diagram at all while
-// kroki.js's own Asciidoctor-parsed `attrs.format` still sees it) style
-// line immediately followed by a four-dot-delimited LITERAL block. Built
+// Matches the shape kroki.js intercepts: a `[type]` style line — optionally
+// followed by ANY further comma-separated attributes real Asciidoctor
+// accepts on a block (a positional id, a bare format shorthand, `role=`,
+// …) — immediately followed by a four-dot-delimited LITERAL block. Built
 // from `SUPPORTED_TYPES` rather than a bare `\w+`, so a block styled with
 // some other, unsupported name (or a coincidental four-dot block that
 // isn't a diagram at all) is never sent to Kroki on a guess. Tolerant of
 // `\r\n` line endings and of trailing whitespace on the delimiter lines —
-// real-world authoring and git checkout settings both produce those — but
-// otherwise matches `tools/fumadocs-migrate/lib/emit.mjs`'s own emitted
-// shape verbatim, since that's the one real caller of this today (which
-// never emits `format=`).
+// real-world authoring and git checkout settings both produce those.
+//
+// Follow-up to GH-189, found while reproducing that fix against a real
+// hand-authored page (karatetools-oss's architecture.adoc): this used to
+// require the WHOLE bracket content to be exactly `type` or
+// `type,format=<anything>` — anything
+// else on the style line (a block id, `role=`, a positional format
+// shorthand — every one of these appears on real, hand-authored pages;
+// see e.g. `[plantuml,architecture,png,role="no-border, zoom-in"]`) made
+// the regex fail to match at all, so the block was invisible to this
+// scan and permanently missed the prewarm cache even though real
+// Asciidoctor conversion (a proper block extension, parsing the full
+// attribute list) still recognised and rendered it — every single time,
+// not just once. The attribute list (group 2 below, raw and unparsed) is
+// now captured whole and handed to `extractFormatAttr` to pull out a
+// `format=` value from wherever it appears, quote-aware, the same way
+// `parseIncludeAttrlist` already does for `include::` directives.
 function buildBlockPattern() {
   const typeAlternation = SUPPORTED_TYPES.map((type) => type.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
   return new RegExp(
     '^\\[(' +
       typeAlternation +
-      ')(?:,\\s*format\\s*=\\s*([a-zA-Z0-9_-]*)\\s*)?\\]\\r?\\n\\.\\.\\.\\.[ \\t]*\\r?\\n([\\s\\S]*?)\\r?\\n\\.\\.\\.\\.[ \\t]*$',
+      ')(?:,([^\\]]*))?\\]\\r?\\n\\.\\.\\.\\.[ \\t]*\\r?\\n([\\s\\S]*?)\\r?\\n\\.\\.\\.\\.[ \\t]*$',
     'gm'
   )
+}
+
+// A minimal, quote-aware attrlist scanner — same shape as
+// `parseIncludeAttrlist` below, but permissive rather than strict: a
+// block's style line may legitimately carry positional attributes
+// (an id, a bare format shorthand) and named attributes this file has no
+// reason to understand (`role=`, …) that real Asciidoctor still parses
+// and applies just fine. This only needs to find `format=`, if any is
+// present, wherever it falls in the list; everything else is simply
+// skipped rather than rejected — unlike `parseIncludeAttrlist`, an
+// unrecognised attribute here is not a reason to give up on the whole
+// block.
+function extractFormatAttr(attrlist) {
+  if (!attrlist) return undefined
+  let i = 0
+  const len = attrlist.length
+  while (i < len) {
+    while (i < len && (attrlist[i] === ',' || attrlist[i] === ' ')) i++
+    if (i >= len) break
+    const start = i
+    while (i < len && attrlist[i] !== '=' && attrlist[i] !== ',') i++
+    if (i < len && attrlist[i] === '=') {
+      const key = attrlist.slice(start, i).trim()
+      i++ // skip '='
+      let value
+      if (attrlist[i] === '"' || attrlist[i] === "'") {
+        const quote = attrlist[i]
+        i++
+        const valueStart = i
+        while (i < len && attrlist[i] !== quote) i++
+        value = attrlist.slice(valueStart, i)
+        i++ // skip closing quote
+        while (i < len && attrlist[i] !== ',') i++
+      } else {
+        const valueStart = i
+        while (i < len && attrlist[i] !== ',') i++
+        value = attrlist.slice(valueStart, i).trim()
+      }
+      if (key === 'format') return value
+    }
+    // positional attribute (no `=` before the next comma) — not `format=`,
+    // skip to the next one.
+  }
+  return undefined
 }
 
 /** Every `(type, source, format)` triple found in one file's raw contents. */
@@ -142,7 +195,7 @@ function extractDiagrams(text, pattern) {
   pattern.lastIndex = 0
   let match
   while ((match = pattern.exec(text))) {
-    found.push({ type: match[1], format: match[2], source: match[3] })
+    found.push({ type: match[1], format: extractFormatAttr(match[2]), source: match[3] })
   }
   return found
 }
@@ -305,6 +358,27 @@ function resolveIncludesInSource(source, originFile, catalog, logger, depth = 0)
         includeContent = resolved.contents
       }
     }
+    // A resolved file's own trailing newline is a LINE TERMINATOR, not an
+    // extra blank line — `resolved.contents` (or `selected.join('\n')` above,
+    // when the last selected line happened to be the file's own final,
+    // terminator-only artifact) ends in `\n` for virtually every real file
+    // on disk. Left as-is, the recursive call below re-splits this same
+    // string on NEWLINE_RX, which turns a trailing terminator into a
+    // trailing EMPTY array element; that empty element then survives back
+    // up as this whole include's own last "line" and gets its own `\n`
+    // separator from the OUTER `outLines.join('\n')` below, on top of the
+    // terminator this string already carries — doubling into a genuine
+    // blank line at the include boundary that real Asciidoctor conversion
+    // (which reads a file as its real lines, not as a blob with its own
+    // trailing terminator to preserve) never produces. This bit real
+    // sites immediately: two adjacent `include::` directives (or one
+    // followed by more literal content) assembling a diagram from actual
+    // files on disk — as opposed to this file's own unit tests' inline
+    // string fixtures, none of which happened to carry a trailing
+    // newline — permanently missed the prewarm cache for exactly that
+    // shape. Stripping a single trailing terminator here, once, matches
+    // real conversion instead of accumulating an extra one.
+    includeContent = includeContent.replace(/\r\n?$|\n$/, '')
     outLines.push(
       resolveIncludesInSource(includeContent, { path: resolved.path, src: resolved.src }, catalog, logger, depth + 1)
     )

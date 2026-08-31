@@ -1,0 +1,143 @@
+code/packages/ui-bundle/gulp.d/lib/create-task.js
+  s_1d4a5257321709::t_9f0e261ff623e0 1-4
+code/packages/ui-bundle/gulp.d/lib/export-tasks.js
+  s_1d4a5257321709::t_7700ba85f20d7a 1-4
+code/packages/ui-bundle/gulp.d/tasks/build-preview-pages.js
+  s_1d4a5257321709::t_9216e5c388be70 1-4
+code/packages/ui-bundle/gulp.d/tasks/build.js
+  s_1d4a5257321709::t_017e3890ce84de 1-4
+code/packages/ui-bundle/gulp.d/tasks/index.js
+  s_1d4a5257321709::t_b37be75c5e6726 1-4
+code/packages/ui-bundle/gulp.d/tasks/pack.js
+  s_1d4a5257321709::t_40c69de65b6a90 1-4
+code/packages/ui-bundle/gulp.d/tasks/remove.js
+  s_1d4a5257321709::t_62e650533e34cf 1-4
+code/packages/ui-bundle/gulp.d/tasks/serve.js
+  s_1d4a5257321709::t_d61b0706fa55c8 1-4
+code/packages/ui-bundle/gulpfile.js
+  s_1d4a5257321709::t_a5632c4c9836cc 1-4
+code/packages/ui-bundle/index.js
+  s_1d4a5257321709::t_778cf4d58ce74b 1-4
+code/packages/ui-bundle/src/css/base.css
+  s_1d4a5257321709::t_5e81310d283e69 1-6
+code/packages/ui-bundle/src/css/body.css
+  s_1d4a5257321709::t_dc545c3ad8aff1 1-6
+code/packages/ui-bundle/src/css/doc.css
+  s_1d4a5257321709::t_61252d2662ba89 1-6
+code/packages/ui-bundle/src/css/footer.css
+  s_1d4a5257321709::t_89aed106070a8a 1-6
+code/packages/ui-bundle/src/css/header.css
+  s_1d4a5257321709::t_afc030b71d40ae 1-6
+code/packages/ui-bundle/src/css/page-versions.css
+  s_1d4a5257321709::t_5bf183d0ef71db 1-6
+code/packages/ui-bundle/src/css/print.css
+  s_1d4a5257321709::t_0a2207c2bbe650 1-6
+code/packages/ui-bundle/src/css/site.css
+  s_1d4a5257321709::t_7a2a7d89b49561 1-6
+code/packages/ui-bundle/src/css/toc.css
+  s_1d4a5257321709::t_89d71c9c393357 1-6
+code/packages/ui-bundle/src/css/vars.css
+  s_1d4a5257321709::t_51e9f64ac46ac5 1-6
+code/packages/ui-bundle/src/helpers/and.ts
+  s_1d4a5257321709::t_a7f9d983a95352 1-4
+code/packages/ui-bundle/src/helpers/detag.ts
+  s_1d4a5257321709::t_91bc9d1ab1c28f 1-4
+code/packages/ui-bundle/src/helpers/eq.ts
+  s_1d4a5257321709::t_e6971fc794b8f9 1-4
+code/packages/ui-bundle/src/helpers/increment.ts
+  s_1d4a5257321709::t_297787651d7241 1-4
+code/packages/ui-bundle/src/helpers/ne.ts
+  s_1d4a5257321709::t_90ba3c10fc86ec 1-4
+code/packages/ui-bundle/src/helpers/not.ts
+  s_1d4a5257321709::t_7f07991c0207eb 1-4
+code/packages/ui-bundle/src/helpers/or.ts
+  s_1d4a5257321709::t_eb693963313f4b 1-4
+code/packages/ui-bundle/src/helpers/relativize.ts
+  s_1d4a5257321709::t_52b83bdbee6fbc 1-4
+code/packages/ui-bundle/src/helpers/year.ts
+  s_1d4a5257321709::t_6f6ed9505d237e 1-4
+code/packages/ui-bundle/src/js/01-nav.ts
+  s_1d4a5257321709::t_ac1ac8b0e12541 1-4
+code/packages/ui-bundle/src/js/02-on-this-page.ts
+  s_1d4a5257321709::t_09d3a86d91f6a5 1-4
+code/packages/ui-bundle/src/js/03-fragment-jumper.ts
+  s_1d4a5257321709::t_be6ff5848659c7 1-4
+code/packages/ui-bundle/src/js/04-page-versions.ts
+  s_1d4a5257321709::t_355c9ad220c3bb 1-4
+code/packages/ui-bundle/src/js/06-copy-to-clipboard.ts
+  s_1d4a5257321709::t_52c3afdffbd8a1 1-4
+code/packages/ui-bundle/src/layouts/404.hbs
+  s_1d4a5257321709::t_15de620079280e 1-6
+code/packages/ui-bundle/src/layouts/default.hbs
+  s_1d4a5257321709::t_339e43a258808b 1-6
+code/packages/ui-bundle/src/partials/article-404.hbs
+  s_1d4a5257321709::t_7fec91a4cd55dc 1-6
+code/packages/ui-bundle/src/partials/article.hbs
+  s_1d4a5257321709::t_cd6ea3ca6b1090 1-6
+code/packages/ui-bundle/src/partials/body.hbs
+  s_1d4a5257321709::t_d17e16aa78c622 1-6
+code/packages/ui-bundle/src/partials/breadcrumbs.hbs
+  s_1d4a5257321709::t_0e1ba08f09725c 1-6
+code/packages/ui-bundle/src/partials/edit-this-page.hbs
+  s_1d4a5257321709::t_daea6ea7699645 1-6
+code/packages/ui-bundle/src/partials/footer-content.hbs
+  s_1d4a5257321709::t_3c9091dbe91a4e 1-6
+code/packages/ui-bundle/src/partials/footer-scripts.hbs
+  s_1d4a5257321709::t_b78c7ead6aa1b4 1-6
+code/packages/ui-bundle/src/partials/footer.hbs
+  s_1d4a5257321709::t_a6df886314cf60 1-6
+code/packages/ui-bundle/src/partials/head-icons.hbs
+  s_1d4a5257321709::t_7ad8895cb17c33 1-6
+code/packages/ui-bundle/src/partials/head-info.hbs
+  s_1d4a5257321709::t_88b505e3d80b58 1-7
+code/packages/ui-bundle/src/partials/head-meta.hbs
+  s_1d4a5257321709::t_8ce303a0829936 1-7
+code/packages/ui-bundle/src/partials/head-prelude.hbs
+  s_1d4a5257321709::t_293cf5e2e3c4f6 1-7
+code/packages/ui-bundle/src/partials/head-scripts.hbs
+  s_1d4a5257321709::t_d3a8f20e464bfb 1-7
+code/packages/ui-bundle/src/partials/head-styles.hbs
+  s_1d4a5257321709::t_2891c6cdf053d2 1-7
+code/packages/ui-bundle/src/partials/head-title.hbs
+  s_1d4a5257321709::t_94db3e2713b4e0 1-7
+code/packages/ui-bundle/src/partials/head.hbs
+  s_1d4a5257321709::t_29c92b46f5f2ea 1-6
+code/packages/ui-bundle/src/partials/header-content.hbs
+  s_1d4a5257321709::t_3198bcb93806a3 1-6
+code/packages/ui-bundle/src/partials/header-scripts.hbs
+  s_1d4a5257321709::t_450dec68d295c8 1-6
+code/packages/ui-bundle/src/partials/header.hbs
+  s_1d4a5257321709::t_f234a5391fadbf 1-6
+code/packages/ui-bundle/src/partials/main.hbs
+  s_1d4a5257321709::t_7f19194973910b 1-6
+code/packages/ui-bundle/src/partials/nav-menu.hbs
+  s_1d4a5257321709::t_5140981c812980 1-6
+code/packages/ui-bundle/src/partials/nav-tree.hbs
+  s_1d4a5257321709::t_661795a9a019e0 1-6
+code/packages/ui-bundle/src/partials/nav.hbs
+  s_1d4a5257321709::t_4ae6d686107a56 1-6
+code/packages/ui-bundle/src/partials/page-versions.hbs
+  s_1d4a5257321709::t_4b2d5a40e83b32 1-6
+code/packages/ui-bundle/src/partials/pagination.hbs
+  s_1d4a5257321709::t_cc55c3c13b5481 1-6
+code/packages/ui-bundle/src/partials/toc.hbs
+  s_1d4a5257321709::t_53f5b826cf6f49 1-6
+code/packages/ui-bundle/types/ui.d.ts
+  s_1d4a5257321709::t_c5cdce1c265c26 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "378bb89100d24489e95a0d5d06b4c1bc1b77a4d1",
+  "prompts": {},
+  "sessions": {
+    "s_1d4a5257321709": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa822a89dffexHNiRI27Z88ZwQ",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

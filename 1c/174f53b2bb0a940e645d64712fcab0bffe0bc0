@@ -1,0 +1,26 @@
+code/CHANGELOG.md
+  h_c93d154c7c7074 80
+skills/docouture-authoring-guides/reference/additional-information.md
+  h_c93d154c7c7074 32-46
+skills/docouture-authoring-guides/reference/contributing.md
+  h_c93d154c7c7074 13-23
+skills/docouture-authoring-guides/reference/guides.md
+  h_c93d154c7c7074 24-36
+skills/docouture-authoring-guides/reference/reference.md
+  h_c93d154c7c7074 19-32
+skills/docouture-docs-internals/reference/page-patterns.md
+  h_c93d154c7c7074 225,229-231
+skills/docouture-writing-docs-pages/SKILL.md
+  h_c93d154c7c7074 83-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1c174f53b2bb0a940e645d64712fcab0bffe0bc0",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

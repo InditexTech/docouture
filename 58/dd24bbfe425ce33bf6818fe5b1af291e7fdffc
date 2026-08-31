@@ -1,0 +1,149 @@
+.agents/skills/docouture-authoring-guides/SKILL.md
+  s_316ef13ee517a7::t_579a3f3616cebc 1-170
+.agents/skills/docouture-authoring-guides/reference/additional-information.md
+  s_316ef13ee517a7::t_98e101e08f2e4b 1-492
+.agents/skills/docouture-authoring-guides/reference/contributing.md
+  s_316ef13ee517a7::t_1e59fe04ce3f93 1-82
+.agents/skills/docouture-authoring-guides/reference/getting-started.md
+  s_316ef13ee517a7::t_31e9841790aafe 1-190
+.agents/skills/docouture-authoring-guides/reference/guides.md
+  s_316ef13ee517a7::t_7e3e64659701c3 1-260
+.agents/skills/docouture-authoring-guides/reference/home.md
+  s_316ef13ee517a7::t_df4905298549af 1-198
+.agents/skills/docouture-authoring-guides/reference/overview.md
+  s_316ef13ee517a7::t_919fd13d11395d 1-222
+.agents/skills/docouture-authoring-guides/reference/reference.md
+  s_316ef13ee517a7::t_c9a964cc2da6c7 1-296
+.agents/skills/docouture-authoring-guides/reference/skeletons/about.adoc
+  s_316ef13ee517a7::t_09ef000d3a0972 1-32
+.agents/skills/docouture-authoring-guides/reference/skeletons/additional-information-overview.adoc
+  s_316ef13ee517a7::t_6e6bd4e3532125 1-38
+.agents/skills/docouture-authoring-guides/reference/skeletons/architecture.adoc
+  s_316ef13ee517a7::t_a982b91356eeb5 1-22
+.agents/skills/docouture-authoring-guides/reference/skeletons/changelog-overview.adoc
+  s_316ef13ee517a7::t_af72ad6e7198a3 1-14
+.agents/skills/docouture-authoring-guides/reference/skeletons/changelog-version.adoc
+  s_316ef13ee517a7::t_a422e6d04f467e 1-28
+.agents/skills/docouture-authoring-guides/reference/skeletons/configuration.adoc
+  s_316ef13ee517a7::t_485d91a73b20e4 1-36
+.agents/skills/docouture-authoring-guides/reference/skeletons/contributing-overview.adoc
+  s_316ef13ee517a7::t_25b63661c69fa3 1-26
+.agents/skills/docouture-authoring-guides/reference/skeletons/development.adoc
+  s_316ef13ee517a7::t_c870e4482ce794 1-22
+.agents/skills/docouture-authoring-guides/reference/skeletons/eol.adoc
+  s_316ef13ee517a7::t_a433425fa3041a 1-23
+.agents/skills/docouture-authoring-guides/reference/skeletons/faq.adoc
+  s_316ef13ee517a7::t_747f29dc846129 1-41
+.agents/skills/docouture-authoring-guides/reference/skeletons/glossary-term-partial.adoc
+  s_316ef13ee517a7::t_907df929b8f036 1
+.agents/skills/docouture-authoring-guides/reference/skeletons/glossary.adoc
+  s_316ef13ee517a7::t_f67a369a7e50b3 1-21
+.agents/skills/docouture-authoring-guides/reference/skeletons/guides-overview.adoc
+  s_316ef13ee517a7::t_7d50adc97a6f66 1-26
+.agents/skills/docouture-authoring-guides/reference/skeletons/home.adoc
+  s_316ef13ee517a7::t_f6fc71add52430 1-86
+.agents/skills/docouture-authoring-guides/reference/skeletons/how-to-guide.adoc
+  s_316ef13ee517a7::t_a90faa1ee87e31 1-36
+.agents/skills/docouture-authoring-guides/reference/skeletons/migration-guides.adoc
+  s_316ef13ee517a7::t_dad765fbf70d2a 1-21
+.agents/skills/docouture-authoring-guides/reference/skeletons/prerequisites.adoc
+  s_316ef13ee517a7::t_01855e93f0a484 1-46
+.agents/skills/docouture-authoring-guides/reference/skeletons/quickstart.adoc
+  s_316ef13ee517a7::t_52b6a1a0e72016 1-32
+.agents/skills/docouture-authoring-guides/reference/skeletons/reference-overview.adoc
+  s_316ef13ee517a7::t_d69d6dd3acd5ad 1-24
+.agents/skills/docouture-authoring-guides/reference/skeletons/release-notes-overview.adoc
+  s_316ef13ee517a7::t_e171e957a66412 1-11
+.agents/skills/docouture-authoring-guides/reference/skeletons/release-notes-version.adoc
+  s_316ef13ee517a7::t_b64986b50117ac 1-29
+.agents/skills/docouture-authoring-guides/reference/skeletons/surface-api.adoc
+  s_316ef13ee517a7::t_ecde08d6714d59 1-51
+.agents/skills/docouture-authoring-guides/reference/skeletons/surface-cli.adoc
+  s_316ef13ee517a7::t_522f0f6a3fbcfa 1-32
+.agents/skills/docouture-docs-internals/reference/page-patterns.md
+  s_316ef13ee517a7::t_27adf896994be0 83-90
+.agents/skills/docouture-documenting-changes/SKILL.md
+  s_316ef13ee517a7::t_f39a153686fc41 34,38-40,63-64
+.agents/skills/docouture-getting-started/SKILL.md
+  s_316ef13ee517a7::t_833b76b8df6375 16,20-26,52-57
+.agents/skills/docouture-getting-started/reference/structure-planning.md
+  s_316ef13ee517a7::t_c578baf2353797 26-37
+.agents/skills/docouture-writing-docs-pages/SKILL.md
+  s_316ef13ee517a7::t_133e6250a60d8f 125-126,128-129
+skills/docouture-authoring-guides/reference/additional-information.md
+  s_316ef13ee517a7::t_9d4fb30405d6c3 1-492
+skills/docouture-authoring-guides/reference/contributing.md
+  s_316ef13ee517a7::t_15c48d425faeb3 1-82
+skills/docouture-authoring-guides/reference/getting-started.md
+  s_316ef13ee517a7::t_b939cd2cda0dee 1-190
+skills/docouture-authoring-guides/reference/guides.md
+  s_316ef13ee517a7::t_4d2fc73f60d7f3 1-260
+skills/docouture-authoring-guides/reference/home.md
+  s_316ef13ee517a7::t_6962965103cc1c 1-198
+skills/docouture-authoring-guides/reference/overview.md
+  s_316ef13ee517a7::t_79f32684e41c30 1-222
+skills/docouture-authoring-guides/reference/reference.md
+  s_316ef13ee517a7::t_a43e1d7013fedc 1-296
+skills/docouture-authoring-guides/reference/skeletons/about.adoc
+  s_316ef13ee517a7::t_2b098af26a036a 1-32
+skills/docouture-authoring-guides/reference/skeletons/additional-information-overview.adoc
+  s_316ef13ee517a7::t_85922cdbd94737 1-38
+skills/docouture-authoring-guides/reference/skeletons/architecture.adoc
+  s_316ef13ee517a7::t_72d47c96c7f39e 1-22
+skills/docouture-authoring-guides/reference/skeletons/changelog-overview.adoc
+  s_316ef13ee517a7::t_e9657696c70dc0 1-14
+skills/docouture-authoring-guides/reference/skeletons/changelog-version.adoc
+  s_316ef13ee517a7::t_509417101d5d63 1-28
+skills/docouture-authoring-guides/reference/skeletons/configuration.adoc
+  s_316ef13ee517a7::t_dadc719626584e 1-36
+skills/docouture-authoring-guides/reference/skeletons/contributing-overview.adoc
+  s_316ef13ee517a7::t_f3e8d8ae940c52 1-26
+skills/docouture-authoring-guides/reference/skeletons/development.adoc
+  s_316ef13ee517a7::t_a9ad5d1d7ab0cf 1-22
+skills/docouture-authoring-guides/reference/skeletons/eol.adoc
+  s_316ef13ee517a7::t_e5e44a1dd1400c 1-23
+skills/docouture-authoring-guides/reference/skeletons/faq.adoc
+  s_316ef13ee517a7::t_7ac4fdbb4cf8a1 1-41
+skills/docouture-authoring-guides/reference/skeletons/glossary-term-partial.adoc
+  s_316ef13ee517a7::t_39df89c973433d 1
+skills/docouture-authoring-guides/reference/skeletons/glossary.adoc
+  s_316ef13ee517a7::t_e18928b7633fec 1-21
+skills/docouture-authoring-guides/reference/skeletons/guides-overview.adoc
+  s_316ef13ee517a7::t_2e1f80b2e410fd 1-26
+skills/docouture-authoring-guides/reference/skeletons/home.adoc
+  s_316ef13ee517a7::t_2152c16857fcd4 1-86
+skills/docouture-authoring-guides/reference/skeletons/how-to-guide.adoc
+  s_316ef13ee517a7::t_49b940cd108524 1-36
+skills/docouture-authoring-guides/reference/skeletons/migration-guides.adoc
+  s_316ef13ee517a7::t_1cb26c06f9c8f4 1-21
+skills/docouture-authoring-guides/reference/skeletons/prerequisites.adoc
+  s_316ef13ee517a7::t_f8227000427cd0 1-46
+skills/docouture-authoring-guides/reference/skeletons/quickstart.adoc
+  s_316ef13ee517a7::t_5e80f42d8a777e 1-32
+skills/docouture-authoring-guides/reference/skeletons/reference-overview.adoc
+  s_316ef13ee517a7::t_00531ec7781981 1-24
+skills/docouture-authoring-guides/reference/skeletons/release-notes-overview.adoc
+  s_316ef13ee517a7::t_e718c4271d4508 1-11
+skills/docouture-authoring-guides/reference/skeletons/release-notes-version.adoc
+  s_316ef13ee517a7::t_435020d0fe8b49 1-29
+skills/docouture-authoring-guides/reference/skeletons/surface-api.adoc
+  s_316ef13ee517a7::t_59a6dfd09c5adc 1-51
+skills/docouture-authoring-guides/reference/skeletons/surface-cli.adoc
+  s_316ef13ee517a7::t_214f65996a55ca 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "58dd24bbfe425ce33bf6818fe5b1af291e7fdffc",
+  "prompts": {},
+  "sessions": {
+    "s_316ef13ee517a7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa9808b5fffeQDTAQzCzskH5jy",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

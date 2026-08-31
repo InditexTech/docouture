@@ -123,5 +123,8 @@ touching `code/**` is expected to carry.
 
 Apache-2.0 — see [`LICENSE`](LICENSE), with one exception:
 `code/packages/ui-bundle` is a fork of
-[antora-ui-default](https://gitlab.com/antora/antora-ui-default) and remains
-under MPL-2.0. See that package's own `LICENSE` and `NOTICE`.
+[antora-ui-default](https://gitlab.com/antora/antora-ui-default) and mixes
+MPL-2.0 (files that are a Modification of an upstream file) with
+Apache-2.0 (files with no upstream counterpart). See that package's own
+`LICENSE` and `NOTICE`, and each file's own SPDX header for which license
+applies to it.

@@ -89,9 +89,12 @@ See `.opencode/skills/` for the deeper conventions behind each of these
 
 docouture is licensed under [Apache-2.0](LICENSE), with one exception:
 `code/packages/ui-bundle` is a fork of
-[antora-ui-default](https://gitlab.com/antora/antora-ui-default) and remains
-under MPL-2.0 — see its own `LICENSE` and `NOTICE`. Contributions to that
-package are made under MPL-2.0; everywhere else, Apache-2.0.
+[antora-ui-default](https://gitlab.com/antora/antora-ui-default) and mixes
+MPL-2.0 (files that are a Modification of an upstream file) with
+Apache-2.0 (files with no upstream counterpart) — see its own `LICENSE`
+and `NOTICE`, and each file's own SPDX header. Contribute to a file under
+whichever license its own header already declares; everywhere else,
+Apache-2.0.
 
 ## Helpful Resources
 

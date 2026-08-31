@@ -106,9 +106,10 @@ Working conventions and the full token inventory live in
 ## Notes on this fork of the Antora default UI
 
 `packages/ui-bundle` began as a fork of
-[antora-ui-default](https://gitlab.com/antora/antora-ui-default) (MPL-2.0; see
-its `LICENSE` and `NOTICE`). The upstream dependency set dated from 2020 and
-does not install or run on current Node, so the build was modernised:
+[antora-ui-default](https://gitlab.com/antora/antora-ui-default) — see its
+`LICENSE` and `NOTICE` for the resulting MPL-2.0/Apache-2.0 split. The
+upstream dependency set dated from 2020 and does not install or run on
+current Node, so the build was modernised:
 
 - **gulp 4 → 5.** gulp 4 pulls chokidar 2 → fsevents 1.x, a native module that
   no longer builds.

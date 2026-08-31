@@ -73,8 +73,10 @@ repo changes. See xref:main:reference-ai-first-approach.adoc[].
 ====
 Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are
 Apache-2.0; the UI bundle's own fork of
-https://gitlab.com/antora/antora-ui-default[antora-ui-default] remains MPL-2.0, per its
-own LICENSE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are
-all original or openly licensed, with nothing embedded that restricts publishing a
-site built with it.
+https://gitlab.com/antora/antora-ui-default[antora-ui-default] mixes MPL-2.0
+(files that are a Modification of an upstream file) with Apache-2.0 (files
+with no upstream counterpart), per its own LICENSE and NOTICE. Its design
+tokens, component CSS and icons (Lucide, ISC licensed) are all original or
+openly licensed, with nothing embedded that restricts publishing a site
+built with it.
 ====

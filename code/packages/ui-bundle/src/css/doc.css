@@ -638,7 +638,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 /*
- * Inline code chip (Figma 2610:28934): `code/m` type — same NotoSansMono
+ * Inline code chip (Figma 2610:28934): `code/m` type — same Noto Sans Mono
  * 14/20 weight-350 token the code block itself uses (doc.css's GH-12
  * section) — on the DS's low background, sharp corners (no radius in the
  * design, unlike the previous rounded chip), horizontal padding only

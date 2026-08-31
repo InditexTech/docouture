@@ -24,8 +24,8 @@
   --dt-size-350: 56px;
   --dt-size-500: 80px;
   --dt-size-800: 128px;
-  --dt-typo-font-family-primary: Helvetica Now Text SW10;
-  --dt-typo-font-family-monospace: NotoSansMono;
+  --dt-typo-font-family-primary: "Inter";
+  --dt-typo-font-family-monospace: "Noto Sans Mono";
   --dt-typo-line-height-18: 18px;
   --dt-typo-line-height-20: 20px;
   --dt-typo-line-height-22: 22px;
@@ -72,8 +72,8 @@
   --dt-size-350: 72px;
   --dt-size-500: 104px;
   --dt-size-800: 168px;
-  --dt-typo-font-family-primary: Helvetica Now Text SW10;
-  --dt-typo-font-family-monospace: NotoSansMono;
+  --dt-typo-font-family-primary: "Inter";
+  --dt-typo-font-family-monospace: "Noto Sans Mono";
   --dt-typo-line-height-18: 23px;
   --dt-typo-line-height-20: 26px;
   --dt-typo-line-height-22: 29px;

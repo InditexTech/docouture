@@ -447,7 +447,7 @@ describe('runNew', () => {
     // (0.0.0-local.<sha>.<ts>) has to resolve on install exactly as
     // published, which a ^/~ range around a different number never does.
     expect(pkg.devDependencies?.['@inditextech/docouture-cli']).not.toMatch(/[\^~]/)
-    expect(pkg.devDependencies?.antora).toBe('3.1.15')
+    expect(pkg.devDependencies?.antora).toBe('3.2.0')
     expect(pkg.devDependencies?.['@inditextech/docouture-asciidoc-extensions']).not.toMatch(/[\^~]/)
     expect(pkg.devDependencies?.['@inditextech/docouture-antora-extensions']).not.toMatch(/[\^~]/)
     expect(pkg.devDependencies?.['@inditextech/docouture-asciidoc-extensions']).toBe(

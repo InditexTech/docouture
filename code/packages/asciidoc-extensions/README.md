@@ -7,7 +7,7 @@ A card grid, a set of steps, a landing hero, a tab switcher — none of these ar
 expressible in AsciiDoc, and none of them belong baked into a Handlebars layout,
 because then they stop being content an author can write and become markup only
 a UI developer can change. An extension is the seam between the two: the author
-writes AsciiDoc, the extension emits the design system's markup.
+writes AsciiDoc, the extension emits this project's own component markup.
 
 Where a thing belongs, before you write anything here:
 
@@ -58,12 +58,13 @@ Read `index.js`'s own header comment before touching any of it, and
 `.opencode/skills/asciidoc/reference/extensions.md` for the registration
 mechanics in full.
 
-### 3. Emit IOP DS BEM markup, exactly
+### 3. Emit this project's own component BEM markup, exactly
 
-Copy the DS component's real markup and class names. Never invent a class on a
-DS block, never re-implement a component's styling from memory. If nothing in
-the DS models what you need, say so before inventing — it usually means the
-wrong component was identified. See `.opencode/skills/iop-ds-components`.
+Copy the component's real markup and class names from `ui-bundle/src/css/dt-components.css`.
+Never invent a class on a component block, never re-implement a component's
+styling from memory. If nothing there models what you need, say so before
+inventing — it usually means the wrong component was identified. See
+`.opencode/skills/docouture-components`.
 
 ### 4. Ship no CSS
 
@@ -184,8 +185,8 @@ default inline SVG — see `kroki-config.js`'s `PNG_SUPPORTED_TYPES` for which o
 itself rejects those two output formats outright). An unsupported combination falls
 back to `svg` with a build warning.
 
-Mermaid diagrams also get IOP DS-aligned styling (square corners, DS colors, DS body
-typography) baked in server-side via a `%%{init: {...}}%%` directive
+Mermaid diagrams also get this project's own styling (square corners, dt-
+colours, dt-typography) baked in server-side via a `%%{init: {...}}%%` directive
 `kroki-mermaid-theme.js` prepends to the diagram's own source before it reaches Kroki
 — not a CSS override, so it applies identically whether the block renders as `svg` or
 `format=png`. An author who opens their own diagram with `%%{init...}%%` opts out
@@ -249,6 +250,6 @@ get retired. New files are written fully annotated; `lib/html.js`,
 
 - `.opencode/skills/asciidoc/reference/extensions.md` — extension points, the
   DSL, and the registration rules in full
-- `.opencode/skills/iop-ds-components` — choosing a DS component and emitting
+- `.opencode/skills/docouture-components` — choosing a component and emitting
   its markup
-- `.opencode/skills/iop-ds-foundations` — tokens, theming, breakpoints
+- `.opencode/skills/docouture-foundations` — tokens, theming, breakpoints

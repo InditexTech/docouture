@@ -73,22 +73,6 @@ export async function checkRegistryPinned(cwd: string): Promise<CheckResult> {
   }
 }
 
-export function checkIdsTokensPresent(cwd: string): CheckResult {
-  const tokens = join(cwd, 'packages/ui-bundle/src/css/ids-tokens.css')
-  const breakpoints = join(cwd, 'packages/ui-bundle/src/css/ids-breakpoints.css')
-  if (existsSync(tokens) && existsSync(breakpoints)) {
-    return { ok: true, label: 'ids tokens', message: 'IOP DS token derivative present' }
-  }
-  return {
-    ok: false,
-    label: 'ids tokens',
-    message: 'IOP DS token derivative missing',
-    detail:
-      'packages/ui-bundle/src/css/ids-tokens.css and ids-breakpoints.css are committed, generated files — ' +
-      "this should not happen from a normal clone. If you deleted them, regenerate with: 'just ids-install && just ids-sync'",
-  }
-}
-
 export function checkGitHasCommit(cwd: string): Promise<CheckResult> {
   return new Promise((resolvePromise) => {
     execFile('git', ['rev-parse', 'HEAD'], { cwd }, (err) => {

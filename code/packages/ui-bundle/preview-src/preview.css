@@ -59,14 +59,12 @@ body.hub-page .hub-card {
 
 /*
  * NOTE --dt-color-bg-states-hover equals --dt-color-bg-low exactly in the
- * light theme (both #f7f7f7 — see @inditex/sewingiopdsweb-styles variables/
- * color.css), so a hover state that only swaps background is invisible in
+ * light theme (both #f7f7f7), so a hover state that only swaps background is invisible in
  * light mode. The border-color change is what actually reads as "hovering"
  * in both themes.
  *
- * No box-shadow/lift here: real IOP DS interactive surfaces (list-item,
- * menu-item) signal hover with a plain colour change only — never elevation
- * — see list/list-item.css and menu/items/item.css.
+ * No box-shadow/lift here: this project's own interactive surfaces (list-item,
+ * menu-item) signal hover with a plain colour change only — never elevation.
  */
 body.hub-page .hub-card:hover,
 body.hub-page .hub-card:focus-visible {
@@ -142,11 +140,10 @@ body.icons-page .icons__toolbar {
 
 /*
  * .icons__search is a plain layout hook around the vendored
- * .dt-search-field-minimal component (search-field/search-field.minimal.css)
- * — "minimal" means no box in the real design system (it's meant to sit
- * inline in a toolbar, see src/partials/header-content.hbs), so this wrapper
- * only sizes it and must not add a border/background the DS component
- * doesn't have — see .opencode/skills/iop-ds-components.
+ * .dt-search-field-minimal component — "minimal" means no box (it's meant to
+ * sit inline in a toolbar, see src/partials/header-content.hbs), so this
+ * wrapper only sizes it and must not add a border/background of its own —
+ * see .opencode/skills/docouture-components.
  */
 body.icons-page .icons__search {
   flex: 1 1 auto;

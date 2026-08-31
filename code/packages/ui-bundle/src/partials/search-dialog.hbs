@@ -17,14 +17,13 @@
   `<dialog>` over a hand-rolled overlay + focus trap: `showModal()` gives the
   top layer, the platform focus trap, Esc-to-close and an implicit ::backdrop
   for free — the same things src/js/05-nav-modules.ts has to hand-roll for
-  the side menu's drawer, because that one isn't a <dialog>. The DS's own
-  `.dt-modal` CSS assumes its own React portal rather than a <dialog>;
+  the side menu's drawer, because that one isn't a <dialog>. `.dt-modal`'s
+  own CSS assumes a React portal rather than a <dialog>;
   search-dialog.css resets the UA <dialog> box model to stand in for that
   portal's own fixed, full-viewport wrapper.
 
-  The nesting below mirrors the DS's own `Overlay`/`Modal` composition
-  exactly (`@inditex/sewingiopdsweb-react-components/overlay/overlay.js` +
-  `modal/modal.js`) rather than approximating it: `Overlay` always renders
+  The nesting below mirrors that portal's own `Overlay`/`Modal` composition
+  exactly rather than approximating it: `Overlay` always renders
   `.dt-overlay__content` (the backdrop) and its `children` (here, the
   `.dt-modal` wrapper) as SIBLINGS, both inside `.dt-overlay`. That
   ordering is load-bearing — `.dt-overlay__content+*` (dt-components.css)

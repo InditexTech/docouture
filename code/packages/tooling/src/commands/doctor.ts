@@ -7,7 +7,6 @@ import { getContext } from '../lib/cli-context.js'
 import { theme } from '../lib/theme.js'
 import {
   checkGitHasCommit,
-  checkIdsTokensPresent,
   checkNodeModulesPresent,
   checkRegistryPinned,
   checkToolVersion,
@@ -41,10 +40,9 @@ function printResult(result: CheckResult): void {
 /**
  * Repo-level environment/workspace doctor — ported from the justfile's own
  * `doctor` recipe (GH-140). Checks the toolchain, dependencies, registry
- * pin, IOP DS token derivative, and git history of *this monorepo* — a
- * different concern from packages/cli's own `docouture doctor`, which
- * inspects a scaffolded/consumer *site*, not this repository's own dev
- * environment.
+ * pin, and git history of *this monorepo* — a different concern from
+ * packages/cli's own `docouture doctor`, which inspects a scaffolded/consumer
+ * *site*, not this repository's own dev environment.
  */
 export async function runDoctor(argv: string[]): Promise<number> {
   parseArgs(argv) // no command-specific flags today, --json is a global flag
@@ -72,9 +70,6 @@ export async function runDoctor(argv: string[]): Promise<number> {
 
   log('registry')
   run('registry', await checkRegistryPinned(cwd))
-
-  log('ids')
-  run('ids', checkIdsTokensPresent(cwd))
 
   log('content')
   run('content', await checkGitHasCommit(cwd))

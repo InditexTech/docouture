@@ -1,10 +1,7 @@
 /*
- * IOP Design System token layer: every --dt-* custom property this bundle's
- * CSS references (palette, size and typography scales, motion, stacking).
- * Generated from the real design system by tools/ids/sync.mjs — see
- * dt-tokens.css's own header and tools/ids/README.md. Not the design
- * system's own stylesheets: this repo has no dependency on
- * @inditex/sewingiopdsweb-styles, only on this small extracted subset.
+ * Design token layer: every --dt-* custom property this bundle's CSS
+ * references (palette, size and typography scales, motion, stacking). See
+ * dt-tokens.css's own header.
  *
  * Must come first — bridge.css and every stylesheet below consume it.
  * Breakpoint @custom-media declarations are injected by a PostCSS plugin
@@ -13,19 +10,17 @@
 @import url("dt-tokens.css");
 
 /*
- * IOP Design System component stylesheets, generated the same way from
- * @inditex/sewingiopdsweb-react-components — see dt-components.css's own
- * header, src/css/dt-components.yml and tools/ids/README.md.
+ * Component stylesheets — see dt-components.css's own header.
  *
- * Comes before bridge.css and every bundle stylesheet below: a DS block is
- * consumed as-is, and any wrapper or `data-*` hook this bundle adds around
- * one wins by cascade order alone. Never override a DS declaration from a
- * later stylesheet, and never add a non-DS class to a DS block — see
- * .opencode/skills/iop-ds-components/SKILL.md.
+ * Comes before bridge.css and every bundle stylesheet below: a component
+ * block is consumed as-is, and any wrapper or `data-*` hook this bundle adds
+ * around one wins by cascade order alone. Never override a component
+ * declaration from a later stylesheet, and never add a foreign class to a
+ * component block — see .opencode/skills/docouture-components/SKILL.md.
  */
 @import url("dt-components.css");
 
-/* This bundle's own variables, expressed in design system tokens. */
+/* This bundle's own variables, expressed in design tokens. */
 @import url("bridge.css");
 @import url("vars.css");
 @import url("icons.css");

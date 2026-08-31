@@ -63,53 +63,45 @@ at the inherited `node16` setting and no `"type": "module"` in the package.
 Depend on them from a site package with `workspace:*` and reference them by
 package name in the playbook; pnpm's workspace link makes them resolvable.
 
-## The IOP Design System
+## Design tokens
 
-The UI bundle is themed with the IOP Design System (IDS) rather than
-reimplemented from Figma. IDS itself is not a dependency of this workspace —
-it's consumed through an isolated sidecar (`code/tools/ids`) that generates a
-small derivative committed into `src/css/`; see `code/tools/ids/README.md` for
-why and how. What it provides:
-
-| package                                    | what it provides                                                                                                                                                          |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@inditex/sewingiopdsweb-styles`           | every `--ids-*` token, light and dark palettes, the density scale, resolution tiers, motion, z-index, and a PostCSS plugin supplying the breakpoint `@custom-media` names |
-| `@inditex/sewingiopdsweb-react-components` | per-component BEM stylesheets. Only the CSS is used — no React reaches the browser                                                                                        |
-
-Both are proprietary, which is why the root README calls out sites built with
-this bundle as internal-only distribution. See `packages/ui-bundle/NOTICE` for
-exactly what's embedded.
+The UI bundle has its own design token and component system, hand-maintained
+under `src/css/` (`dt-tokens.css`, `dt-breakpoints.css`, `dt-components.css`).
+There's no external dependency and no generation step — these are ordinary
+source files, edited directly like any other CSS in the bundle.
 
 Three rules follow from this, and the build enforces the third:
 
 1. No literal colours, sizes, fonts, durations or z-indexes in `src/css`. Every
-   value is an `--ids-*` token. `highlight.css` is the one exception — the design
-   system does not model a syntax palette.
-2. No hand-written width media queries. Write `@media (--ids-breakpoints-m)`;
-   the DS PostCSS plugin injects the declarations and `postcss-custom-media`
-   resolves them.
+   value is a `--dt-*` token. `highlight.css` is the one exception — there's no
+   token for a syntax palette.
+2. No hand-written width media queries. Write `@media (--dt-breakpoints-m)`;
+   `gulp.d/lib/dt-custom-media.js` injects the declarations and
+   `postcss-custom-media` resolves them.
 3. **Custom properties are never flattened.** Theming, the density scale and the
    resolution tiers are all runtime custom-property swaps, so
    `postcss-custom-properties` was removed from the chain. Re-adding it without
    `preserve: true` ships a permanently light, fixed-density site.
 
 `src/css/bridge.css` is the seam: antora-ui-default's variable vocabulary
-(`--body-font-color`, `--panel-background`, …) is re-pointed at IDS tokens there,
-so the inherited stylesheets re-theme without being rewritten. It only shrinks —
-entries are deleted as chrome moves onto design system components.
+(`--body-font-color`, `--panel-background`, …) is re-pointed at `dt-*` tokens
+there, so the inherited stylesheets re-theme without being rewritten. It only
+shrinks — entries are deleted as chrome moves onto this bundle's own
+components.
 
-Theme is a class on `<html>` (`.ids-theme-light` / `.ids-theme-dark`), never a
-data attribute, because that is what the DS stylesheets select on. It is set
+Theme is a class on `<html>` (`.dt-theme-light` / `.dt-theme-dark`), never a
+data attribute, because that is what the stylesheets select on. It is set
 before first paint by an inline script in `partials/head-prelude.hbs` and
-toggled by `src/js/08-theme.ts`; both share the `ids-theme` storage key. With
+toggled by `src/js/08-theme.ts`; both share the `dt-theme` storage key. With
 JavaScript off the page renders light, which is the `:root` default.
 
-Typefaces (Helvetica Now Text SW10, Noto Sans Mono) are loaded from
-`amgassets.inditex.com` and are not bundled; `bridge.css` carries a fallback
-stack so an offline preview still renders.
+Typefaces (Inter, Noto Sans Mono) are loaded from Google Fonts and are not
+bundled; `bridge.css` carries a fallback stack so an offline preview still
+renders.
 
 Working conventions and the full token inventory live in
-`.opencode/skills/iop-ds-foundations` and `.opencode/skills/iop-ds-components`.
+`.opencode/skills/docouture-foundations` and
+`.opencode/skills/docouture-components`.
 
 ## Notes on this fork of the Antora default UI
 

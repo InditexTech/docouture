@@ -3,8 +3,8 @@
 .1. What is docouture?
 [%collapsible]
 ====
-A documentation platform: a themed https://antora.org[Antora] UI bundle (IOP Design
-System), a set of Antora/https://asciidoctor.org[Asciidoctor] extensions, and the
+A documentation platform: a themed https://antora.org[Antora] UI bundle, a set of
+Antora/https://asciidoctor.org[Asciidoctor] extensions, and the
 `docouture` CLI that scaffolds, serves, builds and publishes a site on top of them. See
 xref:main:index.adoc[About].
 ====
@@ -71,10 +71,10 @@ repo changes. See xref:main:reference-ai-first-approach.adoc[].
 .10. Is docouture open source?
 [%collapsible]
 ====
-The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0 (the
-UI bundle's own fork of
+Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are
+Apache-2.0; the UI bundle's own fork of
 https://gitlab.com/antora/antora-ui-default[antora-ui-default] remains MPL-2.0, per its
-own LICENSE). The UI bundle is themed with Inditex's proprietary IOP Design System,
-though, which is *not* open source — a site built with this UI bundle is internal-only
-until that changes, regardless of the code's own license.
+own LICENSE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are
+all original or openly licensed, with nothing embedded that restricts publishing a
+site built with it.
 ====

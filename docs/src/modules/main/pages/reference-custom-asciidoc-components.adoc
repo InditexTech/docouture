@@ -398,7 +398,7 @@ diagram source, as literal text, same as the fenced listing shows it above.
 
 === Styling
 
-https://mermaid.js.org[Mermaid] diagrams are themed to match the IOP Design System
+https://mermaid.js.org[Mermaid] diagrams are themed to match this site
 automatically — square corners, black-on-white (light mode; inverted for dark), body
 typography — via a `%%{init: {...}}%%` directive this extension prepends to the
 diagram's own source before it ever reaches Kroki, not via CSS. Write your own

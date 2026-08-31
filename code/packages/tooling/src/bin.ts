@@ -40,9 +40,8 @@ const COMMAND_INFO: Record<(typeof COMMAND_ORDER)[number], CommandInfo> = {
   docouture-tooling doctor [--json]
 
 Checks toolchain versions against .tool-versions, that dependencies are
-installed, that the default npm registry is pinned, that the IOP DS
-token derivative is present, and that the repository has at least one
-commit.
+installed, that the default npm registry is pinned, and that the
+repository has at least one commit.
 
 Options:
   --json  Print a machine-readable report to stdout instead

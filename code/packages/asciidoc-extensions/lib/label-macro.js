@@ -3,9 +3,8 @@
 const firstPositional = require('./first-positional')
 const warn = require('./warn')
 
-// IDS Label variants shipped in `label.css` (@inditex/sewingiopdsweb-react-
-// components), already vendored into ui-bundle's dt-components.css — see
-// .opencode/skills/iop-ds-components. Anything outside this list is an
+// Label variants shipped in ui-bundle's dt-components.css (`.dt-label--*`) —
+// see .opencode/skills/docouture-components. Anything outside this list is an
 // authoring mistake, not a themeable extension point, so it fails the build
 // (see the logger call below) instead of silently rendering unstyled.
 const VARIANTS = ['white', 'grey', 'red', 'orange', 'green', 'blue', 'purple', 'pink', 'teal']

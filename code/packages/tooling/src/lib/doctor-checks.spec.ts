@@ -9,7 +9,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import {
   checkGitHasCommit,
-  checkIdsTokensPresent,
   checkNodeModulesPresent,
   checkRegistryPinned,
   checkToolVersion,
@@ -69,19 +68,6 @@ describe('checkRegistryPinned', () => {
   it('passes when the registry is pinned to npmjs', async () => {
     await writeFile(join(dir, '.npmrc'), 'registry=https://registry.npmjs.org/\n')
     expect((await checkRegistryPinned(dir)).ok).toBe(true)
-  })
-})
-
-describe('checkIdsTokensPresent', () => {
-  it('fails when the token derivative is missing', () => {
-    expect(checkIdsTokensPresent(dir).ok).toBe(false)
-  })
-
-  it('passes when both files exist', async () => {
-    await mkdir(join(dir, 'packages/ui-bundle/src/css'), { recursive: true })
-    await writeFile(join(dir, 'packages/ui-bundle/src/css/ids-tokens.css'), '')
-    await writeFile(join(dir, 'packages/ui-bundle/src/css/ids-breakpoints.css'), '')
-    expect(checkIdsTokensPresent(dir).ok).toBe(true)
   })
 })
 

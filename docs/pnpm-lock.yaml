@@ -9,20 +9,20 @@ importers:
   .:
     devDependencies:
       '@inditextech/docouture-antora-extensions':
-        specifier: 0.1.0-SNAPSHOT.81.1
-        version: 0.1.0-SNAPSHOT.81.1
+        specifier: 0.1.0-SNAPSHOT.82.1
+        version: 0.1.0-SNAPSHOT.82.1
       '@inditextech/docouture-asciidoc-extensions':
-        specifier: 0.1.0-SNAPSHOT.81.1
-        version: 0.1.0-SNAPSHOT.81.1
+        specifier: 0.1.0-SNAPSHOT.82.1
+        version: 0.1.0-SNAPSHOT.82.1
       '@inditextech/docouture-cli':
-        specifier: 0.1.0-SNAPSHOT.81.1
-        version: 0.1.0-SNAPSHOT.81.1
+        specifier: 0.1.0-SNAPSHOT.82.1
+        version: 0.1.0-SNAPSHOT.82.1
       '@inditextech/docouture-publish-gh-pages':
-        specifier: 0.1.0-SNAPSHOT.81.1
-        version: 0.1.0-SNAPSHOT.81.1
+        specifier: 0.1.0-SNAPSHOT.82.1
+        version: 0.1.0-SNAPSHOT.82.1
       '@inditextech/docouture-ui-bundle':
-        specifier: 0.1.0-SNAPSHOT.81.1
-        version: 0.1.0-SNAPSHOT.81.1
+        specifier: 0.1.0-SNAPSHOT.82.1
+        version: 0.1.0-SNAPSHOT.82.1
       antora:
         specifier: 3.2.0
         version: 3.2.0
@@ -108,25 +108,25 @@ packages:
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
-  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.81.1':
-    resolution: {integrity: sha512-cNX3+u/KomvPtuzi5VV9SCb6FDWOy9IuRPIZIDjZnF2IxVUNbxJpVwCBlajfRO3bbkzayZjMV8tTsyjA9pjStA==}
+  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.82.1':
+    resolution: {integrity: sha512-ilU5JxgPyAz2TgF6vARTyGx5lgT7vosyo02rpXGbA9pADOu8iMor0icwA6Htu/EQz3NVjkxKehvWyNsVLApX6A==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.81.1':
-    resolution: {integrity: sha512-NbXZHgsO3eXzEzaEr67kEwrYyvo59bjoSb7XR3zMoTlsx8esglSlxeTGpL4MRkCKzu3Dwfxa0+nlge1ewn5pXg==}
+  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.82.1':
+    resolution: {integrity: sha512-tMo8u96A9s3RqCOXt2QbQyp7J+ihShZU+aRE5/sCXcxqZ/a/1djW4ST7kTVFP8p/RgoKKph65lA9wF4mpWZhpQ==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.81.1':
-    resolution: {integrity: sha512-Tt6/J5OXnPuYDebWbwECSlgS/sq2REFsTaL9XU53gNPo32kAl2HLZIZsVcMHoq21jrBHY2ZHUU1nmE8wxj4d3Q==}
+  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.82.1':
+    resolution: {integrity: sha512-9xCA+Jy+RuSyJVWq552b4VoC7TRg25799MnIh+OqT+R4U2RUUwNp26J8cwPgZf7auyw8AmNHvyMntQCssapH+g==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
-  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.81.1':
-    resolution: {integrity: sha512-/gl2wZEI3VBOvFhZ/21yYB1/gJPB34B5f3F7ZLbqyeB2K5BwFWOJJCXNZqjPys75M8mNJihFMx2TyzFr1jZF1w==}
+  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.82.1':
+    resolution: {integrity: sha512-uhV2gCF3zvKSf5WiAM7bFnB0KhF9E1HBGzHYiobc9nKQGj5eD1EeuMP0pau079F9PfFD5TvrtlTZCKEe+Zh6bg==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.81.1':
-    resolution: {integrity: sha512-gT1omT5PPkbO+sfjwCNN/ClGspnFG9KiUlfmwattt7I956SPEWpLK20EMf81kA5phFOyiqEN5GCj9TzsTpjLRg==}
+  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.82.1':
+    resolution: {integrity: sha512-pYVWxRn2O/boZ960MlSk+Ex/ZGnNwys9mzxLW4ncJ6My/N3v7pqCKpPc2M87xj8JwdVIWxFlllqGTylV0iLevw==}
     engines: {node: '>=24.0.0'}
 
   '@inquirer/ansi@1.0.2':
@@ -1405,12 +1405,12 @@ snapshots:
 
   '@iarna/toml@2.2.5': {}
 
-  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.81.1':
+  '@inditextech/docouture-antora-extensions@0.1.0-SNAPSHOT.82.1':
     dependencies:
       '@antora/asciidoc-loader': 3.2.0
       '@antora/page-composer': 3.2.0
       '@antora/redirect-producer': 3.2.0
-      '@inditextech/docouture-asciidoc-extensions': 0.1.0-SNAPSHOT.81.1
+      '@inditextech/docouture-asciidoc-extensions': 0.1.0-SNAPSHOT.82.1
       '@shikijs/langs': 4.4.3
       '@shikijs/themes': 4.4.3
       node-html-parser: 9.0.2
@@ -1419,23 +1419,23 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
-  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.81.1':
+  '@inditextech/docouture-asciidoc-extensions@0.1.0-SNAPSHOT.82.1':
     dependencies:
       asciidoctor-core-2.2: '@asciidoctor/core@2.2.9'
       shiki: 4.4.3
 
-  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.81.1':
+  '@inditextech/docouture-cli@0.1.0-SNAPSHOT.82.1':
     dependencies:
       '@inquirer/prompts': 7.10.1
       ora: 8.2.0
     transitivePeerDependencies:
       - '@types/node'
 
-  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.81.1':
+  '@inditextech/docouture-publish-gh-pages@0.1.0-SNAPSHOT.82.1':
     dependencies:
       gh-pages: 6.3.0
 
-  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.81.1': {}
+  '@inditextech/docouture-ui-bundle@0.1.0-SNAPSHOT.82.1': {}
 
   '@inquirer/ansi@1.0.2': {}
 

@@ -1,0 +1,21 @@
+code/packages/asciidoc-extensions/README.md
+  s_0883d3a68f040d::t_cfefad7cc435d1 10,61,63-67,188-189,253,255
+code/packages/ui-bundle/preview-src/preview.css
+  s_0883d3a68f040d::t_c78211484901c2 62,66-67,143-146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f729a3a437f6b7141ca2f0f792c130ef8957dcd9",
+  "prompts": {},
+  "sessions": {
+    "s_0883d3a68f040d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa8e630f4ffe8sFNFQMRcn9J5B",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

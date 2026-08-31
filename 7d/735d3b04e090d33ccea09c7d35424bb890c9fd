@@ -1,0 +1,37 @@
+code/packages/cli/src/commands/branch-model.ts
+  s_651e0340e37d08::t_0b4b0823ec4dd9 1-248
+code/packages/cli/src/commands/new.spec.ts
+  s_651e0340e37d08::t_c9eb7c5a9039de 110-181,326-331,474-477,510-513,541-544,612-615,654-657
+code/packages/cli/src/commands/new.ts
+  s_651e0340e37d08::t_d9d0706c1a8ce9 21,45-54,211-213,226-236,322-383,398-407,419-425,436-443,466-480,485-487,493,497-509,512-514,644-647,683-693,704-706,713,744-756,760,776,780-782
+code/packages/cli/src/lib/doctor-checks.ts
+  s_651e0340e37d08::t_671fd2bd6296e0 7-8,282-340
+code/packages/cli/templates/starter/antora-playbook.local.yml
+  s_f831fe0f74e8a3::t_5c6a7e5887ca44 13-20,25-28
+code/packages/cli/templates/starter/package.json
+  s_f831fe0f74e8a3::t_960575d0e581e2 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7d735d3b04e090d33ccea09c7d35424bb890c9fd",
+  "prompts": {},
+  "sessions": {
+    "s_651e0340e37d08": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa937f0f5ffe0M8T0Eh2s61Yy8",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_f831fe0f74e8a3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa92f7b96ffeav12aCHjbFSqLa",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -10,6 +10,17 @@ Pages in this section:
 
 This list is the minimum, not a ceiling: a product with more complex or more specific documentation needs can add more pages to this section (see [the skill guide](../SKILL.md#the-minimal-structure)) — like separate guidelines for third-party contributors and for product (core) developers.
 
+### Adding this page to the nav
+
+Even with a single required page, keep it a flat sibling under its section heading — no different from Guides or Reference once a repo adds a second Contributing page (e.g. separate guidelines for core vs. third-party contributors):
+
+```adoc
+* Contributing
+* xref:overview.adoc[Overview]
+```
+
+See the `docouture-writing-docs-pages` skill for the full nav.adoc nesting rule.
+
 ---
 
 ## `overview` 🔴

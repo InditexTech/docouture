@@ -222,8 +222,12 @@ own:
 * xref:main:requirements.adoc[Requirements]
 * xref:main:quickstart.adoc[Quickstart]
 * Reference
+* xref:main:reference-overview.adoc[Overview]
 * xref:main:api/index.adoc[API]
 ```
+
+Overview stays a flat sibling of the other topics in its section — never their parent;
+see the `docouture-writing-docs-pages` skill for the full nesting rule.
 
 ## Growing beyond `main`: two different reasons to add a module
 

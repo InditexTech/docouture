@@ -29,6 +29,21 @@ Both are 🔴 and they coexist because they answer different questions:
 
 **When to link instead of duplicate:** if the repo already maintains a `CHANGELOG.md` or uses GitHub Releases as the complete record, the `changelog` overview page links there instead of copying it — never maintain the same list in two places. Release notes, being curated content, are best written in the docs.
 
+### Adding these pages to the nav
+
+List every page above as a flat sibling of `overview` in `main`'s `nav.adoc` — Overview never parents Changelog, Release notes, or FAQ. Only a subsection's own index page parents its genuine children, e.g. Release notes' per-version pages:
+
+```adoc
+* Additional information
+* xref:overview.adoc[Overview]
+* xref:changelog/index.adoc[Changelog]
+* xref:release-notes/index.adoc[Release notes]
+** xref:release-notes/1-0-0.adoc[v1.0.0]
+* xref:faq.adoc[FAQ]
+```
+
+See the `docouture-writing-docs-pages` skill for the full nav.adoc nesting rule.
+
 ---
 
 ## `overview` 🔴

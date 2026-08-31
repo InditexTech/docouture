@@ -21,6 +21,19 @@ This list is the minimum, not a ceiling: a product with more complex or more spe
 
 Unsure whether something belongs here or in Reference? See [Guides vs Reference](../SKILL.md#guides-vs-reference) in the skill guide.
 
+### Adding these pages to the nav
+
+List every page above as a flat sibling of `overview` in `main`'s `nav.adoc` — Overview never parents the other Guides pages:
+
+```adoc
+* Guides
+* xref:overview.adoc[Overview]
+* xref:configure-authentication.adoc[Configure authentication]
+* xref:development.adoc[Development]
+```
+
+See the `docouture-writing-docs-pages` skill for the full nav.adoc nesting rule.
+
 ---
 
 ## `overview` 🔴

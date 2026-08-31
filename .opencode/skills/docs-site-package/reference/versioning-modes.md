@@ -429,10 +429,10 @@ from a documented starting point rather than rediscovering the gaps:
 - **`docouture doctor` does not exist.** Should check that a site's `.github/workflows/`
   contains `docouture-publish.yml`, `docouture-pr-verify.yml` and `docouture-release.yml`, and that
   none has drifted from what the currently-installed `@inditextech/docouture-cli` would
-  generate — the same regenerate-in-memory-and-diff idiom this monorepo's own
-  `just ids-check` already uses, rather than a version-marker comment (which drifts from
-  reality the moment a template changes without a version bump, or someone hand-edits the
-  file).
+  generate — the same regenerate-in-memory-and-diff idiom `scripts/build-sprite.mjs
+  --check` in packages/ui-bundle already uses, rather than a version-marker comment
+  (which drifts from reality the moment a template changes without a version bump,
+  or someone hand-edits the file).
 - **`docouture publish` does not exist.** `docouture-publish.yml` already calls `npx docouture publish`
   after building, but the command itself, and the pluggable "publish-target
   antora-extension" mechanism it's meant to dispatch to (GitHub Pages, S3, Azure Static Web

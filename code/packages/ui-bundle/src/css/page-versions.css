@@ -8,16 +8,16 @@
  * "rotate on expand" convention `.side-menu__toggle` uses (side-menu.css),
  * driven off `aria-expanded` (04-page-versions.ts sets it alongside
  * `.is-active` for exactly this) rather than a second, redundant class.
- * `--ids-motion-micro-states` is the DS's own token for a small interactive
- * state change like this — already reduced-motion-aware (ids-tokens.css
+ * `--dt-motion-micro-states` is the DS's own token for a small interactive
+ * state change like this — already reduced-motion-aware (dt-tokens.css
  * flattens its duration under `prefers-reduced-motion`), so this needs no
  * media query of its own.
  */
-.version-menu-toggle .ids-tag__icon {
-  transition: var(--ids-motion-micro-states);
+.version-menu-toggle .dt-tag__icon {
+  transition: var(--dt-motion-micro-states);
 }
 
-.version-menu-toggle[aria-expanded="true"] .ids-tag__icon {
+.version-menu-toggle[aria-expanded="true"] .dt-tag__icon {
   transform: rotate(180deg);
 }
 
@@ -42,14 +42,14 @@
  */
 .page-versions .version-menu {
   background-color: var(--page-version-menu-background);
-  border: 1px solid var(--ids-color-border-default);
+  border: 1px solid var(--dt-color-border-default);
   display: flex;
   flex-direction: column;
-  margin-top: var(--ids-size-50);
-  max-height: calc((var(--ids-typo-line-height-22) + var(--ids-size-50) * 2) * 6.5);
+  margin-top: var(--dt-size-50);
+  max-height: calc((var(--dt-typo-line-height-22) + var(--dt-size-50) * 2) * 6.5);
   min-width: 100%;
   overflow-y: auto;
-  padding: var(--ids-size-25);
+  padding: var(--dt-size-25);
   position: absolute;
   right: 0;
   top: 100%;
@@ -76,30 +76,30 @@
  */
 .page-versions .version {
   align-items: center;
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   display: flex;
   flex-shrink: 0;
-  font: var(--ids-typo-body-m);
-  gap: var(--ids-size-75);
+  font: var(--dt-typo-body-m);
+  gap: var(--dt-size-75);
   justify-content: space-between;
-  letter-spacing: var(--ids-typo-body-m-letter-spacing);
-  padding: var(--ids-size-50) var(--ids-size-100);
-  text-transform: var(--ids-typo-body-m-text-transform);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  padding: var(--dt-size-50) var(--dt-size-100);
+  text-transform: var(--dt-typo-body-m-text-transform);
   white-space: nowrap;
 }
 
 /*
  * GH-103 — the reader's own version, shown (not hidden — previous
  * behaviour) as a non-interactive row: just the Figma component's own
- * "Selected" variant background (`--ids-color-bg-states-pressed`, #ededed
- * — its "Hover" variant, #f7f7f7/`--ids-color-bg-states-hover`, is what any
+ * "Selected" variant background (`--dt-color-bg-states-pressed`, #ededed
+ * — its "Hover" variant, #f7f7f7/`--dt-color-bg-states-hover`, is what any
  * row gets on `:hover` below, not this one) plus the Stable/Prerelease pill
- * the hbs attaches (`.ids-label--green`/`--orange`, label.css, already
- * vendored — see ids-components.yml). Text colour is inherited from
+ * the hbs attaches (`.dt-label--green`/`--orange`, label.css, already
+ * vendored — see dt-components.yml). Text colour is inherited from
  * `.version` above unchanged — every row in the design is the same colour.
  */
 .page-versions .version.is-current {
-  background-color: var(--ids-color-bg-states-pressed);
+  background-color: var(--dt-color-bg-states-pressed);
 }
 
 .page-versions .version.is-missing {
@@ -111,20 +111,20 @@
 /*
  * GH-103 — selectable versions had no explicit hover/focus treatment beyond
  * UA link defaults. Background is the Figma component's own "Hover" variant
- * (`--ids-color-bg-states-hover`, #f7f7f7 — see `.is-current`'s own comment
+ * (`--dt-color-bg-states-hover`, #f7f7f7 — see `.is-current`'s own comment
  * above for why that's a different token than the selected row's); text
- * colour reuses the same content-state token `.ids-tag`'s own hover rule
- * reads (ids-components.css). `:focus-visible` matches the DS's uniform
- * focus ring (iop-ds-components skill).
+ * colour reuses the same content-state token `.dt-tag`'s own hover rule
+ * reads (dt-components.css). `:focus-visible` matches the DS's uniform
+ * focus ring (docouture-components skill).
  */
 .page-versions a.version:hover {
-  background-color: var(--ids-color-bg-states-hover);
-  color: var(--ids-color-content-states-hover);
+  background-color: var(--dt-color-bg-states-hover);
+  color: var(--dt-color-content-states-hover);
 }
 
 .page-versions a.version:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: var(--ids-size-25);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: var(--dt-size-25);
 }
 
 /*
@@ -138,10 +138,10 @@
  * `bottom: 100%` opens it upward instead, same trigger, same rows, same
  * gap, just the other side of it.
  */
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .page-versions .version-menu {
     bottom: 100%;
-    margin-bottom: var(--ids-size-50);
+    margin-bottom: var(--dt-size-50);
     margin-top: 0;
     top: auto;
   }

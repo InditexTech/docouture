@@ -16,7 +16,7 @@ const warn = require('./warn')
 //
 //   Header info   a 20x20 icon and a `label/m` subheader
 //   Main info     the title (`title/s`) and description (`body/l`)
-//   Meta          `.ids-label--grey` chips
+//   Meta          `.dt-label--grey` chips
 //
 // The frames' date field is deliberately not modelled, and neither is
 // `Selected`: a documentation card has nothing to select. Nor is there a
@@ -27,7 +27,7 @@ const warn = require('./warn')
 // catalogue supersedes it.)
 //
 // Every colour in both theme frames resolves to a semantic IDS token that
-// ids-tokens.css already swaps under `.ids-theme-dark`, so dark theme costs
+// dt-tokens.css already swaps under `.dt-theme-dark`, so dark theme costs
 // this extension and card-grid.css nothing — see that file's own header.
 //
 // SYNTAX
@@ -38,7 +38,7 @@ const warn = require('./warn')
 //
 //   [cards,type=image-portrait,columns="1 s:2 m:3",width=container]
 //   ====
-//   [card,icon="business/file-outlined",subheader="Getting started",labels="java, spring"]
+//   [card,icon="file",subheader="Getting started",labels="java, spring"]
 //   .xref:quickstart.adoc[Quickstart]
 //   --
 //   image::quickstart.svg[Woven cloth, folded]
@@ -73,7 +73,7 @@ const WIDTHS = ['content', 'container']
 const DEFAULT_WIDTH = 'content'
 
 // `xs` is the base, unprefixed, so it has no name here — a bare `3` sets the
-// base count. The rest are the PROJECT's breakpoints (ids-breakpoints.css:
+// base count. The rest are the PROJECT's breakpoints (dt-breakpoints.css:
 // s 513, m 1240, l 1680), not the design system package's own, and the
 // classes they map to are mobile-first and non-exclusive, like the DS grid's
 // `--span-*` utilities.
@@ -82,13 +82,14 @@ const DEFAULT_COLUMNS = '1 s:2 m:3'
 const MAX_COLUMNS = 4
 
 const COLUMN_RX = /^(?:([a-z]+):)?([0-9]+)$/
-// `group/name`, both lowercase and hyphen-separated — the shape
-// `icons.yml` uses. Whether that icon is actually MASKED is checked by
-// ui-bundle's own `just icons-build` (scripts/build-sprite.mjs), which owns
-// the manifest; duplicating the list here would be a second source of truth
-// that drifts. An icon that passes the shape check but has no mask falls
-// back to a visible marker in card-grid.css rather than rendering nothing.
-const ICON_RX = /^[a-z0-9]+(?:-[a-z0-9]+)*\/[a-z0-9]+(?:-[a-z0-9]+)*$/
+// A bare Lucide icon name (lucide.dev/icons/<name>), lowercase and
+// hyphen-separated — the shape `icons.yml` uses. Whether that icon is
+// actually MASKED is checked by ui-bundle's own `just icons-build`
+// (scripts/build-sprite.mjs), which owns the manifest; duplicating the list
+// here would be a second source of truth that drifts. An icon that passes
+// the shape check but has no mask falls back to a visible marker in
+// card-grid.css rather than rendering nothing.
+const ICON_RX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 // The first `href` of the converted title, which is the card's own link.
 const HREF_RX = /<a\b[^>]*\bhref="([^"]*)"/i
@@ -154,15 +155,12 @@ function renderHeader(icon, subheader, parent) {
   let iconHtml = ''
   if (icon) {
     if (ICON_RX.test(icon)) {
-      iconHtml =
-        '<span class="docouture-card__icon ids-icon-mask--' +
-        escapeHtml(icon.replace('/', '-')) +
-        '" aria-hidden="true"></span>'
+      iconHtml = '<span class="docouture-card__icon dt-icon-mask--' + escapeHtml(icon) + '" aria-hidden="true"></span>'
     } else {
       warn(
         parent,
         '[card,icon="' + icon + '"]',
-        'not an icon reference; expected `group/name`, e.g. `business/file-outlined`'
+        'not an icon reference; expected a bare Lucide icon name, e.g. `store`'
       )
     }
   }
@@ -181,7 +179,7 @@ function renderMeta(labels) {
     chips
       .map(
         (label) =>
-          '<span class="ids-label ids-label--grey"><span class="ids-label__content">' +
+          '<span class="dt-label dt-label--grey"><span class="dt-label__content">' +
           escapeHtml(label) +
           '</span></span>'
       )
@@ -192,11 +190,11 @@ function renderMeta(labels) {
 
 function buildCardHtml({ type, imageHtml, header, title, description, meta }) {
   return (
-    '<div class="ids-card ids-card--vertical docouture-card' +
+    '<div class="dt-card dt-card--vertical docouture-card' +
     typeModifier(type) +
     '">' +
     imageHtml +
-    '<div class="ids-card__content">' +
+    '<div class="dt-card__content">' +
     header +
     '<div class="docouture-card__main">' +
     '<div class="docouture-card__title">' +
@@ -254,7 +252,7 @@ function renderCard(block, type, parent) {
 
   return chainAll(parts, ([converted, ...texts]) => {
     const image = converted ? (IMG_RX.exec(converted) || [])[0] : ''
-    const imageHtml = image ? '<div class="ids-card__image docouture-card__image">' + image + '</div>' : ''
+    const imageHtml = image ? '<div class="dt-card__image docouture-card__image">' + image + '</div>' : ''
     const description = texts
       .filter(Boolean)
       .map((text) => '<p>' + text + '</p>')

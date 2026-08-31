@@ -20,9 +20,6 @@ async function scaffoldHealthyWorkspace(root: string): Promise<void> {
   await writeFile(join(root, '.tool-versions'), `nodejs ${nodeVersion}\npnpm 10.0.0\n`)
   await mkdir(join(root, 'node_modules'))
   await writeFile(join(root, '.npmrc'), 'registry=https://registry.npmjs.org/\n')
-  await mkdir(join(root, 'packages/ui-bundle/src/css'), { recursive: true })
-  await writeFile(join(root, 'packages/ui-bundle/src/css/ids-tokens.css'), '')
-  await writeFile(join(root, 'packages/ui-bundle/src/css/ids-breakpoints.css'), '')
   execFileSync('git', ['init', '--quiet'], { cwd: root })
   execFileSync('git', ['config', 'user.email', 'a@a.com'], { cwd: root })
   execFileSync('git', ['config', 'user.name', 'a'], { cwd: root })
@@ -51,14 +48,13 @@ describe('runDoctor', () => {
   it('exits 0 on a healthy workspace, but pnpm may legitimately mismatch here', async () => {
     // pnpm's own installed version can't be pinned in this test environment
     // the way node's can be (no .tool-versions round-trip for the harness
-    // itself) — so this asserts the *other* four checks all pass, which is
+    // itself) — so this asserts the *other* three checks all pass, which is
     // the part this command actually implements.
     await scaffoldHealthyWorkspace(dir)
     await runDoctor([])
     const lines = logSpy.mock.calls.map((call) => String(call[0])).join('\n')
     expect(lines).toContain('node_modules — present')
     expect(lines).toContain('default registry pinned to npmjs')
-    expect(lines).toContain('IOP DS token derivative present')
     expect(lines).toContain('repository has at least one commit')
   })
 

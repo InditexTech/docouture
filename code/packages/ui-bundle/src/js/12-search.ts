@@ -58,21 +58,21 @@
   var dialog = document.getElementById('search-dialog') as HTMLDialogElement | null
   if (!triggers.length || !dialog) return
 
-  var field = dialog.querySelector<HTMLInputElement>('.ids-search-field-minimal__input')
+  var field = dialog.querySelector<HTMLInputElement>('.dt-search-field-minimal__input')
   var closeButton = dialog.querySelector<HTMLButtonElement>('.search-dialog__close')
   var resultsEl = dialog.querySelector<HTMLElement>('.search-dialog__results')
   var statusEl = dialog.querySelector<HTMLElement>('.search-dialog__status')
   var chips = [].slice.call(dialog.querySelectorAll<HTMLButtonElement>('.search-dialog__chip')) as HTMLButtonElement[]
   var chipsRow = dialog.querySelector<HTMLElement>('.search-dialog__chips')
   var shortcutChip = triggers[0].querySelector<HTMLElement>('.header-toolbar__search-shortcut')
-  // The panel — `.ids-modal`/`.ids-modal--small`, nested inside `.ids-overlay`
-  // as the sibling of `.ids-overlay__content` (search-dialog.hbs's own header
-  // explains why that nesting matters). `.ids-modal--fullscreen` toggles here,
-  // not on `dialog` itself, which no longer carries any `.ids-modal*` class.
+  // The panel — `.dt-modal`/`.dt-modal--small`, nested inside `.dt-overlay`
+  // as the sibling of `.dt-overlay__content` (search-dialog.hbs's own header
+  // explains why that nesting matters). `.dt-modal--fullscreen` toggles here,
+  // not on `dialog` itself, which no longer carries any `.dt-modal*` class.
   var panel = dialog.querySelector<HTMLElement>('.search-dialog__panel')
   // The backdrop — a real element, not `dialog` itself, is what a click
   // outside the panel actually lands on (see search-dialog.hbs's header).
-  var overlayContent = dialog.querySelector<HTMLElement>('.ids-overlay__content')
+  var overlayContent = dialog.querySelector<HTMLElement>('.dt-overlay__content')
   if (!field || !closeButton || !resultsEl || !panel || !overlayContent) return
 
   var indexBasename = dialog.dataset.searchIndex
@@ -99,8 +99,8 @@
   })
 
   // GH-68 (S4): fullscreen below the project's own `m` (1240px) — matches
-  // `--ids-breakpoints-xs-s` (ids-breakpoints.css). `.ids-modal--fullscreen`
-  // and `.ids-modal--small` share the same specificity in ids-components.css
+  // `--dt-breakpoints-xs-s` (dt-breakpoints.css). `.dt-modal--fullscreen`
+  // and `.dt-modal--small` share the same specificity in dt-components.css
   // with `--fullscreen`'s rule declared later, so it would win unconditionally
   // at every breakpoint if both classes were simply left on the element
   // together — this toggles it instead, the same matchMedia pattern
@@ -110,7 +110,7 @@
   fullscreenQuery.addEventListener('change', syncFullscreen)
 
   function syncFullscreen () {
-    panel!.classList.toggle('ids-modal--fullscreen', fullscreenQuery.matches)
+    panel!.classList.toggle('dt-modal--fullscreen', fullscreenQuery.matches)
   }
 
   var engineScriptPromise: Promise<void> | null = null
@@ -146,7 +146,7 @@
     // The backdrop — the only thing painted behind the panel now that the
     // nesting is correct (search-dialog.hbs's header) — a click here IS a
     // click outside the panel, unconditionally: nothing else in the DOM ever
-    // sits on top of `.ids-overlay__content` other than the panel itself.
+    // sits on top of `.dt-overlay__content` other than the panel itself.
     dialog!.close()
   })
   field.addEventListener('input', onQuery)
@@ -186,7 +186,7 @@
     activeCategory = category
     chips.forEach(function (c) {
       var selected = c === chip
-      c.classList.toggle('ids-tag--selected', selected)
+      c.classList.toggle('dt-tag--selected', selected)
       c.setAttribute('aria-pressed', String(selected))
     })
     // Idle state (empty field) has nothing category-scoped to re-filter —
@@ -346,7 +346,7 @@
    */
   function prepareRows (newRows: HTMLElement[]) {
     if (activeRow >= 0 && rows[activeRow]) {
-      rows[activeRow].classList.remove('ids-list-item--selected')
+      rows[activeRow].classList.remove('dt-list-item--selected')
       rows[activeRow].setAttribute('aria-selected', 'false')
     }
     rows = newRows
@@ -361,12 +361,12 @@
 
   function moveActive (index: number) {
     if (activeRow >= 0 && rows[activeRow]) {
-      rows[activeRow].classList.remove('ids-list-item--selected')
+      rows[activeRow].classList.remove('dt-list-item--selected')
       rows[activeRow].setAttribute('aria-selected', 'false')
     }
     activeRow = index
     if (activeRow >= 0 && rows[activeRow]) {
-      rows[activeRow].classList.add('ids-list-item--selected')
+      rows[activeRow].classList.add('dt-list-item--selected')
       rows[activeRow].setAttribute('aria-selected', 'true')
       rows[activeRow].scrollIntoView({ block: 'nearest' })
       field!.setAttribute('aria-activedescendant', rows[activeRow].id)
@@ -398,13 +398,13 @@
   function renderLoading () {
     prepareRows([])
     var loader = document.createElement('div')
-    loader.className = 'ids-loader'
+    loader.className = 'dt-loader'
     loader.setAttribute('aria-hidden', 'true')
     var circle = document.createElement('span')
-    circle.className = 'ids-loader__circle ids-loader__circle--medium'
+    circle.className = 'dt-loader__circle dt-loader__circle--medium'
     circle.appendChild(document.createElement('span'))
     var label = document.createElement('span')
-    label.className = 'ids-loader__label'
+    label.className = 'dt-loader__label'
     label.textContent = 'Loading the search index…'
     loader.append(circle, label)
     resultsEl!.replaceChildren(loader)
@@ -414,14 +414,14 @@
     prepareRows([])
     announce('Search is unavailable')
     var empty = document.createElement('div')
-    empty.className = 'ids-empty-state'
+    empty.className = 'dt-empty-state'
     var message = document.createElement('div')
-    message.className = 'ids-empty-state__message'
+    message.className = 'dt-empty-state__message'
     var title = document.createElement('p')
-    title.className = 'ids-empty-state__title'
+    title.className = 'dt-empty-state__title'
     title.textContent = 'Search is unavailable'
     var description = document.createElement('p')
-    description.className = 'ids-empty-state__description'
+    description.className = 'dt-empty-state__description'
     description.textContent = 'Try reloading the page.'
     message.append(title, description)
     empty.appendChild(message)
@@ -432,14 +432,14 @@
     prepareRows([])
     announce('No results for “' + term + '”')
     var empty = document.createElement('div')
-    empty.className = 'ids-empty-state'
+    empty.className = 'dt-empty-state'
     var message = document.createElement('div')
-    message.className = 'ids-empty-state__message'
+    message.className = 'dt-empty-state__message'
     var title = document.createElement('p')
-    title.className = 'ids-empty-state__title'
+    title.className = 'dt-empty-state__title'
     title.textContent = 'No results found'
     var description = document.createElement('p')
-    description.className = 'ids-empty-state__description'
+    description.className = 'dt-empty-state__description'
     description.textContent = 'Try a different search term'
     message.append(title, description)
     empty.appendChild(message)
@@ -492,7 +492,7 @@
     var showCategories = chips.length > 0
 
     var list = document.createElement('ul')
-    list.className = 'ids-list'
+    list.className = 'dt-list'
     var lastCategory: string | null = null
     var rowEls: HTMLElement[] = []
 
@@ -509,15 +509,15 @@
       entry.sections.forEach(function (hit) {
         var item = document.createElement('li')
         var link = document.createElement('a')
-        // `--divider` (DS: an inset bottom border in `--ids-color-border-low`)
+        // `--divider` (DS: an inset bottom border in `--dt-color-border-low`)
         // on every row — stripped off the very last one below, once the full
         // list is known, since a divider under the last row would just be a
         // stray line before the footer.
-        link.className = 'ids-list-item ids-list-item--clickable ids-list-item--divider'
+        link.className = 'dt-list-item dt-list-item--clickable dt-list-item--divider'
         link.href = hit.url
 
         var text = document.createElement('span')
-        text.className = 'ids-list-item__text'
+        text.className = 'dt-list-item__text'
 
         // Site name dropped always (hierarchy[0] — see search-index.js: it's
         // always the component title, or that title merged with the
@@ -536,12 +536,12 @@
         if (crumbs.length) text.appendChild(buildBreadcrumbs(crumbs))
 
         var titleEl = document.createElement('span')
-        titleEl.className = 'ids-list-item__label'
+        titleEl.className = 'dt-list-item__label'
         appendHighlighted(titleEl, hit.title)
         text.appendChild(titleEl)
 
         var description = document.createElement('span')
-        description.className = 'ids-list-item__description'
+        description.className = 'dt-list-item__description'
         appendHighlighted(description, hit.snippet)
         text.appendChild(description)
 
@@ -568,7 +568,7 @@
       })
     })
 
-    if (rowEls.length) rowEls[rowEls.length - 1].classList.remove('ids-list-item--divider')
+    if (rowEls.length) rowEls[rowEls.length - 1].classList.remove('dt-list-item--divider')
 
     resultsEl!.replaceChildren(list)
     prepareRows(rowEls)
@@ -577,7 +577,7 @@
   }
 
   /**
-   * The real DS breadcrumbs component (`.ids-breadcrumbs`/`.ids-breadcrumb-
+   * The real DS breadcrumbs component (`.dt-breadcrumbs`/`.dt-breadcrumb-
    * item`, vendored the same way breadcrumbs.hbs's page-level trail is) —
    * not hand-joined text — reused here as plain, non-interactive spans:
    * these crumbs are history, not a navigable trail of their own. Each
@@ -585,12 +585,12 @@
    */
   function buildBreadcrumbs (crumbs: SearchHit['hierarchy']): HTMLElement {
     var nav = document.createElement('span')
-    nav.className = 'ids-breadcrumbs search-result__breadcrumbs'
+    nav.className = 'dt-breadcrumbs search-result__breadcrumbs'
     crumbs.forEach(function (crumb) {
       var item = document.createElement('span')
-      item.className = 'ids-breadcrumb-item'
+      item.className = 'dt-breadcrumb-item'
       var content = document.createElement('span')
-      content.className = 'ids-breadcrumb-item__content'
+      content.className = 'dt-breadcrumb-item__content'
       appendHighlighted(content, crumb)
       item.appendChild(content)
       nav.appendChild(item)
@@ -605,7 +605,7 @@
     highlighted.marks.forEach(function (mark) {
       if (mark.start > cursor) el.appendChild(document.createTextNode(text.slice(cursor, mark.start)))
       var markEl = document.createElement('mark')
-      markEl.className = 'ids-highlight__mark'
+      markEl.className = 'dt-highlight__mark'
       markEl.textContent = text.slice(mark.start, mark.end)
       el.appendChild(markEl)
       cursor = mark.end

@@ -89,7 +89,7 @@ What each attribute changes:
 * Per-card `subheader=` and `icon=` share one header row and can be combined — they
   are not alternatives to each other, despite how the two examples in
   xref:main:reference-custom-asciidoc-components.adoc[] read side by side. `icon=` only
-  accepts a `group/name` string with a working CSS mask — see
+  accepts a bare icon name with a working CSS mask — see
   xref:main:guides-icon-gallery.adoc[] for which ones actually render.
 * Per-card `labels=` is a comma-separated list rendered as small grey chips, separate
   from `subheader=`.

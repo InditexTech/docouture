@@ -260,64 +260,22 @@ test *args: (_hdr "test")
 test-package packages *args: (_hdr "test-package " + packages) _tooling
     {{ tooling }} test-package {{ packages }} {{ args }}
 
-# ------------------------------------------------------------------- ids -----
-#
-# The IOP Design System (IDS) is not a dependency of this workspace — see
-# tools/ids/README.md for why. It lives in a sidecar pnpm project instead,
-# installed only when you're regenerating the derivative CSS committed under
-# packages/ui-bundle/src/css/ (ids-tokens.css, ids-breakpoints.css) or reading
-# real DS source as reference while building a component. Three stages, and
-# only the first touches the network:
-#
-#   ids-install   pnpm install in tools/ids (needs Artifactory creds in
-#                 ~/.npmrc and VPN — same credential every developer already
-#                 has from before this existed, just no longer needed for a
-#                 plain `pnpm install` at the workspace root)
-#   ids-sync      regenerate the committed derivative from tools/ids/node_modules
-#   ids-check     regenerate in memory and fail if it would differ, writing
-#                 nothing — a drift check, needs ids-install first
-#
-# Day to day you need none of these. Reach for ids-install when extending a
-# component against real DS source, or ids-install + ids-sync after a DS
-# version bump in tools/ids/package.json.
-
-# Install the design system sidecar (network, needs Artifactory credentials)
-[group('ids')]
-[no-exit-message]
-ids-install: (_hdr "ids-install")
-    pnpm -C tools/ids install --ignore-workspace
-
-# Regenerate the committed IDS token/breakpoint CSS from the sidecar
-[group('ids')]
-[no-exit-message]
-ids-sync: (_hdr "ids-sync")
-    node tools/ids/sync.mjs
-
-# Check the committed IDS token/breakpoint CSS is not stale (writes nothing)
-[group('ids')]
-[no-exit-message]
-ids-check: (_hdr "ids-check")
-    node tools/ids/sync.mjs --check
-
 # ---------------------------------------------------------------- icons ------
 #
-# Icons are vendored from the IOP Design System into a local sprite so they
-# render in static, JavaScript-off HTML. Two stages, and only the first one
-# touches the network:
+# Icons come from Lucide (lucide-static, a public npm devDependency) into a
+# local sprite so they render in static, JavaScript-off HTML. One stage, and
+# it never touches the network — lucide-static already ships every icon:
 #
-#   icons-fetch   mirrors all 25 group sprites into packages/ui-bundle/.icons
-#                 (gitignored) and records what it got in icons.lock.json
-#   icons-build   cuts src/img/ids-icons.svg from that mirror, using only the
-#                 icons listed in src/img/icons.yml
+#   icons-build   cuts src/img/icons.svg from lucide-static's own combined
+#                 sprite, using only the icons listed in src/img/icons.yml
 #
-# Day to day you only need icons-build: add a line to the manifest, run it,
-# commit the sprite. icons-fetch is for design system updates.
+# Add a line to the manifest, run icons-build, commit the sprite.
 #
 # `-C` rather than `--filter`: these scripts exit non-zero to report a bad icon
 # name, and pnpm's recursive runner would bury their output in an
 # ERR_PNPM_RECURSIVE_RUN report.
 
-# Find an icon in the design system catalogue
+# Find an icon in Lucide's catalogue
 [group('icons')]
 [no-exit-message]
 icons-search *terms: (_hdr "icons-search " + terms)
@@ -328,12 +286,6 @@ icons-search *terms: (_hdr "icons-search " + terms)
 [no-exit-message]
 icons-build *args: (_hdr "icons-build")
     pnpm -C packages/ui-bundle run icons:build {{ args }}
-
-# Re-mirror the design system icon catalogue (network)
-[group('icons')]
-[no-exit-message]
-icons-fetch *args: (_hdr "icons-fetch")
-    pnpm -C packages/ui-bundle run icons:fetch {{ args }}
 
 # ---------------------------------------------------------------- check ------
 

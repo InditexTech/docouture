@@ -1,27 +1,9 @@
 # docouture
 
-Documentation platform built on [Antora](https://docs.antora.org/antora/latest/),
-themed with the IOP Design System. It's an Nx/pnpm monorepo that ships two
-things: a themed Antora UI bundle, and the `docouture` CLI for scaffolding and
-running standalone documentation sites outside this repository.
-
-## Contributing vs. using this project
-
-Contributing to this repository is open: it's public, licensed Apache-2.0, and
-accepts external contributions (CLA-gated — see [Contributing](#contributing)
-below).
-
-Using the output is not, today: sites built with the current
-`packages/ui-bundle` and `packages/asciidoc-extensions` are for
-**Inditex-internal distribution only**. `ui-bundle` embeds proprietary IOP
-Design System CSS and icons; `asciidoc-extensions` emits markup and class
-names copied from the same design system. Both are licensed for internal use
-only — publishing a site built with either package, or the packages
-themselves, anywhere public isn't permitted until that dependency is stripped
-out (tracked separately as a full licensing review). See
-[`code/packages/ui-bundle/NOTICE`](code/packages/ui-bundle/NOTICE) and
-[`code/packages/asciidoc-extensions/NOTICE`](code/packages/asciidoc-extensions/NOTICE)
-for exactly what's embedded.
+Documentation platform built on [Antora](https://docs.antora.org/antora/latest/).
+It's an Nx/pnpm monorepo that ships two things: a themed Antora UI bundle, and
+the `docouture` CLI for scaffolding and running standalone documentation sites
+outside this repository.
 
 ## Requirements
 
@@ -36,8 +18,7 @@ $ just bootstrap        # asdf install + pnpm install + preflight checks
 
 Every command below works from anywhere in the repository. Dependencies come
 entirely from the public npm registry — nothing here needs Artifactory
-credentials or a VPN (see `code/tools/ids/README.md` if you're looking for the
-IOP Design System sidecar, which does).
+credentials or a VPN.
 
 ## Commands
 
@@ -140,9 +121,7 @@ touching `code/**` is expected to carry.
 
 ## License
 
-Apache-2.0 — see [`LICENSE`](LICENSE), with two exceptions:
+Apache-2.0 — see [`LICENSE`](LICENSE), with one exception:
 `code/packages/ui-bundle` is a fork of
 [antora-ui-default](https://gitlab.com/antora/antora-ui-default) and remains
-under MPL-2.0; `code/packages/asciidoc-extensions` is licensed MPL-2.0
-alongside it because its extensions emit copied IOP Design System markup. See
-each package's own `LICENSE` and `NOTICE`.
+under MPL-2.0. See that package's own `LICENSE` and `NOTICE`.

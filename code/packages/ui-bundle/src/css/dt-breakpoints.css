@@ -1,0 +1,15 @@
+/*
+ * Breakpoint declarations for this project's own design system. Originally
+ * generated from the IOP Design System via a since-removed sync sidecar
+ * (GH-177); the values below are carried over from that source and are now
+ * hand-maintained — there is no regeneration step. Edit directly.
+ */
+/* Project override: M starts at 1240px (not the original source's 1024px). */
+
+@custom-media --dt-breakpoints-xs (max-width: 512px);
+@custom-media --dt-breakpoints-s (min-width: 513px);
+@custom-media --dt-breakpoints-m (min-width: 1240px);
+@custom-media --dt-breakpoints-l (min-width: 1680px);
+@custom-media --dt-breakpoints-xs-s (max-width: 1239.98px);
+@custom-media --dt-breakpoints-xs-m (max-width: 1679.98px);
+@custom-media --dt-breakpoints-s-m (min-width: 513px) and (max-width: 1679.98px);

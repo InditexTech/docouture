@@ -1,15 +1,15 @@
     {{!--
-      IOP Design System typefaces. The design system loads these from a public
-      CDN rather than bundling them; --ids-typo-font-family-* resolve to the
-      families they declare (Helvetica Now Text SW10, NotoSansMono).
-
-      Sites served from a .cn host must use amgassets.inditex.cn instead, which
-      is what the design system's own loader does. bridge.css carries a fallback
-      stack so an offline preview or an air-gapped CI still renders.
+      Typefaces: Inter + Noto Sans Mono, both from Google Fonts. Requested as
+      variable fonts (wght@100..900) rather than a fixed weight list, since
+      --dt-typo-font-family-* is used at several different weights depending
+      on scale/resolution tier (dt-tokens.css) and a variable font serves any
+      of them from one file rather than a separate download per weight.
+      bridge.css carries a fallback stack so an offline preview or an
+      air-gapped CI still renders something.
     --}}
-    <link rel="preconnect" href="https://amgassets.inditex.com" crossorigin>
-    <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/zara-helvetica-now/zara-helvetica-now-sw10.css">
-    <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/noto-sans-mono/noto-sans-mono.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap">
     <link rel="stylesheet" href="{{{uiRootPath}}}/css/site.css">
 {{#with site.keys.homeBackground}}
     {{!--

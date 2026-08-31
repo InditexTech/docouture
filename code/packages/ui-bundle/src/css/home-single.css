@@ -63,7 +63,7 @@
  *
  * The trick instead: NOTHING between h2 and the document root sets
  * `position` (checked — `.body`, `.home`, `.home__main`, `.sect1`, the DS's
- * own `.ids-grid-layout`, all left at the initial `static`; the side menu's
+ * own `.dt-grid-layout`, all left at the initial `static`; the side menu's
  * `position: fixed`, home.css's own hero `position: sticky`, are siblings/
  * cousins, not ancestors, of this h2). An absolutely positioned element with
  * no positioned ancestor resolves its containing block to the INITIAL
@@ -97,7 +97,7 @@
 }
 
 .home--single .home__main > .sect1 > h2::after {
-  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-image: repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
   background-position: bottom;
   background-repeat: repeat-x;
   background-size: 8px 1px;
@@ -120,7 +120,7 @@
  * `grid-column` line-number pair rather than two `--span-*` utility classes
  * for the same reason home.css gives for not using them at all (see its own
  * header note): those classes are keyed to the design system's own `m`
- * (1024px), not this project's (1240px, ids-breakpoints.css).
+ * (1024px), not this project's (1240px, dt-breakpoints.css).
  *
  * Two widths, not one: 2/8/2 (columns 3–10) from `m` (1240px) up, narrowed
  * further to 3/6/3 (columns 4–9) from `l` (1680px) up — the well itself
@@ -130,7 +130,7 @@
  * media conditions are true, wins on source order — same selector, same
  * specificity, last declaration standing.
  */
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .home--single .home__hero,
   .home--single .home__main {
     grid-column: 3 / span 8;
@@ -275,7 +275,7 @@
  * own alignment are already unconditional across this whole range, from the
  * `m` block above.
  */
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .home--single .home__hero,
   .home--single .home__main {
     grid-column: 4 / span 6;

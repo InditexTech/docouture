@@ -23,7 +23,7 @@ files say.
 
 `@inditextech/docouture-ui-bundle` is a themed fork of
 https://gitlab.com/antora/antora-ui-default[antora-ui-default]: Handlebars layouts and
-partials, CSS built on the IOP Design System's tokens, and browser scripts for theme
+partials, CSS built on this project's own design tokens, and browser scripts for theme
 switching, search, tabs, accordions and the on-page table of contents. Antora reads it
 as a plain zip (`ui.bundle.url` in the playbook) — nothing about it is
 docouture-specific from Antora's point of view. See xref:main:reference-ui-bundle.adoc[].

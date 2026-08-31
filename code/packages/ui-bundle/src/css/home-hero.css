@@ -4,15 +4,15 @@
  * already sizes, sticks and pads.
  *
  * Only what the design system does not already give: the chips
- * (`.ids-label--grey`), the buttons (`.ids-button--primary/--secondary`) and
+ * (`.dt-label--grey`), the buttons (`.dt-button--primary/--secondary`) and
  * their type are DS components used as-is, so nothing below restates a
  * colour, a padding or a label typeface — the frames' `8px 24px` button
  * padding and `label/l` label ARE button.css's own, and their `#F7F7F7` chip
- * background IS `--ids-color-bg-low`. What is left is the column's rhythm,
+ * background IS `--dt-color-bg-low`. What is left is the column's rhythm,
  * the title, and the media slot.
  *
  * Every length is a design system size token or a sum of them, as in
- * home.css, so the hero follows `.ids-scale-large` along with the rest of
+ * home.css, so the hero follows `.dt-scale-large` along with the rest of
  * the page.
  */
 
@@ -24,7 +24,7 @@
    * the whole column as "gap 40"; the frames nest it differently — this outer
    * gap is 40, the gaps inside the group are 24 (below). Frames win.
    */
-  gap: var(--ids-size-250);
+  gap: var(--dt-size-250);
 }
 
 /*
@@ -36,12 +36,12 @@
 .home-hero__intro {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-150);
+  gap: var(--dt-size-150);
 }
 
 /*
  * 40x40 product mark, and its dark counterpart swapped off the same
- * `.ids-theme-dark` root class 08-theme.ts sets — identical mechanism to the
+ * `.dt-theme-dark` root class 08-theme.ts sets — identical mechanism to the
  * side menu's own brand mark (side-menu.css), and see nav-brand.hbs for why
  * an externally-referenced image needs a second file at all. Only the pair
  * is swapped: a site with no `productLogoDark` renders its single mark in
@@ -57,22 +57,22 @@
   display: none;
 }
 
-.ids-theme-dark .home-hero__logo--light {
+.dt-theme-dark .home-hero__logo--light {
   display: none;
 }
 
-.ids-theme-dark .home-hero__logo--dark {
+.dt-theme-dark .home-hero__logo--dark {
   display: inline-block;
 }
 
 /*
  * `display/l` (64/72), and the reason this is a bundle-owned class rather
- * than a `.ids-text--display-l` utility: that utility does not ship. The
+ * than a `.dt-text--display-l` utility: that utility does not ship. The
  * design system's own text.css stops at `--display-m` even though the
- * `--ids-typo-display-l` token and the `ids-display-l` mixin both exist
+ * `--dt-typo-display-l` token and the `dt-display-l` mixin both exist
  * upstream — an upstream gap, noted in GH-4 when the DS stylesheets were
  * wired in and still true. The token itself is real and generated into
- * ids-tokens.css, so this consumes it the same way text.css would.
+ * dt-tokens.css, so this consumes it the same way text.css would.
  *
  * Stepped down to `display/m` (48/56) below breakpoint m, which the xs frame
  * (2696:95578) draws: 64px type in a column 358px wide breaks a product name
@@ -81,12 +81,12 @@
  * whether the landing is readable on a phone at all.
  */
 .home-hero__title {
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-display-m);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-display-m-letter-spacing);
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-display-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-display-m-letter-spacing);
   margin: 0;
-  text-transform: var(--ids-typo-display-m-text-transform);
+  text-transform: var(--dt-typo-display-m-text-transform);
 }
 
 /*
@@ -100,14 +100,14 @@
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ids-size-75); /* 12 */
+  gap: var(--dt-size-75); /* 12 */
 }
 
 /*
  * The actions are anchors, not buttons, so they arrive with base.css's own
  * link underline — the same correction hero.css makes for the same reason.
  */
-.home-hero a.ids-button {
+.home-hero a.dt-button {
   text-decoration: none;
 }
 
@@ -137,26 +137,26 @@
 /*
  * Opt-in frame, `:page-hero-image-bordered:` — the Figma's 6px black/white
  * border and 10px radius. Colour is the design system's own theme-aware
- * token (`--ids-color-border-default` — `#000` light, `#fff` dark,
- * ids-tokens.css). Border width uses `--ids-size-border-high` (2px, the
+ * token (`--dt-color-border-default` — `#000` light, `#fff` dark,
+ * dt-tokens.css). Border width uses `--dt-size-border-high` (2px, the
  * thicker of the two border tokens) rather than the literal 6px the Figma
  * draws — no border token goes that high, and a decorative frame is a
  * closer fit for the "high emphasis" token than the 1px
- * `--ids-size-border-default` used for hairline dividers elsewhere. The
- * radius is a literal 10px because no token in ids-tokens.css matches it
- * either (only `--ids-size-radius-none`/`-full` exist) — precedented
+ * `--dt-size-border-default` used for hairline dividers elsewhere. The
+ * radius is a literal 10px because no token in dt-tokens.css matches it
+ * either (only `--dt-size-radius-none`/`-full` exist) — precedented
  * elsewhere in the bundle (base.css's own literal 12px/6px radii) rather
  * than stretching an unrelated token to fit.
  */
 .home-hero__media--bordered {
-  border: var(--ids-size-border-high) solid var(--ids-color-border-default);
+  border: var(--dt-size-border-high) solid var(--dt-color-border-default);
   border-radius: 10px;
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .home-hero__title {
-    font: var(--ids-typo-display-l);
-    letter-spacing: var(--ids-typo-display-l-letter-spacing);
-    text-transform: var(--ids-typo-display-l-text-transform);
+    font: var(--dt-typo-display-l);
+    letter-spacing: var(--dt-typo-display-l-letter-spacing);
+    text-transform: var(--dt-typo-display-l-text-transform);
   }
 }

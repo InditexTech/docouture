@@ -1,77 +1,61 @@
-# Icons vendored from the IOP Design System.
+# Icons used by this bundle, drawn from Lucide (lucide-static, ISC licensed,
+# public npm — see NOTICE).
 #
-# Each entry is a group and the leaf names taken from it. The leaf name always
-# carries its variant suffix (`-outlined` or `-filled`) because the design
-# system ships no bare names — `information` does not exist, only
-# `information-outlined` and `information-filled`. The symbol id in the
-# generated sprite is `sw-icons-<group>-<name>`, matching the design system's
-# own ids so the sprite stays swappable with the CDN one.
+# Each entry is the exact Lucide icon name — the same name `lucide.dev/icons/
+# <name>` and `node_modules/lucide-static/icons/<name>.svg` use, and the same
+# name `icon="<name>"` in an AsciiDoc `[card]` block or a nav module's
+# `icon:` reference uses. There is no group and no variant suffix: Lucide
+# ships one style per icon, unlike the icon set this replaced. The generated
+# sprite's `<symbol>` id is `icon-<name>`.
 #
-# Group names are not intuitive: `sections` is Zara's womenswear/menswear
-# sections, `controls` is media transport only. Use `just icons-search <term>`
-# rather than guessing — the search covers all 1370 icons in the mirror, and
-# `just icons-build` fails with suggestions when a name is wrong.
+# Use `just icons-search <term>` to find a name (searches Lucide's own tag
+# index, offline, from the installed lucide-static package) — `just
+# icons-build` fails with suggestions when a name is wrong.
 #
-#   just icons-search sidebar     find the right group/name
-#   just icons-build              regenerate src/img/ids-icons.svg
+#   just icons-search sidebar     find the right icon name
+#   just icons-build              regenerate src/img/icons.svg
 #
-# Adding an icon is one line here plus `just icons-build`. Refreshing the
-# catalogue from the design system is `just icons-fetch`.
+# Adding an icon is one line here plus `just icons-build`.
 
 icons:
-  accessibility:
-    - moon-outlined # theme toggle, dark
-  actions:
-    - add-outlined
-    - back-outlined
-    - check-circle-outlined # copy-to-clipboard success (06-copy-to-clipboard.ts); admonition: important (GH-13)
-    - close-large-outlined # side-menu drawer close (GH-8, breakpoint xs)
-    - close-small-outlined # recent-search remove (GH-69, 13-search-recents.ts) — close-large-outlined is sized for a header/drawer close, not a per-row control
-    - code-block-outlined # nav switcher: the SDK module; [card,icon=…]: build/index.adoc Plugins
-    - copy-outlined
-    - full-screen-enter-outlined
-    - full-screen-exit-outlined
-    - search-outlined # header toolbar searcher, Home state (GH-18)
-  alerts:
-    - warning-outlined # admonition: warning (GH-13)
-    - warning-alt-outlined # admonition: caution (GH-13)
-  arrows:
-    - arrow-left-outlined # pagination: previous
-    - arrow-right-outlined # pagination: next
-    - chevron-down-outlined
-    - chevron-up-outlined
-  business:
-    - file-outlined # nav switcher: the TypeScript Types module
-    - sticker-outlined # admonition: note (GH-13)
-    - store-outlined # [card,icon=…]: build/index.adoc Stores
-  communication:
-    - comment-outlined # admonition: tip (GH-13)
-  connectivity:
-    - cloud-outlined # nav switcher: the Azure Web PubSub Store module
-    - link-outlined # section anchor / copy link
-    - link-external-outlined
-    - wifi-outlined # nav switcher: the Websockets Store module
-  controls:
-    - play-circle-outlined
-  design:
-    - grid-outlined # nav switcher: the Framework module
-    - menu-tab-outlined # side-menu toggle (GH-8)
-    - sidebar-outlined # "on this page" toggle
-    - tool-outlined # nav switcher: the React Helper module
-  others:
-    - home-outlined
-    - server-outlined # nav switcher: the Standalone Store module
-    - fire-outlined # [card,icon=…]: build/index.adoc Actions
-  shapes:
-    - forms-outlined # [card,icon=…]: build/index.adoc Nodes
-  time:
-    - history-outlined # recent searches heading (GH-69, 13-search-recents.ts)
-  weather:
-    - sunny-outlined # theme toggle, light
+  - moon # theme toggle, dark
+  - plus
+  - arrow-left # pagination: previous; also the generic "back" affordance
+  - circle-check-big # copy-to-clipboard success (06-copy-to-clipboard.ts); admonition: important (GH-13)
+  - x # side-menu drawer close (GH-8, breakpoint xs); also recent-search remove (GH-69, 13-search-recents.ts), sized smaller there by CSS
+  - code # nav switcher: the SDK module; [card,icon=…]: build/index.adoc Plugins
+  - copy
+  - maximize
+  - minimize
+  - search # header toolbar searcher, Home state (GH-18)
+  - triangle-alert # admonition: warning (GH-13)
+  - octagon-alert # admonition: caution (GH-13)
+  - arrow-right # pagination: next
+  - chevron-down
+  - chevron-up
+  - file # nav switcher: the TypeScript Types module
+  - sticky-note # admonition: note (GH-13)
+  - store # [card,icon=…]: build/index.adoc Stores
+  - message-circle # admonition: tip (GH-13)
+  - cloud # nav switcher: the Azure Web PubSub Store module
+  - link # section anchor / copy link
+  - external-link
+  - wifi # nav switcher: the Websockets Store module
+  - circle-play
+  - grid-3x3 # nav switcher: the Framework module
+  - menu # side-menu toggle (GH-8)
+  - panel-left # "on this page" toggle
+  - wrench # nav switcher: the React Helper module
+  - house
+  - server # nav switcher: the Standalone Store module
+  - flame # [card,icon=…]: build/index.adoc Actions
+  - shapes # [card,icon=…]: build/index.adoc Nodes
+  - rotate-ccw-clock # recent searches heading (GH-69, 13-search-recents.ts)
+  - sun # theme toggle, light
 
-# Icons that also need a CSS-consumable form (a `--icon-mask-<group>-<name>`
-# custom property, plus an `.ids-icon-mask--<group>-<name>` utility class, both
-# generated into src/css/icon-masks.css). Two kinds of markup need this:
+# Icons that also need a CSS-consumable form (a `--icon-mask-<name>` custom
+# property, plus a `.dt-icon-mask--<name>` utility class, both generated into
+# src/css/icon-masks.css). Two kinds of markup need this:
 #
 #   - markup Asciidoctor generates itself, where the `{{icon}}` helper's
 #     `<svg><use>` has no way in — admonitions with `icons: font` (both
@@ -85,26 +69,17 @@ icons:
 # Every entry must also be listed under `icons:` above; `just icons-build`
 # fails otherwise.
 masks:
-  actions:
-    - check-circle-outlined
-    - code-block-outlined # [card,icon=…] (GH-20)
-  alerts:
-    - warning-outlined
-    - warning-alt-outlined
-  arrows:
-    - chevron-down-outlined # collapsible marker (GH-15)
-  business:
-    - file-outlined # [card,icon=…] (GH-20)
-    - sticker-outlined
-    - store-outlined # [card,icon=…] (GH-20)
-  communication:
-    - comment-outlined
-  connectivity:
-    - link-external-outlined # [feature-tabs] call to action, external targets (GH-22)
-  design:
-    - grid-outlined # [card,icon=…] (GH-20)
-  others:
-    - server-outlined # [card,icon=…] (GH-20)
-    - fire-outlined # [card,icon=…] (GH-20)
-  shapes:
-    - forms-outlined # [card,icon=…] (GH-20)
+  - circle-check-big
+  - code # [card,icon=…] (GH-20)
+  - triangle-alert
+  - octagon-alert
+  - chevron-down # collapsible marker (GH-15)
+  - file # [card,icon=…] (GH-20)
+  - sticky-note
+  - store # [card,icon=…] (GH-20)
+  - message-circle
+  - external-link # [feature-tabs] call to action, external targets (GH-22)
+  - grid-3x3 # [card,icon=…] (GH-20)
+  - server # [card,icon=…] (GH-20)
+  - flame # [card,icon=…] (GH-20)
+  - shapes # [card,icon=…] (GH-20)

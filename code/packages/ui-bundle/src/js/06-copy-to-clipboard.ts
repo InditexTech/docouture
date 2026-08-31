@@ -12,9 +12,9 @@
 
   // GH-12 (A6) follow-up (design review): both action-bar buttons are
   // icon-only ghost buttons now — no visible "copy code" label — real
-  // `.ids-button` markup (see button/button.js in the DS sidecar for the
-  // shape this mirrors) so they pick up ids-components.css and the dark
-  // token scope doc.css/ids-tokens.css give `.doc .listingblock >
+  // `.dt-button` markup (see button/button.js in the DS sidecar for the
+  // shape this mirrors) so they pick up dt-components.css and the dark
+  // token scope doc.css/dt-tokens.css give `.doc .listingblock >
   // .content` for free. Copy feedback, with no label left to swap, is the
   // icon itself swapping to a checkmark plus a visually-hidden live
   // region for screen readers — same split fullscreen's icon+aria-pressed
@@ -22,11 +22,11 @@
   // alone says nothing to anyone not looking at it.
   function icon (name: string): SVGSVGElement {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('class', 'ids-icon')
+    svg.setAttribute('class', 'dt-icon')
     svg.setAttribute('aria-hidden', 'true')
     svg.setAttribute('focusable', 'false')
     var use = document.createElementNS('http://www.w3.org/2000/svg', 'use')
-    use.setAttribute('href', uiRootPath + '/img/ids-icons.svg#sw-icons-' + name)
+    use.setAttribute('href', uiRootPath + '/img/icons.svg#icon-' + name)
     svg.appendChild(use)
     return svg
   }
@@ -62,15 +62,15 @@
 
     if (supportsCopy) {
       var copyButton = document.createElement('button')
-      copyButton.className = 'ids-button ids-button--ghost ids-button--icon-only'
+      copyButton.className = 'dt-button dt-button--ghost dt-button--icon-only'
       copyButton.type = 'button'
       copyButton.setAttribute('aria-label', 'Copy code')
       var copyContent = document.createElement('div')
-      copyContent.className = 'ids-button__content'
+      copyContent.className = 'dt-button__content'
       var copyIconSlot = document.createElement('span')
-      copyIconSlot.className = 'ids-button__icon ids-button__icon-icon'
+      copyIconSlot.className = 'dt-button__icon dt-button__icon-icon'
       copyIconSlot.setAttribute('aria-hidden', 'true')
-      var copyIcon = icon('actions-copy-outlined')
+      var copyIcon = icon('copy')
       copyIconSlot.appendChild(copyIcon)
       copyContent.appendChild(copyIconSlot)
       copyButton.appendChild(copyContent)
@@ -89,16 +89,16 @@
     // simply not rendered rather than shipping one that does nothing.
     if (document.fullscreenEnabled && content.requestFullscreen) {
       var fullscreenButton = document.createElement('button')
-      fullscreenButton.className = 'ids-button ids-button--ghost ids-button--icon-only'
+      fullscreenButton.className = 'dt-button dt-button--ghost dt-button--icon-only'
       fullscreenButton.type = 'button'
       fullscreenButton.setAttribute('aria-pressed', 'false')
       fullscreenButton.setAttribute('aria-label', 'View full screen')
       var fullscreenContent = document.createElement('div')
-      fullscreenContent.className = 'ids-button__content'
+      fullscreenContent.className = 'dt-button__content'
       var fullscreenIconSlot = document.createElement('span')
-      fullscreenIconSlot.className = 'ids-button__icon ids-button__icon-icon'
+      fullscreenIconSlot.className = 'dt-button__icon dt-button__icon-icon'
       fullscreenIconSlot.setAttribute('aria-hidden', 'true')
-      var fullscreenIcon = icon('actions-full-screen-enter-outlined')
+      var fullscreenIcon = icon('maximize')
       fullscreenIconSlot.appendChild(fullscreenIcon)
       fullscreenContent.appendChild(fullscreenIconSlot)
       fullscreenButton.appendChild(fullscreenContent)
@@ -114,7 +114,7 @@
         fullscreenButton.setAttribute('aria-label', active ? 'Exit full screen' : 'View full screen')
         fullscreenIcon.querySelector('use').setAttribute(
           'href',
-          uiRootPath + '/img/ids-icons.svg#sw-icons-actions-full-screen-' + (active ? 'exit' : 'enter') + '-outlined'
+          uiRootPath + '/img/icons.svg#icon-' + (active ? 'minimize' : 'maximize')
         )
       })
     }
@@ -139,11 +139,11 @@
     if (code.dataset.lang === 'console' && text.startsWith('$ ')) text = extractCommands(text)
     window.navigator.clipboard.writeText(text).then(
       function () {
-        iconEl.querySelector('use').setAttribute('href', uiRootPath + '/img/ids-icons.svg#sw-icons-actions-check-circle-outlined')
+        iconEl.querySelector('use').setAttribute('href', uiRootPath + '/img/icons.svg#icon-circle-check-big')
         button.setAttribute('aria-label', 'Copied to clipboard')
         liveRegion.textContent = 'Copied to clipboard'
         setTimeout(function () {
-          iconEl.querySelector('use').setAttribute('href', uiRootPath + '/img/ids-icons.svg#sw-icons-actions-copy-outlined')
+          iconEl.querySelector('use').setAttribute('href', uiRootPath + '/img/icons.svg#icon-copy')
           button.setAttribute('aria-label', 'Copy code')
           liveRegion.textContent = ''
         }, 2000)

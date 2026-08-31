@@ -3,7 +3,7 @@
  *
  * The ATD Card (Figma component set 2669:33855; types and states at
  * 2610:29000 light / 2669:42541 dark), rendered as IDS Card
- * (ids-components.css, card/card.css) in a CSS grid whose column count the
+ * (dt-components.css, card/card.css) in a CSS grid whose column count the
  * author sets per breakpoint. One block serves both views: the landing's
  * Quicklinks row (GH-20, 2696:54694) and the section-landing card grids the
  * Weave.js migration brought over.
@@ -11,13 +11,13 @@
  * TOKENS ONLY, AND WHY IT MATTERS HERE
  *
  * Every colour in BOTH theme frames resolves to a semantic IDS token that
- * ids-tokens.css already swaps under `.ids-theme-dark`:
+ * dt-tokens.css already swaps under `.dt-theme-dark`:
  *
- *   subheader       #757575 / #C4C4C4   --ids-color-content-low
- *   title, body     #000    / #FFF      --ids-color-content-default
- *   content surface #FFF    / #000      --ids-color-bg-default   (card.css's own)
- *   label chip      #F7F7F7 / #363636   --ids-color-bg-low       (label.css's own)
- *   hover rule      #757575 / #C4C4C4   --ids-color-border-states-hover (card.css's own)
+ *   subheader       #757575 / #C4C4C4   --dt-color-content-low
+ *   title, body     #000    / #FFF      --dt-color-content-default
+ *   content surface #FFF    / #000      --dt-color-bg-default   (card.css's own)
+ *   label chip      #F7F7F7 / #363636   --dt-color-bg-low       (label.css's own)
+ *   hover rule      #757575 / #C4C4C4   --dt-color-border-states-hover (card.css's own)
  *
  * So there is no dark-theme rule in this file, and there must not be one: a
  * literal colour here is a bug that only shows up in one theme. The same goes
@@ -25,23 +25,23 @@
  *
  * Card ships almost no text styling of its own (no `font` rule anywhere in
  * card.css) — it expects a consumer to supply it, normally via the DS's
- * `.ids-text` utilities, which are chrome-only and off limits inside `.doc`
- * prose (see ids-components.yml's own note on text.css). This file supplies it
+ * `.dt-text` utilities, which are chrome-only and off limits inside `.doc`
+ * prose (see dt-components.yml's own note on text.css). This file supplies it
  * directly, the same way Timeline/Progress-Step's own stylesheets set `font:`
  * on their `-label`/`-detail` slots.
  *
  * Deviations from the frames, recorded rather than silently taken:
  *
- * 1. The title does NOT take `--ids-typo-title-s-text-transform`. The token
+ * 1. The title does NOT take `--dt-typo-title-s-text-transform`. The token
  *    says uppercase; the Figma text style for `title/s` carries no `textCase`
  *    at all, unlike `title/xs` and `title/m`, which both declare `UPPER`. The
  *    corpus settles it: these titles are API symbol names, and rendering
  *    `WeaveCommentToolAction` as `WEAVECOMMENTTOOLACTION` destroys the one
  *    thing the card is naming.
- * 2. No `Selected` state. The frames draw one (1px `--ids-color-border-default`
- *    top and bottom, surface `--ids-color-bg-low`), but a documentation card
+ * 2. No `Selected` state. The frames draw one (1px `--dt-color-border-default`
+ *    top and bottom, surface `--dt-color-bg-low`), but a documentation card
  *    has nothing to select — it is a link. `card.css` still ships
- *    `.ids-card--selected` if that ever changes.
+ *    `.dt-card--selected` if that ever changes.
  * 3. The card's image is a plain `<img>`, not the frames' IDS Image component:
  *    its loading, error and no-image states are runtime React behaviour with
  *    no static equivalent, and the overlay badge slots it frames (Top/Bottom,
@@ -52,7 +52,7 @@
 
 .docouture-card-grid {
   display: grid;
-  gap: var(--ids-size-250); /* 40, both axes */
+  gap: var(--dt-size-250); /* 40, both axes */
   grid-template-columns: minmax(0, 1fr);
 }
 
@@ -111,7 +111,7 @@
  * attributes), and a bounded set of column counts is not one. The range is
  * 1-4, enforced in card-grid.js, which is why this stops at 4.
  *
- * The breakpoints are THIS PROJECT's (ids-breakpoints.css: s 513, m 1240,
+ * The breakpoints are THIS PROJECT's (dt-breakpoints.css: s 513, m 1240,
  * l 1680), not the design system package's own — see home.css's note on why
  * the two differ.
  */
@@ -120,21 +120,21 @@
 .docouture-card-grid--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .docouture-card-grid--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .docouture-card-grid--cols-s-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
   .docouture-card-grid--cols-s-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .docouture-card-grid--cols-s-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .docouture-card-grid--cols-s-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .docouture-card-grid--cols-m-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
   .docouture-card-grid--cols-m-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .docouture-card-grid--cols-m-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .docouture-card-grid--cols-m-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .docouture-card-grid--cols-l-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
   .docouture-card-grid--cols-l-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .docouture-card-grid--cols-l-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -148,8 +148,8 @@
  * card is not itself an `<a>`: the title already contains one (the author's
  * own `xref:`), and nesting anchors is invalid HTML.
  *
- * No border, no padding, no surface here — `.ids-card` sets its own 8px block
- * padding and `.ids-card__content` its own 16px and background, which is
+ * No border, no padding, no surface here — `.dt-card` sets its own 8px block
+ * padding and `.dt-card__content` its own 16px and background, which is
  * exactly what the frames draw.
  */
 .docouture-card {
@@ -163,8 +163,8 @@
  * element, so the two mean the same thing here, and this needs no `:has`.
  */
 .docouture-card:focus-within {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: var(--ids-size-25);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: var(--dt-size-25);
 }
 
 /*
@@ -174,21 +174,21 @@
  * than overrides.
  *
  * The background IS an override, and a deliberate one. `card.css` paints
- * `__content` with `--ids-color-bg-default`, which the component catalogue
+ * `__content` with `--dt-color-bg-default`, which the component catalogue
  * frames agree with (2610:29000's Content is `#FFFFFF`, 2669:42541's `#000`).
  * The landing disagrees: in the Quicklinks frame the ATD Home Card's own
  * Content frame carries an EMPTY fill list, so the page shows through. That
  * is the behaviour that matters, because the landing is the only place the
  * two differ — it is the only surface with artwork behind it, and an opaque
  * card punches four white holes in it. Everywhere else the card sits directly
- * on `--ids-color-bg-default` anyway, so transparent renders identically and
+ * on `--dt-color-bg-default` anyway, so transparent renders identically and
  * one rule serves both.
  */
-.docouture-card .ids-card__content {
+.docouture-card .dt-card__content {
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-100); /* 16 */
+  gap: var(--dt-size-100); /* 16 */
   /*
    * The second override, and the reason the whole card is clickable at all.
    *
@@ -211,7 +211,7 @@
 /* ------------------------------------------------------------ the image ---- */
 
 /*
- * `card.css` gives `.ids-card__image` `flex-basis: 50%` (38% from 1024px) and
+ * `card.css` gives `.dt-card__image` `flex-basis: 50%` (38% from 1024px) and
  * `flex-grow: 1`, sized for the HORIZONTAL card where those are widths. In the
  * vertical card the main axis is the block axis, so both apply to HEIGHT and
  * the image stretches. `flex: none` puts the sizing back on `aspect-ratio`,
@@ -247,14 +247,14 @@
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-50); /* 8 */
+  gap: var(--dt-size-50); /* 8 */
 }
 
 /*
  * The icon is a mask, not an `<svg><use>`: the extension that emits this
  * markup runs at conversion time with no `uiRootPath`, so it cannot address
- * the sprite. `icon-masks.css` carries one `.ids-icon-mask--<group>-<name>`
- * utility per entry in icons.yml's `masks:`.
+ * the sprite. `icon-masks.css` carries one `.dt-icon-mask--<name>` utility
+ * per entry in icons.yml's `masks:`.
  *
  * The `mask-image` below is a FALLBACK for an icon that has no mask, wrapped
  * in `:where()` so it carries zero specificity and any real utility class
@@ -264,24 +264,24 @@
  * warning glyph rather than an empty box.
  */
 :where(.docouture-card__icon) {
-  mask-image: var(--icon-mask-alerts-warning-outlined);
+  mask-image: var(--icon-mask-triangle-alert);
 }
 
 .docouture-card__icon {
   background: currentColor;
-  block-size: var(--ids-size-125); /* 20 */
-  inline-size: var(--ids-size-125);
+  block-size: var(--dt-size-125); /* 20 */
+  inline-size: var(--dt-size-125);
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: contain;
 }
 
 .docouture-card__subheader {
-  color: var(--ids-color-content-low);
-  font: var(--ids-typo-label-m);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-m-letter-spacing);
-  text-transform: var(--ids-typo-label-m-text-transform);
+  color: var(--dt-color-content-low);
+  font: var(--dt-typo-label-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
+  text-transform: var(--dt-typo-label-m-text-transform);
 }
 
 /* ------------------------------------------------- title and description ---- */
@@ -289,14 +289,14 @@
 .docouture-card__main {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-75); /* 12 */
+  gap: var(--dt-size-75); /* 12 */
 }
 
 .docouture-card__title {
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-title-s);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-title-s-letter-spacing);
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-title-s);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-s-letter-spacing);
 }
 
 /*
@@ -308,7 +308,7 @@
  * turned the link-hover blue on hover while the same card on a landing, which
  * has no `.doc` ancestor, did not. Equal specificity means source order
  * decides, and card-grid.css is imported after doc.css (site.css), so this
- * wins. The card's own hover feedback is `.ids-card:hover`'s rule from
+ * wins. The card's own hover feedback is `.dt-card:hover`'s rule from
  * card.css — the design changes the card's edges on hover, never its text.
  */
 .docouture-card__title a,
@@ -332,7 +332,7 @@
 
 /*
  * The description takes its type from whatever it sits in rather than
- * restating it. It used to hardcode `--ids-typo-body-l` (16/24), which is the
+ * restating it. It used to hardcode `--dt-typo-body-l` (16/24), which is the
  * design's own body size and matches doc prose at `m` and up — but `.doc`
  * runs at `--doc-font-size` (17px, the bundle's base) BELOW `m`, stepping to
  * 16px only at that breakpoint (doc.css). A card in an article was therefore
@@ -342,7 +342,7 @@
  * landing, and any future context without a third rule here.
  *
  * The same argument covers letter-spacing and colour, so neither is restated:
- * `--doc-font-color` is `--ids-color-content-default` (bridge.css), which is
+ * `--doc-font-color` is `--dt-color-content-default` (bridge.css), which is
  * what this set before.
  */
 .docouture-card p {
@@ -354,5 +354,5 @@
 .docouture-card__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ids-size-25); /* 4 */
+  gap: var(--dt-size-25); /* 4 */
 }

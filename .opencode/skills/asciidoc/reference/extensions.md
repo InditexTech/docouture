@@ -86,7 +86,7 @@ Creation helpers available on the processor:
 
 Returning `createBlock(parent, 'pass', html)` emits raw HTML — the usual way to produce
 markup the design system styles. That markup must carry the classes
-`iop-ds-components` expects, or it renders unstyled.
+`docouture-components` expects, or it renders unstyled.
 
 ## Registration — what Antora requires
 

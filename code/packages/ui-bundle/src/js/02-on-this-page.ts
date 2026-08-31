@@ -51,7 +51,7 @@
   // GH-10: only now — headings found, page not opted out — reveal the
   // panel and narrow the article to make room for it. `html.has-toc` is
   // what toc.css/doc.css gate their grid split behind, rather than a
-  // static `.ids-grid-layout__item--span-*` utility class on either
+  // static `.dt-grid-layout__item--span-*` utility class on either
   // element: a page with JavaScript disabled never reaches this line, so
   // it stays full width per this issue's own acceptance criterion, with
   // nothing to reflow later.

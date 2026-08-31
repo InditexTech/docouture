@@ -34,7 +34,7 @@ default.hbs
 │   ├── head-prelude        charset, viewport, inline theme bootstrap
 │   ├── head-title          <title>: page | site, "|"-separated
 │   ├── head-info           canonical, rel=prev/next, description, keywords, generator
-│   ├── head-styles         IDS webfont CSS from the CDN, then css/site.css
+│   ├── head-styles         Google Fonts CSS, then css/site.css
 │   ├── head-meta           empty extension point
 │   ├── head-scripts        Google Analytics, if site.keys.googleAnalytics
 │   └── head-icons          favicon, currently commented out
@@ -106,10 +106,10 @@ default UI). Treat them as unfinished, not as intent.
   readable and correctly styled with JS off.
 - **State is expressed as `is-*` classes** in this bundle's own chrome (`is-current`,
   `is-active`, `is-current-page`, `is-latest`, `is-missing`). Note that DS components do
-  **not** work this way — see `iop-ds-components`.
+  **not** work this way — see `docouture-components`.
 - **The inline theme bootstrap in `head-prelude.hbs`** runs before first paint, reads
-  `localStorage['ids-theme']`, falls back to `prefers-color-scheme`, and adds
-  `ids-theme-<theme>` plus `ids-scale-medium` to `<html>`. It duplicates logic in
+  `localStorage['dt-theme']`, falls back to `prefers-color-scheme`, and adds
+  `dt-theme-<theme>` plus `dt-scale-medium` to `<html>`. It duplicates logic in
   `src/js/08-theme.ts` on purpose; keep the storage key and class names in sync.
 
 ## UI model

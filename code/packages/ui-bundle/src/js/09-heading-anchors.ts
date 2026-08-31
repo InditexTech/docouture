@@ -30,11 +30,11 @@
       anchor.setAttribute('aria-label', 'Copy link to this section')
 
       var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-      svg.setAttribute('class', 'ids-icon')
+      svg.setAttribute('class', 'dt-icon')
       svg.setAttribute('aria-hidden', 'true')
       svg.setAttribute('focusable', 'false')
       var use = document.createElementNS('http://www.w3.org/2000/svg', 'use')
-      use.setAttribute('href', uiRootPath + '/img/ids-icons.svg#sw-icons-connectivity-link-outlined')
+      use.setAttribute('href', uiRootPath + '/img/icons.svg#icon-link')
       svg.appendChild(use)
       anchor.appendChild(svg)
 

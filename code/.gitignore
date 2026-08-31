@@ -1,12 +1,6 @@
 # dependencies
 node_modules/
 
-# IOP Design System sidecar — see tools/ids/README.md. Never installed as
-# part of this workspace; its lockfile records Artifactory tarball URLs, so
-# it's gitignored the same as node_modules rather than committed.
-tools/ids/node_modules/
-tools/ids/pnpm-lock.yaml
-
 # nx
 .nx/cache
 .nx/workspace-data
@@ -15,11 +9,6 @@ tools/ids/pnpm-lock.yaml
 packages/*/build/
 packages/*/public/
 packages/*/.tsbuild/
-
-# Mirror of the IOP Design System icon catalogue, refreshed by `just icons-fetch`.
-# ~1.5 MB of proprietary artwork that only feeds `just icons-build`; the sprite
-# it produces (src/img/ids-icons.svg) is what gets committed. See icons.lock.json.
-packages/*/.icons/
 
 # logs
 *.log

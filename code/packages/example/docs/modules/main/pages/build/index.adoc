@@ -9,7 +9,7 @@ features or entire applications. *Weave.js* provides a set of well-defined build
 
 [cards,type=image-portrait,columns="1 s:2 m:4",width=container]
 ====
-[card,icon="shapes/forms-outlined"]
+[card,icon="shapes"]
 .xref:main:build/nodes/index.adoc[Nodes]
 --
 image::build/abstract-nodes.png["Abstract study of connected nodes, moss grey"]
@@ -17,7 +17,7 @@ image::build/abstract-nodes.png["Abstract study of connected nodes, moss grey"]
 Nodes are the fundamental visual building blocks in Weave.js. They are primarily based on Konva.js primitives (shapes and groups) and represent everything rendered on the canvas.
 --
 
-[card,icon="actions/code-block-outlined"]
+[card,icon="code"]
 .xref:main:build/plugins/index.adoc[Plugins]
 --
 image::build/abstract-plugins.png["Abstract study of interlocking blocks, indigo grey"]
@@ -25,7 +25,7 @@ image::build/abstract-plugins.png["Abstract study of interlocking blocks, indigo
 Plugins extend and enhance Weave.js's core functionality. Whether it's selection handling, canvas panning, zooming, or custom behaviors, plugins allow you to modular add or override features without cluttering the core logic.
 --
 
-[card,icon="others/fire-outlined"]
+[card,icon="flame"]
 .xref:main:build/actions/index.adoc[Actions]
 --
 image::build/abstract-actions.png["Abstract study of radiating motion, rust"]
@@ -33,7 +33,7 @@ image::build/abstract-actions.png["Abstract study of radiating motion, rust"]
 Actions are how user interactions are interpreted and executed within Weave.js. From adding new Nodes to the canvas to triggering selection or transformation, Actions provide a clean and consistent way to handle event-driven logic.
 --
 
-[card,icon="business/store-outlined"]
+[card,icon="store"]
 .xref:main:build/stores/index.adoc[Stores]
 --
 image::build/abstract-stores.png["Abstract study of stacked layers, steel blue"]

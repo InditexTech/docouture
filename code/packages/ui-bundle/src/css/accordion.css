@@ -12,24 +12,24 @@
  * exactly the shape of the DS `AccordionItem` (`accordion/accordion-item.js`,
  * `accordion/accordion-header.js`):
  *
- *   .ids-accordion
- *     .ids-accordion__toggle           (<button>, here: <summary>)
- *       .ids-accordion__toggle-label   (here: summary's own text node)
- *       .ids-accordion__toggle-icon    (here: summary::after)
- *     .ids-accordion__content-wrapper
- *       .ids-accordion__content        (here: .content)
+ *   .dt-accordion
+ *     .dt-accordion__toggle           (<button>, here: <summary>)
+ *       .dt-accordion__toggle-label   (here: summary's own text node)
+ *       .dt-accordion__toggle-icon    (here: summary::after)
+ *     .dt-accordion__content-wrapper
+ *       .dt-accordion__content        (here: .content)
  *
  * Native `<details>`/`<summary>`/`.content` can't be given those BEM classes
  * — Asciidoctor owns that markup, not this bundle — so what follows applies
  * the real component's OWN declarations (`accordion/accordion.css`, read
  * from the vendored sidecar, not reinvented) directly to the elements
- * Asciidoctor actually emits. `ids-components.yml`'s `accordion` entry pulls
- * that file's tokens into `ids-tokens.css`, and separately backs the
- * `.ids-accordion*` selectors Timeline's own `--expandable` variant already
- * ships dangling (`ids-components.css:2112-2126`) — its `<AccordionItem>`
+ * Asciidoctor actually emits. `dt-components.yml`'s `accordion` entry pulls
+ * that file's tokens into `dt-tokens.css`, and separately backs the
+ * `.dt-accordion*` selectors Timeline's own `--expandable` variant already
+ * ships dangling (`dt-components.css:2112-2126`) — its `<AccordionItem>`
  * IS the real component, unlike this file.
  *
- * `.ids-accordion__toggle` is a `<button>` in the DS, its label a separately
+ * `.dt-accordion__toggle` is a `<button>` in the DS, its label a separately
  * wrapped `<span>` (`accordion-header.js`) — laid out as flex siblings
  * label-then-icon. Native `<summary>` has no such wrapper around its title,
  * so it is deliberately NOT flexed here; see the rule below for why, and how
@@ -37,10 +37,10 @@
  *
  * DELIBERATE DEVIATION — type scale:
  *
- * The DS's own toggle label is `--ids-typo-label-l` (13px/20px, and
+ * The DS's own toggle label is `--dt-typo-label-l` (13px/20px, and
  * `-text-transform: uppercase` — the same casing problem the Figma frames'
  * literal "Label" string hides, see the doc.css `.exampleblock > .title`
- * comment for the general shape of that trap). Set here to `--ids-typo-
+ * comment for the general shape of that trap). Set here to `--dt-typo-
  * body-l` (16px/24px, `-text-transform: none` already, no override needed)
  * instead: this row sits inside a long-form article, at the same scale as
  * the prose around it (`.doc`'s own paragraph text) and the prose INSIDE
@@ -50,14 +50,14 @@
  *
  * DARK THEME: no theme-specific rule below. Both values this file uses that
  * differ between the Figma light/dark frames — the divider
- * (`--ids-color-border-low`) and the label (`--ids-color-content-default`)
- * — are already swapped under `.ids-theme-dark` in `ids-tokens.css`.
+ * (`--dt-color-border-low`) and the label (`--dt-color-content-default`)
+ * — are already swapped under `.dt-theme-dark` in `dt-tokens.css`.
  */
 
 /*
- * `.ids-accordion__toggle` + `.ids-accordion__toggle-label` merged onto the
+ * `.dt-accordion__toggle` + `.dt-accordion__toggle-label` merged onto the
  * one element native markup has for both — see the header comment above for
- * the `--ids-typo-body-l` type-scale deviation.
+ * the `--dt-typo-body-l` type-scale deviation.
  *
  * NOT `display: flex`. The real component can lay the label out as a flex
  * item because its label is its own wrapped node (Figma's "Content" frame,
@@ -71,8 +71,8 @@
  * different line-box metrics than the inline run it replaced). Plain block
  * flow with the icon taken out of flow via `position: absolute` keeps
  * arbitrary title markup exactly as inline as Asciidoctor left it; the
- * shorthand's own embedded line-height (`--ids-typo-line-height-24`, part of
- * `--ids-typo-body-l`) is what centers a single-line label in the 40px row
+ * shorthand's own embedded line-height (`--dt-typo-line-height-24`, part of
+ * `--dt-typo-body-l`) is what centers a single-line label in the 40px row
  * via the padding-block below, so nothing after `font:` may re-set it.
  *
  * `box-sizing: border-box` is set explicitly rather than relied on from the
@@ -87,19 +87,19 @@
  */
 .doc details > summary {
   box-sizing: border-box;
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   cursor: pointer;
   display: block;
-  font: var(--ids-typo-body-l);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-body-l-letter-spacing);
+  font: var(--dt-typo-body-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-l-letter-spacing);
   margin-bottom: 0;
-  min-height: var(--ids-size-250);
-  padding-block: calc((var(--ids-size-250) - var(--ids-typo-line-height-24)) / 2);
-  padding-right: calc(var(--ids-size-125) + var(--ids-size-50));
+  min-height: var(--dt-size-250);
+  padding-block: calc((var(--dt-size-250) - var(--dt-typo-line-height-24)) / 2);
+  padding-right: calc(var(--dt-size-125) + var(--dt-size-50));
   position: relative;
   text-align: left;
-  text-transform: var(--ids-typo-body-l-text-transform);
+  text-transform: var(--dt-typo-body-l-text-transform);
   user-select: none;
 }
 
@@ -108,8 +108,8 @@
 }
 
 /*
- * `.ids-accordion__toggle-icon` — `chevron-down-outlined`, rotated 180°
- * open, eased by `--ids-motion-micro-appear`. Absolutely positioned and
+ * `.dt-accordion__toggle-icon` — `chevron-down`, rotated 180°
+ * open, eased by `--dt-motion-micro-appear`. Absolutely positioned and
  * vertically centred against the row rather than laid out as a flex
  * sibling — see the rule above for why `<summary>` itself is never a flex
  * container.
@@ -117,8 +117,8 @@
 .doc details > summary::after {
   background: currentColor;
   content: "";
-  height: var(--ids-size-125);
-  mask-image: var(--icon-mask-arrows-chevron-down-outlined);
+  height: var(--dt-size-125);
+  mask-image: var(--icon-mask-chevron-down);
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: contain;
@@ -126,8 +126,8 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  transition: var(--ids-motion-micro-appear);
-  width: var(--ids-size-125);
+  transition: var(--dt-motion-micro-appear);
+  width: var(--dt-size-125);
 }
 
 .doc details[open] > summary::after {
@@ -135,7 +135,7 @@
 }
 
 /*
- * `.ids-accordion__divider` — every collapsible gets one: the Figma item
+ * `.dt-accordion__divider` — every collapsible gets one: the Figma item
  * set draws it as a property of the item itself, not of group membership
  * (the DS's own `AccordionItem` outside an `Accordion` group defaults
  * `divider` to `false`, but that default belongs to the interactive
@@ -144,7 +144,7 @@
  * choose the DS's own default once it exists).
  */
 .doc details {
-  border-bottom: var(--ids-size-border-high) solid var(--ids-color-border-low);
+  border-bottom: var(--dt-size-border-high) solid var(--dt-color-border-low);
 }
 
 /*
@@ -160,11 +160,11 @@
 }
 
 /*
- * `.ids-accordion__content` — real DS value (`accordion/accordion.css`:
- * `padding-bottom: var(--ids-size-50)`), NOT the `--ids-size-25` a literal
+ * `.dt-accordion__content` — real DS value (`accordion/accordion.css`:
+ * `padding-bottom: var(--dt-size-50)`), NOT the `--dt-size-25` a literal
  * reading of the Figma frame might suggest; trusted over that reading since
  * this is the one place the shipped component states its own number.
- * `margin-top`/`margin-bottom` are homologated to the same `--ids-size-50`
+ * `margin-top`/`margin-bottom` are homologated to the same `--dt-size-50`
  * (8px) — the Figma item's own `gap: 8px` between its "Header" and "Content
  * Slot" children (`.IDS Accordion / Item`, node 2735:64680) applied
  * symmetrically, rather than pairing it on top with `--doc-space-block`
@@ -183,8 +183,8 @@
  * nothing in the corpus ever emits `role="result"`, verified against the
  * built site output).
  *
- * `transition: all var(--ids-motion-duration-s-high)
- * var(--ids-motion-easing-standard-3)` does nothing visually by itself
+ * `transition: all var(--dt-motion-duration-s-high)
+ * var(--dt-motion-easing-standard-3)` does nothing visually by itself
  * here — nothing on this element changes via a CSS state class — it
  * exists so `ui-bundle/src/js/10-accordion.ts`'s own height animation (Web
  * Animations API, not a CSS transition — auto-height content has no
@@ -192,25 +192,25 @@
  * easing off a REAL declaration, `getComputedStyle`'d at animation time,
  * rather than a value hard-coded into the script. That is also what makes
  * the animation collapse to ~0 under `prefers-reduced-motion` for free —
- * both tokens already do that (`ids-tokens.css`), and the script never
+ * both tokens already do that (`dt-tokens.css`), and the script never
  * overrides them with a duration of its own.
  *
- * Deliberately NOT `--ids-motion-micro-appear` (0.35s, `cubic-bezier(0.42,
+ * Deliberately NOT `--dt-motion-micro-appear` (0.35s, `cubic-bezier(0.42,
  * 0,1,1)` — ease-IN, accelerating): that pairing is what the chevron's own
  * rotation above uses, correctly — the real component's `AccordionItem`
  * does not reuse it for the content reveal itself. Its content is wrapped
  * in `<Visibility animation="expand">` (`animations/visibility/
- * visibility.js`), whose `ids-expand-in`/`ids-expand-out` keyframes
- * (`visibility.css`) run on `--ids-motion-duration-s-high` (0.25s) +
- * `--ids-motion-easing-standard-3` (`cubic-bezier(0,0,0.58,1)` — ease-OUT,
+ * visibility.js`), whose `dt-expand-in`/`dt-expand-out` keyframes
+ * (`visibility.css`) run on `--dt-motion-duration-s-high` (0.25s) +
+ * `--dt-motion-easing-standard-3` (`cubic-bezier(0,0,0.58,1)` — ease-OUT,
  * decelerating) — a shorter, decelerating curve genuinely different from
  * the icon's own, read verbatim off that file rather than reused from
- * whatever token happened to already be in `ids-tokens.css`. (Neither
+ * whatever token happened to already be in `dt-tokens.css`. (Neither
  * token was pulled in before this: nothing this bundle vendors referenced
- * them — `ids-components.yml` lists `accordion.css`, not `visibility.css`,
- * since this bundle has no React tree to mount `<Visibility>` into. `just
- * ids-sync` picks both up the moment this declaration exists, the same way
- * it already does for every other `var(--ids-...)` in this file.)
+ * them — the component manifest this file's header describes only ever
+ * listed `accordion.css`, not `visibility.css`, since this bundle has no
+ * React tree to mount `<Visibility>` into. Both are declared directly in
+ * `dt-tokens.css` now that it is hand-maintained rather than generated.)
  *
  * `box-sizing: border-box` is set explicitly, for the same reason
  * `.doc details > summary` sets it explicitly above — measured, not
@@ -247,12 +247,12 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--ids-size-50);
+  gap: var(--dt-size-50);
   margin-left: 0;
-  margin-top: var(--ids-size-50);
-  margin-bottom: var(--ids-size-50);
-  padding-bottom: var(--ids-size-50);
-  transition: all var(--ids-motion-duration-s-high) var(--ids-motion-easing-standard-3);
+  margin-top: var(--dt-size-50);
+  margin-bottom: var(--dt-size-50);
+  padding-bottom: var(--dt-size-50);
+  transition: all var(--dt-motion-duration-s-high) var(--dt-motion-easing-standard-3);
 }
 
 

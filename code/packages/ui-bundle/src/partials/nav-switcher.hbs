@@ -14,8 +14,9 @@
 
   `title`, `description`, `icon` and `startUrl` are all stamped onto the tree
   by that extension; Antora's own navigation model has no notion of any of
-  them. `icon` is a `<group>/<name>` reference into the vendored sprite, split
-  here because the {{icon}} helper takes the two separately.
+  them. `icon` is a bare icon name (Lucide's own, e.g. `grid-3x3`) — the same
+  name a nav module's `icon:` attribute in antora.yml carries straight
+  through to the {{icon}} helper.
 
   The trigger is a button, not a link: it opens the panel, and the panel is
   what navigates. Its label is the ACTIVE module, so the control reads as
@@ -36,33 +37,29 @@
   {{#each page.navigation}}
   {{#if (eq ./module (or @root.page.attributes.[nav-module] @root.page.module))}}
   <button class="nav-switcher__toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-label="Switch module, currently {{detag ./title}}">
-    {{#with (split ./icon '/')}}
-    <span class="nav-switcher__icon">{{icon this.[0] this.[1]}}</span>
-    {{/with}}
+    <span class="nav-switcher__icon">{{icon ./icon}}</span>
     <span class="nav-switcher__label">
-      <span class="nav-switcher__title ids-text ids-text--body-m-high">{{{./title}}}</span>
+      <span class="nav-switcher__title dt-text dt-text--body-m-high">{{{./title}}}</span>
       {{#with ./description}}
-      <span class="nav-switcher__description ids-text ids-text--detail-m">{{{this}}}</span>
+      <span class="nav-switcher__description dt-text dt-text--detail-m">{{{this}}}</span>
       {{/with}}
     </span>
-    <span class="nav-switcher__chevron">{{icon "arrows" "chevron-down-outlined"}}</span>
+    <span class="nav-switcher__chevron">{{icon "chevron-down"}}</span>
   </button>
   {{/if}}
   {{/each}}
   <div class="nav-switcher__menu" hidden>
-    <ul class="ids-list nav-switcher__list">
+    <ul class="dt-list nav-switcher__list">
       {{#each page.navigation}}
       {{#if ./startUrl}}
       <li class="nav-switcher__item">
         <a class="nav-switcher__option" href="{{{relativize ./startUrl}}}"
           {{~#if (eq ./module (or @root.page.attributes.[nav-module] @root.page.module))}} aria-current="true"{{/if~}}>
-          {{#with (split ./icon '/')}}
-          <span class="nav-switcher__icon">{{icon this.[0] this.[1]}}</span>
-          {{/with}}
+          <span class="nav-switcher__icon">{{icon ./icon}}</span>
           <span class="nav-switcher__label">
-            <span class="nav-switcher__title ids-text ids-text--body-m-high">{{{./title}}}</span>
+            <span class="nav-switcher__title dt-text dt-text--body-m-high">{{{./title}}}</span>
             {{#with ./description}}
-            <span class="nav-switcher__description ids-text ids-text--detail-m">{{{this}}}</span>
+            <span class="nav-switcher__description dt-text dt-text--detail-m">{{{this}}}</span>
             {{/with}}
           </span>
         </a>

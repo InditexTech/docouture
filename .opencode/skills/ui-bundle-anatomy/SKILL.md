@@ -8,7 +8,7 @@ description: "How the docouture Antora UI bundle package (code/packages/ui-bundl
 `code/packages/ui-bundle` (`@inditextech/docouture-ui-bundle`) is an **Antora UI bundle**:
 a zip of layouts, partials, helpers, CSS, JS and images that Antora unpacks and uses to
 render every page of a site. It is a fork of `antora-ui-default`, modernised (gulp 5,
-esbuild, PostCSS 8, TypeScript) and re-skinned onto the IOP Design System.
+esbuild, PostCSS 8, TypeScript) and re-skinned with its own design tokens.
 
 It builds **one artifact**:
 
@@ -22,8 +22,8 @@ build/ui-bundle.zip             copy of the above under a stable name
 literal path and does not glob, so a versioned-only output would force a playbook edit
 on every bump.
 
-This skill covers the package itself. For **what CSS to write** read `iop-ds-foundations`
-(tokens, theming, breakpoints); for **what markup to emit** read `iop-ds-components`.
+This skill covers the package itself. For **what CSS to write** read `docouture-foundations`
+(tokens, theming, breakpoints); for **what markup to emit** read `docouture-components`.
 
 ## Layout
 
@@ -65,7 +65,7 @@ ui.yml  layouts/  partials/  helpers/  css/site.css  js/site.js  js/vendor/  img
 | copy a file to the site root | drop it in `src/static/` | list it under `static_files` in `src/ui.yml` |
 
 Import order in `site.css` is load-bearing: design system tokens first, then `bridge.css`
-(maps legacy `--body-*` names onto `--ids-*`), then `vars.css` (layout metrics only), then
+(maps legacy `--body-*` names onto `--dt-*`), then `vars.css` (layout metrics only), then
 the leaf stylesheets. Anything that consumes a token must come after the token layer.
 
 Browser scripts are side-effect IIFEs and their numeric prefixes encode execution order,
@@ -104,8 +104,8 @@ list and the comments in the source.
   anyway.
 - **The inline theme bootstrap in `head-prelude.hbs` and `src/js/08-theme.ts` share a
   storage key and class names.** Change one, change the other. The inline copy exists to
-  set the theme before first paint; IDS keys theming off a class on `<html>`
-  (`ids-theme-dark` / `ids-theme-light`), not a data attribute.
+  set the theme before first paint; theming is keyed off a class on `<html>`
+  (`dt-theme-dark` / `dt-theme-light`), not a data attribute.
 
 ## Commands
 

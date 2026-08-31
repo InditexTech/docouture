@@ -1,16 +1,16 @@
 /*
  * ToC panel (GH-10), Figma node 2610:27801 / component 2686:47569 —
  * "TABLE OF CONTENTS" renamed "On this page" per this issue's own decision
- * (see toc.hbs). Colours and type come straight off `--ids-*` tokens, like
+ * (see toc.hbs). Colours and type come straight off `--dt-*` tokens, like
  * side-menu.css and header.css — this is a new DS-composed component, not
  * upstream chrome threaded through bridge.css aliases. The list itself is
  * built by 02-on-this-page.ts, not server-rendered, so its typography is
- * expressed as raw `--ids-typo-*` shorthands rather than `.ids-text--*`
+ * expressed as raw `--dt-typo-*` shorthands rather than `.dt-text--*`
  * utility classes, matching the pattern side-menu.css's own tree items use
  * for the same reason.
  *
  * Grid placement: `.doc` (article.hbs) and `.toc` (toc.hbs) are two tracks
- * of the same `.ids-grid-layout` main.hbs gives `.content` — 3 of 12
+ * of the same `.dt-grid-layout` main.hbs gives `.content` — 3 of 12
  * columns at l, 4 of 12 at m, full width (stacked above the article, by
  * DOM order alone) at s/xs. `.toc`'s own explicit `grid-column` below is
  * what puts it on the RIGHT of the article at m/l despite coming FIRST in
@@ -29,13 +29,13 @@
  * `html.has-toc`, added by 02-on-this-page.ts once it has confirmed there
  * is a real ToC to show (headings exist, page is not `-toc`), gates both
  * this panel's own visibility AND doc.css's narrower column span. That
- * split — rather than a static `.ids-grid-layout__item--span-*` utility
+ * split — rather than a static `.dt-grid-layout__item--span-*` utility
  * class on either element — is what lets every page render full width
  * with JavaScript disabled (this issue's own acceptance criterion): there
  * is no way to make a static utility class conditional on JS having run.
  *
  * Toggled from the hero (hero.hbs's `.toc-toggle`) at m/l only, via
- * `html.is-toc-closed`. Because `.ids-grid-layout`'s track widths come
+ * `html.is-toc-closed`. Because `.dt-grid-layout`'s track widths come
  * from an explicit `repeat(N, minmax(0,1fr))` on the container, not from
  * its children's content, hiding this panel never widens the article's
  * own column — the space stays reserved for free, which is this issue's
@@ -59,7 +59,7 @@
  * stretched to the row's full height above — has none left over; putting
  * sticky on it directly pins it to nothing, since its own box already
  * fills the entire scrollable range. `.toc-menu`'s `top` adds
- * `--ids-size-150` on top of `--toc-top` to keep the same gap below the
+ * `--dt-size-150` on top of `--toc-top` to keep the same gap below the
  * header that `.toc`'s own `padding-top` gives it before the list starts
  * sticking, so the visual gap doesn't collapse the moment scrolling
  * begins.
@@ -71,20 +71,20 @@
   min-width: 0;
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .toc {
     grid-column: span 6;
-    padding-top: var(--ids-size-150);
+    padding-top: var(--dt-size-150);
   }
 }
 
 .toc-menu h3 {
-  color: var(--ids-color-content-low);
-  font: var(--ids-typo-label-m);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  color: var(--dt-color-content-low);
+  font: var(--dt-typo-label-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
   margin: 0 0 var(--toc-gap-heading);
-  text-transform: var(--ids-typo-label-m-text-transform);
+  text-transform: var(--dt-typo-label-m-text-transform);
 }
 
 .toc-menu ul {
@@ -113,39 +113,39 @@
 }
 
 .toc-menu a {
-  color: var(--ids-color-content-low);
+  color: var(--dt-color-content-low);
   display: block;
-  font: var(--ids-typo-body-m);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-body-m-letter-spacing);
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
   text-decoration: none;
 }
 
 .toc-menu a:hover {
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
 }
 
-/* see .opencode/skills/iop-ds-components: the DS's own uniform focus ring */
+/* see .opencode/skills/docouture-components: the DS's own uniform focus ring */
 .toc-menu a:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: var(--ids-size-25);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: var(--dt-size-25);
 }
 
 .toc-menu a.is-active {
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-body-m-high);
-  letter-spacing: var(--ids-typo-body-m-high-letter-spacing);
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-body-m-high);
+  letter-spacing: var(--dt-typo-body-m-high-letter-spacing);
 }
 
 /* s/xs (GH-10): static block above the article, DOM order alone does the work. */
 html.has-toc .toc {
-  border-bottom: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  border-bottom: var(--dt-size-border-default) solid var(--dt-color-border-low);
   display: block;
-  margin-bottom: var(--ids-size-150);
-  padding-bottom: var(--ids-size-150);
+  margin-bottom: var(--dt-size-150);
+  padding-bottom: var(--dt-size-150);
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   html.has-toc .toc {
     /*
      * Left edge only (Figma's own `strokeWeight: 1px 0px 0px 1px` also
@@ -158,7 +158,7 @@ html.has-toc .toc {
      * footer.css/side-menu.css use it: the border shorthand cannot
      * control dash length, and Figma's is 4px on/4px off.
      */
-    background-image: repeating-linear-gradient(to bottom, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+    background-image: repeating-linear-gradient(to bottom, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
     background-position: left;
     background-repeat: repeat-y;
     background-size: 1px 8px;
@@ -167,13 +167,13 @@ html.has-toc .toc {
     grid-row: 1;
     margin-bottom: 0;
     padding-bottom: 0;
-    padding-left: var(--ids-size-150);
-    padding-top: var(--ids-size-150);
+    padding-left: var(--dt-size-150);
+    padding-top: var(--dt-size-150);
   }
 
   .toc-menu {
     position: sticky;
-    top: calc(var(--toc-top) + var(--ids-size-150));
+    top: calc(var(--toc-top) + var(--dt-size-150));
   }
 
   .toc-menu ul {
@@ -198,13 +198,13 @@ html.has-toc .toc {
   }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   html.has-toc .toc {
     grid-column: 10 / span 3;
   }
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   html.has-toc .toc {
     margin-bottom: 0;
   }

@@ -5,7 +5,7 @@
     brand block: logo + product name (nav-brand.hbs).
   - m/s (513-1679): overlay drawer, narrower padding/gap, a 0.5px solid
     right rule instead of l's dashed one, and a themed 80% scrim
-    (.side-menu-scrim, `--ids-color-bg-overlay` — a sibling so it can sit
+    (.side-menu-scrim, `--dt-color-bg-overlay` — a sibling so it can sit
     behind the panel and still catch the outside-click that closes it —
     see 01-nav.ts). The version
     tag (page-versions.hbs) moves out of the header and into the drawer at
@@ -36,9 +36,9 @@
       {{#with site.keys.productLogoDark}}
       <img class="side-menu__header-logo side-menu__header-logo--dark" src="{{{relativize this}}}" width="24" height="24" alt="">
       {{/with}}
-      <span class="side-menu__header-title ids-text ids-text--title-s">{{or page.component.title site.title}}</span>
+      <span class="side-menu__header-title dt-text dt-text--title-s">{{or page.component.title site.title}}</span>
     </div>
-    <button class="side-menu__close" type="button" aria-label="Close navigation">{{icon "actions" "close-large-outlined"}}</button>
+    <button class="side-menu__close" type="button" aria-label="Close navigation">{{icon "x"}}</button>
   </div>
 {{> nav-brand}}
 {{> nav-switcher}}

@@ -1,8 +1,8 @@
 = docouture
 :page-layout: home
 :page-nav-module: main
-:description: A documentation platform built on Antora, themed with the IOP Design System — scaffold, write and publish a real documentation site with one CLI.
-:page-tags: antora, cli, design-system, documentation
+:description: A documentation platform built on Antora — scaffold, write and publish a real documentation site with one CLI.
+:page-tags: antora, cli, documentation
 :page-action: Get started
 :page-action-url: main:quickstart.adoc
 :page-action-secondary: About
@@ -69,9 +69,9 @@ coding agents — into an existing repository. `docouture dev`, `docouture build
 xref:main:quickstart.adoc[Try it]
 --
 
-[feature,label="Themed with the IOP Design System"]
+[feature,label="Its own design tokens"]
 --
-image::feature-iop-design-system.jpg[A grid of light and dark themed UI components — buttons, cards, navigation, dropdowns — shown side by side]
+image::feature-design-tokens.jpg[A grid of light and dark themed UI components — buttons, cards, navigation, dropdowns — shown side by side]
 
 The UI bundle is a themed fork of Antora's own default UI: dark/light mode, a version
 switcher, full-text search, and a set of authoring blocks — tabs, cards, accordions,
@@ -107,14 +107,13 @@ xref:main:reference-ai-first-approach.adoc[See the skills]
 --
 ====
 
-== Free & open source
+== Open source
 
 [cta]
 ====
-The CLI, the Antora/https://asciidoctor.org[Asciidoctor] extensions and the release
-tooling are Apache-2.0. The UI bundle itself is themed with Inditex's proprietary IOP
-Design System, which makes a site built with it internal-only for now — see the FAQ
-below for the full story.
+The CLI, the Antora/https://asciidoctor.org[Asciidoctor] extensions, the UI bundle
+(MPL-2.0, being a fork of antora-ui-default) and the release tooling are all open —
+see the FAQ below for the licence breakdown.
 
 [.primary]
 https://github.com/InditexTech/docouture[View the repository]
@@ -127,7 +126,7 @@ https://github.com/InditexTech/docouture[View the repository]
 .What is docouture?
 [%collapsible]
 ====
-An Antora documentation platform: a themed UI bundle (IOP Design System), a set of
+An Antora documentation platform: a themed UI bundle, a set of
 Antora/Asciidoctor extensions, and the `docouture` CLI that scaffolds, serves, builds
 and publishes a site built on top of them. See xref:main:index.adoc[About].
 ====
@@ -148,8 +147,9 @@ xref:main:guides-versioning-modes.adoc[Versioning modes].
 .Is docouture open source?
 [%collapsible]
 ====
-The CLI and extensions are Apache-2.0, but the UI bundle depends on a proprietary
-design system — see the xref:main:faq.adoc[full FAQ] for the details.
+Yes — the CLI, extensions and UI bundle are all Apache-2.0 or MPL-2.0, with
+nothing embedded that restricts publishing a site — see the xref:main:faq.adoc[full FAQ]
+for the licence breakdown.
 ====
 --
 

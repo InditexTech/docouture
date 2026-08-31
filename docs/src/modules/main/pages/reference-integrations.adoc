@@ -15,8 +15,8 @@ real diagrams via a self-hosted https://kroki.io[Kroki] service, enabled by defa
 xref:main:reference-antora-playbook-configuration.adoc[]). The service starts itself
 automatically the first time a build needs it (https://www.docker.com[Docker]
 required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its
-compose definition out for customization. Mermaid diagrams get IOP Design
-System-aligned theming baked in server-side. `format=png` renders a transparent raster
+compose definition out for customization. Mermaid diagrams get this site's own
+theming baked in server-side. `format=png` renders a transparent raster
 image instead of inline SVG for types that support it. Without Docker, or with the
 feature disabled, a diagram block renders as its own literal source text rather than
 failing the build. Full syntax: xref:main:reference-custom-asciidoc-components.adoc[].

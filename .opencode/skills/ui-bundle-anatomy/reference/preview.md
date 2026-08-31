@@ -104,11 +104,12 @@ Styles for the two preview-only layouts (`hub`, `icons`) only. Copied straight t
 `public/preview.css`, never staged into `public/_`, so it never reaches `build/ui-bundle.zip`
 — unlike `src/css/site.css`, which is real bundle content.
 
-`tools/ids/sync.mjs` decides which `--ids-*` custom properties survive into
-`src/css/ids-tokens.css` by scanning only `packages/ui-bundle/src/css`; `preview-src` is
-deliberately outside that scan; see `code/tools/ids/README.md`. Every `var(--ids-*)`
+`dt-tokens.css` only carries the subset of `--dt-*` custom properties
+`packages/ui-bundle/src/css` actually references (see that file's own header) —
+`preview-src` was never part of what decided that subset, and still isn't now that
+the file is hand-maintained rather than generated. Every `var(--dt-*)`
 reference in this file therefore needs a literal CSS fallback
-(`var(--ids-size-100, 16px)`) — without one the declaration silently resolves to nothing
+(`var(--dt-size-100, 16px)`) — without one the declaration silently resolves to nothing
 the moment nothing in `src/css` happens to reference the same token.
 
 ## How preview differs from a release build

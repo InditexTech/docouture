@@ -14,7 +14,7 @@
   everything else below is optional:
 
     = AMIGA Framework Java                  required by Antora, not shown
-    :page-tags: efficiency, speed, support  one .ids-label--grey chip each
+    :page-tags: efficiency, speed, support  one .dt-label--grey chip each
     :page-action: Go to tool                primary call to action
     :page-action-url: https://tool.example  its target — page reference or URL
     :page-action-secondary: Quickstart      secondary (outlined) call to action
@@ -50,7 +50,7 @@
 
   That same fallthrough is what decides the external-link icon: a target
   `resolvePageURL` cannot resolve is not a page in this site, so the primary
-  action gets `connectivity/link-external-outlined` in its action slot —
+  action gets `external-link` in its action slot —
   which is what the frame draws on "go to tool", pointing out of the docs.
   Derived, never authored: an author cannot forget it, and cannot put it on
   a link that stays in the site.
@@ -87,20 +87,20 @@
 {{#with (split page.attributes.tags ',')}}
     <div class="home-hero__labels">
     {{#each this}}
-      <div class="ids-label ids-label--grey">
-        <span class="ids-label__content">{{this}}</span>
+      <div class="dt-label dt-label--grey">
+        <span class="dt-label__content">{{this}}</span>
       </div>
     {{/each}}
     </div>
 {{/with}}
 {{#if (and page.attributes.action page.attributes.[action-url])}}
     <div class="home-hero__actions">
-      <a class="ids-button ids-button--primary{{#unless (resolvePageURL page.attributes.[action-url])}} ids-button--icon-and-label ids-button--icon-action{{/unless}}" href="{{{relativize (or (resolvePageURL page.attributes.[action-url]) page.attributes.[action-url])}}}">
-        <span class="ids-button__content">{{page.attributes.action}}{{#unless (resolvePageURL page.attributes.[action-url])}}<span class="ids-button__icon ids-button__icon-action">{{icon "connectivity" "link-external-outlined"}}</span>{{/unless}}</span>
+      <a class="dt-button dt-button--primary{{#unless (resolvePageURL page.attributes.[action-url])}} dt-button--icon-and-label dt-button--icon-action{{/unless}}" href="{{{relativize (or (resolvePageURL page.attributes.[action-url]) page.attributes.[action-url])}}}">
+        <span class="dt-button__content">{{page.attributes.action}}{{#unless (resolvePageURL page.attributes.[action-url])}}<span class="dt-button__icon dt-button__icon-action">{{icon "external-link"}}</span>{{/unless}}</span>
       </a>
     {{#if (and page.attributes.[action-secondary] page.attributes.[action-secondary-url])}}
-      <a class="ids-button ids-button--secondary{{#unless (resolvePageURL page.attributes.[action-secondary-url])}} ids-button--icon-and-label ids-button--icon-action{{/unless}}" href="{{{relativize (or (resolvePageURL page.attributes.[action-secondary-url]) page.attributes.[action-secondary-url])}}}">
-        <span class="ids-button__content">{{page.attributes.[action-secondary]}}{{#unless (resolvePageURL page.attributes.[action-secondary-url])}}<span class="ids-button__icon ids-button__icon-action">{{icon "connectivity" "link-external-outlined"}}</span>{{/unless}}</span>
+      <a class="dt-button dt-button--secondary{{#unless (resolvePageURL page.attributes.[action-secondary-url])}} dt-button--icon-and-label dt-button--icon-action{{/unless}}" href="{{{relativize (or (resolvePageURL page.attributes.[action-secondary-url]) page.attributes.[action-secondary-url])}}}">
+        <span class="dt-button__content">{{page.attributes.[action-secondary]}}{{#unless (resolvePageURL page.attributes.[action-secondary-url])}}<span class="dt-button__icon dt-button__icon-action">{{icon "external-link"}}</span>{{/unless}}</span>
       </a>
     {{/if}}
     </div>

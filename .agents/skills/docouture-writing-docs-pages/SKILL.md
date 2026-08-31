@@ -86,7 +86,7 @@ The first time a page names a third-party product, library, or repo in prose —
 AsciiDoc, Kroki, Shiki, pnpm, GitHub, etc. — link it to its canonical home
 (`https://antora.org`, `https://kroki.io`, ...). Don't repeat the link on every later
 mention on the same page; once is enough. Internal/proprietary tools with no public URL
-(e.g. Inditex's IOP Design System) are named but left unlinked — there's nothing to send
+(e.g. an internal wiki page, a private registry) are named but left unlinked — there's nothing to send
 a reader to.
 
 ## Constraints that fail silently

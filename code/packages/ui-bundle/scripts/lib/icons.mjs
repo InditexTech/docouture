@@ -1,19 +1,20 @@
-// Shared plumbing for the icon pipeline: `fetch-icons`, `build-sprite` and
-// `search-icons` all speak in terms of the mirror, the manifest and the symbol
-// index defined here.
+// Shared plumbing for the icon pipeline: `build-sprite` and `search-icons`
+// both speak in terms of the manifest (icons.yml) and Lucide's own installed
+// package (node_modules/lucide-static).
 //
-// The pipeline has three stages and only the first one touches the network:
+// The pipeline has one stage, and it is entirely offline:
 //
-//   fetch-icons   network   .icons/ + icons.lock.json
-//   build-sprite  offline   src/img/ids-icons.svg
-//   gulp bundle   offline   ships it
+//   build-sprite   offline   src/img/icons.svg + src/css/icon-masks.css
 //
-// The mirror is a full copy of every IOP DS group sprite and is gitignored. It
-// is scratch: large, proprietary and reproducible from the lock. What gets
-// committed is the manifest (intent), the lock (provenance) and the generated
-// sprite (the artifact the bundle actually ships).
+// There is nothing to fetch: lucide-static is a public npm package, installed
+// like any other devDependency, and already ships every icon this bundle
+// could want — both as individual SVGs (icons/<name>.svg) and as one
+// combined sprite (sprite.svg) using canonical names only (no deprecated
+// aliases). This file reads from the latter: it is already exactly the
+// `<symbol id="<name>" viewBox="...">...</symbol>` shape this bundle's own
+// sprite needs, just for every icon Lucide ships instead of the ~34 this
+// bundle actually uses.
 
-import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -21,115 +22,21 @@ import { fileURLToPath } from 'node:url'
 import yaml from 'js-yaml'
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
+const lucideRoot = resolve(packageRoot, 'node_modules/lucide-static')
 
 export const paths = {
   packageRoot,
-  /** Gitignored mirror of every group sprite. Outside src/ so the bundle never ships it. */
-  mirror: join(packageRoot, '.icons'),
   manifest: join(packageRoot, 'src/img/icons.yml'),
-  lock: join(packageRoot, 'icons.lock.json'),
-  sprite: join(packageRoot, 'src/img/ids-icons.svg'),
-  /** Generated `--icon-mask-<group>-<name>` custom properties — see loadMasks(). */
+  sprite: join(packageRoot, 'src/img/icons.svg'),
+  /** Generated `--icon-mask-<name>` custom properties — see loadMasks(). */
   masks: join(packageRoot, 'src/css/icon-masks.css'),
+  /** Lucide's own combined sprite — canonical names only, no deprecated aliases. */
+  lucideSprite: join(lucideRoot, 'sprite.svg'),
+  /** Lucide's own search-tag index, keyed by the same canonical names as lucideSprite. */
+  lucideTags: join(lucideRoot, 'tags.json'),
 }
 
-/** Where the design system publishes its sprites. There is no version in the path. */
-export const SOURCE_TEMPLATE = 'https://amgassets.inditex.com/amigaweb/icons/sw-icons-{group}.symbol.svg'
-
-export const sourceUrl = (group) => SOURCE_TEMPLATE.replace('{group}', group)
-
-/**
- * The 25 sprite groups, matching the `Icons` canvas of the Figma Foundations
- * file (node `217486:9`) one for one. Hardcoded because the CDN publishes no
- * index: a group that disappears has to fail loudly rather than be skipped.
- */
-export const GROUPS = [
-  'accessibility',
-  'actions',
-  'alerts',
-  'arrows',
-  'business',
-  'care',
-  'communication',
-  'connectivity',
-  'controls',
-  'cursors',
-  'design',
-  'graphics',
-  'others',
-  'packaging',
-  'payments',
-  'products',
-  'sections',
-  'shapes',
-  'shopping',
-  'social-media',
-  'spaces',
-  'sustainability',
-  'time',
-  'transport',
-  'weather',
-]
-
-// --------------------------------------------------------------- symbols -----
-
-// Symbols never nest, so a non-greedy scan between the tags is enough and
-// avoids pulling an XML parser in for a file we only ever slice.
-const SYMBOL_RE = /<symbol\b[^>]*\bid="([^"]+)"[^>]*>[\s\S]*?<\/symbol>/g
-
-/**
- * Extract every `<symbol>` of a group sprite, keyed by its leaf name — the id
- * with the `sw-icons-<group>-` prefix removed. The leaf carries the variant
- * suffix (`-outlined` / `-filled`); the design system ships no bare names.
- *
- * Some published sprites repeat an id: as of the 2026-05-12 catalogue, 14 ids
- * across six groups appear twice with byte-identical bodies. That is harmless
- * upstream duplication, so the repeat is dropped and counted rather than
- * treated as an error — but two symbols sharing an id with *different* bodies
- * would mean the sprite is genuinely ambiguous, and that does throw.
- */
-export function parseSymbols(svg, group) {
-  const prefix = `sw-icons-${group}-`
-  const symbols = new Map()
-  let duplicates = 0
-
-  for (const [markup, id] of svg.matchAll(SYMBOL_RE)) {
-    if (!id.startsWith(prefix)) {
-      throw new Error(`Symbol id "${id}" in group "${group}" does not start with "${prefix}"`)
-    }
-    const name = id.slice(prefix.length)
-    const seen = symbols.get(name)
-    if (seen === undefined) {
-      symbols.set(name, markup)
-    } else if (seen === markup) {
-      duplicates++
-    } else {
-      throw new Error(`Symbol id "${id}" appears twice in group "${group}" with different definitions`)
-    }
-  }
-
-  if (!symbols.size) throw new Error(`No <symbol> elements found in the sprite for group "${group}"`)
-  return { symbols, duplicates }
-}
-
-export const sha256 = (text) => createHash('sha256').update(text).digest('hex')
-
-// -------------------------------------------------------------- manifest -----
-
-/** Read one `group -> [name, ...]` mapping into a flat, ordered `{ group, name, id }` list. */
-function flatten(mapping, label) {
-  const entries = []
-  for (const [group, names] of Object.entries(mapping)) {
-    if (!GROUPS.includes(group)) {
-      throw new Error(`Unknown icon group "${group}" in ${label}. Known groups: ${GROUPS.join(', ')}`)
-    }
-    if (!Array.isArray(names)) {
-      throw new Error(`${label} entry for group "${group}" must be a list of icon names`)
-    }
-    for (const name of names) entries.push({ group, name, id: `sw-icons-${group}-${name}` })
-  }
-  return entries
-}
+// --------------------------------------------------------------- manifest -----
 
 let manifestDoc
 
@@ -138,68 +45,70 @@ async function readManifestDoc() {
   return manifestDoc
 }
 
-/**
- * Read `src/img/icons.yml`'s `icons:` mapping into a flat, ordered list of
- * `{ group, name, id }`. Order follows the manifest so the generated sprite
- * has a stable, reviewable diff rather than one that reshuffles on every run.
- */
+function flatten(list, label) {
+  if (!Array.isArray(list)) throw new Error(`${label} must be a list of icon names`)
+  for (const name of list) {
+    if (typeof name !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)) {
+      throw new Error(`${label} entry "${name}" is not a lowercase, hyphen-separated icon name`)
+    }
+  }
+  return list
+}
+
+/** Read `src/img/icons.yml`'s `icons:` list — the icons this bundle vendors. */
 export async function loadManifest() {
   const doc = await readManifestDoc()
-  const icons = doc?.icons
-  if (!icons || typeof icons !== 'object') {
-    throw new Error(`${paths.manifest} has no \`icons\` mapping`)
-  }
-  return flatten(icons, '`icons:`')
+  return flatten(doc?.icons, '`icons:`')
 }
 
 /**
- * Read `src/img/icons.yml`'s `masks:` mapping — the subset of vendored icons
- * that also need a CSS-consumable `--icon-mask-<group>-<name>` custom
- * property, for markup Asciidoctor generates itself (admonitions, GH-13) where
- * the `{{icon}}` helper's `<svg><use>` has no way in. Every entry must also
- * appear under `icons:`; that's what makes it safe to resolve against the
- * same sprite mirror rather than a second index.
+ * Read `src/img/icons.yml`'s `masks:` list — the subset of vendored icons
+ * that also need a CSS-consumable `--icon-mask-<name>` custom property, for
+ * markup Asciidoctor generates itself (admonitions, GH-13) or an extension
+ * emits (GH-20), neither of which can address the sprite with `<use>`. Every
+ * entry must also appear under `icons:`.
  */
 export async function loadMasks() {
   const doc = await readManifestDoc()
-  const masks = doc?.masks
-  if (!masks) return []
-  if (typeof masks !== 'object') {
-    throw new Error(`${paths.manifest}'s \`masks\` must be a mapping, like \`icons:\``)
-  }
-  const entries = flatten(masks, '`masks:`')
+  if (doc?.masks == null) return []
+  const masks = flatten(doc.masks, '`masks:`')
 
-  const vendored = new Set((await loadManifest()).map(({ group, name }) => `${group}/${name}`))
-  const notVendored = entries.filter(({ group, name }) => !vendored.has(`${group}/${name}`))
+  const vendored = new Set(await loadManifest())
+  const notVendored = masks.filter((name) => !vendored.has(name))
   if (notVendored.length) {
-    const refs = notVendored.map(({ group, name }) => `${group}/${name}`).join(', ')
-    throw new Error(`\`masks:\` in ${paths.manifest} lists ${refs}, not present under \`icons:\` — add it there first`)
+    throw new Error(
+      `\`masks:\` in ${paths.manifest} lists ${notVendored.join(', ')}, not present under \`icons:\` — add it there first`
+    )
   }
 
-  return entries
+  return masks
 }
 
-// ---------------------------------------------------------------- mirror -----
+// ------------------------------------------------------------- lucide sprite -----
 
-/** Read one group sprite out of the mirror, with a pointer to the fix when it is absent. */
-export async function readMirroredGroup(group) {
-  const file = join(paths.mirror, `sw-icons-${group}.symbol.svg`)
-  try {
-    return await readFile(file, 'utf8')
-  } catch (err) {
-    if (err.code !== 'ENOENT') throw err
-    throw new Error(`No mirror for group "${group}" at ${file}. Run \`just icons-fetch\` first.`, { cause: err })
+// Symbols never nest, so a non-greedy scan between the tags is enough and
+// avoids pulling an XML parser in for a file we only ever slice.
+const SYMBOL_RE = /<symbol\b[^>]*\bid="([^"]+)"[^>]*>[\s\S]*?<\/symbol>/g
+
+let lucideIndex
+
+/** Load every symbol Lucide ships, keyed by its canonical name — 1,791 entries as of writing. */
+export async function loadLucideIndex() {
+  if (!lucideIndex) {
+    const svg = await readFile(paths.lucideSprite, 'utf8')
+    lucideIndex = new Map()
+    for (const [markup, id] of svg.matchAll(SYMBOL_RE)) lucideIndex.set(id, markup)
+    if (!lucideIndex.size) throw new Error(`No <symbol> elements found in ${paths.lucideSprite}`)
   }
+  return lucideIndex
 }
 
-/** Load the whole mirror as `group -> Map<leafName, markup>`. */
-export async function readMirror(groups = GROUPS) {
-  const index = new Map()
-  for (const group of groups) {
-    const { symbols } = parseSymbols(await readMirroredGroup(group), group)
-    index.set(group, symbols)
-  }
-  return index
+let lucideTags
+
+/** Load Lucide's own search-tag index: canonical name -> array of search terms. */
+export async function loadLucideTags() {
+  if (!lucideTags) lucideTags = JSON.parse(await readFile(paths.lucideTags, 'utf8'))
+  return lucideTags
 }
 
 // ------------------------------------------------------------ suggestions -----
@@ -222,30 +131,21 @@ function distance(a, b) {
 }
 
 /**
- * Suggest replacements for an icon the manifest asked for and the mirror does
- * not have. Searches every group, not just the one that was asked for: the
- * common mistake is a right name in the wrong group — `sections` is Zara's
- * womenswear/menswear sections, not page furniture, so `sections/home-outlined`
- * is really `others/home-outlined`.
+ * Suggest replacements for an icon name the manifest asked for that Lucide
+ * does not ship under that exact (canonical) name — most often because it is
+ * a deprecated alias (`home` instead of `house`, `alert-triangle` instead of
+ * `triangle-alert`) or a typo.
  */
-export function suggest(index, group, name, limit = 4) {
+export function suggest(index, name, limit = 4) {
   const scored = []
-  for (const [candidateGroup, symbols] of index) {
-    for (const candidate of symbols.keys()) {
-      // Substring hits rank above edit-distance ones: a wrong-group name matches
-      // exactly and should always be offered first.
-      const exact = candidate === name
-      const contains = candidate.includes(name) || name.includes(candidate)
-      const d = distance(name, candidate)
-      if (!exact && !contains && d > 4) continue
-      scored.push({
-        ref: `${candidateGroup}/${candidate}`,
-        rank: exact ? -2 : contains ? -1 : d,
-        sameGroup: candidateGroup === group,
-      })
-    }
+  for (const candidate of index.keys()) {
+    const exact = candidate === name
+    const contains = candidate.includes(name) || name.includes(candidate)
+    const d = distance(name, candidate)
+    if (!exact && !contains && d > 4) continue
+    scored.push({ ref: candidate, rank: exact ? -2 : contains ? -1 : d })
   }
-  scored.sort((a, b) => a.rank - b.rank || Number(b.sameGroup) - Number(a.sameGroup) || a.ref.localeCompare(b.ref))
+  scored.sort((a, b) => a.rank - b.rank || a.ref.localeCompare(b.ref))
   return scored.slice(0, limit).map((s) => s.ref)
 }
 

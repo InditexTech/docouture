@@ -1,7 +1,7 @@
 = About
 
 docouture is a documentation platform: an https://antora.org[Antora] content pipeline, a
-UI bundle themed with Inditex's IOP Design System, and the `docouture` CLI that ties them
+UI bundle with its own design tokens, and the `docouture` CLI that ties them
 together — scaffolding, serving, building and publishing a site without hand-wiring an
 Antora playbook from scratch.
 
@@ -26,10 +26,9 @@ It ships three things a documentation site actually needs:
 
 Mainly InditexTech teams documenting an InditexTech Open Source project — this site
 you're reading is itself one, scaffolded the same way xref:main:quickstart.adoc[Quickstart]
-describes. Nothing about the CLI or the Antora pipeline underneath enforces that
-audience, but the themed UI bundle depends on Inditex's proprietary IOP Design System
-(see xref:main:faq.adoc[the FAQ]), which is what actually keeps a site built with it
-internal to InditexTech for now.
+describes. Nothing about the CLI, the Antora pipeline or the UI bundle underneath
+restricts that audience — see xref:main:faq.adoc[the FAQ] for the full licence
+breakdown.
 
 == What it isn't
 

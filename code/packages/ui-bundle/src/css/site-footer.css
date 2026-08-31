@@ -9,7 +9,7 @@
  * sits outside `.body` in the DOM, so it needs the same variable and the same
  * transition to move in step when the side menu is toggled.
  *
- * An opaque surface of its own: `--ids-color-bg-default`, which is white
+ * An opaque surface of its own: `--dt-color-bg-default`, which is white
  * under the light theme and black under the dark one, so the landing's
  * decorative artwork (home.css) stops at the footer rather than running
  * behind it. The token, not a literal `#fff`, is what makes the second half
@@ -17,7 +17,7 @@
  * bottom of a dark page.
  */
 .site-footer {
-  background-color: var(--ids-color-bg-default);
+  background-color: var(--dt-color-bg-default);
   margin-left: var(--side-menu-offset);
   transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
 }
@@ -28,14 +28,14 @@
  * control dash length), on the top edge only.
  */
 .site-footer__grid {
-  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-image: repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
   background-position: top;
   background-repeat: repeat-x;
   background-size: 8px 1px;
-  /* 80: was --ids-size-250 (40) — the footer reads as a thin closing line at
+  /* 80: was --dt-size-250 (40) — the footer reads as a thin closing line at
      40, undersized against the 48-80px block rhythm above it (home.css). */
-  padding-block: var(--ids-size-500);
-  row-gap: var(--ids-size-250);
+  padding-block: var(--dt-size-500);
+  row-gap: var(--dt-size-250);
 }
 
 /*
@@ -52,7 +52,7 @@
  * Declared here rather than with the grid's own `--span-*` utility classes,
  * for the reason home.css states at length: those classes carry the design
  * system package's breakpoints, whose `m` starts at 1024px, while this project
- * overrides `m` to 1240px (ids-breakpoints.css). A footer that went four-up at
+ * overrides `m` to 1240px (dt-breakpoints.css). A footer that went four-up at
  * 1024 would do it across the whole of this project's `s` band.
  *
  * Each breakpoint sets both selectors rather than letting one fall through to
@@ -64,7 +64,7 @@
   grid-column-end: span 6;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .site-footer__col {
     grid-column-end: span 12;
   }
@@ -74,7 +74,7 @@
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .site-footer__col,
   .site-footer__links {
     grid-column-end: span 3;
@@ -99,9 +99,9 @@
 
 .site-footer__brand-link {
   align-items: center;
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   display: flex;
-  gap: var(--ids-size-75); /* 12 */
+  gap: var(--dt-size-75); /* 12 */
 }
 
 /*
@@ -114,36 +114,36 @@
 }
 
 .site-footer__logo--dark,
-.ids-theme-dark .site-footer__logo--light {
+.dt-theme-dark .site-footer__logo--light {
   display: none;
 }
 
-.ids-theme-dark .site-footer__logo--dark {
+.dt-theme-dark .site-footer__logo--dark {
   display: inline-block;
 }
 
 .site-footer__links {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-50); /* 8 */
+  gap: var(--dt-size-50); /* 8 */
 }
 
 /*
  * GH-77: optional per-group heading, authored via `footer.groups[].title` —
  * `content-low`, the same muted colour every other non-interactive category
  * label in this bundle uses to read as chrome rather than content (side-menu
- * tree labels, the ToC, the search-shortcut chip) — `ids-text--label-l`
+ * tree labels, the ToC, the search-shortcut chip) — `dt-text--label-l`
  * itself supplies the font (uppercase baked into that token, not set here).
  */
 .site-footer__heading {
-  color: var(--ids-color-content-low);
+  color: var(--dt-color-content-low);
 }
 
 .site-footer__link {
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
 }
 
 /* GH-77: the copyright line, now inside the brand column (see .site-footer__brand above) */
 .site-footer__legal {
-  color: var(--ids-color-content-low);
+  color: var(--dt-color-content-low);
 }

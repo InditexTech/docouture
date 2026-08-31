@@ -1,11 +1,11 @@
 /*
- * Grid placement (GH-10): `.doc` is a track in the same `.ids-grid-layout`
+ * Grid placement (GH-10): `.doc` is a track in the same `.dt-grid-layout`
  * `main.hbs` gives `.content`, sharing its container with the ToC
  * (toc.css) — full width by default (both `.content`'s grid and no ToC
  * column reserved), narrowing to 8 of 12 columns at m / 9 of 12 at l only
  * once `html.has-toc` says the ToC is real (02-on-this-page.ts). See
  * toc.css's own header comment for why this is plain `grid-column` rather
- * than the DS's `.ids-grid-layout__item--span-*` utility classes — those
+ * than the DS's `.dt-grid-layout__item--span-*` utility classes — those
  * are static, and this split is not.
  *
  * `grid-row: 1` at m/l is required, not decorative: both `.doc` and `.toc`
@@ -96,7 +96,7 @@
   dd,
   .docouture-tabs__panel,
   .docouture-accordion-group,
-  .ids-timeline-item-content
+  .dt-timeline-item-content
 ) {
   --doc-inset-cap: 100%;
 }
@@ -108,7 +108,7 @@
  * below, this one needs no gap-bridging trick: it sits on `main > .content`
  * itself — the actual grid CONTAINER main.hbs builds, not one of the grid
  * ITEMS (`.doc`/`.toc`) inside it — so its box already spans edge to edge
- * (`.ids-grid-layout--with-margin`'s own inline padding is the only inset,
+ * (`.dt-grid-layout--with-margin`'s own inline padding is the only inset,
  * matching the header/hero/footer gutter at every breakpoint) with nothing
  * to bridge. `:not(:empty)` isn't needed: `.content` always has a `.toc`
  * child (`display: none` when there's nothing to show it, but still
@@ -116,7 +116,7 @@
  * has something to sit above.
  */
 main > .content {
-  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-image: repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
   background-position: top;
   background-repeat: repeat-x;
   background-size: 8px 1px;
@@ -145,13 +145,13 @@ main > .content {
   max-width: var(--content-max-width);
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .doc {
     grid-column: span 12;
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .doc {
     font-size: var(--doc-font-size--desktop);
   }
@@ -162,7 +162,7 @@ main > .content {
   }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   html.has-toc .doc {
     grid-column: 1 / span 9;
   }
@@ -185,11 +185,11 @@ html.has-toc.is-toc-closed .doc {
 /*
  * GH-11 heading scale (Figma 3615:59166, mapped in the issue's own table):
  * `title-*` sizing, `text-transform` reset back to `none` — see
- * .opencode/skills/iop-ds-foundations/reference/typography.md's own
+ * .opencode/skills/docouture-foundations/reference/typography.md's own
  * "Documentation deviation" section for why article prose keeps every
  * `title-*` style's weight/size/line-height but not its uppercase default.
  * Each level is its own rule rather than a shared block plus overrides,
- * because every `--ids-typo-title-*` token is a distinct `font` shorthand —
+ * because every `--dt-typo-title-*` token is a distinct `font` shorthand —
  * there is nothing left in common to factor out once that shorthand is
  * applied.
  */
@@ -207,31 +207,31 @@ html.has-toc.is-toc-closed .doc {
 
 .doc > h1.page,
 .doc h2 {
-  font: var(--ids-typo-title-l);
-  letter-spacing: var(--ids-typo-title-l-letter-spacing);
+  font: var(--dt-typo-title-l);
+  letter-spacing: var(--dt-typo-title-l-letter-spacing);
 }
 
 .doc h3 {
-  font: var(--ids-typo-title-m);
-  letter-spacing: var(--ids-typo-title-m-letter-spacing);
+  font: var(--dt-typo-title-m);
+  letter-spacing: var(--dt-typo-title-m-letter-spacing);
 }
 
 .doc h4 {
-  font: var(--ids-typo-title-s);
-  letter-spacing: var(--ids-typo-title-s-letter-spacing);
+  font: var(--dt-typo-title-s);
+  letter-spacing: var(--dt-typo-title-s-letter-spacing);
 }
 
 .doc h5,
 .doc h6 {
-  font: var(--ids-typo-title-xs);
-  letter-spacing: var(--ids-typo-title-xs-letter-spacing);
+  font: var(--dt-typo-title-xs);
+  letter-spacing: var(--dt-typo-title-xs-letter-spacing);
 }
 
 .doc > h1.page:first-child {
   margin: var(--doc-space-block) 0;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .doc > h1.page:first-child {
     margin-top: var(--doc-space-section);
   }
@@ -292,23 +292,23 @@ html.has-toc.is-toc-closed .doc {
  * same reason header.css/footer.css/side-menu.css/toc.css all use it: the
  * border shorthand cannot control dash length, and Figma's is 4px on/4px
  * off. Horizontal padding is 0, not the design's 64px — that's the L
- * breakpoint's own grid gutter, which `.doc`'s own `.ids-grid-layout--
+ * breakpoint's own grid gutter, which `.doc`'s own `.dt-grid-layout--
  * with-margin` ancestor (main.hbs) already applies, so repeating it here
  * would double it. `:not(.discrete)` is what keeps a `[discrete]` heading
  * (content.adoc has one) plain prose with no band and no anchor slot — it
  * is not a real section, `02-on-this-page.ts` already excludes it from the
  * ToC on the same basis.
  *
- * No `.ids-divider` here despite the issue's own suggestion — the design
+ * No `.dt-divider` here despite the issue's own suggestion — the design
  * system's divider is a solid rule; this one is dashed 4/4, which nothing
  * in the DS models, so there is no component to compose from (see
- * .opencode/skills/iop-ds-components/SKILL.md's decision order, step 4).
+ * .opencode/skills/docouture-components/SKILL.md's decision order, step 4).
  */
 .doc h2:not(.discrete) {
-  background-color: var(--ids-color-bg-default);
+  background-color: var(--dt-color-bg-default);
   background-image:
-    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px),
-    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+    repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px),
+    repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
   background-position: top, bottom;
   background-repeat: repeat-x, repeat-x;
   background-size: 8px 1px, 8px 1px;
@@ -326,7 +326,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   padding-right: var(--comp-grid-margin-l);
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .doc h2:not(.discrete) {
     margin-right: 0;
     padding-right: 0;
@@ -338,7 +338,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   }
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .doc h2:not(.discrete) {
     margin-right: calc(-1 * var(--comp-grid-margin-l));
     padding-right: var(--comp-grid-margin-l);
@@ -368,7 +368,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * would drag the copy-link icon (`margin-inline-start: auto`, further
  * down this file) along with it, off to the right of the visible title.
  * It only needs to know the grid's own `gap` at each breakpoint — a fixed
- * `--ids-size-*` token (`grid-layout.css`'s own value, mirrored here), not
+ * `--dt-size-*` token (`grid-layout.css`'s own value, mirrored here), not
  * `.doc`/`.toc`'s fr-based column widths, which plain CSS has no way to
  * read — so it reaches exactly as far as the gap and lands flush on
  * `.toc`'s own left edge (toc.css's `grid-column`, the other track this
@@ -384,12 +384,12 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * `h2` rule above (also needed there for the floating copy-link icon),
  * so nothing further to set here beyond the pseudo itself.
  */
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   html.has-toc:not(.is-toc-closed) .doc h2:not(.discrete)::after {
-    background-color: var(--ids-color-bg-default);
+    background-color: var(--dt-color-bg-default);
     background-image:
-      repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px),
-      repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+      repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px),
+      repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
     background-position: top, bottom;
     background-repeat: repeat-x, repeat-x;
     background-size: 8px 1px, 8px 1px;
@@ -398,13 +398,13 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
     left: 100%;
     position: absolute;
     top: 0;
-    width: var(--ids-size-300);
+    width: var(--dt-size-300);
   }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   html.has-toc:not(.is-toc-closed) .doc h2:not(.discrete)::after {
-    width: var(--ids-size-350);
+    width: var(--dt-size-350);
   }
 }
 
@@ -423,14 +423,14 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * mirroring 06-copy-to-clipboard.ts's code-block copy button).
  *
  * Sized to the design system button's own tap-target height
- * (`--ids-size-250`, `.ids-button`'s `min-height`, ids-components.css)
- * rather than the DS's own icon-only-ghost width (`--ids-size-125`,
- * `.ids-button--icon-only.ids-button--ghost`) — that variant is narrower
+ * (`--dt-size-250`, `.dt-button`'s `min-height`, dt-components.css)
+ * rather than the DS's own icon-only-ghost width (`--dt-size-125`,
+ * `.dt-button--icon-only.dt-button--ghost`) — that variant is narrower
  * than it is tall, fine for a button sitting beside label text, wrong for
  * a standalone square target here. Not the DS class either way: the DS
- * button needs `.ids-button__content`/`.ids-button__icon` wrapper spans
+ * button needs `.dt-button__content`/`.dt-button__icon` wrapper spans
  * this plain `<a>` does not have, and adding the class without them would
- * be styling for markup that isn't there (see iop-ds-components skill,
+ * be styling for markup that isn't there (see docouture-components skill,
  * "BEM conventions").
  *
  * Floats over the band's own left gutter via `position: absolute`,
@@ -468,20 +468,20 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc h4:not(.discrete) .anchor,
 .doc h5:not(.discrete) .anchor {
   align-items: center;
-  border-radius: var(--ids-size-50);
-  color: var(--ids-color-content-low);
+  border-radius: var(--dt-size-50);
+  color: var(--dt-color-content-low);
   display: inline-flex;
-  height: var(--ids-size-250);
+  height: var(--dt-size-250);
   justify-content: center;
-  margin-right: var(--ids-size-75);
+  margin-right: var(--dt-size-75);
   opacity: 0;
   position: absolute;
   right: 100%;
   text-decoration: none;
   top: 50%;
   transform: translateY(-50%);
-  transition: var(--ids-motion-micro-states);
-  width: var(--ids-size-250);
+  transition: var(--dt-motion-micro-states);
+  width: var(--dt-size-250);
 }
 
 .doc h2:not(.discrete) .anchor {
@@ -510,7 +510,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * with no icon, same as the plain hover-`§` treatment `h1`/`h6` keep at
  * every breakpoint.
  */
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .doc h2:not(.discrete) .anchor,
   .doc h3:not(.discrete) .anchor,
   .doc h4:not(.discrete) .anchor,
@@ -538,14 +538,14 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc h4:not(.discrete) .anchor:focus-visible,
 .doc h5:not(.discrete) .anchor:hover,
 .doc h5:not(.discrete) .anchor:focus-visible {
-  background-color: var(--ids-color-bg-low);
+  background-color: var(--dt-color-bg-low);
 }
 
 .doc h2:not(.discrete) .anchor:focus-visible,
 .doc h3:not(.discrete) .anchor:focus-visible,
 .doc h4:not(.discrete) .anchor:focus-visible,
 .doc h5:not(.discrete) .anchor:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
   outline-offset: 1px;
 }
 
@@ -558,12 +558,12 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   }
 }
 
-.doc h2:not(.discrete) .anchor .ids-icon,
-.doc h3:not(.discrete) .anchor .ids-icon,
-.doc h4:not(.discrete) .anchor .ids-icon,
-.doc h5:not(.discrete) .anchor .ids-icon {
-  height: var(--ids-size-125);
-  width: var(--ids-size-125);
+.doc h2:not(.discrete) .anchor .dt-icon,
+.doc h3:not(.discrete) .anchor .dt-icon,
+.doc h4:not(.discrete) .anchor .dt-icon,
+.doc h5:not(.discrete) .anchor .dt-icon {
+  height: var(--dt-size-125);
+  width: var(--dt-size-125);
 }
 
 /*
@@ -573,7 +573,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * it. `aria-live="polite"` (09-heading-anchors.ts) is what gives the
  * keyboard path the same feedback the visual toast gives a mouse.
  *
- * Type is `--ids-typo-label-m` (11/16, uppercase) rather than a raw
+ * Type is `--dt-typo-label-m` (11/16, uppercase) rather than a raw
  * `font-size` — the full triplet (font + letter-spacing + text-transform)
  * per the design system's own typography convention, not just the size —
  * and padding is trimmed to `2px 6px` against that smaller line height so
@@ -586,13 +586,13 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   color: var(--color-white);
   cursor: auto;
   display: inline-flex;
-  font: var(--ids-typo-label-m);
+  font: var(--dt-typo-label-m);
   justify-content: center;
-  letter-spacing: var(--ids-typo-label-m-letter-spacing);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
   opacity: 0;
   padding: 2px 6px;
   position: absolute;
-  text-transform: var(--ids-typo-label-m-text-transform);
+  text-transform: var(--dt-typo-label-m-text-transform);
   transition: opacity 0.5s ease 0.5s;
   white-space: nowrap;
 }
@@ -608,7 +608,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc h5:not(.discrete) .copy-toast {
   left: 0;
   top: 100%;
-  margin-top: var(--ids-size-25);
+  margin-top: var(--dt-size-25);
 }
 
 .doc p,
@@ -638,14 +638,14 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 /*
- * Inline code chip (Figma 2610:28934): `code/m` type — same NotoSansMono
+ * Inline code chip (Figma 2610:28934): `code/m` type — same Noto Sans Mono
  * 14/20 weight-350 token the code block itself uses (doc.css's GH-12
  * section) — on the DS's low background, sharp corners (no radius in the
  * design, unlike the previous rounded chip), horizontal padding only
- * (`--ids-size-25`, 4px) since the type's own 20px line-height already
+ * (`--dt-size-25`, 4px) since the type's own 20px line-height already
  * gives the chip its vertical breathing room. `--code-background`/
- * `--code-font-color` (bridge.css) are already `--ids-color-bg-low` /
- * `--ids-color-content-default`, which is `#F7F7F7` on black in the light
+ * `--code-font-color` (bridge.css) are already `--dt-color-bg-low` /
+ * `--dt-color-content-default`, which is `#F7F7F7` on black in the light
  * site theme, exactly the design's fill — and flips with the DS's own
  * light/dark token swap for the dark site theme the same as everything
  * else, no separate override needed here.
@@ -656,10 +656,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   color: var(--code-font-color);
   background: var(--code-background);
   border-radius: 0;
-  font: var(--ids-typo-code-m);
-  letter-spacing: var(--ids-typo-code-m-letter-spacing);
-  text-transform: var(--ids-typo-code-m-text-transform);
-  padding: 0 var(--ids-size-25);
+  font: var(--dt-typo-code-m);
+  letter-spacing: var(--dt-typo-code-m-letter-spacing);
+  text-transform: var(--dt-typo-code-m-text-transform);
+  padding: 0 var(--dt-size-25);
 }
 
 /*
@@ -673,7 +673,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * than the chip rule above (two classes vs. one) wins regardless of source
  * order.
  */
-.doc code.ids-mono {
+.doc code.dt-mono {
   background: none;
   padding: 0;
 }
@@ -806,19 +806,19 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 
 /*
  * GH-14 (A8, Figma 2735:55589 light / 2735:56362 dark) — there is no
- * `.ids-table`: Datagrid is React-driven (per-cell components keyed on
- * `--ids-comp-datagrid-*` and a `.ids-theme-datagrid-*` root class) and
+ * `.dt-table`: Datagrid is React-driven (per-cell components keyed on
+ * `--dt-comp-datagrid-*` and a `.dt-theme-datagrid-*` root class) and
  * cannot be produced from Asciidoctor's own `<table>` markup. Instead this
  * styles Asciidoctor's table onto the same cell tokens Datagrid's own cells
  * use — `.IDS Datagrid / Cells` (Figma component set 2629:29623/2610:24786)
  * — so the result reads as one family without importing the component.
  *
- * Both Figma frames measure identically against `--ids-color-border-*` /
- * `--ids-color-bg-default`: light is `#000`/`#e3e3e3`/`#fff`, dark is
+ * Both Figma frames measure identically against `--dt-color-border-*` /
+ * `--dt-color-bg-default`: light is `#000`/`#e3e3e3`/`#fff`, dark is
  * `#fff`/`#5e5e5e`/`#000` — exactly those tokens in the dark bucket
- * (ids-tokens.css). No `.ids-theme-dark` override needed anywhere below.
+ * (dt-tokens.css). No `.dt-theme-dark` override needed anywhere below.
  *
- * Cell padding is `--ids-size-25` (4px) left and right, matching the
+ * Cell padding is `--dt-size-25` (4px) left and right, matching the
  * Datagrid cell's own "Content" inner frame (`0px 4px`, Figma component
  * `.IDS Datagrid / Cells` — the `EL-db3e06f5`/basic-cell templates both
  * carry it) rather than the outer cell's own zero-left-padding — that
@@ -847,16 +847,16 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  *    regardless of body scale.
  */
 .doc table.tableblock {
-  font: var(--ids-typo-body-m);
-  letter-spacing: var(--ids-typo-body-m-letter-spacing);
-  text-transform: var(--ids-typo-body-m-text-transform);
+  font: var(--dt-typo-body-m);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  text-transform: var(--dt-typo-body-m-text-transform);
   border: 0;
 }
 
 .doc table.tableblock.compact {
-  font: var(--ids-typo-detail-m);
-  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
-  text-transform: var(--ids-typo-detail-m-text-transform);
+  font: var(--dt-typo-detail-m);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  text-transform: var(--dt-typo-detail-m-text-transform);
 }
 
 .doc p.tableblock + p.tableblock {
@@ -894,22 +894,22 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 .doc table.tableblock th,
 .doc table.tableblock td {
-  border: 0 solid var(--ids-color-border-low);
-  border-bottom-width: var(--ids-size-border-default);
-  height: var(--ids-size-250);
-  padding: var(--ids-size-50) var(--ids-size-25);
+  border: 0 solid var(--dt-color-border-low);
+  border-bottom-width: var(--dt-size-border-default);
+  height: var(--dt-size-250);
+  padding: var(--dt-size-50) var(--dt-size-25);
 }
 
 .doc table.tableblock th {
-  font: var(--ids-typo-label-m);
-  letter-spacing: var(--ids-typo-label-m-letter-spacing);
-  text-transform: var(--ids-typo-label-m-text-transform);
-  border-bottom-color: var(--ids-color-border-default);
+  font: var(--dt-typo-label-m);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
+  text-transform: var(--dt-typo-label-m-text-transform);
+  border-bottom-color: var(--dt-color-border-default);
   vertical-align: middle;
 }
 
 .doc table.grid-cols > * > tr > :not(:last-child) {
-  border-right-width: var(--ids-size-border-default);
+  border-right-width: var(--dt-size-border-default);
 }
 
 .doc table.grid-none > * > tr > * {
@@ -920,11 +920,11 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc table.stripes-odd > tbody > tr:nth-of-type(odd),
 .doc table.stripes-even > tbody > tr:nth-of-type(even),
 .doc table.stripes-hover > tbody > tr:hover {
-  background: var(--ids-color-bg-low);
+  background: var(--dt-color-bg-low);
 }
 
 .doc table.tableblock > tfoot {
-  background: var(--ids-color-bg-low);
+  background: var(--dt-color-bg-low);
 }
 
 /*
@@ -1051,10 +1051,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   overscroll-behavior-x: contain;
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .doc table.tableblock th,
   .doc table.tableblock td {
-    min-width: var(--ids-size-500);
+    min-width: var(--dt-size-500);
   }
 }
 
@@ -1085,7 +1085,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 
 /*
  * GH-13 (Figma 2610:28944, "Admonition" component set 2650:33028) — NOT the
- * shipped `.ids-notification`: the design stacks a notification-like label
+ * shipped `.dt-notification`: the design stacks a notification-like label
  * band and a second content band with a 2px gap between them, and overrides
  * the notification's own `min-height`/`padding-inline`. Vendoring
  * notification.css would leave half of it unused and fight the other half —
@@ -1115,32 +1115,32 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
    * this can never exceed the grid column regardless of breakpoint or
    * whether the ToC column is reserved, nor its own container when nested.
    */
-  width: min(calc(var(--content-max-width) + var(--ids-size-500)), var(--doc-inset-cap));
+  width: min(calc(var(--content-max-width) + var(--dt-size-500)), var(--doc-inset-cap));
 }
 
 .doc .admonitionblock.important {
-  --admonition-tint: var(--ids-color-alt-blue-low);
-  --admonition-icon: var(--icon-mask-actions-check-circle-outlined);
+  --admonition-tint: var(--dt-color-alt-blue-low);
+  --admonition-icon: var(--icon-mask-circle-check-big);
 }
 
 .doc .admonitionblock.caution {
-  --admonition-tint: var(--ids-color-alt-red-low);
-  --admonition-icon: var(--icon-mask-alerts-warning-alt-outlined);
+  --admonition-tint: var(--dt-color-alt-red-low);
+  --admonition-icon: var(--icon-mask-octagon-alert);
 }
 
 .doc .admonitionblock.warning {
-  --admonition-tint: var(--ids-color-alt-orange-low);
-  --admonition-icon: var(--icon-mask-alerts-warning-outlined);
+  --admonition-tint: var(--dt-color-alt-orange-low);
+  --admonition-icon: var(--icon-mask-triangle-alert);
 }
 
 .doc .admonitionblock.tip {
-  --admonition-tint: var(--ids-color-alt-teal-low);
-  --admonition-icon: var(--icon-mask-communication-comment-outlined);
+  --admonition-tint: var(--dt-color-alt-teal-low);
+  --admonition-icon: var(--icon-mask-message-circle);
 }
 
 .doc .admonitionblock.note {
-  --admonition-tint: var(--ids-color-alt-purple-low);
-  --admonition-icon: var(--icon-mask-business-sticker-outlined);
+  --admonition-tint: var(--dt-color-alt-purple-low);
+  --admonition-icon: var(--icon-mask-sticky-note);
 }
 
 /*
@@ -1153,7 +1153,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .admonitionblock > table {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-12);
+  gap: var(--dt-size-12);
   width: 100%;
 }
 
@@ -1166,7 +1166,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * Label band: icon + type name, e.g. Figma's `layout_a4f4d6ed` (row, padding
  * 8/12/8/40). Figma's own instance overrides only the padding — `min-height`
  * isn't in that override, so the band still measures the underlying
- * `.ids-notification`'s own 56px (`--ids-size-350`) rather than the ~36px its
+ * `.dt-notification`'s own 56px (`--dt-size-350`) rather than the ~36px its
  * padding and label line-height alone would hug to; `align-items: center`
  * (also the real notification's own, not decorative here) is what centres
  * icon and label in the slack. Verified against a render of the component
@@ -1176,25 +1176,25 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   align-items: center;
   background: var(--admonition-tint);
   display: flex;
-  min-height: var(--ids-size-350);
-  padding: var(--ids-size-50) var(--ids-size-75) var(--ids-size-50) var(--ids-size-250);
+  min-height: var(--dt-size-350);
+  padding: var(--dt-size-50) var(--dt-size-75) var(--dt-size-50) var(--dt-size-250);
   position: relative;
 }
 
 .doc .admonitionblock td.icon i {
   color: var(--doc-font-color);
   display: block;
-  font: var(--ids-typo-label-l);
+  font: var(--dt-typo-label-l);
   font-style: normal;
-  letter-spacing: var(--ids-typo-label-l-letter-spacing);
-  text-transform: var(--ids-typo-label-l-text-transform);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform);
 }
 
 .doc .admonitionblock td.icon i::before {
   background-color: currentColor;
   content: "";
-  height: var(--ids-size-125);
-  left: var(--ids-size-75);
+  height: var(--dt-size-125);
+  left: var(--dt-size-75);
   mask-image: var(--admonition-icon);
   mask-position: center;
   mask-repeat: no-repeat;
@@ -1202,7 +1202,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: var(--ids-size-125);
+  width: var(--dt-size-125);
 }
 
 .doc .admonitionblock td.icon i::after {
@@ -1213,16 +1213,16 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .admonitionblock td.content {
   background: var(--admonition-tint);
   color: var(--doc-font-color);
-  font: var(--ids-typo-body-l);
-  letter-spacing: var(--ids-typo-body-l-letter-spacing);
+  font: var(--dt-typo-body-l);
+  letter-spacing: var(--dt-typo-body-l-letter-spacing);
   overflow-wrap: anywhere;
-  padding: var(--ids-size-125) var(--ids-size-250);
-  text-transform: var(--ids-typo-body-l-text-transform);
+  padding: var(--dt-size-125) var(--dt-size-250);
+  text-transform: var(--dt-typo-body-l-text-transform);
   width: 100%;
 }
 
 .doc .admonitionblock td.content > * + * {
-  margin-top: var(--ids-size-100);
+  margin-top: var(--dt-size-100);
 }
 
 /*
@@ -1249,10 +1249,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 .doc .admonitionblock td.content > .title {
   color: var(--doc-font-color);
-  font: var(--ids-typo-body-l-high);
+  font: var(--dt-typo-body-l-high);
   font-style: normal;
-  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
-  text-transform: var(--ids-typo-body-l-high-text-transform);
+  letter-spacing: var(--dt-typo-body-l-high-letter-spacing);
+  text-transform: var(--dt-typo-body-l-high-text-transform);
 }
 
 /*
@@ -1332,8 +1332,8 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 .doc .imageblock .content {
-  background: var(--ids-color-bg-low);
-  padding: var(--ids-size-250);
+  background: var(--dt-color-bg-low);
+  padding: var(--dt-size-250);
 }
 
 .doc .imageblock img,
@@ -1391,8 +1391,8 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 .doc .videoblock .content {
-  background: var(--ids-color-bg-low);
-  padding: var(--ids-size-250);
+  background: var(--dt-color-bg-low);
+  padding: var(--dt-size-250);
 }
 
 .doc .videoblock iframe,
@@ -1408,10 +1408,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * GH-15 (A9) panel surface — the one visual family every "block on a grey
  * field" construct shares: example blocks/collapsible results (below),
  * the preamble's abstract and sidebars. None of these has a DS component
- * of its own (no `.ids-sidebar` content block, `.ids-example` — see
- * .opencode/skills/iop-ds-components/SKILL.md's decision order, step 4),
- * so every one of them is built from `--ids-color-bg-low` +
- * `--ids-size-250` (40px) padding here instead — nothing in the design
+ * of its own (no `.dt-sidebar` content block, `.dt-example` — see
+ * .opencode/skills/docouture-components/SKILL.md's decision order, step 4),
+ * so every one of them is built from `--dt-color-bg-low` +
+ * `--dt-size-250` (40px) padding here instead — nothing in the design
  * gives any of them a border or a radius, unlike antora-ui-default's own
  * 5px-rule/rounded-corner defaults they replace. `.quoteblock`/
  * `.verseblock` split off this family (design review) — see below.
@@ -1419,14 +1419,14 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 #preamble .abstract blockquote {
   background: var(--abstract-background);
   color: var(--doc-font-color);
-  font: var(--ids-typo-body-l);
-  letter-spacing: var(--ids-typo-body-l-letter-spacing);
-  padding: var(--ids-size-250);
+  font: var(--dt-typo-body-l);
+  letter-spacing: var(--dt-typo-body-l-letter-spacing);
+  padding: var(--dt-size-250);
 }
 
 .doc .sidebarblock {
-  background: var(--ids-color-bg-low);
-  padding: var(--ids-size-250);
+  background: var(--dt-color-bg-low);
+  padding: var(--dt-size-250);
 }
 
 /*
@@ -1434,10 +1434,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * same treatment — is a rule, not a fill: no background, a 4px rule down
  * the left edge only, padding on the left alone (nothing above/below/
  * right) rather than the panel's even 40px on every side.
- * `--ids-color-border-low` (not `--ids-color-bg-low`, the panel fill every
+ * `--dt-color-border-low` (not `--dt-color-bg-low`, the panel fill every
  * other block in this family uses) is the closest DS token to "the same
  * colour, as a border": the full IDS border ramp is only six tokens
- * (`--ids-color-border-{default,low,inverse,states-*}`, `.opencode/skills`
+ * (`--dt-color-border-{default,low,inverse,states-*}`, `.opencode/skills`
  * catalogue), nothing sits at the panel's own `#f7f7f7`, and `border-low`
  * is what the header/footer/section-band/ToC dashed rules already use —
  * also the one that actually reads in dark theme (`#5e5e5e` against
@@ -1446,15 +1446,15 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 .doc .quoteblock,
 .doc .verseblock {
-  border-left: var(--ids-size-25) solid var(--ids-color-border-low);
-  padding: 0 0 0 var(--ids-size-250);
+  border-left: var(--dt-size-25) solid var(--dt-color-border-low);
+  padding: 0 0 0 var(--dt-size-250);
 }
 
 .doc .quoteblock .attribution {
   color: var(--caption-font-color);
-  font: var(--ids-typo-detail-m);
-  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
-  margin-top: var(--ids-size-100);
+  font: var(--dt-typo-detail-m);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  margin-top: var(--dt-size-100);
 }
 
 .doc .quoteblock blockquote {
@@ -1462,8 +1462,8 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 .doc .quoteblock .paragraph {
-  font: var(--ids-typo-body-l);
-  letter-spacing: var(--ids-typo-body-l-letter-spacing);
+  font: var(--dt-typo-body-l);
+  letter-spacing: var(--dt-typo-body-l-letter-spacing);
 }
 
 .doc .quoteblock cite {
@@ -1478,7 +1478,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc ol,
 .doc ul {
   margin: 0;
-  padding: 0 0 0 var(--ids-size-100);
+  padding: 0 0 0 var(--dt-size-100);
 }
 
 .doc ul.checklist,
@@ -1493,7 +1493,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 
 .doc ul.no-bullet,
 .doc ol.unnumbered {
-  padding-left: var(--ids-size-125);
+  padding-left: var(--dt-size-125);
 }
 
 .doc ul.unstyled,
@@ -1575,12 +1575,12 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .ulist .dlist,
 .doc .ulist .olist,
 .doc .ulist .ulist {
-  margin-top: var(--ids-size-50);
+  margin-top: var(--dt-size-50);
 }
 
 .doc .olist li + li,
 .doc .ulist li + li {
-  margin-top: var(--ids-size-50);
+  margin-top: var(--dt-size-50);
 }
 
 .doc .ulist .listingblock,
@@ -1592,7 +1592,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 /*
  * GH-14 follow-up: table/code-block titles move to `label/l` — the
  * Datagrid header cell's own scale, one step up from the `label/m` header
- * row itself — with a fixed `--ids-size-75` (12px) gap to the block that
+ * row itself — with a fixed `--dt-size-75` (12px) gap to the block that
  * follows, replacing the old ad hoc 16px/0.075rem caption style. This is
  * the one shared title rule (doc.css), so every block title moves
  * together, table title included.
@@ -1612,11 +1612,11 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .openblock .title,
 .doc .tableblock-wrap > .title {
   color: var(--caption-font-color);
-  font: var(--ids-typo-label-l);
-  letter-spacing: var(--ids-typo-label-l-letter-spacing);
-  text-transform: var(--ids-typo-label-l-text-transform);
+  font: var(--dt-typo-label-l);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform);
   hyphens: none;
-  padding-bottom: var(--ids-size-75);
+  padding-bottom: var(--dt-size-75);
 }
 
 .doc .tableblock-wrap > .title {
@@ -1640,11 +1640,11 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .imageblock .title,
 .doc .videoblock .title {
   color: var(--caption-font-color);
-  font: var(--ids-typo-detail-m);
-  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
+  font: var(--dt-typo-detail-m);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
   text-align: left;
   hyphens: none;
-  margin-top: var(--ids-size-75);
+  margin-top: var(--dt-size-75);
   padding-bottom: 0;
 }
 
@@ -1672,7 +1672,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * The outer `.title` above this panel is NOT the shared grey `label/l`
  * caption every other block title in this file uses (table/code/open/
  * literal, below) — Figma's "Example title" instance is `label/l` at full
- * `--ids-color-content-default` black, the one deliberate deviation from
+ * `--dt-color-content-default` black, the one deliberate deviation from
  * that shared rule, per design. A list's own title (`.olist`/`.ulist`/
  * `.dlist > .title`) joins it too (follow-up request) — same treatment, a
  * heading FOR the block that follows rather than a caption describing one
@@ -1683,21 +1683,21 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .ulist > .title,
 .doc .dlist > .title {
   color: var(--doc-font-color);
-  font: var(--ids-typo-label-l);
-  letter-spacing: var(--ids-typo-label-l-letter-spacing);
-  text-transform: var(--ids-typo-label-l-text-transform);
+  font: var(--dt-typo-label-l);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
+  text-transform: var(--dt-typo-label-l-text-transform);
   hyphens: none;
-  padding-bottom: var(--ids-size-75);
+  padding-bottom: var(--dt-size-75);
 }
 
 
 .doc .exampleblock > .content {
-  background: var(--ids-color-bg-low);
+  background: var(--dt-color-bg-low);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--ids-size-100);
-  padding: var(--ids-size-250);
+  gap: var(--dt-size-100);
+  padding: var(--dt-size-250);
 }
 
 /*
@@ -1708,7 +1708,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * was stacking its own `margin-top` on top of the gap, doubling the visible
  * space between children (16px gap + 24px margin = 40px, measured). Reset
  * ALL children, not just the first, the same fix `.docouture-steps
- * .ids-timeline-item-content > *` already applies for the same reason
+ * .dt-timeline-item-content > *` already applies for the same reason
  * (steps.css).
  */
 .doc .exampleblock > .content > * {
@@ -1722,15 +1722,15 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 .doc .exampleblock > .content .title {
   color: var(--doc-font-color);
-  font: var(--ids-typo-body-l-high);
-  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
-  text-transform: var(--ids-typo-body-l-high-text-transform);
+  font: var(--dt-typo-body-l-high);
+  letter-spacing: var(--dt-typo-body-l-high-letter-spacing);
+  text-transform: var(--dt-typo-body-l-high-text-transform);
   padding-bottom: 0;
 }
 
 /*
  * GH-15 width budget — the admonition's own (80px past the text measure,
- * `--ids-size-500`, doc.css's GH-13 section above), not the code/table
+ * `--dt-size-500`, doc.css's GH-13 section above), not the code/table
  * family's 50%: Figma's own example panel (963px) against its 707px text
  * column is +256px, closer to the admonition's flat overflow than a
  * percentage growth would give at this measure. Same `--doc-inset-cap`
@@ -1738,7 +1738,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * `.doc > *` (`.doc`'s own header comment).
  */
 .doc .exampleblock {
-  width: min(calc(var(--content-max-width) + var(--ids-size-500)), var(--doc-inset-cap));
+  width: min(calc(var(--content-max-width) + var(--dt-size-500)), var(--doc-inset-cap));
 }
 
 /*
@@ -1751,10 +1751,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 .doc .sidebarblock > .content > .title {
   color: var(--doc-font-color);
-  font: var(--ids-typo-body-l-high);
-  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
-  text-transform: var(--ids-typo-body-l-high-text-transform);
-  margin-bottom: var(--ids-size-50);
+  font: var(--dt-typo-body-l-high);
+  letter-spacing: var(--dt-typo-body-l-high-letter-spacing);
+  text-transform: var(--dt-typo-body-l-high-text-transform);
+  margin-bottom: var(--dt-size-50);
   text-align: left;
 }
 
@@ -1778,9 +1778,9 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  *     via the container's own top padding); the code text gets its own
  *     padding instead. Nothing needs to reserve space for anything else.
  *   - Background follows the SITE theme rather than being fixed black:
- *     `--ids-color-bg-default` (#000) in the light site theme,
- *     `--ids-color-bg-low` (#363636) once `.ids-theme-dark` is active.
- *     Both already resolve through the same widened `.ids-theme-dark`
+ *     `--dt-color-bg-default` (#000) in the light site theme,
+ *     `--dt-color-bg-low` (#363636) once `.dt-theme-dark` is active.
+ *     Both already resolve through the same widened `.dt-theme-dark`
  *     bucket tools/ids/sync.mjs gives this selector (see that file's own
  *     header) — just two different tokens out of it, so still no literal
  *     colour of our own and no separate dark-mode override block needed.
@@ -1806,7 +1806,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  *
  * The action bar's ghost buttons (06-copy-to-clipboard.ts) still invert
  * for free from the same widened dark-theme scope — no separate override
- * needed for `.ids-button--ghost` either.
+ * needed for `.dt-button--ghost` either.
  */
 .doc .listingblock,
 .doc .literalblock {
@@ -1817,15 +1817,15 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .literalblock > .content {
   display: flex;
   flex-direction: column;
-  background: var(--ids-color-bg-default);
-  color: var(--ids-color-content-default);
+  background: var(--dt-color-bg-default);
+  color: var(--dt-color-content-default);
   position: relative;
   width: 100%;
 }
 
-.ids-theme-dark .doc .listingblock > .content,
-.ids-theme-dark .doc .literalblock > .content {
-  background: var(--ids-color-bg-low);
+.dt-theme-dark .doc .listingblock > .content,
+.dt-theme-dark .doc .literalblock > .content {
+  background: var(--dt-color-bg-low);
 }
 
 .doc .listingblock > .content pre,
@@ -1834,11 +1834,11 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   box-shadow: none;
   display: block;
   margin: 0;
-  padding: var(--ids-size-100) var(--ids-size-100) var(--ids-size-150);
+  padding: var(--dt-size-100) var(--dt-size-100) var(--dt-size-150);
   overflow-x: auto;
-  font: var(--ids-typo-code-m);
-  letter-spacing: var(--ids-typo-code-m-letter-spacing);
-  text-transform: var(--ids-typo-code-m-text-transform);
+  font: var(--dt-typo-code-m);
+  letter-spacing: var(--dt-typo-code-m-letter-spacing);
+  text-transform: var(--dt-typo-code-m-text-transform);
 }
 
 /*
@@ -1856,7 +1856,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 /*
  * Action bar — a normal row at the top of `.content` (see the header
  * comment above for why it no longer overlays), height set by the ghost
- * buttons' own `.ids-button` sizing, gap between them from the design
+ * buttons' own `.dt-button` sizing, gap between them from the design
  * (Figma 2610:24218's "Action bar" frame: 8px). `.source-actions` always
  * sits at the row's trailing edge via `margin-left: auto` — not
  * `justify-content: space-between` on the row itself, which only works
@@ -1869,9 +1869,9 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .source-toolbox {
   display: flex;
   align-items: center;
-  gap: var(--ids-size-50);
-  padding: var(--ids-size-50) var(--ids-size-100) 0;
-  color: var(--ids-color-content-low);
+  gap: var(--dt-size-50);
+  padding: var(--dt-size-50) var(--dt-size-100) 0;
+  color: var(--dt-color-content-low);
   font-family: var(--body-font-family);
   font-size: calc(13 / var(--rem-base) * 1rem);
   line-height: 1;
@@ -1889,7 +1889,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 .doc .source-toolbox .source-actions {
   display: flex;
   align-items: center;
-  gap: var(--ids-size-50);
+  gap: var(--dt-size-50);
   margin-left: auto;
 }
 
@@ -1924,7 +1924,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  * Every token span, and the outermost wrapper span that function adds in
  * place of Shiki's own (discarded) `<pre>`, redefines both variables to ITS
  * OWN token's colour in each theme — so one rule switching which of the two
- * `color` reads, on `.ids-theme-dark`, is the entire theme switch. No
+ * `color` reads, on `.dt-theme-dark`, is the entire theme switch. No
  * PostCSS scoping step, unlike hljs's own theme CSS files this replaces
  * (gulp.d/lib/hljs-theme-scope.js, removed) — Shiki ships no CSS at all.
  */
@@ -1932,28 +1932,28 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   color: var(--shiki-light);
 }
 
-.ids-theme-dark .doc pre.highlight code[data-lang] span {
+.dt-theme-dark .doc pre.highlight code[data-lang] span {
   color: var(--shiki-dark);
 }
 
 .doc .dlist dt {
-  font: var(--ids-typo-body-l-high);
-  letter-spacing: var(--ids-typo-body-l-high-letter-spacing);
-  text-transform: var(--ids-typo-body-l-high-text-transform);
+  font: var(--dt-typo-body-l-high);
+  letter-spacing: var(--dt-typo-body-l-high-letter-spacing);
+  text-transform: var(--dt-typo-body-l-high-text-transform);
 }
 
 .doc .dlist dd {
-  margin: 0 0 0 var(--ids-size-150);
+  margin: 0 0 0 var(--dt-size-150);
 }
 
 .doc .dlist dd + dt,
 .doc .dlist dd > p:first-child {
-  margin-top: var(--ids-size-50);
+  margin-top: var(--dt-size-50);
 }
 
 .doc td.hdlist1,
 .doc td.hdlist2 {
-  padding: var(--ids-size-50) 0 0;
+  padding: var(--dt-size-50) 0 0;
   vertical-align: top;
 }
 
@@ -1964,11 +1964,11 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 
 .doc td.hdlist1 {
   font-weight: var(--body-font-weight-bold);
-  padding-right: var(--ids-size-25);
+  padding-right: var(--dt-size-25);
 }
 
 .doc td.hdlist2 {
-  padding-left: var(--ids-size-25);
+  padding-left: var(--dt-size-25);
 }
 
 .doc .colist {
@@ -1992,7 +1992,7 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   border-radius: 100%;
   display: inline-block;
   font-family: var(--body-font-family);
-  font-size: var(--ids-typo-font-size-13);
+  font-size: var(--dt-typo-font-size-13);
   font-style: normal;
   line-height: 1.2;
   text-align: center;
@@ -2033,10 +2033,10 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   background: var(--code-background);
   border-radius: 0;
   color: var(--code-font-color);
-  font: var(--ids-typo-label-m);
-  letter-spacing: var(--ids-typo-label-m-letter-spacing);
-  text-transform: var(--ids-typo-label-m-text-transform);
-  padding: 0 var(--ids-size-25);
+  font: var(--dt-typo-label-m);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
+  text-transform: var(--dt-typo-label-m-text-transform);
+  padding: 0 var(--dt-size-25);
   white-space: nowrap; /* effectively ignores hyphens setting */
 }
 
@@ -2051,21 +2051,21 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
   border-radius: 0;
   color: var(--code-font-color);
   display: inline-block;
-  font: var(--ids-typo-code-m);
-  letter-spacing: var(--ids-typo-code-m-letter-spacing);
-  text-transform: var(--ids-typo-code-m-text-transform);
-  padding: 0 var(--ids-size-25);
+  font: var(--dt-typo-code-m);
+  letter-spacing: var(--dt-typo-code-m-letter-spacing);
+  text-transform: var(--dt-typo-code-m-text-transform);
+  padding: 0 var(--dt-size-25);
   vertical-align: text-bottom;
   white-space: nowrap; /* effectively ignores hyphens setting */
 }
 
 .doc kbd,
 .doc .keyseq {
-  line-height: var(--ids-typo-line-height-20);
+  line-height: var(--dt-typo-line-height-20);
 }
 
 .doc .keyseq kbd {
-  margin: 0 var(--ids-size-12);
+  margin: 0 var(--dt-size-12);
 }
 
 .doc .keyseq kbd:first-child {
@@ -2108,9 +2108,9 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
  */
 #footnotes {
   color: var(--caption-font-color);
-  font: var(--ids-typo-detail-m);
-  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
-  margin: var(--doc-space-block) calc(-1 * var(--ids-size-50)) 0;
+  font: var(--dt-typo-detail-m);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  margin: var(--doc-space-block) calc(-1 * var(--dt-size-50)) 0;
 }
 
 .doc td.tableblock > .content #footnotes {
@@ -2123,16 +2123,16 @@ html.has-toc.is-toc-closed .doc h2:not(.discrete) {
 }
 
 #footnotes .footnote {
-  margin: var(--ids-size-50) 0 0 var(--ids-size-100);
+  margin: var(--dt-size-50) 0 0 var(--dt-size-100);
 }
 
 #footnotes .footnote + .footnote {
-  margin-top: var(--ids-size-25);
+  margin-top: var(--dt-size-25);
 }
 
 #footnotes .footnote > a:first-of-type {
   display: inline-block;
-  margin-left: calc(-2 * var(--ids-size-100));
+  margin-left: calc(-2 * var(--dt-size-100));
   text-align: right;
-  width: var(--ids-size-125);
+  width: var(--dt-size-125);
 }

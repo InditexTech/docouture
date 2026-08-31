@@ -24,51 +24,13 @@ comment. Covered by the same BSD-3-Clause licence as highlight.js itself:
 
 --------------------------------------------------------------------------------
 
-This bundle embeds a small amount of CSS derived from the IOP Design System, which
-is NOT covered by the Mozilla Public License and is NOT redistributable outside
-Inditex:
+Icon artwork (src/img/icons.svg, src/css/icon-masks.css, and the individual
+SVGs `just icons-build` cuts them from) comes from Lucide, a public npm
+package:
 
-  IOP Design System (Sewing)
-  https://github.com/inditex/lib-sewingiopdsweb
-  Copyright (C) Industria de Diseno Textil, S.A. (Inditex)
-  Licensed under the INDITEX license — proprietary, internal use only
+  Lucide
+  https://lucide.dev
+  Copyright (c) 2022 Lucide Contributors, and Feather Icons contributors
+  (Copyright (c) 2013-2023 Cole Bemis)
+  Licensed under the ISC License (see node_modules/lucide-static/LICENSE)
 
-  @inditex/sewingiopdsweb-styles              design tokens, theming, breakpoints
-  @inditex/sewingiopdsweb-react-components    per-component stylesheets (see src/css/ids-components.yml)
-
-Neither package is a dependency of this workspace and neither is resolved from
-Artifactory at build time — see code/tools/ids/README.md. What's embedded is a
-small, generated derivative committed under src/css/ (ids-tokens.css,
-ids-breakpoints.css, ids-components.css, and the `.ids-icon` sizing rule in
-icons.css), mechanically extracted by code/tools/ids/sync.mjs from those
-packages installed in a sidecar outside this workspace, and re-generated only
-when a developer runs `just ids-sync` by hand. Which component stylesheets are
-vendored into ids-components.css is declared in src/css/ids-components.yml.
-`ids.lock.json` records the design system version and source hashes the
-current derivative was generated from.
-
-Sites built with this bundle are for internal distribution only, on account of
-that derivative. Publishing such a site, or the bundle itself, to a public
-location requires removing it first — see
-.opencode/skills/iop-ds-components/SKILL.md and the `iop-ds-reference` skill.
-
-The same restriction covers artwork. `src/img/ids-icons.svg` is a sprite cut
-from the design system's published icon sprites at
-https://amgassets.inditex.com/amigaweb/icons/ and is committed to this
-repository and shipped inside the bundle. Those icons are INDITEX-licensed, not
-MPL, and carry their notice in the sprite's own `<desc>`. Which icons are
-vendored is declared in `src/img/icons.yml`; what they were cut from is recorded
-in `icons.lock.json`; `scripts/build-sprite.mjs` regenerates the sprite. The
-full catalogue those sprites come from is mirrored into a gitignored `.icons/`
-directory and is deliberately not committed.
-
-`src/css/icon-masks.css` is a second, generated derivative of the same
-INDITEX-licensed sprites: a subset of the icons above, named in
-`src/img/icons.yml`'s `masks:` list, re-cut as `mask-image`-ready data URIs for
-markup Asciidoctor generates itself with no room for an `<svg><use>`
-(admonitions — see doc.css and GH-13). Same source, same licence, same
-regeneration command.
-
-The typefaces referenced by those stylesheets (Helvetica Now Text SW10, Noto
-Sans Mono) are loaded at runtime from https://amgassets.inditex.com and are not
-embedded in this bundle.

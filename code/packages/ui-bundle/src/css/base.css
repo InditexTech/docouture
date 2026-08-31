@@ -21,7 +21,7 @@ html {
   scroll-padding-top: var(--anchor-scroll-margin);
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   html {
     font-size: var(--body-font-size--desktop);
   }

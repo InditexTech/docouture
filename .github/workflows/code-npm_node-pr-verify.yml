@@ -167,10 +167,9 @@ jobs:
           echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
           cp code/.tool-versions "$HOME/.tool-versions"
 
-      # code/.npmrc pins the default registry to npmjs. The IOP Design System
-      # (the only dependency that was ever on a different registry) is not
-      # installed in this workspace — see code/tools/ids/README.md — so this
-      # install needs no credential and never contacts Artifactory.
+      # code/.npmrc pins the default registry to npmjs. Nothing in this
+      # workspace is on a different registry, so this install needs no
+      # credential and never contacts a private registry.
       - name: Install dependencies
         working-directory: code
         run: pnpm install --frozen-lockfile

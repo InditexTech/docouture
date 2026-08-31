@@ -99,17 +99,15 @@ Order matters; the list is built in `build.js`.
 1. `postcss-import` — inlines the `@import` graph rooted at `site.css`.
 2. `track-imported-stylesheet-mtimes` (local) — rolls the newest mtime of any imported
    file onto the entry file, so the preview watch rebuilds when a partial stylesheet changes.
-3. `postcss-mixins` — expands the IDS typography mixins (`@mixin ids-body-m;`). The
-   `@define-mixin` rules are loaded by path from `@inditex/sewingiopdsweb-styles/mixins/index.css`
-   because they are never imported by a stylesheet.
-4. `@inditex/sewingiopdsweb-styles/postcss/custom-media.cjs` — prepends the design system's
-   `@custom-media` breakpoint declarations to every stylesheet.
-5. `postcss-custom-media` — resolves them, so rules can write `@media (--ids-breakpoints-m)`.
-6. `postcss-url` — rewrites `~…font…/files/*.{ttf,woff,woff2}` URLs, copying the matched
+3. `dt-custom-media` (local, `gulp.d/lib/dt-custom-media.js`) — prepends this
+   bundle's own `@custom-media` breakpoint declarations (`dt-breakpoints.css`)
+   to every stylesheet.
+4. `postcss-custom-media` — resolves them, so rules can write `@media (--dt-breakpoints-m)`.
+5. `postcss-url` — rewrites `~…font…/files/*.{ttf,woff,woff2}` URLs, copying the matched
    font out of `node_modules` into `font/` and pointing at `../font/<basename>`.
-7. `postcss-calc` — **preview only**; cssnano already applies it on release builds.
-8. `autoprefixer`.
-9. **release only**: `cssnano` (`preset: 'default'`) then `pseudo-element-fixer`, a local
+6. `postcss-calc` — **preview only**; cssnano already applies it on release builds.
+7. `autoprefixer`.
+8. **release only**: `cssnano` (`preset: 'default'`) then `pseudo-element-fixer`, a local
    plugin that normalises single-colon `:before` / `:after` back to `::` after minification.
 
 The plugin list uses PostCSS 8 conventions. Upstream targeted PostCSS 7, where a plugin

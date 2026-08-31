@@ -51,7 +51,7 @@ where a full site build does not.
 
 ## Writing one
 
-A block macro, emitting DS markup:
+A block macro, emitting component markup:
 
 ```js
 // lib/card-grid.js
@@ -61,7 +61,7 @@ function cardGridBlock () {
   this.named('cards')
   this.onContext('open')
   this.process((parent, reader, attrs) => {
-    // build DS markup, then:
+    // build the component's markup, then:
     return this.createBlock(parent, 'pass', html, attrs)
   })
 }
@@ -80,14 +80,14 @@ Both the named export and `module.exports.register` are needed: Antora calls
 
 Rules:
 
-- Emit the DS BEM classes exactly (see `catalogue.md`). No new class names.
-- Import the DS stylesheet in `src/css/site.css`; the extension ships **no CSS**.
+- Emit the existing component's BEM classes exactly (see `catalogue.md`). No new class names.
+- The component's CSS already lives in `dt-components.css`; the extension ships **no CSS** of its own.
 - Escape or convert user content properly — build children with `createBlock` /
   `parseContent` rather than concatenating strings, so nested AsciiDoc still works.
 - Degrade without JavaScript. Tabs render as sequential sections, accordions as
   `<details>`. A docs page must be readable and printable with JS off.
 - Set ARIA (`role="tablist"`, `aria-selected`, `aria-controls`, `aria-expanded`) —
-  DS stylesheets key their state off these attributes, not off classes.
+  component stylesheets key their state off these attributes, not off classes.
 - Never emit inline `style` attributes. Every value is a token.
 
 ## Behaviour

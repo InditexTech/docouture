@@ -98,14 +98,14 @@
     heading.textContent = 'Recent searches'
 
     var list = document.createElement('ul')
-    list.className = 'ids-list'
+    list.className = 'dt-list'
     list.setAttribute('aria-labelledby', heading.id)
 
     terms.forEach(function (term) {
-      // The row itself IS `.ids-list-item` (an `<li>`, not a wrapping
+      // The row itself IS `.dt-list-item` (an `<li>`, not a wrapping
       // element around a separate one) — see this file's own CSS
       // (search-dialog.css) for why: the remove button lives INSIDE it, as
-      // `.ids-list-item__content-end` (the real DS `ListItem`'s own slot for
+      // `.dt-list-item__content-end` (the real DS `ListItem`'s own slot for
       // a trailing action), so the hover/selected background covers the
       // whole row rather than stopping short of the button.
       //
@@ -115,34 +115,34 @@
       // `element="li"` by default, `onClick` wired by the component rather
       // than relying on native button/link semantics.
       var item = document.createElement('li')
-      item.className = 'ids-list-item ids-list-item--clickable search-recents__row'
+      item.className = 'dt-list-item dt-list-item--clickable search-recents__row'
       item.addEventListener('click', function () {
         onSelect(term)
       })
 
       var iconSlot = document.createElement('span')
-      iconSlot.className = 'ids-list-item__icon-start'
+      iconSlot.className = 'dt-list-item__icon-start'
       iconSlot.setAttribute('aria-hidden', 'true')
-      iconSlot.appendChild(icon('time', 'history-outlined'))
+      iconSlot.appendChild(icon('rotate-ccw-clock'))
 
       var text = document.createElement('span')
-      text.className = 'ids-list-item__text'
+      text.className = 'dt-list-item__text'
       var label = document.createElement('span')
-      label.className = 'ids-list-item__label'
+      label.className = 'dt-list-item__label'
       label.textContent = term
       text.appendChild(label)
 
       var contentEnd = document.createElement('span')
-      contentEnd.className = 'ids-list-item__content-end'
+      contentEnd.className = 'dt-list-item__content-end'
       var removeButton = document.createElement('button')
       removeButton.type = 'button'
-      removeButton.className = 'ids-button ids-button--ghost ids-button--icon-only'
+      removeButton.className = 'dt-button dt-button--ghost dt-button--icon-only'
       removeButton.setAttribute('aria-label', 'Remove “' + term + '” from recent searches')
       var removeContent = document.createElement('span')
-      removeContent.className = 'ids-button__content'
+      removeContent.className = 'dt-button__content'
       var removeIconSlot = document.createElement('span')
-      removeIconSlot.className = 'ids-button__icon ids-button__icon-icon'
-      removeIconSlot.appendChild(icon('actions', 'close-small-outlined'))
+      removeIconSlot.className = 'dt-button__icon dt-button__icon-icon'
+      removeIconSlot.appendChild(icon('x'))
       removeContent.appendChild(removeIconSlot)
       removeButton.appendChild(removeContent)
       removeButton.addEventListener('click', function (e) {
@@ -161,14 +161,14 @@
     return rowEls
   }
 
-  /** `<svg><use></use></svg>` against the vendored sprite — same shape 06-copy-to-clipboard.ts and 09-heading-anchors.ts build by hand for the same reason: no `{{icon}}` Handlebars helper at runtime. `.ids-icon` is what actually sizes it; without that class it renders at the `<use>` element's own intrinsic (viewport-filling) size. */
-  function icon (group: string, name: string): SVGSVGElement {
+  /** `<svg><use></use></svg>` against the vendored sprite — same shape 06-copy-to-clipboard.ts and 09-heading-anchors.ts build by hand for the same reason: no `{{icon}}` Handlebars helper at runtime. `.dt-icon` is what actually sizes it; without that class it renders at the `<use>` element's own intrinsic (viewport-filling) size. */
+  function icon (name: string): SVGSVGElement {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('class', 'ids-icon')
+    svg.setAttribute('class', 'dt-icon')
     svg.setAttribute('aria-hidden', 'true')
     svg.setAttribute('focusable', 'false')
     var use = document.createElementNS('http://www.w3.org/2000/svg', 'use')
-    use.setAttribute('href', uiRootPath + '/img/ids-icons.svg#sw-icons-' + group + '-' + name)
+    use.setAttribute('href', uiRootPath + '/img/icons.svg#icon-' + name)
     svg.appendChild(use)
     return svg
   }

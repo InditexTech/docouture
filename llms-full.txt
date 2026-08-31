@@ -85,7 +85,7 @@ If what needs fixing is a page under `docs/` (this site, not docouture itself), 
 
 ## License
 
-Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which remains MPL-2.0 under its own LICENSE/NOTICE.
+Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which mixes MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each file’s own SPDX header for which applies to it.
 
 ---
 
@@ -131,7 +131,7 @@ Yes — `npx skills@latest add InditexTech/docouture --all` installs a set of ag
 
 10. Is docouture open source?
 
-Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0; the UI bundle’s own fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default) remains MPL-2.0, per its own LICENSE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are all original or openly licensed, with nothing embedded that restricts publishing a site built with it.
+Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0; the UI bundle’s own fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default) mixes MPL-2.0 (files that are a Modification of an upstream file) with Apache-2.0 (files with no upstream counterpart), per its own LICENSE and NOTICE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are all original or openly licensed, with nothing embedded that restricts publishing a site built with it.
 
 ---
 
@@ -2598,6 +2598,10 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Fixed
 
+- [#186](https://github.com/InditexTech/docouture/pull/186) [skills] --all leaks contributor-only skills from .opencode/skills into public installs
+- [#184](https://github.com/InditexTech/docouture/pull/184) [skills] --all leaks contributor-only skills from .agents/skills into public installs
+- [#182](https://github.com/InditexTech/docouture/pull/182) [tooling] Fix open CodeQL cache-poisoning alerts in publish-release workflow
+- [#181](https://github.com/InditexTech/docouture/pull/181) [tooling] Upgrade Antora to 3.2.0 to resolve open js-yaml Dependabot alerts
 - [#167](https://github.com/InditexTech/docouture/pull/167) [tooling] Published v1.0.0 docs show "No tagged release yet" on the Changelog page
 - [#163](https://github.com/InditexTech/docouture/pull/163) [ui-bundle] Content page titles rendered uppercase via hero.hbs, ignoring source case
 - [#158](https://github.com/InditexTech/docouture/pull/158) [tooling] Fix commit to main from docuture-* workflows that need it

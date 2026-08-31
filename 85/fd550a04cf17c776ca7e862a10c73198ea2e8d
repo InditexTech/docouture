@@ -1,0 +1,27 @@
+code/packages/antora-extensions/LICENSE
+  s_00fa180281b76b::t_d8cecc9c20ed75 1-373
+code/packages/antora-extensions/lib/kroki-include-line-filters.js
+  s_00fa180281b76b::t_c96b16073cc386 1-268
+code/packages/antora-extensions/lib/kroki-include-line-filters.spec.js
+  s_00fa180281b76b::t_448f0045beb16c 1-147
+code/packages/antora-extensions/lib/kroki-prewarm.spec.js
+  s_00fa180281b76b::t_36bf93ea38bb2a 9-10,32-47,55-60,70-71,73,202-236,270-423
+code/pnpm-lock.yaml
+  s_00fa180281b76b::t_20f26eed05a7b0 56-58,80-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "85fd550a04cf17c776ca7e862a10c73198ea2e8d",
+  "prompts": {},
+  "sessions": {
+    "s_00fa180281b76b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa78fa9dfffeMguKEN5MqgaKVh",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

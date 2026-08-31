@@ -1,6 +1,8 @@
 ---
 name: asciidoc
 description: "How AsciiDoc is authored and extended in docouture — the content tree Antora expects, resource IDs and xrefs, the attributes the playbooks set, and the Asciidoctor.js extension API as Antora actually loads it. USE WHEN writing or editing an .adoc page, adding a page to the nav, fixing a broken xref or include, writing a custom block/macro/preprocessor, or wiring an extension into a playbook. EXAMPLES: 'add a page', 'my xref doesn't resolve', 'the build fails on a warning', 'add a custom admonition', 'register a block macro', 'my extension is being skipped', 'why is {attr} not substituted'."
+metadata:
+  internal: true
 ---
 
 # AsciiDoc in docouture

@@ -1,6 +1,8 @@
 ---
 name: skills-authoring
 description: "How this repo's shipped docouture-* agent skills (skills/docouture-*, published to InditexTech/docouture and installed elsewhere via npx skills add) stay in sync with the authoring-guides source they're built from (code/authoring-guides/) and with the real implementation they describe (ui-bundle layouts/partials, asciidoc-extensions block registrations, this repo's and example's own real pages). Internal, contributor-facing only — never shipped. USE WHEN code/authoring-guides changes, a file under skills/docouture-* is edited, a skill is added to or removed from the set, ui-bundle or asciidoc-extensions gains or changes a layout/attribute/block, or before self-installing an updated skill set via npx skills add. EXAMPLES: 'I changed the home page authoring guide, what else needs updating', 'I added a new attribute to home-hero.hbs, does a skill need updating', 'add a new custom AsciiDoc block', 'ship an update to docouture-authoring-guides', 'add a new skill to the set we publish', 'why did the authoring guide say something that isn't true anymore'."
+metadata:
+  internal: true
 ---
 
 # Keeping the shipped skills honest

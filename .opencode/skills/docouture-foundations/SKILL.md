@@ -1,6 +1,8 @@
 ---
 name: docouture-foundations
 description: "Design tokens, theming, breakpoints, typography and motion for the docouture Antora UI bundle. USE WHEN writing or editing any CSS in code/packages/ui-bundle, adding a colour/spacing/font value, implementing dark mode or responsive behaviour, or wiring PostCSS. EXAMPLES: 'what colour should this border be', 'add dark mode', 'make this responsive', 'why is my custom property missing in the build', 'set the heading font size'."
+metadata:
+  internal: true
 ---
 
 # Design tokens — Foundations

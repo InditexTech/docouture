@@ -1,6 +1,8 @@
 ---
 name: ui-bundle-anatomy
 description: "How the docouture Antora UI bundle package (code/packages/ui-bundle) is structured and built — directory layout, the gulp/esbuild/PostCSS pipeline, the Handlebars template tree, the helper compilation contract, the TypeScript config split and the preview harness. USE WHEN adding or editing a partial, layout, helper, browser script or stylesheet in that package, changing anything under gulp.d, debugging a build/preview failure, or working out where a change belongs. EXAMPLES: 'add a new partial', 'my helper isn't registered', 'why is the font corrupted in the zip', 'add a language to syntax highlighting', 'the preview doesn't rebuild', 'where does site.js come from'."
+metadata:
+  internal: true
 ---
 
 # UI bundle — anatomy

@@ -1,6 +1,8 @@
 ---
 name: docouture-components
 description: "Build UI in the docouture Antora bundle out of this project's own components — reusing dt-components.css's shipped BEM CSS instead of writing new styles. USE WHEN editing Handlebars layouts or partials in code/packages/ui-bundle, styling site chrome (header, nav, toolbar, breadcrumbs, pagination, toc, footer), rendering AsciiDoc content as a component, or writing an Antora/Asciidoctor extension. EXAMPLES: 'style the nav like the rest of the bundle', 'add tabs to the docs', 'make admonitions look consistent', 'add a card grid block macro'."
+metadata:
+  internal: true
 ---
 
 # Components in the Antora bundle

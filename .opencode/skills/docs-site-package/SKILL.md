@@ -1,6 +1,8 @@
 ---
 name: docs-site-package
 description: "How a documentation site package in docouture (code/packages/example) is put together — the playbook, the component descriptor, the docs/ tree, the UI bundle link, and the Nx/pnpm wiring that makes `just dev` and `just build-site` work. USE WHEN creating a new site package, editing antora-playbook.yml or docs/antora.yml, changing a site's title, start page, output dir or content source, pointing a site at a different UI bundle, setting up multi-version docs (release tags, a stable/prerelease branch pair, the version dropdown, `urls.latest_version_segment`), or debugging a site that builds with zero pages, a missing start page or a stale UI. EXAMPLES: 'add a new docs site', 'the site builds but has no pages', 'start page not found', 'my UI change doesn't show up in the site', 'point this site at a published bundle', 'why is the content path repo-root relative', 'just dev says port in use', 'set up docs versioning', 'add a stable vs prerelease toggle', 'why does the version dropdown only show one entry'."
+metadata:
+  internal: true
 ---
 
 # Documentation site packages

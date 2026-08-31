@@ -27,8 +27,6 @@ path = [
     "code/packages/cli/**",
     "code/packages/tooling/**",
     "code/packages/publish-gh-pages/**",
-    "code/tools/fumadocs-migrate/**",
-    "code/tools/ids/**",
     "code/scripts/**",
     "code/authoring-guides/**",
     "code/README.md",

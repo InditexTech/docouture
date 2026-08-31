@@ -63,6 +63,7 @@ at all).
 
 ### Fixed
 
+- [#194](https://github.com/InditexTech/docouture/pull/194) [cli] docouture-release-preview.yml's check-changes-in-paths job missing contents/pull-requests read permissions
 - [#186](https://github.com/InditexTech/docouture/pull/186) [skills] --all leaks contributor-only skills from .opencode/skills into public installs
 - [#184](https://github.com/InditexTech/docouture/pull/184) [skills] --all leaks contributor-only skills from .agents/skills into public installs
 - [#182](https://github.com/InditexTech/docouture/pull/182) [tooling] Fix open CodeQL cache-poisoning alerts in publish-release workflow

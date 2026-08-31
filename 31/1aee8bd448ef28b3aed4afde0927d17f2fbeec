@@ -1,0 +1,16 @@
+code/packages/cli/src/lib/dev-server.spec.ts
+  h_c93d154c7c7074 36,38-41,45,48-51,80-93
+code/packages/cli/src/lib/dev-server.ts
+  h_c93d154c7c7074 338-353,356
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "311aee8bd448ef28b3aed4afde0927d17f2fbeec",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -14,11 +14,11 @@
 // live render both ways: computed `rx`/`fill` on the resulting `<rect>`
 // match this file's own values, with zero page CSS involved at all.
 //
-// COLORS ARE HARDCODED HEX, NOT `--ids-*` TOKENS — deliberately. This runs
+// COLORS ARE HARDCODED HEX, NOT `--dt-*` TOKENS — deliberately. This runs
 // server-side, at prewarm/render time, against a plain HTTP POST body; there
 // is no CSS custom-property resolution available there (no page, no
 // cascade, nothing). The values below are IOP DS's own light-theme
-// `--ids-color-{bg,border,content}-default` (ids-tokens.css) copied
+// `--dt-color-{bg,border,content}-default` (dt-tokens.css) copied
 // verbatim — same exception the iop-ds-foundations skill already carves out
 // for `--hljs-*`'s own syntax palette, for the same reason: a value that
 // cannot be expressed as a token in the context it's actually used. DARK

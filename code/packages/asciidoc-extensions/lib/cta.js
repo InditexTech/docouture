@@ -22,15 +22,15 @@ const warn = require('./warn')
 // `[.secondary]` paragraphs carrying a real `xref:`/`link:`, resolved by the
 // time this file ever sees them.
 //
-// It also drops the issue's inverse surface (`--ids-color-bg-inverse` +
-// `--ids-color-content-inverse`) and its eyebrow chip, neither of which the
+// It also drops the issue's inverse surface (`--dt-color-bg-inverse` +
+// `--dt-color-content-inverse`) and its eyebrow chip, neither of which the
 // Fumadocs reference has. An inverse band would need a real fix for its
 // buttons too — the DS ships no inverse button variant, so a plain
-// `.ids-button--primary` resolves BLACK text on a BLACK band in light theme
-// (`--ids-comp-button-primary-default`). Fixing that means widening
+// `.dt-button--primary` resolves BLACK text on a BLACK band in light theme
+// (`--dt-comp-button-primary-default`). Fixing that means widening
 // `tools/ids/sync.mjs`'s THEME_SCOPES the way the dark code-block surface
 // already does (see that file's own comment) — deferred; this block instead
-// sits on `--ids-color-bg-low`, which needs none of that: DS buttons already
+// sits on `--dt-color-bg-low`, which needs none of that: DS buttons already
 // read correctly against it in both themes, no scope-inversion, no new
 // token, no rule at all separating the band from the page.
 //
@@ -205,16 +205,16 @@ function renderAction(converted, variant, role, parent) {
   const label = match[2] || ''
   const github = GITHUB_RX.test(href)
   return (
-    '<a class="ids-button ids-button--' +
+    '<a class="dt-button dt-button--' +
     variant +
     ' docouture-cta__action' +
-    (github ? ' ids-button--icon-and-label ids-button--icon-icon' : '') +
+    (github ? ' dt-button--icon-and-label dt-button--icon-icon' : '') +
     '"' +
     attr('href', href) +
     '>' +
-    '<span class="ids-button__content">' +
+    '<span class="dt-button__content">' +
     (github
-      ? '<span class="ids-button__icon ids-button__icon-icon docouture-cta__action-icon ' +
+      ? '<span class="dt-button__icon dt-button__icon-icon docouture-cta__action-icon ' +
         'docouture-cta__action-icon--github" aria-hidden="true"></span>'
       : '') +
     label +
@@ -274,10 +274,10 @@ function finish(parent, wrapper, attrs, self) {
   bodies.forEach((body) => parts.push(body.getContent()))
 
   return chainAll(parts, ([lightHtml, darkHtml, primaryHtml, secondaryHtml, ...bodyHtmls]) => {
-    const titleHtml = title ? '<h2 class="docouture-cta__title discrete ids-text--title-l">' + title + '</h2>' : ''
+    const titleHtml = title ? '<h2 class="docouture-cta__title discrete dt-text--title-l">' + title + '</h2>' : ''
     const leadHtml = bodyHtmls
       .filter(Boolean)
-      .map((text) => '<p class="docouture-cta__lead ids-text--body-l">' + text + '</p>')
+      .map((text) => '<p class="docouture-cta__lead dt-text--body-l">' + text + '</p>')
       .join('')
     const markHtml = renderMark(lightHtml, darkHtml)
     const actionsHtml =

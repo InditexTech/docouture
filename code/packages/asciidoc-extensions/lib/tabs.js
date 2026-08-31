@@ -10,7 +10,7 @@ const warn = require('./warn')
 // found: `main/quickstart.adoc`'s package-manager command blocks
 // (`code/tools/fumadocs-migrate`'s README, "Degraded" section). Both frames
 // are the same component with only the ink swapped (`#000000` / `#FFFFFF`,
-// which is `--ids-color-content-default` in each theme) — dark costs
+// which is `--dt-color-content-default` in each theme) — dark costs
 // tabs.css nothing, same reasoning as card-grid.js's own header.
 //
 // Not to be confused with `feature-tabs.js` (GH-22, the landing's "Key
@@ -166,8 +166,8 @@ function renderTab(block, index, groupId, seenLabels, parent) {
   return chainAll(bodies, (parts) => {
     const tab =
       '<li class="docouture-tabs__item" role="presentation">' +
-      '<button type="button" class="ids-tabs-item docouture-tabs__tab' +
-      (selected ? ' ids-tabs-item--selected' : '') +
+      '<button type="button" class="dt-tabs-item docouture-tabs__tab' +
+      (selected ? ' dt-tabs-item--selected' : '') +
       '"' +
       attr('id', tabId) +
       attr('role', 'tab') +
@@ -176,7 +176,7 @@ function renderTab(block, index, groupId, seenLabels, parent) {
       attr('tabindex', selected ? '0' : '-1') +
       attr('data-tab-value', label) +
       '>' +
-      '<span class="ids-tabs-item__label">' +
+      '<span class="dt-tabs-item__label">' +
       escapeHtml(label) +
       '</span>' +
       '</button>' +

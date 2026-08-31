@@ -228,15 +228,15 @@ function renderCta(converted, parent) {
   const label = match[2] || ''
   const external = EXTERNAL_RX.test(href)
   return (
-    '<a class="ids-button ids-button--ghost docouture-feature-tabs__cta' +
-    (external ? ' ids-button--icon-and-label ids-button--icon-action' : '') +
+    '<a class="dt-button dt-button--ghost docouture-feature-tabs__cta' +
+    (external ? ' dt-button--icon-and-label dt-button--icon-action' : '') +
     '"' +
     attr('href', href) +
     '>' +
-    '<span class="ids-button__content">' +
+    '<span class="dt-button__content">' +
     label +
     (external
-      ? '<span class="ids-button__icon ids-button__icon-action docouture-feature-tabs__cta-icon ' +
+      ? '<span class="dt-button__icon dt-button__icon-action docouture-feature-tabs__cta-icon ' +
         'dt-icon-mask--external-link" aria-hidden="true"></span>'
       : '') +
     '</span>' +
@@ -291,8 +291,8 @@ function renderFeature(block, index, parent) {
   return chainAll(parts, ([lightHtml, darkHtml, ctaHtml, ...bodyHtmls]) => {
     const tab =
       '<li class="docouture-feature-tabs__item">' +
-      '<a class="ids-tabs-item docouture-feature-tabs__tab' +
-      (index === 0 ? ' ids-tabs-item--selected' : '') +
+      '<a class="dt-tabs-item docouture-feature-tabs__tab' +
+      (index === 0 ? ' dt-tabs-item--selected' : '') +
       '"' +
       attr('id', tabId) +
       attr('href', '#' + panelId) +

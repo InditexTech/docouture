@@ -14,14 +14,14 @@ const MACRO_RX = /\bmono:()\[((?:\\\]|[^\]])*?)\]/
 /**
  * `mono:[className]` →
  *
- *   <code class="ids-mono">className</code>
+ *   <code class="dt-mono">className</code>
  *
  * Plain monospaced text with none of the GH-12 inline-code chip
  * (background, padding) — for a property/table cell whose ENTIRE content
  * is a name or token (Figma 2735:55589's `className` column) where the
  * chip would otherwise apply to literally every cell and read as noise.
  * `` `backtick code` `` keeps its chip; this is the deliberate opt-out.
- * The `.ids-mono` class is doc.css's own — nothing in the DS itself models
+ * The `.dt-mono` class is doc.css's own — nothing in the DS itself models
  * "code with no surrounding treatment", so this one rule is ours to own,
  * not a component skipped.
  */
@@ -35,7 +35,7 @@ module.exports = function registerMonoMacro(registry) {
       // Already specialcharacters-substituted by the time macros run
       // (verified, same as label-macro.js) — safe to place directly.
       const text = firstPositional(attrs) || ''
-      return self.createInline(parent, 'quoted', '<code class="ids-mono">' + text + '</code>')
+      return self.createInline(parent, 'quoted', '<code class="dt-mono">' + text + '</code>')
     })
   })
 }

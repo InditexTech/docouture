@@ -14,7 +14,7 @@ module.exports = {
   // Shiki's "css variables" dual-theme mode (`defaultColor: false` — see
   // shiki-syntax-highlighter.js) emits `--shiki-light`/`--shiki-dark` custom
   // properties instead of literal colours; ui-bundle's doc.css switches
-  // between them on `.ids-theme-dark`, the same toggle the rest of the site
+  // between them on `.dt-theme-dark`, the same toggle the rest of the site
   // themes off. Named themes, not hljs's theme FILES (GH-12) — @shikijs/themes
   // ships them as data, no CSS import/PostCSS scoping step needed at all.
   //

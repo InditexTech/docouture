@@ -4,7 +4,7 @@ const firstPositional = require('./first-positional')
 const warn = require('./warn')
 
 // IDS Label variants shipped in `label.css` (@inditex/sewingiopdsweb-react-
-// components), already vendored into ui-bundle's ids-components.css — see
+// components), already vendored into ui-bundle's dt-components.css — see
 // .opencode/skills/iop-ds-components. Anything outside this list is an
 // authoring mistake, not a themeable extension point, so it fails the build
 // (see the logger call below) instead of silently rendering unstyled.
@@ -30,13 +30,13 @@ const MACRO_RX = /\blabel:([a-z]*)\[((?:\\\]|[^\]])*?)\]/
  * `label:red[Blocked]` / `label:[String]` (colour omitted → grey, the
  * table default) →
  *
- *   <span class="ids-label ids-label--grey">
- *     <span class="ids-label__content">String</span>
+ *   <span class="dt-label dt-label--grey">
+ *     <span class="dt-label__content">String</span>
  *   </span>
  *
  * Exactly the DS's own BEM markup (label/label.css) — every colour, every
  * theme, comes free from the component already vendored into
- * ids-components.css. This macro emits markup only, no styling of its own.
+ * dt-components.css. This macro emits markup only, no styling of its own.
  */
 module.exports = function registerLabelMacro(registry) {
   registry.inlineMacro('label', function () {
@@ -62,7 +62,7 @@ module.exports = function registerLabelMacro(registry) {
       // attributes are substituted, a BLOCK's are not.
       const text = firstPositional(attrs) || ''
       const html =
-        '<span class="ids-label ids-label--' + variant + '"><span class="ids-label__content">' + text + '</span></span>'
+        '<span class="dt-label dt-label--' + variant + '"><span class="dt-label__content">' + text + '</span></span>'
       return self.createInline(parent, 'quoted', html)
     })
   })

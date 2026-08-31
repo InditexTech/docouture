@@ -27,6 +27,7 @@ path = [
     "code/packages/cli/**",
     "code/packages/tooling/**",
     "code/packages/publish-gh-pages/**",
+    "code/packages/asciidoc-extensions/**",
     "code/scripts/**",
     "code/authoring-guides/**",
     "code/README.md",
@@ -58,12 +59,8 @@ SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
 # ui-bundle: literal fork of antora-ui-default (MPL-2.0 upstream).
-# asciidoc-extensions: emits markup/class names copied from the IOP Design
-# System, licensed MPL-2.0 to match ui-bundle's internal-distribution
-# posture — see each package's own LICENSE and NOTICE.
 path = [
     "code/packages/ui-bundle/**",
-    "code/packages/asciidoc-extensions/**",
 ]
 SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "MPL-2.0"

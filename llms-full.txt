@@ -20,7 +20,7 @@ Antora aggregates [AsciiDoc](https://asciidoc.org) content from one or more git 
 
 ## The UI: a themed Antora UI bundle
 
-`@inditextech/docouture-ui-bundle` is a themed fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default): Handlebars layouts and partials, CSS built on the IOP Design System’s tokens, and browser scripts for theme switching, search, tabs, accordions and the on-page table of contents. Antora reads it as a plain zip (`ui.bundle.url` in the playbook) — nothing about it is docouture-specific from Antora’s point of view. See [UI Bundle](../reference-ui-bundle/).
+`@inditextech/docouture-ui-bundle` is a themed fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default): Handlebars layouts and partials, CSS built on this project’s own design tokens, and browser scripts for theme switching, search, tabs, accordions and the on-page table of contents. Antora reads it as a plain zip (`ui.bundle.url` in the playbook) — nothing about it is docouture-specific from Antora’s point of view. See [UI Bundle](../reference-ui-bundle/).
 
 ## The extensions: two different seams
 
@@ -95,7 +95,7 @@ Source: /prerelease/main/faq/
 
 1. What is docouture?
 
-A documentation platform: a themed [Antora](https://antora.org) UI bundle (IOP Design System), a set of Antora/https://asciidoctor.org[Asciidoctor] extensions, and the `docouture` CLI that scaffolds, serves, builds and publishes a site on top of them. See [About](../).
+A documentation platform: a themed [Antora](https://antora.org) UI bundle, a set of Antora/https://asciidoctor.org[Asciidoctor] extensions, and the `docouture` CLI that scaffolds, serves, builds and publishes a site on top of them. See [About](../).
 
 2. Do I need to know Antora or AsciiDoc already?
 
@@ -131,7 +131,7 @@ Yes — `npx skills@latest add InditexTech/docouture --all` installs a set of ag
 
 10. Is docouture open source?
 
-The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0 (the UI bundle’s own fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default) remains MPL-2.0, per its own LICENSE). The UI bundle is themed with Inditex’s proprietary IOP Design System, though, which is **not** open source — a site built with this UI bundle is internal-only until that changes, regardless of the code’s own license.
+Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0; the UI bundle’s own fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default) remains MPL-2.0, per its own LICENSE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are all original or openly licensed, with nothing embedded that restricts publishing a site built with it.
 
 ---
 
@@ -210,16 +210,16 @@ nav_modules:
   - module: main
     title: Documentation
     description: The core product story.
-    icon: design/grid-outlined
+    icon: grid-3x3
   - module: <name>
     title: <Title>
     description: One-line description of this module.
-    icon: <group>/<name>
+    icon: <name>
 ```
 
 Once a second entry exists, the UI’s module switcher appears automatically — with just one module, there’s nothing to switch between.
 
-`icon` is `<group>/<name>` from the UI bundle’s own vendored sprite, not a free-form name — see [Icon gallery](../guides-icon-gallery/) for every icon this site’s UI bundle ships.
+`icon` is a bare icon name from the UI bundle’s own vendored sprite (Lucide’s own naming, not a free-form name) — see [Icon gallery](../guides-icon-gallery/) for every icon this site’s UI bundle ships.
 
 ---
 
@@ -345,100 +345,100 @@ How a scaffolded site’s shape grows over time: new modules, new pages within t
 
 Source: /prerelease/main/guides-icon-gallery/
 
-Every icon this site’s UI bundle actually ships, so you never have to guess a `group/name` string and find out only after a card renders with a blank header slot.
+Every icon this site’s UI bundle actually ships, so you never have to guess a name and find out only after a card renders with a blank header slot.
 
-The set below is fixed by whichever `@inditextech/docouture-ui-bundle` version this site depends on — a normal site cannot add to it. The icons come from Inditex’s proprietary internal design-system mirror; the fetch/build tooling that vendors them (`src/img/icons.yml`, `just icons-fetch`/`icons-build`) only runs inside the `docouture` monorepo itself, against an internal asset host. Need one that isn’t here? Open a request against the `docouture` repository — there’s no way to add it from a site that just depends on the published bundle.
+The set below is fixed by whichever `@inditextech/docouture-ui-bundle` version this site depends on — a normal site cannot add to it at request time, since the sprite is baked into the published package. The icons themselves come from [Lucide](https://lucide.dev) (ISC licensed, public npm) — a name here is the same name `lucide.dev/icons/<name>` uses, so browsing that catalogue is a legitimate way to find a candidate before checking whether it’s already vendored below. Need one that isn’t? Open a request against the `docouture` repository — vendoring a new Lucide icon is one line in `packages/ui-bundle/src/img/icons.yml` plus a UI bundle release, but a site consuming the published package can’t do that itself.
 
 ## Two places an icon reference is read, two different rules
 
 - `nav_modules[].icon` (see [Adding a module](../guides-adding-a-module/)) is resolved by a Handlebars helper at **page-render** time, with full access to the icon sprite — any icon in this gallery works there, both sections below.
-- `[card,icon="group/name"]` (see [Custom AsciiDoc components](../reference-custom-asciidoc-components/)) is resolved by the Asciidoctor extension itself at **build** time, which has no access to the sprite at all — it can only emit a pre-generated CSS class. Only the icons in the first section below have one. Reference one from the second section instead, and nothing errors — the card just renders with an empty icon slot, silently.
+- `[card,icon="name"]` (see [Custom AsciiDoc components](../reference-custom-asciidoc-components/)) is resolved by the Asciidoctor extension itself at **build** time, which has no access to the sprite at all — it can only emit a pre-generated CSS class. Only the icons in the first section below have one. Reference one from the second section instead, and nothing errors — the card just renders with an empty icon slot, silently.
 
 ## Usable in `[card,icon=]`
 
-Every icon here has a generated CSS mask, so it’s guaranteed to actually render in a card’s header. Copy the `group/name` string as-is.
+Every icon here has a generated CSS mask, so it’s guaranteed to actually render in a card’s header. Copy the name as-is.
 
 Copy button · admonition
 
-[actions/check-circle-outlined](../reference-custom-asciidoc-components/)
+[circle-check-big](../reference-custom-asciidoc-components/)
 
 The check that flashes after a successful code-block copy, and the `IMPORTANT` admonition’s icon.
 
 Card icon example
 
-[actions/code-block-outlined](../reference-custom-asciidoc-components/)
+[code](../reference-custom-asciidoc-components/)
 
 Vendored specifically as a `[card,icon=]` example.
 
 Admonition
 
-[alerts/warning-outlined](../reference-custom-asciidoc-components/)
+[triangle-alert](../reference-custom-asciidoc-components/)
 
 The `WARNING` admonition’s icon.
 
 Admonition
 
-[alerts/warning-alt-outlined](../reference-custom-asciidoc-components/)
+[octagon-alert](../reference-custom-asciidoc-components/)
 
 The `CAUTION` admonition’s icon.
 
 Accordion · nav switcher
 
-[arrows/chevron-down-outlined](../reference-custom-asciidoc-components/)
+[chevron-down](../reference-custom-asciidoc-components/)
 
 The disclosure marker on a `[%collapsible]` item, and the nav-switcher’s own chevron.
 
 Card icon example
 
-[business/file-outlined](../reference-custom-asciidoc-components/)
+[file](../reference-custom-asciidoc-components/)
 
 Vendored specifically as a `[card,icon=]` example.
 
 Admonition
 
-[business/sticker-outlined](../reference-custom-asciidoc-components/)
+[sticky-note](../reference-custom-asciidoc-components/)
 
 The `NOTE` admonition’s icon.
 
 Card icon example
 
-[business/store-outlined](../reference-custom-asciidoc-components/)
+[store](../reference-custom-asciidoc-components/)
 
 Vendored specifically as a `[card,icon=]` example.
 
 Admonition
 
-[communication/comment-outlined](../reference-custom-asciidoc-components/)
+[message-circle](../reference-custom-asciidoc-components/)
 
 The `TIP` admonition’s icon.
 
 Feature tabs · hero
 
-[connectivity/link-external-outlined](../reference-custom-asciidoc-components/)
+[external-link](../reference-custom-asciidoc-components/)
 
 Auto-appended to a `[feature-tabs]` slide’s `[.cta]` link, and to a hero action button, whenever the target isn’t a resolvable internal page.
 
 Card icon example
 
-[design/grid-outlined](../reference-custom-asciidoc-components/)
+[grid-3x3](../reference-custom-asciidoc-components/)
 
 The icon on this very site’s own Architecture quicklink card, and on `main’s `nav_modules` entry — proof the same string works in both places.
 
 Card icon example
 
-[others/server-outlined](../reference-custom-asciidoc-components/)
+[server](../reference-custom-asciidoc-components/)
 
 Vendored specifically as a `[card,icon=]` example.
 
 Card icon example
 
-[others/fire-outlined](../reference-custom-asciidoc-components/)
+[flame](../reference-custom-asciidoc-components/)
 
 Vendored specifically as a `[card,icon=]` example.
 
 Card icon example
 
-[shapes/forms-outlined](../reference-custom-asciidoc-components/)
+[shapes](../reference-custom-asciidoc-components/)
 
 Vendored specifically as a `[card,icon=]` example.
 
@@ -448,28 +448,28 @@ These exist in the sprite and work fine in `nav_modules[].icon`, but have no CSS
 
 | Reference | Where it’s actually used |
 | --- | --- |
-| `accessibility/moon-outlined` | Dark-mode icon on the light/dark theme toggle. |
-| `actions/add-outlined` | Vendored; no current template use in this bundle version. |
-| `actions/back-outlined` | Vendored; no current template use in this bundle version. |
-| `actions/close-large-outlined` | Side-menu drawer’s close button (mobile breakpoint). |
-| `actions/close-small-outlined` | A recent-search entry’s remove button. |
-| `actions/copy-outlined` | A code block’s copy-to-clipboard button, idle state. |
-| `actions/full-screen-enter-outlined` | A code block’s "view full screen" button. |
-| `actions/full-screen-exit-outlined` | The same button, swapped in once full screen is active. |
-| `actions/search-outlined` | The header toolbar’s search trigger, and the search dialog itself. |
-| `arrows/arrow-left-outlined` | Pagination’s "previous page" link. |
-| `arrows/arrow-right-outlined` | Pagination’s "next page" link. |
-| `arrows/chevron-up-outlined` | Vendored; no current template use in this bundle version. |
-| `connectivity/cloud-outlined` | A `nav_modules[].icon` example (a "Store"-style module). |
-| `connectivity/link-outlined` | A section heading’s anchor / copy-link button. |
-| `connectivity/wifi-outlined` | A `nav_modules[].icon` example (a "Websockets"-style module). |
-| `controls/play-circle-outlined` | Vendored; no current template use in this bundle version. |
-| `design/menu-tab-outlined` | The side-menu’s open/close toggle. |
-| `design/sidebar-outlined` | The "on this page" table-of-contents toggle. |
-| `design/tool-outlined` | A `nav_modules[].icon` example (a "React Helper"-style module). |
-| `others/home-outlined` | Vendored; no current template use in this bundle version. |
-| `time/history-outlined` | The "recent searches" list heading. |
-| `weather/sunny-outlined` | Light-mode icon on the light/dark theme toggle. |
+| `moon` | Dark-mode icon on the light/dark theme toggle. |
+| `plus` | Vendored; no current template use in this bundle version. |
+| `arrow-left` | Vendored; no current template use in this bundle version. |
+| `x` | Side-menu drawer’s close button (mobile breakpoint). |
+| `x` | A recent-search entry’s remove button. |
+| `copy` | A code block’s copy-to-clipboard button, idle state. |
+| `maximize` | A code block’s "view full screen" button. |
+| `minimize` | The same button, swapped in once full screen is active. |
+| `search` | The header toolbar’s search trigger, and the search dialog itself. |
+| `arrow-left` | Pagination’s "previous page" link. |
+| `arrow-right` | Pagination’s "next page" link. |
+| `chevron-up` | Vendored; no current template use in this bundle version. |
+| `cloud` | A `nav_modules[].icon` example (a "Store"-style module). |
+| `link` | A section heading’s anchor / copy-link button. |
+| `wifi` | A `nav_modules[].icon` example (a "Websockets"-style module). |
+| `circle-play` | Vendored; no current template use in this bundle version. |
+| `menu` | The side-menu’s open/close toggle. |
+| `panel-left` | The "on this page" table-of-contents toggle. |
+| `wrench` | A `nav_modules[].icon` example (a "React Helper"-style module). |
+| `house` | Vendored; no current template use in this bundle version. |
+| `rotate-ccw-clock` | The "recent searches" list heading. |
+| `sun` | Light-mode icon on the light/dark theme toggle. |
 
 See [Adding a module](../guides-adding-a-module/) for `nav_modules[].icon` syntax and [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for `[card,icon=]` syntax.
 
@@ -538,7 +538,7 @@ What each attribute changes:
 - `type=` — `no-image` (default, text-only), `image-landscape`, `image-square`, or `image-portrait`. An unknown value warns and falls back to `no-image`.
 - `columns=` — space-separated `breakpoint:count` tokens (bare `count` = the base/ mobile column count); breakpoints are `s`, `m`, `l` only, max 4 columns per breakpoint. Defaults to `"1 s:2 m:3"` if omitted.
 - `width=` — `content` (default, matches the page’s text measure) or `container` (full page width — what this site’s own Get started section uses).
-- Per-card `subheader=` and `icon=` share one header row and can be combined — they are not alternatives to each other, despite how the two examples in [Custom AsciiDoc components](../reference-custom-asciidoc-components/) read side by side. `icon=` only accepts a `group/name` string with a working CSS mask — see [Icon gallery](../guides-icon-gallery/) for which ones actually render.
+- Per-card `subheader=` and `icon=` share one header row and can be combined — they are not alternatives to each other, despite how the two examples in [Custom AsciiDoc components](../reference-custom-asciidoc-components/) read side by side. `icon=` only accepts a bare icon name with a working CSS mask — see [Icon gallery](../guides-icon-gallery/) for which ones actually render.
 - Per-card `labels=` is a comma-separated list rendered as small grey chips, separate from `subheader=`.
 
 Adding, removing or reordering a card is just adding, removing or reordering a `[card]` block inside the `====`; there’s no fixed count (4 is this template’s starting point, not a limit).
@@ -884,7 +884,7 @@ Taking a site from a local build to a published, versioned one: the mode chosen 
 
 Source: /prerelease/main/
 
-docouture is a documentation platform: an [Antora](https://antora.org) content pipeline, a UI bundle themed with Inditex’s IOP Design System, and the `docouture` CLI that ties them together — scaffolding, serving, building and publishing a site without hand-wiring an Antora playbook from scratch.
+docouture is a documentation platform: an [Antora](https://antora.org) content pipeline, a UI bundle with its own design tokens, and the `docouture` CLI that ties them together — scaffolding, serving, building and publishing a site without hand-wiring an Antora playbook from scratch.
 
 It ships three things a documentation site actually needs:
 
@@ -894,7 +894,7 @@ It ships three things a documentation site actually needs:
 
 ## Who it’s for
 
-Mainly InditexTech teams documenting an InditexTech Open Source project — this site you’re reading is itself one, scaffolded the same way [Quickstart](quickstart/) describes. Nothing about the CLI or the Antora pipeline underneath enforces that audience, but the themed UI bundle depends on Inditex’s proprietary IOP Design System (see [the FAQ](faq/)), which is what actually keeps a site built with it internal to InditexTech for now.
+Mainly InditexTech teams documenting an InditexTech Open Source project — this site you’re reading is itself one, scaffolded the same way [Quickstart](quickstart/) describes. Nothing about the CLI, the Antora pipeline or the UI bundle underneath restricts that audience — see [the FAQ](faq/) for the full licence breakdown.
 
 ## What it isn’t
 
@@ -1109,7 +1109,7 @@ nav_modules:
   - module: main
     title: Documentation
     description: One-line description.
-    icon: design/grid-outlined
+    icon: grid-3x3
 ```
 
 | Key | Effect |
@@ -1117,7 +1117,7 @@ nav_modules:
 | `module` | Which module (a directory under `modules/`) this entry describes. |
 | `title` | Label shown in the module switcher. |
 | `description` | One-line description shown alongside the title in the switcher. |
-| `icon` | `<group>/<name>` from the UI bundle’s own vendored sprite, not a free-form name. |
+| `icon` | A bare icon name from the UI bundle’s own vendored sprite (Lucide’s own naming, e.g. `grid-3x3`), not a free-form name. |
 
 A **list**, not a map keyed by module — deliberately. Antora’s content aggregator runs the whole descriptor through `camelCaseKeys`, which recurses into nested objects and rewrites their **keys**; a map keyed by a hyphenated module slug (`store-standalone`) would arrive renamed (`storeStandalone`) and match nothing.
 
@@ -1986,7 +1986,7 @@ Scaffold, build, publish — the smallest path to a working result.
 .xref:main:guides-adding-a-page.adoc[Adding a page]
 Create a file, add it to nav.adoc, done.
 
-[card,icon="design/grid-outlined"]
+[card,icon="grid-3x3"]
 .xref:main:architecture.adoc[Architecture]
 This one carries a header icon — `icon=` and `subheader=` share one header row and
 combine fine on the same card, they aren't alternatives to each other.
@@ -2007,7 +2007,7 @@ Create a file, add it to nav.adoc, done.
 
 This one carries a header icon — `icon=` and `subheader=` share one header row and combine fine on the same card, they aren’t alternatives to each other.
 
-`icon=` takes a `group/name` string, and only renders if that icon has a generated CSS mask — see [Icon gallery](../guides-icon-gallery/) for the full, working set. A per-card `labels=` attribute (comma-separated) renders a separate row of small grey chips, independent of `subheader=`.
+`icon=` takes a bare icon name (Lucide’s own, e.g. `store`), and only renders if that icon has a generated CSS mask — see [Icon gallery](../guides-icon-gallery/) for the full, working set. A per-card `labels=` attribute (comma-separated) renders a separate row of small grey chips, independent of `subheader=`.
 
 With images, a fixed square aspect, four columns, let out to the container’s full width — the same shape the landing’s own quicklinks use (`ROOT:card-placeholder.png` reused across modules via a cross-module image resource ID):
 
@@ -2185,7 +2185,7 @@ This feature is **enabled by default** in this starter (see `antora-playbook.yml
 
 ### Styling
 
-[Mermaid](https://mermaid.js.org) diagrams are themed to match the IOP Design System automatically — square corners, black-on-white (light mode; inverted for dark), body typography — via a `%%{init: {…​}}%%` directive this extension prepends to the diagram’s own source before it ever reaches Kroki, not via CSS. Write your own `%%{init…​}%%` as the diagram’s first line to opt out and take full control of Mermaid’s own theming instead. Every other diagram type’s font is still normalized via CSS (safe — a tool’s typeface choice carries no meaning); [BPMN](https://www.bpmn.org)'s two-tone palette is still remapped via CSS too (its [bpmn-js](https://bpmn.io) renderer has no source-level theming hook this package uses yet, unlike Mermaid’s). BPMN’s own rounded task-box corners could not be un-rounded by any means found — bpmn-js hardcodes that radius; this is a real, currently-unfixed limitation, not an oversight.
+[Mermaid](https://mermaid.js.org) diagrams are themed to match this site automatically — square corners, black-on-white (light mode; inverted for dark), body typography — via a `%%{init: {…​}}%%` directive this extension prepends to the diagram’s own source before it ever reaches Kroki, not via CSS. Write your own `%%{init…​}%%` as the diagram’s first line to opt out and take full control of Mermaid’s own theming instead. Every other diagram type’s font is still normalized via CSS (safe — a tool’s typeface choice carries no meaning); [BPMN](https://www.bpmn.org)'s two-tone palette is still remapped via CSS too (its [bpmn-js](https://bpmn.io) renderer has no source-level theming hook this package uses yet, unlike Mermaid’s). BPMN’s own rounded task-box corners could not be un-rounded by any means found — bpmn-js hardcodes that radius; this is a real, currently-unfixed limitation, not an oversight.
 
 ### PNG output
 
@@ -2327,7 +2327,7 @@ Build-time and content capabilities that ship with every scaffolded site — as 
 
 ### Diagrams — Kroki
 
-`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and more render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get IOP Design System-aligned theming baked in server-side. `format=png` renders a transparent raster image instead of inline SVG for types that support it. Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
+`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and more render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side. `format=png` renders a transparent raster image instead of inline SVG for types that support it. Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
 
 ### Syntax highlighting — Shiki
 

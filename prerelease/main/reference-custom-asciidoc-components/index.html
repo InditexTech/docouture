@@ -14,12 +14,12 @@
        */
       (function () {
         var stored
-        try { stored = localStorage.getItem('ids-theme') } catch (e) {}
+        try { stored = localStorage.getItem('dt-theme') } catch (e) {}
         var theme = stored === 'light' || stored === 'dark'
           ? stored
           : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
         var root = document.documentElement
-        root.classList.add('ids-theme-' + theme, 'ids-scale-medium')
+        root.classList.add('dt-theme-' + theme, 'dt-scale-medium')
         root.style.colorScheme = theme
       })()
     </script>
@@ -70,78 +70,78 @@
     <link rel="prev" href="../reference-asciidoc-basics/">
     <link rel="next" href="../reference-integrations/">
     <meta name="generator" content="Antora 3.1.15">
-    <link rel="preconnect" href="https://amgassets.inditex.com" crossorigin>
-    <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/zara-helvetica-now/zara-helvetica-now-sw10.css">
-    <link rel="stylesheet" href="https://amgassets.inditex.com/amigaweb/typography/noto-sans-mono/noto-sans-mono.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <link rel="icon" href="../../../_/favicon.ico">
   </head>
   <body class="article">
 <header class="header-toolbar">
-  <div class="ids-grid-layout ids-grid-layout--with-margin header-toolbar__grid">
-    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__left">
-      <button class="ids-button ids-button--ghost ids-button--icon-only side-menu-toggle" type="button" aria-controls="side-menu" hidden>
-        <span class="ids-button__content">
-          <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-design-menu-tab-outlined"></use></svg></span>
+  <div class="dt-grid-layout dt-grid-layout--with-margin header-toolbar__grid">
+    <div class="dt-grid-layout__item dt-grid-layout__item--span-6 dt-grid-layout__item--span-xs-3 header-toolbar__left">
+      <button class="dt-button dt-button--ghost dt-button--icon-only side-menu-toggle" type="button" aria-controls="side-menu" hidden>
+        <span class="dt-button__content">
+          <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-menu"></use></svg></span>
         </span>
       </button>
       <a class="header-toolbar__brand" href="../../">
         <img class="header-toolbar__logo header-toolbar__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="header-toolbar__logo header-toolbar__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
-        <span class="header-toolbar__product-name ids-text ids-text--label-l-high">docouture</span>
+        <span class="header-toolbar__product-name dt-text dt-text--label-l-high">docouture</span>
       </a>
     </div>
-    <div class="ids-grid-layout__item ids-grid-layout__item--span-6 ids-grid-layout__item--span-xs-3 header-toolbar__actions">
-      <button type="button" class="ids-button ids-button--ghost header-toolbar__search-trigger">
-        <span class="ids-button__content">
-          <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-search-outlined"></use></svg></span>
-          <span class="ids-text ids-text--label-l header-toolbar__search-label">Search</span>
+    <div class="dt-grid-layout__item dt-grid-layout__item--span-6 dt-grid-layout__item--span-xs-3 header-toolbar__actions">
+      <button type="button" class="dt-button dt-button--ghost header-toolbar__search-trigger">
+        <span class="dt-button__content">
+          <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-search"></use></svg></span>
+          <span class="dt-text dt-text--label-l header-toolbar__search-label">Search</span>
           <kbd class="header-toolbar__search-shortcut" aria-hidden="true">⌘K</kbd>
         </span>
       </button>
 <div class="page-versions">
-  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
-    <span class="ids-tag__label">prerelease</span>
+  <span class="dt-tag dt-tag--solid dt-tag--selected dt-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
+    <span class="dt-tag__label">prerelease</span>
   </span>
 </div>
-<a class="ids-button ids-button--ghost ids-button--icon-only header-toolbar__repo" href="https://github.com/InditexTech/docouture" target="_blank" rel="noopener" aria-label="Repository">
-  <span class="ids-button__content">
-    <span class="ids-button__icon ids-button__icon-icon header-toolbar__repo-icon" aria-hidden="true"></span>
+<a class="dt-button dt-button--ghost dt-button--icon-only header-toolbar__repo" href="https://github.com/InditexTech/docouture" target="_blank" rel="noopener" aria-label="Repository">
+  <span class="dt-button__content">
+    <span class="dt-button__icon dt-button__icon-icon header-toolbar__repo-icon" aria-hidden="true"></span>
   </span>
 </a>
-<button class="ids-button ids-button--ghost ids-button--icon-only theme-toggle" type="button" hidden>
-  <span class="ids-button__content">
-    <span class="ids-button__icon ids-button__icon-icon theme-toggle-icon theme-toggle-icon--light" aria-hidden="true"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-weather-sunny-outlined"></use></svg></span>
-    <span class="ids-button__icon ids-button__icon-icon theme-toggle-icon theme-toggle-icon--dark" aria-hidden="true"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-accessibility-moon-outlined"></use></svg></span>
+<button class="dt-button dt-button--ghost dt-button--icon-only theme-toggle" type="button" hidden>
+  <span class="dt-button__content">
+    <span class="dt-button__icon dt-button__icon-icon theme-toggle-icon theme-toggle-icon--light" aria-hidden="true"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-sun"></use></svg></span>
+    <span class="dt-button__icon dt-button__icon-icon theme-toggle-icon theme-toggle-icon--dark" aria-hidden="true"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-moon"></use></svg></span>
   </span>
 </button>
     </div>
   </div>
 </header>
 <dialog id="search-dialog" class="search-dialog" aria-label="Search" data-search-index="ROOT-prerelease.json">
-  <div class="ids-overlay ids-overlay--visible search-dialog__overlay">
-    <div class="ids-overlay__content"></div>
-    <div class="ids-modal ids-modal--small search-dialog__panel">
-      <div class="ids-modal__container search-dialog__container">
-        <div class="ids-search-field-minimal ids-search-field-minimal--full-width search-dialog__field">
-          <span class="ids-search-field-minimal__icon-start" aria-hidden="true"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-search-outlined"></use></svg></span>
-          <div class="ids-search-field-minimal__input-wrapper">
-            <div class="ids-search-field-minimal__input-container">
-              <input type="search" class="ids-search-field-minimal__input" placeholder="Search the docs" aria-label="Search the docs"
+  <div class="dt-overlay dt-overlay--visible search-dialog__overlay">
+    <div class="dt-overlay__content"></div>
+    <div class="dt-modal dt-modal--small search-dialog__panel">
+      <div class="dt-modal__container search-dialog__container">
+        <div class="dt-search-field-minimal dt-search-field-minimal--full-width search-dialog__field">
+          <span class="dt-search-field-minimal__icon-start" aria-hidden="true"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-search"></use></svg></span>
+          <div class="dt-search-field-minimal__input-wrapper">
+            <div class="dt-search-field-minimal__input-container">
+              <input type="search" class="dt-search-field-minimal__input" placeholder="Search the docs" aria-label="Search the docs"
                 role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list"
                 aria-controls="search-dialog-listbox" disabled>
             </div>
           </div>
-          <button type="button" class="ids-button ids-button--ghost ids-button--icon-only search-dialog__close" aria-label="Close search" disabled>
-            <span class="ids-button__content">
-              <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-close-large-outlined"></use></svg></span>
+          <button type="button" class="dt-button dt-button--ghost dt-button--icon-only search-dialog__close" aria-label="Close search" disabled>
+            <span class="dt-button__content">
+              <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-x"></use></svg></span>
             </span>
           </button>
         </div>
-        <div id="search-dialog-listbox" class="ids-modal__content ids-modal__content--scrollable search-dialog__results" role="listbox" aria-label="Search results"></div>
+        <div id="search-dialog-listbox" class="dt-modal__content dt-modal__content--scrollable search-dialog__results" role="listbox" aria-label="Search results"></div>
         <div class="search-dialog__status" aria-live="polite"></div>
-        <div class="ids-modal__footer ids-modal__footer--horizontal search-dialog__footer">
-          <span class="ids-modal__footer-left ids-text ids-text--detail-m search-dialog__hints">
+        <div class="dt-modal__footer dt-modal__footer--horizontal search-dialog__footer">
+          <span class="dt-modal__footer-left dt-text dt-text--detail-m search-dialog__hints">
             <kbd>&uarr;&darr;</kbd> navigate &middot; <kbd>&crarr;</kbd> select &middot; <kbd>esc</kbd> close
           </span>
         </div>
@@ -149,10 +149,10 @@
     </div>
   </div>
 </dialog>
-<div class="ids-floating-button-wrapper ids-floating-button-wrapper--viewport ids-floating-button-wrapper--end search-fab">
-  <button type="button" class="ids-button ids-button--ghost ids-button--icon-only ids-floating-button search-fab__trigger" aria-label="Search" aria-haspopup="dialog" aria-controls="search-dialog">
-    <span class="ids-button__content">
-      <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-search-outlined"></use></svg></span>
+<div class="dt-floating-button-wrapper dt-floating-button-wrapper--viewport dt-floating-button-wrapper--end search-fab">
+  <button type="button" class="dt-button dt-button--ghost dt-button--icon-only dt-floating-button search-fab__trigger" aria-label="Search" aria-haspopup="dialog" aria-controls="search-dialog">
+    <span class="dt-button__content">
+      <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-search"></use></svg></span>
     </span>
   </button>
 </div>
@@ -162,136 +162,136 @@
     <div class="side-menu__header-start">
       <img class="side-menu__header-logo side-menu__header-logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
       <img class="side-menu__header-logo side-menu__header-logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
-      <span class="side-menu__header-title ids-text ids-text--title-s">docouture</span>
+      <span class="side-menu__header-title dt-text dt-text--title-s">docouture</span>
     </div>
-    <button class="side-menu__close" type="button" aria-label="Close navigation"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-actions-close-large-outlined"></use></svg></button>
+    <button class="side-menu__close" type="button" aria-label="Close navigation"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-x"></use></svg></button>
   </div>
 <div class="side-menu__brand">
   <a class="side-menu__brand-link" href="../../">
     <img class="side-menu__brand-logo side-menu__brand-logo--light" src="../../../_/product-logo.png" width="40" height="40" alt="">
     <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="../../../_/product-logo-dark.png" width="40" height="40" alt="">
-    <span class="side-menu__brand-title ids-text ids-text--title-m">docouture</span>
+    <span class="side-menu__brand-title dt-text dt-text--title-m">docouture</span>
   </a>
 </div>
   <nav class="side-menu__nav" aria-label="Site navigation">
-<ul class="ids-list side-menu__list" data-depth="0">
+<ul class="dt-list side-menu__list" data-depth="0">
   <li class="side-menu__item side-menu__item--label">
     <div class="side-menu__row">
-      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+      <span class="dt-list-item side-menu__link--label dt-list-item--tree--level-0">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Overview</span></span>
       </span>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">About</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">About</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../architecture/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Architecture</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Architecture</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../structure/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Structure</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Structure</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../glossary/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Glossary</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Glossary</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--label">
     <div class="side-menu__row">
-      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Getting started</span></span>
+      <span class="dt-list-item side-menu__link--label dt-list-item--tree--level-0">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Getting started</span></span>
       </span>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../prerequisites/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Prerequisites</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Prerequisites</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../quickstart/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Quickstart</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Quickstart</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--label">
     <div class="side-menu__row">
-      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Guides</span></span>
+      <span class="dt-list-item side-menu__link--label dt-list-item--tree--level-0">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Guides</span></span>
       </span>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../guides-overview/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Overview</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--branch">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../guides-content-structure/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Content &amp; structure</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Content &amp; structure</span></span>
       </a>
       <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Content &amp;amp; structure">
-        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+        <svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg>
       </button>
     </div>
-<ul class="ids-list side-menu__list" data-depth="1">
+<ul class="dt-list side-menu__list" data-depth="1">
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-adding-a-module/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Adding a module</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Adding a module</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-adding-a-page/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Adding a page</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Adding a page</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-modifying-the-navigation/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Modifying the navigation</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Modifying the navigation</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-icon-gallery/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Icon gallery</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Icon gallery</span></span>
       </a>
     </div>
   </li>
@@ -299,36 +299,36 @@
   </li>
   <li class="side-menu__item side-menu__item--branch">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../guides-branding/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Branding &amp; customization</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Branding &amp; customization</span></span>
       </a>
       <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Branding &amp;amp; customization">
-        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+        <svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg>
       </button>
     </div>
-<ul class="ids-list side-menu__list" data-depth="1">
+<ul class="dt-list side-menu__list" data-depth="1">
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-landing-page-modifications/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Landing page modifications</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Landing page modifications</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-setup-a-favicon/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Setup a favicon</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Setup a favicon</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-setup-the-product-logo/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Setup the product logo</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Setup the product logo</span></span>
       </a>
     </div>
   </li>
@@ -336,44 +336,44 @@
   </li>
   <li class="side-menu__item side-menu__item--branch">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../guides-versioning-publishing/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Versioning &amp; publishing</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Versioning &amp; publishing</span></span>
       </a>
       <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Versioning &amp;amp; publishing">
-        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+        <svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg>
       </button>
     </div>
-<ul class="ids-list side-menu__list" data-depth="1">
+<ul class="dt-list side-menu__list" data-depth="1">
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-versioning-modes/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Versioning modes</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Versioning modes</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-branching-model/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Branching model</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Branching model</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-releasing-a-documentation/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Releasing a documentation</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Releasing a documentation</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../guides-publishing-a-documentation/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Publishing a documentation</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Publishing a documentation</span></span>
       </a>
     </div>
   </li>
@@ -381,43 +381,43 @@
   </li>
   <li class="side-menu__item side-menu__item--label">
     <div class="side-menu__row">
-      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Reference</span></span>
+      <span class="dt-list-item side-menu__link--label dt-list-item--tree--level-0">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Reference</span></span>
       </span>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../reference-overview/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Overview</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--branch">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../reference-configuration/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Configuration</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Configuration</span></span>
       </a>
       <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Configuration">
-        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+        <svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg>
       </button>
     </div>
-<ul class="ids-list side-menu__list" data-depth="1">
+<ul class="dt-list side-menu__list" data-depth="1">
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../reference-antora-playbook-configuration/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Antora Playbook</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Antora Playbook</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../reference-antora-descriptor-configuration/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Antora Descriptor</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Antora Descriptor</span></span>
       </a>
     </div>
   </li>
@@ -425,44 +425,44 @@
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../reference-cli/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">CLI</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">CLI</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../reference-ui-bundle/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">UI Bundle</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">UI Bundle</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--branch">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../reference-asciidoc/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">AsciiDoc</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">AsciiDoc</span></span>
       </a>
       <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle AsciiDoc">
-        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+        <svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg>
       </button>
     </div>
-<ul class="ids-list side-menu__list" data-depth="1">
+<ul class="dt-list side-menu__list" data-depth="1">
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../reference-asciidoc-basics/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">AsciiDoc basics</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">AsciiDoc basics</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="./" aria-current="page">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Custom AsciiDoc components</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Custom AsciiDoc components</span></span>
       </a>
     </div>
   </li>
@@ -470,59 +470,59 @@
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../reference-integrations/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Integrations</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Integrations</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../reference-ai-first-approach/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">AI-First approach</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">AI-First approach</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--label">
     <div class="side-menu__row">
-      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Additional information</span></span>
+      <span class="dt-list-item side-menu__link--label dt-list-item--tree--level-0">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Additional information</span></span>
       </span>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../additional-information-overview/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Overview</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../changelog/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Changelog</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Changelog</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--branch">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../release-notes/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Release notes</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Release notes</span></span>
       </a>
       <button class="side-menu__toggle" type="button" aria-expanded="true" aria-label="Toggle Release notes">
-        <svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-chevron-down-outlined"></use></svg>
+        <svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg>
       </button>
     </div>
-<ul class="ids-list side-menu__list" data-depth="1">
+<ul class="dt-list side-menu__list" data-depth="1">
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-1"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-0-0/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">v1.0.0</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.0.0</span></span>
       </a>
     </div>
   </li>
@@ -530,24 +530,24 @@
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../faq/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">FAQ</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">FAQ</span></span>
       </a>
     </div>
   </li>
   <li class="side-menu__item side-menu__item--label">
     <div class="side-menu__row">
-      <span class="ids-list-item side-menu__link--label ids-list-item--tree--level-0">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Contributing</span></span>
+      <span class="dt-list-item side-menu__link--label dt-list-item--tree--level-0">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Contributing</span></span>
       </span>
     </div>
   </li>
   <li class="side-menu__item">
     <div class="side-menu__row">
-      <a class="ids-list-item side-menu__link ids-list-item--tree--level-0"
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-0"
         href="../contributing/">
-        <span class="ids-list-item__text"><span class="ids-list-item__label">Overview</span></span>
+        <span class="dt-list-item__text"><span class="dt-list-item__label">Overview</span></span>
       </a>
     </div>
   </li>
@@ -555,8 +555,8 @@
   </nav>
   <div class="side-menu__version">
 <div class="page-versions">
-  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
-    <span class="ids-tag__label">prerelease</span>
+  <span class="dt-tag dt-tag--solid dt-tag--selected dt-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
+    <span class="dt-tag__label">prerelease</span>
   </span>
 </div>
   </div>
@@ -564,27 +564,27 @@
 <div class="side-menu-scrim"></div>
 <main class="article">
 <div class="hero">
-  <div class="ids-grid-layout ids-grid-layout--with-margin hero__grid">
-    <div class="ids-grid-layout__item ids-grid-layout__item--span-full hero__row">
+  <div class="dt-grid-layout dt-grid-layout--with-margin hero__grid">
+    <div class="dt-grid-layout__item dt-grid-layout__item--span-full hero__row">
       <div class="hero__main">
-<nav class="ids-breadcrumbs" aria-label="Breadcrumb">
-  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="../../"><span class="ids-breadcrumb-item__content">docouture</span></a>
-  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="../reference-asciidoc/"><span class="ids-breadcrumb-item__content">AsciiDoc</span></a>
-  <div class="ids-breadcrumb-item ids-breadcrumb-item--active" aria-current="page"><span class="ids-breadcrumb-item__content">Custom AsciiDoc components</span></div>
+<nav class="dt-breadcrumbs" aria-label="Breadcrumb">
+  <a class="dt-breadcrumb-item dt-breadcrumb-item--link" href="../../"><span class="dt-breadcrumb-item__content">docouture</span></a>
+  <a class="dt-breadcrumb-item dt-breadcrumb-item--link" href="../reference-asciidoc/"><span class="dt-breadcrumb-item__content">AsciiDoc</span></a>
+  <div class="dt-breadcrumb-item dt-breadcrumb-item--active" aria-current="page"><span class="dt-breadcrumb-item__content">Custom AsciiDoc components</span></div>
 </nav>
-        <h1 class="hero__title ids-text ids-text--title-xl">Custom AsciiDoc components</h1>
+        <h1 class="hero__title dt-text dt-text--title-xl">Custom AsciiDoc components</h1>
       </div>
       <div class="hero__aside">
-        <button class="ids-button ids-button--ghost ids-button--icon-only toc-toggle" type="button" aria-controls="on-this-page" aria-expanded="true" hidden>
-          <span class="ids-button__content">
-            <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-design-sidebar-outlined"></use></svg></span>
+        <button class="dt-button dt-button--ghost dt-button--icon-only toc-toggle" type="button" aria-controls="on-this-page" aria-expanded="true" hidden>
+          <span class="dt-button__content">
+            <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-panel-left"></use></svg></span>
           </span>
         </button>
       </div>
     </div>
   </div>
 </div>
-  <div class="content ids-grid-layout ids-grid-layout--with-margin">
+  <div class="content dt-grid-layout dt-grid-layout--with-margin">
 <aside id="on-this-page" class="toc" data-title="On this page" data-levels="3">
   <div class="toc-menu"></div>
 </aside>
@@ -639,7 +639,7 @@ tab in one never affects another further down the page.</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">--</span></span></span></code></pre>
 </div>
 </div>
-<div class="docouture-tabs" data-tabs><ul class="docouture-tabs__list" role="tablist"><li class="docouture-tabs__item" role="presentation"><button type="button" class="ids-tabs-item docouture-tabs__tab ids-tabs-item--selected" id="tabs-1-tab-1" role="tab" aria-selected="true" aria-controls="tabs-1-panel-1" tabindex="0" data-tab-value="pnpm"><span class="ids-tabs-item__label">pnpm</span></button></li><li class="docouture-tabs__item" role="presentation"><button type="button" class="ids-tabs-item docouture-tabs__tab" id="tabs-1-tab-2" role="tab" aria-selected="false" aria-controls="tabs-1-panel-2" tabindex="-1" data-tab-value="npm"><span class="ids-tabs-item__label">npm</span></button></li><li class="docouture-tabs__item" role="presentation"><button type="button" class="ids-tabs-item docouture-tabs__tab" id="tabs-1-tab-3" role="tab" aria-selected="false" aria-controls="tabs-1-panel-3" tabindex="-1" data-tab-value="yarn"><span class="ids-tabs-item__label">yarn</span></button></li></ul><div class="docouture-tabs__panels"><section class="docouture-tabs__panel is-selected" id="tabs-1-panel-1" role="tabpanel" aria-labelledby="tabs-1-tab-1" tabindex="0" data-tab-value="pnpm"><div class="listingblock">
+<div class="docouture-tabs" data-tabs><ul class="docouture-tabs__list" role="tablist"><li class="docouture-tabs__item" role="presentation"><button type="button" class="dt-tabs-item docouture-tabs__tab dt-tabs-item--selected" id="tabs-1-tab-1" role="tab" aria-selected="true" aria-controls="tabs-1-panel-1" tabindex="0" data-tab-value="pnpm"><span class="dt-tabs-item__label">pnpm</span></button></li><li class="docouture-tabs__item" role="presentation"><button type="button" class="dt-tabs-item docouture-tabs__tab" id="tabs-1-tab-2" role="tab" aria-selected="false" aria-controls="tabs-1-panel-2" tabindex="-1" data-tab-value="npm"><span class="dt-tabs-item__label">npm</span></button></li><li class="docouture-tabs__item" role="presentation"><button type="button" class="dt-tabs-item docouture-tabs__tab" id="tabs-1-tab-3" role="tab" aria-selected="false" aria-controls="tabs-1-panel-3" tabindex="-1" data-tab-value="yarn"><span class="dt-tabs-item__label">yarn</span></button></li></ul><div class="docouture-tabs__panels"><section class="docouture-tabs__panel is-selected" id="tabs-1-panel-1" role="tabpanel" aria-labelledby="tabs-1-tab-1" tabindex="0" data-tab-value="pnpm"><div class="listingblock">
 <div class="content">
 <pre class="shiki highlight"><code data-lang="bash"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4;--shiki-light-bg:#1E1E1E;--shiki-dark-bg:#1E1E1E"><span class="line"><span style="--shiki-light:#DCDCAA;--shiki-dark:#DCDCAA">pnpm</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> add</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> some-package</span></span></span></code></pre>
 </div>
@@ -677,7 +677,7 @@ tab in one never affects another further down the page.</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">--</span></span></span></code></pre>
 </div>
 </div>
-<div class="docouture-tabs" data-tabs><ul class="docouture-tabs__list" role="tablist"><li class="docouture-tabs__item" role="presentation"><button type="button" class="ids-tabs-item docouture-tabs__tab ids-tabs-item--selected" id="tabs-2-tab-1" role="tab" aria-selected="true" aria-controls="tabs-2-panel-1" tabindex="0" data-tab-value="pnpm"><span class="ids-tabs-item__label">pnpm</span></button></li><li class="docouture-tabs__item" role="presentation"><button type="button" class="ids-tabs-item docouture-tabs__tab" id="tabs-2-tab-2" role="tab" aria-selected="false" aria-controls="tabs-2-panel-2" tabindex="-1" data-tab-value="npm"><span class="ids-tabs-item__label">npm</span></button></li></ul><div class="docouture-tabs__panels"><section class="docouture-tabs__panel is-selected" id="tabs-2-panel-1" role="tabpanel" aria-labelledby="tabs-2-tab-1" tabindex="0" data-tab-value="pnpm"><div class="listingblock">
+<div class="docouture-tabs" data-tabs><ul class="docouture-tabs__list" role="tablist"><li class="docouture-tabs__item" role="presentation"><button type="button" class="dt-tabs-item docouture-tabs__tab dt-tabs-item--selected" id="tabs-2-tab-1" role="tab" aria-selected="true" aria-controls="tabs-2-panel-1" tabindex="0" data-tab-value="pnpm"><span class="dt-tabs-item__label">pnpm</span></button></li><li class="docouture-tabs__item" role="presentation"><button type="button" class="dt-tabs-item docouture-tabs__tab" id="tabs-2-tab-2" role="tab" aria-selected="false" aria-controls="tabs-2-panel-2" tabindex="-1" data-tab-value="npm"><span class="dt-tabs-item__label">npm</span></button></li></ul><div class="docouture-tabs__panels"><section class="docouture-tabs__panel is-selected" id="tabs-2-panel-1" role="tabpanel" aria-labelledby="tabs-2-tab-1" tabindex="0" data-tab-value="pnpm"><div class="listingblock">
 <div class="content">
 <pre class="shiki highlight"><code data-lang="bash"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4;--shiki-light-bg:#1E1E1E;--shiki-dark-bg:#1E1E1E"><span class="line"><span style="--shiki-light:#DCDCAA;--shiki-dark:#DCDCAA">pnpm</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> run</span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178"> dev</span></span></span></code></pre>
 </div>
@@ -706,20 +706,20 @@ tab in one never affects another further down the page.</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">.</span><span style="--shiki-light:#569CD6;--shiki-light-font-weight:bold;--shiki-dark:#569CD6;--shiki-dark-font-weight:bold">xref:main:guides-adding-a-page.adoc[Adding a page]</span></span>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">Create a file, add it to nav.adoc, done.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#569CD6;--shiki-light-font-weight:bold;--shiki-dark:#569CD6;--shiki-dark-font-weight:bold">[card,icon="design/grid-outlined"]</span></span>
+<span class="line"><span style="--shiki-light:#569CD6;--shiki-light-font-weight:bold;--shiki-dark:#569CD6;--shiki-dark-font-weight:bold">[card,icon="grid-3x3"]</span></span>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">.</span><span style="--shiki-light:#569CD6;--shiki-light-font-weight:bold;--shiki-dark:#569CD6;--shiki-dark-font-weight:bold">xref:main:architecture.adoc[Architecture]</span></span>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">This one carries a header icon — </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">`icon=`</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4"> and </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">`subheader=`</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4"> share one header row and</span></span>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">combine fine on the same card, they aren't alternatives to each other.</span></span>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">====</span></span></span></code></pre>
 </div>
 </div>
-<div class="docouture-card-grid docouture-card-grid--cols-1 docouture-card-grid--cols-s-2 docouture-card-grid--cols-m-3 docouture-card-grid--width-content"><div class="ids-card ids-card--vertical docouture-card"><div class="ids-card__content"><div class="docouture-card__main"><div class="docouture-card__title"><a href="../quickstart/" class="xref page">Quickstart</a></div><p>Scaffold, build, publish — the smallest path to a working result.</p></div></div></div><div class="ids-card ids-card--vertical docouture-card"><div class="ids-card__content"><div class="docouture-card__header"><span class="docouture-card__subheader">Reference</span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../guides-adding-a-page/" class="xref page">Adding a page</a></div><p>Create a file, add it to nav.adoc, done.</p></div></div></div><div class="ids-card ids-card--vertical docouture-card"><div class="ids-card__content"><div class="docouture-card__header"><span class="docouture-card__icon ids-icon-mask--design-grid-outlined" aria-hidden="true"></span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../architecture/" class="xref page">Architecture</a></div><p>This one carries a header icon — <code>icon=</code> and <code>subheader=</code> share one header row and
+<div class="docouture-card-grid docouture-card-grid--cols-1 docouture-card-grid--cols-s-2 docouture-card-grid--cols-m-3 docouture-card-grid--width-content"><div class="dt-card dt-card--vertical docouture-card"><div class="dt-card__content"><div class="docouture-card__main"><div class="docouture-card__title"><a href="../quickstart/" class="xref page">Quickstart</a></div><p>Scaffold, build, publish — the smallest path to a working result.</p></div></div></div><div class="dt-card dt-card--vertical docouture-card"><div class="dt-card__content"><div class="docouture-card__header"><span class="docouture-card__subheader">Reference</span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../guides-adding-a-page/" class="xref page">Adding a page</a></div><p>Create a file, add it to nav.adoc, done.</p></div></div></div><div class="dt-card dt-card--vertical docouture-card"><div class="dt-card__content"><div class="docouture-card__header"><span class="docouture-card__icon dt-icon-mask--grid-3x3" aria-hidden="true"></span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../architecture/" class="xref page">Architecture</a></div><p>This one carries a header icon — <code>icon=</code> and <code>subheader=</code> share one header row and
 combine fine on the same card, they aren&#8217;t alternatives to each other.</p></div></div></div></div>
 <div class="paragraph">
-<p><code>icon=</code> takes a <code>group/name</code> string, and only renders if that icon has a generated
-CSS mask — see <a href="../guides-icon-gallery/" class="xref page">Icon gallery</a> for the full, working set. A per-card
-<code>labels=</code> attribute (comma-separated) renders a separate row of small grey chips,
-independent of <code>subheader=</code>.</p>
+<p><code>icon=</code> takes a bare icon name (Lucide&#8217;s own, e.g. <code>store</code>), and only renders if that
+icon has a generated CSS mask — see <a href="../guides-icon-gallery/" class="xref page">Icon gallery</a> for the full,
+working set. A per-card <code>labels=</code> attribute (comma-separated) renders a separate row of
+small grey chips, independent of <code>subheader=</code>.</p>
 </div>
 <div class="paragraph">
 <p>With images, a fixed square aspect, four columns, let out to the container&#8217;s full width —
@@ -748,7 +748,7 @@ across modules via a cross-module image resource ID):</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">====</span></span></span></code></pre>
 </div>
 </div>
-<div class="docouture-card-grid docouture-card-grid--cols-1 docouture-card-grid--cols-s-2 docouture-card-grid--cols-m-4 docouture-card-grid--width-container"><div class="ids-card ids-card--vertical docouture-card docouture-card--square"><div class="ids-card__image docouture-card__image"><img src="../../_images/card-placeholder.png" alt="Placeholder card image"></div><div class="ids-card__content"><div class="docouture-card__header"><span class="docouture-card__subheader">One</span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../quickstart/" class="xref page">First</a></div><p>Every card in a block shares one aspect ratio.</p></div></div></div><div class="ids-card ids-card--vertical docouture-card docouture-card--square"><div class="ids-card__image docouture-card__image"><img src="../../_images/card-placeholder.png" alt="Placeholder card image"></div><div class="ids-card__content"><div class="docouture-card__header"><span class="docouture-card__subheader">Two</span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../" class="xref page">Second</a></div><p>The image crops to fill; it is never letterboxed.</p></div></div></div></div>
+<div class="docouture-card-grid docouture-card-grid--cols-1 docouture-card-grid--cols-s-2 docouture-card-grid--cols-m-4 docouture-card-grid--width-container"><div class="dt-card dt-card--vertical docouture-card docouture-card--square"><div class="dt-card__image docouture-card__image"><img src="../../_images/card-placeholder.png" alt="Placeholder card image"></div><div class="dt-card__content"><div class="docouture-card__header"><span class="docouture-card__subheader">One</span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../quickstart/" class="xref page">First</a></div><p>Every card in a block shares one aspect ratio.</p></div></div></div><div class="dt-card dt-card--vertical docouture-card docouture-card--square"><div class="dt-card__image docouture-card__image"><img src="../../_images/card-placeholder.png" alt="Placeholder card image"></div><div class="dt-card__content"><div class="docouture-card__header"><span class="docouture-card__subheader">Two</span></div><div class="docouture-card__main"><div class="docouture-card__title"><a href="../" class="xref page">Second</a></div><p>The image crops to fill; it is never letterboxed.</p></div></div></div></div>
 <div class="ulist">
 <ul>
 <li>
@@ -878,9 +878,9 @@ landing&#8217;s "Key features" section uses:</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">====</span></span></span></code></pre>
 </div>
 </div>
-<div class="docouture-feature-tabs" data-feature-tabs><ul class="docouture-feature-tabs__list"><li class="docouture-feature-tabs__item"><a class="ids-tabs-item docouture-feature-tabs__tab ids-tabs-item--selected" id="feature-tabs-tab-1" href="#feature-tabs-panel-1">With a call to action</a></li><li class="docouture-feature-tabs__item"><a class="ids-tabs-item docouture-feature-tabs__tab" id="feature-tabs-tab-2" href="#feature-tabs-panel-2">Without one</a></li></ul><div class="docouture-feature-tabs__panels"><section class="docouture-feature-tabs__panel is-selected" id="feature-tabs-panel-1" aria-label="With a call to action"><div class="docouture-feature-tabs__media"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--light" src="../../_images/feature-placeholder.png" alt="Placeholder feature image"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--dark" src="../../_images/feature-placeholder-dark.png" alt="feature placeholder dark"></div><div class="docouture-feature-tabs__body"><div class="paragraph">
+<div class="docouture-feature-tabs" data-feature-tabs><ul class="docouture-feature-tabs__list"><li class="docouture-feature-tabs__item"><a class="dt-tabs-item docouture-feature-tabs__tab dt-tabs-item--selected" id="feature-tabs-tab-1" href="#feature-tabs-panel-1">With a call to action</a></li><li class="docouture-feature-tabs__item"><a class="dt-tabs-item docouture-feature-tabs__tab" id="feature-tabs-tab-2" href="#feature-tabs-panel-2">Without one</a></li></ul><div class="docouture-feature-tabs__panels"><section class="docouture-feature-tabs__panel is-selected" id="feature-tabs-panel-1" aria-label="With a call to action"><div class="docouture-feature-tabs__media"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--light" src="../../_images/feature-placeholder.png" alt="Placeholder feature image"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--dark" src="../../_images/feature-placeholder-dark.png" alt="feature placeholder dark"></div><div class="docouture-feature-tabs__body"><div class="paragraph">
 <p>A slide is a media still, prose, and an optional call to action, in that order.</p>
-</div></div><a class="ids-button ids-button--ghost docouture-feature-tabs__cta" href="../quickstart/"><span class="ids-button__content">Learn more</span></a></section><section class="docouture-feature-tabs__panel" id="feature-tabs-panel-2" aria-label="Without one"><div class="docouture-feature-tabs__media"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--light" src="../../_images/feature-placeholder.png" alt="Placeholder feature image"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--dark" src="../../_images/feature-placeholder-dark.png" alt="feature placeholder dark"></div><div class="docouture-feature-tabs__body"><div class="paragraph">
+</div></div><a class="dt-button dt-button--ghost docouture-feature-tabs__cta" href="../quickstart/"><span class="dt-button__content">Learn more</span></a></section><section class="docouture-feature-tabs__panel" id="feature-tabs-panel-2" aria-label="Without one"><div class="docouture-feature-tabs__media"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--light" src="../../_images/feature-placeholder.png" alt="Placeholder feature image"><img class="docouture-feature-tabs__image docouture-feature-tabs__image--dark" src="../../_images/feature-placeholder-dark.png" alt="feature placeholder dark"></div><div class="docouture-feature-tabs__body"><div class="paragraph">
 <p>A call to action is optional — a slide without one just ends at its prose.</p>
 </div></div></section></div></div>
 </div>
@@ -902,7 +902,7 @@ landing&#8217;s "Key features" section uses:</p>
 <span class="line"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">====</span></span></span></code></pre>
 </div>
 </div>
-<div class="docouture-cta docouture-cta--center"><div class="docouture-cta__body"><p class="docouture-cta__lead ids-text--body-l">A short pitch, plus one prominent action.</p></div><div class="docouture-cta__actions"><a class="ids-button ids-button--primary docouture-cta__action" href="../quickstart/"><span class="ids-button__content">Get started</span></a></div></div>
+<div class="docouture-cta docouture-cta--center"><div class="docouture-cta__body"><p class="docouture-cta__lead dt-text--body-l">A short pitch, plus one prominent action.</p></div><div class="docouture-cta__actions"><a class="dt-button dt-button--primary docouture-cta__action" href="../quickstart/"><span class="dt-button__content">Get started</span></a></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -940,7 +940,7 @@ diagram source, as literal text, same as the fenced listing shows it above.</p>
 <div class="sect2">
 <h3 id="styling"><a class="anchor" href="#styling"></a>Styling</h3>
 <div class="paragraph">
-<p><a href="https://mermaid.js.org">Mermaid</a> diagrams are themed to match the IOP Design System
+<p><a href="https://mermaid.js.org">Mermaid</a> diagrams are themed to match this site
 automatically — square corners, black-on-white (light mode; inverted for dark), body
 typography — via a <code>%%{init: {&#8230;&#8203;}}%%</code> directive this extension prepends to the
 diagram&#8217;s own source before it ever reaches Kroki, not via CSS. Write your own
@@ -1036,7 +1036,7 @@ container — the bundled <code>kroki-compose.yml</code> already includes one:</
 <div class="docouture-diagram" data-diagram-type="bpmn"><?xml version="1.0" encoding="utf-8"?>
 <!-- created with bpmn-js / http://bpmn.io -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="332" height="90" viewBox="69 73 332 90" version="1.1"><g class="djs-group"><g class="djs-element djs-shape" data-element-id="start" style="display: block;" transform="matrix(1 0 0 1 100 100)"><g class="djs-visual"><circle cx="18" cy="18" r="18" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; fill: white; fill-opacity: 0.95;"/></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="36" height="36" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="start_label" style="display: block;" transform="matrix(1 0 0 1 74 136)"><g class="djs-visual"><text lineHeight="1.2" class="djs-label" style="font-family: Arial, sans-serif; font-size: 11px; font-weight: normal; fill: rgb(34, 36, 42);"><tspan x="0.0322265625" y="9.899999999999999">Request received</tspan></text></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="88" height="14" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="task" style="display: block;" transform="matrix(1 0 0 1 200 78)"><g class="djs-visual"><rect x="0" y="0" width="100" height="80" rx="10" ry="10" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; fill: white; fill-opacity: 0.95;"/><text lineHeight="1.2" class="djs-label" style="font-family: Arial, sans-serif; font-size: 12px; font-weight: normal; fill: rgb(34, 36, 42);"><tspan x="30.0078125" y="36.4">Handle </tspan><tspan x="28.4609375" y="50.8">request</tspan></text></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="100" height="80" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="end" style="display: block;" transform="matrix(1 0 0 1 360 100)"><g class="djs-visual"><circle cx="18" cy="18" r="18" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 4px; fill: white; fill-opacity: 0.95;"/></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="36" height="36" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="end_label" style="display: block;" transform="matrix(1 0 0 1 364 136)"><g class="djs-visual"><text lineHeight="1.2" class="djs-label" style="font-family: Arial, sans-serif; font-size: 11px; font-weight: normal; fill: rgb(34, 36, 42);"><tspan x="0.2392578125" y="9.899999999999999">Done</tspan></text></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="28" height="14" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-connection" data-element-id="flow_1" style="display: block;"><g class="djs-visual"><defs><marker id="marker-8kfsouefaowvz6cp2gvpkoory" viewBox="0 0 20 20" refX="11" refY="10" markerWidth="10" markerHeight="10" orient="auto"><path d="M 1 5 L 11 10 L 1 15 Z" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 1px; fill: rgb(34, 36, 42);"/></marker></defs><path data-corner-radius="5" style="fill: none; stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; marker-end: url('#marker-8kfsouefaowvz6cp2gvpkoory');" d="M136,118L200,118"/></g><path d="M136,118L200,118" class="djs-hit djs-hit-stroke" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-connection" data-element-id="flow_2" style="display: block;"><g class="djs-visual"><defs><marker id="marker-988m9bldmdk8l25gqzbavqg9y" viewBox="0 0 20 20" refX="11" refY="10" markerWidth="10" markerHeight="10" orient="auto"><path d="M 1 5 L 11 10 L 1 15 Z" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 1px; fill: rgb(34, 36, 42);"/></marker></defs><path data-corner-radius="5" style="fill: none; stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; marker-end: url('#marker-988m9bldmdk8l25gqzbavqg9y');" d="M300,118L360,118"/></g><path d="M300,118L360,118" class="djs-hit djs-hit-stroke" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g></svg></div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="332" height="90" viewBox="69 73 332 90" version="1.1"><g class="djs-group"><g class="djs-element djs-shape" data-element-id="start" style="display: block;" transform="matrix(1 0 0 1 100 100)"><g class="djs-visual"><circle cx="18" cy="18" r="18" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; fill: white; fill-opacity: 0.95;"/></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="36" height="36" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="start_label" style="display: block;" transform="matrix(1 0 0 1 74 136)"><g class="djs-visual"><text lineHeight="1.2" class="djs-label" style="font-family: Arial, sans-serif; font-size: 11px; font-weight: normal; fill: rgb(34, 36, 42);"><tspan x="0.0322265625" y="9.899999999999999">Request received</tspan></text></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="88" height="14" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="task" style="display: block;" transform="matrix(1 0 0 1 200 78)"><g class="djs-visual"><rect x="0" y="0" width="100" height="80" rx="10" ry="10" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; fill: white; fill-opacity: 0.95;"/><text lineHeight="1.2" class="djs-label" style="font-family: Arial, sans-serif; font-size: 12px; font-weight: normal; fill: rgb(34, 36, 42);"><tspan x="30.0078125" y="36.4">Handle </tspan><tspan x="28.4609375" y="50.8">request</tspan></text></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="100" height="80" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="end" style="display: block;" transform="matrix(1 0 0 1 360 100)"><g class="djs-visual"><circle cx="18" cy="18" r="18" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 4px; fill: white; fill-opacity: 0.95;"/></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="36" height="36" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-shape" data-element-id="end_label" style="display: block;" transform="matrix(1 0 0 1 364 136)"><g class="djs-visual"><text lineHeight="1.2" class="djs-label" style="font-family: Arial, sans-serif; font-size: 11px; font-weight: normal; fill: rgb(34, 36, 42);"><tspan x="0.2392578125" y="9.899999999999999">Done</tspan></text></g><rect class="djs-hit djs-hit-all" x="0" y="0" width="28" height="14" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-connection" data-element-id="flow_1" style="display: block;"><g class="djs-visual"><defs><marker id="marker-3gotjloy4lc8rg0p985rrgt4c" viewBox="0 0 20 20" refX="11" refY="10" markerWidth="10" markerHeight="10" orient="auto"><path d="M 1 5 L 11 10 L 1 15 Z" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 1px; fill: rgb(34, 36, 42);"/></marker></defs><path data-corner-radius="5" style="fill: none; stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; marker-end: url('#marker-3gotjloy4lc8rg0p985rrgt4c');" d="M136,118L200,118"/></g><path d="M136,118L200,118" class="djs-hit djs-hit-stroke" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g><g class="djs-group"><g class="djs-element djs-connection" data-element-id="flow_2" style="display: block;"><g class="djs-visual"><defs><marker id="marker-5v4mpthjfeyz56pv65uzjkm6h" viewBox="0 0 20 20" refX="11" refY="10" markerWidth="10" markerHeight="10" orient="auto"><path d="M 1 5 L 11 10 L 1 15 Z" style="stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 1px; fill: rgb(34, 36, 42);"/></marker></defs><path data-corner-radius="5" style="fill: none; stroke-linecap: round; stroke-linejoin: round; stroke: rgb(34, 36, 42); stroke-width: 2px; marker-end: url('#marker-5v4mpthjfeyz56pv65uzjkm6h');" d="M300,118L360,118"/></g><path d="M300,118L360,118" class="djs-hit djs-hit-stroke" style="fill: none; stroke-opacity: 0; stroke: white; stroke-width: 15px;"/></g></g></svg></div>
 </div>
 <div class="sect2">
 <h3 id="excalidraw"><a class="anchor" href="#excalidraw"></a>Excalidraw</h3>
@@ -1098,15 +1098,15 @@ includes an <code>excalidraw</code> service alongside <code>mermaid</code> for e
 </div>
 </div>
 <div class="paragraph">
-<p><span class="ids-label ids-label--grey"><span class="ids-label__content">Default</span></span> <span class="ids-label ids-label--red"><span class="ids-label__content">Blocked</span></span> <span class="ids-label ids-label--orange"><span class="ids-label__content">Pending</span></span> <span class="ids-label ids-label--green"><span class="ids-label__content">Stable</span></span>
-<span class="ids-label ids-label--blue"><span class="ids-label__content">Info</span></span> <span class="ids-label ids-label--purple"><span class="ids-label__content">Beta</span></span> <span class="ids-label ids-label--pink"><span class="ids-label__content">New</span></span> <span class="ids-label ids-label--teal"><span class="ids-label__content">Docs</span></span> <span class="ids-label ids-label--white"><span class="ids-label__content">White</span></span></p>
+<p><span class="dt-label dt-label--grey"><span class="dt-label__content">Default</span></span> <span class="dt-label dt-label--red"><span class="dt-label__content">Blocked</span></span> <span class="dt-label dt-label--orange"><span class="dt-label__content">Pending</span></span> <span class="dt-label dt-label--green"><span class="dt-label__content">Stable</span></span>
+<span class="dt-label dt-label--blue"><span class="dt-label__content">Info</span></span> <span class="dt-label dt-label--purple"><span class="dt-label__content">Beta</span></span> <span class="dt-label dt-label--pink"><span class="dt-label__content">New</span></span> <span class="dt-label dt-label--teal"><span class="dt-label__content">Docs</span></span> <span class="dt-label dt-label--white"><span class="dt-label__content">White</span></span></p>
 </div>
 <div class="paragraph">
 <p><code>mono:</code> is plain monospaced text with no code-chip styling — for a table cell whose
 entire content is a bare token (see <a href="../reference-asciidoc-basics/" class="xref page">AsciiDoc basics</a>'s
-Tables section, which uses backtick code instead; <code><code class="ids-mono">className</code></code> is the
+Tables section, which uses backtick code instead; <code><code class="dt-mono">className</code></code> is the
 deliberate opt-out when a whole column of cells is tokens and the chip would be
-noise): <code class="ids-mono">className</code></p>
+noise): <code class="dt-mono">className</code></p>
 </div>
 </div>
 </div>
@@ -1136,38 +1136,38 @@ viewport; width alone caps the width and leaves the ratio at the 16:9 fallback.<
 </div>
 <footer class="page-footer">
   <div class="page-footer__nav">
-<div class="ids-grid-layout ids-grid-layout--with-margin pagination">
-  <div class="ids-grid-layout__item ids-grid-layout__item--span-full pagination__row">
+<div class="dt-grid-layout dt-grid-layout--with-margin pagination">
+  <div class="dt-grid-layout__item dt-grid-layout__item--span-full pagination__row">
     <div class="pagination__buttons">
-    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-icon pagination__prev" href="../reference-asciidoc-basics/">
-      <span class="ids-button__content">
-        <span class="ids-button__icon ids-button__icon-icon"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-arrow-left-outlined"></use></svg></span>
+    <a class="dt-button dt-button--ghost dt-button--icon-and-label dt-button--icon-icon pagination__prev" href="../reference-asciidoc-basics/">
+      <span class="dt-button__content">
+        <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-arrow-left"></use></svg></span>
         <span class="pagination__label-full">AsciiDoc basics</span>
         <span class="pagination__label-short">Prev</span>
       </span>
     </a>
-    <a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action pagination__next" href="../reference-integrations/">
-      <span class="ids-button__content">
+    <a class="dt-button dt-button--ghost dt-button--icon-and-label dt-button--icon-action pagination__next" href="../reference-integrations/">
+      <span class="dt-button__content">
         <span class="pagination__label-full">Integrations</span>
         <span class="pagination__label-short">Next</span>
-        <span class="ids-button__icon ids-button__icon-action"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-arrows-arrow-right-outlined"></use></svg></span>
+        <span class="dt-button__icon dt-button__icon-action"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-arrow-right"></use></svg></span>
       </span>
     </a>
     </div>
   </div>
 </div>
   </div>
-  <div class="ids-grid-layout ids-grid-layout--with-margin page-footer__feedback">
-    <div class="ids-grid-layout__item ids-grid-layout__item--span-full page-footer__contribute">
+  <div class="dt-grid-layout dt-grid-layout--with-margin page-footer__feedback">
+    <div class="dt-grid-layout__item dt-grid-layout__item--span-full page-footer__contribute">
       <div class="page-footer__contribute-copy">
-        <p class="ids-text ids-text--title-s">Help us make these docs great!</p>
-        <p class="ids-text ids-text--body-m">See something that is wrong or unclear? Collaborate with us! Submit a pull request</p>
+        <p class="dt-text dt-text--title-s">Help us make these docs great!</p>
+        <p class="dt-text dt-text--body-m">See something that is wrong or unclear? Collaborate with us! Submit a pull request</p>
       </div>
       <div class="page-footer__contribute-buttons">
-<a class="ids-button ids-button--ghost ids-button--icon-and-label ids-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/edit/main/docs/src/modules/main/pages/reference-custom-asciidoc-components.adoc">
-  <span class="ids-button__content">
+<a class="dt-button dt-button--ghost dt-button--icon-and-label dt-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/edit/main/docs/src/modules/main/pages/reference-custom-asciidoc-components.adoc">
+  <span class="dt-button__content">
     Propose a change
-    <span class="ids-button__icon ids-button__icon-action"><svg class="ids-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/ids-icons.svg#sw-icons-connectivity-link-external-outlined"></use></svg></span>
+    <span class="dt-button__icon dt-button__icon-action"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-external-link"></use></svg></span>
   </span>
 </a>
       </div>
@@ -1177,19 +1177,19 @@ viewport; width alone caps the width and leaves the ratio at the 16:9 fallback.<
 
 <script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
 <footer class="site-footer">
-  <div class="ids-grid-layout ids-grid-layout--with-margin site-footer__grid">
-    <div class="ids-grid-layout__item site-footer__col site-footer__brand">
+  <div class="dt-grid-layout dt-grid-layout--with-margin site-footer__grid">
+    <div class="dt-grid-layout__item site-footer__col site-footer__brand">
       <a class="site-footer__brand-link" href="../../">
         <img class="site-footer__logo site-footer__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="site-footer__logo site-footer__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
-        <span class="ids-text ids-text--label-l-high">docouture</span>
+        <span class="dt-text dt-text--label-l-high">docouture</span>
       </a>
-      <span class="ids-text ids-text--detail-m site-footer__legal">&#169; 2026 InditexTech</span>
+      <span class="dt-text dt-text--detail-m site-footer__legal">&#169; 2026 InditexTech</span>
     </div>
-    <div class="ids-grid-layout__item site-footer__col site-footer__links">
-      <span class="ids-text ids-text--label-l site-footer__heading">Resources</span>
-      <a class="ids-text ids-text--body-l site-footer__link" href="../../">Home</a>
-      <a class="ids-text ids-text--body-l site-footer__link" href="../quickstart/">Quickstart</a>
+    <div class="dt-grid-layout__item site-footer__col site-footer__links">
+      <span class="dt-text dt-text--label-l site-footer__heading">Resources</span>
+      <a class="dt-text dt-text--body-l site-footer__link" href="../../">Home</a>
+      <a class="dt-text dt-text--body-l site-footer__link" href="../quickstart/">Quickstart</a>
     </div>
   </div>
 </footer>

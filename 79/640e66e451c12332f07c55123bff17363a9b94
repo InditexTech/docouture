@@ -1,0 +1,18 @@
+.github/workflows/code-npm_node-pr-verify.yml
+  h_c93d154c7c7074 170-172
+code/packages/example/antora-playbook.yml
+  h_c93d154c7c7074 156-159
+code/packages/example/docs/antora.yml
+  h_c93d154c7c7074 53-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "79640e66e451c12332f07c55123bff17363a9b94",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

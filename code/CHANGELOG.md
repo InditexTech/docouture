@@ -63,6 +63,7 @@ at all).
 
 ### Fixed
 
+- [#182](https://github.com/InditexTech/docouture/pull/182) [tooling] Fix open CodeQL cache-poisoning alerts in publish-release workflow
 - [#181](https://github.com/InditexTech/docouture/pull/181) [tooling] Upgrade Antora to 3.2.0 to resolve open js-yaml Dependabot alerts
 - [#167](https://github.com/InditexTech/docouture/pull/167) [tooling] Published v1.0.0 docs show "No tagged release yet" on the Changelog page
 - [#163](https://github.com/InditexTech/docouture/pull/163) [ui-bundle] Content page titles rendered uppercase via hero.hbs, ignoring source case

@@ -1,0 +1,33 @@
+code/packages/asciidoc-extensions/lib/card-grid.js
+  s_0883d3a68f040d::t_8e7f5cba7521fc 19,30,76,178,189,193,251
+code/packages/asciidoc-extensions/lib/cta.js
+  s_0883d3a68f040d::t_900b621e9f4438 25-26,29-30,33,208,211,215,217,277,280
+code/packages/asciidoc-extensions/lib/feature-tabs.js
+  s_0883d3a68f040d::t_0ba0690a50b42f 231-232,236,239,294-295
+code/packages/asciidoc-extensions/lib/kroki-mermaid-theme.js
+  s_0883d3a68f040d::t_96ef6deeed8359 17,21
+code/packages/asciidoc-extensions/lib/label-macro.js
+  s_0883d3a68f040d::t_8277bf47fa9fc7 7,33-34,39,65
+code/packages/asciidoc-extensions/lib/mono-macro.js
+  s_0883d3a68f040d::t_8c0c3129bbf50a 17,24,38
+code/packages/asciidoc-extensions/lib/shiki-config.js
+  s_0883d3a68f040d::t_f22cbe95f3f850 17
+code/packages/asciidoc-extensions/lib/tabs.js
+  s_0883d3a68f040d::t_40fc5ff2775918 13,169-170,179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8ed9d6299ddb10c42e7c87a13190454d84613e88",
+  "prompts": {},
+  "sessions": {
+    "s_0883d3a68f040d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa8e630f4ffe8sFNFQMRcn9J5B",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

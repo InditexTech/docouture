@@ -77,6 +77,7 @@ at all).
 
 ### Documentation
 
+- [#191](https://github.com/InditexTech/docouture/pull/191) [skills] nav.adoc guidance doesn't warn against nesting a section's topics under its own Overview page
 - [#174](https://github.com/InditexTech/docouture/pull/174) [skills] Internalize authoring-guides content into the docouture-* skills as AsciiDoc
 - [#150](https://github.com/InditexTech/docouture/pull/150) [documentation] Document docouture using docouture (dogfood the platform for its own docs)
 - [#149](https://github.com/InditexTech/docouture/pull/149) [skills] Externalize docs-authoring skills into standalone skill packages

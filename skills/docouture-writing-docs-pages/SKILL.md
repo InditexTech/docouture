@@ -80,6 +80,38 @@ file-relative.
 | set a component-wide attribute | `asciidoc.attributes` in `docs/src/antora.yml`                                                                                                 |
 | set a page-scoped attribute    | an attribute entry in the page header, above the first blank line                                                                              |
 
+## Nesting rule: keep a section's Overview flat
+
+Nesting in `nav.adoc` is literal list-marker depth (`*`, `**`, `***`) — Antora has no
+concept of "this line is an Overview page," so indenting a topic one level under it reads
+exactly like indenting it under anything else. **A section's own Overview/index page stays
+a flat sibling of that section's other top-level pages — it is never their parent.**
+Nesting only happens one level below a page that genuinely owns sub-pages of its own.
+
+This doesn't forbid nesting under an Overview/index page in general — it forbids nesting
+*other* topics under the *section's* own Overview. A sub-topic's own index page can still
+legitimately parent its own children: `changelog/index.adoc` parenting its per-version
+pages is correct, because those pages genuinely belong to the changelog, not to the
+section's Overview.
+
+Don't — nests every other topic under Overview:
+
+```adoc
+* Guides
+* xref:guides-overview.adoc[Overview]
+** xref:configure-authentication.adoc[Configure authentication]
+*** xref:configure-authentication-details.adoc[Configure authentication details]
+```
+
+Do — Overview stays flat; only a topic's genuine sub-page nests under that topic:
+
+```adoc
+* Guides
+* xref:guides-overview.adoc[Overview]
+* xref:configure-authentication.adoc[Configure authentication]
+** xref:configure-authentication-details.adoc[Configure authentication details]
+```
+
 ## Linking third-party mentions
 
 The first time a page names a third-party product, library, or repo in prose — Antora,

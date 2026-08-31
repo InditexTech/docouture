@@ -1,0 +1,139 @@
+code/packages/ui-bundle/gulp.d/lib/compile-helpers.js
+  s_1d4a5257321709::t_a56399fad187e5 1-4
+code/packages/ui-bundle/gulp.d/lib/concat-streams.js
+  s_1d4a5257321709::t_11f281b35d403d 1-4
+code/packages/ui-bundle/gulp.d/lib/dt-custom-media.js
+  s_1d4a5257321709::t_95c6d4a46abd73 1-4
+code/packages/ui-bundle/gulp.d/lib/existing-globs.js
+  s_1d4a5257321709::t_5f6b0ca0e70040 1-4
+code/packages/ui-bundle/gulp.d/lib/load-icon-catalog.js
+  s_1d4a5257321709::t_accd025779f17c 1-4
+code/packages/ui-bundle/gulp.d/lib/optimize-svg.js
+  s_1d4a5257321709::t_71e4eb02ac6fb7 1-4
+code/packages/ui-bundle/gulp.d/lib/svgo-config.js
+  s_1d4a5257321709::t_d009fb7b40e997 1-4
+code/packages/ui-bundle/gulp.d/tasks/alias.js
+  s_1d4a5257321709::t_97cc051f90a340 1-4
+code/packages/ui-bundle/gulp.d/tasks/reload.js
+  s_1d4a5257321709::t_14ba3cad8c25a2 1-4
+code/packages/ui-bundle/preview-src/layouts/hub.hbs
+  s_1d4a5257321709::t_f914d32730b5d9 1-6
+code/packages/ui-bundle/preview-src/layouts/icons.hbs
+  s_1d4a5257321709::t_270f3476d22252 1-6
+code/packages/ui-bundle/preview-src/layouts/search-dialog.hbs
+  s_1d4a5257321709::t_4c4950c39e4f8b 1-6
+code/packages/ui-bundle/preview-src/preview.css
+  s_1d4a5257321709::t_32a98242b90852 1-6
+code/packages/ui-bundle/scripts/build-sprite.mjs
+  s_1d4a5257321709::t_4a10c38d1448b9 2-6
+code/packages/ui-bundle/scripts/lib/icons.mjs
+  s_1d4a5257321709::t_c86818d6dbf76a 1-4
+code/packages/ui-bundle/scripts/search-icons.mjs
+  s_1d4a5257321709::t_3295ab924025f1 2-6
+code/packages/ui-bundle/src/css/accordion.css
+  s_1d4a5257321709::t_f5b35d4f8e5137 1-6
+code/packages/ui-bundle/src/css/bridge.css
+  s_1d4a5257321709::t_3761e0bc79cbe7 1-6
+code/packages/ui-bundle/src/css/card-grid.css
+  s_1d4a5257321709::t_f47423faa0b57e 1-6
+code/packages/ui-bundle/src/css/cta.css
+  s_1d4a5257321709::t_e905047a17fbde 1-6
+code/packages/ui-bundle/src/css/diagram.css
+  s_1d4a5257321709::t_715e90dbc9c145 1-6
+code/packages/ui-bundle/src/css/dt-breakpoints.css
+  s_1d4a5257321709::t_5d2ea0e972e30b 1-6
+code/packages/ui-bundle/src/css/dt-components.css
+  s_1d4a5257321709::t_df2bcef508ac3e 1-6
+code/packages/ui-bundle/src/css/dt-tokens.css
+  s_1d4a5257321709::t_32a2c378a1a390 1-6
+code/packages/ui-bundle/src/css/feature-tabs.css
+  s_1d4a5257321709::t_f97c4f405c9ccb 1-6
+code/packages/ui-bundle/src/css/hero.css
+  s_1d4a5257321709::t_7043f3b1ac16f2 1-6
+code/packages/ui-bundle/src/css/home-hero.css
+  s_1d4a5257321709::t_92ad15c6843c92 1-6
+code/packages/ui-bundle/src/css/home-single.css
+  s_1d4a5257321709::t_53392d7334e9a4 1-6
+code/packages/ui-bundle/src/css/home.css
+  s_1d4a5257321709::t_7bce6b75525717 1-6
+code/packages/ui-bundle/src/css/icon-masks.css
+  s_1d4a5257321709::t_7a7b86041badab 1-6
+code/packages/ui-bundle/src/css/icons.css
+  s_1d4a5257321709::t_7ac61cad9f9514 1-6
+code/packages/ui-bundle/src/css/nav-switcher.css
+  s_1d4a5257321709::t_2e14118f4fc841 1-6
+code/packages/ui-bundle/src/css/search-dialog.css
+  s_1d4a5257321709::t_795950f86f327a 1-6
+code/packages/ui-bundle/src/css/side-menu.css
+  s_1d4a5257321709::t_1582ccde53af0a 1-6
+code/packages/ui-bundle/src/css/site-footer.css
+  s_1d4a5257321709::t_51b6711ced2d4a 1-6
+code/packages/ui-bundle/src/css/tabs.css
+  s_1d4a5257321709::t_7802ce79118b70 1-6
+code/packages/ui-bundle/src/helpers/icon.ts
+  s_1d4a5257321709::t_ec45809d0f737f 1-4
+code/packages/ui-bundle/src/helpers/includes.ts
+  s_1d4a5257321709::t_7e543a8a1c2054 1-4
+code/packages/ui-bundle/src/helpers/resolveResourceURL.ts
+  s_1d4a5257321709::t_76960f785b5dbb 1-4
+code/packages/ui-bundle/src/helpers/split.ts
+  s_1d4a5257321709::t_aa6c1f91c8a8f4 1-4
+code/packages/ui-bundle/src/js/05-nav-modules.ts
+  s_1d4a5257321709::t_6b6623f1dc9c6e 1-4
+code/packages/ui-bundle/src/js/07-feature-tabs.ts
+  s_1d4a5257321709::t_59f6cee0680f40 1-4
+code/packages/ui-bundle/src/js/08-theme.ts
+  s_1d4a5257321709::t_e973b456071028 1-4
+code/packages/ui-bundle/src/js/09-heading-anchors.ts
+  s_1d4a5257321709::t_8a9c939b91b3ef 1-4
+code/packages/ui-bundle/src/js/10-accordion.ts
+  s_1d4a5257321709::t_e1d9f274b22182 1-4
+code/packages/ui-bundle/src/js/11-tabs.ts
+  s_1d4a5257321709::t_2b73ca43101957 1-4
+code/packages/ui-bundle/src/js/12-search.ts
+  s_1d4a5257321709::t_1d4f4f287764e3 1-4
+code/packages/ui-bundle/src/js/13-search-recents.ts
+  s_1d4a5257321709::t_c99ad06c3266dc 1-4
+code/packages/ui-bundle/src/js/index.ts
+  s_1d4a5257321709::t_03fe27cf136a58 1-4
+code/packages/ui-bundle/src/js/vendor/search.bundle.ts
+  s_1d4a5257321709::t_3ab638a1818f7c 1-4
+code/packages/ui-bundle/src/layouts/home-single.hbs
+  s_1d4a5257321709::t_c9dc14245b4c2f 1-6
+code/packages/ui-bundle/src/layouts/home.hbs
+  s_1d4a5257321709::t_2a2a22035ae356 1-6
+code/packages/ui-bundle/src/partials/hero.hbs
+  s_1d4a5257321709::t_6467ab0aef9217 1-6
+code/packages/ui-bundle/src/partials/home-hero.hbs
+  s_1d4a5257321709::t_3989be1ca8fe82 1-6
+code/packages/ui-bundle/src/partials/nav-brand.hbs
+  s_1d4a5257321709::t_e12b1081867713 1-6
+code/packages/ui-bundle/src/partials/nav-switcher.hbs
+  s_1d4a5257321709::t_ae3dd858b85847 1-6
+code/packages/ui-bundle/src/partials/repo-link.hbs
+  s_1d4a5257321709::t_81df257e42ad2b 1-6
+code/packages/ui-bundle/src/partials/search-dialog.hbs
+  s_1d4a5257321709::t_1e62c5c25a1015 1-6
+code/packages/ui-bundle/src/partials/site-footer.hbs
+  s_1d4a5257321709::t_b5d79023d09a60 1-6
+code/packages/ui-bundle/src/partials/theme-toggle.hbs
+  s_1d4a5257321709::t_1c7ba42aeb1963 1-6
+code/packages/ui-bundle/types/browser.d.ts
+  s_1d4a5257321709::t_8f839d2967ece0 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c61e6c9dd523b566f59eb8f2c890d35d1a043b4b",
+  "prompts": {},
+  "sessions": {
+    "s_1d4a5257321709": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa822a89dffexHNiRI27Z88ZwQ",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

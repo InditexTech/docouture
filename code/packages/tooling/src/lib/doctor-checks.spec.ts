@@ -7,12 +7,7 @@ import { join } from 'node:path'
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import {
-  checkGitHasCommit,
-  checkNodeModulesPresent,
-  checkRegistryPinned,
-  checkToolVersion,
-} from './doctor-checks.js'
+import { checkGitHasCommit, checkNodeModulesPresent, checkRegistryPinned, checkToolVersion } from './doctor-checks.js'
 
 let dir: string
 

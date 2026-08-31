@@ -48,7 +48,8 @@ async function main() {
   for (const name of matches) {
     const mark = vendored.has(name) ? `${style.green}●${style.off}` : ' '
     const matchedTags = (tags[name] ?? []).filter((tag) => tag.toLowerCase().includes(term))
-    const tagNote = matchedTags.length && !name.includes(term) ? ` ${style.dim}(${matchedTags.join(', ')})${style.off}` : ''
+    const tagNote =
+      matchedTags.length && !name.includes(term) ? ` ${style.dim}(${matchedTags.join(', ')})${style.off}` : ''
     console.log(`  ${mark} ${name}${tagNote}`)
   }
 

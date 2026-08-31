@@ -51,7 +51,7 @@ function resolve(names, index) {
     })
     throw new Error(
       `${missing.length} icon(s) in src/img/icons.yml do not exist:\n${lines.join('\n')}\n` +
-        '\nTry `just icons-search <term>` — a name may be a deprecated alias (lucide-static\'s sprite carries canonical names only).'
+        "\nTry `just icons-search <term>` — a name may be a deprecated alias (lucide-static's sprite carries canonical names only)."
     )
   }
 

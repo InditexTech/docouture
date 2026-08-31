@@ -76,7 +76,9 @@ export async function loadMasks() {
   const vendored = new Set(await loadManifest())
   const notVendored = masks.filter((name) => !vendored.has(name))
   if (notVendored.length) {
-    throw new Error(`\`masks:\` in ${paths.manifest} lists ${notVendored.join(', ')}, not present under \`icons:\` — add it there first`)
+    throw new Error(
+      `\`masks:\` in ${paths.manifest} lists ${notVendored.join(', ')}, not present under \`icons:\` — add it there first`
+    )
   }
 
   return masks

@@ -157,7 +157,11 @@ function renderHeader(icon, subheader, parent) {
     if (ICON_RX.test(icon)) {
       iconHtml = '<span class="docouture-card__icon dt-icon-mask--' + escapeHtml(icon) + '" aria-hidden="true"></span>'
     } else {
-      warn(parent, '[card,icon="' + icon + '"]', 'not an icon reference; expected a bare Lucide icon name, e.g. `store`')
+      warn(
+        parent,
+        '[card,icon="' + icon + '"]',
+        'not an icon reference; expected a bare Lucide icon name, e.g. `store`'
+      )
     }
   }
   const subheaderHtml = subheader ? '<span class="docouture-card__subheader">' + escapeHtml(subheader) + '</span>' : ''

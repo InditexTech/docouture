@@ -133,12 +133,12 @@ Show the **minimal implementation** that accomplishes the goal — the smallest 
 
 ### Docouture blocks
 
-| Use                                                                                 | Block                                                                   |
-| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Equivalent alternatives inside a step (package managers, config formats, languages) | `[tabs]`                                                                |
-| The expected output of a step or of the verification                                | `[source]` block with the real output — searchable, unlike a screenshot |
-| The expected result in a visual tool                                                | A screenshot (image) of the state the reader should see                 |
-| A destructive or irreversible action warning                                        | `WARNING`/`CAUTION` admonition                                          |
+| Use                                                                                 | Block                                                                                                                            |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Equivalent alternatives inside a step (package managers, config formats, languages) | `[tabs]`                                                                                                                         |
+| The expected output of a step or of the verification                                | `[source]` block with the real output — searchable, unlike a screenshot                                                          |
+| The expected result in a visual tool                                                | A screenshot (image) of the state the reader should see                                                                          |
+| A destructive or irreversible action warning                                        | `WARNING`/`CAUTION` admonition                                                                                                   |
 | A recorded walkthrough of the whole task                                            | `video::demo[youtube,640,360]` — sizes and locks the aspect ratio; a supplement to the written steps, not a replacement for them |
 
 ### AsciiDoc skeleton

@@ -1,0 +1,121 @@
+= Branching model
+
+`docouture new --flow` offers two shapes — decided at scaffold time, switchable later
+with `docouture branch-model`.
+
+== Trunk-based — the default
+
+One long-lived branch (`main` by default) plays *both* roles: it's the branch Antora
+tracks live as the *prerelease* version, and it's the branch `docouture-release.yml`
+requires, checks out, and cuts tags from. There is no second code path anywhere for
+this — it's the degenerate case where the two roles below happen to be the same
+branch.
+
+== Git-flow
+
+Two independently-named branches, e.g. `develop` and `main`:
+
+* *prerelease branch* (`develop`) — what `antora-playbook.yml`'s
+  `content.sources[].branches` aggregates as the live prerelease version, and what
+  `docouture-publish-prerelease.yml` watches (pushes to it republish automatically).
+* *release branch* (`main`) — what `docouture-release.yml` requires/checks
+  out/pushes bump commits to, and what `docouture-release-preview.yml` watches
+  (pull requests targeting it get a release preview comment).
+
+Adopting git-flow maps directly onto the existing "merge a `docs/release`-labelled PR"
+release trigger — no event change, only the branch name it's filtered against.
+Hotfix/`release/*` short-lived branches get no dedicated handling: they're ordinary
+feature-branch-shaped PRs into `develop`/`main` from docouture's perspective, already
+covered by the two roles above.
+
+== Which workflow watches which branch
+
+[cols="1,2"]
+|===
+|Workflow |Branch role it watches
+
+|`docouture-pr-verify.yml` |Neither — branch-agnostic, builds every PR's own HEAD via
+`antora-playbook.local.yml`
+|`docouture-publish-prerelease.yml` |prerelease branch (push trigger)
+|`docouture-kroki-cache-warm.yml` |*both*, unconditionally (push trigger — see below)
+|`docouture-release-preview.yml` |release branch (pull_request trigger)
+|`docouture-release.yml` |release branch (pull_request:closed + workflow_dispatch)
+|`docouture-publish.yml` |Neither — never push-triggered, only `workflow_call`-chained
+from `docouture-release.yml` or manually dispatched
+|===
+
+`docouture-kroki-cache-warm.yml` triggers on both branches unconditionally, not just
+one: GitHub's cache-access rule only ever writes a trusted, cross-run cache entry from
+a push to the repository's actual *configured default branch* — and there's no
+reliable way to know at scaffold time which of the two a git-flow repo has set as
+that. Warming both means whichever one really is the default gets its cache entry
+written either way; the other branch's push still produces a normal
+base-branch-scoped cache, so nothing is wasted. (On a trunk-based site this
+collapses to a single entry — both roles are the same branch.)
+
+== A release under git-flow, end to end
+
+. Feature branch → `develop`: only `docouture-pr-verify.yml` fires on the PR (it's
+  branch-agnostic). On merge, `docouture-publish-prerelease.yml` republishes the
+  prerelease docs from `develop`.
+. `develop` → `main`, labelled `docs/release`: `docouture-pr-verify.yml` fires (always)
+  and `docouture-release-preview.yml` now fires too (targets `main`), posting a preview
+  comment. On merge, `docouture-release.yml` cuts the release (checks out `main`, tags
+  it, pushes the tag) and calls `docouture-publish.yml` to build and publish.
+. The merge to `main` is also an ordinary push — but `docouture-publish-prerelease.yml`
+  does *not* fire a second time: its trigger is `develop`-only, so there's no overlap
+  with `docouture-release.yml`'s own publish. (Under trunk-based, where both roles are
+  the same branch, this same-push double-trigger risk is real, and
+  `docouture-release.yml`'s own header comment documents the mitigation.)
+
+== `antora-playbook.yml`'s `content.sources[]` never lists the release branch
+
+Only the prerelease branch appears under `branches:` — the release branch is never a
+*live, content-tracked* branch, only the checkout target `docouture-release.yml` cuts
+tags *from*. A tag is just a pointer to a commit; Antora's `tags:` matcher doesn't care
+which branch produced it. So `docs/stable`/`docs/vX.Y.Z` genuinely reflect whatever was
+on the release branch each time a release was cut, even though the release branch
+itself is never named in the playbook. See xref:main:guides-versioning-modes.adoc[]
+for what `tags:` is set to in each versioning mode.
+
+== Switching later: `docouture branch-model`
+
+[,console]
+----
+$ docouture branch-model git-flow --integration-branch develop
+$ docouture branch-model trunk-based --branch main
+----
+
+Trunk-based → git-flow: the current single branch becomes the *release* branch by
+default (least disruption to anything already tagged off it) — `--integration-branch`
+(the new prerelease branch) is required, since there's nothing on disk to infer that
+name from.
+
+Git-flow → trunk-based: lossy — `--branch` is required and must match one of the two
+current branches exactly; a third, invented name is refused.
+
+Either direction re-renders `.github/workflows/` (the same machinery `docouture
+upgrade` uses) and patches `antora-playbook.yml`'s `content.sources[0].branches` and
+`docs/package.json`'s `docouture.branching` field. It does *not* rename actual git
+branches, touch branch-protection/ruleset rules, or change GitHub's configured default
+branch — those stay manual steps, printed as a reminder after every real run.
+
+== `docouture.branching` is a declared signal, not the source of truth
+
+`docs/package.json`'s `"docouture": {"branching": "trunk-based"}` (or `"git-flow"`) is
+cheap and redundant by design — the actual branch names are never persisted anywhere.
+`docouture branch-model`/`docouture doctor` always re-derive them live, from
+`antora-playbook.yml`'s `content.sources[0].branches` and `docouture-release.yml`'s
+checkout `ref:`, the same way standalone-vs-versioned mode is already derived live
+(`docouture-release.yml`'s own "Detect mode" step) rather than stored anywhere. This
+field only exists so `docouture doctor` has something to compare that derivation
+against — a mismatch between the two is reported as an advisory warning, not a hard
+failure, since it can only ever be *stale*, never a build-breaking config error the
+way the four names in xref:main:guides-modifying-the-navigation.adoc[] are.
+
+== Which one to pick
+
+Trunk-based if one branch is genuinely enough — most sites. Git-flow if the
+repository this docs site lives alongside already reserves `main` for
+release/hotfix merges and uses `develop` as its integration branch — matching the
+docs site's branching to the code's avoids a confusing mismatch between the two.

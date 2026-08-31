@@ -14,6 +14,7 @@ at all).
 
 ### Added
 
+- [#176](https://github.com/InditexTech/docouture/pull/176) [cli] Support git-flow branching alongside trunk-based in docouture scaffolding
 - [#173](https://github.com/InditexTech/docouture/pull/173) [tooling] Docs release: stop creating a GitHub Release for versioned-mode tags, tag only
 - [#168](https://github.com/InditexTech/docouture/pull/168) [tooling] Prefix versioned and standalone modes git tags with docs/ to avoid collision with code release tags
 - [#164](https://github.com/InditexTech/docouture/pull/164) [ui-bundle] Add opt-in bordered style for home hero image

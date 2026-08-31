@@ -53,8 +53,11 @@ content:
 playbook sits one level below the repository root `docouture new` scaffolded into.
 |`sources[].start_path` |Repo-root-relative path to the component's content root
 (where `antora.yml` lives).
-|`sources[].branches` |Which branches are aggregated as versions — see
-xref:main:guides-versioning-modes.adoc[] for what standalone vs. versioned mode sets here.
+|`sources[].branches` |Which branch is aggregated as the live prerelease version — `main`
+for a trunk-based site, or an independently-named integration branch (e.g. `develop`)
+for a git-flow one — see xref:main:guides-branching-model.adoc[] for what sets this, and
+xref:main:guides-versioning-modes.adoc[] for what standalone vs. versioned mode sets for
+`tags` below.
 |`sources[].tags` |Which tags are aggregated as versions — same reference as `branches`.
 |===
 

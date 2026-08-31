@@ -2,14 +2,15 @@ name: docouture-kroki-cache-warm
 
 # GitHub Actions' cache is scoped to the branch/ref a run executes under, not
 # just the key string — and a `pull_request`-triggered run (docouture-release.yml's
-# main trigger) is ALWAYS scoped to that PR's own ephemeral merge ref
-# (`refs/pull/<N>/merge`), by design, even when it targets `main` and even
-# after it merges. See GitHub's own docs ("Restrictions for accessing a
-# cache"): "Caches created by a pull_request run are already scoped to the
-# merge ref ... and cannot be written to the default branch's scope." That
-# means every release PR gets its own throwaway cache scope — release #12's
-# warm Kroki image cache is invisible to release #13, #14, etc., even though
-# the cache KEY (kroki-compose.yml's own hash) never changes between them.
+# release-branch trigger) is ALWAYS scoped to that PR's own ephemeral merge
+# ref (`refs/pull/<N>/merge`), by design, even when it targets the release
+# branch and even after it merges. See GitHub's own docs ("Restrictions for
+# accessing a cache"): "Caches created by a pull_request run are already
+# scoped to the merge ref ... and cannot be written to the default branch's
+# scope." That means every release PR gets its own throwaway cache scope —
+# release #12's warm Kroki image cache is invisible to release #13, #14,
+# etc., even though the cache KEY (kroki-compose.yml's own hash) never
+# changes between them.
 #
 # The one sanctioned way around this (same docs, "Cache access for low-trust
 # workflow triggers"): "ensure there is a trusted workflow that keeps the
@@ -23,18 +24,30 @@ name: docouture-kroki-cache-warm
 # entry warm, so docouture-pr-verify.yml/docouture-release.yml/docouture-publish.yml's own
 # (unmodified) cache steps get a real hit instead of a cold pull on every run.
 #
+# Triggers on push to BOTH the prerelease and release branches,
+# unconditionally (a trunk-based site collapses this to one entry — see
+# TemplateValues.cacheWarmBranchesYaml in copy-template.ts) — this workflow
+# has no reliable way to know at scaffold time which of the two a git-flow
+# repo actually has configured as its GitHub default branch (the one whose
+# cache scope this whole mechanism depends on), so it warms both rather than
+# guessing wrong and silently losing the optimization. Whichever one really
+# is the configured default gets its cache entry written either way; the
+# other branch's push still produces a normal base-branch-scoped cache,
+# benefiting PRs targeting it specifically, so nothing is wasted.
+#
 # Gated on `kroki-enabled` the same way those three are — no point warming a
 # cache for images a disabled site's build will never touch.
 on:
   push:
-    branches: ['main*']
+    branches: [__DOCOUTURE_CACHE_WARM_BRANCHES__]
 
-# Least-privilege default: this job only checks out `main`, warms the
-# Docker/Kroki image cache and writes it via actions/cache (a separate,
-# token-independent cache API, not repository contents) — it never uses
-# GITHUB_TOKEN itself, so it never needs more than read access. Declared
-# explicitly rather than left to inherit whatever the repository/
-# organization's default token permissions happen to be.
+# Least-privilege default: this job only checks out the release/prerelease
+# branch it happened to run against, warms the Docker/Kroki image cache and
+# writes it via actions/cache (a separate, token-independent cache API, not
+# repository contents) — it never uses GITHUB_TOKEN itself, so it never
+# needs more than read access. Declared explicitly rather than left to
+# inherit whatever the repository/organization's default token permissions
+# happen to be.
 permissions:
   contents: read
 
@@ -75,8 +88,9 @@ jobs:
       - name: Install dependencies
         run: __DOCOUTURE_INSTALL_CI__
 
-      # This is `main`'s own real antora-playbook.yml (this workflow only
-      # ever runs on a push to main, so there's no local/tag ambiguity to
+      # This is whichever branch triggered this run's own real
+      # antora-playbook.yml (this workflow only ever runs on a push to the
+      # prerelease or release branch, so there's no local/tag ambiguity to
       # worry about the way docouture-release.yml's build step has) — see
       # docouture-pr-verify.yml's own comment on the `kroki-enabled` attribute.
       - name: Kroki / Detect enabled

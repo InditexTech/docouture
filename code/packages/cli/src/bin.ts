@@ -8,6 +8,7 @@ import { runBuild } from './commands/build.js'
 import { runDoctor } from './commands/doctor.js'
 import { runPublish } from './commands/publish.js'
 import { runUpgrade } from './commands/upgrade.js'
+import { runBranchModel } from './commands/branch-model.js'
 import { runEject } from './commands/eject.js'
 import { runTeardown } from './commands/teardown.js'
 import { runCompletion } from './commands/completion.js'
@@ -35,6 +36,7 @@ const COMMAND_ORDER = [
   'publish',
   'doctor',
   'upgrade',
+  'branch-model',
   'eject',
   'teardown',
   'completion',
@@ -45,7 +47,9 @@ const COMMAND_INFO: Record<(typeof COMMAND_ORDER)[number], CommandInfo> = {
     usageLine: 'new <name>',
     summary: 'Scaffold a new documentation site',
     help: `Usage:
-  docouture new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned] [--pm npm|pnpm] [--yes]
+  docouture new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned]
+    [--flow trunk-based|git-flow] [--branch <name>] [--integration-branch <name>]
+    [--release-branch <name>] [--pm npm|pnpm] [--yes]
 
 Scaffold an Antora documentation site into docs/ (and its workflows into
 .github/workflows/), plus AGENTS.md and agent skills (.opencode/skills/,
@@ -61,6 +65,10 @@ Options:
   --dir <path>     Repository root to scaffold into (default: cwd, or its enclosing repo)
   --title <title>  Site title (default: title-cased from <name>)
   --mode <mode>    'standalone' (default) or 'versioned'
+  --flow <flow>    'trunk-based' (default) or 'git-flow' — see 'docouture branch-model --help'
+  --branch <name>  Trunk-based only: the one branch (default: main)
+  --integration-branch <name>  Git-flow only: the prerelease branch (default: develop)
+  --release-branch <name>      Git-flow only: the release branch (default: main)
   --pm <pm>        'npm' or 'pnpm' (default: auto-detected from a lockfile/packageManager
                    field, or how docouture itself was invoked)
   --yes            Skip the interactive wizard, use defaults for anything unset
@@ -141,7 +149,9 @@ Check that the environment and site configuration are healthy: Node
 version, the four names that must agree (component name, start page,
 content path, package name), git history, that antora is installed,
 and (advisory only) whether AGENTS.md and the scaffolded skills are
-still present.
+still present, whether the docs/release label exists, and whether the
+declared branching model (docs/package.json's docouture.branching)
+agrees with what antora-playbook.yml/docouture-release.yml actually say.
 
 Options:
   --dir <path>  Repository root (default: cwd, or its enclosing repo)
@@ -167,6 +177,45 @@ Options:
   --dir <path>   Repository root (default: cwd, or its enclosing repo)
   --title <title>  Override the title read back from docs/antora.yml
   --dry-run      List what would be written without changing anything
+`,
+  },
+  'branch-model': {
+    usageLine: 'branch-model <model>',
+    summary: 'Switch between trunk-based and git-flow branching',
+    help: `Usage:
+  docouture branch-model <trunk-based|git-flow> [--branch <name>]
+    [--integration-branch <name>] [--release-branch <name>] [--dir <path>] [--dry-run]
+
+Switch an already-scaffolded repository between the trunk-based and
+git-flow branching models — see docs/src/modules/main/pages/
+guides-branching-model.adoc for the full mechanism. Direction is
+inferred from the site's current branch names (read live from
+antora-playbook.yml/docouture-release.yml, never from a stored config)
+versus the <model> argument given here — the same command handles
+both directions.
+
+trunk-based -> git-flow: the current single branch becomes the release
+branch by default (least disruption to anything already tagged off
+it) — --integration-branch <name> (the new prerelease branch) is
+required, since there is nothing on disk to infer that name from.
+
+git-flow -> trunk-based: lossy — --branch <name> is required and must
+match one of the two current branches exactly; a third, invented name
+is refused.
+
+Re-renders .github/workflows/ (same machinery 'docouture upgrade' uses)
+and patches antora-playbook.yml's content.sources[0].branches and
+docs/package.json's docouture.branching field. Does NOT rename actual
+git branches, touch branch-protection/ruleset rules, or change GitHub's
+configured default branch — these stay manual steps, printed as a
+reminder after every real run.
+
+Options:
+  --branch <name>              Trunk-based target only
+  --integration-branch <name>  Git-flow target only: the prerelease branch
+  --release-branch <name>      Git-flow target only: the release branch
+  --dir <path>                 Repository root (default: cwd, or its enclosing repo)
+  --dry-run                    List what would be written without changing anything
 `,
   },
   eject: {
@@ -223,8 +272,8 @@ Examples:
 const CLI_SUMMARY = 'Scaffold, build, and publish Antora documentation sites'
 
 // Left column width of the command table below, including the 2-space
-// indent — wide enough for the longest usageLine ('completion <shell>').
-const COMMAND_COLUMN_WIDTH = 22
+// indent — wide enough for the longest usageLine ('branch-model <model>').
+const COMMAND_COLUMN_WIDTH = 24
 
 const USAGE = `Usage: docouture <command> [options]
 
@@ -254,6 +303,7 @@ const RUNNERS: Record<string, Runner> = {
   publish: runPublish,
   doctor: runDoctor,
   upgrade: runUpgrade,
+  'branch-model': runBranchModel,
   eject: runEject,
   teardown: runTeardown,
   completion: async (argv) => runCompletion(argv),

@@ -21,7 +21,7 @@ name: docouture-release-preview
 on:
   pull_request:
     types: [labeled, synchronize, ready_for_review, opened]
-    branches: ['main*']
+    branches: ['__DOCOUTURE_RELEASE_BRANCH__*']
 
 concurrency:
   group: release-preview
@@ -66,7 +66,8 @@ jobs:
 
       # Same signal docouture-release.yml's own "Detect mode" step reads:
       # antora-playbook.yml's content.sources[] tags, not docs/antora.yml
-      # (identical on main for both modes, so it carries no mode signal).
+      # (identical on the release branch for both modes, so it carries no
+      # mode signal).
       - name: Detect mode
         id: detect
         run: |

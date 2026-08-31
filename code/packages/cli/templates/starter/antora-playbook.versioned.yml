@@ -55,15 +55,16 @@ content:
       # playbook's comment: the starter template's own nested `src/` lands
       # one level below this repository's `docs/`.
       start_path: docs/src
-      # Versioned (Full History): `main` aggregates as the prerelease
-      # version — docs/antora.yml on this branch says `version: prerelease`,
-      # `prerelease: true`, the same as the standalone mode's shape (this
-      # descriptor is identical for both modes on main — see docs/antora.yml's
-      # own comment). `tags: ['docs/v*']` matches every release tag (docs/v1.2.0,
-      # docs/v2.0.0, ...) docouture-release.yml cuts, each an immutable version with
-      # its own copy of docs/antora.yml — the version dropdown grows by one
-      # every release and nothing here ever needs editing again.
-      branches: [main]
+      # Versioned (Full History): __DOCOUTURE_PRERELEASE_BRANCH__ aggregates
+      # as the prerelease version — docs/antora.yml on this branch says
+      # `version: prerelease`, `prerelease: true`, the same as the
+      # standalone mode's shape (this descriptor is identical for both
+      # modes on this branch — see docs/antora.yml's own comment).
+      # `tags: ['docs/v*']` matches every release tag (docs/v1.2.0,
+      # docs/v2.0.0, ...) docouture-release.yml cuts, each an immutable version
+      # with its own copy of docs/antora.yml — the version dropdown grows by
+      # one every release and nothing here ever needs editing again.
+      branches: [__DOCOUTURE_PRERELEASE_BRANCH__]
       tags: ['docs/v*']
 
 ui:

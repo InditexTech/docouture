@@ -18,6 +18,7 @@ import {
 } from '../lib/detect-package-manager.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { AGENTS_MD_FILENAME, hasManagedSection, mergeAgentsMd } from '../lib/agents-md.js'
+import { cacheWarmBranchesYaml, type Branching } from '../lib/branch-detect.js'
 
 // Matches the rule an npm package name (and, not coincidentally, an Antora
 // component name — both end up as URL segments) can safely be: this is
@@ -40,6 +41,16 @@ const NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/
 // is chosen, never as something worth releasing.)
 const MODES = ['standalone', 'versioned'] as const
 type Mode = (typeof MODES)[number]
+
+// The two branching models `docouture new` can scaffold for — see the
+// guides-branching-model guide, and GH #175. 'trunk-based' (the default):
+// one branch plays both roles (prerelease AND release) — the degenerate
+// case, not a second code path anywhere prereleaseBranch/releaseBranch are
+// used. 'git-flow': two independently-named branches, e.g. `develop`
+// (prerelease) and `main` (release) — see antora-playbook.yml's own comment
+// on what "prerelease branch" means, and docouture-release.yml's on
+// "release branch".
+const BRANCH_MODELS = ['trunk-based', 'git-flow'] as const
 
 const PACKAGE_MANAGERS = ['npm', 'pnpm'] as const
 
@@ -197,6 +208,9 @@ interface WizardAnswers {
   title: string
   urlSegment: boolean
   mode: Mode
+  branching: Branching
+  prereleaseBranch: string
+  releaseBranch: string
   pm: PackageManager
 }
 
@@ -209,7 +223,17 @@ interface WizardAnswers {
 // the old hand-rolled readline wizard used.
 async function promptWizard(
   io: NewIO,
-  initial: { name?: string; title?: string; urlSegment?: boolean; mode?: Mode; pm?: PackageManager },
+  initial: {
+    name?: string
+    title?: string
+    urlSegment?: boolean
+    mode?: Mode
+    branching?: Branching
+    branch?: string
+    prereleaseBranch?: string
+    releaseBranch?: string
+    pm?: PackageManager
+  },
   defaults: { pm: PackageManager }
 ): Promise<WizardAnswers> {
   const context = { input: io.input, output: keepOutputOpen(io.output) }
@@ -295,6 +319,68 @@ async function promptWizard(
       context
     ))
 
+  // Branching model — see BRANCH_MODELS' own comment. Unconditional, same
+  // as Versioning mode above; the follow-up branch-name question(s) below
+  // are this wizard's first CONDITIONAL prompt.
+  const branching =
+    initial.branching ??
+    (await select<Branching>(
+      {
+        message: 'Branching model:\n',
+        default: 'trunk-based' as Branching,
+        choices: [
+          {
+            name: 'Trunk-based',
+            value: 'trunk-based',
+            description: 'One long-lived branch plays both the prerelease and release roles — e.g. main.',
+          },
+          {
+            name: 'Git-flow',
+            value: 'git-flow',
+            description:
+              'Two independently-named branches — an integration branch (e.g. develop) for prerelease, ' +
+              'a release branch (e.g. main) for cutting releases.',
+          },
+        ],
+      },
+      context
+    ))
+
+  let prereleaseBranch: string
+  let releaseBranch: string
+  if (branching === 'git-flow') {
+    releaseBranch = (
+      await input(
+        {
+          message: 'Release branch (docouture-release.yml checks this out and cuts tags from it):\n',
+          default: initial.releaseBranch ?? 'main',
+        },
+        context
+      )
+    ).trim()
+    prereleaseBranch = (
+      await input(
+        {
+          message: 'Integration/prerelease branch (antora-playbook.yml tracks this as the live prerelease version):\n',
+          default: initial.prereleaseBranch ?? 'develop',
+        },
+        context
+      )
+    ).trim()
+  } else {
+    const branch = (
+      await input(
+        {
+          message: 'Branch (plays both the prerelease and release roles):\n',
+          default: initial.branch ?? 'main',
+        },
+        context
+      )
+    ).trim()
+    prereleaseBranch = branch
+    releaseBranch = branch
+  }
+
   const pm =
     initial.pm ??
     (await select<PackageManager>(
@@ -309,7 +395,16 @@ async function promptWizard(
       context
     ))
 
-  return { name, title: title.length > 0 ? title : defaultTitle, urlSegment, mode, pm }
+  return {
+    name,
+    title: title.length > 0 ? title : defaultTitle,
+    urlSegment,
+    mode,
+    branching,
+    prereleaseBranch,
+    releaseBranch,
+    pm,
+  }
 }
 
 export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<number> {
@@ -321,6 +416,13 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // already "off", so the only thing worth scripting is turning it on.
   let urlSegment: boolean | undefined = flags['url-segment'] === true ? true : undefined
   let mode: Mode | undefined
+  let branching: Branching | undefined
+  let prereleaseBranch: string | undefined
+  let releaseBranch: string | undefined
+  const branchFlag = typeof flags.branch === 'string' ? flags.branch : undefined
+  const integrationBranchFlag =
+    typeof flags['integration-branch'] === 'string' ? flags['integration-branch'] : undefined
+  const releaseBranchFlag = typeof flags['release-branch'] === 'string' ? flags['release-branch'] : undefined
   let pmChoice: PackageManager | undefined
 
   if (typeof flags.mode === 'string') {
@@ -329,6 +431,14 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
       return 1
     }
     mode = flags.mode as Mode
+  }
+
+  if (typeof flags.flow === 'string') {
+    if (!(BRANCH_MODELS as readonly string[]).includes(flags.flow)) {
+      console.error(`invalid --flow: '${flags.flow}' — expected 'trunk-based' or 'git-flow'`)
+      return 1
+    }
+    branching = flags.flow as Branching
   }
 
   if (typeof flags.pm === 'string') {
@@ -353,22 +463,55 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   const skipWizard = flags.yes === true || !io.isTTY
 
   if (!skipWizard) {
-    const answers = await promptWizard(io, { name, title, urlSegment, mode, pm: pmChoice }, { pm: pmGuess })
+    const answers = await promptWizard(
+      io,
+      {
+        name,
+        title,
+        urlSegment,
+        mode,
+        branching,
+        branch: branchFlag,
+        prereleaseBranch: integrationBranchFlag,
+        releaseBranch: releaseBranchFlag,
+        pm: pmChoice,
+      },
+      { pm: pmGuess }
+    )
     name = answers.name
     title = answers.title
     urlSegment = answers.urlSegment
     mode = answers.mode
+    branching = answers.branching
+    prereleaseBranch = answers.prereleaseBranch
+    releaseBranch = answers.releaseBranch
     pmChoice = answers.pm
     io.output.write('\n')
   }
 
   mode = mode ?? 'standalone'
+  branching = branching ?? 'trunk-based'
   pmChoice = pmChoice ?? pmGuess
   urlSegment = urlSegment ?? false
 
+  // Non-interactive path (--yes, or no TTY): resolve from flags/defaults
+  // the same way the wizard would have, rather than leaving these unset —
+  // trunk-based collapses to one branch name playing both roles, same as
+  // BRANCH_MODELS' own comment describes.
+  if (branching === 'git-flow') {
+    prereleaseBranch = prereleaseBranch ?? integrationBranchFlag ?? 'develop'
+    releaseBranch = releaseBranch ?? releaseBranchFlag ?? 'main'
+  } else {
+    const branch = branchFlag ?? 'main'
+    prereleaseBranch = prereleaseBranch ?? branch
+    releaseBranch = releaseBranch ?? branch
+  }
+
   if (!name) {
     console.error(
-      'usage: docouture new <name> [--dir <path>] [--title <title>] [--url-segment] [--mode standalone|versioned] [--pm npm|pnpm]'
+      'usage: docouture new <name> [--dir <path>] [--title <title>] [--url-segment] [--mode standalone|versioned] ' +
+        '[--flow trunk-based|git-flow] [--branch <name>] [--integration-branch <name>] [--release-branch <name>] ' +
+        '[--pm npm|pnpm]'
     )
     return 1
   }
@@ -498,6 +641,10 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     pmSetupStepYaml: pm.setupStepYaml,
     pmPackageManagerField: pm.packageManagerField,
     repoIgnoreGlob: repoIgnoreGlob(target),
+    prereleaseBranch,
+    releaseBranch,
+    branching,
+    cacheWarmBranchesYaml: cacheWarmBranchesYaml(prereleaseBranch, releaseBranch),
   }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own
@@ -533,7 +680,17 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     )
   }
 
-  printNextSteps({ mode, pm, target, docsDir, workflowsDir, ghPagesUrl: githubPagesUrl(target) })
+  printNextSteps({
+    mode,
+    branching,
+    prereleaseBranch,
+    releaseBranch,
+    pm,
+    target,
+    docsDir,
+    workflowsDir,
+    ghPagesUrl: githubPagesUrl(target),
+  })
 
   return 0
 }
@@ -544,13 +701,16 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
 // own banner — see lib/theme.ts for why that's not picocolors directly.
 function printNextSteps(args: {
   mode: Mode
+  branching: Branching
+  prereleaseBranch: string
+  releaseBranch: string
   pm: PackageManagerPlan
   target: string
   docsDir: string
   workflowsDir: string
   ghPagesUrl: string | undefined
 }): void {
-  const { mode, pm, target, docsDir, workflowsDir, ghPagesUrl } = args
+  const { mode, branching, prereleaseBranch, releaseBranch, pm, target, docsDir, workflowsDir, ghPagesUrl } = args
   const created = (path: string): string => `  ${theme.success('✓')} ${path}`
 
   // Relative to `target` (the repo root), not process.cwd() — cwd may be a
@@ -582,9 +742,22 @@ function printNextSteps(args: {
   console.log('  docouture-docs-internals and, for a versioned-mode site, docouture-docs-versioning)')
 
   console.log('')
+  if (branching === 'git-flow') {
+    console.log(theme.bold('Branching: Git-flow'))
+    console.log(`  ${prereleaseBranch} is the prerelease/integration branch; ${releaseBranch} is the release branch.`)
+    console.log(`  docouture-release.yml only runs against ${releaseBranch}; ordinary content merges into`)
+    console.log(`  ${prereleaseBranch} publish continuously via docouture-publish-prerelease.yml.`)
+  } else {
+    console.log(theme.bold('Branching: Trunk-based'))
+    console.log(`  ${releaseBranch} plays both the prerelease and release roles.`)
+  }
+  console.log('  See docs/src/modules/main/pages/guides-branching-model.adoc for the full lifecycle,')
+  console.log("  and 'docouture branch-model' to switch later.")
+
+  console.log('')
   if (mode === 'versioned') {
     console.log(theme.bold('Versioning: Versioned (Full History)'))
-    console.log('  main is the prerelease channel.')
+    console.log(`  ${prereleaseBranch} is the prerelease channel.`)
     console.log('')
     console.log('  To cut your first release:')
     console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
@@ -600,11 +773,13 @@ function printNextSteps(args: {
     )
   } else {
     console.log(theme.bold('Versioning: Standalone (Stable + Prerelease)'))
-    console.log('  main is the prerelease channel.')
+    console.log(`  ${prereleaseBranch} is the prerelease channel.`)
     console.log('')
     console.log('  To cut your first stable release:')
     console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
-    console.log("    2. Merge any PR labeled 'docs/release' into main — docouture-release.yml runs automatically")
+    console.log(
+      `    2. Merge any PR labeled 'docs/release' into ${releaseBranch} — docouture-release.yml runs automatically`
+    )
     console.log('')
     console.log('  (or skip the label/PR entirely: run docouture-release.yml manually via workflow_dispatch,')
     console.log('  default input is fine)')

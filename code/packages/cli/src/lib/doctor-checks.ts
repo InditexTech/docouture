@@ -4,6 +4,8 @@ import { execFile } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 
+import type { Branching } from './branch-detect.js'
+
 // Each check here is a plain function returning a result rather than
 // printing directly — `commands/doctor.ts` owns all output formatting, so
 // these are unit-testable against fixture directories without capturing
@@ -276,4 +278,63 @@ export function checkAgentFilesPresent(repoRoot: string): CheckResult[] {
           detail: "run 'docouture upgrade' in this repository to regenerate it, or restore it from version control",
         }
   })
+}
+
+export interface BranchingInput {
+  /** `docs/package.json` -> `docouture.branching`, or null if absent (predates GH #175, or hand-removed). */
+  declaredBranching: string | null
+  /**
+   * Derived live from antora-playbook.yml's content.sources[0].branches and
+   * docouture-release.yml's checkout ref — see lib/branch-detect.ts's
+   * detectBranches/inferBranching, which this is never itself a
+   * replacement for: `declaredBranching` is a cheap, redundant-by-design
+   * signal, this is the actual state it's compared against.
+   */
+  actualBranching: Branching | null
+}
+
+/**
+ * Whether `docs/package.json`'s declared `docouture.branching` still agrees
+ * with what antora-playbook.yml/docouture-release.yml actually say — the
+ * same "names must agree" idiom as checkNamesAgree above, just for a single
+ * pair instead of four. Advisory only, same reasoning as
+ * checkReleaseLabelExists: a site predating GH #175 (no declared value yet)
+ * or one where the derivation itself failed (malformed/hand-edited
+ * templates) is reported as `ok: true` rather than a failure — only an
+ * actual, confident disagreement between the two is `ok: false`.
+ */
+export function checkBranchingAgrees(input: BranchingInput): CheckResult {
+  const label = 'branching model'
+
+  if (!input.declaredBranching) {
+    return {
+      ok: true,
+      label,
+      message: 'no docouture.branching declared in docs/package.json — skipping',
+    }
+  }
+
+  if (!input.actualBranching) {
+    return {
+      ok: true,
+      label,
+      message: 'could not derive the current branch names from antora-playbook.yml/docouture-release.yml — skipping',
+    }
+  }
+
+  if (input.declaredBranching === input.actualBranching) {
+    return {
+      ok: true,
+      label,
+      message: `docouture.branching '${input.declaredBranching}' matches what antora-playbook.yml/docouture-release.yml actually say`,
+    }
+  }
+
+  return {
+    ok: false,
+    label,
+    message: `docouture.branching '${input.declaredBranching}' != actual '${input.actualBranching}' (derived from antora-playbook.yml/docouture-release.yml)`,
+    detail:
+      "run 'docouture branch-model <trunk-based|git-flow>' to re-sync everything, or fix docs/package.json's docouture.branching by hand if it's simply stale",
+  }
 }

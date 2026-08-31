@@ -19,6 +19,7 @@
 ** xref:main:guides-setup-the-product-logo.adoc[Setup the product logo]
 * xref:main:guides-versioning-publishing.adoc[Versioning & publishing]
 ** xref:main:guides-versioning-modes.adoc[Versioning modes]
+** xref:main:guides-branching-model.adoc[Branching model]
 ** xref:main:guides-releasing-a-documentation.adoc[Releasing a documentation]
 ** xref:main:guides-publishing-a-documentation.adoc[Publishing a documentation]
 * Reference

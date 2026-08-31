@@ -93,3 +93,55 @@ export function readSourceUrl(content: string): string | null {
 export function readOutputDir(content: string): string | null {
   return firstField(topLevelBlock(content, 'output'), 'dir')
 }
+
+/**
+ * `content.sources[0].branches` — an inline YAML array (e.g. `[main]`), not
+ * a scalar, so this reads it as one and splits it, unlike every other
+ * reader above. Used by lib/branch-detect.ts to derive the *prerelease*
+ * branch role (GH #175) — see that module's own comment on why this is
+ * derived live rather than stored anywhere.
+ */
+export function readBranches(content: string): string[] | null {
+  const raw = firstField(topLevelBlock(content, 'content'), 'branches')
+  if (!raw) return null
+  const inner = raw.trim().replace(/^\[/, '').replace(/\]$/, '')
+  const values = inner
+    .split(',')
+    .map((value) => value.trim().replace(/^['"]|['"]$/g, ''))
+    .filter(Boolean)
+  return values.length > 0 ? values : null
+}
+
+/**
+ * Rewrites `content.sources[0].branches`'s inline array to a single new
+ * branch name — the one write this module performs, used by `docouture
+ * branch-model` (GH #175) to update an existing site's playbook without a
+ * full re-scaffold. Mirrors topLevelBlock's own line-classification (blank/
+ * comment lines skipped, a non-indented line either continues or ends the
+ * block) so the same top-level-key scoping applies here as everywhere else
+ * in this file; returns `content` unchanged if no `branches:` line is found
+ * within `content:`'s block.
+ */
+export function writeBranches(content: string, branch: string): string {
+  const lines = content.split('\n')
+  let inBlock = false
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]!
+    if (/^\s*(?:#.*)?$/.test(line)) continue
+    if (/^\S/.test(line)) {
+      if (inBlock) break
+      inBlock = /^content:/.test(line)
+      continue
+    }
+    if (inBlock) {
+      const match = /^(\s*(?:-\s*)?branches:\s*)\[[^\]]*\](.*)$/.exec(line)
+      if (match) {
+        lines[i] = `${match[1]}[${branch}]${match[2]}`
+        return lines.join('\n')
+      }
+    }
+  }
+
+  return content
+}

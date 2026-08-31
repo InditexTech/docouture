@@ -12,6 +12,7 @@ import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-
 import { resolveConfig } from '../lib/config-resolver.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { AGENTS_MD_FILENAME, mergeAgentsMd } from '../lib/agents-md.js'
+import { cacheWarmBranchesYaml, detectBranches } from '../lib/branch-detect.js'
 
 // Same check `new.ts` uses, duplicated rather than imported — it's three
 // lines, and `doctor-checks.ts` already sets the precedent of duplicating a
@@ -111,6 +112,19 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     { title: typeof flags.title === 'string' ? flags.title : undefined }
   )
 
+  // Re-derived live too, same reasoning as name/title above — upgrade
+  // re-copies every workflow template (unlike docs/), and those templates
+  // now carry __DOCOUTURE_PRERELEASE_BRANCH__/__DOCOUTURE_RELEASE_BRANCH__
+  // (GH #175) — real branch names are required here, not stubs, or an
+  // upgrade would silently overwrite a git-flow site's workflows back to
+  // whatever these placeholders' un-substituted default would be. See
+  // lib/branch-detect.ts's own comment on why these are derived live
+  // rather than read back from a stored config.
+  const siteRoot = join(target, 'docs')
+  const detected = await detectBranches(siteRoot, target)
+  const prereleaseBranch = detected.prerelease ?? 'main'
+  const releaseBranch = detected.release ?? 'main'
+
   const values = {
     name,
     title,
@@ -137,6 +151,13 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     // pattern matching every URL, which would be a silent, dangerous no-op
     // if this value were ever actually substituted somewhere.
     repoIgnoreGlob: 'unused-by-upgrade',
+    prereleaseBranch,
+    releaseBranch,
+    // docs/package.json (the only template file this placeholder appears
+    // in) is never re-copied by upgrade — same reasoning as
+    // pmPackageManagerField/repoIgnoreGlob above.
+    branching: 'unused-by-upgrade',
+    cacheWarmBranchesYaml: cacheWarmBranchesYaml(prereleaseBranch, releaseBranch),
   }
 
   const workflowsDir = join(target, '.github', 'workflows')

@@ -58,14 +58,16 @@ content:
       # copied under this repository's `docs/`, so the descriptor ends up at
       # `docs/src/antora.yml`.
       start_path: docs/src
-      # Standalone: `main` aggregates as the prerelease version —
-      # docs/antora.yml on this branch permanently says `version: prerelease`,
-      # `prerelease: true`. `docs/stable` is a rolling tag that docouture-release.yml
-      # force-moves to a fresh one-off commit on every release, not a second
-      # long-lived branch. Until the first release, `docs/stable` does not exist
-      # yet and this site builds with just the one (prerelease) version —
-      # that is expected, not an error.
-      branches: [main]
+      # Standalone: __DOCOUTURE_PRERELEASE_BRANCH__ aggregates as the prerelease
+      # version — docs/antora.yml on this branch permanently says
+      # `version: prerelease`, `prerelease: true`. `docs/stable` is a rolling
+      # tag that docouture-release.yml force-moves to a fresh one-off commit
+      # on every release, cut from the (independently-named) release branch
+      # — see docouture-release.yml's own header and the
+      # guides-branching-model guide. Until the first release, `docs/stable`
+      # does not exist yet and this site builds with just the one
+      # (prerelease) version — that is expected, not an error.
+      branches: [__DOCOUTURE_PRERELEASE_BRANCH__]
       tags: ['docs/stable']
 
 ui:

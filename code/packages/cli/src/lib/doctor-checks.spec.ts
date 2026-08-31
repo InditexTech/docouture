@@ -10,6 +10,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import {
   checkAgentFilesPresent,
   checkAntoraAvailable,
+  checkBranchingAgrees,
   checkGitHasCommit,
   checkNamesAgree,
   checkNodeVersion,
@@ -202,5 +203,30 @@ describe('checkReleaseLabelExists', () => {
     // "cannot check" case this function treats as advisory, not broken.
     expect(result.ok).toBe(true)
     expect(result.label).toBe('docs/release label')
+  })
+})
+
+describe('checkBranchingAgrees', () => {
+  it('is advisory-only (ok: true) when no docouture.branching is declared yet — predates GH #175', () => {
+    const result = checkBranchingAgrees({ declaredBranching: null, actualBranching: 'trunk-based' })
+    expect(result.ok).toBe(true)
+  })
+
+  it('is advisory-only (ok: true) when the actual branching could not be derived', () => {
+    const result = checkBranchingAgrees({ declaredBranching: 'trunk-based', actualBranching: null })
+    expect(result.ok).toBe(true)
+  })
+
+  it('passes when the declared value matches the derived one', () => {
+    const result = checkBranchingAgrees({ declaredBranching: 'git-flow', actualBranching: 'git-flow' })
+    expect(result.ok).toBe(true)
+  })
+
+  it('fails when the declared value disagrees with the derived one', () => {
+    const result = checkBranchingAgrees({ declaredBranching: 'trunk-based', actualBranching: 'git-flow' })
+    expect(result.ok).toBe(false)
+    expect(result.message).toContain("'trunk-based'")
+    expect(result.message).toContain("'git-flow'")
+    expect(result.detail).toContain('docouture branch-model')
   })
 })

@@ -335,11 +335,25 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
     }
   }
 
-  if (!existsSync(root)) {
-    log('no build output yet, building the site')
-    if (!(await runBuild())) {
+  // Always build once up front, even when a prior `build/site` already
+  // exists on disk (a previous `docouture build`/`dev` session, or one this
+  // process's own file watcher hasn't caught up to yet) — serving stale
+  // output silently, with no visible sign anything is out of date, was a
+  // real footgun: a `docouture dev` started after content changed on disk
+  // since the last build would show the OLD site until the next watched
+  // change fired, which can look indistinguishable from "my edit didn't
+  // take" if that first edit is what's being tested. Only when there's
+  // truly nothing to fall back to (no prior `build/site` at all) does a
+  // failed initial build actually throw; if stale output already exists,
+  // this degrades exactly like a failed watch-triggered rebuild does
+  // below — log it and keep serving what's there.
+  const hadExistingBuild = existsSync(root)
+  log(hadExistingBuild ? 'building the site' : 'no build output yet, building the site')
+  if (!(await runBuild())) {
+    if (!hadExistingBuild) {
       throw new Error('initial build failed')
     }
+    logError('initial rebuild failed, serving the previous build')
   }
 
   await new Promise<void>((resolvePromise, reject) => {

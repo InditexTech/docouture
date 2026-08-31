@@ -5,6 +5,8 @@ scaffold time, cutting a release, and the workflows that actually publish it.
 
 * xref:main:guides-versioning-modes.adoc[Versioning modes] — Standalone (Stable + Prerelease)
   vs. Versioned (Full History), decided once at scaffold time.
+* xref:main:guides-branching-model.adoc[Branching model] — trunk-based vs. git-flow,
+  switchable later with `docouture branch-model`.
 * xref:main:guides-releasing-a-documentation.adoc[Releasing a documentation] — cutting a
   release via `docouture-release.yml`, manually or on a labelled merge to `main`.
 * xref:main:guides-publishing-a-documentation.adoc[Publishing a documentation] — the

@@ -29,7 +29,7 @@ name: docouture-publish
 # than a coincidence of two workflows independently reacting to the same
 # git push. `workflow_call` is what makes that direct call possible.
 # `workflow_dispatch` is kept alongside it for a manual rebuild+republish
-# of whatever is currently on `main`, without cutting a new release.
+# of whatever is currently checked out, without cutting a new release.
 on:
   workflow_call: {}
   workflow_dispatch: {}

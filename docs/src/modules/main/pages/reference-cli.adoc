@@ -1,7 +1,7 @@
 = CLI
 
 Every `docouture` command (`@inditextech/docouture-cli`), reproduced from its own
-`--help` text. All ten accept `--dir <path>` to run from anywhere inside the target
+`--help` text. All eleven accept `--dir <path>` to run from anywhere inside the target
 repository — the actual root is found by walking up, same as `git` itself.
 
 Global flags, valid before or after the command name: `-h`/`--help`, `-v`/`--version`,
@@ -24,6 +24,11 @@ git repository. Prompts interactively for anything not given as a flag, in a ter
 |`--title <title>` |Site title (default: title-cased from `<name>`)
 |`--mode <mode>` |`standalone` (default) or `versioned` — see
 xref:main:guides-versioning-modes.adoc[]
+|`--flow <flow>` |`trunk-based` (default) or `git-flow` — see
+xref:main:guides-branching-model.adoc[]
+|`--branch <name>` |Trunk-based only: the one branch (default: `main`)
+|`--integration-branch <name>` |Git-flow only: the prerelease branch (default: `develop`)
+|`--release-branch <name>` |Git-flow only: the release branch (default: `main`)
 |`--pm <pm>` |`npm` or `pnpm` (default: auto-detected)
 |`--yes` |Skip the interactive wizard
 |===
@@ -89,8 +94,11 @@ $ docouture publish gh-pages --branch gh-pages
 
 Check environment and site health: https://nodejs.org[Node] version, the four names
 that must agree (see xref:main:guides-modifying-the-navigation.adoc[]), git history, that
-Antora is installed, and (advisory only) whether `AGENTS.md` is still present and the
-`docs/release` label exists. Does not check for the agent skills — see
+Antora is installed, and (advisory only) whether `AGENTS.md` is still present, whether the
+`docs/release` label exists, and whether the declared branching model
+(`docs/package.json`'s `docouture.branching`) agrees with what
+`antora-playbook.yml`/`docouture-release.yml` actually say — see
+xref:main:guides-branching-model.adoc[]. Does not check for the agent skills — see
 xref:main:reference-ai-first-approach.adoc[], those are a separate, self-serve install
 this CLI never scaffolds or verifies.
 
@@ -112,6 +120,39 @@ docouture's own managed section is replaced. Never touches `docs/` content itsel
 |Flag |Effect
 
 |`--title <title>` |Overrides the title read back from `antora.yml`
+|`--dry-run` |Lists what would be written without writing it
+|===
+
+== `docouture branch-model <model>`
+
+Switch an already-scaffolded repository between the trunk-based and git-flow
+branching models — see xref:main:guides-branching-model.adoc[] for the full mechanism.
+Direction is inferred from the site's current branch names (read live from
+`antora-playbook.yml`/`docouture-release.yml`, never from a stored config) versus the
+`<model>` argument given here — the same command handles both directions.
+
+Trunk-based → git-flow: the current single branch becomes the release branch by
+default (least disruption to anything already tagged off it) — `--integration-branch`
+(the new prerelease branch) is required, since there is nothing on disk to infer that
+name from.
+
+Git-flow → trunk-based: lossy — `--branch` is required and must match one of the two
+current branches exactly; a third, invented name is refused.
+
+Re-renders `.github/workflows/` (same machinery `docouture upgrade` uses) and patches
+`antora-playbook.yml`'s `content.sources[0].branches` and `docs/package.json`'s
+`docouture.branching` field. Does NOT rename actual git branches, touch
+branch-protection/ruleset rules, or change GitHub's configured default branch — these
+stay manual steps, printed as a reminder after every real run.
+
+[cols="1,2"]
+|===
+|Argument/Flag |Effect
+
+|`<model>` |Target model: `trunk-based` or `git-flow`
+|`--branch <name>` |Trunk-based target only
+|`--integration-branch <name>` |Git-flow target only: the new prerelease branch
+|`--release-branch <name>` |Git-flow target only: overrides the release branch's name
 |`--dry-run` |Lists what would be written without writing it
 |===
 

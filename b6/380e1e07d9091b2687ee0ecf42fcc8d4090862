@@ -1,0 +1,317 @@
+.opencode/skills/monitor-ci/scripts/ci-poll-decide.mjs
+  s_1d4a5257321709::t_ee855ae6c57d92 3-6
+.opencode/skills/monitor-ci/scripts/ci-state-update.mjs
+  s_1d4a5257321709::t_98b852a28e3ef0 3-6
+code/eslint.config.mjs
+  s_1d4a5257321709::t_02325f5798a770 1-4
+code/packages/antora-extensions/index.js
+  s_1d4a5257321709::t_9a32d4aa3eba91 1-4
+code/packages/antora-extensions/lib/changelog-pages.js
+  s_1d4a5257321709::t_ab69fb4f552e04 1-4
+code/packages/antora-extensions/lib/changelog-pages.spec.js
+  s_1d4a5257321709::t_362e319b4f0edc 1-4
+code/packages/antora-extensions/lib/duplicate-latest-version.js
+  s_1d4a5257321709::t_5bcfdb7ece0593 1-4
+code/packages/antora-extensions/lib/duplicate-latest-version.spec.js
+  s_1d4a5257321709::t_af57a5abfb99b9 1-4
+code/packages/antora-extensions/lib/footer.js
+  s_1d4a5257321709::t_6c2aef4b3d113f 1-4
+code/packages/antora-extensions/lib/html-to-markdown.js
+  s_1d4a5257321709::t_13d55d748d2f79 1-4
+code/packages/antora-extensions/lib/html-to-markdown.spec.js
+  s_1d4a5257321709::t_799c7a44f358a1 1-4
+code/packages/antora-extensions/lib/kroki-docker.js
+  s_1d4a5257321709::t_1c8786c0d18f32 1-4
+code/packages/antora-extensions/lib/kroki-docker.spec.js
+  s_1d4a5257321709::t_ae835c55a254ad 1-4
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  s_1d4a5257321709::t_534845dff93e6e 1-4
+code/packages/antora-extensions/lib/kroki-prewarm.spec.js
+  s_1d4a5257321709::t_4be6e7f0c646a3 1-4
+code/packages/antora-extensions/lib/lifecycle-log.js
+  s_1d4a5257321709::t_b56c8ab14c956d 1-4
+code/packages/antora-extensions/lib/lifecycle-log.spec.js
+  s_1d4a5257321709::t_92118d1182b0b9 1-4
+code/packages/antora-extensions/lib/llms-txt.js
+  s_1d4a5257321709::t_bd410f9d28b32f 1-4
+code/packages/antora-extensions/lib/llms-txt.spec.js
+  s_1d4a5257321709::t_b37801770a7466 1-4
+code/packages/antora-extensions/lib/nav-modules.js
+  s_1d4a5257321709::t_78a201fb2abce2 1-4
+code/packages/antora-extensions/lib/not-found-page.js
+  s_1d4a5257321709::t_86880f6edc5914 1-4
+code/packages/antora-extensions/lib/redirects.js
+  s_1d4a5257321709::t_200634146e6282 1-4
+code/packages/antora-extensions/lib/redirects.spec.js
+  s_1d4a5257321709::t_9c6157d540eba2 1-4
+code/packages/antora-extensions/lib/resolve-url.js
+  s_1d4a5257321709::t_718a3786126aad 1-4
+code/packages/antora-extensions/lib/search-index.js
+  s_1d4a5257321709::t_99698bf2824997 1-4
+code/packages/antora-extensions/lib/search-index.spec.js
+  s_1d4a5257321709::t_b79ba956924a35 1-4
+code/packages/antora-extensions/lib/shiki-prewarm.js
+  s_1d4a5257321709::t_23c37863438e43 1-4
+code/packages/antora-extensions/lib/version-report.js
+  s_1d4a5257321709::t_bbbb4fc78b86dc 1-4
+code/packages/antora-extensions/lib/version-report.spec.js
+  s_1d4a5257321709::t_b1bb708e8ddd47 1-4
+code/packages/antora-extensions/vitest.config.js
+  s_1d4a5257321709::t_64fccc7061ee82 1-4
+code/packages/cli/scripts/chmod-bin.mjs
+  s_1d4a5257321709::t_d002d0f0dbd3c9 2-6
+code/packages/cli/scripts/copy-templates.mjs
+  s_1d4a5257321709::t_6023cb7071e03f 2-6
+code/packages/cli/src/bin.ts
+  s_1d4a5257321709::t_95ee798d9f5ed7 2-6
+code/packages/cli/src/commands/branch-model.spec.ts
+  s_1d4a5257321709::t_98b2f426e759de 1-4
+code/packages/cli/src/commands/branch-model.ts
+  s_1d4a5257321709::t_9f73dc8d42552a 1-4
+code/packages/cli/src/commands/build.spec.ts
+  s_1d4a5257321709::t_298f966551a283 1-4
+code/packages/cli/src/commands/build.ts
+  s_1d4a5257321709::t_c055ee6d1eca4a 1-4
+code/packages/cli/src/commands/completion.spec.ts
+  s_1d4a5257321709::t_9b1d4c25b99def 1-4
+code/packages/cli/src/commands/completion.ts
+  s_1d4a5257321709::t_9492c87faa33b1 1-4
+code/packages/cli/src/commands/dev.spec.ts
+  s_1d4a5257321709::t_b43c7646e62a5d 1-4
+code/packages/cli/src/commands/dev.ts
+  s_1d4a5257321709::t_f37d43a5d8c4c8 1-4
+code/packages/cli/src/commands/doctor.spec.ts
+  s_1d4a5257321709::t_3104deee86c39f 1-4
+code/packages/cli/src/commands/doctor.ts
+  s_1d4a5257321709::t_493b6bc218c2bd 1-4
+code/packages/cli/src/commands/eject.spec.ts
+  s_1d4a5257321709::t_165bc8a975aa03 1-4
+code/packages/cli/src/commands/eject.ts
+  s_1d4a5257321709::t_9b980f890a63f5 1-4
+code/packages/cli/src/commands/new.spec.ts
+  s_1d4a5257321709::t_7d91ff517f2ead 1-4
+code/packages/cli/src/commands/new.ts
+  s_1d4a5257321709::t_45f0161ea89052 1-4
+code/packages/cli/src/commands/publish.spec.ts
+  s_1d4a5257321709::t_9b74b49a00021d 1-4
+code/packages/cli/src/commands/publish.ts
+  s_1d4a5257321709::t_0e9061b5eef108 1-4
+code/packages/cli/src/commands/teardown.spec.ts
+  s_1d4a5257321709::t_059fef1cbdb59a 1-4
+code/packages/cli/src/commands/teardown.ts
+  s_1d4a5257321709::t_bb1f1457bf59a4 1-4
+code/packages/cli/src/commands/upgrade.spec.ts
+  s_1d4a5257321709::t_65808e9a67b5fa 1-4
+code/packages/cli/src/commands/upgrade.ts
+  s_1d4a5257321709::t_37b19b910ab01d 1-4
+code/packages/cli/src/commands/version.spec.ts
+  s_1d4a5257321709::t_b780f67ff1bce7 1-4
+code/packages/cli/src/commands/version.ts
+  s_1d4a5257321709::t_c589bc8263e31e 1-4
+code/packages/cli/src/lib/agents-md.spec.ts
+  s_1d4a5257321709::t_e1201cb32fbaf2 1-4
+code/packages/cli/src/lib/agents-md.ts
+  s_1d4a5257321709::t_5ac0c7abe889c5 1-4
+code/packages/cli/src/lib/antora-log.spec.ts
+  s_1d4a5257321709::t_0ed468c6af4fe5 1-4
+code/packages/cli/src/lib/antora-log.ts
+  s_1d4a5257321709::t_dd77e627f2cbee 1-4
+code/packages/cli/src/lib/antora-yml.spec.ts
+  s_1d4a5257321709::t_3a92e778ca494d 1-4
+code/packages/cli/src/lib/antora-yml.ts
+  s_1d4a5257321709::t_0c8b3ee3dd5e6e 1-4
+code/packages/cli/src/lib/args.spec.ts
+  s_1d4a5257321709::t_eabdeac0e81edf 1-4
+code/packages/cli/src/lib/args.ts
+  s_1d4a5257321709::t_0b7b4005d6351f 1-4
+code/packages/cli/src/lib/branch-detect.spec.ts
+  s_1d4a5257321709::t_c629c9ba673511 1-4
+code/packages/cli/src/lib/branch-detect.ts
+  s_1d4a5257321709::t_36ab2128b8a649 1-4
+code/packages/cli/src/lib/cli-context.spec.ts
+  s_1d4a5257321709::t_d9713d28406021 1-4
+code/packages/cli/src/lib/cli-context.ts
+  s_1d4a5257321709::t_d31ee50a277a83 1-4
+code/packages/cli/src/lib/cli-info.ts
+  s_1d4a5257321709::t_294b3cb8fd69c0 1-4
+code/packages/cli/src/lib/config-resolver.spec.ts
+  s_1d4a5257321709::t_c5ff0d39de8dc3 1-4
+code/packages/cli/src/lib/config-resolver.ts
+  s_1d4a5257321709::t_fa419e1da0ac63 1-4
+code/packages/cli/src/lib/copy-template.spec.ts
+  s_1d4a5257321709::t_45ce6dea06eda1 1-4
+code/packages/cli/src/lib/copy-template.ts
+  s_1d4a5257321709::t_4a82223f391210 1-4
+code/packages/cli/src/lib/debug-log.spec.ts
+  s_1d4a5257321709::t_9911ec8c1e41e0 1-4
+code/packages/cli/src/lib/debug-log.ts
+  s_1d4a5257321709::t_192bc13a4d5b37 1-4
+code/packages/cli/src/lib/detect-package-manager.spec.ts
+  s_1d4a5257321709::t_4df4df383bb00d 1-4
+code/packages/cli/src/lib/detect-package-manager.ts
+  s_1d4a5257321709::t_2580ae0c1532e7 1-4
+code/packages/cli/src/lib/dev-server.spec.ts
+  s_1d4a5257321709::t_4f7e4266f7121f 1-4
+code/packages/cli/src/lib/dev-server.ts
+  s_1d4a5257321709::t_de3cb3657703c0 1-4
+code/packages/cli/src/lib/doctor-checks.spec.ts
+  s_1d4a5257321709::t_9fa51b0252cde8 1-4
+code/packages/cli/src/lib/doctor-checks.ts
+  s_1d4a5257321709::t_1a21ddea31e932 1-4
+code/packages/cli/src/lib/global-flags.spec.ts
+  s_1d4a5257321709::t_ee5ae6d07f80df 1-4
+code/packages/cli/src/lib/global-flags.ts
+  s_1d4a5257321709::t_b91fdfb2e49451 1-4
+code/packages/cli/src/lib/kroki-compose.ts
+  s_1d4a5257321709::t_f1f9a0566eff92 1-4
+code/packages/cli/src/lib/playbook-yml.spec.ts
+  s_1d4a5257321709::t_4219305e4d294f 1-4
+code/packages/cli/src/lib/playbook-yml.ts
+  s_1d4a5257321709::t_b0454fee6425c9 1-4
+code/packages/cli/src/lib/repo-root.spec.ts
+  s_1d4a5257321709::t_54de059d1cdcb3 1-4
+code/packages/cli/src/lib/repo-root.ts
+  s_1d4a5257321709::t_e701fcbfef42eb 1-4
+code/packages/cli/src/lib/run-script.spec.ts
+  s_1d4a5257321709::t_7edec813869afa 1-4
+code/packages/cli/src/lib/run-script.ts
+  s_1d4a5257321709::t_97194478a86aa0 1-4
+code/packages/cli/src/lib/theme.spec.ts
+  s_1d4a5257321709::t_8a78200395ad0f 1-4
+code/packages/cli/src/lib/theme.ts
+  s_1d4a5257321709::t_0642a90d768310 1-4
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  s_1d4a5257321709::t_1e65da1235b22d 2-6
+code/packages/cli/vitest.config.ts
+  s_1d4a5257321709::t_77ddc8a02a8ad5 1-4
+code/packages/example/docs/modules/main/examples/build/stores/azure-web-pubsub-server.ts
+  s_1d4a5257321709::t_6102e0811bb9b6 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/api/get-room.ts
+  s_1d4a5257321709::t_8014e59a87ebd2 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/app/api/rooms/roomId/route.ts
+  s_1d4a5257321709::t_af4633795fb805 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/app/globals.css
+  s_1d4a5257321709::t_4dd77903ca6b8f 1-6
+code/packages/example/docs/modules/main/examples/manual-installation/app/page.tsx
+  s_1d4a5257321709::t_cbbc8107178cc6 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/app/rooms/roomId/page.tsx
+  s_1d4a5257321709::t_54c5e63b58f434 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/home/home.tsx
+  s_1d4a5257321709::t_0ce9323cedb4c6 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/home/login-form.tsx
+  s_1d4a5257321709::t_dad930b26df815 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/connected-users.tsx
+  s_1d4a5257321709::t_1c6c440b82ea3e 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/connection-status.tsx
+  s_1d4a5257321709::t_0894701a2b9b8f 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/room-information-overlay.tsx
+  s_1d4a5257321709::t_66cfa9115c9011 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/room-users-overlay.tsx
+  s_1d4a5257321709::t_9924b59eba983c 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/toolbar-button.tsx
+  s_1d4a5257321709::t_c2b72032cc80d0 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/toolbar.tsx
+  s_1d4a5257321709::t_c5b1a66f39c520 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/tools-overlay.tsx
+  s_1d4a5257321709::t_f50135dcad984b 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/overlays/zoom-handler-overlay.tsx
+  s_1d4a5257321709::t_8645c3f45d4855 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/room/room.layout.tsx
+  s_1d4a5257321709::t_92435a30adf297 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/room/room.loader.tsx
+  s_1d4a5257321709::t_06be9399548bef 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/room/room.tsx
+  s_1d4a5257321709::t_e586afea364eeb 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/components/utils/constants.ts
+  s_1d4a5257321709::t_5ac62ccbec3a1f 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/hooks/use-get-websockets-store.ts
+  s_1d4a5257321709::t_d02ee8ba385b76 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/hooks/use-handle-route-params.ts
+  s_1d4a5257321709::t_f812b10ba1afbf 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/lib/utils.ts
+  s_1d4a5257321709::t_031de07818f710 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/next.config.mjs
+  s_1d4a5257321709::t_fb7df9d779f3fc 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/store/store.ts
+  s_1d4a5257321709::t_48985f72c0fc70 1-4
+code/packages/example/docs/modules/main/examples/manual-installation/weave/persistence.ts
+  s_1d4a5257321709::t_4c81f8002c4d90 1-4
+code/packages/example/docs/modules/store-azure-web-pubsub/examples/build/stores/azure-web-pubsub-server.ts
+  s_1d4a5257321709::t_9b525c309c8853 1-4
+code/packages/example/docs/modules/store-websockets/examples/build/stores/websockets-server.ts
+  s_1d4a5257321709::t_44c2a450d9f9b3 1-4
+code/packages/example/scripts/generate-card-images.js
+  s_1d4a5257321709::t_d7401ceed4d4c7 1-4
+code/packages/publish-gh-pages/index.js
+  s_1d4a5257321709::t_8aa0e0b23d988e 1-4
+code/packages/publish-gh-pages/index.spec.js
+  s_1d4a5257321709::t_722d993ff168c1 1-4
+code/packages/publish-gh-pages/vitest.config.js
+  s_1d4a5257321709::t_7d1b91d6aa1cfa 1-4
+code/packages/tooling/scripts/chmod-bin.mjs
+  s_1d4a5257321709::t_24ce9cb9c1ac6b 2-6
+code/packages/tooling/src/bin.ts
+  s_1d4a5257321709::t_6943176c2efd2d 2-6
+code/packages/tooling/src/commands/bump.spec.ts
+  s_1d4a5257321709::t_f43ce0a10e6dd6 1-4
+code/packages/tooling/src/commands/bump.ts
+  s_1d4a5257321709::t_694934217aad7d 1-4
+code/packages/tooling/src/commands/changelog.spec.ts
+  s_1d4a5257321709::t_7257ba10ded6b1 1-4
+code/packages/tooling/src/commands/changelog.ts
+  s_1d4a5257321709::t_d97ec473e086d9 1-4
+code/packages/tooling/src/commands/doctor.spec.ts
+  s_1d4a5257321709::t_7cce3837ce9c8a 1-4
+code/packages/tooling/src/commands/doctor.ts
+  s_1d4a5257321709::t_a523cbfc462ca6 1-4
+code/packages/tooling/src/commands/registry.spec.ts
+  s_1d4a5257321709::t_579302cf080ce9 1-4
+code/packages/tooling/src/commands/registry.ts
+  s_1d4a5257321709::t_37069323562455 1-4
+code/packages/tooling/src/commands/release-local.ts
+  s_1d4a5257321709::t_39d09c7e112962 1-4
+code/packages/tooling/src/commands/test-package.spec.ts
+  s_1d4a5257321709::t_ad33fde1643c4a 1-4
+code/packages/tooling/src/commands/test-package.ts
+  s_1d4a5257321709::t_caf3f87e062b00 1-4
+code/packages/tooling/src/lib/args.spec.ts
+  s_1d4a5257321709::t_66aca2d72d8a0a 1-4
+code/packages/tooling/src/lib/args.ts
+  s_1d4a5257321709::t_c76daa4287eaf9 1-4
+code/packages/tooling/src/lib/cli-context.ts
+  s_1d4a5257321709::t_486e5755894c06 1-4
+code/packages/tooling/src/lib/doctor-checks.spec.ts
+  s_1d4a5257321709::t_252418ea9e3bb3 1-4
+code/packages/tooling/src/lib/doctor-checks.ts
+  s_1d4a5257321709::t_0566444ea6c86c 1-4
+code/packages/tooling/src/lib/global-flags.spec.ts
+  s_1d4a5257321709::t_daf4bb4a2b38d4 1-4
+code/packages/tooling/src/lib/global-flags.ts
+  s_1d4a5257321709::t_4e16f1d4ec3673 1-4
+code/packages/tooling/src/lib/theme.ts
+  s_1d4a5257321709::t_f88558750bd373 1-4
+code/packages/tooling/vitest.config.ts
+  s_1d4a5257321709::t_6cceb7f7767738 1-4
+code/scripts/dev.mjs
+  s_1d4a5257321709::t_7c31857d6bd1a3 2-6
+code/scripts/publishable-packages.mjs
+  s_1d4a5257321709::t_2ae4b0a8f2cfb0 2-6
+docs/scripts/check-links.mjs
+  s_1d4a5257321709::t_888e2c3e767c22 2-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b6380e1e07d9091b2687ee0ecf42fcc8d4090862",
+  "prompts": {},
+  "sessions": {
+    "s_1d4a5257321709": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa822a89dffexHNiRI27Z88ZwQ",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

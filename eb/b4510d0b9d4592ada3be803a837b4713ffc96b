@@ -1,0 +1,22 @@
+code/packages/asciidoc-extensions/lib/card-grid.js
+  h_c93d154c7c7074 160-164
+code/packages/tooling/src/lib/doctor-checks.spec.ts
+  h_c93d154c7c7074 10
+code/packages/ui-bundle/scripts/build-sprite.mjs
+  h_c93d154c7c7074 54
+code/packages/ui-bundle/scripts/lib/icons.mjs
+  h_c93d154c7c7074 79-81
+code/packages/ui-bundle/scripts/search-icons.mjs
+  h_c93d154c7c7074 51-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ebb4510d0b9d4592ada3be803a837b4713ffc96b",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

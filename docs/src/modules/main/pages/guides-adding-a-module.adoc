@@ -34,15 +34,16 @@ nav_modules:
   - module: main
     title: Documentation
     description: The core product story.
-    icon: design/grid-outlined
+    icon: grid-3x3
   - module: <name>
     title: <Title>
     description: One-line description of this module.
-    icon: <group>/<name>
+    icon: <name>
 ----
 
 Once a second entry exists, the UI's module switcher appears automatically — with just
 one module, there's nothing to switch between.
 
-`icon` is `<group>/<name>` from the UI bundle's own vendored sprite, not a free-form
-name — see xref:main:guides-icon-gallery.adoc[] for every icon this site's UI bundle ships.
+`icon` is a bare icon name from the UI bundle's own vendored sprite (Lucide's own
+naming, not a free-form name) — see xref:main:guides-icon-gallery.adoc[] for every icon
+this site's UI bundle ships.

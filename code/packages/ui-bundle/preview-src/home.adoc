@@ -99,7 +99,7 @@ block, rather than trailing content of the one above it — the same
 dashed-rule heading band every `==` here gets, home.css's own rule, not a
 second title inside the block. Styled after Fumadocs' "Free & Open Source"
 block on the Weave.js docs home rather than a Figma frame (this block has
-none). A flat `--ids-color-bg-low` band rather than an inverse one: see
+none). A flat `--dt-color-bg-low` band rather than an inverse one: see
 cta.js and cta.css for why. The mark reuses the site's own product logo
 pair, one image per theme, exactly as the hero does.
 
@@ -140,7 +140,7 @@ image::photo-medium.png[A canvas with a text node selected]
 
 A slide is a media still, this prose, and an optional call to action, in that
 order however they were authored. The still is fluid at every breakpoint and
-letterboxed on `--ids-color-bg-low` rather than cropped, since these are
+letterboxed on `--dt-color-bg-low` rather than cropped, since these are
 diagrams as often as photographs.
 
 [.cta]

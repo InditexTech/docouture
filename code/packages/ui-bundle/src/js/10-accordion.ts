@@ -14,13 +14,13 @@
  * So this file adds exactly two things neither of those has on their own:
  *
  *   1. A height animation on open/close, eased by the DS's own
- *      `--ids-motion-duration-s-high` / `--ids-motion-easing-standard-3`
+ *      `--dt-motion-duration-s-high` / `--dt-motion-easing-standard-3`
  *      (`accordion.css`'s own comment on `.doc details > .content` has the
  *      full grounding: the real `AccordionItem`'s content is a
  *      `<Visibility animation="expand">`, not the icon's `micro-appear`)
  *      — read at animation time via `getComputedStyle`, not hard-coded, so
  *      it collapses to ~0 for free under `prefers-reduced-motion` exactly
- *      the way the tokens themselves already do (`ids-tokens.css`) for
+ *      the way the tokens themselves already do (`dt-tokens.css`) for
  *      every other consumer. Applied to EVERY `<details>` under `.doc` —
  *      a standalone `[%collapsible]` gets the exact same animation as one
  *      inside an `[accordion]` group; there is no behavioural difference
@@ -136,15 +136,15 @@
 
   /**
    * The duration and easing this document's own theme has set for the
-   * `transition` on `.doc details > .content` — `--ids-motion-duration-s-
-   * high` / `--ids-motion-easing-standard-3` (`accordion.css`'s own
+   * `transition` on `.doc details > .content` — `--dt-motion-duration-s-
+   * high` / `--dt-motion-easing-standard-3` (`accordion.css`'s own
    * comment on that rule has the full grounding against the real DS's
    * `<Visibility animation="expand">`) — read off `el` rather than
    * assumed, and already ~0 under `prefers-reduced-motion`
-   * (`ids-tokens.css`), which this inherits for free by never hard-coding
+   * (`dt-tokens.css`), which this inherits for free by never hard-coding
    * a duration of its own. Deliberately a DIFFERENT pairing than the
    * chevron's own rotation (`accordion.css`'s `summary::after`, still
-   * `--ids-motion-micro-appear`) — the real component doesn't reuse one
+   * `--dt-motion-micro-appear`) — the real component doesn't reuse one
    * for the other either, so the two animate independently, at different
    * speeds, exactly as shipped.
    *

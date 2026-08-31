@@ -1,22 +1,22 @@
 import type { HelperOptions } from '../../types/ui'
 
 /**
- * `{{icon group name}}` — render an IOP Design System icon.
+ * `{{icon name}}` — render an icon from this bundle's vendored sprite.
  *
- *     {{icon "alerts" "information-outlined"}}
- *     {{icon "actions" "close-large-outlined" class="toolbar__icon"}}
- *     {{icon "design" "sidebar-outlined" label="On this page"}}
+ *     {{icon "triangle-alert"}}
+ *     {{icon "x" class="toolbar__icon"}}
+ *     {{icon "panel-left" label="On this page"}}
  *
- * Emits a reference into the vendored sprite at `img/ids-icons.svg`, which is
+ * Emits a reference into the vendored sprite at `img/icons.svg`, which is
  * generated from `src/img/icons.yml` by `just icons-build`. An icon must be in
  * that manifest before a template can use it; `just icons-build` fails the
  * build if a template references one that is not.
  *
- * The design system's own React `<Icon>` fetches a sprite from its CDN and
- * injects it into the DOM at runtime, which produces nothing in static,
- * JavaScript-off HTML. An external `<use href>` needs neither, and the symbol
- * ids match the design system's (`sw-icons-<group>-<name>`) so the local sprite
- * stays swappable with the published one.
+ * Names are Lucide's own (lucide.dev/icons/<name>) — an external `<use href>`
+ * produces the icon in static, JavaScript-off HTML with no client-side
+ * fetch/inject step, and the symbol id (`icon-<name>`) is just that name
+ * prefixed, so a sprite id can never collide with an unrelated element id
+ * elsewhere on a page.
  *
  * Icons are decorative by default (`aria-hidden`), because they nearly always
  * sit beside their own label. Pass `label` when the icon is the only content of
@@ -43,15 +43,15 @@ const escapeText = (value: string): string => value.replace(/&/g, '&amp;').repla
  */
 const safe = (html: string) => ({ toHTML: () => html, toString: () => html })
 
-const icon = (group: string, name: string, options: HelperOptions) => {
-  if (!NAME_RX.test(group) || !NAME_RX.test(name)) {
-    throw new Error(`Invalid icon reference "${group}/${name}": expected lowercase, hyphen-separated names`)
+const icon = (name: string, options: HelperOptions) => {
+  if (!NAME_RX.test(name)) {
+    throw new Error(`Invalid icon reference "${name}": expected a lowercase, hyphen-separated name`)
   }
 
   const uiRootPath = (options.data.root.uiRootPath as string | undefined) ?? '.'
-  const href = `${uiRootPath}/img/ids-icons.svg#sw-icons-${group}-${name}`
+  const href = `${uiRootPath}/img/icons.svg#icon-${name}`
 
-  const classes = ['ids-icon']
+  const classes = ['dt-icon']
   const extra = options.hash.class
   if (typeof extra === 'string' && extra) classes.push(extra)
 

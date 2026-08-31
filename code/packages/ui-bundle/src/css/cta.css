@@ -8,14 +8,14 @@
  * optional light/dark mark, and one or two DS buttons, all centred by
  * default.
  *
- * WHY --ids-color-bg-low AND NOT AN INVERSE BAND
+ * WHY --dt-color-bg-low AND NOT AN INVERSE BAND
  *
- * GH-23 proposed `--ids-color-bg-inverse` + `--ids-color-content-inverse`.
- * The DS ships no inverse BUTTON variant, so a plain `.ids-button--primary`
+ * GH-23 proposed `--dt-color-bg-inverse` + `--dt-color-content-inverse`.
+ * The DS ships no inverse BUTTON variant, so a plain `.dt-button--primary`
  * on that surface resolves black-on-black in light theme
- * (`--ids-comp-button-primary-default` is black). Fixing that would mean
+ * (`--dt-comp-button-primary-default` is black). Fixing that would mean
  * widening `tools/ids/sync.mjs`'s THEME_SCOPES the way the dark code-block
- * surface already does. `--ids-color-bg-low` needs none of it: it is a
+ * surface already does. `--dt-color-bg-low` needs none of it: it is a
  * step OFF the page surface in both themes already, and every DS component
  * placed on it (buttons, the mark) already resolves correctly — which is
  * also the surface `[feature-tabs]`'s own media panel sits on, so the two
@@ -24,11 +24,11 @@
 
 .docouture-cta {
   align-items: center;
-  background-color: var(--ids-color-bg-low);
+  background-color: var(--dt-color-bg-low);
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-150); /* 24 */
-  padding: var(--ids-size-300); /* 48 */
+  gap: var(--dt-size-150); /* 24 */
+  padding: var(--dt-size-300); /* 48 */
   text-align: center;
   /*
    * Wider than prose, capped at the column — the same shape and the same
@@ -71,7 +71,7 @@
 .docouture-cta__body {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-150); /* 24 */
+  gap: var(--dt-size-150); /* 24 */
   max-width: var(--content-max-width);
 }
 
@@ -108,7 +108,7 @@
  */
 .docouture-cta__mark-image {
   height: auto;
-  max-height: var(--ids-size-250); /* 40 */
+  max-height: var(--dt-size-250); /* 40 */
   width: auto;
 }
 
@@ -117,7 +117,7 @@
   display: block;
 }
 
-.ids-theme-dark .docouture-cta__mark-image--light {
+.dt-theme-dark .docouture-cta__mark-image--light {
   display: none;
 }
 
@@ -125,7 +125,7 @@
   display: none;
 }
 
-.ids-theme-dark .docouture-cta__mark-image--dark {
+.dt-theme-dark .docouture-cta__mark-image--dark {
   display: block;
 }
 
@@ -134,7 +134,7 @@
 .docouture-cta__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ids-size-100); /* 16 */
+  gap: var(--dt-size-100); /* 16 */
   justify-content: center;
 }
 
@@ -149,8 +149,8 @@
  */
 .docouture-cta__action-icon {
   background: currentColor;
-  block-size: var(--ids-size-125); /* 20 */
-  inline-size: var(--ids-size-125);
+  block-size: var(--dt-size-125); /* 20 */
+  inline-size: var(--dt-size-125);
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: contain;
@@ -174,33 +174,33 @@
 }
 
 /*
- * More air than the DS's own leading-icon gap (`.ids-button--icon-and-label
- * .ids-button__icon-icon`, button.css: `margin-inline-end: --ids-size-25`,
+ * More air than the DS's own leading-icon gap (`.dt-button--icon-and-label
+ * .dt-button__icon-icon`, button.css: `margin-inline-end: --dt-size-25`,
  * 4px) — tight enough at that size to read as touching the label rather
  * than sitting beside it. Ties that rule's specificity exactly (three
- * classes each) and wins on load order alone: `ids-components.css` (the
+ * classes each) and wins on load order alone: `dt-components.css` (the
  * DS's own button.css) imports near the top of site.css, this file after
  * `feature-tabs.css`, near the bottom.
  */
-.docouture-cta__action.ids-button--icon-and-label .ids-button__icon-icon {
-  margin-inline-end: var(--ids-size-75); /* 12 */
+.docouture-cta__action.dt-button--icon-and-label .dt-button__icon-icon {
+  margin-inline-end: var(--dt-size-75); /* 12 */
 }
 
 /*
  * Hover/focus colour fix. `.doc a:hover` (doc.css) sets a link-blue `color`
  * at specificity (0,2,1); the DS's OWN primary-button rule only changes
- * `background-color` on hover (button.css — `.ids-button.ids-button--
+ * `background-color` on hover (button.css — `.dt-button.dt-button--
  * primary:hover`), never restating `color`, because normally nothing else
  * competes for it. Here something does: with no explicit hover colour of
- * its own, the button's base `color` (`--ids-color-content-inverse`,
+ * its own, the button's base `color` (`--dt-color-content-inverse`,
  * (0,2,0)) loses to `.doc a:hover` on tag-count alone even though both tie
  * on class count — the DS never had to plan for that collision because a
  * bare `.doc a` was never meant to double as a button. Secondary and ghost
  * don't need this: the DS sets their OWN hover `color` at (0,3,0), which
  * already outranks `.doc a:hover` outright.
  */
-.doc .docouture-cta__action.ids-button--primary:hover,
-.doc .docouture-cta__action.ids-button--primary:focus {
-  color: var(--ids-color-content-inverse);
+.doc .docouture-cta__action.dt-button--primary:hover,
+.doc .docouture-cta__action.dt-button--primary:focus {
+  color: var(--dt-color-content-inverse);
   text-decoration: none;
 }

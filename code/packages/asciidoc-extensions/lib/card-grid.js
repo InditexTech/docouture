@@ -38,7 +38,7 @@ const warn = require('./warn')
 //
 //   [cards,type=image-portrait,columns="1 s:2 m:3",width=container]
 //   ====
-//   [card,icon="business/file-outlined",subheader="Getting started",labels="java, spring"]
+//   [card,icon="file",subheader="Getting started",labels="java, spring"]
 //   .xref:quickstart.adoc[Quickstart]
 //   --
 //   image::quickstart.svg[Woven cloth, folded]
@@ -82,13 +82,14 @@ const DEFAULT_COLUMNS = '1 s:2 m:3'
 const MAX_COLUMNS = 4
 
 const COLUMN_RX = /^(?:([a-z]+):)?([0-9]+)$/
-// `group/name`, both lowercase and hyphen-separated — the shape
-// `icons.yml` uses. Whether that icon is actually MASKED is checked by
-// ui-bundle's own `just icons-build` (scripts/build-sprite.mjs), which owns
-// the manifest; duplicating the list here would be a second source of truth
-// that drifts. An icon that passes the shape check but has no mask falls
-// back to a visible marker in card-grid.css rather than rendering nothing.
-const ICON_RX = /^[a-z0-9]+(?:-[a-z0-9]+)*\/[a-z0-9]+(?:-[a-z0-9]+)*$/
+// A bare Lucide icon name (lucide.dev/icons/<name>), lowercase and
+// hyphen-separated — the shape `icons.yml` uses. Whether that icon is
+// actually MASKED is checked by ui-bundle's own `just icons-build`
+// (scripts/build-sprite.mjs), which owns the manifest; duplicating the list
+// here would be a second source of truth that drifts. An icon that passes
+// the shape check but has no mask falls back to a visible marker in
+// card-grid.css rather than rendering nothing.
+const ICON_RX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 // The first `href` of the converted title, which is the card's own link.
 const HREF_RX = /<a\b[^>]*\bhref="([^"]*)"/i
@@ -154,16 +155,9 @@ function renderHeader(icon, subheader, parent) {
   let iconHtml = ''
   if (icon) {
     if (ICON_RX.test(icon)) {
-      iconHtml =
-        '<span class="docouture-card__icon ids-icon-mask--' +
-        escapeHtml(icon.replace('/', '-')) +
-        '" aria-hidden="true"></span>'
+      iconHtml = '<span class="docouture-card__icon dt-icon-mask--' + escapeHtml(icon) + '" aria-hidden="true"></span>'
     } else {
-      warn(
-        parent,
-        '[card,icon="' + icon + '"]',
-        'not an icon reference; expected `group/name`, e.g. `business/file-outlined`'
-      )
+      warn(parent, '[card,icon="' + icon + '"]', 'not an icon reference; expected a bare Lucide icon name, e.g. `store`')
     }
   }
   const subheaderHtml = subheader ? '<span class="docouture-card__subheader">' + escapeHtml(subheader) + '</span>' : ''

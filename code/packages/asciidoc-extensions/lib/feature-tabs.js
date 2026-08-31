@@ -237,7 +237,7 @@ function renderCta(converted, parent) {
     label +
     (external
       ? '<span class="ids-button__icon ids-button__icon-action docouture-feature-tabs__cta-icon ' +
-        'ids-icon-mask--connectivity-link-external-outlined" aria-hidden="true"></span>'
+        'dt-icon-mask--external-link" aria-hidden="true"></span>'
       : '') +
     '</span>' +
     '</a>'

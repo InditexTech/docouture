@@ -25,16 +25,16 @@
   <div class="page-footer__nav">
 {{> pagination}}
   </div>
-  <div class="ids-grid-layout ids-grid-layout--with-margin page-footer__feedback">
-    <div class="ids-grid-layout__item ids-grid-layout__item--span-full page-footer__contribute">
+  <div class="dt-grid-layout dt-grid-layout--with-margin page-footer__feedback">
+    <div class="dt-grid-layout__item dt-grid-layout__item--span-full page-footer__contribute">
       <div class="page-footer__contribute-copy">
-        <p class="ids-text ids-text--title-s">Help us make these docs great!</p>
-        <p class="ids-text ids-text--body-m">See something that is wrong or unclear? Collaborate with us! Submit a pull request</p>
+        <p class="dt-text dt-text--title-s">Help us make these docs great!</p>
+        <p class="dt-text dt-text--body-m">See something that is wrong or unclear? Collaborate with us! Submit a pull request</p>
       </div>
       <div class="page-footer__contribute-buttons">
 {{#with site.keys.contributeUrl}}
-        <a class="ids-button ids-button--ghost ids-button--icon-and-label page-footer__how-to-contribute" href="{{{relativize this}}}">
-          <span class="ids-button__content">how to contribute</span>
+        <a class="dt-button dt-button--ghost dt-button--icon-and-label page-footer__how-to-contribute" href="{{{relativize this}}}">
+          <span class="dt-button__content">how to contribute</span>
         </a>
 {{/with}}
 {{> edit-this-page}}

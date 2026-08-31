@@ -14,7 +14,7 @@
  * toggled (see vars.css's own note on `--side-menu-motion-duration`).
  */
 .page-footer {
-  background-color: var(--ids-color-bg-default);
+  background-color: var(--dt-color-bg-default);
   margin-left: var(--side-menu-offset);
   transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
 }
@@ -30,8 +30,8 @@
  */
 .page-footer__nav {
   background-image:
-    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px),
-    repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+    repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px),
+    repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
   background-position: top, bottom;
   background-repeat: repeat-x, repeat-x;
   background-size: 8px 1px, 8px 1px;
@@ -39,7 +39,7 @@
 
 /*
  * `.pagination` is the outer container: the full 12-column DS grid
- * (`ids-grid-layout--with-margin`, pagination.hbs) with a single
+ * (`dt-grid-layout--with-margin`, pagination.hbs) with a single
  * `--span-full` item, `.pagination__row`, so it takes the same
  * per-breakpoint gutter (16/32/56/64px) as the header and hero and
  * nothing narrower — the row itself carries no flex/max-width of its own.
@@ -70,19 +70,19 @@
 }
 
 /*
- * The 40px gap between the two buttons is fixed (`--ids-size-250`, 40px at
+ * The 40px gap between the two buttons is fixed (`--dt-size-250`, 40px at
  * the default density scale) rather than the grid's own responsive gap
  * (16/24/48/56px) — a deliberate, explicit measure for this row. Applied
  * from `s` up only; below it the grid's own smaller gap is closer to the
  * reduced XS (icon + short label) button width.
  */
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .pagination__buttons {
-    gap: var(--ids-size-250);
+    gap: var(--dt-size-250);
   }
 }
 
-.pagination a.ids-button {
+.pagination a.dt-button {
   flex: 1 1 0;
   max-width: 100%;
   min-width: 0;
@@ -90,8 +90,8 @@
 }
 
 /*
- * The DS button centers its content (`.ids-button { justify-content:
- * center }`, ids-components.css) — overridden here so "Prev" sits flush
+ * The DS button centers its content (`.dt-button { justify-content:
+ * center }`, dt-components.css) — overridden here so "Prev" sits flush
  * at the button's own left edge and "Next" flush at its own right edge,
  * per the design.
  */
@@ -103,8 +103,8 @@
   justify-content: flex-end;
 }
 
-.pagination__prev .ids-button__content,
-.pagination__next .ids-button__content {
+.pagination__prev .dt-button__content,
+.pagination__next .dt-button__content {
   min-width: 0;
   overflow: hidden;
 }
@@ -126,7 +126,7 @@
   display: none;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .pagination__label-full {
     display: inline;
   }
@@ -136,20 +136,20 @@
   }
 }
 
-.page-footer__feedback .ids-grid-layout__item {
+.page-footer__feedback .dt-grid-layout__item {
   padding-block: var(--page-footer-feedback-padding-block);
 }
 
 .page-footer__contribute {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-100);
+  gap: var(--dt-size-100);
 }
 
 .page-footer__contribute-copy {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-50);
+  gap: var(--dt-size-50);
 }
 
 .page-footer__contribute-copy p {
@@ -158,10 +158,10 @@
 
 .page-footer__contribute-buttons {
   display: flex;
-  gap: var(--ids-size-150);
+  gap: var(--dt-size-150);
 }
 
-.page-footer a.ids-button {
+.page-footer a.dt-button {
   text-decoration: none;
 }
 

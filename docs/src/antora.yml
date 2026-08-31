@@ -49,13 +49,13 @@ nav:
 # silently camelCased by Antora's content aggregator, which breaks any module
 # slug containing a hyphen.
 #
-# `icon` is `<group>/<name>` from the UI bundle's own vendored sprite
+# `icon` is a bare icon name from the UI bundle's own vendored sprite
 # (packages/ui-bundle/src/img/icons.yml) — an icon name is not free-form.
 nav_modules:
   - module: main
     title: Documentation
     description: Everything about scaffolding, writing and publishing a docouture site.
-    icon: design/grid-outlined
+    icon: grid-3x3
 
 # Which module's navigation the generated 404 page's side menu shows, read
 # by @inditextech/docouture-antora-extensions. With a single module there is

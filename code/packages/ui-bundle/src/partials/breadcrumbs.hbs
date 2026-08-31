@@ -1,8 +1,8 @@
 {{!--
   The real IOP Design System component (GH-9), not a hand-rolled <ul> — see
   @inditex/sewingiopdsweb-react-components/breadcrumbs/{breadcrumb,breadcrumb-
-  item}.css, vendored via src/css/ids-components.yml. `.ids-breadcrumbs` is
-  the flex row; `.ids-breadcrumb-item` draws its own trailing divider via
+  item}.css, vendored via src/css/dt-components.yml. `.dt-breadcrumbs` is
+  the flex row; `.dt-breadcrumb-item` draws its own trailing divider via
   `::after` and suppresses it on `:last-child` — no divider markup of our
   own, and nothing to do for the item that ends up last except mark it
   `--active`.
@@ -17,20 +17,20 @@
   mind: the model does not itself mark "the current one", the last position
   does.
 --}}
-<nav class="ids-breadcrumbs" aria-label="Breadcrumb">
+<nav class="dt-breadcrumbs" aria-label="Breadcrumb">
 {{#if page.breadcrumbs}}
   {{#with page.componentVersion}}
   {{#if (and ./title (ne ./title @root.page.breadcrumbs.0.content))}}
-  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="{{{relativize ./url}}}"><span class="ids-breadcrumb-item__content">{{{./title}}}</span></a>
+  <a class="dt-breadcrumb-item dt-breadcrumb-item--link" href="{{{relativize ./url}}}"><span class="dt-breadcrumb-item__content">{{{./title}}}</span></a>
   {{/if}}
   {{/with}}
   {{#each page.breadcrumbs}}
   {{#if @last}}
-  <div class="ids-breadcrumb-item ids-breadcrumb-item--active" aria-current="page"><span class="ids-breadcrumb-item__content">{{{./content}}}</span></div>
+  <div class="dt-breadcrumb-item dt-breadcrumb-item--active" aria-current="page"><span class="dt-breadcrumb-item__content">{{{./content}}}</span></div>
   {{else if (and ./url (eq ./urlType 'internal'))}}
-  <a class="ids-breadcrumb-item ids-breadcrumb-item--link" href="{{{relativize ./url}}}"><span class="ids-breadcrumb-item__content">{{{./content}}}</span></a>
+  <a class="dt-breadcrumb-item dt-breadcrumb-item--link" href="{{{relativize ./url}}}"><span class="dt-breadcrumb-item__content">{{{./content}}}</span></a>
   {{else}}
-  <div class="ids-breadcrumb-item"><span class="ids-breadcrumb-item__content">{{{./content}}}</span></div>
+  <div class="dt-breadcrumb-item"><span class="dt-breadcrumb-item__content">{{{./content}}}</span></div>
   {{/if}}
   {{/each}}
 {{/if}}

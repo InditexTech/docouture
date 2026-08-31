@@ -10,13 +10,13 @@
   transition: margin-left var(--side-menu-motion-duration) var(--side-menu-motion-easing);
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   main > .content {
     overflow-x: hidden;
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .body {
     display: flex;
   }

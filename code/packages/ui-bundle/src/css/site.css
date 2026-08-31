@@ -1,21 +1,21 @@
 /*
- * IOP Design System token layer: every --ids-* custom property this bundle's
+ * IOP Design System token layer: every --dt-* custom property this bundle's
  * CSS references (palette, size and typography scales, motion, stacking).
  * Generated from the real design system by tools/ids/sync.mjs — see
- * ids-tokens.css's own header and tools/ids/README.md. Not the design
+ * dt-tokens.css's own header and tools/ids/README.md. Not the design
  * system's own stylesheets: this repo has no dependency on
  * @inditex/sewingiopdsweb-styles, only on this small extracted subset.
  *
  * Must come first — bridge.css and every stylesheet below consume it.
  * Breakpoint @custom-media declarations are injected by a PostCSS plugin
- * (gulp.d/lib/ids-custom-media.js), not imported here.
+ * (gulp.d/lib/dt-custom-media.js), not imported here.
  */
-@import url("ids-tokens.css");
+@import url("dt-tokens.css");
 
 /*
  * IOP Design System component stylesheets, generated the same way from
- * @inditex/sewingiopdsweb-react-components — see ids-components.css's own
- * header, src/css/ids-components.yml and tools/ids/README.md.
+ * @inditex/sewingiopdsweb-react-components — see dt-components.css's own
+ * header, src/css/dt-components.yml and tools/ids/README.md.
  *
  * Comes before bridge.css and every bundle stylesheet below: a DS block is
  * consumed as-is, and any wrapper or `data-*` hook this bundle adds around
@@ -23,7 +23,7 @@
  * later stylesheet, and never add a non-DS class to a DS block — see
  * .opencode/skills/iop-ds-components/SKILL.md.
  */
-@import url("ids-components.css");
+@import url("dt-components.css");
 
 /* This bundle's own variables, expressed in design system tokens. */
 @import url("bridge.css");

@@ -1,7 +1,7 @@
 {{!--
   Side-menu brand block (see GH issue #8): 40x40 product symbol above the
   product name, gap 24, column layout. Distinct from menu/menu.css's
-  `.ids-menu__brand-logo` (row, space-between, border-bottom) which does not
+  `.dt-menu__brand-logo` (row, space-between, border-bottom) which does not
   match the Figma frame — see the issue's own notes on that deviation.
 
   The symbol has no equivalent in Antora's page model: `site.keys.productLogo`
@@ -16,7 +16,7 @@
   bitmap `<img src>`, not inlined markup (unlike `{{icon}}`'s sprite refs),
   and an externally-referenced SVG document does not inherit CSS from the
   page that embeds it. When a dark variant is configured, both images
-  render and side-menu.css swaps between them off the same `.ids-theme-dark`
+  render and side-menu.css swaps between them off the same `.dt-theme-dark`
   root class 08-theme.ts sets (see header.css's theme-toggle icons for the
   identical pattern). When it isn't, the light logo alone renders
   unconditionally — same as before this existed — rather than being hidden
@@ -49,6 +49,6 @@
     {{#with site.keys.productLogoDark}}
     <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="{{{relativize this}}}" width="40" height="40" alt="">
     {{/with}}
-    <span class="side-menu__brand-title ids-text ids-text--title-m">{{or page.component.title site.title}}</span>
+    <span class="side-menu__brand-title dt-text dt-text--title-m">{{or page.component.title site.title}}</span>
   </a>
 </div>

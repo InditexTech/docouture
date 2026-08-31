@@ -183,6 +183,9 @@ importers:
       js-yaml:
         specifier: ^4.3.1
         version: 4.3.1
+      lucide-static:
+        specifier: ~1.38.0
+        version: 1.38.0
       postcss:
         specifier: ~8.5.26
         version: 8.5.26
@@ -2522,6 +2525,9 @@ packages:
 
   loupe@3.2.1:
     resolution: {integrity: sha512-CdzqowRJCeLU72bHvWqwRBBlLcMEtIvGrlvef74kMnV2AolS9Y8xUv1I0U/MNAWMhBlKIoyuEgoJ0t/bbwHbLQ==}
+
+  lucide-static@1.38.0:
+    resolution: {integrity: sha512-/pRaHJceXrQyAMzWfwhWPMwZeiZEIejZ+Ko226AqI52QbLVgowyGAp7OzZIaQEf7XB+LuRGWqUGqTfu3LJ0CQQ==}
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -6233,6 +6239,8 @@ snapshots:
       is-unicode-supported: 1.3.0
 
   loupe@3.2.1: {}
+
+  lucide-static@1.38.0: {}
 
   magic-string@0.30.21:
     dependencies:

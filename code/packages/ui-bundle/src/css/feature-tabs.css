@@ -18,8 +18,8 @@
  *
  * WHAT COMES FROM THE DESIGN SYSTEM
  *
- * The labels are IDS Tabs' own item (ids-components.css, tabs/tabs-item.css):
- * `.ids-tabs-item` is `label/l`, `.ids-tabs-item--selected` is `label/l-high`,
+ * The labels are IDS Tabs' own item (dt-components.css, tabs/tabs-item.css):
+ * `.dt-tabs-item` is `label/l`, `.dt-tabs-item--selected` is `label/l-high`,
  * which is exactly the pair the frames draw, and it carries the DS's own
  * focus ring with it. What that stylesheet assumes is a HORIZONTAL strip —
  * `height: 40px`, `max-width: 200px`, centred content — so this file re-lays
@@ -27,14 +27,14 @@
  * are the only ones, and they are listed at the rule itself.
  *
  * Its hover colour is not reused: tabs-item.css scopes hover to
- * `.ids-tabs-item--underlined`, a variant with an indicator bar this block does
+ * `.dt-tabs-item--underlined`, a variant with an indicator bar this block does
  * not render, so the rule below applies the same token to the unselected items
  * directly rather than adding a class that would also claim an indicator.
  *
  * COLOURS ARE TOKENS, SO THERE IS NO DARK-THEME RULE FOR THE BLOCK ITSELF
  *
- * The frame's `#F7F7F7` media surface is `--ids-color-bg-low`, which
- * ids-tokens.css already swaps under `.ids-theme-dark`, and the label and body
+ * The frame's `#F7F7F7` media surface is `--dt-color-bg-low`, which
+ * dt-tokens.css already swaps under `.dt-theme-dark`, and the label and body
  * colours come from the DS item and from `.doc`. The one thing that cannot
  * adapt on its own is a raster still, which is why a slide may carry a second
  * `role=dark` image and why the only theme-conditional rules here are the two
@@ -60,7 +60,7 @@
   align-items: flex-end;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--ids-size-150) + var(--ids-size-50)); /* 32 */
+  gap: calc(var(--dt-size-150) + var(--dt-size-50)); /* 32 */
   /*
    * Wider than prose, capped at the column. A slide is a media panel with a
    * label column beside it, not a paragraph — held to the 820px reading measure
@@ -104,11 +104,11 @@
  * still the wider of the two, and the design's own "M" frame agrees: at 1024 it
  * stacks this block for exactly that reason.
  */
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .docouture-feature-tabs {
     align-items: flex-end;
     flex-direction: row;
-    gap: var(--ids-size-350); /* 56 */
+    gap: var(--dt-size-350); /* 56 */
   }
 }
 
@@ -126,7 +126,7 @@
 .docouture-feature-tabs__list {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-75); /* 12 */
+  gap: var(--dt-size-75); /* 12 */
   inline-size: 254px;
   list-style: none;
   margin: 0;
@@ -134,7 +134,7 @@
   padding: 0;
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .docouture-feature-tabs__list {
     flex: none;
   }
@@ -155,7 +155,7 @@
   block-size: auto;
   display: block;
   max-inline-size: none;
-  min-block-size: var(--ids-size-125); /* 20, the frames' line box */
+  min-block-size: var(--dt-size-125); /* 20, the frames' line box */
   text-align: right;
 }
 
@@ -172,13 +172,13 @@
 .docouture-feature-tabs__list .docouture-feature-tabs__tab,
 .docouture-feature-tabs__list .docouture-feature-tabs__tab:hover,
 .docouture-feature-tabs__list .docouture-feature-tabs__tab:focus {
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   text-decoration: none;
 }
 
 @media (hover: hover) {
-  .docouture-feature-tabs__list .docouture-feature-tabs__tab:not(.ids-tabs-item--selected):hover {
-    color: var(--ids-color-content-states-hover);
+  .docouture-feature-tabs__list .docouture-feature-tabs__tab:not(.dt-tabs-item--selected):hover {
+    color: var(--dt-color-content-states-hover);
   }
 }
 
@@ -206,7 +206,7 @@
 .docouture-feature-tabs__panel {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-100); /* 16 */
+  gap: var(--dt-size-100); /* 16 */
   min-inline-size: 0;
 }
 
@@ -230,8 +230,8 @@
 .is-enhanced .docouture-feature-tabs__panel {
   grid-area: 1 / 1;
   opacity: 0;
-  transition: var(--ids-motion-micro-appear); /* all 0.35s */
-  transform: translateY(var(--ids-size-25)); /* 4 */
+  transition: var(--dt-motion-micro-appear); /* all 0.35s */
+  transform: translateY(var(--dt-size-25)); /* 4 */
   visibility: hidden;
 }
 
@@ -263,10 +263,10 @@
  * that margin, so a single class here would lose to it.
  */
 .docouture-feature-tabs__panel .docouture-feature-tabs__heading {
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-title-s);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-title-s-letter-spacing);
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-title-s);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-title-s-letter-spacing);
   margin: 0;
 }
 
@@ -311,17 +311,17 @@
  *
  * `contain`, not `cover`: these are diagrams and product shots, and cropping
  * one to fill the box loses the thing it was drawn to show. The surface behind
- * the letterboxing is the frame's own `#F7F7F7` = `--ids-color-bg-low`, and the
+ * the letterboxing is the frame's own `#F7F7F7` = `--dt-color-bg-low`, and the
  * 20px inset keeps the artwork off that surface's edges — `border-box` sizing
  * so the padding comes out of the aspect box rather than growing it.
  */
 .docouture-feature-tabs__media {
   aspect-ratio: 566 / 280;
-  background-color: var(--ids-color-bg-low);
+  background-color: var(--dt-color-bg-low);
   box-sizing: border-box;
   inline-size: 100%;
   overflow: hidden;
-  padding: var(--ids-size-125); /* 20 */
+  padding: var(--dt-size-125); /* 20 */
 }
 
 .docouture-feature-tabs__image {
@@ -336,11 +336,11 @@
  * with one still carries neither class and is shown in both themes.
  */
 .docouture-feature-tabs__image--dark,
-.ids-theme-dark .docouture-feature-tabs__image--light {
+.dt-theme-dark .docouture-feature-tabs__image--light {
   display: none;
 }
 
-.ids-theme-dark .docouture-feature-tabs__image--dark {
+.dt-theme-dark .docouture-feature-tabs__image--dark {
   display: block;
 }
 
@@ -386,8 +386,8 @@
  */
 .docouture-feature-tabs__cta-icon {
   background: currentColor;
-  block-size: var(--ids-size-125); /* 20 */
-  inline-size: var(--ids-size-125);
+  block-size: var(--dt-size-125); /* 20 */
+  inline-size: var(--dt-size-125);
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: contain;

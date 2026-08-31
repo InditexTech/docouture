@@ -1,5 +1,5 @@
 {{!--
-  Header toolbar version tag (see GH issue #7). Reuses the `.ids-tag` block
+  Header toolbar version tag (see GH issue #7). Reuses the `.dt-tag` block
   from tag/tag.css (`Solid` + `Selected` in the design) rather than the
   Select Tag component — Select Tag pulls in list/scrollable-panel/search-field
   CSS for a dropdown menu this bundle already renders itself below.
@@ -33,9 +33,9 @@
   comparison can no longer reach here. Don't reorder these branches without
   re-checking that.
 
-  `ids-tag--read-only` (DS modifier, tag/tag.css) marks the badge as
+  `dt-tag--read-only` (DS modifier, tag/tag.css) marks the badge as
   non-interactive — it isn't a button and does nothing on click, so it must
-  not pick up `.ids-tag`'s generic hover cursor/colour shift, which would
+  not pick up `.dt-tag`'s generic hover cursor/colour shift, which would
   otherwise imply an affordance that isn't there. `aria-label` adds the
   "Version" context the bare displayVersion text doesn't carry on its own.
   The label is always the real `displayVersion` Antora computed; nothing
@@ -44,9 +44,9 @@
 {{#if page.componentVersion}}
 <div class="page-versions">
   {{#if page.versions.[1]}}
-  <button type="button" class="ids-tag ids-tag--solid ids-tag--selected header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}} version-menu-toggle" title="Show other versions of page" aria-expanded="false">
-    <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
-    <span class="ids-tag__icon">{{icon "arrows" "chevron-down-outlined"}}</span>
+  <button type="button" class="dt-tag dt-tag--solid dt-tag--selected header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}} version-menu-toggle" title="Show other versions of page" aria-expanded="false">
+    <span class="dt-tag__label">{{page.componentVersion.displayVersion}}</span>
+    <span class="dt-tag__icon">{{icon "chevron-down"}}</span>
   </button>
   <div class="version-menu">
     {{#each page.versions}}
@@ -68,26 +68,26 @@
     <span class="version is-current" aria-current="page">
       <span class="version__label">{{./displayVersion}}</span>
       {{#if ./prerelease}}
-      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
+      <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
       {{else if ./latest}}
-      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
+      <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
       {{/if}}
     </span>
     {{else}}
     <a class="version{{#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">
       <span class="version__label">{{./displayVersion}}</span>
       {{#if ./prerelease}}
-      <span class="ids-label ids-label--orange"><span class="ids-label__content">Prerelease</span></span>
+      <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
       {{else if ./latest}}
-      <span class="ids-label ids-label--green"><span class="ids-label__content">Latest</span></span>
+      <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
       {{/if}}
     </a>
     {{/if}}
     {{/each}}
   </div>
   {{else}}
-  <span class="ids-tag ids-tag--solid ids-tag--selected ids-tag--read-only header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}}" aria-label="Version {{page.componentVersion.displayVersion}}">
-    <span class="ids-tag__label">{{page.componentVersion.displayVersion}}</span>
+  <span class="dt-tag dt-tag--solid dt-tag--selected dt-tag--read-only header-toolbar__version{{#if page.componentVersion.prerelease}} header-toolbar__version--prerelease{{else if (eq page.componentVersion page.component.latest)}} header-toolbar__version--latest{{else}} header-toolbar__version--older{{/if}}" aria-label="Version {{page.componentVersion.displayVersion}}">
+    <span class="dt-tag__label">{{page.componentVersion.displayVersion}}</span>
   </span>
   {{/if}}
 </div>

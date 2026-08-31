@@ -88,7 +88,7 @@
     function select (index: number) {
       tabs.forEach(function (tab, i) {
         var selected = i === index
-        tab.classList.toggle('ids-tabs-item--selected', selected)
+        tab.classList.toggle('dt-tabs-item--selected', selected)
         tab.setAttribute('aria-selected', String(selected))
         // Roving tabindex: one stop for the whole tablist, arrow keys inside it.
         tab.tabIndex = selected ? 0 : -1
@@ -109,7 +109,7 @@
   /** The tab the server marked selected, defaulting to the first. */
   function selectedIndex (tabs: HTMLAnchorElement[]): number {
     var index = tabs.findIndex(function (tab) {
-      return tab.classList.contains('ids-tabs-item--selected')
+      return tab.classList.contains('dt-tabs-item--selected')
     })
     return index === -1 ? 0 : index
   }

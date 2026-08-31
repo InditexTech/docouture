@@ -2,7 +2,7 @@
  * The [tabs] block — asciidoc-extensions/lib/tabs.js (GH-45). IDS Tabs,
  * `Kind=Underlined` (Figma 2735:69397 light, 2735:69401 dark) — both frames
  * are the same component with only the ink swapped (`#000000` / `#FFFFFF`,
- * which is `--ids-color-content-default` in each theme), so there is no
+ * which is `--dt-color-content-default` in each theme), so there is no
  * dark-theme rule below beyond what tokens already give for free — same
  * reasoning as card-grid.css and steps.css.
  *
@@ -22,7 +22,7 @@
  *
  * WHAT COMES FROM THE DESIGN SYSTEM, AND WHAT DOES NOT
  *
- * `.ids-tabs-item` (ids-components.css, tabs/tabs-item.css) supplies the
+ * `.dt-tabs-item` (dt-components.css, tabs/tabs-item.css) supplies the
  * item's box — 40px height, centred content, the focus ring, and (unlike
  * some other DS type usages in this bundle) the FULL type triplet for both
  * states already, `letter-spacing` and `text-transform` included, not just
@@ -30,27 +30,27 @@
  * carry `textCase: UPPER`, which is what the DS class forces by default —
  * deliberately overridden below to `none`: labels here render in the
  * author's own case rather than forced to uppercase, a departure from the
- * Figma frames this component is otherwise built from. `.ids-tabs-item` is
+ * Figma frames this component is otherwise built from. `.dt-tabs-item` is
  * styled here as a `<button>`, never an anchor — see tabs.js's own header
  * for why real anchors caused a genuine bug (03-fragment-jumper.ts
  * hijacking every `a[href^="#"]` on the page) — so this file also strips
  * the browser's own button chrome (background, border, font inheritance)
- * that `.ids-tabs-item` alone does not need to think about when it is
+ * that `.dt-tabs-item` alone does not need to think about when it is
  * normally an anchor or a native button in the DS's own React usage.
  *
- * The selected underline (DS `__indicator`) is NOT vendored — ids-components
+ * The selected underline (DS `__indicator`) is NOT vendored — dt-components
  * .yml excludes it because the real component measures it in JS against a
  * ref, which nothing here can do — so it is drawn as a plain `::after` at the
  * position the frame draws it: 1px, the full item width, sitting at y=32 of a
- * 40px item (`bottom: var(--ids-size-50)`, 8px up from its foot). The subtle
+ * 40px item (`bottom: var(--dt-size-50)`, 8px up from its foot). The subtle
  * full-width line under the WHOLE strip is a separate rule, on
  * `.docouture-tabs__list` itself: `Kind=Underlined`'s own baseline, present
  * regardless of which item is selected.
  *
- * `.ids-tabs-item__label` (also vendored) gives the ellipsis a long label
+ * `.dt-tabs-item__label` (also vendored) gives the ellipsis a long label
  * needs under the DS's own 200px cap.
  *
- * `.ids-overflow-wrapper` (the DS's own horizontal-scroll affordance for a
+ * `.dt-overflow-wrapper` (the DS's own horizontal-scroll affordance for a
  * strip that outgrows its container) is not vendored either — this file adds
  * a plain `overflow-x: auto` on the list instead, which loses the DS's fade
  * mask but keeps the strip usable rather than wrapping the item labels.
@@ -78,15 +78,15 @@
  * Qualified with `.doc` and given the full `ol, ul` shape doc.css's own
  * `.doc ul` rule uses (margin AND padding together) rather than overridden
  * property-by-property: at equal specificity `.doc ul`'s `padding: 0 0 0
- * var(--ids-size-100)` is what actually wins without this, because a bare
+ * var(--dt-size-100)` is what actually wins without this, because a bare
  * `.docouture-tabs__list` alone is one class lower — (0,1,0) against (0,2,0) —
  * regardless of import order. This is a plain button strip, not a list a
  * reader reads as one, so `list-style` is reset here too.
  */
 .doc .docouture-tabs__list {
-  border-bottom: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  border-bottom: var(--dt-size-border-default) solid var(--dt-color-border-low);
   display: flex;
-  gap: var(--ids-size-150); /* 24, the frames' own tab-to-tab gap */
+  gap: var(--dt-size-150); /* 24, the frames' own tab-to-tab gap */
   list-style: none;
   margin: 0;
   overflow-x: auto;
@@ -98,17 +98,17 @@
 }
 
 /*
- * Undoing the browser's own `<button>` chrome — `.ids-tabs-item` is
+ * Undoing the browser's own `<button>` chrome — `.dt-tabs-item` is
  * normally an anchor or a native-styled control in the DS's own React
  * usage, so it carries no reset of its own for this — plus overriding the
  * DS's forced uppercase (both the base and `--selected` rules in
- * ids-components.css set `text-transform: uppercase`) back to `none`; see
+ * dt-components.css set `text-transform: uppercase`) back to `none`; see
  * this file's header for why.
  *
  * Deliberately NOT resetting `font`: a `<button>`'s user-agent default font
- * is a plain element-selector rule (specificity 0,0,1), so `.ids-tabs-item`'s
- * own `font: var(--ids-typo-label-l)` / `--selected`'s `label-l-high`
- * (ids-components.css, both class selectors) already win without any help
+ * is a plain element-selector rule (specificity 0,0,1), so `.dt-tabs-item`'s
+ * own `font: var(--dt-typo-label-l)` / `--selected`'s `label-l-high`
+ * (dt-components.css, both class selectors) already win without any help
  * from here. An earlier revision added `font: inherit` "to be safe" and it
  * was the opposite: SAME specificity as the DS's own rule (0,1,0), loaded
  * later in the cascade, so it silently overrode the DS type entirely —
@@ -119,15 +119,15 @@
   appearance: none;
   background: none;
   border: 0;
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   cursor: pointer;
   position: relative;
   text-transform: none;
 }
 
 @media (hover: hover) {
-  .docouture-tabs__tab:not(.ids-tabs-item--selected):hover {
-    color: var(--ids-color-content-states-hover);
+  .docouture-tabs__tab:not(.dt-tabs-item--selected):hover {
+    color: var(--dt-color-content-states-hover);
   }
 }
 
@@ -138,10 +138,10 @@
  * Sits above the strip's own baseline (`z-index` unnecessary: it is drawn
  * on the item, which is a flex sibling of nothing at that position).
  */
-.docouture-tabs__tab.ids-tabs-item--selected::after {
+.docouture-tabs__tab.dt-tabs-item--selected::after {
   background: currentColor;
-  block-size: var(--ids-size-border-default); /* 1 */
-  bottom: var(--ids-size-50); /* 8 — the frame's y=32 inside a 40px item */
+  block-size: var(--dt-size-border-default); /* 1 */
+  bottom: var(--dt-size-50); /* 8 — the frame's y=32 inside a 40px item */
   content: "";
   inset-inline: 0;
   position: absolute;
@@ -164,7 +164,7 @@
 
 .docouture-tabs__panel.is-selected {
   display: block;
-  margin-block-start: var(--ids-size-100); /* 16, the frames' own strip-to-content gap */
+  margin-block-start: var(--dt-size-100); /* 16, the frames' own strip-to-content gap */
   min-inline-size: 0;
 }
 
@@ -172,7 +172,7 @@
  * Every child of a panel is ordinary `.doc` prose (paragraphs, code blocks,
  * tables, admonitions) — reset the block-level top margin `.doc` would
  * otherwise add to the first one, same reasoning as steps.css's own
- * `.ids-timeline-item-content > *` rule.
+ * `.dt-timeline-item-content > *` rule.
  */
 .docouture-tabs__panel.is-selected > :first-child {
   margin-top: 0;

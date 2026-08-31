@@ -1,6 +1,6 @@
 /*
  * Page hero (GH-9), Figma node 3615:59150. Gutter comes from the same DS
- * grid container the header toolbar uses (`.ids-grid-layout--with-margin`,
+ * grid container the header toolbar uses (`.dt-grid-layout--with-margin`,
  * grid-layout/grid-layout.css — see header-content.hbs's own comment), so
  * the hero's left edge lines up with the header's at every breakpoint
  * (16/32/56/64px) instead of a flat 64px. `.hero__row` spans the grid's full
@@ -10,8 +10,8 @@
  * the breadcrumbs/title/lead/tags/actions column shares its measure with
  * the article below (doc.css) — see vars.css's own note on that variable.
  *
- * Every colour is a `.ids-text` / `.ids-breadcrumb-item` / `.ids-label` /
- * `.ids-button` utility class, not a literal here — that is what makes this
+ * Every colour is a `.dt-text` / `.dt-breadcrumb-item` / `.dt-label` /
+ * `.dt-button` utility class, not a literal here — that is what makes this
  * file theme-agnostic; see hero.hbs's own header comment for the two Figma
  * frames (light 2735:65619, dark 2735:65779) this was built against.
  */
@@ -21,19 +21,19 @@
   padding-block-end: var(--hero-space-block-end);
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .hero {
     padding-block-start: var(--hero-space-block-start-s);
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .hero {
     padding-block-start: var(--hero-space-block-start-m);
   }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .hero {
     padding-block-start: var(--hero-space-block-start-l);
   }
@@ -43,14 +43,14 @@
   align-items: flex-end;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ids-size-150);
+  gap: var(--dt-size-150);
   justify-content: space-between;
 }
 
 .hero__main {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-150);
+  gap: var(--dt-size-150);
   max-width: var(--content-max-width);
   min-width: 0;
 }
@@ -61,8 +61,8 @@
 }
 
 /*
- * GH-159: `.hero__title` carries `ids-text--title-xl`, whose token
- * (--ids-typo-title-xl-text-transform, ids-tokens.css) forces uppercase.
+ * GH-159: `.hero__title` carries `dt-text--title-xl`, whose token
+ * (--dt-typo-title-xl-text-transform, dt-tokens.css) forces uppercase.
  * Reset back to `none` so `.adoc` source case (`= My Title`) survives, same
  * fix already applied to in-article headings — see doc.css's own `.doc
  * h1..h6` rule and its GH-11 comment for the sibling case.
@@ -83,11 +83,11 @@
 }
 
 .hero__tags {
-  gap: var(--ids-size-25);
+  gap: var(--dt-size-25);
 }
 
 .hero__actions {
-  gap: var(--ids-size-75);
+  gap: var(--dt-size-75);
 }
 
 /*
@@ -100,15 +100,15 @@
 .hero__aside {
   align-items: center;
   display: flex;
-  gap: var(--ids-size-100);
+  gap: var(--dt-size-100);
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .hero__aside {
     display: none;
   }
 }
 
-.hero a.ids-button {
+.hero a.dt-button {
   text-decoration: none;
 }

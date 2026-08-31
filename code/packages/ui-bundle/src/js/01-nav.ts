@@ -95,7 +95,7 @@
 
   // Current page is real state (aria-current), not a class — see
   // nav-tree.hbs / side-menu.css.
-  var currentItem = nav.querySelector<HTMLElement>('.ids-list-item[aria-current="page"]')
+  var currentItem = nav.querySelector<HTMLElement>('.dt-list-item[aria-current="page"]')
   var originalItem = currentItem
   if (currentItem) {
     activateCurrentPath(currentItem)
@@ -142,7 +142,7 @@
     var hash = window.location.hash
     if (hash) {
       if (hash.indexOf('%')) hash = decodeURIComponent(hash)
-      navLink = nav.querySelector<HTMLElement>('.ids-list-item[href="' + hash + '"]')
+      navLink = nav.querySelector<HTMLElement>('.dt-list-item[href="' + hash + '"]')
       if (!navLink) {
         var targetNode = document.getElementById(hash.slice(1))
         if (targetNode) {
@@ -152,7 +152,7 @@
             var id = current.id
             // NOTE: look for section heading
             if (!id && SECT_CLASS_RX.test(current.className)) id = current.firstElementChild?.id
-            if (id && (navLink = nav.querySelector<HTMLElement>('.ids-list-item[href="#' + id + '"]'))) break
+            if (id && (navLink = nav.querySelector<HTMLElement>('.dt-list-item[href="#' + id + '"]'))) break
           }
         }
       }
@@ -173,7 +173,7 @@
     scrollItemToMidpoint(nav, navItem)
   }
 
-  if (nav.querySelector('.ids-list-item[href^="#"]')) {
+  if (nav.querySelector('.dt-list-item[href^="#"]')) {
     if (window.location.hash) onHashChange()
     window.addEventListener('hashchange', onHashChange)
   }

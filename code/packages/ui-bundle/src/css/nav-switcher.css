@@ -14,7 +14,7 @@
  *
  * No DS component models "pick one of several sibling documentation sets",
  * so this is composed from tokens directly, like the side menu itself —
- * fills, edges and motion from `--ids-*`, never a hand-picked value.
+ * fills, edges and motion from `--dt-*`, never a hand-picked value.
  */
 
 .nav-switcher {
@@ -34,10 +34,10 @@
 .nav-switcher__option {
   align-items: flex-start;
   box-sizing: border-box;
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   display: flex;
-  gap: var(--ids-size-50);
-  padding-block: var(--ids-size-75);
+  gap: var(--dt-size-50);
+  padding-block: var(--dt-size-75);
   text-align: start;
   width: 100%;
 }
@@ -50,33 +50,33 @@
  * shows the same treatment twice, once in each place, which is the point.
  *
  * Because it rests transparent rather than on `bg-low`, hover can use the
- * hover token honestly — `--ids-color-bg-states-hover` and
- * `--ids-color-bg-low` are the same colour in the light theme (#f7f7f7,
- * ids-tokens.css), which is exactly the collision a filled trigger used to
+ * hover token honestly — `--dt-color-bg-states-hover` and
+ * `--dt-color-bg-low` are the same colour in the light theme (#f7f7f7,
+ * dt-tokens.css), which is exactly the collision a filled trigger used to
  * run into. The open state takes the same fill; the chevron's rotation is
  * what distinguishes open from merely hovered.
  */
 .nav-switcher__toggle {
   background: none;
-  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  border: var(--dt-size-border-default) solid var(--dt-color-border-low);
   cursor: pointer;
-  padding-inline: var(--ids-size-100);
+  padding-inline: var(--dt-size-100);
 }
 
 @media (hover: hover) {
   .nav-switcher__toggle:hover {
-    background: var(--ids-color-bg-states-hover);
+    background: var(--dt-color-bg-states-hover);
   }
 }
 
 .nav-switcher__toggle[aria-expanded="true"] {
-  background: var(--ids-color-bg-states-hover);
+  background: var(--dt-color-bg-states-hover);
 }
 
 .nav-switcher__toggle:focus-visible,
 .nav-switcher__option:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: calc(var(--ids-size-border-high) * -1);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: calc(var(--dt-size-border-high) * -1);
 }
 
 /*
@@ -88,7 +88,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--ids-size-25);
+  gap: var(--dt-size-25);
   min-width: 0;
 }
 
@@ -113,9 +113,9 @@
 .nav-switcher__description {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  color: var(--ids-color-content-low);
+  color: var(--dt-color-content-low);
   display: -webkit-box;
-  height: calc(2 * var(--ids-typo-line-height-18));
+  height: calc(2 * var(--dt-typo-line-height-18));
   overflow: hidden;
   overflow-wrap: break-word;
 }
@@ -127,23 +127,23 @@
  * row used to do, leaving the icon floating opposite the gap between the two
  * lines.
  *
- * The token, never a literal 22px: `.ids-scale-large` redefines
- * `--ids-typo-line-height-22` to 29px (ids-tokens.css), and a hardcoded
+ * The token, never a literal 22px: `.dt-scale-large` redefines
+ * `--dt-typo-line-height-22` to 29px (dt-tokens.css), and a hardcoded
  * value would silently drift out of alignment under that scale.
  */
 .nav-switcher__icon,
 .nav-switcher__chevron {
   align-items: center;
-  color: var(--ids-color-content-low);
+  color: var(--dt-color-content-low);
   display: flex;
   flex-shrink: 0;
-  height: var(--ids-typo-line-height-22);
+  height: var(--dt-typo-line-height-22);
 }
 
-.nav-switcher__icon .ids-icon,
-.nav-switcher__chevron .ids-icon {
-  height: var(--ids-size-125);
-  width: var(--ids-size-125);
+.nav-switcher__icon .dt-icon,
+.nav-switcher__chevron .dt-icon {
+  height: var(--dt-size-125);
+  width: var(--dt-size-125);
 }
 
 .nav-switcher__chevron {
@@ -166,14 +166,14 @@
  * replacing it.
  */
 .nav-switcher__menu {
-  background: var(--ids-color-bg-default);
+  background: var(--dt-color-bg-default);
   /*
-   * The DS ships no elevation/shadow token (ids-tokens.css has none), so the
+   * The DS ships no elevation/shadow token (dt-tokens.css has none), so the
    * panel separates itself from the tree underneath with a real border
    * rather than an invented shadow — the same grey the side menu's own right
    * rule and the dashed header/footer rules use.
    */
-  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  border: var(--dt-size-border-default) solid var(--dt-color-border-low);
   box-sizing: border-box;
   display: block;
   left: 0;
@@ -189,7 +189,7 @@
    * would be unreachable.
    */
   max-height: min(
-    calc(var(--ids-size-50) + 3.4 * var(--nav-switcher-row-height) + 3 * var(--ids-size-50)),
+    calc(var(--dt-size-50) + 3.4 * var(--nav-switcher-row-height) + 3 * var(--dt-size-50)),
     60dvh
   );
   opacity: 1;
@@ -197,7 +197,7 @@
   overscroll-behavior: contain;
   position: absolute;
   right: 0;
-  top: calc(100% + var(--ids-size-50));
+  top: calc(100% + var(--dt-size-50));
   /*
    * `display` is in the transition — with `allow-discrete` — so the panel
    * stays rendered for the length of the exit and the close animates too;
@@ -220,22 +220,22 @@
    */
   display: none;
   opacity: 0;
-  translate: 0 calc(var(--ids-size-25) * -1);
+  translate: 0 calc(var(--dt-size-25) * -1);
 }
 
 /* The entry side of the same two properties. */
 @starting-style {
   .nav-switcher__menu:not([hidden]) {
     opacity: 0;
-    translate: 0 calc(var(--ids-size-25) * -1);
+    translate: 0 calc(var(--dt-size-25) * -1);
   }
 }
 
 .nav-switcher__list {
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-50);
-  padding: var(--ids-size-50);
+  gap: var(--dt-size-50);
+  padding: var(--dt-size-50);
 }
 
 /*
@@ -249,13 +249,13 @@
  * otherwise make it 2px taller than its neighbours.
  */
 .nav-switcher__option {
-  border: var(--ids-size-border-default) solid transparent;
-  padding-inline: var(--ids-size-50);
+  border: var(--dt-size-border-default) solid transparent;
+  padding-inline: var(--dt-size-50);
 }
 
 @media (hover: hover) {
   .nav-switcher__option:hover {
-    background: var(--ids-color-bg-states-hover);
+    background: var(--dt-color-bg-states-hover);
   }
 }
 
@@ -268,5 +268,5 @@
  * edges rather than as chrome bleeding into content.
  */
 .nav-switcher__option[aria-current="true"] {
-  border-color: var(--ids-color-border-low);
+  border-color: var(--dt-color-border-low);
 }

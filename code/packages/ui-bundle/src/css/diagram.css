@@ -14,11 +14,11 @@
  * container query, is what actually stops at the doc column rather than
  * the viewport.
  *
- * The frame (background/border/radius/padding) is a `--ids-*`-token card,
- * the same family card-grid.css's `.ids-card__content` draws from, so a
+ * The frame (background/border/radius/padding) is a `--dt-*`-token card,
+ * the same family card-grid.css's `.dt-card__content` draws from, so a
  * diagram sits in a surface consistent with every other docouture block instead
  * of floating on the page background with no visual boundary. Square
- * corners (`--ids-size-radius-none`), not rounded — a diagram frequently
+ * corners (`--dt-size-radius-none`), not rounded — a diagram frequently
  * butts its own straight edges (a flowchart's boxes, a state diagram's
  * borders) right up against the card's, where a rounded outer corner reads
  * as a mismatch the other DS cards (built from photos, text, icons) don't
@@ -27,7 +27,7 @@
  * STYLING THE DIAGRAM'S OWN CONTENT — NOT JUST ITS FRAME
  *
  * Every tool this package renders bakes its own fonts/colors/corner
- * radii into what it returns; none of that is expressible as `--ids-*`
+ * radii into what it returns; none of that is expressible as `--dt-*`
  * tokens by definition (it's baked before this stylesheet ever sees it).
  * Two different strategies are in play, and which one applies depends on
  * whether the tool exposes a source-level theming hook Kroki passes
@@ -40,7 +40,7 @@
  *   screenshotting that same themed SVG in headless Chrome, so this applies
  *   identically either way) that comes back is already correct, with zero
  *   CSS involved. See that file's own header for why the colors are
- *   hardcoded hex there rather than `--ids-*` references (no CSS cascade
+ *   hardcoded hex there rather than `--dt-*` references (no CSS cascade
  *   exists at that point to resolve a custom property against) and for why
  *   dark mode is NOT baked there — it's still this file's own `filter:
  *   invert()` rule below, same as every other tool's baked-in output.
@@ -70,10 +70,10 @@
   max-width: 100%;
   overflow-x: auto;
   width: fit-content;
-  padding: var(--ids-size-100);
-  background: var(--ids-color-bg-low);
-  border: var(--ids-size-border-default) solid var(--ids-color-border-low);
-  border-radius: var(--ids-size-radius-none);
+  padding: var(--dt-size-100);
+  background: var(--dt-color-bg-low);
+  border: var(--dt-size-border-default) solid var(--dt-color-border-low);
+  border-radius: var(--dt-size-radius-none);
 }
 
 .docouture-diagram svg,
@@ -105,7 +105,7 @@
  * two shipped examples: `text`/`tspan` covers plain SVG labels (BPMN, and
  * most of the non-Mermaid types), `foreignObject` and its own descendants
  * covers the HTML labels some tools (Mermaid's `.nodeLabel`/`.edgeLabel`)
- * render through instead of `<text>`. `--ids-typo-body-m` end to end (font
+ * render through instead of `<text>`. `--dt-typo-body-m` end to end (font
  * shorthand + the letter-spacing/text-transform/font-variant-numeric that
  * have to travel with it — see the iop-ds-foundations skill's own
  * typography section) rather than just `font-family`, so a diagram's text
@@ -116,10 +116,10 @@
 .docouture-diagram svg tspan,
 .docouture-diagram svg foreignObject,
 .docouture-diagram svg foreignObject * {
-  font: var(--ids-typo-body-m) !important;
-  letter-spacing: var(--ids-typo-body-m-letter-spacing) !important;
-  text-transform: var(--ids-typo-body-m-text-transform) !important;
-  font-variant-numeric: var(--ids-typo-font-variant-numeric) !important;
+  font: var(--dt-typo-body-m) !important;
+  letter-spacing: var(--dt-typo-body-m-letter-spacing) !important;
+  text-transform: var(--dt-typo-body-m-text-transform) !important;
+  font-variant-numeric: var(--dt-typo-font-variant-numeric) !important;
 }
 
 /* BPMN (bpmn-js): every shape is exactly one of two inline-styled colors —
@@ -131,12 +131,12 @@
  * token's own theme swap instead of leaving it alone. SVG only: BPMN has no
  * PNG output to apply this to (`PNG_SUPPORTED_TYPES`). */
 .docouture-diagram[data-diagram-type='bpmn'] svg [style*='rgb(34, 36, 42)'] {
-  fill: var(--ids-color-border-default) !important;
-  stroke: var(--ids-color-border-default) !important;
+  fill: var(--dt-color-border-default) !important;
+  stroke: var(--dt-color-border-default) !important;
 }
 
 .docouture-diagram[data-diagram-type='bpmn'] svg [style*='fill: white'] {
-  fill: var(--ids-color-bg-default) !important;
+  fill: var(--dt-color-bg-default) !important;
 }
 
 /* Dark mode: `filter: invert(1) hue-rotate(180deg)` on the rendered output
@@ -151,13 +151,13 @@
  * fetch/cache/pipeline for one theme's sake.
  *
  * BPMN is excluded because its colors are already re-mapped to light/dark-
- * aware `--ids-*` tokens above (a filter on top would fight the token's own
+ * aware `--dt-*` tokens above (a filter on top would fight the token's own
  * swap, not cooperate with it). Mermaid is NOT excluded, unlike an earlier
  * version of this file — kroki-mermaid-theme.js bakes a fixed, light-theme
  * palette (hardcoded hex, not tokens: no CSS cascade exists where it runs),
  * so Mermaid needs this filter for dark mode exactly like BPMN's `format=
  * png` sibling or any of the other SUPPORTED_TYPES entries would. */
-.ids-theme-dark .docouture-diagram:not([data-diagram-type='bpmn']) svg,
-.ids-theme-dark .docouture-diagram:not([data-diagram-type='bpmn']) img {
+.dt-theme-dark .docouture-diagram:not([data-diagram-type='bpmn']) svg,
+.dt-theme-dark .docouture-diagram:not([data-diagram-type='bpmn']) img {
   filter: invert(1) hue-rotate(180deg);
 }

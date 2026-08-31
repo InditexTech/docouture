@@ -318,7 +318,7 @@ The abstract class that defines the blueprint of an action in Weave.js.
 Enables users to directly comment and give feedback on the stage. This one
 carries a subheader and label chips.
 
-[card,icon="actions/code-block-outlined"]
+[card,icon="code"]
 .link:content.html[WeaveEraserToolAction]
 Allows users to erase elements of the canvas by clicking on them. This one
 carries a header icon.

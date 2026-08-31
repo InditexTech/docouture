@@ -1,49 +1,35 @@
 'use strict'
 
-// Preview-only. Builds the data + assets for the icons catalog page from the
-// gitignored `.icons/` mirror (`just icons-fetch`), not from the vendored
-// `src/img/icons.yml` manifest — the catalog's job is to show every icon that
-// *could* be vendored, with the ones already in the sprite flagged, so picking
-// one is browsing rather than guessing group/name pairs.
-//
-// `.icons/` is scratch and may not exist (fresh clone, CI). Absence is not an
-// error: the caller gets `{ available: false }` and renders an explainer
-// instead of a catalog.
+// Preview-only. Builds the data + assets for the icons catalog page from
+// lucide-static's own combined sprite (a normal, always-installed
+// devDependency — nothing to fetch, nothing that may be absent), not from
+// the vendored `src/img/icons.yml` manifest — the catalog's job is to show
+// every icon that *could* be vendored, with the ones already in the sprite
+// flagged, so picking one is browsing rather than guessing a name.
 
 const fs = require('fs-extra')
 const ospath = require('path')
 
 const PACKAGE_ROOT = ospath.join(__dirname, '..', '..')
-const MIRROR_DIR = ospath.join(PACKAGE_ROOT, '.icons')
+const LUCIDE_SPRITE = ospath.join(PACKAGE_ROOT, 'node_modules/lucide-static/sprite.svg')
 
 /**
- * @param {string} previewDest e.g. 'public', where the mirror's sprites are
- *   copied to so the preview page can reference them over http.
- * @returns {Promise<{available: false} | {available: true, total: number, groups: Array<{name: string, icons: Array<{name: string, id: string, vendored: boolean}>}>}>}
+ * @param {string} previewDest e.g. 'public', where lucide's sprite is copied
+ *   to so the preview page can reference it over http.
+ * @returns {Promise<{available: false} | {available: true, total: number, icons: Array<{name: string, vendored: boolean}>}>}
  */
 module.exports = async function loadIconCatalog(previewDest) {
-  const { GROUPS, parseSymbols, loadManifest } = await import('../../scripts/lib/icons.mjs')
+  const { loadLucideIndex, loadManifest } = await import('../../scripts/lib/icons.mjs')
 
-  if (!(await fs.pathExists(MIRROR_DIR))) return { available: false }
+  if (!(await fs.pathExists(LUCIDE_SPRITE))) return { available: false }
 
-  const vendored = new Set((await loadManifest()).map(({ group, name }) => `${group}/${name}`))
+  const vendored = new Set(await loadManifest())
   const destDir = ospath.join(PACKAGE_ROOT, previewDest, '_', 'img', 'preview-icons')
   await fs.ensureDir(destDir)
+  await fs.copyFile(LUCIDE_SPRITE, ospath.join(destDir, 'sprite.svg'))
 
-  const groups = []
-  let total = 0
-  for (const group of GROUPS) {
-    const file = ospath.join(MIRROR_DIR, `sw-icons-${group}.symbol.svg`)
-    if (!(await fs.pathExists(file))) continue
-    const svg = await fs.readFile(file, 'utf8')
-    const { symbols } = parseSymbols(svg, group)
-    await fs.copyFile(file, ospath.join(destDir, `sw-icons-${group}.symbol.svg`))
-    const groupIcons = [...symbols.keys()]
-      .sort()
-      .map((name) => ({ name, id: `sw-icons-${group}-${name}`, vendored: vendored.has(`${group}/${name}`) }))
-    groups.push({ name: group, icons: groupIcons })
-    total += groupIcons.length
-  }
+  const index = await loadLucideIndex()
+  const icons = [...index.keys()].sort().map((name) => ({ name, vendored: vendored.has(name) }))
 
-  return { available: true, total, groups }
+  return { available: true, total: icons.length, icons }
 }

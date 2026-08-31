@@ -4,7 +4,7 @@ const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const esbuild = require('esbuild')
 const fs = require('fs-extra')
-const idsCustomMedia = require('../lib/ids-custom-media')
+const dtCustomMedia = require('../lib/dt-custom-media')
 const merge = require('../lib/concat-streams')
 const ospath = require('path')
 const path = ospath.posix
@@ -44,10 +44,10 @@ module.exports = (src, dest, preview) => async () => {
     postcssImport,
     trackImportedStylesheetMtimes,
     // Prepend this bundle's own @custom-media breakpoint declarations
-    // (generated from the design system into src/css/ids-breakpoints.css) to
+    // (generated from the design system into src/css/dt-breakpoints.css) to
     // every stylesheet, then resolve them. Together these let any rule write
-    // `@media (--ids-breakpoints-m)` instead of a hardcoded width.
-    idsCustomMedia(),
+    // `@media (--dt-breakpoints-m)` instead of a hardcoded width.
+    dtCustomMedia(),
     postcssCustomMedia(),
     postcssUrl([
       {

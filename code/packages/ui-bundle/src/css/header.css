@@ -8,7 +8,7 @@
  * all overlay drawers there (see side-menu.css), so the header stays
  * full-width at every breakpoint except l.
  *
- * Colours come straight off --ids-* tokens: this is a new DS-composed
+ * Colours come straight off --dt-* tokens: this is a new DS-composed
  * component, not upstream chrome threaded through bridge.css aliases.
  */
 
@@ -18,8 +18,8 @@ body {
 
 .header-toolbar {
   align-items: center;
-  background: var(--ids-color-bg-default);
-  color: var(--ids-color-content-default);
+  background: var(--dt-color-bg-default);
+  color: var(--dt-color-content-default);
   display: flex;
   height: var(--navbar-height);
   left: var(--side-menu-offset);
@@ -33,7 +33,7 @@ body {
    * dashed` does not give control over dash length. Shared with the side
    * menu (#8) and page footer (#16), which draw the same rule.
    */
-  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-image: repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
   background-position: bottom;
   background-repeat: repeat-x;
   background-size: 8px 1px;
@@ -46,12 +46,12 @@ body {
 /*
  * The header's own content sits in the same DS grid container as the
  * breadcrumb toolbar (see GH issue #8 — grid-layout/grid-layout.css,
- * vendored via src/css/ids-components.yml, and header-content.hbs):
- * `.ids-grid-layout--with-margin` for the correct per-breakpoint gutter
+ * vendored via src/css/dt-components.yml, and header-content.hbs):
+ * `.dt-grid-layout--with-margin` for the correct per-breakpoint gutter
  * instead of a flat padding. Both halves carry `--span-6` *and*
  * `--span-xs-3` (see header-content.hbs) so the row is 50/50 at every
  * breakpoint instead of stacking at xs, where the grid itself is 6, not
- * 12, columns. `.ids-grid-layout` already has its own `width: 100%`;
+ * 12, columns. `.dt-grid-layout` already has its own `width: 100%`;
  * `.header-toolbar` just needs to centre it vertically.
  */
 .header-toolbar__grid {
@@ -61,7 +61,7 @@ body {
 .header-toolbar__left {
   align-items: center;
   display: flex;
-  gap: var(--ids-size-150);
+  gap: var(--dt-size-150);
   min-width: 0;
 }
 
@@ -84,7 +84,7 @@ body {
   align-items: center;
   color: inherit;
   display: flex;
-  gap: var(--ids-size-75);
+  gap: var(--dt-size-75);
   min-width: 0;
   text-decoration: none;
 }
@@ -100,11 +100,11 @@ body {
   display: none;
 }
 
-.ids-theme-dark .header-toolbar__logo--light {
+.dt-theme-dark .header-toolbar__logo--light {
   display: none;
 }
 
-.ids-theme-dark .header-toolbar__logo--dark {
+.dt-theme-dark .header-toolbar__logo--dark {
   display: inline-block;
 }
 
@@ -121,7 +121,7 @@ body {
  * duplication is a smaller cost than a page losing its own name.
  */
 .header-toolbar__product-name {
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -141,12 +141,12 @@ body {
   flex-shrink: 0;
 }
 
-/* icon/label/⌘K chip need visible separation — `.ids-button__content` sets none by default */
-.header-toolbar__search-trigger .ids-button__content {
-  gap: var(--ids-size-25);
+/* icon/label/⌘K chip need visible separation — `.dt-button__content` sets none by default */
+.header-toolbar__search-trigger .dt-button__content {
+  gap: var(--dt-size-25);
 }
 
-@media screen and (--ids-breakpoints-xs) {
+@media screen and (--dt-breakpoints-xs) {
   .header-toolbar__search-trigger {
     display: none;
   }
@@ -157,7 +157,7 @@ body {
   flex-shrink: 0;
 }
 
-@media screen and (--ids-breakpoints-xs) {
+@media screen and (--dt-breakpoints-xs) {
   .header-toolbar__search-label {
     display: none;
   }
@@ -169,14 +169,14 @@ body {
   border-radius: 0;
   color: var(--toolbar-muted-color);
   flex-shrink: 0;
-  font: var(--ids-typo-label-m);
-  letter-spacing: var(--ids-typo-label-m-letter-spacing);
-  padding: 0 var(--ids-size-25);
-  text-transform: var(--ids-typo-label-m-text-transform);
+  font: var(--dt-typo-label-m);
+  letter-spacing: var(--dt-typo-label-m-letter-spacing);
+  padding: 0 var(--dt-size-25);
+  text-transform: var(--dt-typo-label-m-text-transform);
   white-space: nowrap;
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .header-toolbar__search-shortcut {
     display: none;
   }
@@ -185,7 +185,7 @@ body {
 .header-toolbar__actions {
   align-items: center;
   display: flex;
-  gap: var(--ids-size-100);
+  gap: var(--dt-size-100);
   justify-content: flex-end;
 }
 
@@ -193,7 +193,7 @@ body {
  * The version tag moves into the side-menu drawer at xs/s (nav.hbs,
  * side-menu.css); hidden here at both, not dropped.
  */
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .header-toolbar__actions .page-versions {
     display: none;
   }
@@ -201,62 +201,62 @@ body {
 
 /*
  * GH-103 — explicit Latest/older-Stable/Prerelease colouring for the
- * dropdown toggle (`.ids-tag--solid`, page-versions.hbs) — three states:
+ * dropdown toggle (`.dt-tag--solid`, page-versions.hbs) — three states:
  * the current release green, an older stable version grey (no `alt-grey`
- * pair exists in ids-tokens.css the way green/orange do, so this composes
- * from the plain neutral scale instead — `--ids-color-bg-low`/`--ids-color-
+ * pair exists in dt-tokens.css the way green/orange do, so this composes
+ * from the plain neutral scale instead — `--dt-color-bg-low`/`--dt-color-
  * content-low`, the same "muted" pairing the dropdown's own plain rows use,
- * page-versions.css), Prerelease orange. `.ids-tag--solid` reads its
- * background off the `--ids-color-bg-low` custom property and its label off
- * `--ids-color-content-default` (ids-components.css), so redefining those two
+ * page-versions.css), Prerelease orange. `.dt-tag--solid` reads its
+ * background off the `--dt-color-bg-low` custom property and its label off
+ * `--dt-color-content-default` (dt-components.css), so redefining those two
  * variables locally is enough — no selector override needed.
  */
 .header-toolbar__version--latest {
-  --ids-color-bg-low: var(--ids-color-alt-green-low);
-  --ids-color-content-default: var(--ids-color-alt-green-high);
+  --dt-color-bg-low: var(--dt-color-alt-green-low);
+  --dt-color-content-default: var(--dt-color-alt-green-high);
 }
 
 .header-toolbar__version--older {
-  --ids-color-bg-low: var(--ids-color-bg-states-hover);
-  --ids-color-content-default: var(--ids-color-content-low);
+  --dt-color-bg-low: var(--dt-color-bg-states-hover);
+  --dt-color-content-default: var(--dt-color-content-low);
 }
 
 .header-toolbar__version--prerelease {
-  --ids-color-bg-low: var(--ids-color-alt-orange-low);
-  --ids-color-content-default: var(--ids-color-alt-orange-high);
+  --dt-color-bg-low: var(--dt-color-alt-orange-low);
+  --dt-color-content-default: var(--dt-color-alt-orange-high);
 }
 
 /*
  * GH-103/GH-101 — the single-version read-only badge doesn't go through the
- * variables above: `.ids-tag--read-only.ids-tag--solid` sets its own
- * `background-color` directly, off `--ids-color-bg-states-disabled`
- * (ids-components.css), ignoring `--ids-color-bg-low` entirely. Same for the
- * label, which stays on the DS's default `--ids-color-content-default` read
- * globally rather than the locally-scoped one `.ids-tag--solid` uses. Both
+ * variables above: `.dt-tag--read-only.dt-tag--solid` sets its own
+ * `background-color` directly, off `--dt-color-bg-states-disabled`
+ * (dt-components.css), ignoring `--dt-color-bg-low` entirely. Same for the
+ * label, which stays on the DS's default `--dt-color-content-default` read
+ * globally rather than the locally-scoped one `.dt-tag--solid` uses. Both
  * need a selector-specificity override here instead of a variable swap.
  */
-.header-toolbar__version--latest.ids-tag--read-only.ids-tag--solid {
-  background-color: var(--ids-color-alt-green-low);
+.header-toolbar__version--latest.dt-tag--read-only.dt-tag--solid {
+  background-color: var(--dt-color-alt-green-low);
 }
 
-.header-toolbar__version--latest.ids-tag--read-only .ids-tag__label {
-  color: var(--ids-color-alt-green-high);
+.header-toolbar__version--latest.dt-tag--read-only .dt-tag__label {
+  color: var(--dt-color-alt-green-high);
 }
 
-.header-toolbar__version--older.ids-tag--read-only.ids-tag--solid {
-  background-color: var(--ids-color-bg-states-hover);
+.header-toolbar__version--older.dt-tag--read-only.dt-tag--solid {
+  background-color: var(--dt-color-bg-states-hover);
 }
 
-.header-toolbar__version--older.ids-tag--read-only .ids-tag__label {
-  color: var(--ids-color-content-low);
+.header-toolbar__version--older.dt-tag--read-only .dt-tag__label {
+  color: var(--dt-color-content-low);
 }
 
-.header-toolbar__version--prerelease.ids-tag--read-only.ids-tag--solid {
-  background-color: var(--ids-color-alt-orange-low);
+.header-toolbar__version--prerelease.dt-tag--read-only.dt-tag--solid {
+  background-color: var(--dt-color-alt-orange-low);
 }
 
-.header-toolbar__version--prerelease.ids-tag--read-only .ids-tag__label {
-  color: var(--ids-color-alt-orange-high);
+.header-toolbar__version--prerelease.dt-tag--read-only .dt-tag__label {
+  color: var(--dt-color-alt-orange-high);
 }
 
 /*
@@ -270,8 +270,8 @@ body {
  */
 .header-toolbar__repo-icon {
   background: currentColor;
-  block-size: var(--ids-size-125);
-  inline-size: var(--ids-size-125);
+  block-size: var(--dt-size-125);
+  inline-size: var(--dt-size-125);
   mask-image: var(--icon-mask-brand-github);
   mask-position: center;
   mask-repeat: no-repeat;
@@ -281,15 +281,15 @@ body {
 /*
  * Show the icon for the theme the button switches TO, not the one in use.
  * Qualified with .theme-toggle (not just the icon class) to match the
- * specificity of .ids-button__content .ids-button__icon in button.css, which
+ * specificity of .dt-button__content .dt-button__icon in button.css, which
  * would otherwise win the `display` property on equal source order.
  */
 .theme-toggle .theme-toggle-icon--dark,
-.ids-theme-dark .theme-toggle .theme-toggle-icon--light {
+.dt-theme-dark .theme-toggle .theme-toggle-icon--light {
   display: inline-flex;
 }
 
 .theme-toggle .theme-toggle-icon--light,
-.ids-theme-dark .theme-toggle .theme-toggle-icon--dark {
+.dt-theme-dark .theme-toggle .theme-toggle-icon--dark {
   display: none;
 }

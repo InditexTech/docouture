@@ -11,12 +11,12 @@
        */
       (function () {
         var stored
-        try { stored = localStorage.getItem('ids-theme') } catch (e) {}
+        try { stored = localStorage.getItem('dt-theme') } catch (e) {}
         var theme = stored === 'light' || stored === 'dark'
           ? stored
           : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
         var root = document.documentElement
-        root.classList.add('ids-theme-' + theme, 'ids-scale-medium')
+        root.classList.add('dt-theme-' + theme, 'dt-scale-medium')
         root.style.colorScheme = theme
       })()
     </script>

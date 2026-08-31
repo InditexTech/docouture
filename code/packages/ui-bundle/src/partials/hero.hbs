@@ -2,9 +2,9 @@
   Page hero (GH-9): breadcrumbs, title, excerpt, tags and actions above every
   content page — see Figma node 3615:59150 (in the page), 2735:65619 (hero
   alone, light) and 2735:65779 (hero alone, dark). Every colour below is a
-  design-system token (`.ids-text`, `.ids-breadcrumb-item`, `.ids-label`,
-  `.ids-button`), so nothing here is theme-specific — dark mode falls out of
-  ids-tokens.css's own `.ids-theme-dark` block for free.
+  design-system token (`.dt-text`, `.dt-breadcrumb-item`, `.dt-label`,
+  `.dt-button`), so nothing here is theme-specific — dark mode falls out of
+  dt-tokens.css's own `.dt-theme-dark` block for free.
 
   Renders on every default-layout page except when `:page-role: -hero` is
   set — see main.hbs, which decides once and passes the result down, and
@@ -15,7 +15,7 @@
   Authoring surface — every attribute below is optional, page.title is not:
 
     :description: A sentence or two.        hero excerpt AND <meta name="description">
-    :page-tags: Beta, Internal               comma-separated, one .ids-label--grey each
+    :page-tags: Beta, Internal               comma-separated, one .dt-label--grey each
     :page-action: Get started                primary button label
     :page-action-url: getting-started.adoc   its target — a page reference or a literal URL
     :page-action-secondary: View source       secondary (outlined) button
@@ -36,7 +36,7 @@
   both put the primary action first.
 
   The right-hand slot carries the ToC toggle (GH-10): a
-  `.ids-button--ghost .ids-button--icon-only` with `design/sidebar-outlined`
+  `.dt-button--ghost .dt-button--icon-only` with `panel-left`
   (Figma frame 3615:59159), `hidden` until src/js/02-on-this-page.ts decides
   there is a ToC to control — same reasoning as theme-toggle.hbs and the
   side-menu toggle, a control with no handler must not render. Hidden
@@ -44,11 +44,11 @@
   hiding of the version tag and search input is the precedent) — the ToC
   sits above the article there instead of beside it, with nothing to toggle.
 
-  Tags render `.ids-label--grey`, not the `--white` variant Figma's mock
-  shows: `--white`'s background is literally `--ids-color-bg-default`, i.e.
+  Tags render `.dt-label--grey`, not the `--white` variant Figma's mock
+  shows: `--white`'s background is literally `--dt-color-bg-default`, i.e.
   the page background itself, so on this page (bg-default surface) it never
-  paints a visible pill in EITHER theme — grey's `--ids-color-bg-low` against
-  `--ids-color-content-default` is the only variant that actually contrasts
+  paints a visible pill in EITHER theme — grey's `--dt-color-bg-low` against
+  `--dt-color-content-default` is the only variant that actually contrasts
   against the page in both light and dark.
 
   The hero's left column (`.hero__main`) is capped at `--content-max-width`
@@ -58,40 +58,40 @@
   measure's edge (Figma frame 3615:59159).
 --}}
 <div class="hero">
-  <div class="ids-grid-layout ids-grid-layout--with-margin hero__grid">
-    <div class="ids-grid-layout__item ids-grid-layout__item--span-full hero__row">
+  <div class="dt-grid-layout dt-grid-layout--with-margin hero__grid">
+    <div class="dt-grid-layout__item dt-grid-layout__item--span-full hero__row">
       <div class="hero__main">
 {{> breadcrumbs}}
-        <h1 class="hero__title ids-text ids-text--title-xl">{{{page.title}}}</h1>
+        <h1 class="hero__title dt-text dt-text--title-xl">{{{page.title}}}</h1>
 {{#with page.description}}
-        <p class="hero__excerpt ids-text ids-text--body-l">{{this}}</p>
+        <p class="hero__excerpt dt-text dt-text--body-l">{{this}}</p>
 {{/with}}
 {{#with (split page.attributes.tags ',')}}
         <div class="hero__tags">
         {{#each this}}
-          <div class="ids-label ids-label--grey">
-            <span class="ids-label__content">{{this}}</span>
+          <div class="dt-label dt-label--grey">
+            <span class="dt-label__content">{{this}}</span>
           </div>
         {{/each}}
         </div>
         {{/with}}
 {{#if (and page.attributes.action page.attributes.[action-url])}}
         <div class="hero__actions">
-          <a class="ids-button ids-button--primary ids-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-url]) page.attributes.[action-url])}}}">
-            <span class="ids-button__content">{{page.attributes.action}}</span>
+          <a class="dt-button dt-button--primary dt-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-url]) page.attributes.[action-url])}}}">
+            <span class="dt-button__content">{{page.attributes.action}}</span>
           </a>
         {{#if (and page.attributes.[action-secondary] page.attributes.[action-secondary-url])}}
-          <a class="ids-button ids-button--secondary ids-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-secondary-url]) page.attributes.[action-secondary-url])}}}">
-            <span class="ids-button__content">{{page.attributes.[action-secondary]}}</span>
+          <a class="dt-button dt-button--secondary dt-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-secondary-url]) page.attributes.[action-secondary-url])}}}">
+            <span class="dt-button__content">{{page.attributes.[action-secondary]}}</span>
           </a>
         {{/if}}
         </div>
 {{/if}}
       </div>
       <div class="hero__aside">
-        <button class="ids-button ids-button--ghost ids-button--icon-only toc-toggle" type="button" aria-controls="on-this-page" aria-expanded="true" hidden>
-          <span class="ids-button__content">
-            <span class="ids-button__icon ids-button__icon-icon">{{icon "design" "sidebar-outlined"}}</span>
+        <button class="dt-button dt-button--ghost dt-button--icon-only toc-toggle" type="button" aria-controls="on-this-page" aria-expanded="true" hidden>
+          <span class="dt-button__content">
+            <span class="dt-button__icon dt-button__icon-icon">{{icon "panel-left"}}</span>
           </span>
         </button>
       </div>

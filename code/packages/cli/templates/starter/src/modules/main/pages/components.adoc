@@ -328,7 +328,7 @@ Add a page, build the site, publish it.
 .xref:main:quickstart.adoc[Quickstart]
 The smallest path to a working result, as concrete steps.
 
-[card,icon="design/grid-outlined"]
+[card,icon="grid-3x3"]
 .xref:main:architecture.adoc[Architecture]
 This one carries a header icon instead of a subheader.
 ====

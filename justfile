@@ -262,23 +262,20 @@ test-package packages *args: (_hdr "test-package " + packages) _tooling
 
 # ---------------------------------------------------------------- icons ------
 #
-# Icons are vendored from the IOP Design System into a local sprite so they
-# render in static, JavaScript-off HTML. Two stages, and only the first one
-# touches the network:
+# Icons come from Lucide (lucide-static, a public npm devDependency) into a
+# local sprite so they render in static, JavaScript-off HTML. One stage, and
+# it never touches the network — lucide-static already ships every icon:
 #
-#   icons-fetch   mirrors all 25 group sprites into packages/ui-bundle/.icons
-#                 (gitignored) and records what it got in icons.lock.json
-#   icons-build   cuts src/img/ids-icons.svg from that mirror, using only the
-#                 icons listed in src/img/icons.yml
+#   icons-build   cuts src/img/icons.svg from lucide-static's own combined
+#                 sprite, using only the icons listed in src/img/icons.yml
 #
-# Day to day you only need icons-build: add a line to the manifest, run it,
-# commit the sprite. icons-fetch is for design system updates.
+# Add a line to the manifest, run icons-build, commit the sprite.
 #
 # `-C` rather than `--filter`: these scripts exit non-zero to report a bad icon
 # name, and pnpm's recursive runner would bury their output in an
 # ERR_PNPM_RECURSIVE_RUN report.
 
-# Find an icon in the design system catalogue
+# Find an icon in Lucide's catalogue
 [group('icons')]
 [no-exit-message]
 icons-search *terms: (_hdr "icons-search " + terms)
@@ -289,12 +286,6 @@ icons-search *terms: (_hdr "icons-search " + terms)
 [no-exit-message]
 icons-build *args: (_hdr "icons-build")
     pnpm -C packages/ui-bundle run icons:build {{ args }}
-
-# Re-mirror the design system icon catalogue (network)
-[group('icons')]
-[no-exit-message]
-icons-fetch *args: (_hdr "icons-fetch")
-    pnpm -C packages/ui-bundle run icons:fetch {{ args }}
 
 # ---------------------------------------------------------------- check ------
 

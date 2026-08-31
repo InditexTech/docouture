@@ -131,7 +131,7 @@ Scaffold, build, publish — the smallest path to a working result.
 .xref:main:guides-adding-a-page.adoc[Adding a page]
 Create a file, add it to nav.adoc, done.
 
-[card,icon="design/grid-outlined"]
+[card,icon="grid-3x3"]
 .xref:main:architecture.adoc[Architecture]
 This one carries a header icon — `icon=` and `subheader=` share one header row and
 combine fine on the same card, they aren't alternatives to each other.
@@ -148,16 +148,16 @@ Scaffold, build, publish — the smallest path to a working result.
 .xref:main:guides-adding-a-page.adoc[Adding a page]
 Create a file, add it to nav.adoc, done.
 
-[card,icon="design/grid-outlined"]
+[card,icon="grid-3x3"]
 .xref:main:architecture.adoc[Architecture]
 This one carries a header icon — `icon=` and `subheader=` share one header row and
 combine fine on the same card, they aren't alternatives to each other.
 ====
 
-`icon=` takes a `group/name` string, and only renders if that icon has a generated
-CSS mask — see xref:main:guides-icon-gallery.adoc[] for the full, working set. A per-card
-`labels=` attribute (comma-separated) renders a separate row of small grey chips,
-independent of `subheader=`.
+`icon=` takes a bare icon name (Lucide's own, e.g. `store`), and only renders if that
+icon has a generated CSS mask — see xref:main:guides-icon-gallery.adoc[] for the full,
+working set. A per-card `labels=` attribute (comma-separated) renders a separate row of
+small grey chips, independent of `subheader=`.
 
 With images, a fixed square aspect, four columns, let out to the container's full width —
 the same shape the landing's own quicklinks use (`ROOT:card-placeholder.png` reused

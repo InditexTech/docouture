@@ -1,9 +1,10 @@
 <!--
   Preview-only layout. Lives in preview-src/layouts, not src/layouts, so it is
-  never packed into the published UI bundle. Icon data comes from the
-  gitignored `.icons/` mirror (`just icons-fetch`), not from the vendored
-  `src/img/icons.yml` manifest — see gulp.d/lib/load-icon-catalog.js. Sprites
-  referenced here are copied to `_/img/preview-icons/` for this preview only.
+  never packed into the published UI bundle. Icon data comes straight from
+  lucide-static's own combined sprite (a normal devDependency, always
+  installed), not from the vendored `src/img/icons.yml` manifest — see
+  gulp.d/lib/load-icon-catalog.js. The sprite is copied to
+  `_/img/preview-icons/` for this preview only.
 
   No site chrome (header, footer copy): this is a dev-only catalog, not a page
   any real Antora site would use. `footer-scripts` stays so `site.js` still
@@ -17,69 +18,63 @@
   </head>
   <body class="icons-page">
     <main class="icons">
-      <a class="icons__back ids-text ids-text--body-m" href="{{{siteRootPath}}}/index.html">{{icon "arrows" "arrow-left-outlined"}} UI Preview</a>
+      <a class="icons__back dt-text dt-text--body-m" href="{{{siteRootPath}}}/index.html">{{icon "arrow-left"}} UI Preview</a>
 {{#if icons.available}}
       <div class="icons__toolbar">
         <div class="icons__search">
-          <div class="ids-search-field-minimal ids-search-field-minimal--full-width">
-            <span class="ids-search-field-minimal__icon-start">{{icon "actions" "search-outlined"}}</span>
-            <div class="ids-search-field-minimal__input-wrapper">
-              <div class="ids-search-field-minimal__input-container">
-                <input class="ids-search-field-minimal__input icons__filter" type="search" placeholder="Filter by name or group&hellip;" aria-label="Filter icons">
+          <div class="dt-search-field-minimal dt-search-field-minimal--full-width">
+            <span class="dt-search-field-minimal__icon-start">{{icon "search"}}</span>
+            <div class="dt-search-field-minimal__input-wrapper">
+              <div class="dt-search-field-minimal__input-container">
+                <input class="dt-search-field-minimal__input icons__filter" type="search" placeholder="Filter by name&hellip;" aria-label="Filter icons">
               </div>
             </div>
           </div>
         </div>
-        <div class="ids-option-picker icons__size" role="group" aria-label="Icon size">
-          <div class="ids-option-picker-item ids-option-picker-item--hover">
-            <button type="button" class="ids-option-picker-button" data-size="16" aria-pressed="false">
-              <span class="ids-option-picker-button__content"><span class="ids-option-picker-button__label">16</span></span>
+        <div class="dt-option-picker icons__size" role="group" aria-label="Icon size">
+          <div class="dt-option-picker-item dt-option-picker-item--hover">
+            <button type="button" class="dt-option-picker-button" data-size="16" aria-pressed="false">
+              <span class="dt-option-picker-button__content"><span class="dt-option-picker-button__label">16</span></span>
             </button>
           </div>
-          <div class="ids-option-picker-item ids-option-picker-item--hover ids-option-picker-item--selected">
-            <button type="button" class="ids-option-picker-button ids-option-picker-button--selected" data-size="24" aria-pressed="true">
-              <span class="ids-option-picker-button__content"><span class="ids-option-picker-button__label">24</span></span>
+          <div class="dt-option-picker-item dt-option-picker-item--hover dt-option-picker-item--selected">
+            <button type="button" class="dt-option-picker-button dt-option-picker-button--selected" data-size="24" aria-pressed="true">
+              <span class="dt-option-picker-button__content"><span class="dt-option-picker-button__label">24</span></span>
             </button>
           </div>
-          <div class="ids-option-picker-item ids-option-picker-item--hover">
-            <button type="button" class="ids-option-picker-button" data-size="48" aria-pressed="false">
-              <span class="ids-option-picker-button__content"><span class="ids-option-picker-button__label">48</span></span>
+          <div class="dt-option-picker-item dt-option-picker-item--hover">
+            <button type="button" class="dt-option-picker-button" data-size="48" aria-pressed="false">
+              <span class="dt-option-picker-button__content"><span class="dt-option-picker-button__label">48</span></span>
             </button>
           </div>
         </div>
-        <span class="icons__count ids-text ids-text--label-l">{{icons.total}} icons</span>
+        <span class="icons__count dt-text dt-text--label-l">{{icons.total}} icons</span>
       </div>
-{{#each icons.groups}}
-      <section class="icons__group" data-group="{{this.name}}">
-        <h2 class="icons__group-title ids-text ids-text--title-s">{{this.name}}</h2>
-        <ul class="icons__grid" data-size="24">
-{{#each this.icons}}
-          <li>
-            <button
-              type="button"
-              class="icon-cell{{#if this.vendored}} is-vendored{{/if}}"
-              data-search="{{../name}} {{this.name}}"
-              data-group="{{../name}}"
-              data-icon-name="{{this.name}}"
-            >
-              <svg class="ids-icon" aria-hidden="true" focusable="false">
-                <use href="{{@root.uiRootPath}}/img/preview-icons/sw-icons-{{../name}}.symbol.svg#{{this.id}}"></use>
-              </svg>
-              <span class="icon-cell__name ids-text ids-text--detail-m">{{this.name}}</span>
+      <ul class="icons__grid" data-size="24">
+{{#each icons.icons}}
+        <li>
+          <button
+            type="button"
+            class="icon-cell{{#if this.vendored}} is-vendored{{/if}}"
+            data-search="{{this.name}}"
+            data-icon-name="{{this.name}}"
+          >
+            <svg class="dt-icon" aria-hidden="true" focusable="false">
+              <use href="{{@root.uiRootPath}}/img/preview-icons/sprite.svg#{{this.name}}"></use>
+            </svg>
+            <span class="icon-cell__name dt-text dt-text--detail-m">{{this.name}}</span>
 {{#if this.vendored}}
-              <span class="icon-cell__vendored ids-text ids-text--detail-m-high">vendored</span>
+            <span class="icon-cell__vendored dt-text dt-text--detail-m-high">vendored</span>
 {{/if}}
-            </button>
-          </li>
+          </button>
+        </li>
 {{/each}}
-        </ul>
-      </section>
-{{/each}}
+      </ul>
 {{else}}
       <div class="icons__missing">
-        <p>The icon mirror is not present, so there is nothing to catalog yet.</p>
-        <p>Run <code>just icons-fetch</code> to pull the IOP Design System sprites, then restart the preview.</p>
-        <p>This is separate from <code>just icons-build</code>, which only regenerates the small vendored sprite (<code>src/img/ids-icons.svg</code>) that the published bundle ships.</p>
+        <p>lucide-static is not installed, so there is nothing to catalog yet.</p>
+        <p>Run <code>pnpm install</code>, then restart the preview.</p>
+        <p>This is separate from <code>just icons-build</code>, which only regenerates the small vendored sprite (<code>src/img/icons.svg</code>) that the published bundle ships.</p>
       </div>
 {{/if}}
     </main>
@@ -100,24 +95,17 @@
               var haystack = (cell.getAttribute('data-search') || '').toLowerCase()
               cell.parentElement.classList.toggle('is-hidden', term !== '' && haystack.indexOf(term) === -1)
             })
-            main.querySelectorAll('.icons__group').forEach(function (group) {
-              var anyVisible = Array.prototype.some.call(
-                group.querySelectorAll('li'),
-                function (li) { return !li.classList.contains('is-hidden') }
-              )
-              group.classList.toggle('is-hidden', !anyVisible)
-            })
           })
         }
 
-        main.querySelectorAll('.icons__size .ids-option-picker-button').forEach(function (button) {
+        main.querySelectorAll('.icons__size .dt-option-picker-button').forEach(function (button) {
           button.addEventListener('click', function () {
             var size = button.getAttribute('data-size')
-            main.querySelectorAll('.icons__size .ids-option-picker-button').forEach(function (b) {
+            main.querySelectorAll('.icons__size .dt-option-picker-button').forEach(function (b) {
               var isSelected = b === button
               b.setAttribute('aria-pressed', String(isSelected))
-              b.classList.toggle('ids-option-picker-button--selected', isSelected)
-              b.closest('.ids-option-picker-item').classList.toggle('ids-option-picker-item--selected', isSelected)
+              b.classList.toggle('dt-option-picker-button--selected', isSelected)
+              b.closest('.dt-option-picker-item').classList.toggle('dt-option-picker-item--selected', isSelected)
             })
             main.querySelectorAll('.icons__grid').forEach(function (grid) {
               grid.setAttribute('data-size', size)
@@ -128,7 +116,7 @@
         var toastTimer
         main.querySelectorAll('.icon-cell').forEach(function (cell) {
           cell.addEventListener('click', function () {
-            var snippet = '\{{icon "' + cell.getAttribute('data-group') + '" "' + cell.getAttribute('data-icon-name') + '"}}'
+            var snippet = '\{{icon "' + cell.getAttribute('data-icon-name') + '"}}'
             var done = function () {
               if (!toast) return
               toast.textContent = 'Copied ' + snippet

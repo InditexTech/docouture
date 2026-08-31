@@ -94,8 +94,8 @@ const CTA_RX = /<a\b[^>]*\bhref="([^"]*)"[^>]*>([\s\S]*?)<\/a>/i
 /**
  * A target on github.com — derived from the href, never authored. GitHub has
  * no place in `icon-masks.css`: that file is generated exclusively from the
- * design system's own icon mirror (its own header, `Do not edit by hand`),
- * and this is a brand mark, not a DS icon — so it is the one hand-authored
+ * Lucide sprite (its own header, `Do not edit by hand`),
+ * and this is a brand mark, not a Lucide icon — so it is the one hand-authored
  * mask this package carries, in cta.css, and lives only there. No generic
  * external-link icon accompanies it (there was one; removed) — a second,
  * unbranded arrow beside the mark read as redundant rather than

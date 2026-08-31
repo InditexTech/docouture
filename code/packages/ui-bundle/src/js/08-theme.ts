@@ -1,13 +1,13 @@
 ;(function () {
   'use strict'
 
-  var STORAGE_KEY = 'ids-theme'
+  var STORAGE_KEY = 'dt-theme'
   var THEMES = ['light', 'dark']
 
   var root = document.documentElement
 
   function current () {
-    return root.classList.contains('ids-theme-dark') ? 'dark' : 'light'
+    return root.classList.contains('dt-theme-dark') ? 'dark' : 'light'
   }
 
   /**
@@ -17,7 +17,7 @@
    */
   function apply (theme) {
     THEMES.forEach(function (it) {
-      root.classList.toggle('ids-theme-' + it, it === theme)
+      root.classList.toggle('dt-theme-' + it, it === theme)
     })
     root.style.colorScheme = theme
   }

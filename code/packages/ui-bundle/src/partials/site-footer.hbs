@@ -8,7 +8,7 @@
   Four columns on the design system's own grid — three of its twelve each at m
   and l, folding to 12 / 6 + 6 / 6 + 6 at s (brand a row of its own, the three
   link columns sharing two rows) and to full-width rows at xs. Composed from
-  design system primitives (`.ids-text--*`) the same way the header toolbar is:
+  design system primitives (`.dt-text--*`) the same way the header toolbar is:
   the design system has no footer component to consume.
 
     1. the product mark, the site title (linking home) and the copyright
@@ -35,8 +35,8 @@
   this still gets a coherent footer rather than three gaps and a dead link.
 --}}
 <footer class="site-footer">
-  <div class="ids-grid-layout ids-grid-layout--with-margin site-footer__grid">
-    <div class="ids-grid-layout__item site-footer__col site-footer__brand">
+  <div class="dt-grid-layout dt-grid-layout--with-margin site-footer__grid">
+    <div class="dt-grid-layout__item site-footer__col site-footer__brand">
       <a class="site-footer__brand-link" href="{{{relativize (or site.homeUrl page.componentVersion.url)}}}">
         {{#with site.keys.productLogo}}
         <img class="site-footer__logo{{#if @root.site.keys.productLogoDark}} site-footer__logo--light{{/if}}" src="{{{relativize this}}}" width="24" height="24" alt="">
@@ -44,17 +44,17 @@
         {{#with site.keys.productLogoDark}}
         <img class="site-footer__logo site-footer__logo--dark" src="{{{relativize this}}}" width="24" height="24" alt="">
         {{/with}}
-        <span class="ids-text ids-text--label-l-high">{{site.title}}</span>
+        <span class="dt-text dt-text--label-l-high">{{site.title}}</span>
       </a>
-      <span class="ids-text ids-text--detail-m site-footer__legal">&#169; {{year}} InditexTech</span>
+      <span class="dt-text dt-text--detail-m site-footer__legal">&#169; {{year}} InditexTech</span>
     </div>
 {{#with page.componentVersion.footer.groups.[0]}}
-    <div class="ids-grid-layout__item site-footer__col site-footer__links">
+    <div class="dt-grid-layout__item site-footer__col site-footer__links">
       {{#if this.title}}
-      <span class="ids-text ids-text--label-l site-footer__heading">{{this.title}}</span>
+      <span class="dt-text dt-text--label-l site-footer__heading">{{this.title}}</span>
       {{/if}}
       {{#each this.links}}
-      <a class="ids-text ids-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
+      <a class="dt-text dt-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
       {{/each}}
     </div>
 {{/with}}
@@ -71,33 +71,33 @@
   `footer.groups`, so there is no per-site `title` to read.
 --}}
 {{#if (and page.navigation.[1] page.navigation.[0].module)}}
-    <div class="ids-grid-layout__item site-footer__col site-footer__links">
-      <span class="ids-text ids-text--label-l site-footer__heading">Modules</span>
+    <div class="dt-grid-layout__item site-footer__col site-footer__links">
+      <span class="dt-text dt-text--label-l site-footer__heading">Modules</span>
       {{#each page.navigation}}
       {{#if ./startUrl}}
-      <a class="ids-text ids-text--body-l site-footer__link" href="{{{relativize ./startUrl}}}">{{{./title}}}</a>
+      <a class="dt-text dt-text--body-l site-footer__link" href="{{{relativize ./startUrl}}}">{{{./title}}}</a>
       {{/if}}
       {{/each}}
     </div>
 {{else}}
 {{#with page.componentVersion.footer.groups.[1]}}
-    <div class="ids-grid-layout__item site-footer__col site-footer__links">
+    <div class="dt-grid-layout__item site-footer__col site-footer__links">
       {{#if this.title}}
-      <span class="ids-text ids-text--label-l site-footer__heading">{{this.title}}</span>
+      <span class="dt-text dt-text--label-l site-footer__heading">{{this.title}}</span>
       {{/if}}
       {{#each this.links}}
-      <a class="ids-text ids-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
+      <a class="dt-text dt-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
       {{/each}}
     </div>
 {{/with}}
 {{/if}}
 {{#with page.componentVersion.footer.groups.[2]}}
-    <div class="ids-grid-layout__item site-footer__col site-footer__links">
+    <div class="dt-grid-layout__item site-footer__col site-footer__links">
       {{#if this.title}}
-      <span class="ids-text ids-text--label-l site-footer__heading">{{this.title}}</span>
+      <span class="dt-text dt-text--label-l site-footer__heading">{{this.title}}</span>
       {{/if}}
       {{#each this.links}}
-      <a class="ids-text ids-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
+      <a class="dt-text dt-text--body-l site-footer__link" href="{{{relativize this.url}}}">{{this.text}}</a>
       {{/each}}
     </div>
 {{/with}}

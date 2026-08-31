@@ -8,18 +8,18 @@
    * more reliable than auditing every rule for a dark-mode print path, and it
    * stops a reader in dark mode from producing pages of black ink.
    */
-  html.ids-theme-dark {
+  html.dt-theme-dark {
     color-scheme: light;
 
-    --ids-color-content-default: #000;
-    --ids-color-content-low: #757575;
-    --ids-color-content-inverse: #fff;
-    --ids-color-bg-default: #fff;
-    --ids-color-bg-low: #f7f7f7;
-    --ids-color-bg-inverse: #000;
-    --ids-color-border-default: #000;
-    --ids-color-border-low: #e3e3e3;
-    --ids-color-border-inverse: #fff;
+    --dt-color-content-default: #000;
+    --dt-color-content-low: #757575;
+    --dt-color-content-inverse: #fff;
+    --dt-color-bg-default: #fff;
+    --dt-color-bg-low: #f7f7f7;
+    --dt-color-bg-inverse: #000;
+    --dt-color-border-default: #000;
+    --dt-color-border-low: #e3e3e3;
+    --dt-color-border-inverse: #fff;
   }
 
   .hide-for-print {
@@ -153,9 +153,9 @@
   /*
    * GH-12: the code surface is always dark on screen — `.doc
    * .listingblock > .content` is one of the selectors
-   * tools/ids/sync.mjs widens `.ids-theme-dark`'s own token values onto
-   * (see ids-tokens.css), unconditionally, so it is unaffected by the
-   * `html.ids-theme-dark` override above and needs its own reset here:
+   * tools/ids/sync.mjs widens `.dt-theme-dark`'s own token values onto
+   * (see dt-tokens.css), unconditionally, so it is unaffected by the
+   * `html.dt-theme-dark` override above and needs its own reset here:
    * without it, printed code would render white-on-black regardless of
    * site theme, wasting ink and failing contrast on paper. The action bar
    * (copy/fullscreen) has no printed equivalent — hidden outright, same as

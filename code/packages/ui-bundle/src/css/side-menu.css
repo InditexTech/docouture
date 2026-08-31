@@ -1,12 +1,12 @@
 /*
  * Side menu (see GH issue #8): logo, product title and the IDS list
- * navigation tree. Colours come straight off --ids-* tokens, like
+ * navigation tree. Colours come straight off --dt-* tokens, like
  * header.css — this is a new DS-composed component, not upstream chrome
  * threaded through bridge.css aliases.
  *
  * Structure: src/partials/nav.hbs, nav-brand.hbs, nav-menu.hbs, nav-tree.hbs.
- * `.ids-list` and `.ids-list-item` (layout/indent only — see the state
- * section below) are vendored DS component CSS (src/css/ids-components.yml);
+ * `.dt-list` and `.dt-list-item` (layout/indent only — see the state
+ * section below) are vendored DS component CSS (src/css/dt-components.yml);
  * everything with a `.side-menu` prefix is this bundle's own layout on top.
  *
  * Fixed, 100dvh, and it never moves with the page at any breakpoint —
@@ -31,7 +31,7 @@
  *   height, from an earlier 41px measurement — this panel offset moves
  *   with it automatically). The header stays visible and usable (menu
  *   toggle included) while the
- *   drawer is open. Solid 0.5px right rule in --ids-color-border-low (the
+ *   drawer is open. Solid 0.5px right rule in --dt-color-border-low (the
  *   same grey as l's dashed one, not the DS's near-black border-default),
  *   no brand block, a white 80% scrim (.side-menu-scrim) behind the panel,
  *   itself also starting below the header and fading in/out on the same
@@ -55,7 +55,7 @@
  */
 
 .side-menu {
-  background: var(--ids-color-bg-default);
+  background: var(--dt-color-bg-default);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -74,9 +74,9 @@
   z-index: var(--z-index-nav);
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .side-menu {
-    border-right: var(--ids-size-border-default) solid var(--ids-color-border-low);
+    border-right: var(--dt-size-border-default) solid var(--dt-color-border-low);
     gap: var(--side-menu-gap-s);
     height: calc(100dvh - var(--navbar-height));
     padding: var(--side-menu-padding-s);
@@ -86,7 +86,7 @@
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .side-menu {
     gap: var(--side-menu-gap-m);
     padding: var(--side-menu-padding-m);
@@ -94,7 +94,7 @@
   }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .side-menu {
     border-right: none;
     gap: var(--side-menu-gap);
@@ -111,7 +111,7 @@
      * dashed cannot control dash length. l only: m/s use a plain solid
      * border instead (see above), xs has neither.
      */
-    background-image: repeating-linear-gradient(to bottom, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+    background-image: repeating-linear-gradient(to bottom, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
     background-position: right;
     background-repeat: repeat-y;
     background-size: 1px 8px;
@@ -157,7 +157,7 @@ html.is-side-menu-collapsed {
 
 /*
  * Scrim behind the drawer at m/s only (l pushes instead of overlaying; xs's
- * drawer already covers the viewport, header included). `--ids-color-bg-
+ * drawer already covers the viewport, header included). `--dt-color-bg-
  * overlay` is a DS token (white 80% in light, black 80% in dark), not a
  * literal — the dark side wasn't previously themed at all: a hardcoded
  * `rgb(255 255 255 / 80%)` washed the whole page white-ish over a dark
@@ -181,9 +181,9 @@ html.is-side-menu-collapsed {
   display: none;
 }
 
-@media screen and (--ids-breakpoints-s-m) {
+@media screen and (--dt-breakpoints-s-m) {
   .side-menu-scrim {
-    background: var(--ids-color-bg-overlay);
+    background: var(--dt-color-bg-overlay);
     bottom: 0;
     display: block;
     left: 0;
@@ -219,13 +219,13 @@ html.is-side-menu-collapsed {
   justify-content: space-between;
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .side-menu__header {
     display: flex;
   }
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   /* only xs shows its own header row; s/m/l all render the brand block or nothing */
   .side-menu__header {
     display: none;
@@ -235,7 +235,7 @@ html.is-side-menu-collapsed {
 .side-menu__header-start {
   align-items: center;
   display: flex;
-  gap: var(--ids-size-100);
+  gap: var(--dt-size-100);
   min-width: 0;
 }
 
@@ -251,23 +251,23 @@ html.is-side-menu-collapsed {
  * (see nav.hbs / nav-brand.hbs) — a bare, unsuffixed .side-menu__header-logo
  * has no dark counterpart to swap to and stays visible in both themes.
  * Matches header.css's theme-toggle icon swap: both images render, one
- * `display: none` by default, the root's `.ids-theme-dark` class (set by
+ * `display: none` by default, the root's `.dt-theme-dark` class (set by
  * 08-theme.ts) flips which.
  */
 .side-menu__header-logo--dark {
   display: none;
 }
 
-.ids-theme-dark .side-menu__header-logo--light {
+.dt-theme-dark .side-menu__header-logo--light {
   display: none;
 }
 
-.ids-theme-dark .side-menu__header-logo--dark {
+.dt-theme-dark .side-menu__header-logo--dark {
   display: inline-block;
 }
 
 .side-menu__header-title {
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -282,21 +282,21 @@ html.is-side-menu-collapsed {
   cursor: pointer;
   display: flex;
   flex-shrink: 0;
-  height: var(--ids-size-250);
+  height: var(--dt-size-250);
   justify-content: center;
   outline: none;
   padding: 0;
-  width: var(--ids-size-250);
+  width: var(--dt-size-250);
 }
 
-.side-menu__close .ids-icon {
-  height: var(--ids-size-125);
-  width: var(--ids-size-125);
+.side-menu__close .dt-icon {
+  height: var(--dt-size-125);
+  width: var(--dt-size-125);
 }
 
 .side-menu__close:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: calc(var(--ids-size-border-high) * -1);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: calc(var(--dt-size-border-high) * -1);
 }
 
 /*
@@ -312,7 +312,7 @@ html.is-side-menu-collapsed {
   flex-shrink: 0;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .side-menu__brand {
     display: flex;
   }
@@ -322,7 +322,7 @@ html.is-side-menu-collapsed {
   align-items: stretch;
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-150);
+  gap: var(--dt-size-150);
 }
 
 .side-menu__brand-logo {
@@ -336,16 +336,16 @@ html.is-side-menu-collapsed {
   display: none;
 }
 
-.ids-theme-dark .side-menu__brand-logo--light {
+.dt-theme-dark .side-menu__brand-logo--light {
   display: none;
 }
 
-.ids-theme-dark .side-menu__brand-logo--dark {
+.dt-theme-dark .side-menu__brand-logo--dark {
   display: inline-block;
 }
 
 .side-menu__brand-title {
-  color: var(--ids-color-content-default);
+  color: var(--dt-color-content-default);
 }
 
 .side-menu__nav {
@@ -365,13 +365,13 @@ html.is-side-menu-collapsed {
   flex-shrink: 0;
 }
 
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .side-menu__version {
     display: block;
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .side-menu__version {
     display: none;
   }
@@ -391,8 +391,8 @@ html.is-side-menu-collapsed {
 }
 
 /* Figma's nested rows use a fixed 8px indent, not the DS default 12px/level */
-.side-menu__nav .ids-list-item {
-  --ids-list-item-tree-indent: var(--side-menu-tree-indent);
+.side-menu__nav .dt-list-item {
+  --dt-list-item-tree-indent: var(--side-menu-tree-indent);
 }
 
 .side-menu__row {
@@ -400,13 +400,13 @@ html.is-side-menu-collapsed {
   display: flex;
 }
 
-.side-menu__row .ids-list-item {
+.side-menu__row .dt-list-item {
   flex: 1;
   min-width: 0;
 }
 
 /*
- * Row states — colour and weight only, never a background. `.ids-list-item`
+ * Row states — colour and weight only, never a background. `.dt-list-item`
  * is rendered without the DS's `--clickable`/`--selected` modifiers (see
  * nav-tree.hbs) specifically to avoid their background-painting states;
  * `.side-menu__link` is this bundle's own class for the interaction this
@@ -418,12 +418,12 @@ html.is-side-menu-collapsed {
  *   active + hover   content-states-hover, body/m-high
  *
  * One type ramp at every depth: body/m is already the DS default on
- * `.ids-list-item__label`, so only the active weight is set below. Top-level
+ * `.dt-list-item__label`, so only the active weight is set below. Top-level
  * rows were briefly given a label/l of their own (Figma node-id=2610-26422)
  * and then a body/l; both made the first level louder than the tree it heads,
  * and the indentation already says what depth a row is. Nothing to reinstate.
  * `-high` is the DS's own weight for an active menu item (see
- * `.ids-menu-item--active` in menu/items/item.css) — not just a bare
+ * `.dt-menu-item--active` in menu/items/item.css) — not just a bare
  * `font-weight` bump.
  */
 .side-menu__link {
@@ -431,21 +431,21 @@ html.is-side-menu-collapsed {
 }
 
 .side-menu__link:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: calc(var(--ids-size-border-high) * -1);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: calc(var(--dt-size-border-high) * -1);
 }
 
 @media (hover: hover) {
-  .side-menu__link:hover .ids-list-item__label {
-    color: var(--ids-color-content-states-hover);
+  .side-menu__link:hover .dt-list-item__label {
+    color: var(--dt-color-content-states-hover);
   }
 }
 
-.side-menu__link[aria-current="page"] .ids-list-item__label {
-  font: var(--ids-typo-body-m-high);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-body-m-high-letter-spacing);
-  text-transform: var(--ids-typo-body-m-high-text-transform);
+.side-menu__link[aria-current="page"] .dt-list-item__label {
+  font: var(--dt-typo-body-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-high-letter-spacing);
+  text-transform: var(--dt-typo-body-m-high-text-transform);
 }
 
 /*
@@ -457,8 +457,8 @@ html.is-side-menu-collapsed {
  * this bundle for muted chrome text — toolbar, ToC) is the only signal
  * that distinguishes it from a real entry.
  */
-.side-menu__link--label .ids-list-item__label {
-  color: var(--ids-color-content-low);
+.side-menu__link--label .dt-list-item__label {
+  color: var(--dt-color-content-low);
   /*
    * label/l-high applied WHOLE, `text-transform: uppercase` and its 0.4px
    * tracking included — the one type token in the side menu still used at
@@ -467,14 +467,14 @@ html.is-side-menu-collapsed {
    * are what separate a section heading from an entry, and the tracking is
    * drawn for exactly the capitals this sets.
    */
-  font: var(--ids-typo-label-l-high);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-l-high-letter-spacing);
-  text-transform: var(--ids-typo-label-l-high-text-transform);
+  font: var(--dt-typo-label-l-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-high-letter-spacing);
+  text-transform: var(--dt-typo-label-l-high-text-transform);
 }
 
 /*
- * Left at `.ids-list-item`'s own 40px min-height and 8px block padding —
+ * Left at `.dt-list-item`'s own 40px min-height and 8px block padding —
  * the same box a link gets — so a label sits on the tree's vertical rhythm
  * rather than on one of its own. It was briefly tightened on the grounds
  * that nothing here is tappable, which made labels sit closer to the entries
@@ -506,28 +506,28 @@ html.is-side-menu-collapsed {
   cursor: pointer;
   display: flex;
   flex-shrink: 0;
-  height: var(--ids-size-250);
+  height: var(--dt-size-250);
   justify-content: center;
   outline: none;
   padding: 0;
   transition: transform var(--side-menu-motion-duration) var(--side-menu-motion-easing);
-  width: var(--ids-size-250);
+  width: var(--dt-size-250);
 }
 
 .side-menu__toggle:focus-visible {
-  outline: var(--ids-size-border-high) solid var(--ids-color-border-states-focus);
-  outline-offset: calc(var(--ids-size-border-high) * -1);
+  outline: var(--dt-size-border-high) solid var(--dt-color-border-states-focus);
+  outline-offset: calc(var(--dt-size-border-high) * -1);
 }
 
-.side-menu__toggle .ids-icon {
-  height: var(--ids-size-125);
-  width: var(--ids-size-125);
+.side-menu__toggle .dt-icon {
+  height: var(--dt-size-125);
+  width: var(--dt-size-125);
 }
 
 .side-menu__toggle[aria-expanded="false"] {
   transform: rotate(-90deg);
 }
 
-.side-menu__row:has(> .side-menu__toggle[aria-expanded="false"]) + .ids-list {
+.side-menu__row:has(> .side-menu__toggle[aria-expanded="false"]) + .dt-list {
   display: none;
 }

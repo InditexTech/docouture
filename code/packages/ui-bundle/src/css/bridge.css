@@ -4,7 +4,7 @@
  * This file is the single seam between antora-ui-default's variable vocabulary
  * and the design system. Every stylesheet in src/css keeps referring to
  * --body-font-color, --panel-background and friends; those names now resolve to
- * --ids-* tokens, so the whole bundle re-themes (light/dark, density,
+ * --dt-* tokens, so the whole bundle re-themes (light/dark, density,
  * resolution) without any of the leaf stylesheets changing.
  *
  * Rules:
@@ -24,56 +24,56 @@
    * onto the same token — deliberately. TRANSITIONAL: every entry here
    * disappears as its consumers move onto design system components.
    */
-  --color-white: var(--ids-color-bg-default);
+  --color-white: var(--dt-color-bg-default);
 
   /* fonts */
-  --body-font-color: var(--ids-color-content-default);
-  --body-font-family: var(--ids-typo-font-family-primary), "Helvetica Neue", arial, sans-serif;
+  --body-font-color: var(--dt-color-content-default);
+  --body-font-family: var(--dt-typo-font-family-primary), "Helvetica Neue", arial, sans-serif;
   /*
    * GH-11 follow-up (design review): prose was rendering at the browser's
    * own UA-default weight (400) — nothing had ever pointed a body weight
-   * at a design system token, unlike every `.ids-text--*`/`.ids-button`/
+   * at a design system token, unlike every `.dt-text--*`/`.dt-button`/
    * heading rule, which all bundle their own weight into their `font`
-   * shorthand already. Same colour (`--ids-color-content-default`, pure
+   * shorthand already. Same colour (`--dt-color-content-default`, pure
    * black) at a heavier weight than the hero's `body/l` excerpt reads as
    * visibly darker even though the colour itself never differed — this is
    * what fixes that, matching the design system's own "Light" body text.
    */
-  --body-font-weight: var(--ids-typo-font-weight-default);
-  --body-font-weight-bold: var(--ids-typo-font-weight-high);
-  --monospace-font-family: var(--ids-typo-font-family-monospace), ui-monospace, monospace;
-  --monospace-font-weight-bold: var(--ids-typo-font-weight-high);
+  --body-font-weight: var(--dt-typo-font-weight-default);
+  --body-font-weight-bold: var(--dt-typo-font-weight-high);
+  --monospace-font-family: var(--dt-typo-font-family-monospace), ui-monospace, monospace;
+  --monospace-font-weight-bold: var(--dt-typo-font-weight-high);
 
   /* base */
-  --body-background: var(--ids-color-bg-default);
-  --panel-background: var(--ids-color-bg-low);
-  --panel-border-color: var(--ids-color-border-low);
-  --scrollbar-track-color: var(--ids-color-bg-low);
-  --scrollbar-thumb-color: var(--ids-color-border-low);
-  --scrollbar_hover-thumb-color: var(--ids-color-content-low);
+  --body-background: var(--dt-color-bg-default);
+  --panel-background: var(--dt-color-bg-low);
+  --panel-border-color: var(--dt-color-border-low);
+  --scrollbar-track-color: var(--dt-color-bg-low);
+  --scrollbar-thumb-color: var(--dt-color-border-low);
+  --scrollbar_hover-thumb-color: var(--dt-color-content-low);
 
   /* toolbar */
-  --toolbar-background: var(--ids-color-bg-default);
-  --toolbar-border-color: var(--ids-color-border-low);
-  --toolbar-font-color: var(--ids-color-content-low);
-  --toolbar-muted-color: var(--ids-color-content-low);
-  --page-version-menu-background: var(--ids-color-bg-default);
-  --page-version-missing-font-color: var(--ids-color-content-states-disabled);
+  --toolbar-background: var(--dt-color-bg-default);
+  --toolbar-border-color: var(--dt-color-border-low);
+  --toolbar-font-color: var(--dt-color-content-low);
+  --toolbar-muted-color: var(--dt-color-content-low);
+  --page-version-menu-background: var(--dt-color-bg-default);
+  --page-version-missing-font-color: var(--dt-color-content-states-disabled);
 
   /* doc */
-  --doc-font-color: var(--ids-color-content-default);
-  --heading-font-color: var(--ids-color-content-default);
-  --heading-font-weight: var(--ids-typo-font-weight-default);
-  --alt-heading-font-weight: var(--ids-typo-font-weight-mid);
-  --section-divider-color: var(--ids-color-border-low);
-  --link-font-color: var(--ids-color-alt-blue-high);
-  --link_hover-font-color: var(--ids-color-alt-blue-mid);
-  --link_unresolved-font-color: var(--ids-color-alt-red-high);
-  --abstract-background: var(--ids-color-bg-low);
-  --caption-font-color: var(--ids-color-content-low);
-  --caption-font-weight: var(--ids-typo-font-weight-high);
-  --code-background: var(--ids-color-bg-low);
-  --code-font-color: var(--ids-color-content-default);
+  --doc-font-color: var(--dt-color-content-default);
+  --heading-font-color: var(--dt-color-content-default);
+  --heading-font-weight: var(--dt-typo-font-weight-default);
+  --alt-heading-font-weight: var(--dt-typo-font-weight-mid);
+  --section-divider-color: var(--dt-color-border-low);
+  --link-font-color: var(--dt-color-alt-blue-high);
+  --link_hover-font-color: var(--dt-color-alt-blue-mid);
+  --link_unresolved-font-color: var(--dt-color-alt-red-high);
+  --abstract-background: var(--dt-color-bg-low);
+  --caption-font-color: var(--dt-color-content-low);
+  --caption-font-weight: var(--dt-typo-font-weight-high);
+  --code-background: var(--dt-color-bg-low);
+  --code-font-color: var(--dt-color-content-default);
 
   /*
    * stacking — upstream used 1..4. Mapped onto the design system scale, which
@@ -85,33 +85,33 @@
    * menu's own header row replaces the main one entirely. Either way the
    * side menu sits above the navbar, the reverse of upstream's ordering,
    * so it's never covered at xs. The version dropdown keeps the highest
-   * token of all (--ids-z-dropdown) since it can be triggered with the
+   * token of all (--dt-z-dropdown) since it can be triggered with the
    * menu still open.
    */
-  --z-index-toolbar: var(--ids-z-sticky);
-  --z-index-navbar: var(--ids-z-sticky);
-  --z-index-nav-scrim: var(--ids-z-modal-drawer);
-  --z-index-nav: var(--ids-z-dropdown);
-  --z-index-page-version-menu: var(--ids-z-dropdown);
+  --z-index-toolbar: var(--dt-z-sticky);
+  --z-index-navbar: var(--dt-z-sticky);
+  --z-index-nav-scrim: var(--dt-z-modal-drawer);
+  --z-index-nav: var(--dt-z-dropdown);
+  --z-index-page-version-menu: var(--dt-z-dropdown);
   /*
    * The module switcher's popover (nav-switcher.css) opens INSIDE the side
    * menu, so it only ever has to beat the menu's own scrolling nav list —
-   * `--ids-z-dropdown` again, matching the version menu, since both are the
+   * `--dt-z-dropdown` again, matching the version menu, since both are the
    * same kind of thing and neither is ever open over the other.
    */
-  --z-index-nav-switcher-menu: var(--ids-z-dropdown);
+  --z-index-nav-switcher-menu: var(--dt-z-dropdown);
   /*
    * GH-66 — the search dialog is a native <dialog>, so `showModal()` alone
    * puts it in the top layer, above every other z-index here regardless of
    * this value. GH-68 (S4) is the actual consumer: `.search-fab`
    * (search-dialog.css) is an ordinary positioned element — the DS gives
-   * `.ids-floating-button-wrapper` `position: fixed` and no z-index of its
+   * `.dt-floating-button-wrapper` `position: fixed` and no z-index of its
    * own — so it needs one from us to sit above the header/nav it's drawn
-   * over at xs. `--ids-z-modal` (also above `--ids-z-dropdown`) matches what
+   * over at xs. `--dt-z-modal` (also above `--dt-z-dropdown`) matches what
    * the dialog itself would use if it were ever rendered without the top
    * layer (e.g. a browser without <dialog>'s top-layer support painting it
    * in normal flow), so the FAB and its own dialog agree on stacking order
    * even then.
    */
-  --z-index-search-dialog: var(--ids-z-modal);
+  --z-index-search-dialog: var(--dt-z-modal);
 }

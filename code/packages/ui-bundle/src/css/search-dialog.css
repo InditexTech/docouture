@@ -5,17 +5,17 @@
  *    model (border, padding, background, max-width/height, the browser's
  *    own centring margin) and takes over position/sizing, standing in for
  *    the fixed, full-viewport wrapper the DS's own React portal would
- *    otherwise supply. `::backdrop` is suppressed — `.ids-overlay` (also
+ *    otherwise supply. `::backdrop` is suppressed — `.dt-overlay` (also
  *    vendored) plays that role instead.
  *
- * 2. `.ids-modal`/`.ids-modal--small` (GH-69: renamed `.search-dialog__panel`
+ * 2. `.dt-modal`/`.dt-modal--small` (GH-69: renamed `.search-dialog__panel`
  *    for this file's own hooks) live on the element search-dialog.hbs nests
- *    INSIDE `.ids-overlay`, as the sibling immediately after
- *    `.ids-overlay__content` — not fused onto `<dialog>` itself, which is
+ *    INSIDE `.dt-overlay`, as the sibling immediately after
+ *    `.dt-overlay__content` — not fused onto `<dialog>` itself, which is
  *    what an earlier version of this file did, and which silently broke
  *    every click landing on the panel. See search-dialog.hbs's own header
  *    for the full stacking-order argument; this file only needs to know the
- *    result: `.ids-modal`'s own flex-centring rules apply unmodified to
+ *    result: `.dt-modal`'s own flex-centring rules apply unmodified to
  *    `.search-dialog__panel`, exactly as they would inside the DS's real
  *    portal, and no explicit z-index is needed to sit above the backdrop.
  *
@@ -23,7 +23,7 @@
  *    is not a generic dialog:
  *
  *    - GH-69: at `m`+ (this project's M and L combined, ≥1240px — see
- *      ids-breakpoints.css), the panel is a fixed-position, 820px-wide
+ *      dt-breakpoints.css), the panel is a fixed-position, 820px-wide
  *      frame pinned to the top with a 128px margin above and below, rather
  *      than the DS's own 560px `--small` sized to its content and centred.
  *      `align-items: flex-start` (not the DS's own centring) plus
@@ -36,24 +36,24 @@
  *      fixed point, the same reasoning the original "pinned high, not
  *      centred" deviation used, just with an explicit frame now rather
  *      than an open-ended `padding-top`. 128px is literal, not
- *      `var(--ids-size-800)`: that token is 128px only in the medium
+ *      `var(--dt-size-800)`: that token is 128px only in the medium
  *      density scale (168px in large) and the ask was an exact figure, not
  *      a token. The 820px width is likewise literal, but the
- *      +`var(--ids-size-150)*2` padding compensation is not: `.ids-
+ *      +`var(--dt-size-150)*2` padding compensation is not: `.dt-
  *      modal__container` is `box-sizing: border-box` with that much
  *      padding on each side (modal-inline.css), so 820px is the panel's
  *      *content* width regardless of which density scale is active.
  *      Below `m`, modal.css's own `@media (max-width:512px)` already
- *      switches `.ids-modal` to a bottom sheet (`align-items:flex-end`),
+ *      switches `.dt-modal` to a bottom sheet (`align-items:flex-end`),
  *      which has no size-jump problem to begin with.
  *
- *    - GH-68 (S4): `.ids-modal--fullscreen` is JS-toggled (12-search.ts) on
+ *    - GH-68 (S4): `.dt-modal--fullscreen` is JS-toggled (12-search.ts) on
  *      `.search-dialog__panel` below the project's own `m` (1240px), never
- *      authored alongside `.ids-modal--small` in the markup — the two share
- *      the same specificity in ids-components.css and `--fullscreen`'s rule
+ *      authored alongside `.dt-modal--small` in the markup — the two share
+ *      the same specificity in dt-components.css and `--fullscreen`'s rule
  *      comes later in that file, so having both classes present together
  *      would make it win unconditionally at every breakpoint, m/l included.
- *      Below m, modal.css's own `.ids-modal--fullscreen` padding steps still
+ *      Below m, modal.css's own `.dt-modal--fullscreen` padding steps still
  *      hardcode `@media (min-width:1024px)` — upstream's own M, not this
  *      project's — so the 1024-1239px zone would use the wrong (m-sized)
  *      padding step for the roughly 216px of that range where the dialog is
@@ -64,9 +64,9 @@
  *      fixed below instead: re-forcing the `s` padding step across the
  *      project's entire xs-s range, source order alone winning over the
  *      vendored rule (same specificity, this file loads after
- *      ids-components.css). Once `m` genuinely starts (1240px), fullscreen
+ *      dt-components.css). Once `m` genuinely starts (1240px), fullscreen
  *      is no longer applied at all (12-search.ts), so the DS's own
- *      `.ids-modal--small` sizing takes over cleanly with no override
+ *      `.dt-modal--small` sizing takes over cleanly with no override
  *      needed there.
  */
 
@@ -85,12 +85,12 @@
 }
 
 /*
- * The DS's own `.ids-modal` (ids-components.css) sets `display: flex`
+ * The DS's own `.dt-modal` (dt-components.css) sets `display: flex`
  * unconditionally — it assumes its React portal only ever mounts that markup
  * while open, so it never needed a closed state of its own. A native
  * <dialog> instead relies on the UA stylesheet's `dialog:not([open]) {
  * display: none }` — but that's a UA rule, and *any* author rule beats the
- * UA sheet regardless of specificity, so `.ids-modal`'s authored
+ * UA sheet regardless of specificity, so `.dt-modal`'s authored
  * `display: flex` was winning and rendering the dialog open on every page
  * load. This restates the closed state as an author rule of our own, on
  * `<dialog>` itself (`.search-dialog`, not `.search-dialog__panel` — the
@@ -122,51 +122,51 @@
  * `flex-start` + `max-height` is what actually keeps it "not dancing": the
  * top edge never moves, so the panel only ever grows or shrinks downward.
  */
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .search-dialog__panel {
     align-items: flex-start;
     padding-block: 128px;
   }
 
   /*
-   * `.ids-modal--small` in the selector isn't decorative — it brings this to
-   * three classes, matching ids-components.css's own
-   * `.ids-modal.ids-modal--small .ids-modal__container` selector's
+   * `.dt-modal--small` in the selector isn't decorative — it brings this to
+   * three classes, matching dt-components.css's own
+   * `.dt-modal.dt-modal--small .dt-modal__container` selector's
    * specificity exactly. Two would lose outright regardless of source
    * order (a lower-specificity selector never beats a higher one), which is
    * what happened here the first time: this file loads after
-   * ids-components.css, but source order only breaks a TIE.
+   * dt-components.css, but source order only breaks a TIE.
    */
-  .search-dialog__panel.ids-modal--small .ids-modal__container {
-    width: calc(820px + var(--ids-size-150) * 2);
+  .search-dialog__panel.dt-modal--small .dt-modal__container {
+    width: calc(820px + var(--dt-size-150) * 2);
     max-height: calc(100vh - 128px * 2);
   }
 }
 
 /*
- * `.ids-modal__container`'s own border (modal-inline.css) is
- * `--ids-color-border-default` — near-black/white, a stark line meant for a
- * generic dialog. `--ids-color-border-low` is the same light grey this
+ * `.dt-modal__container`'s own border (modal-inline.css) is
+ * `--dt-color-border-default` — near-black/white, a stark line meant for a
+ * generic dialog. `--dt-color-border-low` is the same light grey this
  * bundle's own "dashed rule" already uses everywhere (header.css,
  * footer.css, side-menu.css, toc.css, site-footer.css, home.css) — not a
  * dashed border here (a search palette's box outline isn't that rule, just
  * the same colour it's drawn in), just a lighter, quieter one than the DS's
  * own default.
  */
-.search-dialog__panel .ids-modal__container {
-  border-color: var(--ids-color-border-low);
+.search-dialog__panel .dt-modal__container {
+  border-color: var(--dt-color-border-low);
 }
 
 /*
  * Deviation 2 (see file header, GH-68): forces modal.css's fullscreen
  * padding step to `s` across this project's entire xs-s range (≤1239.98px),
  * undoing the DS's own premature switch to its `m` step at 1024px.
- * `.ids-modal--fullscreen` is only ever present below the project's real
+ * `.dt-modal--fullscreen` is only ever present below the project's real
  * `m` (12-search.ts), so there's no m+ case to handle here — modal.css's own
  * rules apply unmodified once the class is gone.
  */
-/* @media screen and (--ids-breakpoints-xs-s) {
-  .search-dialog__panel.ids-modal--fullscreen .ids-modal__container {
+/* @media screen and (--dt-breakpoints-xs-s) {
+  .search-dialog__panel.dt-modal--fullscreen .dt-modal__container {
     padding-inline: var(--comp-grid-margin-s);
   }
 } */
@@ -176,7 +176,7 @@
  * keyboard — hidden below `m` (GH-68), where the fullscreen dialog is a
  * touch surface with no keys to hint at.
  */
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .search-dialog__hints {
     display: none;
   }
@@ -185,8 +185,8 @@
 /*
  * GH-68 — the xs-only floating trigger (search-dialog.hbs), opening the same
  * dialog as header-content.hbs's own trigger (12-search.ts wires up
- * whichever exists). `.ids-floating-button-wrapper`/`.ids-floating-button`
- * are vendored DS CSS (ids-components.yml) supplying the pill shape, border,
+ * whichever exists). `.dt-floating-button-wrapper`/`.dt-floating-button`
+ * are vendored DS CSS (dt-components.yml) supplying the pill shape, border,
  * blur and shadow; only positioning and visibility are this bundle's own.
  */
 .search-fab {
@@ -195,7 +195,7 @@
   z-index: var(--z-index-search-dialog);
 }
 
-@media screen and (--ids-breakpoints-xs) {
+@media screen and (--dt-breakpoints-xs) {
   .search-fab {
     display: inline-flex;
   }
@@ -227,49 +227,50 @@ body:has(#side-menu.is-active) .search-fab {
 }
 
 /*
- * GH-69 — the real DS `.ids-empty-state` (no-results and unavailable
+ * GH-69 — the real DS `.dt-empty-state` (no-results and unavailable
  * states, 12-search.ts) already centres its OWN children (title/description
  * as a column), but doesn't centre ITSELF within whatever it's dropped
- * into — `.search-dialog__results` is a flex column (`.ids-modal__content`),
+ * into — `.search-dialog__results` is a flex column (`.dt-modal__content`),
  * so left alone the block just sits at the top, under the chips/field,
  * rather than in the middle of the available space. `flex: 1` is what
  * actually centres it: it grows to fill the results area, and the DS's own
- * `justify-content: center` (on `.ids-empty-state` itself) does the rest.
+ * `justify-content: center` (on `.dt-empty-state` itself) does the rest.
  *
  * Both this and the loader below (12-search.ts's `renderLoading`) also get
  * some breathing room off the panel's own edges — neither carries any
- * padding of its own in the DS component CSS (ids-components.css), so
+ * padding of its own in the DS component CSS (dt-components.css), so
  * without it either sits flush against `.search-dialog__results`'s edges
  * the moment the panel is short enough that `flex: 1` can't add slack.
  * Scoped to this searcher usage, not the bare DS classes globally — a
- * generic `.ids-empty-state` used elsewhere on a page has no reason to
+ * generic `.dt-empty-state` used elsewhere on a page has no reason to
  * inherit search-dialog-specific spacing.
  */
-.search-dialog__results .ids-empty-state {
+.search-dialog__results .dt-empty-state {
   flex: 1;
-  padding-block: var(--ids-size-250);
+  padding-block: var(--dt-size-250);
 }
 
-.search-dialog__results .ids-loader {
-  padding-block: var(--ids-size-250);
+.search-dialog__results .dt-loader {
+  padding-block: var(--dt-size-250);
 }
 
 /*
  * GH-69 — the gap between "No results found" and "Try a different search
- * term" reads much bigger than the DS's own `row-gap: var(--ids-size-50)`
- * on `.ids-empty-state__message` (ids-components.css) suggests: `title`/
+ * term" reads much bigger than the DS's own `row-gap: var(--dt-size-50)`
+ * on `.dt-empty-state__message` (dt-components.css) suggests: `title`/
  * `description` render as plain `<p>` tags (empty-state.js) with no margin
  * reset of their own — the DS component assumes a host app that already
  * zeroes paragraph margins globally, which this bundle doesn't do (no
  * reset stylesheet, unlike a Tailwind-preflight-style app). Each `<p>`'s
  * UA-default `margin-block` stacks on top of the flex `row-gap`, roughly
  * doubling the visual gap. Reset here, scoped to this usage, rather than
- * hand-editing the generated `ids-components.css` (would just get
- * overwritten by the next `ids-sync`) or resetting `p` margins bundle-wide
- * (out of scope of this component's own bug).
+ * hand-editing `dt-components.css` bundle-wide (out of scope of this
+ * component's own bug, and it is hand-maintained now rather than
+ * generated, but still shared by every component that uses it) or
+ * resetting `p` margins bundle-wide.
  */
-.search-dialog__results .ids-empty-state__title,
-.search-dialog__results .ids-empty-state__description {
+.search-dialog__results .dt-empty-state__title,
+.search-dialog__results .dt-empty-state__description {
   margin: 0;
 }
 
@@ -279,103 +280,103 @@ body:has(#side-menu.is-active) .search-fab {
  * matched snippet. All three override a font that's already there for a
  * different reason:
  *
- * - Breadcrumbs are the real DS breadcrumbs component (`.ids-breadcrumbs`/
- *   `.ids-breadcrumb-item` — the same classes breadcrumbs.hbs's page-level
- *   trail uses, vendored via ids-components.yml), reused here as plain,
+ * - Breadcrumbs are the real DS breadcrumbs component (`.dt-breadcrumbs`/
+ *   `.dt-breadcrumb-item` — the same classes breadcrumbs.hbs's page-level
+ *   trail uses, vendored via dt-components.yml), reused here as plain,
  *   non-interactive spans for its divider + per-segment ellipsis, not
- *   hand-joined text. Its own default font is `ids-typo-label-m`; overridden
- *   to `ids-typo-label-l` here, and — "case sensitive" — WITHOUT that
+ *   hand-joined text. Its own default font is `dt-typo-label-m`; overridden
+ *   to `dt-typo-label-l` here, and — "case sensitive" — WITHOUT that
  *   token's own `text-transform: uppercase`, since a breadcrumb built from
  *   real heading text (mixed case) reads wrong shouted in caps.
- * - The title reuses `.ids-list-item__label` (semantically the closest DS
- *   slot — a row's primary text) but at `ids-typo-body-l`, not that class's
- *   own default `ids-typo-body-m`.
- * - The snippet reuses `.ids-list-item__description` at `ids-typo-detail-m`
+ * - The title reuses `.dt-list-item__label` (semantically the closest DS
+ *   slot — a row's primary text) but at `dt-typo-body-l`, not that class's
+ *   own default `dt-typo-body-m`.
+ * - The snippet reuses `.dt-list-item__description` at `dt-typo-detail-m`
  *   (that class's own DS default, left alone — an earlier pass here had
- *   swapped it to `ids-typo-body-m`, since undone), with its own top margin
+ *   swapped it to `dt-typo-body-m`, since undone), with its own top margin
  *   — "some separation" from the title above it.
  *
  * The row itself: a horizontal inset (it had none — see list-item.css, no
- * `.ids-list-item` here carries its own `padding-inline`), a divider below
- * every row but the last (the DS's own `.ids-list-item--divider`, an inset
- * `box-shadow` in `--ids-color-border-low` — 12-search.ts adds the class),
+ * `.dt-list-item` here carries its own `padding-inline`), a divider below
+ * every row but the last (the DS's own `.dt-list-item--divider`, an inset
+ * `box-shadow` in `--dt-color-border-low` — 12-search.ts adds the class),
  * and the global `a:hover{text-decoration:underline}` (base.css) turned back
  * off — a row already gets the DS's own hover/selected background feedback
- * (`.ids-list-item--clickable`), and underlining an entire multi-line card
+ * (`.dt-list-item--clickable`), and underlining an entire multi-line card
  * reads as a rendering bug, not a link.
  *
  * All scoped to `.search-dialog__results` so nothing else in the bundle
- * using `.ids-list-item`/`.ids-breadcrumb-item` picks up this override.
+ * using `.dt-list-item`/`.dt-breadcrumb-item` picks up this override.
  */
-.search-dialog__results .ids-list-item {
-  padding-inline: var(--ids-size-150);
+.search-dialog__results .dt-list-item {
+  padding-inline: var(--dt-size-150);
 }
 
-.search-dialog__results .ids-list-item:hover {
+.search-dialog__results .dt-list-item:hover {
   text-decoration: none;
 }
 
-.search-dialog__results .search-result__breadcrumbs .ids-breadcrumb-item {
-  color: var(--ids-color-content-low);
-  font: var(--ids-typo-label-l);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-l-letter-spacing);
+.search-dialog__results .search-result__breadcrumbs .dt-breadcrumb-item {
+  color: var(--dt-color-content-low);
+  font: var(--dt-typo-label-l);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-l-letter-spacing);
   text-transform: none;
 }
 
-.search-dialog__results .ids-list-item__label {
-  font: var(--ids-typo-body-m);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-body-m-letter-spacing);
-  text-transform: var(--ids-typo-body-m-text-transform);
+.search-dialog__results .dt-list-item__label {
+  font: var(--dt-typo-body-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-body-m-letter-spacing);
+  text-transform: var(--dt-typo-body-m-text-transform);
 }
 
-.search-dialog__results .ids-list-item__description {
-  font: var(--ids-typo-detail-m);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-detail-m-letter-spacing);
-  margin-top: var(--ids-size-25);
-  text-transform: var(--ids-typo-detail-m-text-transform);
+.search-dialog__results .dt-list-item__description {
+  font: var(--dt-typo-detail-m);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-detail-m-letter-spacing);
+  margin-top: var(--dt-size-25);
+  text-transform: var(--dt-typo-detail-m-text-transform);
 }
 
 /*
  * GH-67/GH-69: the category heading `renderResults` (12-search.ts) inserts
  * before the first entry of each category — only ever present when a
  * query's results span more than one, so a single-module site never sees
- * it. Not a DS component of its own (`.ids-list` has no heading-row
+ * it. Not a DS component of its own (`.dt-list` has no heading-row
  * concept), just enough to read as a label rather than another clickable
  * row: no background/hover, `role="presentation"` in the markup itself
  * since an `<li>` here is layout, not a list semantic worth announcing.
- * `ids-typo-label-m-high` (GH-69) rather than the plain `.ids-text--detail-m`
+ * `dt-typo-label-m-high` (GH-69) rather than the plain `.dt-text--detail-m`
  * class the markup also carries for a fallback — this file's own font wins
  * on specificity/source order without touching that shared utility class.
- * Same horizontal padding as the result rows below it (`.ids-list-item`,
+ * Same horizontal padding as the result rows below it (`.dt-list-item`,
  * above), so the heading's own text lines up with theirs rather than
  * sitting flush with the panel's edge while every row under it is inset.
- * `--ids-color-content-default` (not `-low`): a section title is a heading,
+ * `--dt-color-content-default` (not `-low`): a section title is a heading,
  * not secondary/muted text.
  */
 .search-dialog__category {
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-label-m-high);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-m-high-letter-spacing);
-  padding-block: var(--ids-size-100) var(--ids-size-50);
-  padding-inline: var(--ids-size-150);
-  text-transform: var(--ids-typo-label-m-high-text-transform);
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-label-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-high-letter-spacing);
+  padding-block: var(--dt-size-100) var(--dt-size-50);
+  padding-inline: var(--dt-size-150);
+  text-transform: var(--dt-typo-label-m-high-text-transform);
 }
 
 .search-dialog__hints kbd {
   background: var(--panel-background);
   border-radius: 0;
-  font: var(--ids-typo-detail-m);
-  padding: 0 var(--ids-size-25);
+  font: var(--dt-typo-detail-m);
+  padding: 0 var(--dt-size-25);
 }
 
 /*
  * GH-69 (S5) — module filter chips (search-dialog.hbs), only ever rendered
  * for a component with more than one switchable module (same condition as
- * nav-switcher.hbs). `.ids-tag` is vendored already (the header's version
+ * nav-switcher.hbs). `.dt-tag` is vendored already (the header's version
  * tag); this only adds the row's own layout.
  *
  * Horizontally scrollable at xs-s, where a component with several modules
@@ -387,13 +388,13 @@ body:has(#side-menu.is-active) .search-fab {
 .search-dialog__chips {
   display: flex;
   flex-shrink: 0;
-  gap: var(--ids-size-50);
+  gap: var(--dt-size-50);
   overflow-x: auto;
-  padding: var(--ids-size-100) var(--ids-size-150);
-  border-bottom: var(--ids-size-border-default) solid var(--ids-color-border-low);
+  padding: var(--dt-size-100) var(--dt-size-150);
+  border-bottom: var(--dt-size-border-default) solid var(--dt-color-border-low);
   /*
    * `min-width: 0` overrides the flex item default of `min-width: auto`.
-   * `.ids-modal__container` (modal-inline.css) is `display: flex;
+   * `.dt-modal__container` (modal-inline.css) is `display: flex;
    * flex-direction: column`, so without this a flex child's implied minimum
    * width is its content's own intrinsic width — the full row of chips
    * un-wrapped — meaning the box itself just grows to fit them all rather
@@ -444,18 +445,18 @@ body:has(#side-menu.is-active) .search-fab {
 
 /*
  * GH-69 — recent searches (13-search-recents.ts), rendered in the idle state
- * in place of nothing. `.search-recents__row` IS the `.ids-list-item` (an
+ * in place of nothing. `.search-recents__row` IS the `.dt-list-item` (an
  * `<li>`, not a separate wrapping element) — the remove button lives INSIDE
- * it, as `.ids-list-item__content-end` (the real DS `ListItem`'s own slot
+ * it, as `.dt-list-item__content-end` (the real DS `ListItem`'s own slot
  * for a trailing action, per its React source), rather than as an external
  * flex sibling. An earlier version paired the item with the remove button
  * as two siblings under a wrapping `<li>`, and the hover/selected background
- * (`.ids-list-item--clickable`'s box-shadow bleed) only ever covered the
+ * (`.dt-list-item--clickable`'s box-shadow bleed) only ever covered the
  * item's own shrunk box — never the button's, leaving a visible dead strip
  * on the row's trailing edge. Nesting the button inside the same element
- * that carries `.ids-list-item` fixes that: background is one box, hover
+ * that carries `.dt-list-item` fixes that: background is one box, hover
  * covers the row's full padded width, matching how the actual search
- * result rows already behave (a single `.ids-list-item` per row, nothing
+ * result rows already behave (a single `.dt-list-item` per row, nothing
  * external).
  *
  * The row itself isn't a `<button>`/`<a>` (unlike a result row, which is a
@@ -468,23 +469,23 @@ body:has(#side-menu.is-active) .search-fab {
  * `padding-inline` here is this row's own addition, not shared with actual
  * result rows: those have no icon-start and read fine flush to the list's
  * edge, but a recent's history icon flush against the left edge (no gutter
- * at all, since `.ids-list-item` itself has none — see list-item.css) read
+ * at all, since `.dt-list-item` itself has none — see list-item.css) read
  * as a layout bug once the remove button on the right had its own
- * (`.ids-list-item__content-end`'s implicit trailing position plus this
+ * (`.dt-list-item__content-end`'s implicit trailing position plus this
  * same padding) — this gives both ends a matching inset.
  */
 .search-recents__heading {
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-label-m-high);
-  font-variant-numeric: var(--ids-typo-font-variant-numeric);
-  letter-spacing: var(--ids-typo-label-m-high-letter-spacing);
-  padding: var(--ids-size-100) var(--ids-size-150) var(--ids-size-50);
-  text-transform: var(--ids-typo-label-m-high-text-transform);
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-label-m-high);
+  font-variant-numeric: var(--dt-typo-font-variant-numeric);
+  letter-spacing: var(--dt-typo-label-m-high-letter-spacing);
+  padding: var(--dt-size-100) var(--dt-size-150) var(--dt-size-50);
+  text-transform: var(--dt-typo-label-m-high-text-transform);
   margin: 0
 }
 
 .search-recents__row {
-  padding-inline: var(--ids-size-100);
+  padding-inline: var(--dt-size-100);
 }
 
 /*

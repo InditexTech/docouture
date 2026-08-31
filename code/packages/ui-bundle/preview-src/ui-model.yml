@@ -179,7 +179,7 @@ page:
       module: ROOT
       title: Platform
       description: The platform documentation
-      icon: design/grid-outlined
+      icon: grid-3x3
       startUrl: *component_url
       items:
         # A `content` with neither `url` nor `items` is a section label — the
@@ -239,7 +239,7 @@ page:
       module: sdk
       title: SDK
       description: The headless client library
-      icon: actions/code-block-outlined
+      icon: code
       startUrl: *component_url
       items:
         - content: Introduction

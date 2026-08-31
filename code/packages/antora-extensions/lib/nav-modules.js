@@ -42,7 +42,7 @@ const MODULE_NAV_PATH_RX = /^modules\/([^/]+)\//
  *       - module: main
  *         title: Framework
  *         description: The visual collaborative apps framework
- *         icon: design/menu-tab-outlined
+ *         icon: menu
  *
  * Two optional keys beyond the ones the switcher draws:
  *

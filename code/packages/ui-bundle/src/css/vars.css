@@ -22,20 +22,20 @@
   --doc-font-size: inherit;
   /*
    * GH-11 (Figma 3615:59166): prose is the design system's own `body/l` size
-   * (16px at `.ids-scale-medium`), not the bundle's pre-existing 17px — this
-   * is the one spot doc type borrows a raw `--ids-typo-*` scale value rather
+   * (16px at `.dt-scale-medium`), not the bundle's pre-existing 17px — this
+   * is the one spot doc type borrows a raw `--dt-typo-*` scale value rather
    * than a full text-style token, because the *ratio* below is ours, not the
    * design system's fixed 24px line-height (see the comment on
    * `--doc-line-height`).
    */
-  --doc-font-size--desktop: var(--ids-typo-font-size-16);
+  --doc-font-size--desktop: var(--dt-typo-font-size-16);
 
   /*
    * Unitless line heights. The design system pairs each font size with a fixed
    * px line height, which is right for UI chrome and wrong for prose that must
    * reflow at any zoom level, so documentation body copy keeps ratios. (The
    * ToC no longer needs one of these — GH-10 moved its typography onto
-   * `--ids-typo-*` shorthands, which already carry a line-height.)
+   * `--dt-typo-*` shorthands, which already carry a line-height.)
    *
    * 1.5 matches `body/l`'s own 16/24 ratio (GH-11, Figma 3615:59166) rather
    * than being picked independently.
@@ -46,34 +46,34 @@
    * GH-11 prose rhythm (Figma 3615:59166/59300): the section band's own
    * block padding, the gap above a mid-document heading, and the gap above
    * a new `h2` band. Plain block spacing (paragraphs, lists, admonitions,
-   * …) reuses `--doc-space-block` — see doc.css. All three are `--ids-
+   * …) reuses `--doc-space-block` — see doc.css. All three are `--dt-
    * size-*` tokens, not literals, per vars.css's own rule above.
    */
-  --doc-space-block: var(--ids-size-150);
-  --doc-space-heading: var(--ids-size-250);
-  --doc-space-section: calc(var(--ids-size-250) * 2);
-  --doc-section-band-padding-block: var(--ids-size-50);
+  --doc-space-block: var(--dt-size-150);
+  --doc-space-heading: var(--dt-size-250);
+  --doc-space-section: calc(var(--dt-size-250) * 2);
+  --doc-section-band-padding-block: var(--dt-size-50);
 
   /* dimensions and positioning */
   /*
-   * GH-77: matches the IOP DS `.ids-header` component's own ≥513px box
-   * height exactly — `--ids-size-350` already equals its
-   * `padding-block: var(--ids-size-50)` (top+bottom) around the
-   * `--ids-size-250` content row, box-sized, so it's used directly rather
-   * than re-assembled from those two parts. The previous `calc(--ids-size-
+   * GH-77: matches the IOP DS `.dt-header` component's own ≥513px box
+   * height exactly — `--dt-size-350` already equals its
+   * `padding-block: var(--dt-size-50)` (top+bottom) around the
+   * `--dt-size-250` content row, box-sized, so it's used directly rather
+   * than re-assembled from those two parts. The previous `calc(--dt-size-
    * 250 + 1px)` both undershot the DS component (40 vs 56 at medium scale)
    * and compensated for a border that was never actually there:
    * `.header-toolbar`'s bottom rule (header.css) is a `background-image`
    * dashed pattern, not a real `border`, so it adds no layout height.
-   * `.ids-scale-large` isn't wired up anywhere in this bundle yet
-   * (head-prelude.hbs hardcodes `ids-scale-medium`), so this resolves to a
+   * `.dt-scale-large` isn't wired up anywhere in this bundle yet
+   * (head-prelude.hbs hardcodes `dt-scale-medium`), so this resolves to a
    * flat 56px regardless of breakpoint today — same as the DS component's
    * own height, which likewise doesn't vary by breakpoint outside its
    * `--large` modifier. Kept as its own variable, not the literal, because
    * .side-menu / --toc-top both offset from it and must move together if
    * the toolbar's height ever changes.
    */
-  --navbar-height: var(--ids-size-350);
+  --navbar-height: var(--dt-size-350);
   --body-top: var(--navbar-height);
   /*
    * Extra breathing room between the fixed header and whatever an in-page
@@ -96,15 +96,15 @@
    * Shared by side-menu.css, header.css and body.css so the sidebar, the
    * header offset and the content margin all move in the same 0.5s beat
    * when the menu is toggled — see 01-nav.ts. Explicit duration + easing,
-   * not the DS's --ids-motion-macro-structure token: that token's value is
+   * not the DS's --dt-motion-macro-structure token: that token's value is
    * `all <duration> <easing>`, which would also put the same 0.5s fade on
    * every colour change (e.g. the theme toggle). The two tokens it's built
    * from are used directly instead, so reduced-motion is still inherited
    * for free — both collapse to ~0 under prefers-reduced-motion in
-   * ids-tokens.css.
+   * dt-tokens.css.
    */
-  --side-menu-motion-duration: var(--ids-motion-duration-l);
-  --side-menu-motion-easing: var(--ids-motion-easing-standard-4);
+  --side-menu-motion-duration: var(--dt-motion-duration-l);
+  --side-menu-motion-easing: var(--dt-motion-easing-standard-4);
   --nav-width: calc(320 / var(--rem-base) * 1rem);
   /*
    * Per-breakpoint panel geometry (Figma frames linked from GH-8's own
@@ -141,25 +141,25 @@
   --side-menu-label-gap: calc(16 / var(--rem-base) * 1rem);
   /*
    * Module switcher popover (nav-switcher.css). Built from the same pair the
-   * DS's own `--ids-motion-micro-appear` is — duration/m and easing/standard-2
+   * DS's own `--dt-motion-micro-appear` is — duration/m and easing/standard-2
    * — but declared as two names rather than used through that token, which is
    * shorthand for `all <duration> <easing>` and would animate every property
    * on the panel, background and border included. Both collapse to ~0 under
-   * prefers-reduced-motion in ids-tokens.css, so that comes for free.
+   * prefers-reduced-motion in dt-tokens.css, so that comes for free.
    */
-  --nav-switcher-motion-duration: var(--ids-motion-duration-m);
-  --nav-switcher-motion-easing: var(--ids-motion-easing-standard-2);
+  --nav-switcher-motion-duration: var(--dt-motion-duration-m);
+  --nav-switcher-motion-easing: var(--dt-motion-easing-standard-2);
   /*
    * One switcher row, derived rather than measured: block padding and border
    * on both edges, the title's line box, the gap under it, and a description
    * fixed at exactly two lines (see `__description` in nav-switcher.css).
    * Every row is this tall at every breakpoint, which is what lets the panel
    * cap itself at a whole number of rows. Built from tokens so it follows
-   * `.ids-scale-large`, where the line heights grow.
+   * `.dt-scale-large`, where the line heights grow.
    */
   --nav-switcher-row-height: calc(
-    2 * var(--ids-size-75) + 2 * var(--ids-size-border-default) + var(--ids-typo-line-height-22) +
-      var(--ids-size-25) + 2 * var(--ids-typo-line-height-18)
+    2 * var(--dt-size-75) + 2 * var(--dt-size-border-default) + var(--dt-typo-line-height-22) +
+      var(--dt-size-25) + 2 * var(--dt-typo-line-height-18)
   );
   /*
    * ToC panel (GH-10, Figma node 2610:27801/2686:47569). No secondary
@@ -173,19 +173,19 @@
    *
    * `--toc-height` sizes the internal scrollable list (toc.css's own
    * `.toc-menu ul`), so it starts from the same point `.toc-menu`'s own
-   * sticky `top` does (`--toc-top` PLUS the panel's `--ids-size-150`
+   * sticky `top` does (`--toc-top` PLUS the panel's `--dt-size-150`
    * padding, not `--toc-top` alone) — otherwise the list could run past
    * the viewport's bottom edge by that same padding.
    */
   --toc-top: var(--body-top);
-  --toc-height: calc(100vh - var(--toc-top) - var(--ids-size-150) - 2.5rem);
-  --toc-gap-heading: var(--ids-size-100);
-  --toc-gap-list: var(--ids-size-75);
-  --toc-gap-item: var(--ids-size-50);
-  --toc-indent-1: var(--ids-size-0);
-  --toc-indent-2: var(--ids-size-75);
-  --toc-indent-3: var(--ids-size-150);
-  --toc-indent-4: var(--ids-size-250);
+  --toc-height: calc(100vh - var(--toc-top) - var(--dt-size-150) - 2.5rem);
+  --toc-gap-heading: var(--dt-size-100);
+  --toc-gap-list: var(--dt-size-75);
+  --toc-gap-item: var(--dt-size-50);
+  --toc-indent-1: var(--dt-size-0);
+  --toc-indent-2: var(--dt-size-75);
+  --toc-indent-3: var(--dt-size-150);
+  --toc-indent-4: var(--dt-size-250);
 
   /*
    * Hero (GH-9), Figma node 3615:59150 (l), 2678:35962 (m, node "Content Page
@@ -218,17 +218,17 @@
 
   /*
    * Page footer (GH-16), Figma node 3615:59424. `--page-footer-nav-height`
-   * is the navigation row's fixed 40px (`--ids-size-250`, matching the
+   * is the navigation row's fixed 40px (`--dt-size-250`, matching the
    * header toolbar's own height — see vars.css's own `--navbar-height`
    * note and header.css); `--page-footer-feedback-padding-block` is the
    * feedback row's 24px vertical padding, `--page-footer-inline-padding`
    * its (and the nav row's) 64px horizontal padding — both already the DS
-   * grid container's own `l` gutter (`.ids-grid-layout--with-margin`), so
+   * grid container's own `l` gutter (`.dt-grid-layout--with-margin`), so
    * these two exist only for the shared column layout below, not to
    * override the grid's own spacing. `--page-footer-vote-width` is the
    * vote column's fixed 294px (Figma "Content" frame 3017:4311).
    */
-  --page-footer-nav-height: var(--ids-size-250);
-  --page-footer-feedback-padding-block: var(--ids-size-150);
+  --page-footer-nav-height: var(--dt-size-250);
+  --page-footer-feedback-padding-block: var(--dt-size-150);
   --page-footer-vote-width: calc(294 / var(--rem-base) * 1rem);
 }

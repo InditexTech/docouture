@@ -8,15 +8,15 @@
  * unchanged from the doc view — this file styles only what is inside `main`.
  *
  * The spans are declared here rather than with the grid's own
- * `.ids-grid-layout__item--span-*` utility classes, the same choice doc.css
+ * `.dt-grid-layout__item--span-*` utility classes, the same choice doc.css
  * and toc.css made and for the same reason: those classes carry the design
  * system package's own breakpoints, whose `m` starts at 1024px, while this
- * project overrides `m` to 1240px (see ids-breakpoints.css). Spanning 5/7
+ * project overrides `m` to 1240px (see dt-breakpoints.css). Spanning 5/7
  * from 1024 would split the columns across the whole of this project's `s`
  * band, where the design stacks them.
  *
  * Every length is a design system size token, or a sum of them, so the
- * layout follows `.ids-scale-large` as well; the horizontal gutters come
+ * layout follows `.dt-scale-large` as well; the horizontal gutters come
  * from `--with-margin` on the container itself (64/56/32/16 per breakpoint,
  * exactly what the frames draw) and the column gap from the grid's own
  * per-breakpoint gap (56 at l, 48 at m — again what the frames draw), so
@@ -30,20 +30,20 @@
    * become rows — its 24px is not the 48 the frames draw, so only the row
    * axis is overridden.
    */
-  row-gap: var(--ids-size-300);
+  row-gap: var(--dt-size-300);
   /* 64px: the xs frame's top padding, below the toolbar body already offsets. */
-  padding-block-start: calc(var(--ids-size-300) + var(--ids-size-100));
+  padding-block-start: calc(var(--dt-size-300) + var(--dt-size-100));
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .home {
-    padding-block-start: var(--ids-size-500); /* 80 */
+    padding-block-start: var(--dt-size-500); /* 80 */
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .home {
-    padding-block-start: calc(var(--ids-size-500) + var(--ids-size-300)); /* 128 */
+    padding-block-start: calc(var(--dt-size-500) + var(--dt-size-300)); /* 128 */
   }
 }
 
@@ -127,7 +127,7 @@ html:has(> .home-page) {
  * a photographic or strongly coloured background would want a real
  * `home_background_dark` key instead.
  */
-.ids-theme-dark .home-page {
+.dt-theme-dark .home-page {
   --home-background-scrim: rgb(0 0 0 / 90%);
 }
 
@@ -137,13 +137,13 @@ html:has(> .home-page) {
   grid-column-end: span 6;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .home__hero {
     grid-column-end: span 12;
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .home__hero {
     /*
      * Sticky at m/l only: at s/xs the hero is a stacked row above the
@@ -156,9 +156,9 @@ html:has(> .home-page) {
      */
     align-self: start;
     grid-column-end: span 5;
-    padding-block-end: var(--ids-size-125); /* 20 */
+    padding-block-end: var(--dt-size-125); /* 20 */
     position: sticky;
-    top: calc(var(--navbar-height) + var(--ids-size-250));
+    top: calc(var(--navbar-height) + var(--dt-size-250));
   }
 }
 
@@ -187,14 +187,14 @@ html:has(> .home-page) {
    */
   display: flex;
   flex-direction: column;
-  gap: var(--ids-size-350); /* 56 */
+  gap: var(--dt-size-350); /* 56 */
   /*
    * `auto /`, not a bare `grid-column-end`: `.doc` sets the `grid-column`
    * SHORTHAND (doc.css), whose start longhand would otherwise survive here
    * and place the column against the wrong line.
    */
   grid-column: auto / span 6;
-  padding-block-end: var(--ids-size-500); /* 80 */
+  padding-block-end: var(--dt-size-500); /* 80 */
 }
 
 /*
@@ -232,7 +232,7 @@ html:has(> .home-page) {
 .home__main > #preamble {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--ids-size-150) + var(--ids-size-50)); /* 32 */
+  gap: calc(var(--dt-size-150) + var(--dt-size-50)); /* 32 */
   max-width: none;
 }
 
@@ -257,14 +257,14 @@ html:has(> .home-page) {
  * page footer (see header.css) — `border-style: dashed` cannot control dash
  * length.
  *
- * `--ids-color-border-low`, the same colour the article view's own section
+ * `--dt-color-border-low`, the same colour the article view's own section
  * band uses (doc.css's `.doc h2:not(.discrete)`), not the full black the
  * frames draw: a landing block's heading rule and a doc page's section rule
  * are the same thing seen in two layouts, and they should not disagree.
  *
  * The rule runs past the column to the viewport edge. The only thing between
  * the column's edge and the viewport is the grid container's own inline
- * padding (`.ids-grid-layout--with-margin`), so a negative margin of exactly
+ * padding (`.dt-grid-layout--with-margin`), so a negative margin of exactly
  * that cancels it. It bleeds right at every breakpoint; it also bleeds LEFT
  * at s and xs, where the hero and content stack into one full-width column
  * and the heading's left edge is likewise the container's, with no side menu
@@ -282,9 +282,9 @@ html:has(> .home-page) {
  * The amount is one variable, tiered once and consumed by both sides. Note
  * which breakpoints it follows: the gutter being cancelled is the DESIGN
  * SYSTEM'S, applied at the design system's own thresholds (513/1024/1680,
- * see ids-components.css), while this project overrides `m` to 1240
- * (ids-breakpoints.css). Between 1024 and 1239 the container is already on
- * `--comp-grid-margin-m` though `--ids-breakpoints-m` has not yet matched, so
+ * see dt-components.css), while this project overrides `m` to 1240
+ * (dt-breakpoints.css). Between 1024 and 1239 the container is already on
+ * `--comp-grid-margin-m` though `--dt-breakpoints-m` has not yet matched, so
  * tiering by the project's own `m` would leave the rule 24px short across
  * that whole band. Hence the raw `1024px` query below: not a stray literal,
  * the design system's threshold, and it has to stay in step with the padding
@@ -308,17 +308,17 @@ html:has(> .home-page) {
    * The margin shorthand below already overrides the band's own margins.
    */
   background-color: transparent;
-  background-image: repeating-linear-gradient(to right, var(--ids-color-border-low) 0 4px, transparent 4px 8px);
+  background-image: repeating-linear-gradient(to right, var(--dt-color-border-low) 0 4px, transparent 4px 8px);
   background-position: bottom;
   background-repeat: repeat-x;
   background-size: 8px 1px;
-  color: var(--ids-color-content-default);
-  font: var(--ids-typo-title-m);
-  letter-spacing: var(--ids-typo-title-m-letter-spacing);
+  color: var(--dt-color-content-default);
+  font: var(--dt-typo-title-m);
+  letter-spacing: var(--dt-typo-title-m-letter-spacing);
   margin: 0 calc(-1 * var(--home-block-bleed)) 0 0;
-  padding-block: var(--ids-size-25); /* 4 */
+  padding-block: var(--dt-size-25); /* 4 */
   padding-inline: 0;
-  text-transform: var(--ids-typo-title-m-text-transform);
+  text-transform: var(--dt-typo-title-m-text-transform);
 }
 
 /*
@@ -344,7 +344,7 @@ html:has(> .home-page) {
   display: none;
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .home__main > .sect1 > h2 {
     --home-block-bleed: var(--comp-grid-margin-s);
   }
@@ -357,41 +357,41 @@ html:has(> .home-page) {
   }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .home__main > .sect1 > h2 {
     --home-block-bleed: var(--comp-grid-margin-l);
   }
 }
 
 /* Stacked breakpoints only: the heading's left edge is the container's too. */
-@media screen and (--ids-breakpoints-xs-s) {
+@media screen and (--dt-breakpoints-xs-s) {
   .home__main > .sect1 > h2 {
     margin-inline-start: calc(-1 * var(--home-block-bleed));
     padding-inline-start: var(--home-block-bleed);
   }
 }
 
-@media screen and (--ids-breakpoints-s) {
+@media screen and (--dt-breakpoints-s) {
   .home__main {
-    gap: calc(var(--ids-size-300) + var(--ids-size-100)); /* 64 */
+    gap: calc(var(--dt-size-300) + var(--dt-size-100)); /* 64 */
     grid-column: auto / span 12;
   }
 }
 
-@media screen and (--ids-breakpoints-m) {
+@media screen and (--dt-breakpoints-m) {
   .home__main {
-    gap: calc(var(--ids-size-300) + var(--ids-size-150)); /* 72 */
+    gap: calc(var(--dt-size-300) + var(--dt-size-150)); /* 72 */
     grid-column: auto / span 7;
     /* 160: the m/l frames drop the content column below the hero's first line. */
-    padding-block-start: calc(var(--ids-size-500) * 2);
+    padding-block-start: calc(var(--dt-size-500) * 2);
   }
 }
 
-@media screen and (--ids-breakpoints-l) {
+@media screen and (--dt-breakpoints-l) {
   .home__main > .sect1,
   .home__main > #preamble,
   .home__main > .sect1 > .sectionbody,
   .home__main > #preamble > .sectionbody {
-    gap: var(--ids-size-250); /* 40 */
+    gap: var(--dt-size-250); /* 40 */
   }
 }

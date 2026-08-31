@@ -61,7 +61,7 @@
     function select (index: number) {
       tabs.forEach(function (tab, i) {
         var selected = i === index
-        tab.classList.toggle('ids-tabs-item--selected', selected)
+        tab.classList.toggle('dt-tabs-item--selected', selected)
         tab.setAttribute('aria-selected', String(selected))
         // Roving tabindex: one stop for the whole tablist, arrow keys inside it.
         tab.tabIndex = selected ? 0 : -1

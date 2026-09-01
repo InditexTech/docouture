@@ -25,7 +25,7 @@ icons:
   - x # side-menu drawer close (GH-8, breakpoint xs); also recent-search remove (GH-69, 13-search-recents.ts), sized smaller there by CSS
   - code # nav switcher: the SDK module; [card,icon=…]: build/index.adoc Plugins
   - copy
-  - maximize
+  - maximize # zoom-in touch affordance badge, [role=zoom-in] images/diagrams (GH-197); also masked below for the same CSS-only badge
   - minimize
   - search # header toolbar searcher, Home state (GH-18)
   - triangle-alert # admonition: warning (GH-13)
@@ -83,3 +83,4 @@ masks:
   - server # [card,icon=…] (GH-20)
   - flame # [card,icon=…] (GH-20)
   - shapes # [card,icon=…] (GH-20)
+  - maximize # image-zoom.css's touch-affordance badge on `.zoom-in` images/diagrams — no `uiRootPath` in either Asciidoctor's own built-in image markup or kroki.js's diagram div, same reason `code`/`file`/… above need masking (GH-197)

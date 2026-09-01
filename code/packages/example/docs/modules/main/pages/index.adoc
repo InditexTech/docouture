@@ -19,7 +19,7 @@ For a deep dive, refer to xref:main:architecture.adoc[Architecture overview].
 
 == Live showcase
 
-image::showcase.png[Enter room page of the Weave.js showcase]
+image::showcase.png[Enter room page of the Weave.js showcase,role="zoom-in"]
 
 Explore our live whiteboard application:
 

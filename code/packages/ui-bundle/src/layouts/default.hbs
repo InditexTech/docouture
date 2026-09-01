@@ -11,6 +11,8 @@ SPDX-License-Identifier: MPL-2.0
   </head>
   <body class="article{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
 {{> header}}
+{{!-- GH-197: page-level overlay, present on every page a `.doc` body could hold a zoomable image/diagram (image-zoom-dialog.hbs's own header). --}}
+{{> image-zoom-dialog}}
 {{> body}}
 {{> footer}}
 {{!--

@@ -249,8 +249,35 @@ function renderDiagram(parent, type, source, attrs) {
   const body = isTextFormat(effectivePayload.format)
     ? literalMarkup(effectivePayload.data)
     : imageMarkup(effectivePayload)
+  // GH-197: `role` is forwarded onto the OUTER div's class list — same as
+  // Asciidoctor's own built-in image converter already does for a plain
+  // `image::` block (`classes.push(node.role())`, verified against
+  // `@asciidoctor/core`'s bundled HTML5 converter) — so `[mermaid,role=
+  // zoom-in]` gets the same click-to-zoom affordance (ui-bundle's
+  // image-zoom.css/14-image-zoom.ts) an `image::foo.png[role=zoom-in]`
+  // already did. `attrs.role` is a BLOCK attribute, so it goes through
+  // `attr()`'s escaping like `attrs.id` on the same line — this file's own
+  // header states that rule.
+  //
+  // The OUTER div (`docouture-diagram`, sized/positioned, bleeds up to
+  // 125% of the text measure — see diagram.css's own header) is now
+  // deliberately separate from an INNER `docouture-diagram__content` div
+  // (the actual padded/bordered/backgrounded card) — mirrors ui-bundle's
+  // `.imageblock`/`.content` split (doc.css) exactly, for the same reason:
+  // an outer box with a literal, possibly-bled `width` needs an unstretched
+  // flex-item child to shrink-wrap the frame back down to the diagram's own
+  // real size, or a small diagram would render with a large, mostly-empty
+  // grey/bordered box around it.
+  const classAttr = attrs.role ? 'docouture-diagram ' + attrs.role : 'docouture-diagram'
   return (
-    '<div class="docouture-diagram"' + attr('id', attrs.id) + ' data-diagram-type="' + type + '">' + body + '</div>'
+    '<div' +
+    attr('class', classAttr) +
+    attr('id', attrs.id) +
+    ' data-diagram-type="' +
+    type +
+    '"><div class="docouture-diagram__content">' +
+    body +
+    '</div></div>'
   )
 }
 

@@ -1,0 +1,129 @@
+= Image Zoom (GH-197)
+:page-layout: default
+:description: Click-to-zoom fullscreen overlay for `[role=zoom-in]` images and Kroki diagrams — image-zoom-dialog.hbs, image-zoom.css, 14-image-zoom.ts.
+:!example-caption:
+
+This page reviews the click-to-zoom overlay (GH-197): the cursor/hover affordance
+for a mouse (resize this page's viewport, or check dev tools' device toolbar for
+the touch badge instead — `@media (hover: none)`, image-zoom.css), the dialog
+itself, and the diagram bleed fix (diagram.css) side by side with an
+un-zoomable image for comparison.
+
+== Plain images
+
+.A small photo, marked `role=zoom-in` — click it. The frame does not stretch to fill any bled width (doc.css's own `.imageblock`/`.content` split, unchanged by GH-197).
+image::photo-small.jpg[A small photo,role=zoom-in]
+
+.A large photo past the +25% cap, marked `role=zoom-in` — clamped down to the budget same as any other image, but still opens the overlay at its own real size.
+image::photo-large.gif[A large photo,role=zoom-in]
+
+.The same large photo, WITHOUT `role=zoom-in` — no cursor, no hover tint, no badge, nothing opens on click. For comparison only.
+image::photo-large.gif[A large photo, not zoomable]
+
+== Diagrams
+
+Kroki isn't wired into this preview harness (no `kroki-enabled` attribute, no
+live Kroki service — kroki.js's own header) — real Mermaid/PlantUML markup
+here would just show literal source text, not a diagram. The two fixtures
+below are hand-written passthrough HTML in EXACTLY the shape kroki.js now
+emits (GH-197's two-div split — diagram.css's own header), so the dialog and
+the bleed fix are both reviewable without a live Kroki instance.
+
+.A small inline SVG "diagram", marked `zoom-in` — same "no oversized empty frame" check as the small photo above, on the diagram side of the split.
+++++
+<div class="docouture-diagram zoom-in" data-diagram-type="mermaid">
+  <div class="docouture-diagram__content">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" width="220" height="90">
+      <rect x="10" y="30" width="80" height="30" fill="none" stroke="#000" stroke-width="2"/>
+      <text x="50" y="50" text-anchor="middle" font-size="12">Start</text>
+      <path d="M90 45 H130" stroke="#000" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect x="130" y="30" width="80" height="30" fill="none" stroke="#000" stroke-width="2"/>
+      <text x="170" y="50" text-anchor="middle" font-size="12">Done</text>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M0 0 L8 4 L0 8 Z"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</div>
+++++
+
+.A wide inline SVG "diagram", well past the text measure, marked `zoom-in` — GH-197's actual fix: this now bleeds to +25% instead of scrolling inside the column (the pre-fix behaviour `width: fit-content` gave every diagram, regardless of its own real size).
+++++
+<div class="docouture-diagram zoom-in" data-diagram-type="mermaid">
+  <div class="docouture-diagram__content">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" width="1200" height="200">
+      <g font-size="16" text-anchor="middle" stroke="#000" stroke-width="2" fill="none">
+        <rect x="20" y="70" width="220" height="60"/>
+        <rect x="330" y="70" width="220" height="60"/>
+        <rect x="640" y="70" width="220" height="60"/>
+        <rect x="950" y="70" width="220" height="60"/>
+        <path d="M240 100 H330"/>
+        <path d="M550 100 H640"/>
+        <path d="M860 100 H950"/>
+      </g>
+      <g font-size="16" text-anchor="middle" fill="#000">
+        <text x="130" y="105">Request</text>
+        <text x="440" y="105">Validate</text>
+        <text x="750" y="105">Process</text>
+        <text x="1060" y="105">Respond</text>
+      </g>
+    </svg>
+  </div>
+</div>
+++++
+
+.The same wide "diagram", WITHOUT `zoom-in` — still bleeds to +25% (GH-197's width fix applies unconditionally), just has no click affordance and opens nothing.
+++++
+<div class="docouture-diagram" data-diagram-type="mermaid">
+  <div class="docouture-diagram__content">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" width="1200" height="200">
+      <g font-size="16" text-anchor="middle" stroke="#000" stroke-width="2" fill="none">
+        <rect x="20" y="70" width="220" height="60"/>
+        <rect x="330" y="70" width="220" height="60"/>
+        <rect x="640" y="70" width="220" height="60"/>
+        <rect x="950" y="70" width="220" height="60"/>
+        <path d="M240 100 H330"/>
+        <path d="M550 100 H640"/>
+        <path d="M860 100 H950"/>
+      </g>
+      <g font-size="16" text-anchor="middle" fill="#000">
+        <text x="130" y="105">Request</text>
+        <text x="440" y="105">Validate</text>
+        <text x="750" y="105">Process</text>
+        <text x="1060" y="105">Respond</text>
+      </g>
+    </svg>
+  </div>
+</div>
+++++
+
+== Nested (no bleed)
+
+.The same wide diagram, nested inside a sidebar — `--doc-inset-cap` resets to 100% of the sidebar's own width here (doc.css's shared `:is(...)` list), same as an image would.
+****
+++++
+<div class="docouture-diagram zoom-in" data-diagram-type="mermaid">
+  <div class="docouture-diagram__content">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" width="1200" height="200">
+      <g font-size="16" text-anchor="middle" stroke="#000" stroke-width="2" fill="none">
+        <rect x="20" y="70" width="220" height="60"/>
+        <rect x="330" y="70" width="220" height="60"/>
+        <rect x="640" y="70" width="220" height="60"/>
+        <rect x="950" y="70" width="220" height="60"/>
+        <path d="M240 100 H330"/>
+        <path d="M550 100 H640"/>
+        <path d="M860 100 H950"/>
+      </g>
+      <g font-size="16" text-anchor="middle" fill="#000">
+        <text x="130" y="105">Request</text>
+        <text x="440" y="105">Validate</text>
+        <text x="750" y="105">Process</text>
+        <text x="1060" y="105">Respond</text>
+      </g>
+    </svg>
+  </div>
+</div>
+++++
+****

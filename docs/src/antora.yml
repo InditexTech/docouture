@@ -81,6 +81,12 @@ footer:
       links:
         - text: Quickstart
           url: main:quickstart.adoc
+        - text: About
+          url: main:index.adoc
+        - text: CLI reference
+          url: main:reference-cli.adoc
+        - text: Architecture
+          url: main:architecture.adoc
         - text: Repository
           url: https://github.com/InditexTech/docouture
     - title: Guides

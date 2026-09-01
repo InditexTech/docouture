@@ -1,0 +1,157 @@
+code/packages/example/src/modules/main/pages/build/actions/align-nodes-tool.adoc
+  s_47ff53fcc6b553::t_c44f78f0d1acd4 4
+code/packages/example/src/modules/main/pages/build/actions/arrow-tool.adoc
+  s_47ff53fcc6b553::t_0b3f7778a15fca 4
+code/packages/example/src/modules/main/pages/build/actions/brush-tool.adoc
+  s_47ff53fcc6b553::t_f275d8554f51c1 4
+code/packages/example/src/modules/main/pages/build/actions/comment-tool.adoc
+  s_47ff53fcc6b553::t_8fc5ffc9bd0573 4
+code/packages/example/src/modules/main/pages/build/actions/connector-tool.adoc
+  s_47ff53fcc6b553::t_40f9647e5e0f1f 4
+code/packages/example/src/modules/main/pages/build/actions/ellipse-tool.adoc
+  s_47ff53fcc6b553::t_cddf85d52646d0 4
+code/packages/example/src/modules/main/pages/build/actions/eraser-tool.adoc
+  s_47ff53fcc6b553::t_a759e5de4e25a1 4
+code/packages/example/src/modules/main/pages/build/actions/export-node-tool.adoc
+  s_47ff53fcc6b553::t_6b6b3d7b4882fe 4
+code/packages/example/src/modules/main/pages/build/actions/export-stage-tool.adoc
+  s_47ff53fcc6b553::t_0c89236db40ef9 4
+code/packages/example/src/modules/main/pages/build/actions/fit-to-screen-tool.adoc
+  s_47ff53fcc6b553::t_05397d737155ff 4
+code/packages/example/src/modules/main/pages/build/actions/fit-to-selection-tool.adoc
+  s_47ff53fcc6b553::t_a6d981b98fabbd 4
+code/packages/example/src/modules/main/pages/build/actions/frame-tool.adoc
+  s_47ff53fcc6b553::t_fecd98e07d13ed 4
+code/packages/example/src/modules/main/pages/build/actions/image-tool.adoc
+  s_47ff53fcc6b553::t_79e606a87ba9d6 4
+code/packages/example/src/modules/main/pages/build/actions/images-tool.adoc
+  s_47ff53fcc6b553::t_601434a947c496 4
+code/packages/example/src/modules/main/pages/build/actions/index.adoc
+  s_47ff53fcc6b553::t_3d22094afc0756 20
+code/packages/example/src/modules/main/pages/build/actions/line-tool.adoc
+  s_47ff53fcc6b553::t_ddc28bba46a181 4
+code/packages/example/src/modules/main/pages/build/actions/measure-tool.adoc
+  s_47ff53fcc6b553::t_a1892653c13a6b 4
+code/packages/example/src/modules/main/pages/build/actions/move-tool.adoc
+  s_47ff53fcc6b553::t_8ddaf861062d35 4
+code/packages/example/src/modules/main/pages/build/actions/pen-tool.adoc
+  s_47ff53fcc6b553::t_73f6c6c158fe66 4
+code/packages/example/src/modules/main/pages/build/actions/rectangle-tool.adoc
+  s_47ff53fcc6b553::t_29ab29d57cda62 4
+code/packages/example/src/modules/main/pages/build/actions/regular-polygon-tool.adoc
+  s_47ff53fcc6b553::t_0240dec3feb645 10
+code/packages/example/src/modules/main/pages/build/actions/selection-tool.adoc
+  s_47ff53fcc6b553::t_b4413fbcf1d57c 4
+code/packages/example/src/modules/main/pages/build/actions/star-tool.adoc
+  s_47ff53fcc6b553::t_c1155c12d1f017 4
+code/packages/example/src/modules/main/pages/build/actions/stroke-tool.adoc
+  s_47ff53fcc6b553::t_233d2674c7130a 4
+code/packages/example/src/modules/main/pages/build/actions/text-tool.adoc
+  s_47ff53fcc6b553::t_bf3819f8ff55e7 4
+code/packages/example/src/modules/main/pages/build/actions/video-tool.adoc
+  s_47ff53fcc6b553::t_7c0bec733d36aa 4
+code/packages/example/src/modules/main/pages/build/actions/zoom-in-tool.adoc
+  s_47ff53fcc6b553::t_6aa7cdd239db12 4
+code/packages/example/src/modules/main/pages/build/actions/zoom-out-tool.adoc
+  s_47ff53fcc6b553::t_4dcfd7960db078 4
+code/packages/example/src/modules/main/pages/build/nodes/arrow.adoc
+  s_47ff53fcc6b553::t_cb98a078b222c8 4
+code/packages/example/src/modules/main/pages/build/nodes/comment.adoc
+  s_47ff53fcc6b553::t_4b473d193e24de 4
+code/packages/example/src/modules/main/pages/build/nodes/connector.adoc
+  s_47ff53fcc6b553::t_2902500163fd65 4
+code/packages/example/src/modules/main/pages/build/nodes/ellipse.adoc
+  s_47ff53fcc6b553::t_f1f1ee73eb8bad 4
+code/packages/example/src/modules/main/pages/build/nodes/frame.adoc
+  s_47ff53fcc6b553::t_d73cde41e729e7 4
+code/packages/example/src/modules/main/pages/build/nodes/group.adoc
+  s_47ff53fcc6b553::t_c0284546236396 4
+code/packages/example/src/modules/main/pages/build/nodes/image.adoc
+  s_47ff53fcc6b553::t_5c49f81716b596 4
+code/packages/example/src/modules/main/pages/build/nodes/line.adoc
+  s_47ff53fcc6b553::t_56445528666e49 4
+code/packages/example/src/modules/main/pages/build/nodes/measure.adoc
+  s_47ff53fcc6b553::t_3f4cc7eaa0007a 4
+code/packages/example/src/modules/main/pages/build/nodes/rectangle.adoc
+  s_47ff53fcc6b553::t_a9b56d49d2c1d9 4
+code/packages/example/src/modules/main/pages/build/nodes/regular-polygon.adoc
+  s_47ff53fcc6b553::t_f29d25805f6cfe 10
+code/packages/example/src/modules/main/pages/build/nodes/star.adoc
+  s_47ff53fcc6b553::t_44412ca01298e5 4
+code/packages/example/src/modules/main/pages/build/nodes/stroke-single.adoc
+  s_47ff53fcc6b553::t_39c1b467b9d40c 4
+code/packages/example/src/modules/main/pages/build/nodes/stroke.adoc
+  s_47ff53fcc6b553::t_1190236bc78b2f 4
+code/packages/example/src/modules/main/pages/build/nodes/text.adoc
+  s_47ff53fcc6b553::t_97342eff6c2755 4
+code/packages/example/src/modules/main/pages/build/nodes/video.adoc
+  s_47ff53fcc6b553::t_77785550485e77 4
+code/packages/example/src/modules/main/pages/build/plugins/comments-renderer.adoc
+  s_47ff53fcc6b553::t_316d580c2e1e0d 4
+code/packages/example/src/modules/main/pages/build/plugins/connected-users.adoc
+  s_47ff53fcc6b553::t_cbec4a005ccd21 4
+code/packages/example/src/modules/main/pages/build/plugins/context-menu.adoc
+  s_47ff53fcc6b553::t_1227a14b4153ad 4
+code/packages/example/src/modules/main/pages/build/plugins/copy-paste-nodes.adoc
+  s_47ff53fcc6b553::t_2ac91a37ceb8dd 4
+code/packages/example/src/modules/main/pages/build/plugins/nodes-multi-selection-feedback.adoc
+  s_47ff53fcc6b553::t_fe7b1aa34e89bb 4
+code/packages/example/src/modules/main/pages/build/plugins/nodes-selection.adoc
+  s_47ff53fcc6b553::t_691fac117c198c 4
+code/packages/example/src/modules/main/pages/build/plugins/nodes-snapping.adoc
+  s_47ff53fcc6b553::t_be6f4b0a6f370c 4
+code/packages/example/src/modules/main/pages/build/plugins/stage-drop-area.adoc
+  s_47ff53fcc6b553::t_6c6e88bc298938 4
+code/packages/example/src/modules/main/pages/build/plugins/stage-panning.adoc
+  s_47ff53fcc6b553::t_2d5cd5e31e2765 4
+code/packages/example/src/modules/main/pages/build/plugins/stage-zoom.adoc
+  s_47ff53fcc6b553::t_49b03825081752 4
+code/packages/example/src/modules/main/pages/build/plugins/users-pointers.adoc
+  s_47ff53fcc6b553::t_c9fe3c72599ae1 4
+code/packages/example/src/modules/main/pages/build/plugins/users-presence.adoc
+  s_47ff53fcc6b553::t_3a19245d48509b 4
+code/packages/example/src/modules/main/pages/build/plugins/users-selector.adoc
+  s_47ff53fcc6b553::t_c727fbafe2d599 4
+code/packages/example/src/modules/main/pages/build/stores/azure-web-pubsub-store.adoc
+  s_47ff53fcc6b553::t_1f1ff37df14284 172
+code/packages/example/src/modules/main/pages/build/stores/websockets-store.adoc
+  s_47ff53fcc6b553::t_7c01c377b2ed97 68
+code/packages/example/src/modules/main/pages/contributing.adoc
+  s_47ff53fcc6b553::t_a0c86349bd817b 40
+code/packages/example/src/modules/main/pages/manual-installation/frontend/enter-room-page.adoc
+  s_47ff53fcc6b553::t_e3e37fa099102e 6,96
+code/packages/example/src/modules/main/pages/manual-installation/frontend/room-page.adoc
+  s_47ff53fcc6b553::t_7ddcca98b84548 6
+code/packages/example/src/modules/main/pages/manual-installation/index.adoc
+  s_47ff53fcc6b553::t_e54cdfed5ad55e 161,167
+code/packages/example/src/modules/main/pages/quickstart.adoc
+  s_47ff53fcc6b553::t_a9942d6e961c47 8,192,203
+code/packages/example/src/modules/sdk/pages/api-reference/actions/action.adoc
+  s_47ff53fcc6b553::t_a7973baa3e4ae9 35
+code/packages/example/src/modules/sdk/pages/api-reference/plugins/plugin.adoc
+  s_47ff53fcc6b553::t_058ca5fd9a3ef1 33
+code/packages/example/src/modules/store-azure-web-pubsub/pages/api-reference/server/weave-azure-web-pubsub-server.adoc
+  s_47ff53fcc6b553::t_7a0b0bf094766d 329
+code/packages/example/src/modules/store-standalone/pages/api-reference/index.adoc
+  s_47ff53fcc6b553::t_30c3e5f5f9fff1 50
+code/packages/example/src/modules/store-websockets/pages/api-reference/server/weave-websockets-server.adoc
+  s_47ff53fcc6b553::t_f8ff933cfcfb7b 113
+code/packages/ui-bundle/src/css/icon-masks.css
+  s_47ff53fcc6b553::t_3c95e7568efc30 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9e9156fd1f18a61f33a72ef8588c557914705035",
+  "prompts": {},
+  "sessions": {
+    "s_47ff53fcc6b553": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa3375587ffeXWH7v5qS0UoBeS",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

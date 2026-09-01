@@ -1,0 +1,14 @@
+docs/pnpm-lock.yaml
+  h_c93d154c7c7074 1-2536
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0ce4663938824dace6270865f3d5638d6a3ac5d4",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

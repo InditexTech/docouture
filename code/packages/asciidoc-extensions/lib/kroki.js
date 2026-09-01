@@ -277,7 +277,12 @@ function renderDiagram(parent, type, source, attrs) {
   // flex-item child to shrink-wrap the frame back down to the diagram's own
   // real size, or a small diagram would render with a large, mostly-empty
   // grey/bordered box around it.
-  const roleClasses = attrs.role ? attrs.role.split(/[\s,]+/).filter(Boolean).join(' ') : ''
+  const roleClasses = attrs.role
+    ? attrs.role
+        .split(/[\s,]+/)
+        .filter(Boolean)
+        .join(' ')
+    : ''
   const classAttr = roleClasses ? 'docouture-diagram ' + roleClasses : 'docouture-diagram'
   return (
     '<div' +

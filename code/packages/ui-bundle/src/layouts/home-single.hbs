@@ -36,6 +36,8 @@ SPDX-License-Identifier: Apache-2.0
   </head>
   <body class="home-page{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
 {{> header}}
+{{!-- GH-197: page-level overlay — see home.hbs's own copy of this comment. --}}
+{{> image-zoom-dialog}}
     <div class="body">
 {{> nav}}
       <main class="home home--single dt-grid-layout dt-grid-layout--with-margin">

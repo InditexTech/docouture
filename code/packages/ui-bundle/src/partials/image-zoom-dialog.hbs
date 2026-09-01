@@ -1,0 +1,56 @@
+{{!--
+SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+
+SPDX-License-Identifier: Apache-2.0
+--}}
+
+{{!--
+  GH-197: click-to-zoom fullscreen overlay for `image::`/Kroki diagram
+  blocks marked `role=zoom-in` (image-zoom.css's own header explains the
+  affordance half — cursor/hover for a mouse, a persistent badge for
+  touch). This partial is the dialog half only; wired up by
+  src/js/14-image-zoom.ts, which discovers every `.zoom-in` image/diagram
+  on the page at load and populates `.image-zoom-dialog__content` with a
+  clone of whichever one was activated.
+
+  Included once from default.hbs/home.hbs/home-single.hbs (not header.hbs,
+  unlike search-dialog.hbs — this dialog has no fixed trigger of its own to
+  live near; it exists purely so SOMETHING on the page can open it), so it
+  is present on every page shape a zoomable image or diagram could actually
+  appear on.
+
+  Same `<dialog>` + `.dt-overlay`/`.dt-modal` composition search-dialog.hbs
+  already uses, and the same reason: `showModal()` alone gives the top
+  layer, the platform focus trap, Esc-to-close and an implicit ::backdrop,
+  which 14-image-zoom.ts only needs to add backdrop-click-to-close on top
+  of (search-dialog.hbs's own header has the full stacking-order
+  argument for why `.dt-overlay__content` and `.dt-modal` must be SIBLINGS,
+  in that DOM order, both inside `.dt-overlay` — repeated exactly here, not
+  re-derived).
+
+  Unlike the search dialog, `.dt-modal--fullscreen` is authored here
+  directly, statically, never toggled by JS — there is no small/medium
+  panel size that makes sense for "look at this image bigger"; every
+  breakpoint gets the fullscreen frame.
+
+  `.image-zoom-dialog__content` ships empty: 14-image-zoom.ts clones
+  whichever `img`/`svg`/`embed` (or, for a diagram, the whole
+  `.docouture-diagram__content` card) was activated into it on open, and
+  empties it again on close so a stale clone never flashes on the next
+  open.
+--}}
+<dialog id="image-zoom-dialog" class="image-zoom-dialog" aria-label="Zoomed image">
+  <div class="dt-overlay dt-overlay--visible image-zoom-dialog__overlay">
+    <div class="dt-overlay__content"></div>
+    <div class="dt-modal dt-modal--fullscreen image-zoom-dialog__panel">
+      <div class="dt-modal__container image-zoom-dialog__container">
+        <button type="button" class="dt-button dt-button--ghost dt-button--icon-only image-zoom-dialog__close" aria-label="Close zoomed image">
+          <span class="dt-button__content">
+            <span class="dt-button__icon dt-button__icon-icon">{{icon "x"}}</span>
+          </span>
+        </button>
+        <div class="image-zoom-dialog__content"></div>
+      </div>
+    </div>
+  </div>
+</dialog>

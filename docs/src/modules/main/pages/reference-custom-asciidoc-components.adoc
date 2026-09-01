@@ -698,6 +698,34 @@ includes an `excalidraw` service alongside `mermaid` for exactly that reason:
 }
 ....
 
+=== Zoom
+
+Any diagram — or a plain `image::` block, which already gets this for free from
+Asciidoctor's own role-to-class handling — marked `role=zoom-in` gets a click-to-zoom
+affordance: a `zoom-in` cursor and a subtle hover tint for a mouse, a small persistent
+badge for touch, and clicking/tapping opens a fullscreen overlay with a bigger view.
+Esc, the close icon, or clicking the backdrop all dismiss it — static, no pan/pinch-zoom,
+just a bigger still image:
+
+[,asciidoc]
+----
+[mermaid,role=zoom-in]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+----
+
+[mermaid,role=zoom-in]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+
 == Inline macros: `label:` and `mono:`
 
 [,asciidoc]

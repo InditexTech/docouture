@@ -41,6 +41,8 @@ SPDX-License-Identifier: Apache-2.0
   </head>
   <body class="home-page{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
 {{> header}}
+{{!-- GH-197: page-level overlay — `.home__main.doc` can hold a zoomable image/diagram same as any other `.doc` body (image-zoom-dialog.hbs's own header). --}}
+{{> image-zoom-dialog}}
     <div class="body">
 {{> nav}}
       <main class="home dt-grid-layout dt-grid-layout--with-margin">

@@ -1,0 +1,168 @@
+/*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * GH-197 — click-to-zoom fullscreen overlay for `[role=zoom-in]` images and
+ * Kroki diagrams. Two independent halves:
+ *
+ *   1. THE AFFORDANCE (this file's first half): `cursor: zoom-in` plus a
+ *      hover tint on the frame for pointer/mouse readers, who get the
+ *      cursor as their only signal something is clickable, exactly the
+ *      issue's own ask. A hover state alone is invisible to a touch reader
+ *      — nothing on a touch device ever produces `:hover` before the tap
+ *      that already opens the dialog — so `@media (hover: none)` (the same
+ *      split doc.css's own heading-anchor icons already use: always
+ *      visible on touch, hover-revealed with a mouse) additionally paints a
+ *      small persistent badge in the frame's corner via the `maximize`
+ *      `--icon-mask-*` (icon-masks.css) as a `::after`, CSS-only — no
+ *      markup change, no per-instance work for an author who marks a block
+ *      `role=zoom-in`.
+ *
+ *   2. THE DIALOG (second half): `image-zoom-dialog.hbs`'s shell,
+ *      populated by `14-image-zoom.ts` on click/tap with a clone of
+ *      whichever image/diagram was activated. Same `<dialog>` +
+ *      `.dt-overlay`/`.dt-modal` composition search-dialog.css already
+ *      uses — see that file's own header for why `<dialog>` over a
+ *      hand-rolled overlay (top layer, focus trap, Esc-to-close, backdrop,
+ *      all free) and why `.dt-overlay__content`/`.dt-modal` must be
+ *      siblings, in that order, inside `.dt-overlay` (the same
+ *      `image-zoom-dialog.hbs` nesting mirrors exactly). Unlike the search
+ *      dialog, this one is ALWAYS `.dt-modal--fullscreen` — there is no
+ *      small/medium panel size that makes sense for "look at this image
+ *      bigger" — so, unlike `12-search.ts`'s breakpoint-driven
+ *      `matchMedia` toggle, that class is authored directly in the markup
+ *      here, never toggled by JS.
+ */
+
+/* ------------------------------------------------------------- affordance --- */
+
+.imageblock.zoom-in .content,
+.docouture-diagram.zoom-in .docouture-diagram__content {
+  position: relative;
+}
+
+@media (hover: hover) {
+  .imageblock.zoom-in .content,
+  .docouture-diagram.zoom-in .docouture-diagram__content {
+    cursor: zoom-in;
+  }
+
+  .imageblock.zoom-in .content:hover,
+  .docouture-diagram.zoom-in .docouture-diagram__content:hover {
+    background: var(--dt-color-bg-states-hover);
+  }
+}
+
+/*
+ * Touch badge — same pseudo-element shape doc.css's admonition icons use
+ * (`content: ""`, `background-color: currentColor`, `mask-*`): no markup of
+ * its own, so it costs an author nothing beyond `role=zoom-in`. Always
+ * visible under `(hover: none)` — a touch reader gets no hover state at
+ * all to reveal it later, unlike the `(hover: hover)` cursor/tint above.
+ */
+@media (hover: none) {
+  .imageblock.zoom-in .content::after,
+  .docouture-diagram.zoom-in .docouture-diagram__content::after {
+    background-color: var(--dt-color-content-default);
+    border-radius: var(--dt-size-radius-full);
+    box-shadow: 0 0 0 var(--dt-size-25) var(--dt-color-bg-default);
+    content: "";
+    height: var(--dt-size-125);
+    mask-image: var(--icon-mask-maximize);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: 60%;
+    opacity: 0.7;
+    position: absolute;
+    right: var(--dt-size-100);
+    top: var(--dt-size-100);
+    width: var(--dt-size-125);
+  }
+}
+
+/* ----------------------------------------------------------------- dialog --- */
+
+/*
+ * Same UA `<dialog>` reset as `.search-dialog` (search-dialog.css's own
+ * header explains why an author rule is needed at all: the UA stylesheet's
+ * `dialog:not([open]) { display: none }` is beaten by ANY authored
+ * `display`, so `.dt-modal`'s own unconditional `display: flex` has to be
+ * restated as a closed-state rule of our own, on the actual `[open]`-
+ * bearing element).
+ */
+.image-zoom-dialog {
+  background: none;
+  border: none;
+  color: inherit;
+  height: 100%;
+  inset: 0;
+  margin: 0;
+  max-height: none;
+  max-width: none;
+  padding: 0;
+  width: 100%;
+  /*
+   * No `z-index` here, unlike `.search-dialog`: that one exists solely for
+   * `.search-fab`, an ordinary positioned element with no z-index of its
+   * own that needs to sit above the header at xs — see bridge.css's own
+   * comment. This dialog has no floating trigger of its own (the triggers
+   * ARE the in-flow images/diagrams themselves); `showModal()`'s top layer
+   * already outranks the rest of the page regardless.
+   */
+}
+
+.image-zoom-dialog:not([open]) {
+  display: none;
+}
+
+.image-zoom-dialog::backdrop {
+  display: none;
+}
+
+.image-zoom-dialog__container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+  padding: var(--dt-size-250);
+  position: relative;
+}
+
+.image-zoom-dialog__content {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.image-zoom-dialog__content img,
+.image-zoom-dialog__content svg,
+.image-zoom-dialog__content embed {
+  background: #fff;
+  height: auto;
+  max-height: calc(100vh - var(--dt-size-250) * 2);
+  max-width: 100%;
+  width: auto;
+}
+
+/*
+ * 14-image-zoom.ts clones only the innermost `img`/`svg`/`embed` — the same
+ * element for a diagram as for a plain image, never the surrounding
+ * `.docouture-diagram__content` card (border/background/radius,
+ * diagram.css). A diagram's own canvas already carries a fixed white
+ * background (diagram.css's own header, repeated on this rule above), so
+ * the bare enlarged diagram reads exactly like an enlarged photo — no
+ * frame chrome doubling up inside a dialog that already has its own,
+ * different (bg-default) background.
+ */
+
+.image-zoom-dialog__close {
+  position: absolute;
+  right: var(--dt-size-150);
+  top: var(--dt-size-150);
+  z-index: 1;
+}

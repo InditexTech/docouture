@@ -14,22 +14,54 @@
  * returned, verbatim, with no size normalization of its own (the diagram
  * tool decides its own intrinsic viewBox/dimensions). Left alone, that can
  * exceed the reading column on a narrow viewport, or render at an awkwardly
- * small intrinsic size on a wide one. Both are fixed the same way
- * `[cards]`/`[cta]`/`[feature-tabs]` size their own wide blocks — see
- * card-grid.css's own header for why a block-level `width` here, not a
- * container query, is what actually stops at the doc column rather than
- * the viewport.
+ * small intrinsic size on a wide one.
+ *
+ * GH-197: BLEEDING UP TO 125% — AND WHY THAT NEEDS TWO DIVS, NOT ONE
+ *
+ * A diagram is now allowed to grow past the plain text measure the same
+ * way `.imageblock`/`.videoblock` already do (doc.css's own header,
+ * GH-12/13/14/15's `--doc-inset-cap` unification): `.docouture-diagram`
+ * reads `width: min(calc(var(--content-max-width) * 1.25), var(--doc-inset-
+ * cap))` — a LITERAL computed width, not `width: fit-content` (an earlier
+ * version of this file used exactly that, and it silently never bled past
+ * `.sectionbody`'s own 780/820px cap — doc.css's own header explains why:
+ * `fit-content`'s sizing algorithm bounds itself to the AVAILABLE SPACE of
+ * its containing block, so a `max-width` set alongside it can never let
+ * the box grow past that regardless of the diagram's own intrinsic size).
+ * `--doc-inset-cap` is a single, already-shared, inherited custom property
+ * (doc.css) — resolving `100cqw` (the actual `.doc` grid column) normally,
+ * reset to `100%` of the immediate container when nested inside a list,
+ * admonition, example, sidebar, quote, table cell, tab panel, accordion
+ * item, step or description-list value; a diagram picks that reset up for
+ * free, with no diagram-specific entry needed in doc.css's own `:is(...)`
+ * list.
+ *
+ * kroki.js now emits TWO nested divs, not one, for exactly the reason
+ * doc.css's `.imageblock`/`.content` split does: an outer box with a
+ * literal, possibly-bled `width` needs an unstretched flex-item child to
+ * shrink the visible frame back down to the diagram's own real size, or a
+ * SMALL diagram would render with a large, mostly-empty grey/bordered box
+ * stretched out to the full 125% budget. `.docouture-diagram` (this rule)
+ * is the outer, undecorated sizing box — `display: flex; flex-direction:
+ * column; align-items: flex-start` gives its sole child, `.docouture-
+ * diagram__content`, the SAME "shrink-to-fit, clamped by MY available
+ * cross space" sizing a non-stretched flex item gets for free — a
+ * different code path from the `fit-content` property value above, and
+ * the one that actually works: the clamp resolves against the flex
+ * CONTAINER's own (already correctly bled) width, not `.sectionbody`'s.
  *
  * THE FRAME FOLLOWS SITE THEME; THE CANVAS DOESN'T
  *
- * Two separate layers, two separate rules, deliberately not one:
+ * Two separate layers, two separate rules, deliberately not one — this is
+ * ALSO why the visible card lives on `.docouture-diagram__content`, one
+ * level in from the sizing box above:
  *
- * - `.docouture-diagram` (the frame — padding/background/border/radius) IS
- *   a `--dt-*`-token card, the same family card-grid.css's `.dt-card__content`
- *   draws from, so a diagram sits in a surface consistent with every other
- *   docouture block instead of floating on the page background with no
- *   visual boundary, and follows the site's own light/dark theme like every
- *   other card does.
+ * - `.docouture-diagram__content` (the frame — padding/background/border/
+ *   radius) IS a `--dt-*`-token card, the same family card-grid.css's
+ *   `.dt-card__content` draws from, so a diagram sits in a surface
+ *   consistent with every other docouture block instead of floating on the
+ *   page background with no visual boundary, and follows the site's own
+ *   light/dark theme like every other card does.
  * - The `svg`/`img`/`embed` INSIDE it gets its own `background: #fff` —
  *   hardcoded hex, not a `--dt-*` token, same kind of deliberate exception
  *   `kroki-mermaid-theme.js` already carves out for its own baked colors
@@ -81,10 +113,16 @@
  * it replaces.
  */
 .docouture-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   margin: var(--doc-space-block) 0 0;
+  width: min(calc(var(--content-max-width) * 1.25), var(--doc-inset-cap));
+}
+
+.docouture-diagram__content {
   max-width: 100%;
   overflow-x: auto;
-  width: fit-content;
   padding: var(--dt-size-250);
   background: var(--dt-color-bg-low);
   border: var(--dt-size-border-default) solid var(--dt-color-border-low);

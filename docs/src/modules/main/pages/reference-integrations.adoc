@@ -28,7 +28,8 @@ at all), each gated per diagram type against what Kroki's own server actually ac
 Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific
 option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the
 feature disabled, a diagram block renders as its own literal source text rather than
-failing the build. Full syntax: xref:main:reference-custom-asciidoc-components.adoc[].
+failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a
+click-to-zoom fullscreen overlay. Full syntax: xref:main:reference-custom-asciidoc-components.adoc[].
 
 === Syntax highlighting — Shiki
 

@@ -104,6 +104,12 @@ function render(symbols) {
 // `[card,icon=…]` (GH-20) is the first.
 
 const MASKS_HEADER = `/*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * Icon masks — a second, CSS-consumable form of a subset of the icons in
  * icons.svg, for markup that has no room for an <svg><use>: admonitions
  * (doc.css, GH-13) and anything an Asciidoctor extension emits (GH-20),
@@ -254,8 +260,8 @@ async function checkCardIconUsage(masked) {
   const unresolved = new Map()
   const roots = [
     join(paths.packageRoot, 'preview-src'),
-    join(paths.packageRoot, '../example/docs'),
-    join(paths.packageRoot, '../starter/docs'),
+    join(paths.packageRoot, '../example/src'),
+    join(paths.packageRoot, '../cli/templates/starter/src'),
   ]
 
   for (const root of roots) {

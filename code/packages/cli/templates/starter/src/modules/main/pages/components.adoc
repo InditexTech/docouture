@@ -96,6 +96,9 @@ fragment: xref:main:getting-started.adoc#add-a-page[a specific section on that p
 .A block image, capped at its own natural size
 image::ROOT:hero-placeholder.png[A placeholder image,480]
 
+.The same image, marked `role=zoom-in` — click it for a bigger, fullscreen view (GH-197)
+image::ROOT:hero-placeholder.png[A placeholder image,480,role=zoom-in]
+
 An inline image sits mid-paragraph: image:ROOT:card-placeholder.png[A small inline
 placeholder,20,20] like so. Font icons, keyboard shortcuts and UI paths:
 icon:check[] done, kbd:[Ctrl+C] to copy, btn:[Save] to save, menu:File[Save As] to open
@@ -764,9 +767,38 @@ includes an `excalidraw` service alongside `mermaid` for exactly that reason:
       "fontSize": 20,
       "seed": 2
     }
-  ]
+   ]
 }
 ....
+
+==== Zoom
+
+Any diagram (or, per the "Images and icons" section above, any plain `image::` block)
+marked `role=zoom-in` gets a click-to-zoom affordance: a `zoom-in` cursor and a subtle
+hover tint for a mouse, a small persistent badge for touch, and clicking/tapping opens
+a fullscreen overlay with a bigger view — Esc, the close icon, or the backdrop all
+dismiss it:
+
+[,asciidoc]
+----
+[mermaid,role=zoom-in]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+----
+
+[mermaid,role=zoom-in]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+
+Static, no pan/pinch-zoom — a bigger, still image, not an image viewer.
 
 === Inline macros: `label:` and `mono:`
 

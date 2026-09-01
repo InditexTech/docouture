@@ -123,8 +123,8 @@ llms:
 # after dropping invalid ones (see resolveFooter) — a footer.groups list is
 # positional (index 0 → column 2, 1 → column 3's fallback, 2 → column 4), not
 # keyed. Group 3 (GH-77) fills the footer's 4th column — here, a link out to
-# the org's own portal (placeholder URL, swap for the real one). `title`
-# (GH-77) is optional per group; omit it for a column with no heading.
+# the org's own open-source portal. `title` (GH-77) is optional per group;
+# omit it for a column with no heading.
 #
 # `url` is either a page ID — the same string you would write inside
 # `xref:...[]`, resolved against this component — or a literal URL. One that
@@ -133,8 +133,14 @@ footer:
   groups:
     - title: Resources
       links:
-        - text: Home
-          url: ROOT:index.adoc
+        - text: Quickstart
+          url: main:quickstart.adoc
+        - text: SDK
+          url: sdk:index.adoc
+        - text: React Helper
+          url: react:index.adoc
+        - text: Stores
+          url: main:build/stores/index.adoc
         - text: Repository
           url: https://github.com/InditexTech/weavejs
     - title: More
@@ -144,4 +150,4 @@ footer:
     - title: InditexTech
       links:
         - text: Portal
-          url: https://www.google.com
+          url: https://opensource.inditex.com

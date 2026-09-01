@@ -1,9 +1,9 @@
-= docouture
+= Docouture
 :page-layout: home
 :page-nav-module: main
 :description: A documentation platform built on Antora — scaffold, write and publish a real documentation site with one CLI.
 :page-tags: antora, cli, documentation
-:page-action: Get started
+:page-action: Quickstart
 :page-action-url: main:quickstart.adoc
 :page-action-secondary: About
 :page-action-secondary-url: main:index.adoc
@@ -111,7 +111,7 @@ xref:main:reference-ai-first-approach.adoc[See the skills]
 
 [cta]
 ====
-The CLI, the Antora/https://asciidoctor.org[Asciidoctor] extensions, the UI bundle
+The CLI, the Antora/link:https://asciidoctor.org[Asciidoctor] extensions, the UI bundle
 (Apache-2.0/MPL-2.0 split, being a fork of antora-ui-default) and the release tooling
 are all open — see the FAQ below for the licence breakdown.
 

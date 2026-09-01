@@ -1,0 +1,20 @@
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  h_c93d154c7c7074 510
+code/packages/asciidoc-extensions/README.md
+  h_c93d154c7c7074 230
+code/packages/asciidoc-extensions/lib/kroki-config.js
+  h_c93d154c7c7074 263-264
+code/packages/asciidoc-extensions/lib/kroki.js
+  h_c93d154c7c7074 246-254
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c0af3e5047518a1821f26a064a36d4ff2eb7a431",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

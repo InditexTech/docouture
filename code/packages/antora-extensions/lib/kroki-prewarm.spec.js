@@ -115,7 +115,7 @@ describe('registerKrokiPrewarm', () => {
   })
 
   // GH-193: real, hand-authored blocks carry more than a bare `[type]` or
-  // `[type,format=X]` style — a positional id, a positional format
+  // `[type,format=X]` style — a positional target, a positional format
   // shorthand (not `format=`), a `role=`, … — every one of which real
   // Asciidoctor conversion (kroki.js's own block extension, a proper
   // parser) still recognises and renders, but the raw-text regex here
@@ -124,14 +124,20 @@ describe('registerKrokiPrewarm', () => {
   // block invisible to this scan — a permanent, guaranteed prewarm miss,
   // reproduced verbatim from a real page (karatetools-oss's
   // architecture.adoc): `[plantuml,architecture,png,role="no-border,
-  // zoom-in"]`. `png` there is POSITIONAL, not `format=png`, so this
-  // asserts the fetch still defaults to `svg` — matching kroki.js's own
-  // `attrs.format` lookup, which only ever reads a NAMED `format=`
-  // attribute too; treating a positional token as `format` here would be
-  // a NEW mismatch, not a fix.
-  it('detects a block styled with extra attributes beyond a bare [type] or [type,format=X]', async () => {
-    const svg = '<svg>extra-attrs</svg>'
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+  // zoom-in"]`.
+  //
+  // GH-195: `png` there is the classic asciidoctor-diagram/asciidoctor-kroki
+  // `[type,target,format]` positional convention — confirmed against the
+  // real `asciidoctor-kroki` syntax docs and empirically verified against
+  // the pinned `@asciidoctor/core@2.2.9` engine itself (kroki.js's own
+  // `positionalAttributes(['target', 'format'])`) — so this now asserts the
+  // fetch resolves to `png`, matching what real conversion does; this used
+  // to assert the OPPOSITE (a permanent, silent `svg` downgrade) before
+  // GH-195 taught this file the same positional mapping kroki.js already
+  // had.
+  it('resolves the classic [type,target,format] positional shorthand, matching real Asciidoctor conversion', async () => {
+    const png = 'cG5nLWZha2U='
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, arrayBuffer: async () => Buffer.from(png, 'base64') })
     vi.stubGlobal('fetch', fetchMock)
 
     const source = '@startuml\nBob -> Alice\n@enduml'
@@ -146,8 +152,52 @@ describe('registerKrokiPrewarm', () => {
     })
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/png')
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'png', {}))).toEqual({ format: 'png', data: png })
+  })
+
+  // A single bare positional after the type — `target` alone, no second
+  // positional for `format` — must NOT be misread as `format`: real
+  // Asciidoctor's own `positionalAttributes` mapping only assigns the
+  // SECOND positional slot to `format` (see kroki.js's own
+  // `positionalAttributes(['target', 'format'])` — position one is
+  // `target`), so `[plantuml,architecture]` alone stays `svg`.
+  it('treats a single positional as target only, not format, staying at the svg default', async () => {
+    const svg = '<svg>target-only</svg>'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = '@startuml\nBob -> Alice\n@enduml'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+      files: [file('modules/main/pages/a.adoc', `[plantuml,architecture]\n....\n${source}\n....\n`)],
+    })
+
     expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/svg')
-    expect(kroki.get(kroki.keyFor('plantuml', source, 'svg'))).toEqual({ format: 'svg', data: svg })
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'svg', {}))).toEqual({ format: 'svg', data: svg })
+  })
+
+  // GH-195: verified empirically against the real engine — when a block
+  // gives BOTH a positional format AND an explicit, conflicting `format=`,
+  // `AttributeList.rekey` unconditionally overwrites the named value with
+  // the positional one, so positional wins. An unusual thing for an author
+  // to actually write, but this file and kroki.js have to agree on it
+  // either way, or a diagram like this looks up the wrong cache key.
+  it('lets a positional format win over a conflicting named format=, matching real Asciidoctor precedence', async () => {
+    const png = 'cG5nLXdpbnM='
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, arrayBuffer: async () => Buffer.from(png, 'base64') })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = '@startuml\nBob -> Alice\n@enduml'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+      files: [
+        file('modules/main/pages/a.adoc', `[plantuml,architecture,png,format=svg,role="x"]\n....\n${source}\n....\n`),
+      ],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/png')
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'png', {}))).toEqual({ format: 'png', data: png })
   })
 
   it('still honours a real named format= attribute mixed in with other attributes', async () => {
@@ -164,7 +214,148 @@ describe('registerKrokiPrewarm', () => {
     })
 
     expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/png')
-    expect(kroki.get(kroki.keyFor('plantuml', source, 'png'))).toEqual({ format: 'png', data: png })
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'png', {}))).toEqual({ format: 'png', data: png })
+  })
+
+  // GH-195: any named attribute that isn't one of kroki-config.js's
+  // BUILTIN_ATTRIBUTES is a Kroki diagram-specific option, forwarded as a
+  // `Kroki-Diagram-Options-<key>` HTTP header — exactly as the real
+  // asciidoctor-kroki extension forwards them (its own kroki-client.js).
+  it('forwards a diagram-specific named attribute as a Kroki-Diagram-Options-<key> header', async () => {
+    const svg = '<svg>view</svg>'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => svg })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = 'workspace { model { a = softwareSystem "A" } }'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'structurizr' },
+      files: [file('modules/main/pages/a.adoc', `[structurizr,view-key=SystemContext]\n....\n${source}\n....\n`)],
+    })
+
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    const [url, init] = fetchMock.mock.calls[0]
+    expect(url).toBe('http://localhost:8500/structurizr/svg')
+    expect(init.headers['Kroki-Diagram-Options-view-key']).toBe('SystemContext')
+    expect(kroki.get(kroki.keyFor('structurizr', source, 'svg', { 'view-key': 'SystemContext' }))).toEqual({
+      format: 'svg',
+      data: svg,
+    })
+  })
+
+  // Two blocks, same type and source, different diagram-specific options —
+  // real, different Kroki requests (a different `view-key` selects a
+  // different view of the same Structurizr workspace), so they must key
+  // (and therefore cache) separately, not collide.
+  it('keys two diagrams with the same type/source but different options separately', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, text: async () => '<svg>context</svg>' })
+      .mockResolvedValueOnce({ ok: true, text: async () => '<svg>containers</svg>' })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = 'workspace { model {} views {} }'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'structurizr' },
+      files: [
+        file(
+          'modules/main/pages/a.adoc',
+          `[structurizr,view-key=SystemContext]\n....\n${source}\n....\n\n` +
+            `[structurizr,view-key=Containers]\n....\n${source}\n....\n`
+        ),
+      ],
+    })
+
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(kroki.get(kroki.keyFor('structurizr', source, 'svg', { 'view-key': 'SystemContext' }))).toEqual({
+      format: 'svg',
+      data: '<svg>context</svg>',
+    })
+    expect(kroki.get(kroki.keyFor('structurizr', source, 'svg', { 'view-key': 'Containers' }))).toEqual({
+      format: 'svg',
+      data: '<svg>containers</svg>',
+    })
+  })
+
+  // GH-195: text-family formats (`txt`/`atxt`/`utxt`) render Kroki's own
+  // ASCII-art-style TEXT rendering, not an image — fetched via
+  // `response.text()` exactly like `svg`, no base64 step, matching
+  // kroki.js's own `isTextFormat`-gated branch.
+  it('fetches a text-family format as plain text, not base64', async () => {
+    const ascii = '     ,-.          ,-.\n     |A|          |B|\n     `+\x27          `+\x27'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => ascii })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = 'A -> B'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+      files: [file('modules/main/pages/a.adoc', `[plantuml,format=txt]\n....\n${source}\n....\n`)],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/txt')
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'txt', {}))).toEqual({ format: 'txt', data: ascii })
+  })
+
+  // GH-195: `base64`'s own Kroki response is a complete, ready-to-use
+  // `data:image/png;base64,...` STRING as plain text (verified against a
+  // live server) — fetched via `response.text()`, same as `svg`/the
+  // text-family formats, unlike `png`/`jpeg`/`pdf`'s real binary bytes.
+  it('fetches the base64 format as plain text, not through arrayBuffer', async () => {
+    const dataUri = 'data:image/png;base64,ZmFrZQ=='
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => dataUri })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = 'A -> B'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'plantuml' },
+      files: [file('modules/main/pages/a.adoc', `[plantuml,format=base64]\n....\n${source}\n....\n`)],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/plantuml/base64')
+    expect(kroki.get(kroki.keyFor('plantuml', source, 'base64', {}))).toEqual({ format: 'base64', data: dataUri })
+  })
+
+  // GH-195: `jpeg`/`pdf` are real binary formats, fetched via arrayBuffer
+  // and base64-encoded, exactly like `png` already was — gated per type by
+  // `FORMAT_SUPPORT`'s real matrix (graphviz accepts `jpeg`; plantuml
+  // doesn't, and would fall back to svg — see the existing png-unsupported
+  // test above for that fallback path already being covered).
+  it('requests and base64-caches a jpeg diagram for a type that supports it', async () => {
+    const bytes = new Uint8Array([0xff, 0xd8, 0xff]) // a JPEG magic-number prefix is enough for this test
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, arrayBuffer: async () => bytes.buffer })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = 'digraph { A -> B }'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'graphviz' },
+      files: [file('modules/main/pages/a.adoc', `[graphviz,format=jpeg]\n....\n${source}\n....\n`)],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/graphviz/jpeg')
+    expect(kroki.get(kroki.keyFor('graphviz', source, 'jpeg', {}))).toEqual({
+      format: 'jpeg',
+      data: Buffer.from(bytes).toString('base64'),
+    })
+  })
+
+  // `jpg` is accepted as an alias for `jpeg` (Kroki's own API, and this
+  // package's own `FORMAT_SUPPORT`, only ever say `jpeg`) — both spellings
+  // must key identically, or `format=jpg` becomes a permanent cache miss.
+  it('normalizes the jpg alias to jpeg for both the request and the cache key', async () => {
+    const bytes = new Uint8Array([0xff, 0xd8, 0xff])
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, arrayBuffer: async () => bytes.buffer })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const source = 'digraph { A -> B }'
+    await run({
+      attributes: { 'kroki-enabled': true, 'kroki-diagram-types': 'graphviz' },
+      files: [file('modules/main/pages/a.adoc', `[graphviz,format=jpg]\n....\n${source}\n....\n`)],
+    })
+
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:8500/graphviz/jpeg')
+    expect(kroki.get(kroki.keyFor('graphviz', source, 'jpeg', {}))).toEqual({
+      format: 'jpeg',
+      data: Buffer.from(bytes).toString('base64'),
+    })
   })
 
   it('logs a success summary when every requested diagram renders', async () => {

@@ -103,6 +103,7 @@ const {
   KROKI_URL,
   resolveEnabledTypes,
   resolveFormat,
+  resolveDiagramOptions,
 } = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-config')
 const { applyDefaultMermaidTheme } = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-mermaid-theme')
 const kroki = require('@inditextech/docouture-asciidoc-extensions/lib/kroki-instance')
@@ -147,16 +148,30 @@ function buildBlockPattern() {
 
 // A minimal, quote-aware attrlist scanner — same shape as
 // `parseIncludeAttrlist` below, but permissive rather than strict: a
-// block's style line may legitimately carry positional attributes
-// (an id, a bare format shorthand) and named attributes this file has no
-// reason to understand (`role=`, …) that real Asciidoctor still parses
-// and applies just fine. This only needs to find `format=`, if any is
-// present, wherever it falls in the list; everything else is simply
-// skipped rather than rejected — unlike `parseIncludeAttrlist`, an
-// unrecognised attribute here is not a reason to give up on the whole
-// block.
-function extractFormatAttr(attrlist) {
-  if (!attrlist) return undefined
+// block's style line may legitimately carry positional attributes (a
+// target, a positional format shorthand) and named attributes this file
+// forwards without needing to understand (`role=`, a Kroki diagram-specific
+// option like `view-key=`, …) that real Asciidoctor still parses and
+// applies just fine. Splits the WHOLE attrlist into its comma-separated
+// entries (respecting quotes, so `role="no-border, zoom-in"`'s own embedded
+// comma doesn't split it in two) and sorts each into `positional` (in
+// order) or `named` — everything both `resolvePositionalOrNamedFormat` and
+// `resolveDiagramOptions` (kroki-config.js) need, computed once per block.
+//
+// GH-195: replaces the old single-purpose `extractFormatAttr` — this file
+// used to look for `format=` alone; it now also needs every OTHER named
+// attribute (for `resolveDiagramOptions`) and the raw positional list (for
+// the classic `[type,target,format]` shorthand — see kroki.js's own
+// `positionalAttributes(['target','format'])`, the real Asciidoctor
+// mechanism this has to replicate by hand here, since this file can't run
+// real Asciidoctor at all — see this file's own header).
+//
+// @param {string} attrlist
+// @returns {{ positional: string[], named: Record<string, string> }}
+function parseAttrlist(attrlist) {
+  const positional = []
+  const named = {}
+  if (!attrlist) return { positional, named }
   let i = 0
   const len = attrlist.length
   while (i < len) {
@@ -181,21 +196,46 @@ function extractFormatAttr(attrlist) {
         while (i < len && attrlist[i] !== ',') i++
         value = attrlist.slice(valueStart, i).trim()
       }
-      if (key === 'format') return value
+      named[key] = value
+    } else {
+      // positional attribute (no `=` before the next comma).
+      positional.push(attrlist.slice(start, i).trim())
     }
-    // positional attribute (no `=` before the next comma) — not `format=`,
-    // skip to the next one.
   }
-  return undefined
+  return { positional, named }
 }
 
-/** Every `(type, source, format)` triple found in one file's raw contents. */
+/**
+ * Resolves the `format` value from a parsed attrlist exactly the way real
+ * Asciidoctor's `positionalAttributes(['target', 'format'])` does (see
+ * kroki.js's own block registration and this repo's own empirical
+ * verification against `@asciidoctor/core@2.2.9` for the precedence
+ * below): the SECOND bare positional entry (the first is `target`) is
+ * `format`, and — because `AttributeList.rekey` unconditionally overwrites
+ * — a positional format WINS over an explicit `format=` elsewhere in the
+ * same list when an author (unusually) gives both.
+ *
+ * @param {{ positional: string[], named: Record<string, string> }} parsed
+ * @returns {string | undefined}
+ */
+function resolvePositionalOrNamedFormat(parsed) {
+  if (parsed.positional.length >= 2) return parsed.positional[1]
+  return parsed.named.format
+}
+
+/** Every `(type, source, format, options)` tuple found in one file's raw contents. */
 function extractDiagrams(text, pattern) {
   const found = []
   pattern.lastIndex = 0
   let match
   while ((match = pattern.exec(text))) {
-    found.push({ type: match[1], format: extractFormatAttr(match[2]), source: match[3] })
+    const parsed = parseAttrlist(match[2])
+    found.push({
+      type: match[1],
+      format: resolvePositionalOrNamedFormat(parsed),
+      options: resolveDiagramOptions(parsed.named),
+      source: match[3],
+    })
   }
   return found
 }
@@ -386,11 +426,32 @@ function resolveIncludesInSource(source, originFile, catalog, logger, depth = 0)
   return outLines.join('\n')
 }
 
-async function fetchDiagram(type, source, format, logger) {
+// GH-195: formats whose Kroki response is real binary bytes needing our own
+// base64 encoding before it can be embedded as a `data:` URI — `png`/
+// `jpeg`/`pdf`. Every other format's response body is already text kroki.js
+// can use as-is: `svg` (markup), `txt`/`atxt`/`utxt` (a literal-block
+// rendering, not an image at all — see `isTextFormat`), and `base64`
+// (verified against a live server: Kroki's own `/type/base64` endpoint
+// returns a complete, ready-to-use `data:image/png;base64,...` STRING as
+// its plain-text body, not raw base64 bytes — so this needs no encoding
+// step of its own, unlike `png`).
+const BINARY_FORMATS = new Set(['png', 'jpeg', 'pdf'])
+
+async function fetchDiagram(type, source, format, options, logger) {
   try {
+    const headers = { 'Content-Type': 'text/plain; charset=utf-8' }
+    // GH-195: diagram-specific options (`view-key=`, `theme=`, …) forwarded
+    // exactly as the real asciidoctor-kroki extension forwards them — see
+    // its own `kroki-client.js`: one `Kroki-Diagram-Options-<key>` header
+    // per option, not query params (those are only its GET-encoded mode,
+    // which this file — POST-only, see this file's own header on why — has
+    // no equivalent of).
+    for (const key of Object.keys(options || {})) {
+      headers['Kroki-Diagram-Options-' + key] = options[key]
+    }
     const response = await fetch(KROKI_URL + '/' + type + '/' + format, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      headers,
       body: source,
     })
     if (!response.ok) {
@@ -403,7 +464,7 @@ async function fetchDiagram(type, source, format, logger) {
       )
       return
     }
-    if (format === 'png') {
+    if (BINARY_FORMATS.has(format)) {
       return Buffer.from(await response.arrayBuffer()).toString('base64')
     }
     return await response.text()
@@ -446,7 +507,12 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     // the `.adoc` extension check.
     for (const file of contentCatalog.getFiles((candidate) => candidate.path && candidate.path.endsWith('.adoc'))) {
       const text = file.contents.toString('utf8')
-      for (const { type, source: rawSource, format: requestedFormat } of extractDiagrams(text, pattern)) {
+      for (const {
+        type,
+        source: rawSource,
+        format: requestedFormat,
+        options,
+      } of extractDiagrams(text, pattern)) {
         if (!enabledTypes.has(type)) continue
         const format = resolveFormat(type, requestedFormat, (t, requested) =>
           logger.warn('Ignoring unsupported format "%s" for a %s diagram; falling back to svg', requested, t)
@@ -461,8 +527,8 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
         // lookup key, or a prewarmed entry becomes unreachable from the
         // synchronous side.
         const effectiveSource = type === 'mermaid' ? applyDefaultMermaidTheme(source) : source
-        const key = kroki.keyFor(type, effectiveSource, format)
-        if (!jobs.has(key)) jobs.set(key, { type, source: effectiveSource, format })
+        const key = kroki.keyFor(type, effectiveSource, format, options)
+        if (!jobs.has(key)) jobs.set(key, { type, source: effectiveSource, format, options })
       }
     }
     if (!jobs.size) return
@@ -470,8 +536,8 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     logger.info('Rendering %d diagram(s) via Kroki at %s', jobs.size, KROKI_URL)
     let rendered = 0
     await Promise.all(
-      Array.from(jobs, async ([key, { type, source, format }]) => {
-        const data = await fetchDiagram(type, source, format, logger)
+      Array.from(jobs, async ([key, { type, source, format, options }]) => {
+        const data = await fetchDiagram(type, source, format, options, logger)
         if (data) {
           kroki.set(key, { format, data })
           rendered++

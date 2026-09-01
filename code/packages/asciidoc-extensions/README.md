@@ -180,10 +180,60 @@ asciidoc:
 ```
 
 Per-block, `[mermaid,format=png]` renders a transparent PNG `<img>` instead of the
-default inline SVG — see `kroki-config.js`'s `PNG_SUPPORTED_TYPES` for which of
-`SUPPORTED_TYPES` actually support it (`bpmn` and `excalidraw` notably don't; Kroki
-itself rejects those two output formats outright). An unsupported combination falls
-back to `svg` with a build warning.
+default inline SVG — see `kroki-config.js`'s `FORMAT_SUPPORT` for the exact,
+live-server-verified formats each `SUPPORTED_TYPES` entry accepts (`bpmn` and
+`excalidraw`, for instance, are SVG-only; Kroki itself rejects anything else
+for them outright). An unsupported combination falls back to `svg` with a
+build warning.
+
+The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand also
+works — `[plantuml,architecture,png,role="no-border, zoom-in"]` resolves
+`format` from the THIRD comma-separated value (`target`, then `format`),
+exactly like `[plantuml,format=png]` does; a positional format wins over a
+conflicting named `format=` if a block somehow carries both. A `#id`
+shorthand on the type (`[plantuml#diagAliceBob]`) works too, for
+`<<diagAliceBob>>`/`xref:page.adoc#diagAliceBob[]`.
+
+Beyond `svg`/`png`: `jpeg` (`jpg` also accepted), `pdf` and `base64` render
+the same way — an embedded `<img>` (or, for `pdf`, an `<embed>`, since a
+browser can't display a PDF through `<img>`) built from Kroki's own
+response, gated per type by the same `FORMAT_SUPPORT` table.
+`txt`/`atxt`/`utxt` are different in kind: Kroki renders these as literal
+ASCII-art-style TEXT, not an image, so the block renders as a literal block
+containing that text instead.
+
+Any named attribute that isn't one of `kroki-config.js`'s
+`BUILTIN_ATTRIBUTES` (`target`, `width`, `height`, `format`, `role`,
+`title`, `caption`, `subs`, `opts`, …) is a Kroki diagram-specific option —
+e.g. `[structurizr,view-key=SystemContext]` — forwarded to Kroki as a
+`Kroki-Diagram-Options-<key>` HTTP header, exactly as the real
+asciidoctor-kroki extension forwards them.
+
+**Not yet supported**, deliberately scoped out of this round rather than
+half-implemented: `subs=` (substituting document attributes into the
+diagram source before it reaches Kroki — the async prewarm side has no
+access to a live `Document`'s attributes to do this correctly for
+page-local `:attr:` values, only site-wide ones, so it needs its own
+follow-up rather than a partial implementation); `width`/`height`/`float`/
+`align`/`link`/`title`/`caption` (these need real Asciidoctor `image`-block
+integration with `ui-bundle`'s own figure/caption CSS to render correctly,
+rather than this package's own hand-built markup); the block MACRO form
+(`vegalite::chart.vlite[svg]`, reading source from a file rather than an
+inline literal block); and Kroki diagram types outside this package's own
+`SUPPORTED_TYPES` (`d2`/`dbml`/`tikz` are listed in the upstream syntax docs
+but absent from the pinned `yuzutech/kroki` image's own Architecture
+breakdown — unverified against what this project actually runs;
+`diagramsnet` needs its own companion container and is marked
+"experimental" upstream).
+
+Also deliberately NOT matched: the real asciidoctor-kroki extension's
+*default* behaviour is a live, remote Kroki URL (the browser fetches the
+diagram at page-view time) or writing a real image file to disk — this
+package always resolves every diagram at BUILD time and inlines the result
+(see kroki.js's own header), regardless of any `opts=`/`options=` an author
+sets, because a published site depending on a reachable Kroki server
+forever after is a real regression for this project's fully static,
+hermetic build model.
 
 Mermaid diagrams also get this project's own styling (square corners, dt-
 colours, dt-typography) baked in server-side via a `%%{init: {...}}%%` directive

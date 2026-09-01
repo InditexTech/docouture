@@ -362,10 +362,11 @@ xref:main:quickstart.adoc[Get started]
 
 == Diagrams
 
-`[mermaid]`, `[plantuml]`, `[graphviz]` and a handful of other diagram languages (see
-`@inditextech/docouture-asciidoc-extensions`' `lib/kroki-config.js` for the full list) render
-as real diagrams via a self-hosted https://kroki.io[Kroki] service — a literal block
-(four dots, not a fenced code block) styled with the diagram language's name:
+`[mermaid]`, `[plantuml]`, `[graphviz]` and over a dozen more diagram languages (see
+`@inditextech/docouture-asciidoc-extensions`' `lib/kroki-config.js` for the full,
+live-verified list) render as real diagrams via a self-hosted https://kroki.io[Kroki]
+service — a literal block (four dots, not a fenced code block) styled with the diagram
+language's name:
 
 [,asciidoc]
 ----
@@ -396,27 +397,98 @@ definition, or comment the two attributes back out to turn the feature off entir
 block like the one above then renders exactly as plain AsciiDoc already would: the raw
 diagram source, as literal text, same as the fenced listing shows it above.
 
+=== Positional shorthand and diagram-specific options
+
+The classic asciidoctor-diagram/asciidoctor-kroki `[type,target,format]` positional
+form works alongside the named `format=` attribute already shown above — the second
+comma-separated value is a `target` (accepted but otherwise unused: this extension
+always inlines, never writes a named file to disk), the third is the `format`:
+
+[,asciidoc]
+----
+[plantuml,connectivity-flow,png]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
+----
+
+[plantuml,connectivity-flow,png]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
+
+Any named attribute beyond the built-in set (`target`, `width`, `height`, `format`,
+`role`, `title`, `caption`, …) is a Kroki diagram-specific option, forwarded to Kroki as
+a `Kroki-Diagram-Options-<key>` HTTP header — exactly as the real asciidoctor-kroki
+extension forwards them. Structurizr's `view-key` selects which view of a
+multi-view workspace to render:
+
+[,asciidoc]
+----
+[structurizr,view-key=SystemContext]
+....
+workspace {
+  model {
+    user = person "User"
+    system = softwareSystem "Software System"
+    user -> system "Uses"
+  }
+  views {
+    systemContext system "SystemContext" {
+      include *
+      autoLayout
+    }
+  }
+}
+....
+----
+
+[structurizr,view-key=SystemContext]
+....
+workspace {
+  model {
+    user = person "User"
+    system = softwareSystem "Software System"
+    user -> system "Uses"
+  }
+  views {
+    systemContext system "SystemContext" {
+      include *
+      autoLayout
+    }
+  }
+}
+....
+
 === Styling
 
 https://mermaid.js.org[Mermaid] diagrams are themed to match this site
-automatically — square corners, black-on-white (light mode; inverted for dark), body
-typography — via a `%%{init: {...}}%%` directive this extension prepends to the
-diagram's own source before it ever reaches Kroki, not via CSS. Write your own
-`%%{init...}%%` as the diagram's first line to opt out and take full control of
-Mermaid's own theming instead. Every other diagram type's font is still normalized via
-CSS (safe — a tool's typeface choice carries no meaning);
-https://www.bpmn.org[BPMN]'s two-tone palette is still remapped via CSS too (its
-https://bpmn.io[bpmn-js] renderer has no source-level theming hook this package uses
-yet, unlike Mermaid's). BPMN's own rounded task-box corners could not be un-rounded by
-any means found — bpmn-js hardcodes that radius; this is a real, currently-unfixed
-limitation, not an oversight.
+automatically — square corners, black-on-white, body typography — via a
+`%%{init: {...}}%%` directive this extension prepends to the diagram's own source
+before it ever reaches Kroki, not via CSS. Write your own `%%{init...}%%` as the
+diagram's first line to opt out and take full control of Mermaid's own theming
+instead. Every other diagram type's font is still normalized via CSS (safe — a tool's
+typeface choice carries no meaning). https://www.bpmn.org[BPMN]'s own rounded
+task-box corners could not be un-rounded by any means found — bpmn-js hardcodes that
+radius; this is a real, currently-unfixed limitation, not an oversight.
 
-=== PNG output
+The card framing a diagram follows this site's own light/dark theme, same as any other
+card — but the diagram's own canvas underneath it is always a fixed white, regardless of
+theme: diagram tools don't agree on whether they draw a background at all (GraphViz
+bakes its own opaque white one; Mermaid and PlantUML bake none), so a fixed canvas is
+what makes every diagram read the same rather than depending on that inconsistency —
+and it means a diagram's own colors never need inverting for dark mode, avoiding the
+distortion that would cause for anything genuinely colorful (a PlantUML `skinparam`
+palette, a Structurizr diagram's own color-coded boxes, an Excalidraw scene).
 
-`[mermaid,format=png]` (or any other diagram language Kroki can rasterize — see
-`kroki-config.js`'s `PNG_SUPPORTED_TYPES` for the full list; `bpmn` and `excalidraw`
-are notably **not** on it, Kroki itself rejects `/bpmn/png` and `/excalidraw/png`
-outright) renders a transparent PNG instead of inline SVG:
+=== Output formats
+
+`[mermaid,format=png]` (or any other diagram language and format Kroki's own server
+accepts for it — see `kroki-config.js`'s `FORMAT_SUPPORT` for the exact, live-verified
+matrix; it varies per type, not a blanket rule) renders a raster image instead of
+inline SVG:
 
 [,asciidoc]
 ----
@@ -441,9 +513,29 @@ Embedded as a plain `<img>` with a base64 `data:` URI — no extra file written,
 HTTP request. Reach for this only when you actually need a raster image (an export, an
 email, a renderer that can't handle inline SVG); the inline-SVG default stays sharper at
 every zoom level and lets a reader select/search the diagram's own text, neither of
-which a PNG can do. An unsupported type or a typo'd `format=` value both fall back to
-`svg` with a build warning, the same degrade-not-fail posture as an unknown
-`kroki-diagram-types` entry.
+which a raster format can do. Beyond `png`: `jpeg` (`jpg` also accepted), `pdf`
+(embedded as an `<embed>`, since a browser can't display a PDF through `<img>`) and
+`base64` all render the same way. An unsupported type/format combination, or a typo'd
+`format=` value, falls back to `svg` with a build warning, the same degrade-not-fail
+posture as an unknown `kroki-diagram-types` entry.
+
+`txt`/`atxt`/`utxt` are different in kind, not just encoding — Kroki renders these as a
+literal ASCII-art-style text representation, not an image at all:
+
+[,asciidoc]
+----
+[plantuml,format=txt]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
+----
+
+[plantuml,format=txt]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
 
 === BPMN
 

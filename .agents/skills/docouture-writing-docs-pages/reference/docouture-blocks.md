@@ -137,6 +137,48 @@ https://example.com/signup[Get started]
 ====
 ```
 
+## Diagrams
+
+`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]`, `[structurizr]` and
+over a dozen more (see `@inditextech/docouture-asciidoc-extensions`'
+`lib/kroki-config.js`'s `SUPPORTED_TYPES` for the full, live-verified list) render real
+diagrams via a self-hosted Kroki service — opt-in, off by default (`kroki-enabled: true`
+in `antora-playbook.yml`; see the `docouture-integrations` reference for the full
+attribute set). A literal block (four dots, not a fenced code block), styled with the
+diagram language's name:
+
+```adoc
+[mermaid]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+....
+```
+
+- Classic `[type,target,format]` positional shorthand works alongside named
+  `format=`/`target=` — `[plantuml,my-diagram,png]` is the same as
+  `[plantuml,target=my-diagram,format=png]`. `target` is accepted but unused (this
+  extension always inlines, never writes a file to disk).
+- Any named attribute beyond the built-in set (`target`, `width`, `height`, `format`,
+  `role`, `title`, `caption`, …) is a Kroki diagram-specific option, forwarded as a
+  `Kroki-Diagram-Options-<key>` HTTP header — e.g.
+  `[structurizr,view-key=SystemContext]`.
+- `format=png` (or `jpeg`/`jpg`/`pdf`/`base64` — gated per type against
+  `kroki-config.js`'s `FORMAT_SUPPORT`, not a blanket rule) renders a raster `<img>`/
+  `<embed>` instead of inline SVG. `format=txt`/`atxt`/`utxt` is different in kind —
+  Kroki's own ASCII-art-style text rendering, not an image at all.
+- Mermaid gets this project's own theming baked into its source server-side
+  (`kroki-mermaid-theme.js`), before Kroki ever sees it — opt out by opening the
+  diagram with your own `%%{init...}%%` directive.
+- The card framing a diagram follows site theme, like any other card; the diagram's
+  own canvas underneath it is always a fixed white, regardless of theme — diagram
+  tools don't agree on whether they bake their own background at all, so a fixed
+  canvas is what makes every diagram read the same, and means colors never need
+  inverting for dark mode.
+- Without Docker, or with the feature disabled, a block renders as its own literal
+  source text rather than failing the build.
+
 ## Inline macros: `label:` and `mono:`
 
 ```adoc

@@ -1,0 +1,27 @@
+code/packages/example/src/antora.yml
+  s_85e0a000014dcb::t_4532794d407ce6 126-127,136-143,153
+docs/antora-playbook.local.yml
+  s_85e0a000014dcb::t_1b8ca2b3ceed53 32,46
+docs/antora-playbook.yml
+  s_85e0a000014dcb::t_99b1a52c976c95 14,43-48
+docs/src/antora.yml
+  s_85e0a000014dcb::t_e65f95f66bb77c 10
+docs/src/modules/ROOT/pages/index.adoc
+  s_85e0a000014dcb::t_0eeadd470194c0 1,6,114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "36a81a7e49d54409c842a38cdfc9e221d594c4f4",
+  "prompts": {},
+  "sessions": {
+    "s_85e0a000014dcb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05d87-6291-75e2-ab16-bed2ce8bc33d",
+        "model": "unknown"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

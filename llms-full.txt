@@ -2353,6 +2353,20 @@ Bob --> Alice : response
 ....
 ```
 
+### Zoom
+
+Any diagram — or a plain `image::` block, which already gets this for free from Asciidoctor’s own role-to-class handling — marked `role=zoom-in` gets a click-to-zoom affordance: a `zoom-in` cursor and a subtle hover tint for a mouse, a small persistent badge for touch, and clicking/tapping opens a fullscreen overlay with a bigger view. Esc, the close icon, or clicking the backdrop all dismiss it — static, no pan/pinch-zoom, just a bigger still image:
+
+```
+[mermaid,role=zoom-in]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+```
+
 ## Inline macros: `label:` and `mono:`
 
 ```
@@ -2390,7 +2404,7 @@ Build-time and content capabilities that ship with every scaffolded site — as 
 
 `[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
 
-The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
+The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a click-to-zoom fullscreen overlay. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
 
 ### Syntax highlighting — Shiki
 
@@ -2612,6 +2626,7 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Added
 
+- [#198](https://github.com/InditexTech/docouture/pull/198) [ui-bundle] Click-to-zoom fullscreen overlay for images and diagrams
 - [#176](https://github.com/InditexTech/docouture/pull/176) [cli] Support git-flow branching alongside trunk-based in docouture scaffolding
 - [#173](https://github.com/InditexTech/docouture/pull/173) [tooling] Docs release: stop creating a GitHub Release for versioned-mode tags, tag only
 - [#168](https://github.com/InditexTech/docouture/pull/168) [tooling] Prefix versioned and standalone modes git tags with docs/ to avoid collision with code release tags

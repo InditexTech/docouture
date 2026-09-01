@@ -121,12 +121,13 @@ kroki-down: (_hdr "kroki-down")
     fi
     docker compose -f "$compose_file" down
 
-# Build a site and serve it on :5000, rebuilding as you edit it. Pass `true`
-# as the last arg to force a real rebuild instead of an Nx cache replay —
-# see `build-site`'s own comment for when that matters.
+# Build a site and serve it on :5000, rebuilding as you edit it — or on a
+# random free port instead, if :5000 is busy (e.g. macOS AirPlay Receiver).
+# Pass `true` as the last arg to force a real rebuild instead of an Nx cache
+# replay — see `build-site`'s own comment for when that matters.
 [group('dev')]
 [no-exit-message]
-dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + site)
+dev site='example' port='' strict='false' no_cache='false': (_hdr "dev " + site)
     #!/usr/bin/env bash
     set -uo pipefail
 
@@ -219,7 +220,16 @@ dev site='example' port='5000' strict='false' no_cache='false': (_hdr "dev " + s
     # `-C` rather than `--filter`: the filtered form routes through pnpm's
     # recursive runner, which wraps any failure in an ERR_PNPM_RECURSIVE_RUN
     # report that buries the server's own error message.
-    PORT='{{ port }}' exec pnpm -C 'packages/{{ site }}' run dev
+    #
+    # PORT is only exported when `port` was actually passed — an unconditional
+    # export here would look, from dev.mjs's side, identical to the user
+    # having typed `just dev example 5000` themselves, and dev.mjs relies on
+    # telling those two apart to know whether a busy port is a hard error or
+    # something to fall back on (see its own header comment).
+    if [ -n '{{ port }}' ]; then
+      export PORT='{{ port }}'
+    fi
+    exec pnpm -C 'packages/{{ site }}' run dev
 
 # ---------------------------------------------------------------- build ------
 

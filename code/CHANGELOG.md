@@ -14,6 +14,7 @@ at all).
 
 ### Added
 
+- [#202](https://github.com/InditexTech/docouture/pull/202) [cli] docouture dev / just dev: fall back to a random free port when the default 5000 is busy
 - [#198](https://github.com/InditexTech/docouture/pull/198) [ui-bundle] Click-to-zoom fullscreen overlay for images and diagrams
 - [#176](https://github.com/InditexTech/docouture/pull/176) [cli] Support git-flow branching alongside trunk-based in docouture scaffolding
 - [#173](https://github.com/InditexTech/docouture/pull/173) [tooling] Docs release: stop creating a GitHub Release for versioned-mode tags, tag only

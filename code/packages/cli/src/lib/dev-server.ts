@@ -33,6 +33,7 @@ const RELOAD_PATH = '/__dev/reload'
 const CLIENT_PATH = '/__dev/client.js'
 const DEBOUNCE_MS = 150
 const BUILD_TIMEOUT_MS = 120_000
+const DEFAULT_PORT = 5000
 
 const CLIENT_SCRIPT = `// Injected by docouture dev. Not part of the built site.
 const es = new EventSource(${JSON.stringify(RELOAD_PATH)})
@@ -70,8 +71,21 @@ const IGNORED = /(?:^|[\\/])(?:\.|.*~$)|\.swp$/
 export interface DevServerOptions {
   /** The site root: contains antora-playbook.local.yml and package.json. */
   siteRoot: string
-  /** 0 picks any free port — used by tests. Defaults to 5000. */
+  /**
+   * 0 picks any free port — used by tests. Defaults to `defaultPort`
+   * (5000). Explicit, so a busy port here is a hard failure rather than
+   * the `defaultPort` fallback below — the caller asked for this port
+   * specifically.
+   */
   port?: number
+  /**
+   * The port tried when `port` is omitted. Exists so a test can exercise
+   * the "default port busy" fallback deterministically — bind some
+   * throwaway port, pass it here instead of the real 5000, and assert that
+   * `startDevServer` still comes up (on a different, OS-assigned port)
+   * instead of throwing. Not exposed via the CLI; real callers get 5000.
+   */
+  defaultPort?: number
   /**
    * Runs one build, returning whether it succeeded. Defaults to spawning
    * the site's own local `antora` against `antora-playbook.local.yml`.
@@ -361,15 +375,37 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
   }
 
   await new Promise<void>((resolvePromise, reject) => {
-    server.once('error', reject)
-    server.listen(options.port ?? 5000, () => {
-      server.off('error', reject)
+    // `options.port` set (including 0, which a test uses to pick any free
+    // port) means the caller chose this port deliberately — a busy port
+    // there is a hard failure, same as always. Nothing set means the
+    // *default* port, which is routinely squatted by something the user
+    // never asked to avoid (macOS AirPlay Receiver on 5000, most commonly):
+    // that case retries with `listen(0)`, an OS-assigned free port, instead
+    // of failing the whole dev server over a port nobody actually chose.
+    const explicitPort = options.port !== undefined
+    const requestedPort = options.port ?? options.defaultPort ?? DEFAULT_PORT
+    const onListenError = (err: NodeJS.ErrnoException): void => {
+      if (!explicitPort && err.code === 'EADDRINUSE') {
+        server.off('error', onListenError)
+        logError(`port ${requestedPort} is already in use, falling back to a random free port`)
+        server.once('error', reject)
+        server.listen(0, () => {
+          server.off('error', reject)
+          resolvePromise()
+        })
+        return
+      }
+      reject(err)
+    }
+    server.once('error', onListenError)
+    server.listen(requestedPort, () => {
+      server.off('error', onListenError)
       resolvePromise()
     })
   })
 
   const address = server.address()
-  const port = typeof address === 'object' && address ? address.port : (options.port ?? 5000)
+  const port = typeof address === 'object' && address ? address.port : (options.port ?? DEFAULT_PORT)
 
   log(`serving ${root}`)
   log(`  http://localhost:${port}${basePath}/`)

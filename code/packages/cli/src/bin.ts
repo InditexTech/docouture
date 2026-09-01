@@ -105,7 +105,9 @@ change to docs/ or antora-playbook.yml. --dir is the repository root
 (the parent of docs/), same as new/version — not the site directory.
 
 Options:
-  --port <port>  Port to listen on (default: 5000)
+  --port <port>  Port to listen on (default: 5000, falls back to a random
+                 free port if 5000 is busy — an explicit --port that's busy
+                 is still a hard error)
   --dir <path>   Repository root (default: cwd, or its enclosing repo)
 `,
   },

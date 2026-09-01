@@ -7,6 +7,8 @@
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { createServer } from 'node:http'
+import type { Server } from 'node:http'
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -14,6 +16,22 @@ import { startDevServer, type DevServer } from './dev-server.js'
 
 let siteRoot: string
 let server: DevServer | undefined
+let blocker: Server | undefined
+
+/** Binds an OS-assigned free port and resolves it — used to occupy a port
+ * ahead of `startDevServer` so its EADDRINUSE handling has something real
+ * to react to. */
+function listenOnFreePort(): Promise<{ server: Server; port: number }> {
+  return new Promise((resolvePromise, reject) => {
+    const s = createServer()
+    s.once('error', reject)
+    s.listen(0, () => {
+      const address = s.address()
+      const port = typeof address === 'object' && address ? address.port : 0
+      resolvePromise({ server: s, port })
+    })
+  })
+}
 
 async function writeFixtureSite(root: string, opts: { siteUrl?: string } = {}): Promise<void> {
   await mkdir(join(root, 'build', 'site'), { recursive: true })
@@ -34,6 +52,8 @@ beforeEach(async () => {
 afterEach(async () => {
   await server?.close()
   server = undefined
+  blocker?.close()
+  blocker = undefined
 })
 
 describe('startDevServer', () => {
@@ -157,5 +177,38 @@ describe('startDevServer', () => {
 
     expect(built).toBe(true)
     expect(events.join('')).toContain('reload')
+  })
+
+  it('rejects when an explicitly-requested port is already in use', async () => {
+    await writeFixtureSite(siteRoot)
+    const { server: busyServer, port } = await listenOnFreePort()
+    blocker = busyServer
+
+    await expect(
+      startDevServer({ siteRoot, port, runBuild: async () => true, log: () => {}, logError: () => {} })
+    ).rejects.toThrow(/EADDRINUSE/)
+  })
+
+  it('falls back to a random free port when the default port is busy', async () => {
+    await writeFixtureSite(siteRoot)
+    const { server: busyServer, port: busyPort } = await listenOnFreePort()
+    blocker = busyServer
+    const logError = vi.fn()
+
+    // `port` left unset (the "default port" case) and `defaultPort` pointed
+    // at the port already occupied above — startDevServer must not throw,
+    // and must come up listening on some other, OS-assigned port instead.
+    server = await startDevServer({
+      siteRoot,
+      defaultPort: busyPort,
+      runBuild: async () => true,
+      log: () => {},
+      logError,
+    })
+
+    expect(server.port).not.toBe(busyPort)
+    expect(logError).toHaveBeenCalledWith(expect.stringContaining('falling back to a random free port'))
+    const res = await fetch(`http://localhost:${server.port}/`)
+    expect(res.status).toBe(200)
   })
 })

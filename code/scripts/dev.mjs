@@ -33,7 +33,20 @@ import { extname, isAbsolute, join, normalize, relative, resolve } from 'node:pa
 
 const siteDir = process.cwd()
 const root = resolve(process.argv[2] ?? 'build/site')
-const port = Number(process.argv[3] ?? process.env.PORT ?? 5000)
+
+// 5000 is squatted by something the user never chose to avoid on a lot of
+// machines (macOS AirPlay Receiver, most commonly) — falling back to any
+// free port keeps `just dev`/this script working without the user needing
+// to know that. A port the user *did* choose — a CLI arg, or PORT set in
+// the environment — is different: staying busy there is a hard error, same
+// as before. `justfile`'s own `dev` recipe only exports PORT when its
+// `port` param is non-empty, precisely so it can tell "the user picked a
+// port" apart from "nobody did" the same way this script can.
+const DEFAULT_PORT = 5000
+const explicitPortArg = process.argv[3]
+const explicitPortEnv = process.env.PORT
+const explicitPort = explicitPortArg !== undefined || (explicitPortEnv !== undefined && explicitPortEnv !== '')
+const requestedPort = Number(explicitPortArg ?? explicitPortEnv ?? DEFAULT_PORT)
 
 // Antora's `site.url` may carry a path (`/weavejs`, or an absolute URL ending
 // in one). That path is the site's public root: Antora records it as
@@ -399,20 +412,31 @@ if (!existsSync(root)) {
 // A busy port is the ordinary failure here — a dev server left running in
 // another terminal, or, on macOS, the AirPlay receiver squatting on 5000.
 // Node's default is an unhandled 'error' event and a stack trace, which says
-// none of that.
+// none of that. An explicitly-requested port staying busy is still a hard
+// error; the default port instead retries with `listen(0)`, an OS-assigned
+// free port, rather than exiting.
 server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    logError(`port ${port} is already in use`)
+  if (err.code !== 'EADDRINUSE') throw err
+  if (explicitPort) {
+    logError(`port ${requestedPort} is already in use`)
     logError('  stop whatever is listening on it, or pick another: just dev <site> <port>')
     process.exit(1)
   }
-  throw err
+  logError(`port ${requestedPort} is already in use, falling back to a random free port`)
+  server.listen(0)
 })
 
-server.listen(port, () => {
+// 'listening' rather than a listen() callback — it fires the same way for
+// the first attempt and for the `listen(0)` fallback above, so either way
+// this logs the port actually bound, not just the one requested.
+server.on('listening', () => {
+  const address = server.address()
+  const actualPort = typeof address === 'object' && address ? address.port : requestedPort
   log(`serving ${root}`)
-  log(`  http://localhost:${port}${basePath}/`)
+  log(`  http://localhost:${actualPort}${basePath}/`)
 })
+
+server.listen(requestedPort)
 
 watchPath(join(siteDir, 'docs'), 'content')
 watchPath(join(siteDir, 'antora-playbook.yml'), 'content', { recursive: false })

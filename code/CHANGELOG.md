@@ -65,6 +65,7 @@ at all).
 
 ### Fixed
 
+- [#204](https://github.com/InditexTech/docouture/pull/204) [tooling] docouture dev: watch server rebuilds on a hardcoded `docs/` path instead of the content dir declared in the playbook, so in-monorepo site packages (`src/`) never reload
 - [#200](https://github.com/InditexTech/docouture/pull/200) [ui-bundle/asciidoc] Diagram bleed silently lost outside a section, and role="a, b" leaves a comma stuck in the class attribute
 - [#194](https://github.com/InditexTech/docouture/pull/194) [cli] docouture-release-preview.yml's check-changes-in-paths job missing contents/pull-requests read permissions
 - [#192](https://github.com/InditexTech/docouture/pull/192) [asciidoc] kroki-prewarm doesn't resolve include:: before extracting diagram source — permanent cache miss for diagrams built from shared partials

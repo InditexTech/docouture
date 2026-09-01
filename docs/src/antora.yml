@@ -79,7 +79,19 @@ footer:
   groups:
     - title: Resources
       links:
-        - text: Home
-          url: ROOT:index.adoc
         - text: Quickstart
           url: main:quickstart.adoc
+        - text: Repository
+          url: https://github.com/InditexTech/docouture
+    - title: Guides
+      links:
+        - text: Content & structure
+          url: main:guides-content-structure.adoc
+        - text: Branding & customization
+          url: main:guides-branding.adoc
+        - text: Versioning & publishing
+          url: main:guides-versioning-publishing.adoc
+    - title: INDITEXTECH
+      links:
+        - text: OSO Portal
+          url: https://opensource.inditex.com

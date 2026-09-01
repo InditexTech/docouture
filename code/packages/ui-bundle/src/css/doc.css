@@ -151,6 +151,35 @@ main > .content {
   max-width: var(--content-max-width);
 }
 
+/*
+ * GH-199: every block below has its OWN literal bleed `width` — diagram.css's
+ * `.docouture-diagram`, this file's `.imageblock`/`.videoblock` (further
+ * down), `.admonitionblock`, `.exampleblock`, `.listingblock`/`.literalblock`
+ * — sized against `--doc-inset-cap`, same mechanism as `.doc > *`'s own
+ * header comment above describes. That bleed silently died whenever one of
+ * these was a DIRECT child of `.doc` (a page with no `==` heading anywhere
+ * gets no `#preamble`/`.sectionbody` wrapper at all from Asciidoctor, so
+ * the block sits straight under `.doc`): `max-width` and `width` are
+ * different properties, so `.doc > *`'s `max-width` above and the block's
+ * own wider `width` both land on the SAME element in that case — cascade
+ * specificity never enters into it, `max-width` just always wins per the
+ * CSS box model, same as `.doc > .sect1` needed its own `max-width: none`
+ * escape above for the same structural reason. Tables aren't listed here:
+ * native `table-layout` already ignores `max-width` once columns force more
+ * space (verified, see the `.tablecontainer` comment further down), so a
+ * table already bleeds regardless of nesting. `.sidebarblock` has no bleed
+ * `width` of its own (background/padding only) so needs no entry either.
+ */
+.doc > .docouture-diagram,
+.doc > .imageblock,
+.doc > .videoblock,
+.doc > .admonitionblock,
+.doc > .exampleblock,
+.doc > .listingblock,
+.doc > .literalblock {
+  max-width: none;
+}
+
 @media screen and (--dt-breakpoints-s) {
   .doc {
     grid-column: span 12;

@@ -1,0 +1,24 @@
+code/CHANGELOG.md
+  h_c93d154c7c7074 17
+code/packages/cli/src/bin.ts
+  h_c93d154c7c7074 108-110
+code/packages/cli/src/lib/dev-server.spec.ts
+  h_c93d154c7c7074 10-11,19-34,55-56,181-213
+code/packages/cli/src/lib/dev-server.ts
+  h_c93d154c7c7074 36,74-79,81-88,378-402,408
+code/scripts/dev.mjs
+  h_c93d154c7c7074 36-49,415-417,419-421,425-426,429-434,436,439-440
+justfile
+  h_c93d154c7c7074 124-127,130,223-232
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1e6462044bae21f00974fbbfed45fd534b226e7a",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

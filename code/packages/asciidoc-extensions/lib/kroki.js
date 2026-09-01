@@ -243,9 +243,15 @@ function renderDiagram(parent, type, source, attrs) {
   // to happen here (render time, per-block-occurrence) rather than once
   // when the payload was cached.
   const effectivePayload =
-    payload.format === 'svg' ? { format: payload.format, data: namespaceSvgIds(payload.data, uniqueId(parent, 'docouture-diagram')) } : payload
-  const body = isTextFormat(effectivePayload.format) ? literalMarkup(effectivePayload.data) : imageMarkup(effectivePayload)
-  return '<div class="docouture-diagram"' + attr('id', attrs.id) + ' data-diagram-type="' + type + '">' + body + '</div>'
+    payload.format === 'svg'
+      ? { format: payload.format, data: namespaceSvgIds(payload.data, uniqueId(parent, 'docouture-diagram')) }
+      : payload
+  const body = isTextFormat(effectivePayload.format)
+    ? literalMarkup(effectivePayload.data)
+    : imageMarkup(effectivePayload)
+  return (
+    '<div class="docouture-diagram"' + attr('id', attrs.id) + ' data-diagram-type="' + type + '">' + body + '</div>'
+  )
 }
 
 function krokiBlock(type) {

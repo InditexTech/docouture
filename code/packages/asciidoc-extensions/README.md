@@ -227,7 +227,7 @@ breakdown — unverified against what this project actually runs;
 "experimental" upstream).
 
 Also deliberately NOT matched: the real asciidoctor-kroki extension's
-*default* behaviour is a live, remote Kroki URL (the browser fetches the
+_default_ behaviour is a live, remote Kroki URL (the browser fetches the
 diagram at page-view time) or writing a real image file to disk — this
 package always resolves every diagram at BUILD time and inlines the result
 (see kroki.js's own header), regardless of any `opts=`/`options=` an author

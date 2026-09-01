@@ -507,12 +507,7 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     // the `.adoc` extension check.
     for (const file of contentCatalog.getFiles((candidate) => candidate.path && candidate.path.endsWith('.adoc'))) {
       const text = file.contents.toString('utf8')
-      for (const {
-        type,
-        source: rawSource,
-        format: requestedFormat,
-        options,
-      } of extractDiagrams(text, pattern)) {
+      for (const { type, source: rawSource, format: requestedFormat, options } of extractDiagrams(text, pattern)) {
         if (!enabledTypes.has(type)) continue
         const format = resolveFormat(type, requestedFormat, (t, requested) =>
           logger.warn('Ignoring unsupported format "%s" for a %s diagram; falling back to svg', requested, t)

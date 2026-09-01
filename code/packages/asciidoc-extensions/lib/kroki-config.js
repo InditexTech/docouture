@@ -260,7 +260,8 @@ function resolveFormat(type, requestedFormat, onUnsupported) {
   if (requestedFormat == null || requestedFormat === '' || requestedFormat === DEFAULT_FORMAT) return DEFAULT_FORMAT
   const normalized = String(requestedFormat === JPG_ALIAS ? 'jpeg' : requestedFormat)
   const accepted = FORMAT_SUPPORT[type]
-  if (accepted && accepted.includes(normalized)) return /** @type {'svg' | 'png' | 'jpeg' | 'pdf' | 'base64' | 'txt' | 'atxt' | 'utxt'} */ (normalized)
+  if (accepted && accepted.includes(normalized))
+    return /** @type {'svg' | 'png' | 'jpeg' | 'pdf' | 'base64' | 'txt' | 'atxt' | 'utxt'} */ (normalized)
   if (onUnsupported) onUnsupported(type, String(requestedFormat))
   return DEFAULT_FORMAT
 }

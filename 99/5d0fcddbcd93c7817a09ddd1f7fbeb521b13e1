@@ -1,0 +1,31 @@
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  s_50d00e0dbda7b5::t_f0ca40adbaaf10 106,151-174,199-202,205-223,226,232-238,429-440,442-451,454,467,510-515,530-531,539-540
+code/packages/antora-extensions/lib/kroki-prewarm.spec.js
+  s_50d00e0dbda7b5::t_b5463e1ffb313f 118,127-140,155-175,177-200,217-358
+code/packages/asciidoc-extensions/lib/kroki-config.js
+  s_50d00e0dbda7b5::t_6377c023158aaf 45-60,76-87,92-159,235-243,247-249,251-257,261-263,268-343,348-349,353,357-359
+code/packages/asciidoc-extensions/lib/kroki-instance.js
+  s_50d00e0dbda7b5::t_33363ebb597d6d 32-44,48-52,59-65,68-73,75,87-96,105
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  s_50d00e0dbda7b5::t_c418b093765a9f 148
+docs/antora-playbook.local.yml
+  s_50d00e0dbda7b5::t_9dc13fa3248b2e 89
+docs/antora-playbook.yml
+  s_50d00e0dbda7b5::t_970168328feb2f 147
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "995d0fcddbcd93c7817a09ddd1f7fbeb521b13e1",
+  "prompts": {},
+  "sessions": {
+    "s_50d00e0dbda7b5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa45ed61bffe4En0WRUmEHu0NQ",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

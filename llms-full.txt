@@ -2169,7 +2169,7 @@ A short pitch, plus one prominent action.
 
 ## Diagrams
 
-`[mermaid]`, `[plantuml]`, `[graphviz]` and a handful of other diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service — a literal block (four dots, not a fenced code block) styled with the diagram language’s name:
+`[mermaid]`, `[plantuml]`, `[graphviz]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service — a literal block (four dots, not a fenced code block) styled with the diagram language’s name:
 
 ```
 [mermaid]
@@ -2183,13 +2183,50 @@ stateDiagram-v2
 
 This feature is **enabled by default** in this starter (see `antora-playbook.yml’s `kroki-enabled`/`kroki-diagram-types` attributes) — it needs [Docker](https://www.docker.com) available, since the build starts a self-hosted Kroki service the first time a build needs it, no manual step required (it isn’t stopped automatically either — run `docouture teardown kroki` once you’re done with it). Run `docouture eject kroki` if you ever need to customize the container definition, or comment the two attributes back out to turn the feature off entirely — a block like the one above then renders exactly as plain AsciiDoc already would: the raw diagram source, as literal text, same as the fenced listing shows it above.
 
+### Positional shorthand and diagram-specific options
+
+The classic asciidoctor-diagram/asciidoctor-kroki `[type,target,format]` positional form works alongside the named `format=` attribute already shown above — the second comma-separated value is a `target` (accepted but otherwise unused: this extension always inlines, never writes a named file to disk), the third is the `format`:
+
+```
+[plantuml,connectivity-flow,png]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
+```
+
+![](data:image/png;base64,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)
+
+Any named attribute beyond the built-in set (`target`, `width`, `height`, `format`, `role`, `title`, `caption`, …) is a Kroki diagram-specific option, forwarded to Kroki as a `Kroki-Diagram-Options-<key>` HTTP header — exactly as the real asciidoctor-kroki extension forwards them. Structurizr’s `view-key` selects which view of a multi-view workspace to render:
+
+```
+[structurizr,view-key=SystemContext]
+....
+workspace {
+  model {
+    user = person "User"
+    system = softwareSystem "Software System"
+    user -> system "Uses"
+  }
+  views {
+    systemContext system "SystemContext" {
+      include *
+      autoLayout
+    }
+  }
+}
+....
+```
+
 ### Styling
 
-[Mermaid](https://mermaid.js.org) diagrams are themed to match this site automatically — square corners, black-on-white (light mode; inverted for dark), body typography — via a `%%{init: {…​}}%%` directive this extension prepends to the diagram’s own source before it ever reaches Kroki, not via CSS. Write your own `%%{init…​}%%` as the diagram’s first line to opt out and take full control of Mermaid’s own theming instead. Every other diagram type’s font is still normalized via CSS (safe — a tool’s typeface choice carries no meaning); [BPMN](https://www.bpmn.org)'s two-tone palette is still remapped via CSS too (its [bpmn-js](https://bpmn.io) renderer has no source-level theming hook this package uses yet, unlike Mermaid’s). BPMN’s own rounded task-box corners could not be un-rounded by any means found — bpmn-js hardcodes that radius; this is a real, currently-unfixed limitation, not an oversight.
+[Mermaid](https://mermaid.js.org) diagrams are themed to match this site automatically — square corners, black-on-white, body typography — via a `%%{init: {…​}}%%` directive this extension prepends to the diagram’s own source before it ever reaches Kroki, not via CSS. Write your own `%%{init…​}%%` as the diagram’s first line to opt out and take full control of Mermaid’s own theming instead. Every other diagram type’s font is still normalized via CSS (safe — a tool’s typeface choice carries no meaning). [BPMN](https://www.bpmn.org)'s own rounded task-box corners could not be un-rounded by any means found — bpmn-js hardcodes that radius; this is a real, currently-unfixed limitation, not an oversight.
 
-### PNG output
+The card framing a diagram follows this site’s own light/dark theme, same as any other card — but the diagram’s own canvas underneath it is always a fixed white, regardless of theme: diagram tools don’t agree on whether they draw a background at all (GraphViz bakes its own opaque white one; Mermaid and PlantUML bake none), so a fixed canvas is what makes every diagram read the same rather than depending on that inconsistency — and it means a diagram’s own colors never need inverting for dark mode, avoiding the distortion that would cause for anything genuinely colorful (a PlantUML `skinparam` palette, a Structurizr diagram’s own color-coded boxes, an Excalidraw scene).
 
-`[mermaid,format=png]` (or any other diagram language Kroki can rasterize — see `kroki-config.js’s `PNG_SUPPORTED_TYPES` for the full list; `bpmn` and `excalidraw` are notably **not** on it, Kroki itself rejects `/bpmn/png` and `/excalidraw/png` outright) renders a transparent PNG instead of inline SVG:
+### Output formats
+
+`[mermaid,format=png]` (or any other diagram language and format Kroki’s own server accepts for it — see `kroki-config.js’s `FORMAT_SUPPORT` for the exact, live-verified matrix; it varies per type, not a blanket rule) renders a raster image instead of inline SVG:
 
 ```
 [mermaid,format=png]
@@ -2203,7 +2240,31 @@ stateDiagram-v2
 
 ![](data:image/png;base64,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)
 
-Embedded as a plain `<img>` with a base64 `data:` URI — no extra file written, no extra HTTP request. Reach for this only when you actually need a raster image (an export, an email, a renderer that can’t handle inline SVG); the inline-SVG default stays sharper at every zoom level and lets a reader select/search the diagram’s own text, neither of which a PNG can do. An unsupported type or a typo’d `format=` value both fall back to `svg` with a build warning, the same degrade-not-fail posture as an unknown `kroki-diagram-types` entry.
+Embedded as a plain `<img>` with a base64 `data:` URI — no extra file written, no extra HTTP request. Reach for this only when you actually need a raster image (an export, an email, a renderer that can’t handle inline SVG); the inline-SVG default stays sharper at every zoom level and lets a reader select/search the diagram’s own text, neither of which a raster format can do. Beyond `png`: `jpeg` (`jpg` also accepted), `pdf` (embedded as an `<embed>`, since a browser can’t display a PDF through `<img>`) and `base64` all render the same way. An unsupported type/format combination, or a typo’d `format=` value, falls back to `svg` with a build warning, the same degrade-not-fail posture as an unknown `kroki-diagram-types` entry.
+
+`txt`/`atxt`/`utxt` are different in kind, not just encoding — Kroki renders these as a literal ASCII-art-style text representation, not an image at all:
+
+```
+[plantuml,format=txt]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
+```
+
+```
+     ,-----.          ,---.
+     |Alice|          |Bob|
+     `--+--'          `-+-'
+        |   request     |
+        |-------------->|
+        |               |
+        |   response    |
+        |<- - - - - - - |
+     ,--+--.          ,-+-.
+     |Alice|          |Bob|
+     `-----'          `---'
+```
 
 ### BPMN
 
@@ -2327,7 +2388,9 @@ Build-time and content capabilities that ship with every scaffolded site — as 
 
 ### Diagrams — Kroki
 
-`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and more render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side. `format=png` renders a transparent raster image instead of inline SVG for types that support it. Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
+`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
+
+The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
 
 ### Syntax highlighting — Shiki
 
@@ -2598,6 +2661,8 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Fixed
 
+- [#194](https://github.com/InditexTech/docouture/pull/194) [cli] docouture-release-preview.yml’s check-changes-in-paths job missing contents/pull-requests read permissions
+- [#192](https://github.com/InditexTech/docouture/pull/192) [asciidoc] kroki-prewarm doesn’t resolve include:: before extracting diagram source — permanent cache miss for diagrams built from shared partials
 - [#186](https://github.com/InditexTech/docouture/pull/186) [skills] --all leaks contributor-only skills from .opencode/skills into public installs
 - [#184](https://github.com/InditexTech/docouture/pull/184) [skills] --all leaks contributor-only skills from .agents/skills into public installs
 - [#182](https://github.com/InditexTech/docouture/pull/182) [tooling] Fix open CodeQL cache-poisoning alerts in publish-release workflow
@@ -2612,6 +2677,7 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Documentation
 
+- [#191](https://github.com/InditexTech/docouture/pull/191) [skills] nav.adoc guidance doesn’t warn against nesting a section’s topics under its own Overview page
 - [#174](https://github.com/InditexTech/docouture/pull/174) [skills] Internalize authoring-guides content into the docouture-* skills as AsciiDoc
 - [#150](https://github.com/InditexTech/docouture/pull/150) [documentation] Document docouture using docouture (dogfood the platform for its own docs)
 - [#149](https://github.com/InditexTech/docouture/pull/149) [skills] Externalize docs-authoring skills into standalone skill packages

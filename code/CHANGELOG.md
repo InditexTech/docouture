@@ -82,6 +82,7 @@ at all).
 
 ### Documentation
 
+- [#204](https://github.com/InditexTech/docouture/pull/204) [documentation] docs site footer: swap Home for Repository link, add Guides and INDITEXTECH columns
 - [#191](https://github.com/InditexTech/docouture/pull/191) [skills] nav.adoc guidance doesn't warn against nesting a section's topics under its own Overview page
 - [#174](https://github.com/InditexTech/docouture/pull/174) [skills] Internalize authoring-guides content into the docouture-* skills as AsciiDoc
 - [#150](https://github.com/InditexTech/docouture/pull/150) [documentation] Document docouture using docouture (dogfood the platform for its own docs)

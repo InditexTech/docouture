@@ -1,0 +1,21 @@
+code/packages/asciidoc-extensions/lib/kroki.js
+  s_6ed1950bf1e5d6::t_2c5a794886d12a 262-270,280-281
+code/packages/ui-bundle/src/css/doc.css
+  s_6ed1950bf1e5d6::t_81e6e42f28ce19 154-182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "164b909831da3723a552c59def92ed6b384d387d",
+  "prompts": {},
+  "sessions": {
+    "s_6ed1950bf1e5d6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fa2ee7bdaffeTgzAKqethS41EN",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

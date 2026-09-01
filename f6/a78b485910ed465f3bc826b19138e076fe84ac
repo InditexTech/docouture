@@ -1,0 +1,14 @@
+code/packages/asciidoc-extensions/lib/kroki.js
+  h_c93d154c7c7074 280-285
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f6a78b485910ed465f3bc826b19138e076fe84ac",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

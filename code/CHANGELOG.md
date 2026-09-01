@@ -64,6 +64,7 @@ at all).
 
 ### Fixed
 
+- [#200](https://github.com/InditexTech/docouture/pull/200) [ui-bundle/asciidoc] Diagram bleed silently lost outside a section, and role="a, b" leaves a comma stuck in the class attribute
 - [#194](https://github.com/InditexTech/docouture/pull/194) [cli] docouture-release-preview.yml's check-changes-in-paths job missing contents/pull-requests read permissions
 - [#192](https://github.com/InditexTech/docouture/pull/192) [asciidoc] kroki-prewarm doesn't resolve include:: before extracting diagram source — permanent cache miss for diagrams built from shared partials
 - [#186](https://github.com/InditexTech/docouture/pull/186) [skills] --all leaks contributor-only skills from .opencode/skills into public installs

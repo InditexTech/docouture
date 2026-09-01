@@ -259,6 +259,15 @@ function renderDiagram(parent, type, source, attrs) {
   // `attr()`'s escaping like `attrs.id` on the same line — this file's own
   // header states that rule.
   //
+  // GH-199: Asciidoctor's own convention for multiple roles is space-
+  // separated (`role="a b"`), which is why core's `classes.push(node.role())`
+  // gets away with no split of its own — but authors reach for a comma
+  // (`role="no-border, zoom-in"`) often enough that leaving it unsplit
+  // silently corrupts the `class` attribute (`no-border,` stays one dirty
+  // token, its own rule dead, `zoom-in` only works by being last and
+  // comma-free). Splitting on comma-OR-whitespace and rejoining with a
+  // single space accepts both without needing to pick one as "the" syntax.
+  //
   // The OUTER div (`docouture-diagram`, sized/positioned, bleeds up to
   // 125% of the text measure — see diagram.css's own header) is now
   // deliberately separate from an INNER `docouture-diagram__content` div
@@ -268,7 +277,8 @@ function renderDiagram(parent, type, source, attrs) {
   // flex-item child to shrink-wrap the frame back down to the diagram's own
   // real size, or a small diagram would render with a large, mostly-empty
   // grey/bordered box around it.
-  const classAttr = attrs.role ? 'docouture-diagram ' + attrs.role : 'docouture-diagram'
+  const roleClasses = attrs.role ? attrs.role.split(/[\s,]+/).filter(Boolean).join(' ') : ''
+  const classAttr = roleClasses ? 'docouture-diagram ' + roleClasses : 'docouture-diagram'
   return (
     '<div' +
     attr('class', classAttr) +

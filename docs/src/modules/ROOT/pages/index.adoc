@@ -1,5 +1,5 @@
 = Docouture
-:page-layout: home
+:page-layout: home-single
 :page-nav-module: main
 :description: A documentation platform built on Antora — scaffold, write and publish a real documentation site with one CLI.
 :page-tags: antora, cli, documentation

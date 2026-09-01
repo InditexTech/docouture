@@ -1,0 +1,23 @@
+code/packages/example/src/modules/ROOT/pages/index-2-cols.adoc
+  s_85e0a000014dcb::t_be456f63a66443 1-2,28,36,44,52
+code/packages/example/src/modules/ROOT/pages/index.adoc
+  s_85e0a000014dcb::t_5e9161bfae6efe 2,28,36,44,52,115
+docs/src/modules/ROOT/pages/index.adoc
+  s_85e0a000014dcb::t_1b33487de0571c 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "5faa36914c897f75448021fd631529daea6c3ca0",
+  "prompts": {},
+  "sessions": {
+    "s_85e0a000014dcb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a05d87-6291-75e2-ab16-bed2ce8bc33d",
+        "model": "unknown"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -6,9 +6,9 @@
 
 /*
  * The `[mermaid]`/`[plantuml]`/etc. blocks — asciidoc-extensions/lib/kroki.js.
- * `[mermaid,format=png]` (or any other `PNG_SUPPORTED_TYPES` entry —
- * kroki-config.js) renders a transparent `<img>` instead; everything below
- * that isn't image-specific applies to both.
+ * `[mermaid,format=png]` (or any other raster format `kroki-config.js`'s
+ * `FORMAT_SUPPORT` lists for that type) renders an `<img>` instead of inline
+ * `<svg>`; everything below that isn't image-specific applies to both.
  *
  * Sizing is a containment fix: kroki.js inlines whatever Kroki itself
  * returned, verbatim, with no size normalization of its own (the diagram
@@ -20,51 +20,60 @@
  * container query, is what actually stops at the doc column rather than
  * the viewport.
  *
- * The frame (background/border/radius/padding) is a `--dt-*`-token card,
- * the same family card-grid.css's `.dt-card__content` draws from, so a
- * diagram sits in a surface consistent with every other docouture block instead
- * of floating on the page background with no visual boundary. Square
- * corners (`--dt-size-radius-none`), not rounded — a diagram frequently
- * butts its own straight edges (a flowchart's boxes, a state diagram's
- * borders) right up against the card's, where a rounded outer corner reads
- * as a mismatch the other DS cards (built from photos, text, icons) don't
- * have to deal with.
+ * THE FRAME FOLLOWS SITE THEME; THE CANVAS DOESN'T
+ *
+ * Two separate layers, two separate rules, deliberately not one:
+ *
+ * - `.docouture-diagram` (the frame — padding/background/border/radius) IS
+ *   a `--dt-*`-token card, the same family card-grid.css's `.dt-card__content`
+ *   draws from, so a diagram sits in a surface consistent with every other
+ *   docouture block instead of floating on the page background with no
+ *   visual boundary, and follows the site's own light/dark theme like every
+ *   other card does.
+ * - The `svg`/`img`/`embed` INSIDE it gets its own `background: #fff` —
+ *   hardcoded hex, not a `--dt-*` token, same kind of deliberate exception
+ *   `kroki-mermaid-theme.js` already carves out for its own baked colors
+ *   (see that file's own header for the general principle). This is the
+ *   diagram's own canvas, not the frame around it, and it has to be fixed
+ *   for a reason the frame doesn't: diagram tools don't agree on a
+ *   background at all. GraphViz bakes its own opaque white background into
+ *   every SVG it returns; Mermaid and PlantUML bake none (fully
+ *   transparent). Painting a fixed white canvas underneath EVERY tool's
+ *   output — whether that output already opaquely covers it (GraphViz) or
+ *   leaves it showing through (Mermaid, PlantUML) — makes every diagram
+ *   read the same regardless of which tool drew it, without depending on
+ *   Kroki's own inconsistency.
+ *
+ * This also sidesteps the dark-mode problem an earlier version of this file
+ * had: `filter: invert(1) hue-rotate(180deg)` on the rendered output, which
+ * only reliably restores a correct-looking result for flat, near-monochrome
+ * content — anything genuinely colorful (a PlantUML `skinparam` palette, a
+ * Structurizr diagram's own color-coded boxes, an Excalidraw scene) came
+ * back distorted under that filter. With the canvas fixed to white
+ * regardless of theme, the diagram's own colors never need inverting at
+ * all — only the FRAME around it changes with theme, the same as any other
+ * card on the site.
+ *
+ * Square corners (`--dt-size-radius-none`), not rounded — a diagram
+ * frequently butts its own straight edges (a flowchart's boxes, a state
+ * diagram's borders) right up against the frame's, where a rounded outer
+ * corner reads as a mismatch the other DS cards (built from photos, text,
+ * icons) don't have to deal with.
  *
  * STYLING THE DIAGRAM'S OWN CONTENT — NOT JUST ITS FRAME
  *
- * Every tool this package renders bakes its own fonts/colors/corner
- * radii into what it returns; none of that is expressible as `--dt-*`
- * tokens by definition (it's baked before this stylesheet ever sees it).
- * Two different strategies are in play, and which one applies depends on
- * whether the tool exposes a source-level theming hook Kroki passes
- * through:
- *
- * - Mermaid has one (a `%%{init: {...}}%%` directive Mermaid's own renderer
- *   reads): kroki-mermaid-theme.js bakes this project's light-theme colors and
- *   square corners into the diagram SERVER-SIDE, before it ever reaches
- *   Kroki — the SVG (or PNG: Kroki's mermaid companion renders PNG by
- *   screenshotting that same themed SVG in headless Chrome, so this applies
- *   identically either way) that comes back is already correct, with zero
- *   CSS involved. See that file's own header for why the colors are
- *   hardcoded hex there rather than `--dt-*` references (no CSS cascade
- *   exists at that point to resolve a custom property against) and for why
- *   dark mode is NOT baked there — it's still this file's own `filter:
- *   invert()` rule below, same as every other tool's baked-in output.
- *
- * - Every other tool (BPMN included) has no such hook this package uses, so
- *   font is the one thing still fixed here, blanket, post-hoc: a tool's own
- *   type choice is incidental to what it's actually for, unlike its color
- *   choices, which sometimes encode meaning (a BPMN swimlane's fill, say)
- *   this package hasn't audited across every SUPPORTED_TYPES entry and
- *   isn't overriding blind. BPMN's near-black/white two-tone palette is
- *   still recolored via the CSS rule further down (its shapes also DO
- *   support a source-level override — bpmn-js's own `bioc:stroke`/
- *   `bioc:fill` DI extension — but only for shapes, not for edges/text/the
- *   corner radius bpmn-js hardcodes on every task box regardless, so the
- *   CSS version stays for now rather than a two-tier "shapes baked, edges
- *   CSS'd" split). PNG is not an option for BPMN at all — Kroki's own
- *   `/bpmn/png` rejects it outright (`PNG_SUPPORTED_TYPES`), so this
- *   limitation isn't specific to keeping it on the CSS path.
+ * Every tool this package renders bakes its own fonts/colors/corner radii
+ * into what it returns; none of that is expressible as `--dt-*` tokens by
+ * definition (it's baked before this stylesheet ever sees it), and none of
+ * it needs recoloring any more — the fixed white canvas above is what a
+ * tool's own native colors (Mermaid's own baked light palette via
+ * kroki-mermaid-theme.js; PlantUML/GraphViz/BPMN/etc.'s own defaults,
+ * already black-ish-on-white/transparent with no theming hook this package
+ * uses) were designed to sit on in the first place. Font is the one thing
+ * still fixed here, blanket, for every `SUPPORTED_TYPES` entry — a tool's
+ * own type choice is incidental to what it's actually for, unlike its color
+ * choices, which sometimes encode meaning (a BPMN swimlane's fill, say)
+ * this package hasn't audited and isn't overriding.
  *
  * No JavaScript is involved anywhere in this file — see kroki.js's own
  * header: the SVG/`<img>` is real markup already in the page's HTML,
@@ -76,17 +85,19 @@
   max-width: 100%;
   overflow-x: auto;
   width: fit-content;
-  padding: var(--dt-size-100);
+  padding: var(--dt-size-250);
   background: var(--dt-color-bg-low);
   border: var(--dt-size-border-default) solid var(--dt-color-border-low);
   border-radius: var(--dt-size-radius-none);
 }
 
 .docouture-diagram svg,
-.docouture-diagram img {
+.docouture-diagram img,
+.docouture-diagram embed {
   display: block;
   height: auto;
   max-width: 100%;
+  background: #fff;
 }
 
 /* Defense in depth, not the primary fix for Mermaid (which now bakes this
@@ -126,44 +137,4 @@
   letter-spacing: var(--dt-typo-body-m-letter-spacing) !important;
   text-transform: var(--dt-typo-body-m-text-transform) !important;
   font-variant-numeric: var(--dt-typo-font-variant-numeric) !important;
-}
-
-/* BPMN (bpmn-js): every shape is exactly one of two inline-styled colors —
- * a near-black `rgb(34, 36, 42)` for strokes/arrows/text, `white` for shape
- * fill — verified against a real render of the starter's own BPMN example.
- * Mapped to the two DS tokens that mean the same thing and are already
- * light/dark-aware, so no dark-mode filter is layered on top of these (see
- * the `:not()` on the invert rule below) — a filter would fight the
- * token's own theme swap instead of leaving it alone. SVG only: BPMN has no
- * PNG output to apply this to (`PNG_SUPPORTED_TYPES`). */
-.docouture-diagram[data-diagram-type='bpmn'] svg [style*='rgb(34, 36, 42)'] {
-  fill: var(--dt-color-border-default) !important;
-  stroke: var(--dt-color-border-default) !important;
-}
-
-.docouture-diagram[data-diagram-type='bpmn'] svg [style*='fill: white'] {
-  fill: var(--dt-color-bg-default) !important;
-}
-
-/* Dark mode: `filter: invert(1) hue-rotate(180deg)` on the rendered output
- * itself (works on an `<img>` exactly the same as on inlined `<svg>` — a
- * CSS filter composites whatever the element painted, raster or vector),
- * not a second Kroki render. kroki-prewarm.js's fetch is one POST per
- * `(type, source, format)` with no theme parameter — there is no generic
- * "render this in dark mode" switch common to every SUPPORTED_TYPES entry.
- * Invert+hue-rotate flips lightness while restoring the original hue for
- * any diagram built from flat, non-photographic fills and strokes — true
- * of every diagram type this package renders — without doubling the Kroki
- * fetch/cache/pipeline for one theme's sake.
- *
- * BPMN is excluded because its colors are already re-mapped to light/dark-
- * aware `--dt-*` tokens above (a filter on top would fight the token's own
- * swap, not cooperate with it). Mermaid is NOT excluded, unlike an earlier
- * version of this file — kroki-mermaid-theme.js bakes a fixed, light-theme
- * palette (hardcoded hex, not tokens: no CSS cascade exists where it runs),
- * so Mermaid needs this filter for dark mode exactly like BPMN's `format=
- * png` sibling or any of the other SUPPORTED_TYPES entries would. */
-.dt-theme-dark .docouture-diagram:not([data-diagram-type='bpmn']) svg,
-.dt-theme-dark .docouture-diagram:not([data-diagram-type='bpmn']) img {
-  filter: invert(1) hue-rotate(180deg);
 }

@@ -99,6 +99,14 @@ path = [
     "code/packages/ui-bundle/src/ui.yml",
     "code/packages/ui-bundle/tsconfig.browser.json",
     "code/packages/ui-bundle/tsconfig.helpers.json",
+
+    # antora-extensions: GH-189's lib/kroki-include-line-filters.js is a
+    # Modification of @antora/asciidoc-loader's own include-processor.js
+    # (MPL-2.0) — see that package's own NOTICE. Only its LICENSE/NOTICE
+    # themselves lack an inline header (they can't carry one); the
+    # Modification file is self-annotated.
+    "code/packages/antora-extensions/LICENSE",
+    "code/packages/antora-extensions/NOTICE",
 ]
 SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "MPL-2.0"

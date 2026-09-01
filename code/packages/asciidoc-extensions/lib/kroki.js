@@ -4,16 +4,20 @@
 
 'use strict'
 
-const { escapeHtml } = require('./html')
+const { escapeHtml, attr } = require('./html')
 const warn = require('./warn')
 const kroki = require('./kroki-instance')
+const uniqueId = require('./unique-id')
+const namespaceSvgIds = require('./svg-namespace')
 const {
   SUPPORTED_TYPES,
-  PNG_SUPPORTED_TYPES,
+  FORMAT_SUPPORT,
   ENABLED_ATTR,
   TYPES_ATTR,
   resolveEnabledTypes,
   resolveFormat,
+  resolveDiagramOptions,
+  isTextFormat,
 } = require('./kroki-config')
 const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 
@@ -39,10 +43,44 @@ const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 // changes.
 //
 // `[mermaid,format=png]` renders a transparent PNG instead of inline SVG —
-// see kroki-config.js's `PNG_SUPPORTED_TYPES` for which of `SUPPORTED_TYPES`
-// actually support it (Kroki's own `/{type}/png` rejects the rest with a
-// plain 400); anything else falls back to `svg` with a warning, the same
-// degrade-not-fail posture as an unsupported `kroki-diagram-types` entry.
+// see kroki-config.js's `FORMAT_SUPPORT` for the exact, live-server-verified
+// set of formats each `SUPPORTED_TYPES` entry accepts (Kroki's own
+// `/{type}/{format}` rejects the rest with a plain 400); anything else
+// falls back to `svg` with a warning, the same degrade-not-fail posture as
+// an unsupported `kroki-diagram-types` entry.
+//
+// GH-195: THE CLASSIC `[type,target,format]` POSITIONAL FORM
+//
+// `krokiBlock`'s own `this.positionalAttributes(['target', 'format'])` is
+// real Asciidoctor machinery (`AttributeList.rekey`, verified empirically
+// against `@asciidoctor/core@2.2.9` — the exact engine Antora site builds
+// run) — so `[plantuml,architecture,png,role="no-border, zoom-in"]` (the
+// real asciidoctor-kroki/asciidoctor-diagram convention: type, target,
+// format) resolves `attrs.format = 'png'` exactly as `[plantuml,
+// format=png]` already did. `target` is accepted but otherwise unused —
+// this extension always inlines (see DEGRADATION below), never writes a
+// named file to disk.
+//
+// GH-195: DIAGRAM-SPECIFIC OPTIONS
+//
+// Any named attribute that isn't one of `kroki-config.js`'s
+// `BUILTIN_ATTRIBUTES` (`target`, `width`, `height`, `format`, `role`,
+// `title`, `caption`, …) is a Kroki diagram-specific option — e.g.
+// `[structurizr,view-key=SystemContext]` — forwarded to Kroki as a
+// `Kroki-Diagram-Options-view-key` HTTP header, exactly as the real
+// asciidoctor-kroki extension forwards them (see its own `kroki-client.js`).
+// See `resolveDiagramOptions`.
+//
+// GH-195: OUTPUT FORMATS BEYOND `svg`/`png`
+//
+// `jpeg`/`jpg`/`pdf`/`base64` render the same way `png` already did — an
+// embedded `<img>` (or, for `pdf`, an `<embed>`, since a PDF isn't
+// something an `<img>` can display) built from Kroki's own response.
+// `txt`/`atxt`/`utxt` are different in kind, not just encoding: Kroki
+// renders these as literal ASCII-art-style TEXT, not an image at all — see
+// `isTextFormat` — so the block renders as a literal block (Asciidoctor's
+// own plain-text convention this package already reuses for the disabled/
+// unavailable case below) containing that rendered text, not an `<img>`.
 //
 // OPT IN, PER SITE, DISABLED BY DEFAULT
 //
@@ -86,6 +124,14 @@ const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 // (`kroki-instance.js`) — the same seam shiki-syntax-highlighter.js uses for
 // Shiki, and for the identical reason; see that file's own header.
 //
+// GH-196: two SVG-format diagrams on the same page can collide on ids —
+// Mermaid's root `<svg>` is always `id="container"`, GraphViz starts a
+// fresh `node1`/`edge1`/`graph0` sequence every render — so an inline SVG
+// payload has every id (and every reference to it) rewritten to a
+// page-unique prefix before it's embedded; see `svg-namespace.js`'s own
+// header for why this runs here, at render time, rather than once at
+// prewarm/cache time.
+//
 // DEGRADATION
 //
 // Not enabled, type not requested, or a cache miss (prewarm never ran, or
@@ -100,12 +146,61 @@ const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 
 /** What Asciidoctor's own literal-block HTML5 converter emits — reproduced
  * exactly so a disabled/unavailable Kroki changes nothing an author or a
- * reader would notice. */
-function literalFallback(source) {
-  return '<div class="literalblock"><div class="content"><pre>' + escapeHtml(source) + '</pre></div></div>'
+ * reader would notice; also reused (with `extraClass`) for a successful
+ * text-family format render (`txt`/`atxt`/`utxt` — see `isTextFormat`),
+ * since Kroki's own rendering for those IS a literal block of text, not an
+ * image. `id`, when given, is applied here too — a `[plantuml#diagAliceBob]`
+ * shorthand ID is exactly as real Asciidoctor's own literal-block converter
+ * would have honored it, and `xref:page.adoc#diagAliceBob[]` needs it to
+ * exist regardless of whether Kroki itself is reachable. */
+function literalMarkup(text, extraClass, id) {
+  const classAttr = extraClass ? ' ' + extraClass : ''
+  return (
+    '<div class="literalblock' +
+    classAttr +
+    '"' +
+    attr('id', id) +
+    '><div class="content"><pre>' +
+    escapeHtml(text) +
+    '</pre></div></div>'
+  )
 }
 
-function renderDiagram(parent, type, source, requestedFormat) {
+function literalFallback(source, id) {
+  return literalMarkup(source, undefined, id)
+}
+
+// GH-195: MIME type for each non-`svg`/`base64` image format this package
+// can now request — `svg` is embedded as raw markup, not an `<img>` (see
+// `imageMarkup` below); `base64`'s own Kroki response is already a complete
+// `data:image/png;base64,...` string (verified against a live server — see
+// kroki-prewarm.js's own `fetchDiagram` header), needing no MIME lookup of
+// its own.
+const IMAGE_MIME_TYPES = { png: 'image/png', jpeg: 'image/jpeg', pdf: 'application/pdf' }
+
+/**
+ * Builds the embedded markup for one successfully-rendered, non-text-format
+ * diagram payload — an `<img>` for every raster format, an `<embed>` for
+ * `pdf` (a browser cannot display a PDF through `<img>`), or the SVG
+ * markup verbatim, unwrapped, for `svg` (already id-namespaced by the time
+ * this runs — see `renderDiagram`) — preserved exactly as before GH-195,
+ * since a real inline `<svg>` DOM node (as opposed to every other format's
+ * opaque `data:` URI) is what lets `kroki-mermaid-theme.js`'s baked-in
+ * colors actually apply to it at all.
+ *
+ * @param {{ format: string, data: string }} payload
+ * @returns {string}
+ */
+function imageMarkup(payload) {
+  if (payload.format === 'svg') return payload.data
+  if (payload.format === 'base64') return '<img src="' + payload.data + '" alt="">'
+  const mime = IMAGE_MIME_TYPES[payload.format]
+  const dataUri = 'data:' + mime + ';base64,' + payload.data
+  if (payload.format === 'pdf') return '<embed type="' + mime + '" src="' + dataUri + '">'
+  return '<img src="' + dataUri + '" alt="">'
+}
+
+function renderDiagram(parent, type, source, attrs) {
   const document = parent.getDocument()
   const enabledAttr = document.getAttribute(ENABLED_ATTR)
   const typesAttr = document.getAttribute(TYPES_ATTR)
@@ -117,45 +212,62 @@ function renderDiagram(parent, type, source, requestedFormat) {
       SUPPORTED_TYPES
     )
   )
-  if (!enabledTypes.has(type)) return literalFallback(source)
+  if (!enabledTypes.has(type)) return literalFallback(source, attrs.id)
 
-  const format = resolveFormat(type, requestedFormat, (t, requested) =>
+  const format = resolveFormat(type, attrs.format, (t, requested) =>
     warn(
       parent,
       '[' + t + ',format=' + requested + ']',
       'unsupported format "' + requested + '" for a ' + t + ' diagram — falling back to svg',
-      PNG_SUPPORTED_TYPES.has(t) ? ['svg', 'png'] : ['svg']
+      FORMAT_SUPPORT[t] || ['svg']
     )
   )
+  const options = resolveDiagramOptions(attrs)
   // Mermaid gets its own default theme baked in server-side (see that
   // file's own header for why this happens here rather than via ui-bundle
   // CSS) — applied to the LOOKUP key only; `literalFallback` below still
   // shows the author's own original source, untouched, on a cache miss.
   const effectiveSource = type === 'mermaid' ? applyDefaultMermaidTheme(source) : source
 
-  const payload = kroki.get(kroki.keyFor(type, effectiveSource, format))
+  const payload = kroki.get(kroki.keyFor(type, effectiveSource, format, options))
   if (!payload) {
     warn(
       parent,
       '[' + type + ']',
       'no prewarmed Kroki render for this diagram (service unreachable at build time, or the source changed after prewarm ran); showing raw source instead'
     )
-    return literalFallback(source)
+    return literalFallback(source, attrs.id)
   }
-  const body = payload.format === 'png' ? '<img src="data:image/png;base64,' + payload.data + '" alt="">' : payload.data
-  return '<div class="docouture-diagram" data-diagram-type="' + type + '">' + body + '</div>'
+  // GH-196: namespace this SVG's own ids to THIS occurrence, on THIS page,
+  // before embedding — see svg-namespace.js's own header for why this has
+  // to happen here (render time, per-block-occurrence) rather than once
+  // when the payload was cached.
+  const effectivePayload =
+    payload.format === 'svg'
+      ? { format: payload.format, data: namespaceSvgIds(payload.data, uniqueId(parent, 'docouture-diagram')) }
+      : payload
+  const body = isTextFormat(effectivePayload.format)
+    ? literalMarkup(effectivePayload.data)
+    : imageMarkup(effectivePayload)
+  return (
+    '<div class="docouture-diagram"' + attr('id', attrs.id) + ' data-diagram-type="' + type + '">' + body + '</div>'
+  )
 }
 
 function krokiBlock(type) {
   return function () {
     this.named(type)
     this.onContext('literal')
+    // GH-195: the classic `[type,target,format]` positional shorthand —
+    // see this file's own header. `target` is accepted into `attrs` but
+    // otherwise unused.
+    this.positionalAttributes(['target', 'format'])
     this.process((parent, reader, attrs) => {
       // See card-grid.js's own comment: Opal (2.2) can hand this a bare JS
       // `null` for a block with no attributes beyond its style.
       attrs = attrs || {}
       const source = reader.getLines().join('\n')
-      const html = renderDiagram(parent, type, source, attrs.format)
+      const html = renderDiagram(parent, type, source, attrs)
       return this.createBlock(parent, 'pass', html, attrs)
     })
   }

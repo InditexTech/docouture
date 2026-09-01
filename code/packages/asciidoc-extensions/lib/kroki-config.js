@@ -42,6 +42,22 @@ const KROKI_URL = 'http://localhost:8500'
 // than assumed) — before authors can rely on a new one. A site can
 // customize that compose file for itself via `docouture eject kroki` without
 // forking this package.
+//
+// GH-195: the block after `bpmn` (`actdiag` through `wireviz`) are every
+// remaining type Kroki's own Architecture doc lists as bundled in the core
+// `yuzutech/kroki` gateway image itself — https://docs.kroki.io/kroki/architecture/
+// — i.e. needing no companion container of their own, unlike mermaid/bpmn/
+// excalidraw above. Each was posted, individually, straight at this repo's
+// own already-running local Kroki (`docker ps` showed `resources-kroki-1`
+// live on :8500) with a minimal real (not placeholder) source for that
+// diagram language, both at `/svg` and `/png`, before being added here —
+// see `FORMAT_SUPPORT`'s own comment for the full per-type matrix that
+// verification produced (not just `svg`/`png`).
+// `d2`, `dbml` and `tikz` — in the syntax doc's diagram-types table but
+// ABSENT from the Architecture doc's own per-image breakdown — and
+// `diagramsnet` (its own companion, and marked "experimental" upstream) are
+// deliberately NOT added here: unverified against the image this project
+// actually pins, not merely "not yet gotten to".
 const SUPPORTED_TYPES = [
   'mermaid',
   'plantuml',
@@ -57,34 +73,89 @@ const SUPPORTED_TYPES = [
   'vegalite',
   'wavedrom',
   'bpmn',
+  'actdiag',
+  'bytefield',
+  'goat',
+  'nwdiag',
+  'packetdiag',
+  'pikchr',
+  'rackdiag',
+  'seqdiag',
+  'structurizr',
+  'symbolator',
+  'umlet',
+  'wireviz',
 ]
 
-// Kroki's own `/{type}/{format}` API rejects a format it doesn't support for
-// that type with a plain 400 rather than degrading — verified against a
-// live server, one `SUPPORTED_TYPES` entry at a time (posting a
-// deliberately-invalid body to every type's own `/png` endpoint: a syntax
-// error means the format itself was accepted, "Unsupported output format"
-// means it wasn't). Five entries are SVG-only in Kroki's own catalogue:
-// `excalidraw`, `nomnoml`, `svgbob`, `wavedrom`, and — despite drawing
-// ordinary rectangles and circles that look no different from any other
-// diagram-as-code output — `bpmn`. The other nine, listed here, all render
-// PNG (and Kroki formats beyond that this package doesn't expose a way to
-// request) the same way they render SVG. `format=png` on an unlisted type
-// falls back to `svg` with a warning — see `resolveFormat` — the same
-// degrade-not-fail posture as an unknown `kroki-diagram-types` entry.
-const PNG_SUPPORTED_TYPES = new Set([
-  'mermaid',
-  'plantuml',
-  'graphviz',
-  'c4plantuml',
-  'blockdiag',
-  'ditaa',
-  'erd',
-  'vega',
-  'vegalite',
-])
-
 const DEFAULT_FORMAT = 'svg'
+
+// GH-195: the exact per-type format support Kroki's OWN server reports —
+// not an approximation. Kroki's `/{type}/{format}` rejects an unsupported
+// format with a 400 whose body names every format that type DOES accept
+// (`Error 400: Unsupported output format: bogus for plantuml. Must be one
+// of png, svg, pdf, base64, txt or utxt.`) — so rather than guess that
+// `png`-capable implies `jpeg`/`pdf`/`base64`/`txt`-capable (it does not:
+// `mermaid` supports only `png`/`svg` and nothing else; `graphviz` supports
+// `jpeg` but not `txt`; `plantuml` supports `txt`/`base64` but not `jpeg`),
+// every `SUPPORTED_TYPES` entry below was posted a deliberately-invalid
+// format string against this repo's own already-running local Kroki and
+// this table transcribes that response verbatim, `svg` (accepted
+// everywhere, the one format never listed as a rejection) added back in.
+// Re-run this probe (`curl --data-raw x http://localhost:8500/<type>/bogus`)
+// whenever the pinned `yuzutech/kroki*` image versions
+// (`kroki-compose.yml`) move — a newer Kroki release can both add and drop
+// per-type format support.
+const FORMAT_SUPPORT = {
+  mermaid: ['svg', 'png'],
+  plantuml: ['svg', 'png', 'pdf', 'base64', 'txt', 'utxt'],
+  graphviz: ['svg', 'png', 'jpeg', 'pdf'],
+  c4plantuml: ['svg', 'png', 'pdf', 'base64', 'txt', 'utxt'],
+  excalidraw: ['svg'],
+  blockdiag: ['svg', 'png', 'pdf'],
+  ditaa: ['svg', 'png'],
+  erd: ['svg', 'png', 'jpeg', 'pdf'],
+  nomnoml: ['svg'],
+  svgbob: ['svg'],
+  vega: ['svg', 'png', 'pdf'],
+  vegalite: ['svg', 'png', 'pdf'],
+  wavedrom: ['svg'],
+  bpmn: ['svg'],
+  actdiag: ['svg', 'png', 'pdf'],
+  bytefield: ['svg'],
+  goat: ['svg'],
+  nwdiag: ['svg', 'png', 'pdf'],
+  packetdiag: ['svg', 'png', 'pdf'],
+  pikchr: ['svg'],
+  rackdiag: ['svg', 'png', 'pdf'],
+  seqdiag: ['svg', 'png', 'pdf'],
+  structurizr: ['svg', 'png', 'pdf', 'base64', 'txt', 'utxt'],
+  symbolator: ['svg', 'png'],
+  umlet: ['svg', 'png', 'jpeg'],
+  wireviz: ['svg', 'png'],
+}
+
+// Backward-compatible view over `FORMAT_SUPPORT` — every type whose table
+// entry includes `png`. Nothing in this package derives `jpeg`/`pdf`/
+// `base64`/`txt`/`utxt` support from this any more (see `resolveFormat`,
+// which now consults `FORMAT_SUPPORT` directly, per format); kept as its
+// own export because it is still the simplest true statement of "does this
+// type rasterize at all" for anything outside this file that only cares
+// about that one distinction.
+const PNG_SUPPORTED_TYPES = new Set(Object.keys(FORMAT_SUPPORT).filter((type) => FORMAT_SUPPORT[type].includes('png')))
+
+// `jpg` is accepted as an alias for `jpeg` (Kroki's own API, and
+// `FORMAT_SUPPORT` above, only ever say `jpeg`) — normalized in
+// `resolveFormat`, so both spellings key the cache identically instead of
+// `format=jpg` silently becoming a permanent miss. `atxt` is real —
+// present in the syntax doc's own output-formats table — but doesn't
+// appear as an accepted value for ANY `SUPPORTED_TYPES` entry against the
+// Kroki version this project pins (every `txt`-family entry above lists
+// `txt`/`utxt` but never `atxt`); kept resolvable rather than special-cased
+// out, since `resolveFormat` treats an unsupported-for-this-type format
+// the same way regardless (falls back to `svg`, warns) and a future Kroki
+// version, or a type this project hasn't added yet, may support it.
+const TEXT_FORMATS = new Set(['txt', 'atxt', 'utxt'])
+const JPG_ALIAS = 'jpg'
 
 // The two `asciidoc.attributes` keys a site sets in its playbook. Both are
 // read from the same `document` object on the synchronous (Asciidoctor)
@@ -161,35 +232,130 @@ function resolveEnabledTypes(enabledAttr, typesAttr, onUnknownType) {
  * silently downgrades in one place and not the other would look up a key
  * the other side never populated.
  *
+ * GH-195: widened beyond `svg`/`png` to the real extension's own format
+ * vocabulary — `jpeg` (`jpg` accepted as an alias, normalized here so both
+ * spellings share one cache entry), `pdf`, `base64`, `txt`, `atxt`, `utxt`
+ * — gated per type against `FORMAT_SUPPORT`'s real, live-server-verified
+ * matrix rather than one blanket rule. The caller (`kroki.js`/
+ * `kroki-prewarm.js`) is what decides a text-family result means "render a
+ * literal block, not an image" — see `isTextFormat` — this function only
+ * ever resolves which string to request.
+ *
  * @param {string} type - a `SUPPORTED_TYPES` entry.
  * @param {unknown} requestedFormat - the block's own `format` attribute,
  *   however Asciidoctor or the raw-text regex handed it over — anything at
- *   all, not just `"svg"`/`"png"`, since this is the one place both sides
- *   actually validate it (kroki-prewarm.js's own regex deliberately doesn't
- *   restrict the value it captures, for exactly this reason).
+ *   all, not just a known format string, since this is the one place both
+ *   sides actually validate it (kroki-prewarm.js's own regex deliberately
+ *   doesn't restrict the value it captures, for exactly this reason).
  * @param {(type: string, requestedFormat: string) => void} [onUnsupported] -
- *   called once for any `requestedFormat` that isn't `svg`/absent and isn't
- *   a `png` this type's Kroki companion actually supports — an unrecognized
- *   value (a typo, `format=jpeg`) and a recognized-but-unsupported one
- *   (`format=png` on `bpmn`) both go through this the same way, so the
- *   caller can warn with its own node context either way.
- * @returns {'svg' | 'png'}
+ *   called once for any `requestedFormat` that isn't recognized, or that
+ *   `FORMAT_SUPPORT` says this particular type doesn't accept — an
+ *   unrecognized value (a typo, `format=jpg2000`) and a
+ *   recognized-but-unsupported one (`format=jpeg` on `mermaid`) both go
+ *   through this the same way, so the caller can warn with its own node
+ *   context either way.
+ * @returns {'svg' | 'png' | 'jpeg' | 'pdf' | 'base64' | 'txt' | 'atxt' | 'utxt'}
  */
 function resolveFormat(type, requestedFormat, onUnsupported) {
   if (requestedFormat == null || requestedFormat === '' || requestedFormat === DEFAULT_FORMAT) return DEFAULT_FORMAT
-  if (requestedFormat === 'png' && PNG_SUPPORTED_TYPES.has(type)) return 'png'
+  const normalized = String(requestedFormat === JPG_ALIAS ? 'jpeg' : requestedFormat)
+  const accepted = FORMAT_SUPPORT[type]
+  if (accepted && accepted.includes(normalized))
+    return /** @type {'svg' | 'png' | 'jpeg' | 'pdf' | 'base64' | 'txt' | 'atxt' | 'utxt'} */ (normalized)
   if (onUnsupported) onUnsupported(type, String(requestedFormat))
   return DEFAULT_FORMAT
+}
+
+/**
+ * @param {string} format - `resolveFormat`'s return value.
+ * @returns {boolean} whether this format renders as a literal block of text
+ *   (Kroki's own ASCII-art-style output) rather than an image.
+ */
+function isTextFormat(format) {
+  return TEXT_FORMATS.has(format)
+}
+
+// GH-195: every attribute the real asciidoctor-kroki extension itself
+// reserves — https://docs.asciidoctor.org/kroki-extension/latest/syntax/#attributes
+// plus the positional/bookkeeping keys Asciidoctor's own attribute-list
+// parser adds regardless (`$positional` under 2.2, numeric `1`/`2`/`3`
+// under both — filtered separately, by `isPositionalKey`, since they're not
+// fixed strings; `cloaked-context`, which Asciidoctor sets on every literal/
+// listing block itself, diagram or not). Anything ELSE a block carries as a
+// NAMED attribute is a Kroki diagram-specific option (`view-key=`, `theme=`,
+// …) — see `resolveDiagramOptions` — forwarded to Kroki verbatim, exactly
+// as the real extension forwards them as `Kroki-Diagram-Options-<key>`
+// headers (see kroki-prewarm.js's own `fetchDiagram`).
+const BUILTIN_ATTRIBUTES = new Set([
+  'target',
+  'width',
+  'height',
+  'format',
+  'fallback',
+  'link',
+  'float',
+  'align',
+  'role',
+  'title',
+  'caption',
+  'subs',
+  'opts',
+  'options',
+  'id',
+  'cloaked-context',
+  '$positional',
+])
+
+/**
+ * @param {string} key - a raw attribute key, as Asciidoctor's own attrs
+ *   object (2.2 or 4.0 shape) or kroki-prewarm.js's raw-attrlist parser
+ *   produces it.
+ * @returns {boolean} whether `key` is a positional/option bookkeeping key
+ *   rather than something an author wrote as `name=value` — a bare numeric
+ *   index (`"1"`, `"2"`, …, both majors) or an `<opt>-option` flag
+ *   Asciidoctor's own attribute-list grammar synthesizes from `opts=`/
+ *   `options=` (see kroki.js's own header on that expansion).
+ */
+function isPositionalOrOptionKey(key) {
+  return /^\d+$/.test(key) || key.endsWith('-option')
+}
+
+/**
+ * Every named attribute on a diagram block that ISN'T one of
+ * `BUILTIN_ATTRIBUTES` or positional/option bookkeeping — i.e. a Kroki
+ * diagram-specific option (`view-key=SystemContext`, `theme=hacker`, …),
+ * forwarded to Kroki verbatim as `Kroki-Diagram-Options-<key>` headers.
+ *
+ * @param {Record<string, unknown>} attrs - a real Asciidoctor attrs object
+ *   (kroki.js) or the raw-attrlist-parser's named-attribute map
+ *   (kroki-prewarm.js) — same shape either way: plain string-keyed object.
+ * @returns {Record<string, string>} diagram-specific options, values
+ *   coerced to strings (HTTP header values must be strings).
+ */
+function resolveDiagramOptions(attrs) {
+  /** @type {Record<string, string>} */
+  const options = {}
+  for (const key of Object.keys(attrs || {})) {
+    if (BUILTIN_ATTRIBUTES.has(key) || isPositionalOrOptionKey(key)) continue
+    options[key] = String(attrs[key])
+  }
+  return options
 }
 
 module.exports = {
   KROKI_URL,
   SUPPORTED_TYPES,
   PNG_SUPPORTED_TYPES,
+  FORMAT_SUPPORT,
+  TEXT_FORMATS,
   DEFAULT_FORMAT,
   ENABLED_ATTR,
   TYPES_ATTR,
+  BUILTIN_ATTRIBUTES,
   isTruthy,
   resolveEnabledTypes,
   resolveFormat,
+  isTextFormat,
+  isPositionalOrOptionKey,
+  resolveDiagramOptions,
 }

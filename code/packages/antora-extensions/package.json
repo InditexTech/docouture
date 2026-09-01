@@ -7,12 +7,14 @@
     "url": "https://github.com/InditexTech/docouture.git",
     "directory": "code/packages/antora-extensions"
   },
-  "license": "Apache-2.0",
+  "license": "SEE LICENSE IN NOTICE",
   "main": "index.js",
   "files": [
     "index.js",
     "lib",
-    "resources"
+    "resources",
+    "LICENSE",
+    "NOTICE"
   ],
   "engines": {
     "node": ">=24.0.0"
@@ -22,6 +24,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@antora/asciidoc-loader": "~3.2.0",
     "@antora/page-composer": "~3.2.0",
     "@antora/redirect-producer": "~3.2.0",
     "@inditextech/docouture-asciidoc-extensions": "workspace:*",
@@ -29,5 +32,8 @@
     "@shikijs/themes": "~4.4.0",
     "node-html-parser": "^9.0.1",
     "shiki": "~4.4.0"
+  },
+  "devDependencies": {
+    "@antora/content-classifier": "~3.2.0"
   }
 }

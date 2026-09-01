@@ -1,0 +1,14 @@
+docs/src/antora.yml
+  h_c93d154c7c7074 84-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "beb9c194c62e72204ee68d77d780c7b72f1e78b4",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -37,7 +37,7 @@ site:
 content:
   sources:
     - url: ../../..
-      start_path: code/packages/example/docs
+      start_path: code/packages/example/src
       branches: HEAD
 
 ui:

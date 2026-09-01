@@ -823,8 +823,8 @@ const foldsStores = [
 ]
 
 // Write build images
-const rootImagesDir = '/Users/jesusmpc/inditex/docouture/code/packages/example/docs/modules/ROOT/images'
-const buildImagesDir = '/Users/jesusmpc/inditex/docouture/code/packages/example/docs/modules/main/images/build'
+const rootImagesDir = '/Users/jesusmpc/inditex/docouture/code/packages/example/src/modules/ROOT/images'
+const buildImagesDir = '/Users/jesusmpc/inditex/docouture/code/packages/example/src/modules/main/images/build'
 
 fs.mkdirSync(buildImagesDir, { recursive: true })
 

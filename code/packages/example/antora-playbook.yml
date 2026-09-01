@@ -76,7 +76,7 @@ content:
     # edits under docs/ are no longer picked up automatically — see this
     # package's own SKILL.md ("Versions move in lockstep") for that trade-off.
     - url: ../../..
-      start_path: code/packages/example/docs
+      start_path: code/packages/example/src
       branches: [main]
       tags: ['docs/stable']
 

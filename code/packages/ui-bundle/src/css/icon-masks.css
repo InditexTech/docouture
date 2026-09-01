@@ -1,4 +1,10 @@
 /*
+ * SPDX-FileCopyrightText: 2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * Icon masks — a second, CSS-consumable form of a subset of the icons in
  * icons.svg, for markup that has no room for an <svg><use>: admonitions
  * (doc.css, GH-13) and anything an Asciidoctor extension emits (GH-20),

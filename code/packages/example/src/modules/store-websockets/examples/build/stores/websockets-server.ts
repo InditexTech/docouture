@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from 'url'
-import path from 'path'
-import fs from 'fs/promises'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
+import fs from 'node:fs/promises'
 import express from 'express'
 import { WeaveWebsocketsServer } from '@inditextech/weave-store-websockets/server' // <1>
 
@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename)
 const VALID_ROOM_WEBSOCKET_URL = /\/sync\/rooms\/(.*)/
 
 const host = process.env.HOST || 'localhost'
-const port = parseInt(process.env.PORT || '1234')
+const port = Number.parseInt(process.env.PORT || '1234')
 
 const app = express()
 

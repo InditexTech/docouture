@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { fileURLToPath } from 'url'
-import path from 'path'
-import fs from 'fs/promises'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
+import fs from 'node:fs/promises'
 import cors from 'cors'
 import express, { Router } from 'express'
 import { WeaveAzureWebPubsubServer } from '@inditextech/weave-store-azure-web-pubsub/server' // <1>
@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const host = process.env.WEAVE_AZURE_WEB_PUBSUB_HOST || 'localhost'
-const port = parseInt(process.env.WEAVE_AZURE_WEB_PUBSUB_PORT || '1234')
+const port = Number.parseInt(process.env.WEAVE_AZURE_WEB_PUBSUB_PORT || '1234')
 
 const endpoint = process.env.WEAVE_AZURE_WEB_PUBSUB_ENDPOINT // <2>
 const key = process.env.WEAVE_AZURE_WEB_PUBSUB_KEY // <2>

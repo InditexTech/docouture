@@ -12,7 +12,7 @@
 // flagged, so picking one is browsing rather than guessing a name.
 
 const fs = require('fs-extra')
-const ospath = require('path')
+const ospath = require('node:path')
 
 const PACKAGE_ROOT = ospath.join(__dirname, '..', '..')
 const LUCIDE_SPRITE = ospath.join(PACKAGE_ROOT, 'node_modules/lucide-static/sprite.svg')

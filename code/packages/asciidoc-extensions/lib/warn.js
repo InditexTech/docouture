@@ -72,7 +72,7 @@ function warn(node, source, problem, expected) {
   const doc = (typeof node.getDocument === 'function' && node.getDocument()) || node
   const logger = typeof doc.getLogger === 'function' ? doc.getLogger() : undefined
   if (!logger || typeof logger.warn !== 'function') return
-  const suffix = expected && expected.length ? '; expected one of ' + expected.join(', ') : ''
+  const suffix = expected?.length ? '; expected one of ' + expected.join(', ') : ''
   logger.warn(source + ' — ' + problem + suffix)
 }
 

@@ -122,7 +122,7 @@ async function ensureKrokiRunning(url, playbookDir, logger, deps = {}) {
   logger.info(
     'docker compose up -d succeeded — waiting for %s to become reachable...%s',
     url,
-    formatProcessOutput(composeResult && composeResult.stdout, composeResult && composeResult.stderr)
+    formatProcessOutput(composeResult?.stdout, composeResult?.stderr)
   )
 
   const deadline = Date.now() + STARTUP_TIMEOUT_MS
@@ -158,8 +158,8 @@ async function ensureKrokiRunning(url, playbookDir, logger, deps = {}) {
  */
 function formatProcessOutput(stdout, stderr) {
   const parts = []
-  if (stdout && stdout.trim()) parts.push('stdout:\n' + stdout.trim())
-  if (stderr && stderr.trim()) parts.push('stderr:\n' + stderr.trim())
+  if (stdout?.trim()) parts.push('stdout:\n' + stdout.trim())
+  if (stderr?.trim()) parts.push('stderr:\n' + stderr.trim())
   return parts.length ? '\n' + parts.join('\n') : ''
 }
 

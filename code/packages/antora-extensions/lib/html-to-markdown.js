@@ -234,12 +234,15 @@ function splitListItem(li, depth) {
 
 function tableToMarkdown(tableNode) {
   const rows = []
-  // Backslash is escaped first: escaping `|` alone would let a source
-  // backslash immediately before one combine with the `\` this line just
-  // inserted, producing `\\|` — an escaped backslash followed by a live,
-  // unescaped column separator, the exact thing this escape exists to
-  // prevent.
-  const escapeCell = (text) => text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')
+  // Backslash and pipe are escaped in a single pass — not two chained
+  // .replace() calls — so neither escape can interfere with the other:
+  // escaping `|` first would let a source backslash immediately before one
+  // combine with the new backslash to produce `\\|`, an escaped backslash
+  // followed by a live, unescaped column separator. A single regex with a
+  // replacer callback visits each original character exactly once, so this
+  // ordering hazard can't occur no matter which character comes first in
+  // the input.
+  const escapeCell = (text) => text.replace(/[\\|]/g, (ch) => (ch === '\\' ? String.raw`\\` : String.raw`\|`))
   for (const rowNode of tableNode.querySelectorAll('tr')) {
     const cells = rowNode.querySelectorAll('th,td').map((cell) => escapeCell(inlineText(cell)) || ' ')
     if (cells.length) rows.push(cells)

@@ -169,7 +169,7 @@
    */
   function readMotion (el: HTMLElement): { duration: number; easing: string } {
     var cs = getComputedStyle(el)
-    var duration = parseFloat(cs.transitionDuration) * 1000
+    var duration = Number.parseFloat(cs.transitionDuration) * 1000
     var easing = cs.transitionTimingFunction.trim()
     return { duration: duration || 0, easing: easing || 'ease' }
   }
@@ -204,3 +204,10 @@
     }
   }
 })()
+
+// Empty export makes this a real ES module for TypeScript's purposes (it
+// otherwise has no top-level import/export, so tsc treats a `10-accordion.spec.ts`
+// dynamically importing it as TS2306 "not a module") — a genuine no-op at
+// runtime, esbuild strips it, the IIFE above still runs for its side effects
+// exactly the same.
+export {}

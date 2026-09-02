@@ -134,7 +134,7 @@ asciidoctor.SyntaxHighlighter.register('shiki', {
   // return value above — is read directly, rather than trusting an
   // ivar-driven default this adapter doesn't fully participate in.
   format(node, lang, opts) {
-    const preClass = opts && opts.nowrap ? 'shiki highlight nowrap' : 'shiki highlight'
+    const preClass = opts?.nowrap ? 'shiki highlight nowrap' : 'shiki highlight'
     const langAttr = lang ? ' data-lang="' + escapeHtml(lang) + '"' : ''
     return `<pre class="${preClass}"><code${langAttr}>${node.getContent()}</code></pre>`
   },

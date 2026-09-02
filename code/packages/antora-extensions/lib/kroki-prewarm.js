@@ -137,11 +137,11 @@ const { getLines, getTags, filterLinesByLineNumbers, filterLinesByTags } = requi
 // `format=` value from wherever it appears, quote-aware, the same way
 // `parseIncludeAttrlist` already does for `include::` directives.
 function buildBlockPattern() {
-  const typeAlternation = SUPPORTED_TYPES.map((type) => type.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
+  const typeAlternation = SUPPORTED_TYPES.map((type) => type.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)).join(
+    '|'
+  )
   return new RegExp(
-    '^\\[(' +
-      typeAlternation +
-      ')(?:,([^\\]]*))?\\]\\r?\\n\\.\\.\\.\\.[ \\t]*\\r?\\n([\\s\\S]*?)\\r?\\n\\.\\.\\.\\.[ \\t]*$',
+    String.raw`^\[(${typeAlternation})(?:,([^\]]*))?\]\r?\n\.\.\.\.[ \t]*\r?\n([\s\S]*?)\r?\n\.\.\.\.[ \t]*$`,
     'gm'
   )
 }
@@ -481,7 +481,7 @@ async function fetchDiagram(type, source, format, options, logger) {
 module.exports = function registerKrokiPrewarm(context, deps = {}) {
   const doEnsureKrokiRunning = deps.ensureKrokiRunning || ensureKrokiRunning
   context.on('contentClassified', async ({ contentCatalog, playbook }) => {
-    const attributes = (playbook && playbook.asciidoc && playbook.asciidoc.attributes) || {}
+    const attributes = playbook?.asciidoc?.attributes || {}
     const logger = context.getLogger('docouture-kroki-prewarm')
     const enabledTypes = resolveEnabledTypes(attributes[ENABLED_ATTR], attributes[TYPES_ATTR], (unknown) =>
       logger.warn('Ignoring unknown %s entry "%s"; expected one of %s', TYPES_ATTR, unknown, SUPPORTED_TYPES.join(', '))
@@ -493,7 +493,7 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     // invocation paths (CLI, justfile/nx, raw `antora`, a consumer's own
     // CI) equally, because this listener runs on all of them. See
     // kroki-docker.js's own header for why there's no matching teardown.
-    await doEnsureKrokiRunning(KROKI_URL, playbook && playbook.dir, logger)
+    await doEnsureKrokiRunning(KROKI_URL, playbook?.dir, logger)
 
     const pattern = buildBlockPattern()
     // Deduplicated by kroki-instance.js's own key: the same diagram source
@@ -505,7 +505,7 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     // registered by `registerPageAlias`/`addSplatAlias`) which have no
     // `.path` of their own at all — guard against those rather than just
     // the `.adoc` extension check.
-    for (const file of contentCatalog.getFiles((candidate) => candidate.path && candidate.path.endsWith('.adoc'))) {
+    for (const file of contentCatalog.getFiles((candidate) => candidate.path?.endsWith('.adoc'))) {
       const text = file.contents.toString('utf8')
       for (const { type, source: rawSource, format: requestedFormat, options } of extractDiagrams(text, pattern)) {
         if (!enabledTypes.has(type)) continue

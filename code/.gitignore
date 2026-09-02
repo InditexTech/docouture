@@ -10,6 +10,10 @@ packages/*/build/
 packages/*/public/
 packages/*/.tsbuild/
 
+# test coverage (per-package vitest output + the merged report SonarCloud reads)
+packages/*/reports/
+coverage/
+
 # logs
 *.log
 npm-debug.log*

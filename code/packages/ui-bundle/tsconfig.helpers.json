@@ -13,5 +13,6 @@
     "sourceMap": false,
     "removeComments": false
   },
-  "include": ["src/helpers/**/*.ts", "types/**/*.d.ts"]
+  "include": ["src/helpers/**/*.ts", "types/**/*.d.ts"],
+  "exclude": ["src/helpers/**/*.spec.ts"]
 }

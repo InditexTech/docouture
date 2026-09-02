@@ -97,13 +97,13 @@ function resolveFooter(footer, componentVersion, contentCatalog, logger) {
 
   const groups = []
   for (const group of footer.groups) {
-    if (!group || group.constructor !== Object || !Array.isArray(group.links)) {
+    if (group?.constructor !== Object || !Array.isArray(group?.links)) {
       logger.warn('Ignoring footer group in %s: every group needs a links list', where)
       continue
     }
     const links = []
     for (const link of group.links) {
-      if (!link || link.constructor !== Object || !link.text || !link.url) {
+      if (link?.constructor !== Object || !link?.text || !link?.url) {
         logger.warn('Ignoring footer link in %s: every link needs a text and a url', where)
         continue
       }

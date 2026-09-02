@@ -45,7 +45,7 @@ export function RoomInformationOverlay() {
   const [gridType, setGridType] = React.useState<WeaveStageGridType>(WEAVE_GRID_TYPES.LINES)
 
   const handleToggleGrid = React.useCallback(() => {
-    if (instance && instance.isPluginEnabled('stageGrid')) {
+    if (instance?.isPluginEnabled('stageGrid')) {
       instance.disablePlugin('stageGrid')
       setGridEnabled(instance.isPluginEnabled('stageGrid'))
       return

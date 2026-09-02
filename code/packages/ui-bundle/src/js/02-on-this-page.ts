@@ -11,7 +11,7 @@
   var sidebar = document.getElementById('on-this-page')
   if (!sidebar) return
   if (document.querySelector('body.-toc')) return sidebar.parentNode.removeChild(sidebar)
-  var levels = parseInt(sidebar.dataset.levels || '4', 10)
+  var levels = Number.parseInt(sidebar.dataset.levels || '4', 10)
   if (levels < 0) return
 
   var articleSelector = 'article.doc'
@@ -36,16 +36,26 @@
   var list = headings.reduce(function (accum, heading) {
     var link = document.createElement('a')
     link.textContent = heading.textContent
-    links[(link.href = '#' + heading.id)] = link
+    // NOT `links[link.href] = link` — reading `.href` back goes through the
+    // anchor's own getter, which always resolves to an ABSOLUTE URL, not the
+    // bare fragment `onScroll()` below looks entries up by. The fragment has
+    // to be captured in a local and reused as both the assigned href and the
+    // lookup key.
+    var fragment = '#' + heading.id
+    link.href = fragment
+    links[fragment] = link
     var listItem = document.createElement('li')
-    listItem.dataset.level = String(parseInt(heading.nodeName.slice(1), 10) - 1)
+    listItem.dataset.level = String(Number.parseInt(heading.nodeName.slice(1), 10) - 1)
     listItem.appendChild(link)
     accum.appendChild(listItem)
     return accum
   }, document.createElement('ul'))
 
   var menu = sidebar.querySelector('.toc-menu')
-  if (!menu) (menu = document.createElement('div')).className = 'toc-menu'
+  if (!menu) {
+    menu = document.createElement('div')
+    menu.className = 'toc-menu'
+  }
 
   var title = document.createElement('h3')
   title.textContent = sidebar.dataset.title || 'On this page'
@@ -156,6 +166,13 @@
   }
 
   function getNumericStyleVal (el, prop) {
-    return parseFloat(window.getComputedStyle(el)[prop])
+    return Number.parseFloat(window.getComputedStyle(el)[prop])
   }
 })()
+
+// Empty export makes this a real ES module for TypeScript's purposes (it
+// otherwise has no top-level import/export, so tsc treats a `02-on-this-page.spec.ts`
+// dynamically importing it as TS2306 "not a module") — a genuine no-op at
+// runtime, esbuild strips it, the IIFE above still runs for its side effects
+// exactly the same.
+export {}

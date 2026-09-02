@@ -193,14 +193,10 @@ function renderMedia(lightHtml, darkHtml) {
   const dark = darkHtml ? (IMG_RX.exec(darkHtml) || [])[0] : ''
   if (!light && !dark) return ''
   const themed = light && dark
+  const lightModifierClass = themed ? ' docouture-feature-tabs__image--light' : ''
   return (
     '<div class="docouture-feature-tabs__media">' +
-    (light
-      ? light.replace(
-          '<img',
-          '<img class="docouture-feature-tabs__image' + (themed ? ' docouture-feature-tabs__image--light' : '') + '"'
-        )
-      : '') +
+    (light ? light.replace('<img', '<img class="docouture-feature-tabs__image' + lightModifierClass + '"') : '') +
     (dark
       ? dark.replace('<img', '<img class="docouture-feature-tabs__image docouture-feature-tabs__image--dark"')
       : '') +
@@ -305,11 +301,12 @@ function renderFeature(block, index, parent) {
       '</a>' +
       '</li>'
 
+    const headingModifierClass = label ? '' : ' docouture-feature-tabs__heading--redundant'
     const heading = title
       ? '<h3 class="docouture-feature-tabs__heading' +
         // No explicit label means the heading and the tab say the same thing, so
         // the enhanced state hides the heading rather than printing it twice.
-        (label ? '' : ' docouture-feature-tabs__heading--redundant') +
+        headingModifierClass +
         '"' +
         attr('id', headingId) +
         '>' +

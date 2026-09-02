@@ -427,7 +427,7 @@ export async function startDevServer(options: DevServerOptions): Promise<DevServ
       // otherwise be left running as an orphan after the dev server itself
       // has already torn down — kill it too, best-effort (it may already
       // have exited on its own by the time close() runs).
-      if (activeBuildChild && activeBuildChild.exitCode === null && !activeBuildChild.killed) {
+      if (activeBuildChild?.exitCode === null && !activeBuildChild?.killed) {
         activeBuildChild.kill('SIGTERM')
       }
       for (const res of clients) res.end()

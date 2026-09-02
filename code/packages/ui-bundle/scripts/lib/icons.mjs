@@ -147,7 +147,11 @@ export function suggest(index, name, limit = 4) {
     const contains = candidate.includes(name) || name.includes(candidate)
     const d = distance(name, candidate)
     if (!exact && !contains && d > 4) continue
-    scored.push({ ref: candidate, rank: exact ? -2 : contains ? -1 : d })
+    let rank
+    if (exact) rank = -2
+    else if (contains) rank = -1
+    else rank = d
+    scored.push({ ref: candidate, rank })
   }
   scored.sort((a, b) => a.rank - b.rank || a.ref.localeCompare(b.ref))
   return scored.slice(0, limit).map((s) => s.ref)

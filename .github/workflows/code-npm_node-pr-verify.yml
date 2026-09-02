@@ -167,6 +167,17 @@ jobs:
           echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
           cp code/.tool-versions "$HOME/.tool-versions"
 
+      # Catches invisible Unicode whitespace (e.g. a pasted-in NBSP) before
+      # it reaches CHANGELOG.md's [Unreleased] section — that whitespace
+      # breaks release-flow/keep-a-changelog-action's markdown parsing of
+      # the heading it sits in, which then gets corrupted with a stray
+      # backslash escape on every future release. See
+      # .github/scripts/sanitize-changelog.mjs for the full story.
+      # Homologated with weave.js's identical check in its
+      # code-npm_node-PR_verify.yml.
+      - name: Verify CHANGELOG.md has no invisible whitespace
+        run: node .github/scripts/sanitize-changelog.mjs code/CHANGELOG.md --check
+
       # code/.npmrc pins the default registry to npmjs. Nothing in this
       # workspace is on a different registry, so this install needs no
       # credential and never contacts a private registry.

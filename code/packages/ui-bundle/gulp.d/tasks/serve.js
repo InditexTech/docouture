@@ -5,12 +5,12 @@
 'use strict'
 
 const connect = require('gulp-connect')
-const os = require('os')
+const os = require('node:os')
 
 const ANY_HOST = '0.0.0.0'
 const URL_RX = /(https?):\/\/(?:[^/: ]+)(:\d+)?/
 
-module.exports =
+const serve =
   (root, opts = {}, watch = undefined) =>
   (done) => {
     connect.server({ ...opts, middleware: opts.host === ANY_HOST ? decorateLog : undefined, root }, function () {
@@ -18,6 +18,8 @@ module.exports =
       if (watch) watch()
     })
   }
+
+module.exports = serve
 
 function decorateLog(_, app) {
   const _log = app.log

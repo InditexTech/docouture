@@ -14,9 +14,9 @@ export function getContrastTextColor(hex: string): 'white' | 'black' {
   const cleaned = hex.replace(/^#/, '')
 
   // Parse R, G, B from hex
-  const r = parseInt(cleaned.slice(0, 2), 16)
-  const g = parseInt(cleaned.slice(2, 4), 16)
-  const b = parseInt(cleaned.slice(4, 6), 16)
+  const r = Number.parseInt(cleaned.slice(0, 2), 16)
+  const g = Number.parseInt(cleaned.slice(2, 4), 16)
+  const b = Number.parseInt(cleaned.slice(4, 6), 16)
 
   // Calculate luminance (per W3C)
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255

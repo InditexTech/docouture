@@ -180,7 +180,7 @@ export function ZoomHandlerOverlay() {
               />
             </div>
             <div className="w-full px-4 font-noto-sans-mono flex justify-end items-center text-muted-foreground">
-              {parseFloat(`${zoomValue * 100}`).toFixed(2)}%
+              {Number.parseFloat(`${zoomValue * 100}`).toFixed(2)}%
             </div>
           </div>
         </div>

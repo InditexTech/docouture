@@ -38,10 +38,13 @@
   function labelToggle () {
     var collapsed = isCollapsed()
     toggle.setAttribute('aria-expanded', String(!collapsed))
-    toggle.setAttribute(
-      'aria-label',
-      pushQuery.matches ? (collapsed ? 'Show navigation' : 'Hide navigation') : collapsed ? 'Open navigation' : 'Close navigation'
-    )
+    var label
+    if (pushQuery.matches) {
+      label = collapsed ? 'Show navigation' : 'Hide navigation'
+    } else {
+      label = collapsed ? 'Open navigation' : 'Close navigation'
+    }
+    toggle.setAttribute('aria-label', label)
   }
 
   // One mechanism drives every breakpoint: `is-side-menu-collapsed` on
@@ -152,11 +155,13 @@
         if (targetNode) {
           var current: Element = targetNode
           var ceiling = document.querySelector('article.doc')
-          while ((current = current.parentElement) && current !== ceiling) {
+          current = current.parentElement
+          while (current && current !== ceiling) {
             var id = current.id
             // NOTE: look for section heading
             if (!id && SECT_CLASS_RX.test(current.className)) id = current.firstElementChild?.id
             if (id && (navLink = nav.querySelector<HTMLElement>('.dt-list-item[href="#' + id + '"]'))) break
+            current = current.parentElement
           }
         }
       }
@@ -192,3 +197,10 @@
     return [].slice.call(from.querySelectorAll(selector)) as HTMLElement[]
   }
 })()
+
+// Empty export makes this a real ES module for TypeScript's purposes (it
+// otherwise has no top-level import/export, so tsc treats a `01-nav.spec.ts`
+// dynamically importing it as TS2306 "not a module") — a genuine no-op at
+// runtime, esbuild strips it, the IIFE above still runs for its side effects
+// exactly the same.
+export {}

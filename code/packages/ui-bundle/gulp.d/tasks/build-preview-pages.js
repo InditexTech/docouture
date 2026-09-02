@@ -10,11 +10,11 @@ const Asciidoctor = require('@asciidoctor/core')
 const fs = require('fs-extra')
 const handlebars = require('handlebars')
 const merge = require('../lib/concat-streams')
-const ospath = require('path')
+const ospath = require('node:path')
 const path = ospath.posix
 const requireFromString = require('require-from-string')
-const { Transform } = require('stream')
-const { finished } = require('stream/promises')
+const { Transform } = require('node:stream')
+const { finished } = require('node:stream/promises')
 const map = (transform = () => {}, flush = undefined) => new Transform({ objectMode: true, transform, flush })
 // NOTE the default sink must actually forward files. `map()` builds a Transform
 // whose callback is never invoked, which stalls the pipeline as soon as the
@@ -28,7 +28,7 @@ const loadIconCatalog = require('../lib/load-icon-catalog')
 
 const ASCIIDOC_ATTRIBUTES = { experimental: '', icons: 'font', sectanchors: '', 'source-highlighter': 'highlight.js' }
 
-module.exports =
+const buildPreviewPages =
   (src, previewSrc, previewDest, sink = passThrough) =>
   async () => {
     const [sampleUiModel, { layouts }] = await Promise.all([
@@ -52,8 +52,8 @@ module.exports =
 
     const iconCatalog = await loadIconCatalog(previewDest)
 
-    const extensions = ((sampleUiModel.asciidoc || {}).extensions || []).map((request) => {
-      ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replace(/[/]/g, '-') + '-loaded'] = ''
+    const extensions = (sampleUiModel.asciidoc?.extensions || []).map((request) => {
+      ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replaceAll(/[/]/g, '-') + '-loaded'] = ''
       const extension = require(request)
       extension.register.call(Asciidoctor.Extensions)
       return extension
@@ -105,7 +105,7 @@ module.exports =
             // happen per rendered *page*, not by overriding `page` locally
             // inside a shared one with `{{#with}}`.
             const versionScenario = doc.getAttribute('page-version-scenario')
-            const scenario = versionScenario && (sampleUiModel.pageVersionsScenarios || {})[versionScenario]
+            const scenario = versionScenario && sampleUiModel.pageVersionsScenarios?.[versionScenario]
             if (versionScenario && !scenario) {
               throw new Error(`page-version-scenario "${versionScenario}" is not defined in ui-model.yml`)
             }
@@ -134,6 +134,8 @@ module.exports =
     // gulp is no longer consuming the returned stream on its behalf.
     return finished(stream.resume())
   }
+
+module.exports = buildPreviewPages
 
 function loadSampleUiModel(src) {
   // NOTE js-yaml 4 removed safeLoad; load is safe by default.
@@ -210,7 +212,8 @@ const EXTERNAL_OR_FRAGMENT_RX = /^(?:[a-z][a-z0-9+.-]*:)?\/\/|^#/i
 
 function resolvePageURL(spec) {
   if (spec && !EXTERNAL_OR_FRAGMENT_RX.test(spec)) {
-    return '/' + (spec = spec.split(':').pop()).slice(0, spec.lastIndexOf('.')) + '.html'
+    spec = spec.split(':').pop()
+    return '/' + spec.slice(0, spec.lastIndexOf('.')) + '.html'
   }
 }
 

@@ -1,3 +1,102 @@
+# Docouture
+
+Source: /prerelease/
+
+docouture turns an [Antora](https://antora.org) content tree into a themed, searchable documentation site in one command — `docouture new` scaffolds it, `docouture dev` serves it with live reload, and `docouture publish gh-pages` ships it.
+
+## Get started
+
+![A scaffold command turning into a running site](_images/card-quickstart.jpg)
+
+Start here
+
+[Quickstart](main/quickstart/)
+
+Scaffold a site and see it running locally in a few commands.
+
+![A content pipeline diagram connecting a page](_images/card-about.jpg)
+
+Overview
+
+[About](main/)
+
+What docouture actually ships, and why it exists.
+
+![A terminal-style browser window with a command palette and a folder navigation tree](_images/card-cli-reference.png)
+
+Reference
+
+[CLI reference](main/reference-cli/)
+
+Every `docouture` command, its flags, and what it actually does.
+
+![Layered building blocks connecting content sources](_images/card-architecture.jpg)
+
+Design
+
+[Architecture](main/architecture/)
+
+How the CLI, the Antora pipeline and the themed UI bundle fit together.
+
+## Key features
+
+- [Scaffold in one command](#feature-tabs-panel-1)
+- [Its own design tokens](#feature-tabs-panel-2)
+- [Diagrams and search, built in](#feature-tabs-panel-3)
+- [AI-ready docs](#feature-tabs-panel-4)
+
+![A `docouture new` terminal command producing a scaffolded docs/ directory with content](_images/feature-scaffold.png)
+
+`docouture new` lays down a full Antora site — content tree, [GitHub](https://github.com/features/actions) workflows, an AGENTS.md briefing for coding agents — into an existing repository. `docouture dev`, `docouture build` and `docouture publish` take it from there.
+
+[Try it](main/quickstart/)
+
+![A grid of light and dark themed UI components — buttons](_images/feature-design-tokens.jpg)
+
+The UI bundle is a themed fork of Antora’s own default UI: dark/light mode, a version switcher, full-text search, and a set of authoring blocks — tabs, cards, accordions, feature tabs — with no plain [AsciiDoc](https://asciidoc.org) equivalent.
+
+[See the UI bundle](main/reference-ui-bundle/)
+
+![A magnifying glass over search results feeding into a document and a linked network graph](_images/feature-diagrams-search.jpg)
+
+Mermaid/PlantUML/BPMN/Excalidraw diagrams render via a self-hosted [Kroki](https://kroki.io) service, code blocks get build-time [Shiki](https://shiki.style) highlighting, and a full-text search index ships with every build — all with zero configuration beyond what `docouture new` already wrote.
+
+[See what ships](main/reference-integrations/)
+
+![Documentation files being processed and split into a rendered site page and a structured](_images/feature-ai-ready-docs.jpg)
+
+Every build publishes [`llms.txt`](https://llmstxt.org)/`llms-full.txt` for LLM ingestion, and `npx skills add InditexTech/docouture` installs a set of agent skills that plan, scaffold and keep a site’s content in sync with the repo it documents.
+
+[See the skills](main/reference-ai-first-approach/)
+
+## Open source
+
+The CLI, the Antora/[Asciidoctor](https://asciidoctor.org) extensions, the UI bundle (Apache-2.0/MPL-2.0 split, being a fork of antora-ui-default) and the release tooling are all open — see the FAQ below for the licence breakdown.
+
+[View the repository](https://github.com/InditexTech/docouture)
+
+## Frequently asked questions
+
+What is docouture?
+
+An Antora documentation platform: a themed UI bundle, a set of Antora/Asciidoctor extensions, and the `docouture` CLI that scaffolds, serves, builds and publishes a site built on top of them. See [About](main/).
+
+How do I create a new site?
+
+`npx @inditextech/docouture-cli new <name>` — see [Quickstart](main/quickstart/).
+
+Can documentation be versioned?
+
+Yes — standalone (stable + prerelease) or versioned (full release history). See [Versioning modes](main/guides-versioning-modes/).
+
+Is docouture open source?
+
+Yes — the CLI, extensions and UI bundle are all Apache-2.0 or MPL-2.0, with nothing embedded that restricts publishing a site — see the [full FAQ](main/faq/) for the licence breakdown.
+
+See the [full FAQ](main/faq/) for more, including diagrams, search and publishing.
+
+---
+
 # Additional information
 
 Source: /prerelease/main/additional-information-overview/
@@ -2626,6 +2725,7 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Added
 
+- [#202](https://github.com/InditexTech/docouture/pull/202) [cli] docouture dev / just dev: fall back to a random free port when the default 5000 is busy
 - [#198](https://github.com/InditexTech/docouture/pull/198) [ui-bundle] Click-to-zoom fullscreen overlay for images and diagrams
 - [#176](https://github.com/InditexTech/docouture/pull/176) [cli] Support git-flow branching alongside trunk-based in docouture scaffolding
 - [#173](https://github.com/InditexTech/docouture/pull/173) [tooling] Docs release: stop creating a GitHub Release for versioned-mode tags, tag only
@@ -2676,6 +2776,7 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Fixed
 
+- [#200](https://github.com/InditexTech/docouture/pull/200) [ui-bundle/asciidoc] Diagram bleed silently lost outside a section, and role="a, b" leaves a comma stuck in the class attribute
 - [#194](https://github.com/InditexTech/docouture/pull/194) [cli] docouture-release-preview.yml’s check-changes-in-paths job missing contents/pull-requests read permissions
 - [#192](https://github.com/InditexTech/docouture/pull/192) [asciidoc] kroki-prewarm doesn’t resolve include:: before extracting diagram source — permanent cache miss for diagrams built from shared partials
 - [#186](https://github.com/InditexTech/docouture/pull/186) [skills] --all leaks contributor-only skills from .opencode/skills into public installs
@@ -2692,6 +2793,7 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Documentation
 
+- [#204](https://github.com/InditexTech/docouture/pull/204) [documentation] docs site footer: swap Home for Repository link, add Guides and INDITEXTECH columns
 - [#191](https://github.com/InditexTech/docouture/pull/191) [skills] nav.adoc guidance doesn’t warn against nesting a section’s topics under its own Overview page
 - [#174](https://github.com/InditexTech/docouture/pull/174) [skills] Internalize authoring-guides content into the docouture-* skills as AsciiDoc
 - [#150](https://github.com/InditexTech/docouture/pull/150) [documentation] Document docouture using docouture (dogfood the platform for its own docs)

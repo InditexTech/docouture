@@ -1,0 +1,26 @@
+code/packages/antora-extensions/lib/html-to-markdown.js
+  h_c93d154c7c7074 245
+code/packages/asciidoc-extensions/lib/accordion.js
+  h_c93d154c7c7074 125
+code/packages/asciidoc-extensions/lib/kroki-config.spec.js
+  h_c93d154c7c7074 109
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  h_c93d154c7c7074 67
+code/packages/ui-bundle/scripts/build-sprite.mjs
+  h_c93d154c7c7074 66,145-150
+code/packages/ui-bundle/src/helpers/icon.ts
+  h_c93d154c7c7074 35,38
+code/packages/ui-bundle/src/js/02-on-this-page.spec.ts
+  h_c93d154c7c7074 50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2f3a13d79fac12ff62681a9467c8663048bdf8f6",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

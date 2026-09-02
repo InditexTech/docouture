@@ -24,7 +24,11 @@ on:
     branches: ['__DOCOUTURE_RELEASE_BRANCH__*']
 
 concurrency:
-  group: release-preview
+  # Scoped per-PR, not just per-workflow: a bare 'release-preview' group name
+  # collides with this monorepo's own code-release_preview.yml, so a label
+  # change firing both workflows at once could have one cancel the other
+  # mid-run even though they preview unrelated releases.
+  group: docouture-release-preview-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:

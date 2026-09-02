@@ -1,0 +1,14 @@
+.github/workflows/code-npm_node-sonarcloud-analysis.yml
+  h_c93d154c7c7074 39,42-43,45,69,83,86,88,91,93,97,99,104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8b25868c2755626ada444081536f09d6aa1f669a",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

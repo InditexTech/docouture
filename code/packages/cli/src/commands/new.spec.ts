@@ -199,6 +199,32 @@ describe('runNew', () => {
     expect(allLogs).toContain('pnpm run dev')
   })
 
+  it('scaffolds .tool-versions with only the nodejs line for --pm npm', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--pm', 'npm'])
+    expect(code).toBe(0)
+
+    const toolVersions = await readFile(join(repo, 'docs', '.tool-versions'), 'utf8')
+    expect(toolVersions).toBe(`nodejs ${process.version.replace(/^v/, '')}\n`)
+    expect(toolVersions).not.toContain('pnpm')
+    expect(toolVersions).not.toContain('__DOCOUTURE_')
+  })
+
+  it('scaffolds .tool-versions with both lines for --pm pnpm', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+
+    const code = await runNew(['my-project-docs', '--dir', repo, '--pm', 'pnpm'])
+    expect(code).toBe(0)
+
+    const toolVersions = await readFile(join(repo, 'docs', '.tool-versions'), 'utf8')
+    expect(toolVersions).toContain(`nodejs ${process.version.replace(/^v/, '')}\n`)
+    expect(toolVersions).toMatch(/^pnpm \d+\.\d+\.\d+$/m)
+    expect(toolVersions).not.toContain('__DOCOUTURE_')
+  })
+
   it('refuses to scaffold when --dir is not inside a git repository', async () => {
     const notARepo = join(base, 'not-a-repo')
     await mkdir(notARepo, { recursive: true })

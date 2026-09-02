@@ -18,6 +18,7 @@ import {
   checkGitHasCommit,
   checkNamesAgree,
   checkNodeVersion,
+  checkPackageManagerAvailable,
   checkReleaseLabelExists,
 } from './doctor-checks.js'
 
@@ -46,6 +47,32 @@ describe('checkNodeVersion', () => {
   it('does not fail when the range cannot be parsed', () => {
     const result = checkNodeVersion('whatever the docs say', 'v24.0.0')
     expect(result.ok).toBe(true)
+  })
+})
+
+describe('checkPackageManagerAvailable', () => {
+  it('is advisory-only (ok: true) when no packageManager field is declared', async () => {
+    const result = await checkPackageManagerAvailable(null)
+    expect(result.ok).toBe(true)
+    expect(result.message).toContain('skipping')
+  })
+
+  it('is advisory-only (ok: true) when the field cannot be parsed', async () => {
+    const result = await checkPackageManagerAvailable('not-a-valid-field')
+    expect(result.ok).toBe(true)
+    expect(result.message).toContain('skipping')
+  })
+
+  it('passes when the declared package manager is actually on PATH', async () => {
+    const result = await checkPackageManagerAvailable('npm@10.9.2')
+    expect(result.ok).toBe(true)
+    expect(result.message).toContain('npm')
+  })
+
+  it('fails when the declared package manager is not on PATH', async () => {
+    const result = await checkPackageManagerAvailable('docouture-nonexistent-pm@1.0.0')
+    expect(result.ok).toBe(false)
+    expect(result.detail).toContain('docouture-nonexistent-pm')
   })
 })
 

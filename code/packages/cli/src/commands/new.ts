@@ -618,11 +618,22 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // releases included.
   const { version: cliVersion } = await readCliInfo(import.meta.url, 2)
 
+  // Whatever Node is actually running this scaffold — same reasoning as
+  // cliVersion above (readCliInfo's own comment), just for the runtime
+  // rather than the CLI package. Written as .tool-versions' `nodejs` line.
+  const nodeVersion = process.version.replace(/^v/, '')
+
   // The user's own choice (--pm, wizard answer, or the auto-guess computed
   // above if neither was given) — never re-detected against `target`, so
   // whatever was actually chosen/confirmed is what the workflows and
   // printed next-steps agree on.
   const pm = packageManagerPlan(pmChoice)
+
+  // .tool-versions' second line — present only for a pnpm-scaffolded site
+  // (see TemplateValues.pnpmToolVersionsLine's own comment); pm.packageManagerField
+  // is already the corepack-convention 'pnpm@<version>' string, so this
+  // just reshapes it into asdf/mise's own 'pnpm <version>' line syntax.
+  const pnpmToolVersionsLine = pm.pm === 'pnpm' ? `pnpm ${pm.packageManagerField.split('@')[1]}\n` : ''
 
   const values = {
     name,
@@ -638,6 +649,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     // component-name check when this is the literal 'ROOT'.
     componentName: urlSegment ? name : 'ROOT',
     cliVersion,
+    nodeVersion,
+    pnpmToolVersionsLine,
     pmName: pm.pm,
     pmCacheName: pm.cacheName,
     pmLockfile: pm.lockfile,

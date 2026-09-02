@@ -92,7 +92,8 @@ $ docouture publish gh-pages --branch gh-pages
 
 == `docouture doctor`
 
-Check environment and site health: https://nodejs.org[Node] version, the four names
+Check environment and site health: https://nodejs.org[Node] version, that the declared
+package manager (`package.json`'s `packageManager` field) is installed, the four names
 that must agree (see xref:main:guides-modifying-the-navigation.adoc[]), git history, that
 Antora is installed, and (advisory only) whether `AGENTS.md` is still present, whether the
 `docs/release` label exists, and whether the declared branching model

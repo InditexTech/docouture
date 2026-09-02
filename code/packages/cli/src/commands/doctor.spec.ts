@@ -5,7 +5,7 @@
 'use strict'
 
 import { execFileSync } from 'node:child_process'
-import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -154,6 +154,30 @@ describe('runDoctor', () => {
     expect(codePresent).toBe(0)
     const outPresent = loggedLines()
     expect(outPresent).not.toContain('warn')
+  })
+
+  it('fails when the declared package manager is not installed', async () => {
+    await scaffoldGoodSite(repo)
+    const pkgPath = join(repo, 'docs', 'package.json')
+    const pkg = JSON.parse(await readFile(pkgPath, 'utf8')) as Record<string, unknown>
+    pkg.packageManager = 'docouture-nonexistent-pm@1.0.0'
+    await writeFile(pkgPath, JSON.stringify(pkg), 'utf8')
+
+    const code = await runDoctor(['--dir', repo])
+    expect(code).toBe(1)
+    expect(loggedLines()).toContain('package manager')
+  })
+
+  it('passes when the declared package manager is installed', async () => {
+    await scaffoldGoodSite(repo)
+    const pkgPath = join(repo, 'docs', 'package.json')
+    const pkg = JSON.parse(await readFile(pkgPath, 'utf8')) as Record<string, unknown>
+    pkg.packageManager = 'npm@10.9.2'
+    await writeFile(pkgPath, JSON.stringify(pkg), 'utf8')
+
+    const code = await runDoctor(['--dir', repo])
+    expect(code).toBe(0)
+    expect(loggedLines()).not.toContain('FAIL')
   })
 
   it('prints a machine-readable report to stdout and nothing via console.log under --json', async () => {

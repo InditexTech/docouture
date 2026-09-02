@@ -193,6 +193,11 @@ export async function runBranchModel(argv: string[]): Promise<number> {
     // there is nothing meaningful to compute either from.
     componentName: 'unused-by-branch-model',
     cliVersion,
+    // .tool-versions (the only template file these two placeholders appear
+    // in) is never re-copied by branch-model — same reasoning as
+    // componentName above.
+    nodeVersion: 'unused-by-branch-model',
+    pnpmToolVersionsLine: 'unused-by-branch-model',
     pmName: pm.pm,
     pmCacheName: pm.cacheName,
     pmLockfile: pm.lockfile,

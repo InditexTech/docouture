@@ -43,6 +43,7 @@ path = [
     "code/packages/cli/**/*.png",
     "code/packages/cli/**/*.yml",
     "code/packages/cli/templates/starter/gitignore",
+    "code/packages/cli/templates/starter/.tool-versions",
     "code/packages/cli/templates/starter/antora-playbook.versioned.yml",
     "code/packages/cli/templates/starter/src/release-version.versioned",
     "code/packages/asciidoc-extensions/README.md",

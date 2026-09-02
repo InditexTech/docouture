@@ -139,6 +139,12 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     // substituted anywhere upgrade touches.
     componentName: 'unused-by-upgrade',
     cliVersion,
+    // .tool-versions (the only template file these two placeholders appear
+    // in) is never re-copied by upgrade — same reasoning as componentName
+    // above: structurally required by TemplateValues, but nothing
+    // meaningful to compute either from here.
+    nodeVersion: 'unused-by-upgrade',
+    pnpmToolVersionsLine: 'unused-by-upgrade',
     pmName: pm.pm,
     pmCacheName: pm.cacheName,
     pmLockfile: pm.lockfile,

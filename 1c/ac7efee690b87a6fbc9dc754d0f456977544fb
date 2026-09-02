@@ -1,0 +1,14 @@
+code/sonar-project.properties
+  h_c93d154c7c7074 1-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1cac7efee690b87a6fbc9dc754d0f456977544fb",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

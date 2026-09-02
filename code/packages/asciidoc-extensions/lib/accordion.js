@@ -122,7 +122,7 @@ function hasOption(node, name) {
  * @returns {string} the same text, safe inside `"…"`.
  */
 function escapeConvertedAttribute(html) {
-  return html.replaceAll(/"/g, '&quot;')
+  return html.replaceAll('"', '&quot;')
 }
 
 /**

@@ -32,10 +32,10 @@ import type { HelperOptions } from '../../types/ui'
 const NAME_RX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 const escapeAttr = (value: string): string =>
-  value.replaceAll(/&/g, '&amp;').replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;').replaceAll(/"/g, '&quot;')
+  value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;')
 
 const escapeText = (value: string): string =>
-  value.replaceAll(/&/g, '&amp;').replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;')
+  value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 
 /**
  * A Handlebars SafeString without importing Handlebars.

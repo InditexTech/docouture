@@ -106,7 +106,7 @@ describe('resolveEnabledTypes', () => {
     const onUnknownType = () => {
       throw new Error('should not be called when "all types" is meant')
     }
-    resolveEnabledTypes(true, undefined, onUnknownType)
+    expect(() => resolveEnabledTypes(true, undefined, onUnknownType)).not.toThrow()
   })
 })
 

@@ -63,7 +63,7 @@ function resolve(names, index) {
   return symbols
 }
 
-const escape = (text) => text.replaceAll(/&/g, '&amp;').replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;')
+const escape = (text) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 
 /**
  * Rewrite a bare Lucide `<symbol id="name" viewBox="...">` into our own
@@ -142,12 +142,12 @@ const MASKS_HEADER = `/*
 // browser's data URI parser.
 const encodeDataUri = (svg) =>
   svg
-    .replaceAll(/"/g, "'")
-    .replaceAll(/%/g, '%25')
-    .replaceAll(/#/g, '%23')
-    .replaceAll(/</g, '%3C')
-    .replaceAll(/>/g, '%3E')
-    .replaceAll(/\n/g, '')
+    .replaceAll('"', "'")
+    .replaceAll('%', '%25')
+    .replaceAll('#', '%23')
+    .replaceAll('<', '%3C')
+    .replaceAll('>', '%3E')
+    .replaceAll('\n', '')
 
 function maskDataUri(markup) {
   const viewBox = markup.match(/\bviewBox="([^"]+)"/)?.[1]

@@ -242,7 +242,7 @@ function tableToMarkdown(tableNode) {
   // replacer callback visits each original character exactly once, so this
   // ordering hazard can't occur no matter which character comes first in
   // the input.
-  const escapeCell = (text) => text.replace(/[\\|]/g, (ch) => (ch === '\\' ? '\\\\' : '\\|'))
+  const escapeCell = (text) => text.replace(/[\\|]/g, (ch) => (ch === '\\' ? String.raw`\\` : String.raw`\|`))
   for (const rowNode of tableNode.querySelectorAll('tr')) {
     const cells = rowNode.querySelectorAll('th,td').map((cell) => escapeCell(inlineText(cell)) || ' ')
     if (cells.length) rows.push(cells)

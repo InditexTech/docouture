@@ -47,7 +47,7 @@ describe('on this page', () => {
     const sidebar = document.getElementById('on-this-page')!
     expect(document.documentElement.classList.contains('has-toc')).toBe(true)
     const links = sidebar.querySelectorAll('a')
-    expect(links.length).toBe(2)
+    expect(links).toHaveLength(2)
     expect(links[0].getAttribute('href')).toBe('#intro')
     expect(links[1].getAttribute('href')).toBe('#one')
     expect(sidebar.querySelector('h3')!.textContent).toBe('On this page')

@@ -1,0 +1,16 @@
+code/packages/asciidoc-extensions/lib/cta.js
+  h_c93d154c7c7074 180
+code/packages/asciidoc-extensions/lib/feature-tabs.js
+  h_c93d154c7c7074 199
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bcfa00a4b56b527bba2339ff499bf5e18a393482",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

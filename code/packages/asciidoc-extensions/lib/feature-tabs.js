@@ -196,9 +196,7 @@ function renderMedia(lightHtml, darkHtml) {
   const lightModifierClass = themed ? ' docouture-feature-tabs__image--light' : ''
   return (
     '<div class="docouture-feature-tabs__media">' +
-    (light
-      ? light.replace('<img', '<img class="docouture-feature-tabs__image' + lightModifierClass + '"')
-      : '') +
+    (light ? light.replace('<img', '<img class="docouture-feature-tabs__image' + lightModifierClass + '"') : '') +
     (dark
       ? dark.replace('<img', '<img class="docouture-feature-tabs__image docouture-feature-tabs__image--dark"')
       : '') +

@@ -177,9 +177,7 @@ function renderMark(lightHtml, darkHtml) {
   const lightModifierClass = themed ? ' docouture-cta__mark-image--light' : ''
   return (
     '<div class="docouture-cta__mark">' +
-    (light
-      ? light.replace('<img', '<img class="docouture-cta__mark-image' + lightModifierClass + '"')
-      : '') +
+    (light ? light.replace('<img', '<img class="docouture-cta__mark-image' + lightModifierClass + '"') : '') +
     (dark ? dark.replace('<img', '<img class="docouture-cta__mark-image docouture-cta__mark-image--dark"') : '') +
     '</div>'
   )

@@ -1,6 +1,6 @@
 {
   "name": "@inditextech/docouture-ui-bundle",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Antora UI bundle for the docouture documentation platform",
   "repository": {
     "type": "git",

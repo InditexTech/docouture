@@ -39,6 +39,15 @@ describe('htmlToMarkdown', () => {
     expect(htmlToMarkdown(html)).toBe('| A | B |\n| --- | --- |\n| 1 | 2 |')
   })
 
+  // Regression test for the escaping order: a cell containing a literal
+  // backslash must come out doubled, and a cell containing a literal pipe
+  // must come out backslash-escaped, without either interfering with the
+  // other — see escapeCell's own comment in html-to-markdown.js.
+  it('escapes backslashes and pipes in table cells', () => {
+    const html = '<table><tr><th>A</th><th>B</th></tr><tr><td>back\\slash</td><td>pipe|char</td></tr></table>'
+    expect(htmlToMarkdown(html)).toBe('| A | B |\n| --- | --- |\n| back\\\\slash | pipe\\|char |')
+  })
+
   it('drops table-of-contents and icon elements', () => {
     const html = '<div class="toc"><a href="#a">A</a></div><p>Body</p><svg><path/></svg>'
     expect(htmlToMarkdown(html)).toBe('Body')

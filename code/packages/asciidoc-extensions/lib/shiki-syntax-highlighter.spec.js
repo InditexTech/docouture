@@ -15,7 +15,10 @@ require('./shiki-syntax-highlighter')
 
 const asciidoctor = /** @type {any} */ (require('asciidoctor-core-2.2'))()
 
-/** @param {string} lang */
+/**
+ * @param {string | undefined} lang
+ * @param {string} body
+ */
 function convertSource(lang, body) {
   const source = (lang ? '[source,' + lang + ']' : '[source]') + '\n----\n' + body + '\n----'
   return asciidoctor.convert(source, { attributes: { 'source-highlighter': 'shiki' }, safe: 'safe' })
@@ -24,8 +27,11 @@ function convertSource(lang, body) {
 describe('shiki syntax highlighter', () => {
   afterEach(() => {
     // Reset the module-level singleton between tests — shiki-instance.js is
-    // one shared handle for the whole process (see its own header).
-    shikiInstance.set(null, null)
+    // one shared handle for the whole process (see its own header). `set`'s
+    // own JSDoc requires a real highlighter/rootStyle; this is the one place
+    // that intentionally puts it back to the "never warmed" state its own
+    // `get()` documents returning `null` for.
+    shikiInstance.set(/** @type {any} */ (null), /** @type {any} */ (null))
   })
 
   it('degrades to plain escaped text when the pre-warm listener never ran', () => {

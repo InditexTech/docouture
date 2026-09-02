@@ -16,11 +16,16 @@ import { afterEach, describe, expect, it } from 'vitest'
 const asciidoctor = require('@asciidoctor/core')
 const registerCta = require('./cta')
 
+/**
+ * @param {string} source
+ * @param {{ logger?: { warn: (message: string) => void } }} [options]
+ * @returns {Promise<string>}
+ */
 function convert(source, { logger } = {}) {
   const registry = asciidoctor.Extensions.create()
   registerCta(registry)
   if (logger) asciidoctor.LoggerManager.setLogger(logger)
-  return asciidoctor.convert(source, { extension_registry: registry, safe: 'safe' })
+  return /** @type {Promise<string>} */ (asciidoctor.convert(source, { extension_registry: registry, safe: 'safe' }))
 }
 
 describe('cta block', () => {

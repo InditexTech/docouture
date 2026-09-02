@@ -169,3 +169,10 @@
     return Number.parseFloat(window.getComputedStyle(el)[prop])
   }
 })()
+
+// Empty export makes this a real ES module for TypeScript's purposes (it
+// otherwise has no top-level import/export, so tsc treats a `02-on-this-page.spec.ts`
+// dynamically importing it as TS2306 "not a module") — a genuine no-op at
+// runtime, esbuild strips it, the IIFE above still runs for its side effects
+// exactly the same.
+export {}

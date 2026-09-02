@@ -188,7 +188,9 @@ describe('resolveDiagramOptions', () => {
   })
 
   it('returns an empty object for no attributes at all', () => {
-    expect(resolveDiagramOptions(undefined)).toEqual({})
+    // Real callers always pass an object; this only proves the `attrs || {}`
+    // guard inside resolveDiagramOptions holds for a caller that doesn't.
+    expect(resolveDiagramOptions(/** @type {any} */ (undefined))).toEqual({})
     expect(resolveDiagramOptions({})).toEqual({})
   })
 })

@@ -46,7 +46,10 @@ describe('warn', () => {
   })
 
   it('tolerates a logger object whose warn is not a function', () => {
-    const node = { getLogger: () => ({ warn: 'not-a-function' }) }
+    // Intentionally not a real Logger shape — proves the `typeof
+    // logger.warn !== 'function'` guard, not something a real caller
+    // would ever construct.
+    const node = /** @type {any} */ ({ getLogger: () => ({ warn: 'not-a-function' }) })
     expect(() => warn(node, '[cta]', 'problem')).not.toThrow()
   })
 })

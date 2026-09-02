@@ -10,5 +10,11 @@ module.exports = defineConfig({
   test: {
     include: ['lib/**/*.spec.js'],
     environment: 'node',
+    coverage: {
+      enabled: true,
+      provider: 'v8',
+      reporter: ['lcov', 'text-summary'],
+      reportsDirectory: 'reports/vite-coverage',
+    },
   },
 })

@@ -13,5 +13,11 @@ export default defineConfig({
     // headroom a cold CI runner needs rather than sprinkling per-test
     // overrides — matches packages/cli's own vitest.config.ts.
     testTimeout: 20_000,
+    coverage: {
+      enabled: true,
+      provider: 'v8',
+      reporter: ['lcov', 'text-summary'],
+      reportsDirectory: 'reports/vite-coverage',
+    },
   },
 })

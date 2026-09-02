@@ -14,5 +14,11 @@ export default defineConfig({
     // call in particular can take several seconds to fail closed. Give every
     // test the same headroom rather than sprinkling per-test overrides.
     testTimeout: 20_000,
+    coverage: {
+      enabled: true,
+      provider: 'v8',
+      reporter: ['lcov', 'text-summary'],
+      reportsDirectory: 'reports/vite-coverage',
+    },
   },
 })

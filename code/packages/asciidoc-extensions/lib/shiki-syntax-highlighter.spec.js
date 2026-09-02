@@ -39,11 +39,12 @@ describe('shiki syntax highlighter', () => {
     expect(html).toContain('<pre class="shiki highlight"><code data-lang="javascript">const x = 1 &lt; 2;</code></pre>')
   })
 
-  it('strips Shiki\'s own <pre><code> wrapper and re-declares the root style', () => {
+  it("strips Shiki's own <pre><code> wrapper and re-declares the root style", () => {
     shikiInstance.set(
       {
         getLoadedLanguages: () => ['javascript'],
-        codeToHtml: (source) => '<pre class="shiki" style="--shiki-fake:1"><code>' + source.toUpperCase() + '</code></pre>',
+        codeToHtml: (source) =>
+          '<pre class="shiki" style="--shiki-fake:1"><code>' + source.toUpperCase() + '</code></pre>',
       },
       '--root-style:1'
     )

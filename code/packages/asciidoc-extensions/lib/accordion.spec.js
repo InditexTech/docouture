@@ -94,7 +94,10 @@ Just a stray paragraph.
       { logger }
     )
     expect(html).toContain('docouture-accordion-group')
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('an accordion group with no `[%collapsible]` items in it')
   })
 
@@ -112,7 +115,10 @@ A.
 `,
       { logger }
     )
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('has no `aria-label=` and no title')
   })
 })

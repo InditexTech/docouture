@@ -26,7 +26,9 @@ describe('warn', () => {
     const warnFn = vi.fn()
     const node = { getLogger: () => ({ warn: warnFn }) }
     warn(node, 'label:mauve[]', 'unknown IDS Label variant "mauve"', ['white', 'grey'])
-    expect(warnFn).toHaveBeenCalledWith('label:mauve[] — unknown IDS Label variant "mauve"; expected one of white, grey')
+    expect(warnFn).toHaveBeenCalledWith(
+      'label:mauve[] — unknown IDS Label variant "mauve"; expected one of white, grey'
+    )
   })
 
   it('appends nothing when expected is omitted or empty', () => {

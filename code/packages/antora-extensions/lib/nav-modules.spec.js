@@ -135,7 +135,12 @@ describe('registerNavModules', () => {
   it('marks switcher:false without warning about a missing start page', async () => {
     const logger = { warn: vi.fn(), info: () => {} }
     const { componentVersion } = await run(
-      { name: 'weavejs', version: 'latest', nav: ['modules/ROOT/nav.adoc'], navModules: [{ module: 'ROOT', switcher: false }] },
+      {
+        name: 'weavejs',
+        version: 'latest',
+        nav: ['modules/ROOT/nav.adoc'],
+        navModules: [{ module: 'ROOT', switcher: false }],
+      },
       [tree(0, [])],
       { logger }
     )
@@ -181,7 +186,10 @@ describe('registerNavModules', () => {
         name: 'weavejs',
         version: 'latest',
         nav: ['modules/main/nav.adoc'],
-        navModules: [{ module: 'main', title: 'First' }, { module: 'main', title: 'Second' }],
+        navModules: [
+          { module: 'main', title: 'First' },
+          { module: 'main', title: 'Second' },
+        ],
       },
       [tree(0, [{ urlType: 'internal', url: '/x.html', items: [] }])],
       { logger }
@@ -202,11 +210,7 @@ describe('registerNavModules', () => {
 
   it('warns about a declared nav_modules entry that matches no navigation file', async () => {
     const logger = { warn: vi.fn(), info: () => {} }
-    await run(
-      { name: 'weavejs', version: 'latest', nav: [], navModules: [{ module: 'ghost' }] },
-      [],
-      { logger }
-    )
+    await run({ name: 'weavejs', version: 'latest', nav: [], navModules: [{ module: 'ghost' }] }, [], { logger })
     expect(warnedAbout(logger, 'matches no navigation file')).toBe(true)
   })
 

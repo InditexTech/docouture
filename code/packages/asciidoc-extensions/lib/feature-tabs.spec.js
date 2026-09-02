@@ -92,7 +92,10 @@ Just a stray paragraph, no [feature] style.
 `,
       { logger }
     )
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('a feature-tabs block with no `[feature]` in it')
   })
 
@@ -111,7 +114,10 @@ image::feature-4.png[Alt]
     )
     // renderFeature returns { tab: '', panel: '' } for the unlabelled slide.
     expect(html).toContain('<ul class="docouture-feature-tabs__list"></ul>')
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('a slide has no label')
   })
 
@@ -128,7 +134,10 @@ Prose only, no image::.
 `,
       { logger }
     )
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('a slide has no `image::` of its own')
   })
 
@@ -149,7 +158,10 @@ Just text, no link.
       { logger }
     )
     expect(html).not.toContain('docouture-feature-tabs__cta"')
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain("a slide's call to action carries no link")
   })
 

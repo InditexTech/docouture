@@ -113,10 +113,7 @@ describe('registerFooter', () => {
           name: 'weavejs',
           version: 'latest',
           footer: {
-            groups: [
-              { title: 'Broken' },
-              { title: 'Fine', links: [{ text: 'Home', url: '/plain.html' }] },
-            ],
+            groups: [{ title: 'Broken' }, { title: 'Fine', links: [{ text: 'Home', url: '/plain.html' }] }],
           },
         },
       ],

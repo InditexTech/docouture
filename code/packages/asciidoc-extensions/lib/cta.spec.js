@@ -87,7 +87,12 @@ https://example.com[Go]
       { logger }
     )
     expect(html).toContain('docouture-cta--center')
-    expect(logger.getMessages().map((m) => m.getText()).join('\n')).toContain('unknown alignment "bogus"')
+    expect(
+      logger
+        .getMessages()
+        .map((m) => m.getText())
+        .join('\n')
+    ).toContain('unknown alignment "bogus"')
   })
 
   it('warns when there is no [.primary] action', async () => {
@@ -100,7 +105,12 @@ Lead only, no actions.
 `,
       { logger }
     )
-    expect(logger.getMessages().map((m) => m.getText()).join('\n')).toContain('a cta has no `[.primary]` action')
+    expect(
+      logger
+        .getMessages()
+        .map((m) => m.getText())
+        .join('\n')
+    ).toContain('a cta has no `[.primary]` action')
   })
 
   it('warns when a [.secondary] action is present without a [.primary] one', async () => {
@@ -116,7 +126,10 @@ https://example.com[Only secondary]
 `,
       { logger }
     )
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('a cta has a `[.secondary]` action but no `[.primary]` one')
   })
 
@@ -136,7 +149,10 @@ Just plain text, no link.
     // The paragraph converted fine, but renderAction found no anchor in it,
     // so the actions wrapper renders empty rather than a real button.
     expect(html).not.toContain('dt-button--primary')
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('a cta action carries no link')
   })
 
@@ -157,7 +173,10 @@ https://example.com[Go]
 `,
       { logger }
     )
-    const messages = logger.getMessages().map((m) => m.getText()).join('\n')
+    const messages = logger
+      .getMessages()
+      .map((m) => m.getText())
+      .join('\n')
     expect(messages).toContain('a cta body holds a')
   })
 })

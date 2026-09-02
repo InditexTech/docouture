@@ -1906,7 +1906,7 @@ $ docouture publish gh-pages --branch gh-pages
 
 ## `docouture doctor`
 
-Check environment and site health: [Node](https://nodejs.org) version, the four names that must agree (see [Modifying the navigation](../guides-modifying-the-navigation/)), git history, that Antora is installed, and (advisory only) whether `AGENTS.md` is still present, whether the `docs/release` label exists, and whether the declared branching model (`docs/package.json’s `docouture.branching`) agrees with what `antora-playbook.yml`/`docouture-release.yml` actually say — see [Branching model](../guides-branching-model/). Does not check for the agent skills — see [AI-First approach](../reference-ai-first-approach/), those are a separate, self-serve install this CLI never scaffolds or verifies.
+Check environment and site health: [Node](https://nodejs.org) version, that the declared package manager (`package.json’s `packageManager` field) is installed, the four names that must agree (see [Modifying the navigation](../guides-modifying-the-navigation/)), git history, that Antora is installed, and (advisory only) whether `AGENTS.md` is still present, whether the `docs/release` label exists, and whether the declared branching model (`docs/package.json’s `docouture.branching`) agrees with what `antora-playbook.yml`/`docouture-release.yml` actually say — see [Branching model](../guides-branching-model/). Does not check for the agent skills — see [AI-First approach](../reference-ai-first-approach/), those are a separate, self-serve install this CLI never scaffolds or verifies.
 
 | Flag | Effect |
 | --- | --- |
@@ -2725,6 +2725,7 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ### Added
 
+- [#206](https://github.com/InditexTech/docouture/pull/206) [cli] pin toolchain in the scaffolded starter (.tool-versions) + doctor package-manager check
 - [#202](https://github.com/InditexTech/docouture/pull/202) [cli] docouture dev / just dev: fall back to a random free port when the default 5000 is busy
 - [#198](https://github.com/InditexTech/docouture/pull/198) [ui-bundle] Click-to-zoom fullscreen overlay for images and diagrams
 - [#176](https://github.com/InditexTech/docouture/pull/176) [cli] Support git-flow branching alongside trunk-based in docouture scaffolding

@@ -7,7 +7,7 @@
 # `--url-segment`), default off/ROOT. See antora-playbook.yml's own
 # site.url comment for the full GitHub Pages URL shape either way.
 name: ROOT
-title: docouture
+title: Docouture
 # This descriptor is identical for BOTH versioning modes — see the docouture
 # docs-site-package skill's reference/versioning-modes.md. `main` permanently
 # says `version: prerelease`, `prerelease: true`, regardless of whether this
@@ -79,7 +79,25 @@ footer:
   groups:
     - title: Resources
       links:
-        - text: Home
-          url: ROOT:index.adoc
         - text: Quickstart
           url: main:quickstart.adoc
+        - text: About
+          url: main:index.adoc
+        - text: CLI reference
+          url: main:reference-cli.adoc
+        - text: Architecture
+          url: main:architecture.adoc
+        - text: Repository
+          url: https://github.com/InditexTech/docouture
+    - title: Guides
+      links:
+        - text: Content & structure
+          url: main:guides-content-structure.adoc
+        - text: Branding & customization
+          url: main:guides-branding.adoc
+        - text: Versioning & publishing
+          url: main:guides-versioning-publishing.adoc
+    - title: INDITEXTECH
+      links:
+        - text: OSO Portal
+          url: https://opensource.inditex.com

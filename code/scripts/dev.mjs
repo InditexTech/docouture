@@ -331,6 +331,69 @@ const LOCAL_PLAYBOOK = 'antora-playbook.local.yml'
 const PUBLISH_PLAYBOOK = 'antora-playbook.yml'
 const playbook = existsSync(join(siteDir, LOCAL_PLAYBOOK)) ? LOCAL_PLAYBOOK : PUBLISH_PLAYBOOK
 
+// A site package's content does not always live under `docs/`: a package
+// scaffolded by `docouture new` into a repository of its own does (see the
+// playbook's own comment on this), but a package living inside THIS monorepo
+// resolves `start_path` against the repository root and lands on `src/`
+// instead — every in-repo playbook (`code/packages/example`, the top-level
+// `docs/` meta-docs site) agrees on this. Hardcoding either name is wrong for
+// the other shape, so the real `content.sources[].url`/`start_path` pairs are
+// read out of the chosen playbook and watched directly instead of guessing.
+//
+// Deliberately not a YAML parser (see the file header) — this only needs the
+// `content: / sources:` list's `url`/`start_path` scalars, and stops at the
+// next top-level key exactly like `readSiteBasePath` above.
+function readContentDirs() {
+  let source
+  try {
+    source = readFileSync(join(siteDir, playbook), 'utf8')
+  } catch {
+    return []
+  }
+  const dirs = []
+  let current = null
+  const flush = () => {
+    if (current?.url && current?.start_path) {
+      try {
+        dirs.push(resolve(siteDir, current.url, current.start_path))
+      } catch {
+        // Malformed url/start_path — skip this source rather than crash.
+      }
+    }
+    current = null
+  }
+  let inContent = false
+  let inSources = false
+  for (const raw of source.split('\n')) {
+    if (/^\s*(?:#|$)/.test(raw)) continue
+    if (/^\S/.test(raw)) {
+      flush()
+      inContent = /^content:/.test(raw)
+      inSources = false
+      continue
+    }
+    if (!inContent) continue
+    if (/^\s{2}sources:/.test(raw)) {
+      inSources = true
+      continue
+    }
+    if (!inSources) continue
+    const itemStart = /^\s{4}-\s+(\w+):\s*(.+?)\s*$/.exec(raw)
+    const continued = /^\s{6}(\w+):\s*(.+?)\s*$/.exec(raw)
+    if (itemStart) {
+      flush()
+      current = { [itemStart[1]]: itemStart[2].replace(/^['"]|['"]$/g, '') }
+    } else if (continued && current) {
+      current[continued[1]] = continued[2].replace(/^['"]|['"]$/g, '')
+    }
+  }
+  flush()
+  return dirs
+}
+
+const contentDirs = readContentDirs()
+if (contentDirs.length === 0) log('could not read content sources from the playbook, watching docs/ as a fallback')
+
 // `--fetch` belongs to the one-off build: on a watch loop it would re-fetch
 // every remote content source on every keystroke.
 const buildSite = () => run(antoraBin, [playbook], siteDir)
@@ -438,7 +501,11 @@ server.on('listening', () => {
 
 server.listen(requestedPort)
 
-watchPath(join(siteDir, 'docs'), 'content')
+if (contentDirs.length > 0) {
+  for (const dir of contentDirs) watchPath(dir, 'content')
+} else {
+  watchPath(join(siteDir, 'docs'), 'content')
+}
 watchPath(join(siteDir, 'antora-playbook.yml'), 'content', { recursive: false })
 if (hasLocalUi) {
   watchPath(join(uiDir, 'src'), 'ui')

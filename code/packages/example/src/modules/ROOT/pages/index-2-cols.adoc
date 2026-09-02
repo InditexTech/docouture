@@ -1,5 +1,5 @@
-= Home (single column)
-:page-layout: home-single
+= Home (two columns)
+:page-layout: home
 :page-nav-module: main
 :description: Weave.js — the framework for building visual collaborative applications.
 :page-tags: collaborative, canvas, real-time
@@ -25,7 +25,7 @@ Weave.js abstracts the complexity of building real-time, collaborative apps from
 [card,subheader="Start here"]
 .xref:main:quickstart.adoc[Quickstart]
 --
-image::cloth-quickstart.png["Abstract study of draped cloth, warm grey"]
+image::card-quickstart-flat.png["A room is created, a canvas node is added and a second collaborator connects"]
 
 Set up a room, render a canvas and invite a second participant.
 --
@@ -33,7 +33,7 @@ Set up a room, render a canvas and invite a second participant.
 [card,subheader="Reference"]
 .xref:sdk:index.adoc[SDK]
 --
-image::cloth-sdk.png["Abstract study of draped cloth, cool grey"]
+image::card-sdk-flat.png["The shared state model connects nodes, actions, plugins and canvas rendering primitives"]
 
 The headless library the canvas is built on.
 --
@@ -41,7 +41,7 @@ The headless library the canvas is built on.
 [card,subheader="Integration"]
 .xref:react:index.adoc[React Helper]
 --
-image::cloth-react.png["Abstract study of draped cloth, sand"]
+image::card-react-flat.png["React components connect into a Weave.js collaborative canvas"]
 
 Components for integrating Weave.js into a React application.
 --
@@ -49,7 +49,7 @@ Components for integrating Weave.js into a React application.
 [card,subheader="Transport"]
 .xref:main:build/stores/index.adoc[Stores]
 --
-image::cloth-stores.png["Abstract study of draped cloth, slate"]
+image::card-stores-flat.png["Two clients synchronize the same room state through a central store transport"]
 
 How a room's state reaches every participant, and which transport to pick.
 --

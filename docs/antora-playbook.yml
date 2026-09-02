@@ -11,7 +11,7 @@
 #
 
 site:
-  title: docouture
+  title: Docouture
   # Set this to the public URL of the deployed site. It is required for the
   # sitemap and for canonical links; leave it out while developing locally.
   #
@@ -40,6 +40,12 @@ site:
     product_logo: /_/product-logo.png
     product_logo_dark: /_/product-logo-dark.png
     favicon: /_/favicon.ico
+    # The landing's decorative background (home.css) — same supplemental-file
+    # route and `/_/` prefix as the keys above, copied from
+    # code/packages/example's own home_background. home.css paints it
+    # full-bleed and fixed, and inverts it under the dark theme itself,
+    # rather than needing a second, dark-specific asset here.
+    home_background: /_/home-background.jpg
 
 content:
   sources:

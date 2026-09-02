@@ -76,6 +76,13 @@ The packages you'll most likely touch:
 See `.opencode/skills/` for the deeper conventions behind each of these
 (design tokens, Antora internals, page patterns, versioning modes).
 
+`.github/assets/product-logo.png` and `product-logo-dark.png` (used by the
+root README) are a manual copy of
+`docs/supplemental-ui/product-logo.png`/`product-logo-dark.png` (used by the
+docs site itself) — kept as a plain copy rather than a shared reference so the
+root README doesn't depend on the docs site's build input. If the docouture
+logo is ever redesigned, update both locations.
+
 ### Before Submitting
 
 - Run `just check` — lint, typecheck and formatting, the same checks CI runs.

@@ -1,0 +1,14 @@
+code/packages/ui-bundle/tsconfig.helpers.json
+  h_c93d154c7c7074 16-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8bdf738f0c15d3ab9baf718af9a014c73c82f80e",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

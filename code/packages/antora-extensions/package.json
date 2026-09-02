@@ -1,6 +1,6 @@
 {
   "name": "@inditextech/docouture-antora-extensions",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Antora pipeline extensions shared by docouture documentation sites — per-module navigation metadata (nav_modules)",
   "repository": {
     "type": "git",

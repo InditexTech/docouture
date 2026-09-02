@@ -1,6 +1,6 @@
 {
   "name": "@inditextech/docouture-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Command-line tool for docouture documentation sites: scaffold a new site and set its Antora version outside the monorepo",
   "repository": {
     "type": "git",

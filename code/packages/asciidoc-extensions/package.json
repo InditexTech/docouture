@@ -1,6 +1,6 @@
 {
   "name": "@inditextech/docouture-asciidoc-extensions",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Asciidoctor extensions shared by docouture documentation sites — authored content that has no AsciiDoc equivalent, rendered as this project's own component markup",
   "repository": {
     "type": "git",

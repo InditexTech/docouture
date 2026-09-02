@@ -92,16 +92,14 @@ jobs:
 
       - name: Run unit tests with coverage
         working-directory: code
-        continue-on-error: true
         run: |
-          pnpm nx run-many -t test --no-tui --nx-bail=false || true
+          pnpm nx run-many -t test --no-tui --nx-bail=false
 
       - name: Merge coverage reports
         if: always()
         working-directory: code
-        continue-on-error: true
         run: |
-          pnpm run test:merge-coverage || true
+          pnpm run test:merge-coverage
 
       - name: Store project information
         id: version
@@ -167,3 +165,55 @@ jobs:
             -Dsonar.projectName="${{ steps.version.outputs.github-repository }}" \
             -Dsonar.projectVersion="${{ steps.version.outputs.app-version }}" \
             $SCOPE_OPTIONS
+
+      # sonar-scanner only uploads the analysis — the Quality Gate is computed
+      # asynchronously on SonarCloud's side, so the step above exits 0 no
+      # matter what the gate decides. Without this step this job is
+      # structurally incapable of ever failing for a gate breach.
+      - name: SonarCloud / Wait for Quality Gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: code
+        run: |
+          report_file=".scannerwork/report-task.txt"
+          if [ ! -f "$report_file" ]; then
+            echo "::error::$report_file not found — analysis did not produce a report task"
+            exit 1
+          fi
+
+          ce_task_url=$(grep '^ceTaskUrl=' "$report_file" | cut -d'=' -f2-)
+          if [ -z "$ce_task_url" ]; then
+            echo "::error::ceTaskUrl missing from $report_file"
+            exit 1
+          fi
+
+          echo "Waiting for SonarCloud to process the analysis task..."
+          task_status="PENDING"
+          for _ in $(seq 1 60); do
+            task_status=$(curl -sf -u "${SONAR_TOKEN}:" "$ce_task_url" | jq -r '.task.status')
+            echo "Task status: $task_status"
+            case "$task_status" in
+              SUCCESS) break ;;
+              FAILED | CANCELED)
+                echo "::error::SonarCloud analysis task ended with status $task_status"
+                exit 1
+                ;;
+              *) sleep 5 ;;
+            esac
+          done
+          if [ "$task_status" != "SUCCESS" ]; then
+            echo "::error::Timed out waiting for the SonarCloud analysis task to complete"
+            exit 1
+          fi
+
+          analysis_id=$(curl -sf -u "${SONAR_TOKEN}:" "$ce_task_url" | jq -r '.task.analysisId')
+          gate_json=$(curl -sf -u "${SONAR_TOKEN}:" "https://sonarcloud.io/api/qualitygates/project_status?analysisId=${analysis_id}")
+          gate_status=$(echo "$gate_json" | jq -r '.projectStatus.status')
+
+          echo "Quality Gate status: $gate_status"
+          echo "$gate_json" | jq '.projectStatus.conditions'
+
+          if [ "$gate_status" != "OK" ]; then
+            echo "::error::SonarCloud Quality Gate failed (status=$gate_status)"
+            exit 1
+          fi

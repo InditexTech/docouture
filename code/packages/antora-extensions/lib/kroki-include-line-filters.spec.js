@@ -144,4 +144,23 @@ describe('filterLinesByTags', () => {
     filterLinesByTags(content, getTags({ tags: 'a;b' }), { onWarn: (msg) => warnings.push(msg) })
     expect(warnings.some((msg) => msg.includes('mismatched end tag'))).toBe(true)
   })
+
+  it('defaults to excluding everything when a wildcard (*) is not the sole/first requested tag', () => {
+    // globstar (**) is absent, star (*) is present, and the first key
+    // inserted into the tags map is not '*' itself ('a' was named first) —
+    // both are independently sufficient to force selectingDefault = false.
+    const content = ['tag::a[]', 'kept', 'end::a[]', 'tag::c[]', 'unlisted-tag line', 'end::c[]', 'outro'].join('\n')
+    const [lines] = filterLinesByTags(content, getTags({ tags: 'a,*' }))
+    // 'outro' (outside every tag) is excluded — the false selectingDefault —
+    // while 'c', an unlisted tag, still falls through to the wildcard (true).
+    expect(lines).toEqual(['kept', 'unlisted-tag line'])
+  })
+
+  it('applies the wildcard to a tag directive that names neither a listed tag nor */**', () => {
+    const content = ['tag::unlisted[]', 'wildcard-selected line', 'end::unlisted[]'].join('\n')
+    const [selected] = filterLinesByTags(content, getTags({ tags: 'keep,*' }))
+    expect(selected).toEqual(['wildcard-selected line'])
+    const [excluded] = filterLinesByTags(content, getTags({ tags: 'keep,!*' }))
+    expect(excluded).toEqual([])
+  })
 })

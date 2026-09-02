@@ -36,8 +36,14 @@
   var list = headings.reduce(function (accum, heading) {
     var link = document.createElement('a')
     link.textContent = heading.textContent
-    link.href = '#' + heading.id
-    links[link.href] = link
+    // NOT `links[link.href] = link` — reading `.href` back goes through the
+    // anchor's own getter, which always resolves to an ABSOLUTE URL, not the
+    // bare fragment `onScroll()` below looks entries up by. The fragment has
+    // to be captured in a local and reused as both the assigned href and the
+    // lookup key.
+    var fragment = '#' + heading.id
+    link.href = fragment
+    links[fragment] = link
     var listItem = document.createElement('li')
     listItem.dataset.level = String(Number.parseInt(heading.nodeName.slice(1), 10) - 1)
     listItem.appendChild(link)

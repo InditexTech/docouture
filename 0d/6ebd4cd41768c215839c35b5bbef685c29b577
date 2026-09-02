@@ -1,0 +1,14 @@
+code/packages/cli/templates/starter/gitignore
+  h_c93d154c7c7074 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0d6ebd4cd41768c215839c35b5bbef685c29b577",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

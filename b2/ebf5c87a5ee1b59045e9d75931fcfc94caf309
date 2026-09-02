@@ -1,0 +1,29 @@
+code/packages/antora-extensions/lib/kroki-include-line-filters.spec.js
+  s_1899ec149f9bd7::t_ac67bd74088d7d 147-165
+code/pnpm-lock.yaml
+  s_17465c07b37cec::t_ca6863bbebcc70 25,58,198-200,316-318,368-378,386-392,1254-1257,1719-1722,1726-1729,1755-1757,1896-1899,2363-2366,2388-2391,2396-2399,2509-2511,2602-2610,2896-2898,3018-3020,3474-3479,3507-3510,3769-3771,3829-3835,3856-3863,4081-4084,4088-4091,4100-4112,4166-4177,4182-4188,4409-4416,4464-4470,4476-4482,5123,5138,5226-5227,5703-5707,5710-5714,5729-5730,5845-5846,6427-6430,6455-6461,6469-6475,6550-6551,6641-6668,6914-6915,7178-7181,7615-7618,7637-7640,7967-7968,8043-8048,8070-8077,8291,8318,8333-8336,8341-8342,8351-8361,8423-8424,8427-8430
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b2ebf5c87a5ee1b59045e9d75931fcfc94caf309",
+  "prompts": {},
+  "sessions": {
+    "s_17465c07b37cec": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f9d784722ffe5ZngR2CRsY8OX2",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    },
+    "s_1899ec149f9bd7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f9d89c9d1ffeYG96HhwhPswEBo",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

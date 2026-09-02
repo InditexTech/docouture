@@ -97,7 +97,7 @@ footer:
           url: main:guides-branding.adoc
         - text: Versioning & publishing
           url: main:guides-versioning-publishing.adoc
-    - title: INDITEXTECH
-      links:
-        - text: OSO Portal
-          url: https://opensource.inditex.com
+    # - title: INDITEXTECH
+    #   links:
+    #     - text: OSO Portal
+    #       url: https://opensource.inditex.com

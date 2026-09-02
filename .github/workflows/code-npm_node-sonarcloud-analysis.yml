@@ -36,13 +36,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: NPM / Setup Dependencies Cache
+      - name: pnpm / Setup Dependencies Cache
         uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('code/package-lock.json') }}
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('code/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-pnpm-
 
       - name: asdf / Setup Dependencies Cache
         uses: actions/cache@v4
@@ -66,7 +66,7 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_ENV"
 
-      - name: NPM / Setup asdf environment
+      - name: Setup asdf environment
         uses: asdf-vm/actions/install@1902764435ca0dd2f3388eea723a4f92a4eb8302 # v4.0.0
         if: steps.asdf-cache.outputs.cache-hit != 'true'
         with:
@@ -80,32 +80,28 @@ jobs:
           echo "$HOME/.asdf/shims" >> "$GITHUB_PATH"
           cp code/.tool-versions "$HOME/.tool-versions"
 
-      - name: NPM / Create Cache Folders
-        run: |
-          mkdir -p "$HOME"/.npm
-
-      - name: NPM / Install dependencies
+      - name: Install dependencies
         working-directory: code
         run: |
-          npm ci
+          pnpm install --frozen-lockfile
 
-      - name: NPM / Build packages
+      - name: Build packages
         working-directory: code
         run: |
-          npx nx run-many -t build --no-tui
+          pnpm nx run-many -t build --no-tui
 
-      - name: NPM / Run unit tests with coverage
+      - name: Run unit tests with coverage
         working-directory: code
         continue-on-error: true
         run: |
-          npx nx run-many -t test --no-tui --nx-bail=false || true
+          pnpm nx run-many -t test --no-tui --nx-bail=false || true
 
-      - name: NPM / Merge coverage reports
+      - name: Merge coverage reports
         if: always()
         working-directory: code
         continue-on-error: true
         run: |
-          npm run test:merge-coverage || true
+          pnpm run test:merge-coverage || true
 
       - name: Store project information
         id: version

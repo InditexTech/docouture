@@ -1,18 +1,47 @@
-# docouture
+<div align="center">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/product-logo-dark.png">
-  <img src=".github/assets/product-logo.png" alt="docouture logo" width="80">
+  <img src=".github/assets/product-logo.png" alt="docouture logo" width="120">
 </picture>
+
+# docouture
+
+</div>
 
 Documentation platform built on [Antora](https://docs.antora.org/antora/latest/).
 It's an Nx/pnpm monorepo that ships two things: a themed Antora UI bundle, and
 the `docouture` CLI for scaffolding and running standalone documentation sites
 outside this repository.
 
-Full documentation: https://inditextech.github.io/docouture/
+## Documentation
 
-## Requirements
+Full documentation, including the CLI reference and configuration guides,
+lives at https://inditextech.github.io/docouture/.
+
+## Quickstart
+
+Scaffold and run your own documentation site with the `docouture` CLI —
+no checkout of this repository required:
+
+```console
+$ npm install -g @inditextech/docouture-cli
+$ docouture new my-docs
+$ cd my-docs && git init && git add -A && git commit -m "initial commit"
+$ docouture dev
+```
+
+Antora needs at least one commit to find content, hence the `git init`
+above on a fresh scaffold. See the [full quickstart
+guide](https://inditextech.github.io/docouture/) for `docouture new`'s
+other options (versioned sites, git-flow branching, etc.).
+
+## Development
+
+The rest of this README covers working on **this monorepo** — the UI
+bundle and the CLI itself — not using `docouture` to build your own site.
+
+### Requirements
 
 Node and pnpm are pinned in `code/.tool-versions` and provisioned through
 `asdf`. Everyday commands go through [just](https://github.com/casey/just) (1.38
@@ -27,7 +56,7 @@ Every command below works from anywhere in the repository. Dependencies come
 entirely from the public npm registry — nothing here needs Artifactory
 credentials or a VPN.
 
-## Commands
+### Commands
 
 ```console
 $ just                        # list every command
@@ -35,7 +64,7 @@ $ just build                  # build everything
 $ just check                  # lint, typecheck and formatting — what CI runs
 $ just dev example            # serve a site on :5000, live reload (site defaults to example)
 $ just preview-ui             # UI-only dev server, live reload, :5252
-$ just build-site example      # build one site
+$ just build-site example     # build one site
 $ just doctor                 # diagnose a workspace that won't build
 $ just bump minor             # set the version of every package
 ```
@@ -62,7 +91,7 @@ When changing only the UI, prefer `just preview-ui`. It renders a single page
 exercising admonitions, code blocks, lists, tables and the navigation, and
 reloads on save without paying for an Antora run.
 
-### just and package.json
+#### just and package.json
 
 `just` is the human-facing command surface; the `package.json` scripts are the
 machine-facing one, and remain available for anything that cannot or should not
@@ -78,7 +107,7 @@ build logic, so the two surfaces cannot drift apart. Keep it that way when
 adding recipes: if a recipe needs new build behaviour, the behaviour belongs in
 an Nx target or a package script, and the recipe only calls it.
 
-## Layout
+### Layout
 
 ```
 justfile                    every command; runs everything inside code/
@@ -93,7 +122,7 @@ All toolchain configuration lives in `code/`, so `pnpm`, `nx` and `asdf` must be
 invoked from there. `just` handles that for you, which is why the commands above
 work from anywhere.
 
-## Packages
+### Packages
 
 | Package                        | Purpose                                                                                            |
 | ------------------------------ | -------------------------------------------------------------------------------------------------- |
@@ -106,7 +135,7 @@ work from anywhere.
 See [`code/README.md`](code/README.md) for how the workspace itself is put
 together.
 
-## Content requires at least one commit
+### Content requires at least one commit
 
 Antora reads content from a git repository. It will pick up **uncommitted**
 working-tree changes, but the repository must have at least one commit, or the

@@ -1,0 +1,29 @@
+code/packages/cli/src/commands/doctor.ts
+  s_cd9c771fef17a4::t_871c2b36ece545 24,32,116-119
+code/packages/cli/src/commands/new.spec.ts
+  s_cd9c771fef17a4::t_bb442256a07b0b 202-227
+code/packages/cli/src/commands/new.ts
+  s_cd9c771fef17a4::t_563f0215e2c9a6 621-625,632-637,652-653
+code/packages/cli/src/commands/upgrade.ts
+  s_cd9c771fef17a4::t_fc8409e97d24bf 142-147
+code/packages/cli/src/lib/doctor-checks.spec.ts
+  s_cd9c771fef17a4::t_f82265478fc3d1 21,53-78
+docs/src/modules/main/pages/reference-cli.adoc
+  s_cd9c771fef17a4::t_fb3aa0f41f9ea4 95-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4e4d88c4ebfc1c672aca1cf9885941c31c336e8e",
+  "prompts": {},
+  "sessions": {
+    "s_cd9c771fef17a4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f9f2af5eaffe7TxCEO5jXpQFTF",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

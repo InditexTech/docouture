@@ -1,0 +1,19 @@
+code/packages/antora-extensions/lib/html-to-markdown.spec.js
+  s_7eef21f6f3a2fa::t_0fff0abc032cf5 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "854f91e3ab3abd77b4e880f67e66be748a8c65d0",
+  "prompts": {},
+  "sessions": {
+    "s_7eef21f6f3a2fa": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f9de8feecffeLUK3JKVbLvK424",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

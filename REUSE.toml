@@ -61,6 +61,7 @@ path = [
     "code/.prettierrc",
     "code/.tool-versions",
     "code/nx.json",
+    "code/sonar-project.properties",
     "code/tsconfig.base.json",
 
     # docs/ directory licensing — only non-code files (.adoc, images, config)

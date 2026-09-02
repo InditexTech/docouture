@@ -1,0 +1,26 @@
+.github/workflows/code-npm_node-sonarcloud-analysis.yml
+  h_c93d154c7c7074 39,42-43,45,69,83,86,88,91,93,97,99,104
+code/packages/antora-extensions/lib/html-to-markdown.spec.js
+  s_7eef21f6f3a2fa::t_0fff0abc032cf5 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fc574dfcaceb7c6000d2046cb122fe50119d60c5",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  },
+  "sessions": {
+    "s_7eef21f6f3a2fa": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f9de8feecffeLUK3JKVbLvK424",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

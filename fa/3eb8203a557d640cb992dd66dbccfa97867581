@@ -1,0 +1,18 @@
+code/packages/antora-extensions/lib/html-to-markdown.js
+  h_c93d154c7c7074 237-245
+code/packages/antora-extensions/lib/html-to-markdown.spec.js
+  h_c93d154c7c7074 42-46,48-50
+code/sonar-project.properties
+  h_c93d154c7c7074 1-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fa3eb8203a557d640cb992dd66dbccfa97867581",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

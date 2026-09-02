@@ -239,7 +239,7 @@ function tableToMarkdown(tableNode) {
   // inserted, producing `\\|` — an escaped backslash followed by a live,
   // unescaped column separator, the exact thing this escape exists to
   // prevent.
-  const escapeCell = (text) => text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')
+  const escapeCell = (text) => text.replaceAll(/\\/g, String.raw`\\`).replaceAll(/\|/g, '\\|')
   for (const rowNode of tableNode.querySelectorAll('tr')) {
     const cells = rowNode.querySelectorAll('th,td').map((cell) => escapeCell(inlineText(cell)) || ' ')
     if (cells.length) rows.push(cells)

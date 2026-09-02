@@ -169,7 +169,7 @@
    */
   function readMotion (el: HTMLElement): { duration: number; easing: string } {
     var cs = getComputedStyle(el)
-    var duration = parseFloat(cs.transitionDuration) * 1000
+    var duration = Number.parseFloat(cs.transitionDuration) * 1000
     var easing = cs.transitionTimingFunction.trim()
     return { duration: duration || 0, easing: easing || 'ease' }
   }

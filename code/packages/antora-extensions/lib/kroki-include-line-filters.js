@@ -76,17 +76,18 @@ function getLines(attrs) {
         filtered = true
         let delim
         let from
-        if (~(delim = linedef.indexOf('..'))) {
+        delim = linedef.indexOf('..')
+        if (~delim) {
           from = linedef.substring(0, delim)
           let to = linedef.substring(delim + 2)
-          if ((to = parseInt(to, 10) || -1) > 0) {
-            if ((from = parseInt(from, 10) || -1) > 0) {
+          if ((to = Number.parseInt(to, 10) || -1) > 0) {
+            if ((from = Number.parseInt(from, 10) || -1) > 0) {
               for (let i = from; i <= to; i++) linenums.push(i)
             }
-          } else if (to === -1 && (from = parseInt(from, 10) || -1) > 0) {
+          } else if (to === -1 && (from = Number.parseInt(from, 10) || -1) > 0) {
             linenums.push(from, Infinity)
           }
-        } else if ((from = parseInt(linedef, 10) || -1) > 0) {
+        } else if ((from = Number.parseInt(linedef, 10) || -1) > 0) {
           linenums.push(from)
         }
       })
@@ -197,7 +198,8 @@ function filterLinesByTags(content, tags, opts = {}) {
     if (star === undefined) {
       selectingDefault = selecting = !mapContainsValue(tags, true)
     } else {
-      if ((wildcard = star) || tags.keys().next().value !== '*') {
+      wildcard = star
+      if (wildcard || tags.keys().next().value !== '*') {
         selectingDefault = selecting = false
       } else {
         selectingDefault = selecting = !wildcard
@@ -240,11 +242,14 @@ function filterLinesByTags(content, tags, opts = {}) {
           }
         }
       } else if (tags.has(thisTag)) {
-        if ((selecting = tags.get(thisTag))) tagsSelected.push(thisTag)
-        tagStack.unshift([(activeTag = thisTag), selecting, lineNum])
+        selecting = tags.get(thisTag)
+        if (selecting) tagsSelected.push(thisTag)
+        activeTag = thisTag
+        tagStack.unshift([activeTag, selecting, lineNum])
       } else if (wildcard !== undefined) {
         selecting = activeTag && !selecting ? false : wildcard
-        tagStack.unshift([(activeTag = thisTag), selecting, lineNum])
+        activeTag = thisTag
+        tagStack.unshift([activeTag, selecting, lineNum])
       }
     } else if (selecting) {
       if (!startLineNum) startLineNum = lineNum

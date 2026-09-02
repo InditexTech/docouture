@@ -4,8 +4,8 @@
 
 'use strict'
 
-const fs = require('fs')
-const ospath = require('path')
+const fs = require('node:fs')
+const ospath = require('node:path')
 
 const MAGIC_RX = /[*?[\]{}()!+@]/
 
@@ -22,7 +22,7 @@ const MAGIC_RX = /[*?[\]{}()!+@]/
  * @param {string[]} globs candidate globs
  * @returns {string[]} the subset whose base directory exists
  */
-module.exports = (cwd, globs) =>
+const existingGlobs = (cwd, globs) =>
   globs.filter((glob) => {
     const segments = glob.split('/')
     const firstMagic = segments.findIndex((it) => MAGIC_RX.test(it))
@@ -30,3 +30,5 @@ module.exports = (cwd, globs) =>
     if (!dirSegments.length) return true
     return fs.existsSync(ospath.join(cwd, ...dirSegments))
   })
+
+module.exports = existingGlobs

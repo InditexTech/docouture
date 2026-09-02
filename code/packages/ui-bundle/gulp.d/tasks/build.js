@@ -10,15 +10,15 @@ const esbuild = require('esbuild')
 const fs = require('fs-extra')
 const dtCustomMedia = require('../lib/dt-custom-media')
 const merge = require('../lib/concat-streams')
-const ospath = require('path')
+const ospath = require('node:path')
 const path = ospath.posix
 const postcss = require('gulp-postcss')
 const postcssCalc = require('postcss-calc')
 const postcssCustomMedia = require('postcss-custom-media')
 const postcssImport = require('postcss-import')
 const postcssUrl = require('postcss-url')
-const { Transform } = require('stream')
-const { finished } = require('stream/promises')
+const { Transform } = require('node:stream')
+const { finished } = require('node:stream/promises')
 const vfs = require('vinyl-fs')
 const Vinyl = require('vinyl')
 
@@ -32,7 +32,7 @@ const map = (transform) => new Transform({ objectMode: true, transform })
 // `browserslist` field in package.json.
 const ESBUILD_TARGET = ['es2018']
 
-module.exports = (src, dest, preview) => async () => {
+const build = (src, dest, preview) => async () => {
   // NOTE encoding:false / removeBOM:false keep binary assets (fonts, raster
   // images) byte-exact: vinyl-fs 4 decodes contents as UTF-8 by default.
   // Text consumers downstream call toString() themselves, so a raw Buffer is
@@ -139,11 +139,13 @@ module.exports = (src, dest, preview) => async () => {
   return finished(staged.resume())
 }
 
+module.exports = build
+
 const through = () => map((file, enc, next) => next(null, file))
 
 /** Wrap already-built Vinyl files as a readable object stream. */
 function toStream(files) {
-  const { Readable } = require('stream')
+  const { Readable } = require('node:stream')
   return Readable.from(files, { objectMode: true })
 }
 
@@ -212,7 +214,7 @@ const trackImportedStylesheetMtimes = {
   postcssPlugin: 'track-imported-stylesheet-mtimes',
   async OnceExit(root, { result }) {
     const file = result.opts.file
-    if (!file || !file.stat) return
+    if (!file?.stat) return
     const depPaths = result.messages.filter(({ type }) => type === 'dependency').map(({ file: depPath }) => depPath)
     const mtimes = await Promise.all(
       depPaths.map((depPath) =>
@@ -223,7 +225,10 @@ const trackImportedStylesheetMtimes = {
       )
     )
     const newestMtime = mtimes.reduce((max, curr) => (curr && (!max || curr > max) ? curr : max), file.stat.mtime)
-    if (newestMtime > file.stat.mtime) file.stat.mtimeMs = +(file.stat.mtime = newestMtime)
+    if (newestMtime > file.stat.mtime) {
+      file.stat.mtime = newestMtime
+      file.stat.mtimeMs = +file.stat.mtime
+    }
   },
 }
 

@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import path from 'path' // <1>
-import fs from 'fs/promises' // <1>
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
+import path from 'node:path' // <1>
+import fs from 'node:fs/promises' // <1>
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

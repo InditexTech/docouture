@@ -140,7 +140,7 @@ function annotate(componentVersion, { nav, navModules }, contentCatalog, logger)
 
   const declared = new Map()
   for (const entry of navModules) {
-    if (!entry || entry.constructor !== Object || !entry.module) {
+    if (entry?.constructor !== Object || !entry?.module) {
       logger.warn('Ignoring nav_modules entry in %s: every entry needs a module key', where)
       continue
     }

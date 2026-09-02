@@ -145,7 +145,7 @@ const defaultGit = {
       await execFileAsync('git', ['ls-remote', '--exit-code', remote, branch])
       return true
     } catch (err) {
-      if (err && err.code === 2) return false
+      if (err?.code === 2) return false
       throw err
     }
   },

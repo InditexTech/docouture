@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const { createCanvas } = require('canvas')
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 
 const W = 600
 const H = 900

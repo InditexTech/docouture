@@ -61,7 +61,7 @@ const ID_DECLARATION_RX = /id=["']([^"']+)["']/g
  * @returns {string}
  */
 function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return value.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
 }
 
 /**
@@ -89,12 +89,12 @@ function namespaceSvgIds(svgMarkup, prefix) {
   const sortedIds = Array.from(ids).sort((a, b) => b.length - a.length)
   const idAlternation = sortedIds.map(escapeRegExp).join('|')
 
-  const declarationRx = new RegExp('id=(["\'])(' + idAlternation + ')\\1', 'g')
+  const declarationRx = new RegExp(String.raw`id=(["'])(${idAlternation})\1`, 'g')
   // Not followed by another id-safe character (a word character or `-`) —
   // same reasoning as the longest-first sort, belt and suspenders: even if
   // two ids somehow shared a length, this stops a partial match at the
   // reference site too.
-  const referenceRx = new RegExp('#(' + idAlternation + ')(?![\\w-])', 'g')
+  const referenceRx = new RegExp(String.raw`#(${idAlternation})(?![\w-])`, 'g')
 
   return svgMarkup
     .replace(declarationRx, (_, quote, id) => 'id=' + quote + prefix + '-' + id + quote)

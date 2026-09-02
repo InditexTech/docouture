@@ -21,7 +21,7 @@
   // `--anchor-scroll-margin` itself: `getComputedStyle` resolves the
   // former to a pixel value but returns the latter as its raw, unresolved
   // `calc(...)` string.
-  var scrollMargin = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0
+  var scrollMargin = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0
 
   function decodeFragment (hash) {
     return hash && (~hash.indexOf('%') ? decodeURIComponent(hash) : hash).slice(1)
@@ -44,7 +44,8 @@
 
   window.addEventListener('load', function jumpOnLoad (e) {
     var fragment, target
-    if ((fragment = decodeFragment(window.location.hash)) && (target = document.getElementById(fragment))) {
+    fragment = decodeFragment(window.location.hash)
+    if (fragment && (target = document.getElementById(fragment))) {
       jumpToAnchor.call(target, false)
       setTimeout(jumpToAnchor.bind(target, false), 250)
     }
@@ -53,7 +54,8 @@
 
   Array.prototype.slice.call(document.querySelectorAll('a[href^="#"]')).forEach(function (el) {
     var fragment, target
-    if ((fragment = decodeFragment(el.hash)) && (target = document.getElementById(fragment))) {
+    fragment = decodeFragment(el.hash)
+    if (fragment && (target = document.getElementById(fragment))) {
       el.addEventListener('click', jumpToAnchor.bind(target))
     }
   })

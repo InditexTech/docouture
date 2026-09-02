@@ -73,7 +73,10 @@ export function mergeAgentsMd(existing: string | undefined, templateContent: str
     return `${before}${extractManagedBlock(templateContent)}${after}`
   }
 
-  const separator =
-    existing.length === 0 ? '' : existing.endsWith('\n\n') ? '' : existing.endsWith('\n') ? '\n' : '\n\n'
+  let separator
+  if (existing.length === 0) separator = ''
+  else if (existing.endsWith('\n\n')) separator = ''
+  else if (existing.endsWith('\n')) separator = '\n'
+  else separator = '\n\n'
   return `${existing}${separator}${templateContent}`
 }

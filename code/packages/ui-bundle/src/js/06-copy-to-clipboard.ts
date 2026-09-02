@@ -40,8 +40,10 @@
 
     if (pre.classList.contains('highlight')) {
       code = pre.querySelector('code')
-      if ((language = code.dataset.lang) && language !== 'console') {
-        ;(lang = document.createElement('span')).className = 'source-lang'
+      language = code.dataset.lang
+      if (language && language !== 'console') {
+        lang = document.createElement('span')
+        lang.className = 'source-lang'
         lang.appendChild(document.createTextNode(language))
       }
     } else if (pre.innerText.startsWith('$ ')) {
@@ -49,7 +51,8 @@
       block.classList.remove('literalblock')
       block.classList.add('listingblock')
       pre.classList.add('highlightjs', 'highlight')
-      ;(code = document.createElement('code')).className = 'language-console hljs'
+      code = document.createElement('code')
+      code.className = 'language-console hljs'
       code.dataset.lang = 'console'
       while (pre.hasChildNodes()) code.appendChild(pre.firstChild)
       pre.appendChild(code)
@@ -59,9 +62,11 @@
 
     var content = pre.parentNode // .listingblock > .content, also the fullscreen target
 
-    ;(toolbox = document.createElement('div')).className = 'source-toolbox'
+    toolbox = document.createElement('div')
+    toolbox.className = 'source-toolbox'
     if (lang) toolbox.appendChild(lang)
-    ;(actions = document.createElement('div')).className = 'source-actions'
+    actions = document.createElement('div')
+    actions.className = 'source-actions'
     toolbox.appendChild(actions)
 
     if (supportsCopy) {

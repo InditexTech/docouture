@@ -63,7 +63,7 @@ function resolve(names, index) {
   return symbols
 }
 
-const escape = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const escape = (text) => text.replaceAll(/&/g, '&amp;').replaceAll(/</g, '&lt;').replaceAll(/>/g, '&gt;')
 
 /**
  * Rewrite a bare Lucide `<symbol id="name" viewBox="...">` into our own
@@ -142,12 +142,12 @@ const MASKS_HEADER = `/*
 // browser's data URI parser.
 const encodeDataUri = (svg) =>
   svg
-    .replace(/"/g, "'")
-    .replace(/%/g, '%25')
-    .replace(/#/g, '%23')
-    .replace(/</g, '%3C')
-    .replace(/>/g, '%3E')
-    .replace(/\n/g, '')
+    .replaceAll(/"/g, "'")
+    .replaceAll(/%/g, '%25')
+    .replaceAll(/#/g, '%23')
+    .replaceAll(/</g, '%3C')
+    .replaceAll(/>/g, '%3E')
+    .replaceAll(/\n/g, '')
 
 function maskDataUri(markup) {
   const viewBox = markup.match(/\bviewBox="([^"]+)"/)?.[1]
@@ -303,7 +303,10 @@ async function sync(path, content, { check }) {
   await writeFile(path, content)
   const bytes = Buffer.byteLength(content)
   const delta = previous === null ? null : bytes - Buffer.byteLength(previous)
-  const deltaText = delta === null ? 'new' : delta === 0 ? 'unchanged' : `${delta > 0 ? '+' : ''}${delta} B`
+  let deltaText
+  if (delta === null) deltaText = 'new'
+  else if (delta === 0) deltaText = 'unchanged'
+  else deltaText = `${delta > 0 ? '+' : ''}${delta} B`
   console.log(`${style.green}✓${style.off} ${rel} ${style.dim}(${bytes} B, ${deltaText})${style.off}`)
 }
 

@@ -4,7 +4,7 @@
 
 'use strict'
 
-const { Readable } = require('stream')
+const { Readable } = require('node:stream')
 
 /**
  * Concatenate object-mode streams into one.
@@ -21,10 +21,12 @@ const { Readable } = require('stream')
  * @param {...NodeJS.ReadableStream} streams
  * @returns {Readable} object-mode stream emitting every source's data in turn
  */
-module.exports = (...streams) =>
+const concatStreams = (...streams) =>
   Readable.from(
     (async function* () {
       for (const stream of streams) yield* stream
     })(),
     { objectMode: true }
   )
+
+module.exports = concatStreams

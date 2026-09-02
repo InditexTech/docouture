@@ -32,7 +32,7 @@ function stripTags(html: string): string {
 const detag = (html: string | undefined, options: HelperOptions): string | undefined => {
   if (!html) return html
   const stripped = stripTags(html)
-  return options.hash.attribute ? stripped.replace(QUOT_RX, '&quot;') : stripped
+  return options.hash.attribute ? stripped.replaceAll(QUOT_RX, '&quot;') : stripped
 }
 
 export = detag

@@ -5,7 +5,7 @@
 'use strict'
 
 const vfs = require('vinyl-fs')
-const { finished } = require('stream/promises')
+const { finished } = require('node:stream/promises')
 
 // Runs once after `build` and `preview:build-pages` have BOTH finished, so
 // live reload never fires against a half-written `public/` — reloading off
@@ -14,7 +14,7 @@ const { finished } = require('stream/promises')
 //
 // `livereload` is `gulp-connect`'s `reload` function, present only when
 // `LIVERELOAD` is enabled (see gulpfile.js); absent, this is a no-op.
-module.exports = (previewDest, livereload) => () => {
+const reload = (previewDest, livereload) => () => {
   if (!livereload) return Promise.resolve()
   // NOTE unlike the Transform streams used elsewhere in this package,
   // gulp-connect's `reload()` stream (built on `map-stream`) does not return
@@ -24,3 +24,5 @@ module.exports = (previewDest, livereload) => () => {
   stream.resume()
   return done
 }
+
+module.exports = reload

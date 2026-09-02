@@ -4,9 +4,9 @@
 
 'use strict'
 
-const { execFile } = require('child_process')
-const ospath = require('path')
-const { promisify } = require('util')
+const { execFile } = require('node:child_process')
+const ospath = require('node:path')
+const { promisify } = require('node:util')
 
 const execFileAsync = promisify(execFile)
 
@@ -32,7 +32,8 @@ const OUT_ROOT = ospath.join(PROJECT_ROOT, '.tsbuild')
  * @returns {Promise<string>} the directory containing the compiled `helpers` folder
  */
 module.exports = function compileHelpers() {
-  return (inFlight = inFlight || compile().finally(() => (inFlight = undefined)))
+  inFlight = inFlight || compile().finally(() => (inFlight = undefined))
+  return inFlight
 }
 
 let inFlight

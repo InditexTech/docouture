@@ -81,7 +81,7 @@ module.exports = function registerChangelogPages(context, changelogPath) {
 
     const indexFiles = contentCatalog
       .getFiles()
-      .filter((file) => file.src && file.src.family === 'page' && file.src.relative === 'changelog/index.adoc')
+      .filter((file) => file.src?.family === 'page' && file.src?.relative === 'changelog/index.adoc')
 
     if (!indexFiles.length) {
       logger.info("No 'changelog/index.adoc' page found on this site — nothing to append to")

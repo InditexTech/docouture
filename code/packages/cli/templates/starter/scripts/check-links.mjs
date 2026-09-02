@@ -63,8 +63,8 @@ const isExternal = (url) => /^https?:\/\//.test(url)
 // every other regex metacharacter so the rest of the string is matched
 // verbatim.
 function globToRegExp(glob) {
-  const escaped = glob.replace(/[.+^${}()|[\]\\]/g, '\\$&')
-  return new RegExp(escaped.replace(/\*/g, '.*').replace(/\?/g, '.'))
+  const escaped = glob.replace(/[.+^${}()|[\]\\]/g, String.raw`\$&`)
+  return new RegExp(escaped.replaceAll(/\*/g, '.*').replaceAll(/\?/g, '.'))
 }
 
 // `package.json`'s own "docouture" config block (see the scaffolded stub, next

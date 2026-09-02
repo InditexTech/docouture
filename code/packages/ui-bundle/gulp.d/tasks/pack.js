@@ -4,7 +4,7 @@
 
 'use strict'
 
-const ospath = require('path')
+const ospath = require('node:path')
 const vfs = require('vinyl-fs')
 const zip = (() => {
   try {
@@ -14,7 +14,7 @@ const zip = (() => {
   }
 })()
 
-module.exports = (src, dest, bundleName, version, onFinish) => () =>
+const bundlePack = (src, dest, bundleName, version, onFinish) => () =>
   vfs
     // NOTE encoding:false / removeBOM:false are essential. vinyl-fs 4 decodes
     // file contents as UTF-8 by default (v3 did not), which silently corrupts
@@ -25,4 +25,6 @@ module.exports = (src, dest, bundleName, version, onFinish) => () =>
     // and it is the only thing that tells you which bundle you downloaded. The
     // unversioned copy is made by the `bundle:alias` task that follows.
     .pipe(zip.dest(ospath.join(dest, `${bundleName}-bundle-${version}.zip`)))
-    .on('finish', () => onFinish && onFinish(ospath.resolve(dest, `${bundleName}-bundle-${version}.zip`)))
+    .on('finish', () => onFinish?.(ospath.resolve(dest, `${bundleName}-bundle-${version}.zip`)))
+
+module.exports = bundlePack

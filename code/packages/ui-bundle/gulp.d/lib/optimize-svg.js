@@ -4,7 +4,7 @@
 
 'use strict'
 
-const { Transform } = require('stream')
+const { Transform } = require('node:stream')
 
 const svgoConfig = require('./svgo-config')
 
@@ -23,7 +23,7 @@ const loadSvgo = () => (svgoPromise = svgoPromise || import('svgo'))
  * files here, since every image in this UI is an SVG. Only the SVG optimizer
  * ever did any work, and svgo is pure JavaScript with no native dependency.
  */
-module.exports = () =>
+const optimizeSvg = () =>
   new Transform({
     objectMode: true,
     async transform(file, enc, next) {
@@ -38,3 +38,5 @@ module.exports = () =>
       }
     },
   })
+
+module.exports = optimizeSvg

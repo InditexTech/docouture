@@ -4,8 +4,8 @@
 
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 const postcss = require('postcss')
 
 // Prepends this bundle's own @custom-media breakpoint declarations
@@ -21,7 +21,7 @@ const breakpointsContent = fs.readFileSync(breakpointsPath, 'utf-8')
 const breakpointsAST = postcss.parse(breakpointsContent)
 const customMediaNodes = breakpointsAST.nodes.filter((node) => node.type === 'atrule' && node.name === 'custom-media')
 
-module.exports = () => ({
+const dtCustomMedia = () => ({
   postcssPlugin: 'dt-custom-media',
   Once(root) {
     const sourceFile = root.source?.input?.file ? path.resolve(root.source.input.file) : null
@@ -29,8 +29,8 @@ module.exports = () => ({
 
     let hasCustomMedia = false
     root.walkAtRules('custom-media', (atRule) => {
-      const name = atRule.params && atRule.params.trim().split(/\s+/)[0]
-      if (name && name.startsWith('--dt-')) {
+      const name = atRule.params?.trim().split(/\s+/)[0]
+      if (name?.startsWith('--dt-')) {
         hasCustomMedia = true
         return false
       }
@@ -40,4 +40,5 @@ module.exports = () => ({
     root.prepend(customMediaNodes.map((node) => node.clone()))
   },
 })
+module.exports = dtCustomMedia
 module.exports.postcss = true

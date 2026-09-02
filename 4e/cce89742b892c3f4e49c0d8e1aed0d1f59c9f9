@@ -1,0 +1,18 @@
+.github/scripts/sanitize-changelog.mjs
+  h_c93d154c7c7074 1-127
+.github/workflows/code-npm_node-pr-verify.yml
+  h_c93d154c7c7074 170-180
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  h_c93d154c7c7074 216-230,717-731
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4ecce89742b892c3f4e49c0d8e1aed0d1f59c9f9",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

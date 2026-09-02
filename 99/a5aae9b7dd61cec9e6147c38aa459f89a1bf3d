@@ -1,0 +1,114 @@
+code/packages/antora-extensions/lib/changelog-pages.js
+  h_c93d154c7c7074 84
+code/packages/antora-extensions/lib/footer.js
+  h_c93d154c7c7074 100,106
+code/packages/antora-extensions/lib/html-to-markdown.js
+  h_c93d154c7c7074 242
+code/packages/antora-extensions/lib/kroki-docker.js
+  h_c93d154c7c7074 125,161-162
+code/packages/antora-extensions/lib/kroki-include-line-filters.js
+  h_c93d154c7c7074 79-80,83-84,87,90,201-202,245-248,251-252
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  h_c93d154c7c7074 140-142,144,484,496,508
+code/packages/antora-extensions/lib/nav-modules.js
+  h_c93d154c7c7074 143
+code/packages/asciidoc-extensions/lib/accordion.js
+  h_c93d154c7c7074 125
+code/packages/asciidoc-extensions/lib/cta.js
+  h_c93d154c7c7074 177,181
+code/packages/asciidoc-extensions/lib/feature-tabs.js
+  h_c93d154c7c7074 196,200,306,311
+code/packages/asciidoc-extensions/lib/kroki-config.js
+  h_c93d154c7c7074 263
+code/packages/asciidoc-extensions/lib/shiki-syntax-highlighter.js
+  h_c93d154c7c7074 137
+code/packages/asciidoc-extensions/lib/svg-namespace.js
+  h_c93d154c7c7074 64,92,97
+code/packages/asciidoc-extensions/lib/warn.js
+  h_c93d154c7c7074 75
+code/packages/cli/src/lib/agents-md.ts
+  h_c93d154c7c7074 76-80
+code/packages/cli/src/lib/dev-server.ts
+  h_c93d154c7c7074 430
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  h_c93d154c7c7074 66-67
+code/packages/example/scripts/generate-card-images.js
+  h_c93d154c7c7074 6-7
+code/packages/example/src/modules/main/examples/build/stores/azure-web-pubsub-server.ts
+  h_c93d154c7c7074 5-7,18
+code/packages/example/src/modules/main/examples/manual-installation/components/overlays/room-information-overlay.tsx
+  h_c93d154c7c7074 48
+code/packages/example/src/modules/main/examples/manual-installation/components/overlays/zoom-handler-overlay.tsx
+  h_c93d154c7c7074 183
+code/packages/example/src/modules/main/examples/manual-installation/lib/utils.ts
+  h_c93d154c7c7074 17-19
+code/packages/example/src/modules/main/examples/manual-installation/weave/persistence.ts
+  h_c93d154c7c7074 5-8
+code/packages/example/src/modules/store-azure-web-pubsub/examples/build/stores/azure-web-pubsub-server.ts
+  h_c93d154c7c7074 5-7,18
+code/packages/example/src/modules/store-websockets/examples/build/stores/websockets-server.ts
+  h_c93d154c7c7074 5-7,19
+code/packages/publish-gh-pages/index.js
+  h_c93d154c7c7074 148
+code/packages/ui-bundle/gulp.d/lib/compile-helpers.js
+  h_c93d154c7c7074 7-9,35-36
+code/packages/ui-bundle/gulp.d/lib/concat-streams.js
+  h_c93d154c7c7074 7,24,31-32
+code/packages/ui-bundle/gulp.d/lib/create-task.js
+  h_c93d154c7c7074 12,25-26
+code/packages/ui-bundle/gulp.d/lib/dt-custom-media.js
+  h_c93d154c7c7074 7-8,24,32-33,43
+code/packages/ui-bundle/gulp.d/lib/existing-globs.js
+  h_c93d154c7c7074 7-8,25,33-34
+code/packages/ui-bundle/gulp.d/lib/export-tasks.js
+  h_c93d154c7c7074 7,14-17,22-23
+code/packages/ui-bundle/gulp.d/lib/load-icon-catalog.js
+  h_c93d154c7c7074 15
+code/packages/ui-bundle/gulp.d/lib/optimize-svg.js
+  h_c93d154c7c7074 7,26,41-42
+code/packages/ui-bundle/gulp.d/tasks/alias.js
+  h_c93d154c7c7074 8,26,32-33
+code/packages/ui-bundle/gulp.d/tasks/build-preview-pages.js
+  h_c93d154c7c7074 13,16-17,31,55-56,108,138-139,215-216
+code/packages/ui-bundle/gulp.d/tasks/build.js
+  h_c93d154c7c7074 13,20-21,35,142-143,148,217,228-231
+code/packages/ui-bundle/gulp.d/tasks/pack.js
+  h_c93d154c7c7074 7,17,28-30
+code/packages/ui-bundle/gulp.d/tasks/reload.js
+  h_c93d154c7c7074 8,17,27-28
+code/packages/ui-bundle/gulp.d/tasks/remove.js
+  h_c93d154c7c7074 8,12,14-15
+code/packages/ui-bundle/gulp.d/tasks/serve.js
+  h_c93d154c7c7074 8,13,22-23
+code/packages/ui-bundle/scripts/build-sprite.mjs
+  h_c93d154c7c7074 66,145-150,306-309
+code/packages/ui-bundle/scripts/lib/icons.mjs
+  h_c93d154c7c7074 150-154
+code/packages/ui-bundle/src/helpers/detag.ts
+  h_c93d154c7c7074 35
+code/packages/ui-bundle/src/helpers/icon.ts
+  h_c93d154c7c7074 35,37-38
+code/packages/ui-bundle/src/js/01-nav.ts
+  h_c93d154c7c7074 41-47,158-159,164
+code/packages/ui-bundle/src/js/02-on-this-page.ts
+  h_c93d154c7c7074 14,39-40,42,49-52,163
+code/packages/ui-bundle/src/js/03-fragment-jumper.ts
+  h_c93d154c7c7074 24,47-48,57-58
+code/packages/ui-bundle/src/js/06-copy-to-clipboard.ts
+  h_c93d154c7c7074 43-46,54-55,65-66,68-69
+code/packages/ui-bundle/src/js/10-accordion.ts
+  h_c93d154c7c7074 172
+docs/scripts/check-links.mjs
+  h_c93d154c7c7074 66-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "99a5aae9b7dd61cec9e6147c38aa459f89a1bf3d",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

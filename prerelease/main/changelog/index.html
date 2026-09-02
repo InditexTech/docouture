@@ -98,7 +98,7 @@
           <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-menu"></use></svg></span>
         </span>
       </button>
-      <a class="header-toolbar__brand" href="../../">
+      <a class="header-toolbar__brand" href="../../../1.0.0/">
         <img class="header-toolbar__logo header-toolbar__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="header-toolbar__logo header-toolbar__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="header-toolbar__product-name dt-text dt-text--label-l-high">Docouture</span>
@@ -114,9 +114,20 @@
       </button>
 
 <div class="page-versions">
-  <span class="dt-tag dt-tag--solid dt-tag--selected dt-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
+  <button type="button" class="dt-tag dt-tag--solid dt-tag--selected header-toolbar__version header-toolbar__version--prerelease version-menu-toggle" title="Show other versions of page" aria-expanded="false">
     <span class="dt-tag__label">prerelease</span>
-  </span>
+    <span class="dt-tag__icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg></span>
+  </button>
+  <div class="version-menu">
+    <span class="version is-current" aria-current="page">
+      <span class="version__label">prerelease</span>
+      <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
+    </span>
+    <a class="version" href="../../../1.0.0/main/changelog/">
+      <span class="version__label">1.0.0</span>
+      <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
+          </a>
+  </div>
 </div>
 
 <a class="dt-button dt-button--ghost dt-button--icon-only header-toolbar__repo" href="https://github.com/InditexTech/docouture" target="_blank" rel="noopener" aria-label="Repository">
@@ -203,7 +214,7 @@
   </div>
 
 <div class="side-menu__brand">
-  <a class="side-menu__brand-link" href="../../">
+  <a class="side-menu__brand-link" href="../../../1.0.0/">
     <img class="side-menu__brand-logo side-menu__brand-logo--light" src="../../../_/product-logo.png" width="40" height="40" alt="">
     <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="../../../_/product-logo-dark.png" width="40" height="40" alt="">
     <span class="side-menu__brand-title dt-text dt-text--title-m">Docouture</span>
@@ -633,9 +644,20 @@
   <div class="side-menu__version">
 
 <div class="page-versions">
-  <span class="dt-tag dt-tag--solid dt-tag--selected dt-tag--read-only header-toolbar__version header-toolbar__version--prerelease" aria-label="Version prerelease">
+  <button type="button" class="dt-tag dt-tag--solid dt-tag--selected header-toolbar__version header-toolbar__version--prerelease version-menu-toggle" title="Show other versions of page" aria-expanded="false">
     <span class="dt-tag__label">prerelease</span>
-  </span>
+    <span class="dt-tag__icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg></span>
+  </button>
+  <div class="version-menu">
+    <span class="version is-current" aria-current="page">
+      <span class="version__label">prerelease</span>
+      <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
+    </span>
+    <a class="version" href="../../../1.0.0/main/changelog/">
+      <span class="version__label">1.0.0</span>
+      <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
+          </a>
+  </div>
 </div>
   </div>
 </div>
@@ -712,158 +734,158 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 </div>
 </div>
 <div class="sect1">
-<h2 id="unreleased"><a class="anchor" href="#unreleased"></a>Unreleased</h2>
+<h2 id="v1-0-0-2026-09-02"><a class="anchor" href="#v1-0-0-2026-09-02"></a>v1.0.0 — 2026-09-02</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="added"><a class="anchor" href="#added"></a>Added</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/206">#206</a> [cli] pin toolchain in the scaffolded starter (.tool-versions) + doctor package-manager check</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/206">#206</a> \[cli] pin toolchain in the scaffolded starter (.tool-versions) + doctor package-manager check</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/202">#202</a> [cli] docouture dev / just dev: fall back to a random free port when the default 5000 is busy</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/202">#202</a> \[cli] docouture dev / just dev: fall back to a random free port when the default 5000 is busy</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/198">#198</a> [ui-bundle] Click-to-zoom fullscreen overlay for images and diagrams</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/198">#198</a> \[ui-bundle] Click-to-zoom fullscreen overlay for images and diagrams</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/176">#176</a> [cli] Support git-flow branching alongside trunk-based in docouture scaffolding</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/176">#176</a> \[cli] Support git-flow branching alongside trunk-based in docouture scaffolding</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/173">#173</a> [tooling] Docs release: stop creating a GitHub Release for versioned-mode tags, tag only</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/173">#173</a> \[tooling] Docs release: stop creating a GitHub Release for versioned-mode tags, tag only</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/168">#168</a> [tooling] Prefix versioned and standalone modes git tags with docs/ to avoid collision with code release tags</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/168">#168</a> \[tooling] Prefix versioned and standalone modes git tags with docs/ to avoid collision with code release tags</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/164">#164</a> [ui-bundle] Add opt-in bordered style for home hero image</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/164">#164</a> \[ui-bundle] Add opt-in bordered style for home hero image</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/147">#147</a> [ui-bundle] Alternative home page template version</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/147">#147</a> \[ui-bundle] Alternative home page template version</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/141">#141</a> [cli] Polish the docouture CLI</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/141">#141</a> \[cli] Polish the docouture CLI</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/138">#138</a> [tooling] Standalone/versioned docs: /stable (or latest release tag) becomes a redirect stub instead of real content</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/138">#138</a> \[tooling] Standalone/versioned docs: /stable (or latest release tag) becomes a redirect stub instead of real content</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/135">#135</a> [asciidoc] render Mermaid diagrams instead of a literal [mermaid] block</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/135">#135</a> \[asciidoc] render Mermaid diagrams instead of a literal \[mermaid] block</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/120">#120</a> [cli] Polish starter template: align with example, add placeholder module, wire extensions, add default logo/favicon</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/120">#120</a> \[cli] Polish starter template: align with example, add placeholder module, wire extensions, add default logo/favicon</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/119">#119</a> [tooling] Docs publish: Create reusable GitHub Actions workflow for Antora to GitHub Pages</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/119">#119</a> \[tooling] Docs publish: Create reusable GitHub Actions workflow for Antora to GitHub Pages</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/118">#118</a> [ui-bundle] Style Stable vs Prerelease visual states for version selector and tags</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/118">#118</a> \[ui-bundle] Style Stable vs Prerelease visual states for version selector and tags</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/116">#116</a> [ui-bundle] Render version indicator explicitly when only one version exists</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/116">#116</a> \[ui-bundle] Render version indicator explicitly when only one version exists</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/113">#113</a> [indexing] Generate llms.txt and llms-full.txt at build time for AI indexing</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/113">#113</a> \[indexing] Generate llms.txt and llms-full.txt at build time for AI indexing</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/110">#110</a> [cli] Implement docouture dev, docouture build, docouture doctor commands and CLI test suite</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/110">#110</a> \[cli] Implement docouture dev, docouture build, docouture doctor commands and CLI test suite</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/109">#109</a> [cli] CLI: Add interactive scaffolding wizard to docouture new (name, title, versioning mode)</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/109">#109</a> \[cli] CLI: Add interactive scaffolding wizard to docouture new (name, title, versioning mode)</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/108">#108</a> [tooling] Add local Verdaccio snapshot publishing recipe and expand npm publish scope</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/108">#108</a> \[tooling] Add local Verdaccio snapshot publishing recipe and expand npm publish scope</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/107">#107</a> [tooling] Docs release: Evaluate and implement CLI orchestration for docs release workflow</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/107">#107</a> \[tooling] Docs release: Evaluate and implement CLI orchestration for docs release workflow</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/106">#106</a> [tooling] Docs release: Implement and verify Mode 1 (Versioned Tags) on example site</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/106">#106</a> \[tooling] Docs release: Implement and verify Mode 1 (Versioned Tags) on example site</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/100">#100</a> [tooling] Docs release: Implement and verify Mode 2 (Stable + Prerelease) on example site</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/100">#100</a> \[tooling] Docs release: Implement and verify Mode 2 (Stable + Prerelease) on example site</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/98">#98</a> [ui-bundle] Replace highlight.js (client-side) with Shiki (build-time) for code highlighting</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/98">#98</a> \[ui-bundle] Replace highlight.js (client-side) with Shiki (build-time) for code highlighting</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/97">#97</a> [ui-bundle] Review page &lt;title&gt; format: add module segment on multi-module sites and update separator</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/97">#97</a> \[ui-bundle] Review page &lt;title&gt; format: add module segment on multi-module sites and update separator</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/76">#76</a> [ui-bundle] Searcher module filter, recent searches, a11y polish</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/76">#76</a> \[ui-bundle] Searcher module filter, recent searches, a11y polish</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/75">#75</a> [ui-bundle] Searcher responsive: S/XS full-screen dialog and floating trigger</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/75">#75</a> \[ui-bundle] Searcher responsive: S/XS full-screen dialog and floating trigger</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/74">#74</a> [antora-extension] Runtime search</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/74">#74</a> \[antora-extension] Runtime search</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/73">#73</a> [ui-bundle] DS components and static search UI</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/73">#73</a> \[ui-bundle] DS components and static search UI</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/72">#72</a> [antora-extension] Search index built by Antora</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/72">#72</a> \[antora-extension] Search index built by Antora</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/63">#63</a> [asciidoc] real tabs for main/quickstart&#8217;s package-manager code blocks</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/63">#63</a> \[asciidoc] real tabs for main/quickstart&#8217;s package-manager code blocks</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/62">#62</a> [ui-bundle] Landing: accordion restyle collapsibles as DS accordion items, add an [accordion] grouping extension</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/62">#62</a> \[ui-bundle] Landing: accordion restyle collapsibles as DS accordion items, add an \[accordion] grouping extension</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/60">#60</a> [ui-bundle] Landing: cta extension composed from IOP DS primitives</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/60">#60</a> \[ui-bundle] Landing: cta extension composed from IOP DS primitives</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/59">#59</a> [ui-bundle] Landing: feature-tabs extension for the Key features switcher</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/59">#59</a> \[ui-bundle] Landing: feature-tabs extension for the Key features switcher</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/54">#54</a> [ui-bundle] Landing: cards extension for the Quicklinks block</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/54">#54</a> \[ui-bundle] Landing: cards extension for the Quicklinks block</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/52">#52</a> [ui-bundle] Landing: Hero block</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/52">#52</a> \[ui-bundle] Landing: Hero block</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/50">#50</a> [ui-bundle] Landing: Establish the asciidoc-extensions contract</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/50">#50</a> \[ui-bundle] Landing: Establish the asciidoc-extensions contract</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/49">#49</a> [ui-bundle] side menu: per-module navigation with a module switcher</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/49">#49</a> \[ui-bundle] side menu: per-module navigation with a module switcher</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/43">#43</a> [ui-bundle] Example blocks, images with captions, lists and quotes</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/43">#43</a> \[ui-bundle] Example blocks, images with captions, lists and quotes</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/42">#42</a> [ui-bundle] Tables: content tables and property tables</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/42">#42</a> \[ui-bundle] Tables: content tables and property tables</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/41">#41</a> [ui-bundle] Admonitions map to IDS Notification</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/41">#41</a> \[ui-bundle] Admonitions map to IDS Notification</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/40">#40</a> [ui-bundle] Code blocks: IDS Code Block, action bar and copy</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/40">#40</a> \[ui-bundle] Code blocks: IDS Code Block, action bar and copy</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/39">#39</a> [ui-bundle] Prose typography: heading scale, section rules and copy-link anchors</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/39">#39</a> \[ui-bundle] Prose typography: heading scale, section rules and copy-link anchors</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/38">#38</a> [ui-bundle] Page footer: previous/next navigation and feedback block</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/38">#38</a> \[ui-bundle] Page footer: previous/next navigation and feedback block</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/37">#37</a> [ui-bundle] ToC as a sidebar toggled from the hero</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/37">#37</a> \[ui-bundle] ToC as a sidebar toggled from the hero</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/36">#36</a> [ui-bundle] Page hero: breadcrumbs, title, lead and labels</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/36">#36</a> \[ui-bundle] Page hero: breadcrumbs, title, lead and labels</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/35">#35</a> [ui-bundle] Side menu: logo, title and IDS list navigation tree</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/35">#35</a> \[ui-bundle] Side menu: logo, title and IDS list navigation tree</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/34">#34</a> [ui-bundle] Header toolbar</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/34">#34</a> \[ui-bundle] Header toolbar</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/32">#32</a> [ui-bundle] Preview harness: two views, page-layout support, realistic UI model, live reload</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/32">#32</a> \[ui-bundle] Preview harness: two views, page-layout support, realistic UI model, live reload</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/31">#31</a> [ui-bundle] Wire IOP DS component stylesheets into site.css and shrink bridge.css</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/31">#31</a> \[ui-bundle] Wire IOP DS component stylesheets into site.css and shrink bridge.css</p>
 </li>
 </ul>
 </div>
@@ -873,46 +895,46 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/200">#200</a> [ui-bundle/asciidoc] Diagram bleed silently lost outside a section, and role="a, b" leaves a comma stuck in the class attribute</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/200">#200</a> \[ui-bundle/asciidoc] Diagram bleed silently lost outside a section, and role="a, b" leaves a comma stuck in the class attribute</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/194">#194</a> [cli] docouture-release-preview.yml&#8217;s check-changes-in-paths job missing contents/pull-requests read permissions</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/194">#194</a> \[cli] docouture-release-preview.yml&#8217;s check-changes-in-paths job missing contents/pull-requests read permissions</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/192">#192</a> [asciidoc] kroki-prewarm doesn&#8217;t resolve include:: before extracting diagram source — permanent cache miss for diagrams built from shared partials</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/192">#192</a> \[asciidoc] kroki-prewarm doesn&#8217;t resolve include:: before extracting diagram source — permanent cache miss for diagrams built from shared partials</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/186">#186</a> [skills] --all leaks contributor-only skills from .opencode/skills into public installs</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/186">#186</a> \[skills] --all leaks contributor-only skills from .opencode/skills into public installs</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/184">#184</a> [skills] --all leaks contributor-only skills from .agents/skills into public installs</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/184">#184</a> \[skills] --all leaks contributor-only skills from .agents/skills into public installs</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/182">#182</a> [tooling] Fix open CodeQL cache-poisoning alerts in publish-release workflow</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/182">#182</a> \[tooling] Fix open CodeQL cache-poisoning alerts in publish-release workflow</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/181">#181</a> [tooling] Upgrade Antora to 3.2.0 to resolve open js-yaml Dependabot alerts</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/181">#181</a> \[tooling] Upgrade Antora to 3.2.0 to resolve open js-yaml Dependabot alerts</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/167">#167</a> [tooling] Published v1.0.0 docs show "No tagged release yet" on the Changelog page</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/167">#167</a> \[tooling] Published v1.0.0 docs show "No tagged release yet" on the Changelog page</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/163">#163</a> [ui-bundle] Content page titles rendered uppercase via hero.hbs, ignoring source case</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/163">#163</a> \[ui-bundle] Content page titles rendered uppercase via hero.hbs, ignoring source case</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/158">#158</a> [tooling] Fix commit to main from docuture-* workflows that need it</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/158">#158</a> \[tooling] Fix commit to main from docuture-\* workflows that need it</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/117">#117</a> [ui-bundle] Version tag is missing at xs breakpoint in side-menu drawer</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/117">#117</a> \[ui-bundle] Version tag is missing at xs breakpoint in side-menu drawer</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/112">#112</a> [cli] Fix snapshot version pinning, implement Mode 1 versioning, add inquirer wizard + colored banner</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/112">#112</a> \[cli] Fix snapshot version pinning, implement Mode 1 versioning, add inquirer wizard + colored banner</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/90">#90</a> [ui-bundle] Navbar height (--navbar-height) diverges from IDS Header component height (~41px vs 56px)</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/90">#90</a> \[ui-bundle] Navbar height (--navbar-height) diverges from IDS Header component height (~41px vs 56px)</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/71">#71</a> [ui-bundle] fix overflow items length when nested</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/71">#71</a> \[ui-bundle] fix overflow items length when nested</p>
 </li>
 </ul>
 </div>
@@ -922,31 +944,31 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/204">#204</a> [documentation] docs site footer: swap Home for Repository link, add Guides and INDITEXTECH columns</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/204">#204</a> \[documentation] docs site footer: swap Home for Repository link, add Guides and INDITEXTECH columns</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/191">#191</a> [skills] nav.adoc guidance doesn&#8217;t warn against nesting a section&#8217;s topics under its own Overview page</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/191">#191</a> \[skills] nav.adoc guidance doesn&#8217;t warn against nesting a section&#8217;s topics under its own Overview page</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/174">#174</a> [skills] Internalize authoring-guides content into the docouture-* skills as AsciiDoc</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/174">#174</a> \[skills] Internalize authoring-guides content into the docouture-\* skills as AsciiDoc</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/150">#150</a> [documentation] Document docouture using docouture (dogfood the platform for its own docs)</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/150">#150</a> \[documentation] Document docouture using docouture (dogfood the platform for its own docs)</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/149">#149</a> [skills] Externalize docs-authoring skills into standalone skill packages</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/149">#149</a> \[skills] Externalize docs-authoring skills into standalone skill packages</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/115">#115</a> [cli] Scaffold AGENTS.md and agent skills (OpenCode &amp; Claude) in docouture new</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/115">#115</a> \[cli] Scaffold AGENTS.md and agent skills (OpenCode &amp; Claude) in docouture new</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/99">#99</a> [tooling] Document the two Antora versioning modes (Mode 1 &amp; Mode 2)</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/99">#99</a> \[tooling] Document the two Antora versioning modes (Mode 1 &amp; Mode 2)</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/47">#47</a> [internal] migrate Weave.js content to example package</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/47">#47</a> \[internal] migrate Weave.js content to example package</p>
 </li>
 <li>
-<p><a href="https://github.com/InditexTech/docouture/pull/33">#33</a> [skills] Correct the iop-ds-components skill against the shipped package</p>
+<p><a href="https://github.com/InditexTech/docouture/pull/33">#33</a> \[skills] Correct the iop-ds-components skill against the shipped package</p>
 </li>
 </ul>
 </div>
@@ -1008,7 +1030,7 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 <footer class="site-footer">
   <div class="dt-grid-layout dt-grid-layout--with-margin site-footer__grid">
     <div class="dt-grid-layout__item site-footer__col site-footer__brand">
-      <a class="site-footer__brand-link" href="../../">
+      <a class="site-footer__brand-link" href="../../../1.0.0/">
         <img class="site-footer__logo site-footer__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="site-footer__logo site-footer__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="dt-text dt-text--label-l-high">Docouture</span>
@@ -1028,10 +1050,6 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
       <a class="dt-text dt-text--body-l site-footer__link" href="../guides-content-structure/">Content &amp; structure</a>
       <a class="dt-text dt-text--body-l site-footer__link" href="../guides-branding/">Branding &amp; customization</a>
       <a class="dt-text dt-text--body-l site-footer__link" href="../guides-versioning-publishing/">Versioning &amp; publishing</a>
-    </div>
-    <div class="dt-grid-layout__item site-footer__col site-footer__links">
-      <span class="dt-text dt-text--label-l site-footer__heading">INDITEXTECH</span>
-      <a class="dt-text dt-text--body-l site-footer__link" href="https://opensource.inditex.com">OSO Portal</a>
     </div>
   </div>
 </footer>

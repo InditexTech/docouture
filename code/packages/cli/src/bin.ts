@@ -153,8 +153,9 @@ Example:
   docouture doctor [--dir <path>] [--json]
 
 Check that the environment and site configuration are healthy: Node
-version, the four names that must agree (component name, start page,
-content path, package name), git history, that antora is installed,
+version, that the declared package manager (package.json's packageManager
+field) is installed, the four names that must agree (component name, start
+page, content path, package name), git history, that antora is installed,
 and (advisory only) whether AGENTS.md and the scaffolded skills are
 still present, whether the docs/release label exists, and whether the
 declared branching model (docs/package.json's docouture.branching)

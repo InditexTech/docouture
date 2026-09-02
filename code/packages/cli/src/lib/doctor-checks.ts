@@ -57,6 +57,57 @@ export function checkNodeVersion(engineRange: string | null | undefined, actualV
   }
 }
 
+/**
+ * Confirms the package manager a site actually declares (`package.json`'s
+ * own `packageManager` field, corepack convention, e.g. `pnpm@10.24.0`) is
+ * installed and reachable — `checkNodeVersion` above gets a shortcut
+ * (`docouture` *is* a Node process, so Node's presence is proof positive,
+ * only its version is an open question), but `docouture` doesn't run *as*
+ * npm or pnpm, so their presence has to be checked by actually spawning the
+ * binary. Presence only — no version-match against the declared field is
+ * required, the field just says which binary to look for.
+ *
+ * The `<name>` before `@` is read as-is rather than restricted to a
+ * hardcoded `npm`/`pnpm` allow-list — this is what `docouture new` ever
+ * writes there in practice, but nothing here depends on that being true.
+ */
+export function checkPackageManagerAvailable(packageManagerField: string | null | undefined): Promise<CheckResult> {
+  const label = 'package manager'
+
+  if (!packageManagerField) {
+    return Promise.resolve({
+      ok: true,
+      label,
+      message: 'no packageManager field declared in package.json — skipping',
+    })
+  }
+
+  const match = /^([^@\s]+)@/.exec(packageManagerField)
+  const pm = match?.[1]
+  if (!pm) {
+    return Promise.resolve({
+      ok: true,
+      label,
+      message: `could not parse packageManager '${packageManagerField}' — skipping`,
+    })
+  }
+
+  return new Promise((resolvePromise) => {
+    execFile(pm, ['--version'], { timeout: 10_000 }, (err, stdout) => {
+      resolvePromise(
+        err
+          ? {
+              ok: false,
+              label,
+              message: `'${pm}' is not available on PATH`,
+              detail: `package.json declares packageManager: '${packageManagerField}' — install ${pm} (or run via corepack)`,
+            }
+          : { ok: true, label, message: `${pm} ${stdout.trim()} is available` }
+      )
+    })
+  })
+}
+
 export interface NamesInput {
   /** `docs/antora.yml` -> `name`. */
   antoraYmlName: string | null

@@ -21,6 +21,7 @@ import {
   checkGitHasCommit,
   checkNamesAgree,
   checkNodeVersion,
+  checkPackageManagerAvailable,
   checkReleaseLabelExists,
   type CheckResult,
 } from '../lib/doctor-checks.js'
@@ -28,6 +29,7 @@ import {
 interface PackageJson {
   name?: string
   engines?: { node?: string }
+  packageManager?: string
   docouture?: { branching?: string }
 }
 
@@ -110,6 +112,10 @@ export async function runDoctor(argv: string[]): Promise<number> {
   const nodeResult = checkNodeVersion(pkg?.engines?.node, process.version)
   status |= record(report, 'toolchain', nodeResult, 'fail')
   if (!json) printResult(nodeResult)
+
+  const pmResult = await checkPackageManagerAvailable(pkg?.packageManager ?? null)
+  status |= record(report, 'toolchain', pmResult, 'fail')
+  if (!json) printResult(pmResult)
 
   log('names')
   const playbookFile = join(siteRoot, 'antora-playbook.yml')

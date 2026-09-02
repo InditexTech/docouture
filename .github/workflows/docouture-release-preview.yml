@@ -24,7 +24,11 @@ on:
     branches: ['main*']
 
 concurrency:
-  group: release-preview
+  # Scoped per-PR, not just per-workflow: code-release_preview.yml used to
+  # share this same literal group name, so a label change firing both
+  # workflows at once would have the later one cancel this one mid-run
+  # (and vice versa) even though they preview unrelated releases.
+  group: docouture-release-preview-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:

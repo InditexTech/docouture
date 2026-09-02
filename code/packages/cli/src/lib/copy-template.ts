@@ -26,6 +26,20 @@ export interface TemplateValues {
   // included, or npm install has nothing matching to resolve against on a
   // registry that only ever published that one exact version.
   cliVersion: string
+  // The exact Node major.minor.patch actually running the scaffold (`docouture
+  // new` itself, via `process.version`) — same reasoning as `cliVersion`
+  // above: pin whatever's actually doing the scaffolding, not some
+  // hardcoded default that immediately drifts from it. Written as the
+  // `nodejs` line of the scaffolded `.tool-versions` (asdf/mise convention)
+  // — see `pnpmToolVersionsLine` below for the line beneath it.
+  nodeVersion: string
+  // The scaffolded `.tool-versions`' own `pnpm <version>` line, already
+  // newline-terminated — present only when the scaffolded site uses pnpm,
+  // '' for npm-scaffolded sites (no pnpm line at all, not an empty one).
+  // Same "whole line vanishes when this is empty" trick pmSetupStepYaml
+  // below uses, for the same reason: a bare token substituted in-place
+  // would still leave a blank line behind when npm-scaffolded.
+  pnpmToolVersionsLine: string
   // Package-manager-aware bits of the scaffolded workflow templates — see
   // lib/detect-package-manager.ts, whose packageManagerPlan() output this
   // maps to token-for-token. 'npm' is always a safe, working default: these
@@ -91,6 +105,12 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   __DOCOUTURE_TITLE__: 'title',
   __DOCOUTURE_COMPONENT_NAME__: 'componentName',
   __DOCOUTURE_CLI_VERSION__: 'cliVersion',
+  __DOCOUTURE_NODE_VERSION__: 'nodeVersion',
+  // Whole-line token, same reasoning as pmSetupStepYaml's own comment below
+  // — the value (or '' for npm) already carries its own trailing newline,
+  // so substituting the token-plus-newline is what lets the line vanish
+  // entirely rather than leaving a blank line in the npm case.
+  '__DOCOUTURE_PNPM_TOOL_VERSIONS_LINE__\n': 'pnpmToolVersionsLine',
   __DOCOUTURE_PM__: 'pmName',
   __DOCOUTURE_PM_CACHE__: 'pmCacheName',
   __DOCOUTURE_LOCKFILE__: 'pmLockfile',

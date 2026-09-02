@@ -1,9 +1,16 @@
 # docouture
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/product-logo-dark.png">
+  <img src=".github/assets/product-logo.png" alt="docouture logo" width="80">
+</picture>
+
 Documentation platform built on [Antora](https://docs.antora.org/antora/latest/).
 It's an Nx/pnpm monorepo that ships two things: a themed Antora UI bundle, and
 the `docouture` CLI for scaffolding and running standalone documentation sites
 outside this repository.
+
+Full documentation: https://inditextech.github.io/docouture/
 
 ## Requirements
 

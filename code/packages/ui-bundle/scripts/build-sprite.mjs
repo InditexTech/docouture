@@ -20,8 +20,7 @@
 //   node scripts/build-sprite.mjs            write src/img/icons.svg
 //   node scripts/build-sprite.mjs --check    verify it is up to date, write nothing
 
-import { readFile, writeFile } from 'node:fs/promises'
-import { glob } from 'node:fs/promises'
+import { readFile, writeFile, glob } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 
 import { optimize } from 'svgo'
@@ -342,4 +341,8 @@ async function main() {
   await sync(paths.masks, masks, { check })
 }
 
-main().catch(fail)
+try {
+  await main()
+} catch (err) {
+  fail(err)
+}

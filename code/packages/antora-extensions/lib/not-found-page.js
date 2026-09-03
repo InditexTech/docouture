@@ -156,9 +156,7 @@ module.exports = function registerNotFoundPage(context) {
       // Cloned, not shared: mutating the site-wide asciidoc config in place
       // would leak `page-layout: 404` onto every other page composePage
       // touches from here on.
-      asciidoc: Object.assign({}, siteAsciiDocConfig, {
-        attributes: Object.assign({}, siteAsciiDocConfig?.attributes, { 'page-layout': '404' }),
-      }),
+      asciidoc: { ...siteAsciiDocConfig, attributes: { ...siteAsciiDocConfig?.attributes, 'page-layout': '404' } },
     }
 
     // A fresh composer, not the pipeline's own (createPageComposer's result

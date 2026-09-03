@@ -66,7 +66,16 @@ const CONTENT_TYPES: Record<string, string> = {
   '.txt': 'text/plain; charset=utf-8',
 }
 
-const IGNORED = /(?:^|[\\/])(?:\.|.*~$)|\.swp$/
+// Three flat alternatives, not two nested ones: a dotfile/dotdir (a path
+// segment starting with `.`, right after `/` or at the very start), a
+// filename ending in `~` (editor backup), or one ending in `.swp` (vim
+// swap). The previous shape nested `.*~$` inside the same group as the
+// dotfile check — `.test()` already searches anywhere in the string, so
+// that leading `.*` and the group it sat in were doing nothing but making
+// the operator precedence ambiguous (and reading as the "quantifier next
+// to an anchor, twice over" shape a catastrophic-backtracking scanner
+// flags) for the exact same matches.
+const IGNORED = /(?:^|[\\/])\.|~$|\.swp$/
 
 export interface DevServerOptions {
   /** The site root: contains antora-playbook.local.yml and package.json. */
@@ -162,7 +171,14 @@ async function readBasePath(siteRoot: string): Promise<string> {
   if (!url || url === '/') return ''
   const path = url.startsWith('/') ? url : URL.parse(url)?.pathname
   if (!path || path === '/') return ''
-  return path.replace(/\/+$/, '')
+  // Trailing slash(es) only — a plain reverse scan rather than `/\/+$/`:
+  // that regex is safe in practice (nothing else in the pattern to
+  // backtrack against), but a bare quantifier immediately touching an
+  // anchor still reads as the shape a catastrophic-backtracking scanner
+  // flags on sight.
+  let end = path.length
+  while (end > 0 && path[end - 1] === '/') end -= 1
+  return path.slice(0, end)
 }
 
 export async function startDevServer(options: DevServerOptions): Promise<DevServer> {

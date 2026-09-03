@@ -226,9 +226,12 @@ function accordionBlock() {
     // See steps.js's own comment: a literal JS `null` "source" crashes Opal
     // (2.2) inside `Block#initialize`'s `.nil_or_empty?()` check.
     const wrapper = this.createBlock(parent, 'open', '', attrs)
-    // See label-macro.js's own comment on this same pattern.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this
+    // No `self = this` needed: this callback is already an arrow
+    // function (see this.process(...) below), so `this` here is
+    // already the outer block processor's own `this` (Asciidoctor
+    // never rebinds it the way it does inside a plain `function`
+    // callback — see label-macro.js's own comment on that different
+    // case) — passed straight through to finish() below.
     // See async-compat.js's own header comment: parseContent is sync under
     // 2.2 (Opal, real Antora builds) and Promise-returning under 4.0 (the
     // ui-bundle preview harness) — chain() handles either without making
@@ -236,7 +239,7 @@ function accordionBlock() {
     // a `.Title` carrying inline markup (this block's own, or a child
     // `[%collapsible]`'s) arrive converted rather than raw.
     return chain(this.parseContent(wrapper, reader.getLines()), () =>
-      chain(precomputeSubtree(wrapper), () => finish(parent, wrapper, attrs, self))
+      chain(precomputeSubtree(wrapper), () => finish(parent, wrapper, attrs, this))
     )
   })
 }

@@ -44,7 +44,7 @@
   'use strict'
 
   var dialog = document.getElementById('image-zoom-dialog') as HTMLDialogElement | null
-  var triggers = [].slice.call(
+  var triggers = Array.prototype.slice.call(
     document.querySelectorAll<HTMLElement>('.imageblock.zoom-in .content, .docouture-diagram.zoom-in .docouture-diagram__content')
   ) as HTMLElement[]
   if (!dialog || !triggers.length) return

@@ -327,7 +327,8 @@ const QUIET_COMMANDS = new Set(['completion'])
 // build/bin.js -> package root, 1 level up — see readCliInfo's own comment.
 async function banner(): Promise<string> {
   const { name, version } = await readCliInfo(import.meta.url, 1)
-  return `${theme.bold(theme.info(name))} ${theme.dim(`v${version}`)}`
+  const versionLabel = `v${version}`
+  return `${theme.bold(theme.info(name))} ${theme.dim(versionLabel)}`
 }
 
 // Recognises the three global flags anywhere in argv (before or after the
@@ -400,11 +401,9 @@ async function main(): Promise<number> {
   return RUNNERS[command]!(rest)
 }
 
-main()
-  .then((code) => {
-    process.exitCode = code
-  })
-  .catch((err) => {
-    console.error(err instanceof Error ? err.stack : String(err))
-    process.exitCode = 1
-  })
+try {
+  process.exitCode = await main()
+} catch (err) {
+  console.error(err instanceof Error ? err.stack : String(err))
+  process.exitCode = 1
+}

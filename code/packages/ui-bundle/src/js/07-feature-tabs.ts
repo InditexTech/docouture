@@ -26,15 +26,15 @@
 ;(function () {
   'use strict'
 
-  var blocks = [].slice.call(document.querySelectorAll<HTMLElement>('[data-feature-tabs]'))
+  var blocks = Array.prototype.slice.call(document.querySelectorAll<HTMLElement>('[data-feature-tabs]'))
   if (!blocks.length) return
 
   blocks.forEach(function (block: HTMLElement) {
     var list = block.querySelector<HTMLElement>('.docouture-feature-tabs__list')
-    var tabs = [].slice.call(
+    var tabs = Array.prototype.slice.call(
       block.querySelectorAll<HTMLAnchorElement>('.docouture-feature-tabs__tab')
     ) as HTMLAnchorElement[]
-    var panels = [].slice.call(
+    var panels = Array.prototype.slice.call(
       block.querySelectorAll<HTMLElement>('.docouture-feature-tabs__panel')
     ) as HTMLElement[]
     // One tab per panel or the pairing below is guesswork — leave the block in
@@ -45,7 +45,7 @@
     list.setAttribute('role', 'tablist')
     list.setAttribute('aria-orientation', 'vertical')
     // The `<li>`s carry the list semantics a tablist must not have.
-    ;[].slice.call(list.children).forEach(function (item: HTMLElement) {
+    ;Array.prototype.slice.call(list.children).forEach(function (item: HTMLElement) {
       item.setAttribute('role', 'presentation')
     })
 

@@ -68,7 +68,7 @@ const cache = new Map()
 function keyFor(type, source, format, options) {
   const opts = options || {}
   const sortedOptions = Object.keys(opts)
-    .sort()
+    .sort((a, b) => a.localeCompare(b))
     .map((key) => key + '=' + opts[key])
     .join('\u0001')
   return createHash('sha256')

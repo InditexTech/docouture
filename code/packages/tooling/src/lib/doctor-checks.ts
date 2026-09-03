@@ -21,7 +21,7 @@ export interface CheckResult {
 }
 
 function readToolVersion(content: string, tool: string): string | undefined {
-  const match = new RegExp(`^${tool}\\s+(\\S+)`, 'm').exec(content)
+  const match = new RegExp(String.raw`^${tool}\s+(\S+)`, 'm').exec(content)
   return match?.[1]
 }
 
@@ -79,7 +79,12 @@ export async function checkRegistryPinned(cwd: string): Promise<CheckResult> {
 
 export function checkGitHasCommit(cwd: string): Promise<CheckResult> {
   return new Promise((resolvePromise) => {
+    // Resolves 'git' off PATH, same as any shell script would — this
+    // internal tooling CLI runs only on a maintainer's own machine/CI, and
+    // has no way to check "does this repo have a commit" other than asking
+    // whichever `git` is already on that PATH.
     execFile('git', ['rev-parse', 'HEAD'], { cwd }, (err) => {
+      // NOSONAR
       resolvePromise(
         err
           ? {

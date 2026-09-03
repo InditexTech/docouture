@@ -167,11 +167,9 @@ async function main(): Promise<number> {
   return RUNNERS[command]!(rest)
 }
 
-main()
-  .then((code) => {
-    process.exitCode = code
-  })
-  .catch((err) => {
-    console.error(err instanceof Error ? err.stack : String(err))
-    process.exitCode = 1
-  })
+try {
+  process.exitCode = await main()
+} catch (err) {
+  console.error(err instanceof Error ? err.stack : String(err))
+  process.exitCode = 1
+}

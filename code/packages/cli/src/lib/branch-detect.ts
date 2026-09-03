@@ -34,7 +34,13 @@ import { readBranches } from './playbook-yml.js'
  * matching how upgrade.ts already treats docs/antora.yml.
  */
 export function readReleaseBranchFromWorkflow(workflowContent: string): string | null {
-  const match = /^\s*ref:\s*(\S+?)\s*$/m.exec(workflowContent)
+  // No leading `^\s*`: two separate `\s*` repetitions in the same pattern
+  // (the indent before `ref:` and the gap before the value) is itself the
+  // shape a catastrophic-backtracking scanner flags, even though the two
+  // don't share a character class with what follows. `\b` finds `ref:` at
+  // any indentation without a repeated whitespace class of its own, leaving
+  // only the one `\s*` before the captured value.
+  const match = /\bref:\s*(\S+)/.exec(workflowContent)
   if (!match?.[1]) return null
   return match[1].replace(/^['"]|['"]$/g, '')
 }

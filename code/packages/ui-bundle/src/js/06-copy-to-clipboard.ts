@@ -5,14 +5,13 @@
 ;(function () {
   'use strict'
 
-  var CMD_RX = /^\$ (\S[^\\\n]*(\\\n(?!\$ )[^\\\n]*)*)(?=\n|$)/gm
   var LINE_CONTINUATION_RX = /( ) *\\\n *|\\\n( ?) */g
   var TRAILING_SPACE_RX = / +$/gm
 
   var config: Record<string, string | undefined> =
     (document.getElementById('site-script') || { dataset: {} }).dataset
   var supportsCopy = window.navigator.clipboard
-  var uiRootPath = (config.uiRootPath == null ? window.uiRootPath : config.uiRootPath) || '.'
+  var uiRootPath = (config.uiRootPath ?? window.uiRootPath) || '.'
 
   // GH-12 (A6) follow-up (design review): both action-bar buttons are
   // icon-only ghost buttons now — no visible "copy code" label — real
@@ -35,7 +34,7 @@
     return svg
   }
 
-  ;[].slice.call(document.querySelectorAll('.doc pre.highlight, .doc .literalblock pre')).forEach(function (pre) {
+  ;Array.prototype.slice.call(document.querySelectorAll('.doc pre.highlight, .doc .literalblock pre')).forEach(function (pre) {
     var code, language, lang, toolbox, actions
 
     if (pre.classList.contains('highlight')) {
@@ -136,11 +135,32 @@
     content.insertBefore(toolbox, content.firstChild)
   })
 
+  // Line-by-line, not one big regex: a single pattern that both spans
+  // several physical lines (a trailing `\` continues the command onto the
+  // next) AND has to look ahead to tell a real continuation from the START
+  // of the NEXT `$ ` prompt needs a quantifier nested inside a repeated
+  // group to do it — the classic shape a catastrophic-backtracking scanner
+  // flags, since a long non-matching run gives the engine many equally
+  // "almost right" ways to split the text before it gives up. Walking the
+  // lines by hand is the same grammar (a command starts at `$ `, continues
+  // while the accumulated text ends in `\` and the next line isn't itself a
+  // fresh `$ ` prompt) with none of that ambiguity.
   function extractCommands (text) {
+    var lines = text.split('\n')
     var cmds = []
-    var m
-    while ((m = CMD_RX.exec(text))) cmds.push(m[1].replace(LINE_CONTINUATION_RX, '$1$2'))
-    return cmds.join(' && ')
+    var current = null
+    for (var line of lines) {
+      if (current !== null && /\\$/.test(current) && line.slice(0, 2) !== '$ ') {
+        current += '\n' + line
+        continue
+      }
+      if (current !== null) cmds.push(current)
+      current = /^\$ \S/.test(line) ? line.slice(2) : null
+    }
+    if (current !== null) cmds.push(current)
+    return cmds
+      .map(function (cmd) { return cmd.replace(LINE_CONTINUATION_RX, '$1$2') })
+      .join(' && ')
   }
 
   function writeToClipboard (code, button, iconEl, liveRegion) {

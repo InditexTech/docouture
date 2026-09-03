@@ -45,7 +45,7 @@ function firstField(lines: string[], key: string): string | null {
   // `content.sources[0].url` is written `    - url: ..` — every other field
   // on that same item (start_path, branches, ...) is indented the same but
   // without the dash, which the `?` also covers.
-  const re = new RegExp(`^\\s*(?:-\\s*)?${key}:\\s*(.+?)\\s*$`)
+  const re = new RegExp(String.raw`^\s*(?:-\s*)?${key}:\s*(.+?)\s*$`)
   for (const line of lines) {
     const match = re.exec(line)
     if (match?.[1]) return match[1].replace(/^['"]|['"]$/g, '')
@@ -135,7 +135,7 @@ export function writeBranches(content: string, branch: string): string {
     if (/^\s*(?:#.*)?$/.test(line)) continue
     if (/^\S/.test(line)) {
       if (inBlock) break
-      inBlock = /^content:/.test(line)
+      inBlock = line.startsWith('content:')
       continue
     }
     if (inBlock) {

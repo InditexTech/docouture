@@ -79,44 +79,11 @@ module.exports = function registerLlmsTxt(context) {
     const fullParts = []
     let summary
 
+    const ctx = { descriptors, contentCatalog, defaultLayout, multiComponent, logger, sectionsByHeading, fullParts }
     for (const component of components) {
       for (const componentVersion of component.versions) {
-        const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
-        const descriptor = descriptors.get(componentVersion.version + '@' + componentVersion.name) || {}
-        if (descriptor.summary && !summary) summary = descriptor.summary
-
-        const excluded = buildExcludedSet(descriptor.exclude, contentCatalog, componentVersion, logger, where)
-
-        const moduleTitleByModule = new Map()
-        for (const tree of componentVersion.navigation || []) {
-          if (tree.module) moduleTitleByModule.set(tree.module, tree.title || tree.module)
-        }
-
-        const pages = contentCatalog.getPages(
-          (page) =>
-            page.out &&
-            page.src.component === componentVersion.name &&
-            page.src.version === componentVersion.version &&
-            resolveLayout(page, defaultLayout) !== HOME_LAYOUT_NAME &&
-            !excluded.has(page.pub.url)
-        )
-
-        for (const page of pages) {
-          const title = page.asciidoc?.doctitle
-          if (!title) continue // no AsciiDoc header at all — nothing to list or dump, same rule search-index.js applies
-
-          const moduleTitle = moduleTitleByModule.get(page.src.module) || componentVersion.title
-          const heading = multiComponent ? `${componentVersion.title} — ${moduleTitle}` : moduleTitle
-
-          if (!sectionsByHeading.has(heading)) sectionsByHeading.set(heading, [])
-          sectionsByHeading.get(heading).push({
-            title,
-            url: page.pub.url,
-            description: page.asciidoc?.attributes?.description || '',
-          })
-
-          fullParts.push(buildFullEntry(title, page))
-        }
+        const componentSummary = collectComponentVersionLlms(componentVersion, ctx)
+        if (componentSummary && !summary) summary = componentSummary
       }
     }
 
@@ -141,6 +108,71 @@ module.exports = function registerLlmsTxt(context) {
 // model's `page.layout`, which does not exist yet at `navigationBuilt`).
 function resolveLayout(page, defaultLayout) {
   return page.asciidoc?.attributes?.['page-layout'] || defaultLayout
+}
+
+// `tree.module` -> `tree.title` for every module nav-modules.js stamped
+// annotations onto — see this file's own header on the ordering dependency
+// that makes those stamps already present by `navigationBuilt`.
+function collectModuleTitles(componentVersion) {
+  const moduleTitleByModule = new Map()
+  for (const tree of componentVersion.navigation || []) {
+    if (tree.module) moduleTitleByModule.set(tree.module, tree.title || tree.module)
+  }
+  return moduleTitleByModule
+}
+
+function getEligiblePages(componentVersion, contentCatalog, defaultLayout, excluded) {
+  return contentCatalog.getPages(
+    (page) =>
+      page.out &&
+      page.src.component === componentVersion.name &&
+      page.src.version === componentVersion.version &&
+      resolveLayout(page, defaultLayout) !== HOME_LAYOUT_NAME &&
+      !excluded.has(page.pub.url)
+  )
+}
+
+// One page's worth of llms.txt output: the summary-list entry (grouped by
+// heading) and the full Markdown dump entry — pushed straight onto the
+// caller's shared accumulators, since both output files are built from the
+// same single pass over every component/page.
+function addPageEntry(page, heading, sectionsByHeading, fullParts) {
+  const title = page.asciidoc?.doctitle
+  if (!title) return // no AsciiDoc header at all — nothing to list or dump, same rule search-index.js applies
+
+  if (!sectionsByHeading.has(heading)) sectionsByHeading.set(heading, [])
+  sectionsByHeading.get(heading).push({
+    title,
+    url: page.pub.url,
+    description: page.asciidoc?.attributes?.description || '',
+  })
+
+  fullParts.push(buildFullEntry(title, page))
+}
+
+// Everything one component version contributes: every eligible page's entry
+// in both output files — grouped under a heading named after the page's own
+// nav module (see this file's own header), qualified with the component
+// title only when the aggregate has more than one component — and its own
+// declared `llms.summary`, handed back for the caller to keep only if it's
+// the first one seen (there is only one site-wide summary line, not one per
+// component).
+function collectComponentVersionLlms(componentVersion, ctx) {
+  const { descriptors, contentCatalog, defaultLayout, multiComponent, logger, sectionsByHeading, fullParts } = ctx
+  const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
+  const descriptor = descriptors.get(componentVersion.version + '@' + componentVersion.name) || {}
+
+  const excluded = buildExcludedSet(descriptor.exclude, contentCatalog, componentVersion, logger, where)
+  const moduleTitleByModule = collectModuleTitles(componentVersion)
+  const pages = getEligiblePages(componentVersion, contentCatalog, defaultLayout, excluded)
+
+  for (const page of pages) {
+    const moduleTitle = moduleTitleByModule.get(page.src.module) || componentVersion.title
+    const heading = multiComponent ? `${componentVersion.title} — ${moduleTitle}` : moduleTitle
+    addPageEntry(page, heading, sectionsByHeading, fullParts)
+  }
+
+  return descriptor.summary
 }
 
 function buildExcludedSet(exclude, contentCatalog, componentVersion, logger, where) {

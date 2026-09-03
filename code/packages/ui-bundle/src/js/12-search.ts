@@ -56,7 +56,7 @@
 ;(function () {
   'use strict'
 
-  var triggers = [].slice.call(
+  var triggers = Array.prototype.slice.call(
     document.querySelectorAll<HTMLButtonElement>('.header-toolbar__search-trigger, .search-fab__trigger')
   ) as HTMLButtonElement[]
   var dialog = document.getElementById('search-dialog') as HTMLDialogElement | null
@@ -66,7 +66,7 @@
   var closeButton = dialog.querySelector<HTMLButtonElement>('.search-dialog__close')
   var resultsEl = dialog.querySelector<HTMLElement>('.search-dialog__results')
   var statusEl = dialog.querySelector<HTMLElement>('.search-dialog__status')
-  var chips = [].slice.call(dialog.querySelectorAll<HTMLButtonElement>('.search-dialog__chip')) as HTMLButtonElement[]
+  var chips = Array.prototype.slice.call(dialog.querySelectorAll<HTMLButtonElement>('.search-dialog__chip')) as HTMLButtonElement[]
   var chipsRow = dialog.querySelector<HTMLElement>('.search-dialog__chips')
   var shortcutChip = triggers[0].querySelector<HTMLElement>('.header-toolbar__search-shortcut')
   // The panel — `.dt-modal`/`.dt-modal--small`, nested inside `.dt-overlay`
@@ -83,7 +83,7 @@
   if (!indexBasename) return // belt and braces — the server-side guard already covers this
 
   var scriptConfig = (document.getElementById('site-script') || { dataset: {} as DOMStringMap }).dataset
-  var uiRootPath = (scriptConfig.uiRootPath == null ? window.uiRootPath : scriptConfig.uiRootPath) || '.'
+  var uiRootPath = (scriptConfig.uiRootPath ?? window.uiRootPath) || '.'
   var indexUrl = uiRootPath + '/search/' + indexBasename
   var engineUrl = uiRootPath + '/js/vendor/search.js'
 
@@ -572,7 +572,7 @@
       })
     })
 
-    if (rowEls.length) rowEls[rowEls.length - 1].classList.remove('dt-list-item--divider')
+    if (rowEls.length) rowEls.at(-1)!.classList.remove('dt-list-item--divider')
 
     resultsEl!.replaceChildren(list)
     prepareRows(rowEls)

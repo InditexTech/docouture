@@ -157,6 +157,17 @@ const PNG_SUPPORTED_TYPES = new Set(Object.keys(FORMAT_SUPPORT).filter((type) =>
 const TEXT_FORMATS = new Set(['txt', 'atxt', 'utxt'])
 const JPG_ALIAS = 'jpg'
 
+// `typesAttr`/`requestedFormat` are typed `unknown` below (see their own
+// JSDoc) precisely because they arrive however Asciidoctor or the raw-text
+// regex handed them over — in real use always a string or nullish (guarded
+// before this is ever called), never a plain object. This is what makes
+// stringifying them for a warning message or comparison SAFE in practice —
+// `String()` alone can't prove that statically, and would silently produce
+// `'[object Object]'` if it were ever wrong, so this narrows first instead.
+function safeStringify(value) {
+  return typeof value === 'string' || typeof value === 'number' ? String(value) : JSON.stringify(value)
+}
+
 // The two `asciidoc.attributes` keys a site sets in its playbook. Both are
 // read from the same `document` object on the synchronous (Asciidoctor)
 // side, in kroki.js, and from `playbook.asciidoc.attributes` on the async
@@ -206,7 +217,7 @@ function resolveEnabledTypes(enabledAttr, typesAttr, onUnknownType) {
   if (!isTruthy(enabledAttr)) return new Set()
   if (typesAttr == null || typesAttr === '') return new Set(SUPPORTED_TYPES)
 
-  const requested = String(typesAttr)
+  const requested = safeStringify(typesAttr)
     .split(',')
     .map((entry) => entry.trim())
     .filter(Boolean)
@@ -258,11 +269,11 @@ function resolveEnabledTypes(enabledAttr, typesAttr, onUnknownType) {
  */
 function resolveFormat(type, requestedFormat, onUnsupported) {
   if (requestedFormat == null || requestedFormat === '' || requestedFormat === DEFAULT_FORMAT) return DEFAULT_FORMAT
-  const normalized = String(requestedFormat === JPG_ALIAS ? 'jpeg' : requestedFormat)
+  const normalized = safeStringify(requestedFormat === JPG_ALIAS ? 'jpeg' : requestedFormat)
   const accepted = FORMAT_SUPPORT[type]
   if (accepted?.includes(normalized))
     return /** @type {'svg' | 'png' | 'jpeg' | 'pdf' | 'base64' | 'txt' | 'atxt' | 'utxt'} */ (normalized)
-  if (onUnsupported) onUnsupported(type, String(requestedFormat))
+  if (onUnsupported) onUnsupported(type, safeStringify(requestedFormat))
   return DEFAULT_FORMAT
 }
 

@@ -1762,9 +1762,16 @@
 
 /* breadcrumb-item.css (.dt-breadcrumb-item[--link/--active]): the crumb + its divider */
 .dt-breadcrumb-item {
+  align-items: center;
+  color: var(--dt-color-content-default);
+  display: inline-flex;
+  flex-grow: 0;
+  flex-shrink: 1;
   font: var(--dt-typo-label-m);
   font-variant-numeric: var(--dt-typo-font-variant-numeric);
   letter-spacing: var(--dt-typo-label-m-letter-spacing);
+  min-width: 0;
+  text-decoration: none!important;
   text-transform: var(--dt-typo-label-m-text-transform)
 }
 .dt-breadcrumb-item:after {
@@ -1780,15 +1787,6 @@
 .dt-breadcrumb-item:last-child:after {
   content: none;
   display: none
-}
-.dt-breadcrumb-item {
-  align-items: center;
-  color: var(--dt-color-content-default);
-  display: inline-flex;
-  flex-grow: 0;
-  flex-shrink: 1;
-  min-width: 0;
-  text-decoration: none!important
 }
 .dt-breadcrumb-item__content {
   flex-shrink: 1;
@@ -2383,9 +2381,17 @@
   width: 100%
 }
 .dt-modal__container {
+  background-color: var(--dt-color-bg-default);
+  border: var(--dt-size-border-default) solid var(--dt-color-border-default);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dt-size-0);
   max-height: calc(100vh - var(--dt-size-200)*2);
   max-width: calc(100vw - var(--dt-size-200)*2);
-  min-width: 320px
+  min-width: 320px;
+  overflow: hidden;
+  pointer-events: auto
 }
 .dt-modal.dt-modal--small .dt-modal__container {
   width: 560px
@@ -2564,22 +2570,6 @@
   width: 100%
 }
 
-/* modal-inline.css: .dt-modal__container's actual background/border/padding */
-.dt-modal__container {
-  background-color: var(--dt-color-bg-default);
-  border: var(--dt-size-border-default) solid var(--dt-color-border-default);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: var(--dt-size-0);
-  overflow: hidden;
-  /* padding: var(--dt-size-150); */
-  pointer-events: auto
-}
-.dt-modal__content {
-  flex-grow: 1;
-  min-height: 0
-}
 @media (max-width:512px) {
   .dt-modal__container {
     padding: var(--dt-size-100);

@@ -13,7 +13,7 @@ const firstPositional = require('./first-positional')
 // unconditionally tries to parse a second group as an attribute list and
 // throws if it's missing — verified empirically; 2.2 (site builds) doesn't
 // care either way, so the two-group shape is what's portable.
-const MACRO_RX = /\bmono:()\[((?:\\\]|[^\]])*?)\]/
+const MACRO_RX = /\bmono:()\[((?:\\\]|[^\]])*?)\]/ // NOSONAR: the empty group is required, see comment above
 
 /**
  * `mono:[className]` →
@@ -31,15 +31,18 @@ const MACRO_RX = /\bmono:()\[((?:\\\]|[^\]])*?)\]/
  */
 module.exports = function registerMonoMacro(registry) {
   registry.inlineMacro('mono', function () {
-    // See label-macro.js's own comment on this same pattern.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this
-    self.match(MACRO_RX)
-    self.process(function (parent, target, attrs) {
+    this.match(MACRO_RX)
+    // Arrow function, not `self = this`: Asciidoctor's own extension DSL
+    // rebinds `this` inside `process`'s callback to the macro's runtime
+    // context, not the processor instance `match`/`createInline` live on —
+    // an arrow function sidesteps that entirely by capturing the outer
+    // `this` (the processor instance) lexically instead, so there's no
+    // rebinding to route around with a local alias.
+    this.process((parent, target, attrs) => {
       // Already specialcharacters-substituted by the time macros run
       // (verified, same as label-macro.js) — safe to place directly.
       const text = firstPositional(attrs) || ''
-      return self.createInline(parent, 'quoted', '<code class="dt-mono">' + text + '</code>')
+      return this.createInline(parent, 'quoted', '<code class="dt-mono">' + text + '</code>')
     })
   })
 }

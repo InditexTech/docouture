@@ -10,26 +10,35 @@
   var root = document.documentElement
   var sidebar = document.getElementById('on-this-page')
   if (!sidebar) return
-  if (document.querySelector('body.-toc')) return sidebar.parentNode.removeChild(sidebar)
+  if (document.querySelector('body.-toc')) return sidebar.remove()
   var levels = Number.parseInt(sidebar.dataset.levels || '4', 10)
   if (levels < 0) return
 
   var articleSelector = 'article.doc'
   var article = document.querySelector<HTMLElement>(articleSelector)
   if (!article) return
-  var headingsSelector = []
-  for (var level = 0; level <= levels; level++) {
-    var headingSelector = [articleSelector]
-    if (level) {
-      for (var l = 1; l <= level; l++) headingSelector.push((l === 2 ? '.sectionbody>' : '') + '.sect' + l)
-      headingSelector.push('h' + (level + 1) + '[id]' + (level > 1 ? ':not(.discrete)' : ''))
-    } else {
-      headingSelector.push('h1[id].sect0')
+  var headings = find(buildHeadingsSelector(articleSelector, levels), article.parentNode)
+  if (!headings.length) return sidebar.remove()
+
+  // One `article.doc > ... > hN[id]` selector per heading level, matching
+  // Asciidoctor's own nesting (`.sectionbody` wraps level-2 sections only,
+  // `.sectN` classes stack one per level below that, and a discrete heading
+  // — `[discrete]` in AsciiDoc — is skipped past level 1 since it's prose
+  // styling, not a real outline entry).
+  function buildHeadingsSelector (articleSelector: string, levels: number): string {
+    var headingsSelector = []
+    for (var level = 0; level <= levels; level++) {
+      var headingSelector = [articleSelector]
+      if (level) {
+        for (var l = 1; l <= level; l++) headingSelector.push((l === 2 ? '.sectionbody>' : '') + '.sect' + l)
+        headingSelector.push('h' + (level + 1) + '[id]' + (level > 1 ? ':not(.discrete)' : ''))
+      } else {
+        headingSelector.push('h1[id].sect0')
+      }
+      headingsSelector.push(headingSelector.join('>'))
     }
-    headingsSelector.push(headingSelector.join('>'))
+    return headingsSelector.join(',')
   }
-  var headings = find(headingsSelector.join(','), article.parentNode)
-  if (!headings.length) return sidebar.parentNode.removeChild(sidebar)
 
   var lastActiveFragment
   var links = {}
@@ -119,7 +128,7 @@
     var buffer = getNumericStyleVal(document.documentElement, 'fontSize') * 1.15
     var ceil = article.offsetTop
     if (scrolledBy && window.innerHeight + scrolledBy + 2 >= document.documentElement.scrollHeight) {
-      lastActiveFragment = Array.isArray(lastActiveFragment) ? lastActiveFragment : Array(lastActiveFragment || 0)
+      lastActiveFragment = Array.isArray(lastActiveFragment) ? lastActiveFragment : new Array(lastActiveFragment || 0)
       var activeFragments = []
       var lastIdx = headings.length - 1
       headings.forEach(function (heading, idx) {
@@ -162,7 +171,7 @@
   }
 
   function find (selector, from) {
-    return [].slice.call((from || document).querySelectorAll(selector))
+    return Array.prototype.slice.call((from || document).querySelectorAll(selector))
   }
 
   function getNumericStyleVal (el, prop) {

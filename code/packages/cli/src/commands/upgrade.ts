@@ -25,7 +25,11 @@ import { cacheWarmBranchesYaml, detectBranches } from '../lib/branch-detect.js'
 // AGENT_SUPPORT_CHECK_PATHS).
 function isInsideGitWorkTree(dir: string): boolean {
   try {
-    execFileSync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: dir, stdio: 'ignore' })
+    // Resolves 'git' off PATH, same as any shell script would — `docouture
+    // upgrade` runs on a user's own machine and has no way to check "is
+    // this a git repo" other than asking whichever `git` is already on
+    // that PATH.
+    execFileSync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: dir, stdio: 'ignore' }) // NOSONAR
     return true
   } catch {
     return false

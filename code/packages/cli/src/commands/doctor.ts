@@ -47,8 +47,13 @@ async function readJson<T>(file: string): Promise<T | null> {
 }
 
 function readAntoraYmlName(content: string): string | null {
-  const match = /^name:\s*(.+?)\s*$/m.exec(content)
-  return match?.[1] ?? null
+  // No `\s*` before the capture: `\s*` and `.+` both match plain spaces, so
+  // the two quantifiers overlap on every space after `name:` — the classic
+  // shape a catastrophic-backtracking scanner flags. Capturing everything
+  // after the colon and trimming in JS gets the identical value with no
+  // such overlap.
+  const match = /^name:(.+)$/m.exec(content)
+  return match?.[1]?.trim() || null
 }
 
 // Every check is recorded here as it runs, in section order, regardless of
@@ -84,6 +89,119 @@ function printAdvisory(result: CheckResult): void {
   }
 }
 
+// Records one result and prints it (or not, in --json mode), returning the
+// exit-code contribution — this is the single place that couples "what
+// happened" (record) to "what the human sees" (printResult/printAdvisory),
+// so every check site below is a single expression instead of a three-line
+// record-then-print block.
+function runCheck(
+  report: JsonCheckResult[],
+  section: string,
+  result: CheckResult,
+  severity: 'fail' | 'warn',
+  json: boolean
+): number {
+  const inc = record(report, section, result, severity)
+  if (json) return inc
+  if (severity === 'fail') printResult(result)
+  else printAdvisory(result)
+  return inc
+}
+
+function runChecks(
+  report: JsonCheckResult[],
+  section: string,
+  results: CheckResult[],
+  severity: 'fail' | 'warn',
+  json: boolean
+): number {
+  let status = 0
+  for (const result of results) status |= runCheck(report, section, result, severity, json)
+  return status
+}
+
+async function runToolchainSection(report: JsonCheckResult[], json: boolean, pkg: PackageJson | null): Promise<number> {
+  const nodeResult = checkNodeVersion(pkg?.engines?.node, process.version)
+  let status = runCheck(report, 'toolchain', nodeResult, 'fail', json)
+  const pmResult = await checkPackageManagerAvailable(pkg?.packageManager ?? null)
+  status |= runCheck(report, 'toolchain', pmResult, 'fail', json)
+  return status
+}
+
+// The one section with real branching: names only agree with each other
+// once both files exist AND the playbook's content source url actually
+// resolves to where src/antora.yml lives (see lib/playbook-yml.ts for why
+// `url: .` is special-cased) — every other case is a guard clause that
+// records a single failing check and stops, so nesting never goes past one
+// level.
+async function runNamesSection(params: {
+  report: JsonCheckResult[]
+  json: boolean
+  target: string
+  siteRoot: string
+  pkg: PackageJson | null
+}): Promise<number> {
+  const { report, json, target, siteRoot, pkg } = params
+  const playbookFile = join(siteRoot, 'antora-playbook.yml')
+  const antoraYmlFile = join(siteRoot, 'src', 'antora.yml')
+  const playbookContent = (await exists(playbookFile)) ? await readFile(playbookFile, 'utf8') : null
+  const antoraYmlContent = (await exists(antoraYmlFile)) ? await readFile(antoraYmlFile, 'utf8') : null
+
+  let status = 0
+  if (!playbookContent) {
+    status |= runCheck(
+      report,
+      'names',
+      { ok: false, label: 'antora-playbook.yml', message: `not found at '${playbookFile}'` },
+      'fail',
+      json
+    )
+  }
+  if (!antoraYmlContent) {
+    status |= runCheck(
+      report,
+      'names',
+      { ok: false, label: 'src/antora.yml', message: `not found at '${antoraYmlFile}'` },
+      'fail',
+      json
+    )
+  }
+  if (!playbookContent || !antoraYmlContent) return status
+
+  const sourceUrl = readSourceUrl(playbookContent)
+  if (!sourceUrl || sourceUrl === '.') {
+    return (
+      status |
+      runCheck(
+        report,
+        'names',
+        {
+          ok: false,
+          label: 'content source url',
+          message: `content.sources[0].url is '.' but the playbook does not sit at the repository root`,
+          detail:
+            "url: '.' only works when antora-playbook.yml sits at the repository root — use 'url: ..' (or however many levels reach it) otherwise",
+        },
+        'fail',
+        json
+      )
+    )
+  }
+
+  // The repository-root-relative form of `src/antora.yml`'s real location —
+  // see lib/playbook-yml.ts's own comment on why `url: .` only works when
+  // the playbook itself sits at the repository root.
+  const descriptorPath = relative(target, dirname(antoraYmlFile)).split(sep).join('/')
+  const results = checkNamesAgree({
+    antoraYmlName: readAntoraYmlName(antoraYmlContent),
+    startPageComponent: readStartPageComponent(playbookContent),
+    startPath: readStartPath(playbookContent),
+    descriptorPath,
+    packageName: pkg?.name ?? null,
+  })
+  return status | runChecks(report, 'names', results, 'fail', json)
+}
+
 export async function runDoctor(argv: string[]): Promise<number> {
   const { flags } = parseArgs(argv)
   const json = getContext().json
@@ -101,101 +219,44 @@ export async function runDoctor(argv: string[]): Promise<number> {
     return 1
   }
 
-  let status = 0
   const report: JsonCheckResult[] = []
   const log = (line: string): void => {
     if (!json) console.log(line)
   }
+  const pkg = await readJson<PackageJson>(join(siteRoot, 'package.json'))
+
+  let status = 0
 
   log('toolchain')
-  const pkg = await readJson<PackageJson>(join(siteRoot, 'package.json'))
-  const nodeResult = checkNodeVersion(pkg?.engines?.node, process.version)
-  status |= record(report, 'toolchain', nodeResult, 'fail')
-  if (!json) printResult(nodeResult)
-
-  const pmResult = await checkPackageManagerAvailable(pkg?.packageManager ?? null)
-  status |= record(report, 'toolchain', pmResult, 'fail')
-  if (!json) printResult(pmResult)
+  status |= await runToolchainSection(report, json, pkg)
 
   log('names')
-  const playbookFile = join(siteRoot, 'antora-playbook.yml')
-  const antoraYmlFile = join(siteRoot, 'src', 'antora.yml')
-
-  const playbookContent = (await exists(playbookFile)) ? await readFile(playbookFile, 'utf8') : null
-  const antoraYmlContent = (await exists(antoraYmlFile)) ? await readFile(antoraYmlFile, 'utf8') : null
-
-  if (!playbookContent) {
-    const result = { ok: false, label: 'antora-playbook.yml', message: `not found at '${playbookFile}'` }
-    status |= record(report, 'names', result, 'fail')
-    if (!json) printResult(result)
-  }
-  if (!antoraYmlContent) {
-    const result = { ok: false, label: 'src/antora.yml', message: `not found at '${antoraYmlFile}'` }
-    status |= record(report, 'names', result, 'fail')
-    if (!json) printResult(result)
-  }
-
-  if (playbookContent && antoraYmlContent) {
-    const sourceUrl = readSourceUrl(playbookContent)
-    if (sourceUrl && sourceUrl !== '.') {
-      // The repository-root-relative form of `src/antora.yml`'s real
-      // location — see lib/playbook-yml.ts's own comment on why `url: .`
-      // only works when the playbook itself sits at the repository root.
-      const descriptorPath = relative(target, dirname(antoraYmlFile)).split(sep).join('/')
-
-      const results = checkNamesAgree({
-        antoraYmlName: readAntoraYmlName(antoraYmlContent),
-        startPageComponent: readStartPageComponent(playbookContent),
-        startPath: readStartPath(playbookContent),
-        descriptorPath,
-        packageName: pkg?.name ?? null,
-      })
-      for (const result of results) {
-        status |= record(report, 'names', result, 'fail')
-        if (!json) printResult(result)
-      }
-    } else {
-      const result = {
-        ok: false,
-        label: 'content source url',
-        message: `content.sources[0].url is '.' but the playbook does not sit at the repository root`,
-        detail:
-          "url: '.' only works when antora-playbook.yml sits at the repository root — use 'url: ..' (or however many levels reach it) otherwise",
-      }
-      status |= record(report, 'names', result, 'fail')
-      if (!json) printResult(result)
-    }
-  }
+  status |= await runNamesSection({ report, json, target, siteRoot, pkg })
 
   log('content')
-  const gitResult = await checkGitHasCommit(target)
-  status |= record(report, 'content', gitResult, 'fail')
-  if (!json) printResult(gitResult)
+  status |= runCheck(report, 'content', await checkGitHasCommit(target), 'fail', json)
 
   log('dependencies')
-  const antoraResult = checkAntoraAvailable(siteRoot)
-  status |= record(report, 'dependencies', antoraResult, 'fail')
-  if (!json) printResult(antoraResult)
+  status |= runCheck(report, 'dependencies', checkAntoraAvailable(siteRoot), 'fail', json)
 
   log('agent files')
-  for (const result of checkAgentFilesPresent(target)) {
-    record(report, 'agent files', result, 'warn')
-    if (!json) printAdvisory(result)
-  }
+  runChecks(report, 'agent files', checkAgentFilesPresent(target), 'warn', json)
 
   log('release')
-  const releaseResult = await checkReleaseLabelExists(target)
-  record(report, 'release', releaseResult, 'warn')
-  if (!json) printAdvisory(releaseResult)
+  runCheck(report, 'release', await checkReleaseLabelExists(target), 'warn', json)
 
   log('branching')
   const detectedBranches = await detectBranches(siteRoot, target)
-  const branchingResult = checkBranchingAgrees({
-    declaredBranching: pkg?.docouture?.branching ?? null,
-    actualBranching: inferBranching(detectedBranches),
-  })
-  record(report, 'branching', branchingResult, 'warn')
-  if (!json) printAdvisory(branchingResult)
+  runCheck(
+    report,
+    'branching',
+    checkBranchingAgrees({
+      declaredBranching: pkg?.docouture?.branching ?? null,
+      actualBranching: inferBranching(detectedBranches),
+    }),
+    'warn',
+    json
+  )
 
   if (json) {
     process.stdout.write(`${JSON.stringify({ status: status === 0 ? 'ok' : 'fail', checks: report }, null, 2)}\n`)

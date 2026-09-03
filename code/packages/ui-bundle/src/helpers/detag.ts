@@ -13,13 +13,25 @@ const QUOT_RX = /"/g
 // first pass only ever removes the leftmost, shortest match. Looping to a
 // fixed point (stop once a pass changes nothing) is what CodeQL's
 // js/incomplete-multi-character-sanitization expects here.
+//
+// Capped rather than unbounded: each pass removes at least one tag, so
+// nesting depth (not input length) bounds how many passes a real page ever
+// needs — legitimate content never comes close to this cap. Bounding it
+// anyway turns adversarially-deep nesting from O(n) passes over an
+// already-large string (quadratic overall) into a fixed, constant amount of
+// extra work, rather than relying on realistic content alone to keep this
+// fast.
+const MAX_STRIP_PASSES = 100
+
 function stripTags(html: string): string {
   let previous: string
   let current = html
+  let passes = 0
   do {
     previous = current
     current = previous.replace(TAG_ALL_RX, '')
-  } while (current !== previous)
+    passes += 1
+  } while (current !== previous && passes < MAX_STRIP_PASSES)
   return current
 }
 

@@ -124,7 +124,12 @@ function resolveChangelogPath(playbook, changelogPath) {
 // `main` since the last cut — that `buildAppendedSource` renders on the
 // `prerelease` component version only. See that function's own comment.
 function parseReleases(raw, logger) {
-  const headingRe = /^##\s+\[(.+?)\](?:\s*-\s*(.+))?\s*$/
+  // No trailing `\s*$`: whichever branch matches, its own captured group is
+  // already greedy all the way to the true end of the line, so that anchor
+  // never changed what's captured — it only left a `(.+)…\s*$` shape a
+  // catastrophic-backtracking scanner flags for the no-date branch, with no
+  // actual behavioural payoff.
+  const headingRe = /^##\s+\[(.+?)\](?:\s*-\s*(.+))?/
   const releases = []
   let unreleased = null
   let current = null
@@ -187,14 +192,20 @@ function convertBody(lines, logger, versionLabel) {
       out.push('')
       continue
     }
-    const heading = line.match(/^###\s+(.+)$/)
+    const heading = line.match(/^###\s+(.+)/)
     if (heading) {
       out.push(`=== ${heading[1].trim()}`)
       continue
     }
-    const bullet = line.match(/^-\s+\[#(\d+)\]\((\S+?)\)\s*(.*)$/)
+    // `[^)\s]+` instead of a lazy `\S+?`: since `)` itself can't appear
+    // inside the character class, the engine never has to backtrack to
+    // decide where the URL ends and the literal `)` delimiter begins — the
+    // ambiguous-boundary shape a catastrophic-backtracking scanner flags.
+    // Real changelog PR links never contain `)` in the URL, so this is the
+    // identical match with none of that ambiguity.
+    const bullet = line.match(/^-\s+\[#(\d+)\]\(([^)\s]+)\)(.*)$/)
     if (bullet) {
-      out.push(`* link:${bullet[2]}[#${bullet[1]}] ${unescapeMarkdownBrackets(bullet[3])}`.trimEnd())
+      out.push(`* link:${bullet[2]}[#${bullet[1]}] ${unescapeMarkdownBrackets(bullet[3].trim())}`.trimEnd())
       continue
     }
     // Keep a Changelog reference-style link definitions, e.g.

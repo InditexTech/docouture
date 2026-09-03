@@ -130,14 +130,11 @@ function findFirstInternalUrl(items) {
   }
 }
 
-function annotate(componentVersion, { nav, navModules }, contentCatalog, logger) {
-  const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
-
-  if (!Array.isArray(navModules)) {
-    logger.warn('Ignoring nav_modules in %s: expected a list of entries, got %s', where, typeof navModules)
-    return
-  }
-
+// Validates and de-duplicates the authored `nav_modules` list into a
+// Map keyed by module slug — every malformed or duplicate entry is warned
+// about and dropped here, so the tree-annotation pass below can assume
+// `declared` only ever holds one well-formed entry per module.
+function collectDeclaredModules(navModules, where, logger) {
   const declared = new Map()
   for (const entry of navModules) {
     if (entry?.constructor !== Object || !entry?.module) {
@@ -150,83 +147,92 @@ function annotate(componentVersion, { nav, navModules }, contentCatalog, logger)
     }
     declared.set(entry.module, entry)
   }
+  return declared
+}
 
-  const matched = new Set()
-  for (const tree of componentVersion.navigation || []) {
-    // `tree.order` is the index of the nav file in the descriptor's own `nav`
-    // list — an integer, except when one nav file holds more than one list, in
-    // which case the extra lists get a fraction on top of that same index
-    // (build-navigation.js). Flooring therefore gets back to the file either
-    // way, and every list in a file belongs to that file's module.
-    const navPath = nav[Math.floor(tree.order)]
-    const module_ = navPath && MODULE_NAV_PATH_RX.exec(navPath)?.[1]
-    if (!module_) continue
-
-    tree.module = module_
-    // Stamped all the way down, not just on the root. `page.previous` and
-    // `page.next` are these very item objects (page-composer's findNavItem
-    // returns matches out of this same tree), so carrying the module on each
-    // one is what lets the footer pagination tell "the next page" from "the
-    // next page IN THIS MODULE" without re-deriving anything from URLs.
-    stampItems(tree.items, module_)
-
-    const meta = declared.get(module_)
-    if (!meta) {
-      // Not fatal: the tree still renders, and the UI keys segmentation off
-      // `tree.module`, which is set. Only the switcher entry is missing.
-      logger.warn('No nav_modules entry for module %s in %s', module_, where)
-      continue
-    }
-    matched.add(module_)
-
-    // Fall back to the slug rather than leaving the switcher entry blank.
-    tree.title = meta.title || module_
-    if (meta.description) tree.description = meta.description
-    if (meta.icon) tree.icon = meta.icon
-
-    // `switcher: false` — annotated, but not a module anyone can switch TO.
-    // A landing page's own navigation is the case this exists for; see this
-    // file's header. The UI keys "offer this in the switcher" off `startUrl`,
-    // so withholding it is the whole implementation, and it is also why the
-    // flag has to skip the "no page to link to" warning below rather than
-    // fall through to it.
-    if (meta.switcher === false) {
-      tree.switcher = false
-      continue
-    }
-
-    // Where the switcher and the site footer should send someone who picks
-    // this module. `start_page` is the authored override, a page ID resolved
-    // against this component; absent one, it is the first internal page in
-    // the module's own navigation, found here rather than in the template
-    // because finding it means a depth-first walk, which Handlebars has no
-    // way to express. Named `startUrl`, not `url`, on purpose: a nav node
-    // WITH a `url` is a link as far as nav-tree.hbs is concerned, and a root
-    // menu is not one.
-    let startUrl
-    if (meta.startPage) {
-      startUrl = resolveUrl(meta.startPage, contentCatalog, {
-        component: componentVersion.name,
-        version: componentVersion.version,
-        module: module_,
-      })
-      if (!startUrl) {
-        logger.warn(
-          'nav_modules start_page %s for module %s in %s resolves to no page; falling back to the navigation',
-          meta.startPage,
-          module_,
-          where
-        )
-      }
-    }
-    if (!startUrl) startUrl = findFirstInternalUrl(tree.items)
-    if (startUrl) {
-      tree.startUrl = startUrl
-    } else {
-      logger.warn('Module %s in %s has no internal page to link to from the navigation switcher', module_, where)
+// Where the switcher and the site footer should send someone who picks this
+// module. `start_page` is the authored override, a page ID resolved against
+// this component; absent one, it is the first internal page in the module's
+// own navigation, found here rather than in the template because finding it
+// means a depth-first walk, which Handlebars has no way to express.
+function resolveModuleStartUrl(tree, meta, module_, componentVersion, contentCatalog, logger, where) {
+  let startUrl
+  if (meta.startPage) {
+    startUrl = resolveUrl(meta.startPage, contentCatalog, {
+      component: componentVersion.name,
+      version: componentVersion.version,
+      module: module_,
+    })
+    if (!startUrl) {
+      logger.warn(
+        'nav_modules start_page %s for module %s in %s resolves to no page; falling back to the navigation',
+        meta.startPage,
+        module_,
+        where
+      )
     }
   }
+  if (!startUrl) startUrl = findFirstInternalUrl(tree.items)
+  if (!startUrl) {
+    logger.warn('Module %s in %s has no internal page to link to from the navigation switcher', module_, where)
+  }
+  return startUrl
+}
 
+// Annotates one root tree with its module, title and (if declared) switcher
+// metadata — everything the second pass of `annotate` below used to do
+// inline, one tree at a time. Returns the module slug once this tree was
+// successfully matched against a `nav_modules` entry (so the caller can
+// track which declared modules matched nothing), or null/undefined for a
+// tree that isn't attached to any module, or one with no matching entry.
+function annotateTree(tree, nav, declared, componentVersion, contentCatalog, logger, where) {
+  // `tree.order` is the index of the nav file in the descriptor's own `nav`
+  // list — an integer, except when one nav file holds more than one list, in
+  // which case the extra lists get a fraction on top of that same index
+  // (build-navigation.js). Flooring therefore gets back to the file either
+  // way, and every list in a file belongs to that file's module.
+  const navPath = nav[Math.floor(tree.order)]
+  const module_ = navPath && MODULE_NAV_PATH_RX.exec(navPath)?.[1]
+  if (!module_) return null
+
+  tree.module = module_
+  // Stamped all the way down, not just on the root. `page.previous` and
+  // `page.next` are these very item objects (page-composer's findNavItem
+  // returns matches out of this same tree), so carrying the module on each
+  // one is what lets the footer pagination tell "the next page" from "the
+  // next page IN THIS MODULE" without re-deriving anything from URLs.
+  stampItems(tree.items, module_)
+
+  const meta = declared.get(module_)
+  if (!meta) {
+    // Not fatal: the tree still renders, and the UI keys segmentation off
+    // `tree.module`, which is set. Only the switcher entry is missing.
+    logger.warn('No nav_modules entry for module %s in %s', module_, where)
+    return null
+  }
+
+  // Fall back to the slug rather than leaving the switcher entry blank.
+  tree.title = meta.title || module_
+  if (meta.description) tree.description = meta.description
+  if (meta.icon) tree.icon = meta.icon
+
+  // `switcher: false` — annotated, but not a module anyone can switch TO.
+  // A landing page's own navigation is the case this exists for; see this
+  // file's header. The UI keys "offer this in the switcher" off `startUrl`,
+  // so withholding it is the whole implementation, and it is also why the
+  // flag has to skip the "no page to link to" warning below rather than
+  // fall through to it.
+  if (meta.switcher === false) {
+    tree.switcher = false
+    return module_
+  }
+
+  const startUrl = resolveModuleStartUrl(tree, meta, module_, componentVersion, contentCatalog, logger, where)
+  if (startUrl) tree.startUrl = startUrl
+  return module_
+}
+
+function warnUnmatchedModules(declared, matched, where, logger) {
   for (const module_ of declared.keys()) {
     if (matched.has(module_)) continue
     // Almost always a typo in the slug, or a module whose nav file is missing
@@ -234,4 +240,23 @@ function annotate(componentVersion, { nav, navModules }, contentCatalog, logger)
     // module the switcher can never reach.
     logger.warn('nav_modules entry for module %s in %s matches no navigation file', module_, where)
   }
+}
+
+function annotate(componentVersion, { nav, navModules }, contentCatalog, logger) {
+  const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
+
+  if (!Array.isArray(navModules)) {
+    logger.warn('Ignoring nav_modules in %s: expected a list of entries, got %s', where, typeof navModules)
+    return
+  }
+
+  const declared = collectDeclaredModules(navModules, where, logger)
+  const matched = new Set()
+
+  for (const tree of componentVersion.navigation || []) {
+    const matchedModule = annotateTree(tree, nav, declared, componentVersion, contentCatalog, logger, where)
+    if (matchedModule) matched.add(matchedModule)
+  }
+
+  warnUnmatchedModules(declared, matched, where, logger)
 }

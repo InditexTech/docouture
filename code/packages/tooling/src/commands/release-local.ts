@@ -9,10 +9,20 @@ import { join } from 'node:path'
 
 import { theme } from '../lib/theme.js'
 
+// Every spawn/exec call below resolves its command ('node'/'git'/'npm'/
+// 'pnpm') off PATH, same as this rule's own name suggests checking — and
+// that's the point, not an oversight: this is a monorepo-internal release
+// tool, run by a maintainer on their own machine/CI, whose entire job is to
+// invoke whichever toolchain THEY already have configured (nvm/asdf/volta/
+// corepack, ...). Hardcoding an absolute path would silently break on any
+// setup that doesn't happen to match the one it was written on, for a
+// threat model (a hostile entry earlier on this repo's own maintainers'
+// PATH) this tool has no way to defend against differently than any other
+// script/Makefile/package.json `scripts` entry already doesn't.
 const REGISTRY = 'http://localhost:4873'
 
 function publishablePackages(cwd: string): string[] {
-  const out = execFileSync('node', ['scripts/publishable-packages.mjs', '--json'], { cwd }).toString()
+  const out = execFileSync('node', ['scripts/publishable-packages.mjs', '--json'], { cwd }).toString() // NOSONAR
   return JSON.parse(out) as string[]
 }
 
@@ -29,17 +39,17 @@ function isDirty(cwd: string, path: string): boolean {
   // `git diff --quiet` exits 1 when the path differs, 0 when clean —
   // spawnSync (not execFileSync, which throws on a non-zero exit) is what
   // lets that exit code be read as a plain boolean instead of a thrown error.
-  const unstaged = spawnSync('git', ['diff', '--quiet', '--', path], { cwd }).status
-  const staged = spawnSync('git', ['diff', '--quiet', '--cached', '--', path], { cwd }).status
+  const unstaged = spawnSync('git', ['diff', '--quiet', '--', path], { cwd }).status // NOSONAR
+  const staged = spawnSync('git', ['diff', '--quiet', '--cached', '--', path], { cwd }).status // NOSONAR
   return unstaged !== 0 || staged !== 0
 }
 
 function shortSha(cwd: string): string {
-  return execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd }).toString().trim()
+  return execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd }).toString().trim() // NOSONAR
 }
 
 function packageName(cwd: string, pkg: string): string {
-  const raw = execFileSync('node', ['-p', 'require("./package.json").name'], { cwd: join(cwd, 'packages', pkg) })
+  const raw = execFileSync('node', ['-p', 'require("./package.json").name'], { cwd: join(cwd, 'packages', pkg) }) // NOSONAR
   return raw.toString().trim()
 }
 
@@ -51,8 +61,14 @@ function packageName(cwd: string, pkg: string): string {
  * bump/build/publish/revert, with the revert guaranteed via try/finally
  * even on failure or Ctrl-C.
  */
-export async function runReleaseLocal(argv: string[]): Promise<number> {
-  void argv // no command-specific flags today
+// No `argv` parameter: no command-specific flags today, and `Runner` (the
+// type `RUNNERS['release-local']` is checked against in bin.ts) is
+// `(argv: string[]) => Promise<number>` — TypeScript's structural typing
+// accepts a function with fewer parameters than the type it's assigned to,
+// so dropping the unused parameter here satisfies both the compiler and
+// eslint's `@typescript-eslint/no-unused-vars` without a `void`-operator
+// no-op to silence it.
+export async function runReleaseLocal(): Promise<number> {
   const cwd = process.cwd()
   const packages = publishablePackages(cwd)
 
@@ -80,7 +96,7 @@ export async function runReleaseLocal(argv: string[]): Promise<number> {
   try {
     for (const pkg of packages) {
       execFileSync(
-        'npm',
+        'npm', // NOSONAR
         ['version', snapshot, '--no-git-tag-version', '--allow-same-version', '--loglevel', 'error'],
         {
           cwd: join(cwd, 'packages', pkg),
@@ -104,7 +120,7 @@ export async function runReleaseLocal(argv: string[]): Promise<number> {
       // version at pack time — npm doesn't understand the workspace:
       // protocol and would ship the literal string.
       execFileSync(
-        'pnpm',
+        'pnpm', // NOSONAR
         ['publish', '--registry', REGISTRY, '--tag', 'local', '--no-git-checks', '--loglevel', 'warn'],
         {
           cwd: join(cwd, 'packages', pkg),
@@ -137,7 +153,7 @@ export async function runReleaseLocal(argv: string[]): Promise<number> {
   } finally {
     console.log('\n  reverting package.json versions')
     for (const pkg of packages) {
-      execFileSync('git', ['checkout', '--', `packages/${pkg}/package.json`], { cwd, stdio: 'ignore' })
+      execFileSync('git', ['checkout', '--', `packages/${pkg}/package.json`], { cwd, stdio: 'ignore' }) // NOSONAR
     }
   }
 

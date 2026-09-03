@@ -6,7 +6,7 @@ import { posix as path } from 'node:path'
 
 import type { HelperOptions } from '../../types/ui'
 
-const isDir = (str: string): boolean => str.charAt(str.length - 1) === '/'
+const isDir = (str: string): boolean => str.at(-1) === '/'
 
 /**
  * `{{relativize to}}` — rewrite a root-relative URL as a URL relative to the

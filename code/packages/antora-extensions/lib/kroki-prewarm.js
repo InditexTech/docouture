@@ -146,6 +146,68 @@ function buildBlockPattern() {
   )
 }
 
+// Skips comma/space separators between attrlist entries, returning the
+// index of the next entry's first character (or `len` if there is none).
+function skipAttrlistSeparators(attrlist, i, len) {
+  while (i < len && (attrlist[i] === ',' || attrlist[i] === ' ')) i++
+  return i
+}
+
+// Reads one attribute VALUE starting at `i` — quoted (`"..."`/`'...'`, its
+// own embedded commas preserved verbatim, not trimmed) or bare (up to the
+// next comma, trimmed) — the same value grammar both `parseAttrlist` and
+// `parseIncludeAttrlist` need. Returns the value and the index just past it
+// (past the closing quote's own trailing comma-scan, for the quoted case).
+function readAttrlistValue(attrlist, i, len) {
+  if (attrlist[i] === '"' || attrlist[i] === "'") {
+    const quote = attrlist[i]
+    i++
+    const valueStart = i
+    while (i < len && attrlist[i] !== quote) i++
+    const value = attrlist.slice(valueStart, i)
+    i++ // skip closing quote
+    while (i < len && attrlist[i] !== ',') i++
+    return { value, next: i }
+  }
+  const valueStart = i
+  while (i < len && attrlist[i] !== ',') i++
+  return { value: attrlist.slice(valueStart, i).trim(), next: i }
+}
+
+// Splits a comma-separated Asciidoctor attrlist into its raw entries,
+// quote-aware — the single character-by-character scanner both
+// `parseAttrlist` (block style lines, permissive) and `parseIncludeAttrlist`
+// (include:: directives, strict) build on, so the quote/escaping logic that
+// makes this non-trivial exists exactly once. `key` is `null` for a
+// positional entry (no `=` before the next comma) — the two callers
+// disagree on what to do with one, which is exactly why that decision is
+// left to them rather than made in here.
+//
+// @param {string} attrlist
+// @returns {{ key: string | null, value: string }[]}
+function scanAttrlistEntries(attrlist) {
+  const entries = []
+  if (!attrlist) return entries
+  let i = 0
+  const len = attrlist.length
+  while (i < len) {
+    i = skipAttrlistSeparators(attrlist, i, len)
+    if (i >= len) break
+    const start = i
+    while (i < len && attrlist[i] !== '=' && attrlist[i] !== ',') i++
+    if (i < len && attrlist[i] === '=') {
+      const key = attrlist.slice(start, i).trim()
+      i++ // skip '='
+      const { value, next } = readAttrlistValue(attrlist, i, len)
+      entries.push({ key, value })
+      i = next
+    } else {
+      entries.push({ key: null, value: attrlist.slice(start, i).trim() })
+    }
+  }
+  return entries
+}
+
 // A minimal, quote-aware attrlist scanner — same shape as
 // `parseIncludeAttrlist` below, but permissive rather than strict: a
 // block's style line may legitimately carry positional attributes (a
@@ -171,35 +233,11 @@ function buildBlockPattern() {
 function parseAttrlist(attrlist) {
   const positional = []
   const named = {}
-  if (!attrlist) return { positional, named }
-  let i = 0
-  const len = attrlist.length
-  while (i < len) {
-    while (i < len && (attrlist[i] === ',' || attrlist[i] === ' ')) i++
-    if (i >= len) break
-    const start = i
-    while (i < len && attrlist[i] !== '=' && attrlist[i] !== ',') i++
-    if (i < len && attrlist[i] === '=') {
-      const key = attrlist.slice(start, i).trim()
-      i++ // skip '='
-      let value
-      if (attrlist[i] === '"' || attrlist[i] === "'") {
-        const quote = attrlist[i]
-        i++
-        const valueStart = i
-        while (i < len && attrlist[i] !== quote) i++
-        value = attrlist.slice(valueStart, i)
-        i++ // skip closing quote
-        while (i < len && attrlist[i] !== ',') i++
-      } else {
-        const valueStart = i
-        while (i < len && attrlist[i] !== ',') i++
-        value = attrlist.slice(valueStart, i).trim()
-      }
-      named[key] = value
+  for (const entry of scanAttrlistEntries(attrlist)) {
+    if (entry.key === null) {
+      positional.push(entry.value)
     } else {
-      // positional attribute (no `=` before the next comma).
-      positional.push(attrlist.slice(start, i).trim())
+      named[entry.key] = entry.value
     }
   }
   return { positional, named }
@@ -247,7 +285,14 @@ function extractDiagrams(text, pattern) {
 // a constant (`IncludeDirectiveRx`, on an instantiated `@asciidoctor/core`
 // object — not a static export, and not worth a whole extra dependency in
 // this package just to read one property off it).
-const INCLUDE_DIRECTIVE_RX = /^(\\)?include::([^\s[](?:[^[]*[^\s[])?)\[([^\n]*)?\]$/
+// `([^\n]*)` for the attrlist, not `([^\n]*)?`: `*` already matches zero
+// characters on its own, so wrapping it in another optional group was a
+// redundant, ambiguous way to say the same thing (does `include::foo[]`
+// capture group 3 as `''` via the star, or `undefined` via skipping the
+// group entirely? — both were "correct" readings of the old pattern).
+// `attrlist = m[3] || ''` below treats either result identically, so this
+// changes nothing observable.
+const INCLUDE_DIRECTIVE_RX = /^(\\)?include::([^\s[](?:[^[]*[^\s[])?)\[([^\n]*)\]$/
 const NEWLINE_RX = /\r\n?|\n/
 // Asciidoctor's own default `max-include-depth` — matched here so a cyclic
 // or absurdly deep chain of partials degrades (warn, leave the remaining
@@ -278,33 +323,10 @@ const SAFE_INCLUDE_ATTR_KEYS = new Set(['lines', 'tag', 'tags', 'leveloffset', '
  */
 function parseIncludeAttrlist(attrlist) {
   const attrs = {}
-  if (!attrlist) return attrs
-  let i = 0
-  const len = attrlist.length
-  while (i < len) {
-    while (i < len && (attrlist[i] === ',' || attrlist[i] === ' ')) i++
-    if (i >= len) break
-    const keyStart = i
-    while (i < len && attrlist[i] !== '=' && attrlist[i] !== ',') i++
-    if (i >= len || attrlist[i] !== '=') return null // positional attribute — not a form we support
-    const key = attrlist.slice(keyStart, i).trim()
-    i++ // skip '='
-    let value
-    if (attrlist[i] === '"' || attrlist[i] === "'") {
-      const quote = attrlist[i]
-      i++
-      const valueStart = i
-      while (i < len && attrlist[i] !== quote) i++
-      value = attrlist.slice(valueStart, i)
-      i++ // skip closing quote
-      while (i < len && attrlist[i] !== ',') i++
-    } else {
-      const valueStart = i
-      while (i < len && attrlist[i] !== ',') i++
-      value = attrlist.slice(valueStart, i).trim()
-    }
-    if (!SAFE_INCLUDE_ATTR_KEYS.has(key)) return null
-    attrs[key] = value
+  for (const entry of scanAttrlistEntries(attrlist)) {
+    if (entry.key === null) return null // positional attribute — not a form we support
+    if (!SAFE_INCLUDE_ATTR_KEYS.has(entry.key)) return null
+    attrs[entry.key] = entry.value
   }
   return attrs
 }
@@ -331,6 +353,93 @@ function parseIncludeAttrlist(attrlist) {
  *   replaced by its target's own (recursively expanded) content; anything
  *   this file can't safely resolve is left exactly as authored.
  */
+// The resolved include target's own content, after applying whichever
+// `lines=`/`tags=` selection (if any) the include:: directive requested,
+// and after stripping a single trailing line terminator.
+//
+// A resolved file's own trailing newline is a LINE TERMINATOR, not an extra
+// blank line — `resolved.contents` (or `selected.join('\n')` below, when the
+// last selected line happened to be the file's own final, terminator-only
+// artifact) ends in `\n` for virtually every real file on disk. Left as-is,
+// the recursive call in `resolveIncludeLine` below re-splits this same
+// string on NEWLINE_RX, which turns a trailing terminator into a trailing
+// EMPTY array element; that empty element then survives back up as this
+// whole include's own last "line" and gets its own `\n` separator from the
+// OUTER `outLines.join('\n')`, on top of the terminator this string already
+// carries — doubling into a genuine blank line at the include boundary that
+// real Asciidoctor conversion (which reads a file as its real lines, not as
+// a blob with its own trailing terminator to preserve) never produces. This
+// bit real sites immediately: two adjacent `include::` directives (or one
+// followed by more literal content) assembling a diagram from actual files
+// on disk — as opposed to this file's own unit tests' inline string
+// fixtures, none of which happened to carry a trailing newline —
+// permanently missed the prewarm cache for exactly that shape. Stripping a
+// single trailing terminator here, once, matches real conversion instead of
+// accumulating an extra one.
+function extractIncludeContent(resolved, attrs, target, attrlist, logger) {
+  const linenums = getLines(attrs)
+  let includeContent
+  if (linenums) {
+    const [selected] = filterLinesByLineNumbers(resolved.contents, linenums.slice())
+    includeContent = selected.join('\n')
+  } else {
+    const tags = getTags(attrs)
+    if (tags) {
+      const [selected] = filterLinesByTags(resolved.contents, new Map(tags), {
+        onWarn: (msg) => logger.warn('%s (include::%s[%s])', msg, target, attrlist),
+      })
+      includeContent = selected.join('\n')
+    } else {
+      includeContent = resolved.contents
+    }
+  }
+  return includeContent.replace(/\r\n?$|\n$/, '')
+}
+
+// Resolves one line of a diagram block's raw source: either a real
+// `include::` directive — expanded into its target's own (recursively
+// resolved) content — or anything else, including an include:: this file
+// can't safely handle, returned exactly as authored. See this file's own
+// header for exactly what "can't safely handle" covers.
+function resolveIncludeLine(line, page, cursor, catalog, logger, depth) {
+  const m = INCLUDE_DIRECTIVE_RX.exec(line)
+  if (!m || m[1]) {
+    // not an include:: line at all, or an escaped `\include::` — Asciidoctor
+    // itself renders the latter as literal text, unprocessed.
+    return line
+  }
+  const target = m[2]
+  const attrlist = m[3] || ''
+  if (~target.indexOf('{')) {
+    logger.warn(
+      "Ignoring include::%s[%s] while prewarming a diagram — its target needs attribute substitution, which isn't possible this early in the build; that diagram will miss the prewarm cache",
+      target,
+      attrlist
+    )
+    return line
+  }
+  const attrs = parseIncludeAttrlist(attrlist)
+  if (!attrs) {
+    logger.warn(
+      "Ignoring include::%s[%s] while prewarming a diagram — its attributes aren't all lines=/tag=/tags=/leveloffset=/opts=, so this couldn't safely mirror real conversion; that diagram will miss the prewarm cache",
+      target,
+      attrlist
+    )
+    return line
+  }
+  const resolved = resolveIncludeFile(target, page, cursor, catalog)
+  if (!resolved) {
+    logger.warn(
+      'Could not resolve include::%s[%s] while prewarming a diagram (no such file in the content catalog); that diagram will miss the prewarm cache',
+      target,
+      attrlist
+    )
+    return line
+  }
+  const includeContent = extractIncludeContent(resolved, attrs, target, attrlist, logger)
+  return resolveIncludesInSource(includeContent, { path: resolved.path, src: resolved.src }, catalog, logger, depth + 1)
+}
+
 function resolveIncludesInSource(source, originFile, catalog, logger, depth = 0) {
   if (depth > MAX_INCLUDE_DEPTH) {
     logger.warn(
@@ -341,88 +450,9 @@ function resolveIncludesInSource(source, originFile, catalog, logger, depth = 0)
   }
   const page = { src: originFile.src }
   const cursor = { dir: path.posix.dirname(originFile.path), file: undefined }
-  const lines = source.split(NEWLINE_RX)
-  const outLines = []
-  for (const line of lines) {
-    const m = INCLUDE_DIRECTIVE_RX.exec(line)
-    if (!m || m[1]) {
-      // not an include:: line at all, or an escaped `\include::` — Asciidoctor
-      // itself renders the latter as literal text, unprocessed.
-      outLines.push(line)
-      continue
-    }
-    const target = m[2]
-    const attrlist = m[3] || ''
-    if (~target.indexOf('{')) {
-      logger.warn(
-        "Ignoring include::%s[%s] while prewarming a diagram — its target needs attribute substitution, which isn't possible this early in the build; that diagram will miss the prewarm cache",
-        target,
-        attrlist
-      )
-      outLines.push(line)
-      continue
-    }
-    const attrs = parseIncludeAttrlist(attrlist)
-    if (!attrs) {
-      logger.warn(
-        "Ignoring include::%s[%s] while prewarming a diagram — its attributes aren't all lines=/tag=/tags=/leveloffset=/opts=, so this couldn't safely mirror real conversion; that diagram will miss the prewarm cache",
-        target,
-        attrlist
-      )
-      outLines.push(line)
-      continue
-    }
-    const resolved = resolveIncludeFile(target, page, cursor, catalog)
-    if (!resolved) {
-      logger.warn(
-        'Could not resolve include::%s[%s] while prewarming a diagram (no such file in the content catalog); that diagram will miss the prewarm cache',
-        target,
-        attrlist
-      )
-      outLines.push(line)
-      continue
-    }
-    let includeContent
-    const linenums = getLines(attrs)
-    if (linenums) {
-      const [selected] = filterLinesByLineNumbers(resolved.contents, linenums.slice())
-      includeContent = selected.join('\n')
-    } else {
-      const tags = getTags(attrs)
-      if (tags) {
-        const [selected] = filterLinesByTags(resolved.contents, new Map(tags), {
-          onWarn: (msg) => logger.warn('%s (include::%s[%s])', msg, target, attrlist),
-        })
-        includeContent = selected.join('\n')
-      } else {
-        includeContent = resolved.contents
-      }
-    }
-    // A resolved file's own trailing newline is a LINE TERMINATOR, not an
-    // extra blank line — `resolved.contents` (or `selected.join('\n')` above,
-    // when the last selected line happened to be the file's own final,
-    // terminator-only artifact) ends in `\n` for virtually every real file
-    // on disk. Left as-is, the recursive call below re-splits this same
-    // string on NEWLINE_RX, which turns a trailing terminator into a
-    // trailing EMPTY array element; that empty element then survives back
-    // up as this whole include's own last "line" and gets its own `\n`
-    // separator from the OUTER `outLines.join('\n')` below, on top of the
-    // terminator this string already carries — doubling into a genuine
-    // blank line at the include boundary that real Asciidoctor conversion
-    // (which reads a file as its real lines, not as a blob with its own
-    // trailing terminator to preserve) never produces. This bit real
-    // sites immediately: two adjacent `include::` directives (or one
-    // followed by more literal content) assembling a diagram from actual
-    // files on disk — as opposed to this file's own unit tests' inline
-    // string fixtures, none of which happened to carry a trailing
-    // newline — permanently missed the prewarm cache for exactly that
-    // shape. Stripping a single trailing terminator here, once, matches
-    // real conversion instead of accumulating an extra one.
-    includeContent = includeContent.replace(/\r\n?$|\n$/, '')
-    outLines.push(
-      resolveIncludesInSource(includeContent, { path: resolved.path, src: resolved.src }, catalog, logger, depth + 1)
-    )
-  }
+  const outLines = source
+    .split(NEWLINE_RX)
+    .map((line) => resolveIncludeLine(line, page, cursor, catalog, logger, depth))
   return outLines.join('\n')
 }
 
@@ -478,6 +508,62 @@ async function fetchDiagram(type, source, format, options, logger) {
   }
 }
 
+// Every diagram job found in one `.adoc` file's raw text, added to the
+// shared `jobs` map (deduplicated by kroki-instance.js's own key — the same
+// diagram source and requested format repeated across pages, or
+// byte-identical after a migration re-run, should cost one Kroki call, not
+// one per occurrence).
+function collectDiagramJobs(file, pattern, enabledTypes, contentCatalog, logger, jobs) {
+  const text = file.contents.toString('utf8')
+  for (const { type, source: rawSource, format: requestedFormat, options } of extractDiagrams(text, pattern)) {
+    if (!enabledTypes.has(type)) continue
+    const format = resolveFormat(type, requestedFormat, (t, requested) =>
+      logger.warn('Ignoring unsupported format "%s" for a %s diagram; falling back to svg', requested, t)
+    )
+    // GH-189: resolve any include:: directive in the block's own body
+    // BEFORE anything else — this has to happen first, so the mermaid
+    // theme transform and the cache key below are both computed from
+    // the SAME real diagram source real conversion will hash.
+    const source = resolveIncludesInSource(rawSource, { path: file.path, src: file.src }, contentCatalog, logger)
+    // See kroki-mermaid-theme.js's own header: this has to be the
+    // SAME transform kroki.js applies before computing its own
+    // lookup key, or a prewarmed entry becomes unreachable from the
+    // synchronous side.
+    const effectiveSource = type === 'mermaid' ? applyDefaultMermaidTheme(source) : source
+    const key = kroki.keyFor(type, effectiveSource, format, options)
+    if (!jobs.has(key)) jobs.set(key, { type, source: effectiveSource, format, options })
+  }
+}
+
+// Renders every collected job via Kroki, in parallel, recording each
+// success back onto the shared `kroki` module so kroki.js's own synchronous
+// lookup finds it during real conversion — a fetch failure (network or a
+// non-2xx response, both logged by `fetchDiagram` itself) just leaves that
+// one job unrendered, tallied here only for the final summary log.
+async function renderDiagramJobs(jobs, logger) {
+  logger.info('Rendering %d diagram(s) via Kroki at %s', jobs.size, KROKI_URL)
+  let rendered = 0
+  await Promise.all(
+    Array.from(jobs, async ([key, { type, source, format, options }]) => {
+      const data = await fetchDiagram(type, source, format, options, logger)
+      if (data) {
+        kroki.set(key, { format, data })
+        rendered++
+      }
+    })
+  )
+  if (rendered === jobs.size) {
+    logger.info('Kroki rendered all %d diagram(s) successfully', jobs.size)
+  } else {
+    logger.warn(
+      'Kroki rendered %d/%d diagram(s); %d fell back to raw source — see warnings above for why',
+      rendered,
+      jobs.size,
+      jobs.size - rendered
+    )
+  }
+}
+
 module.exports = function registerKrokiPrewarm(context, deps = {}) {
   const doEnsureKrokiRunning = deps.ensureKrokiRunning || ensureKrokiRunning
   context.on('contentClassified', async ({ contentCatalog, playbook }) => {
@@ -496,58 +582,16 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     await doEnsureKrokiRunning(KROKI_URL, playbook?.dir, logger)
 
     const pattern = buildBlockPattern()
-    // Deduplicated by kroki-instance.js's own key: the same diagram source
-    // (and requested format) repeated across pages (or byte-identical after
-    // a migration re-run) should cost one Kroki call, not one per
-    // occurrence.
     const jobs = new Map()
     // `getFiles()` also yields `family: 'alias'` entries (redirects
     // registered by `registerPageAlias`/`addSplatAlias`) which have no
     // `.path` of their own at all — guard against those rather than just
     // the `.adoc` extension check.
     for (const file of contentCatalog.getFiles((candidate) => candidate.path?.endsWith('.adoc'))) {
-      const text = file.contents.toString('utf8')
-      for (const { type, source: rawSource, format: requestedFormat, options } of extractDiagrams(text, pattern)) {
-        if (!enabledTypes.has(type)) continue
-        const format = resolveFormat(type, requestedFormat, (t, requested) =>
-          logger.warn('Ignoring unsupported format "%s" for a %s diagram; falling back to svg', requested, t)
-        )
-        // GH-189: resolve any include:: directive in the block's own body
-        // BEFORE anything else — this has to happen first, so the mermaid
-        // theme transform and the cache key below are both computed from
-        // the SAME real diagram source real conversion will hash.
-        const source = resolveIncludesInSource(rawSource, { path: file.path, src: file.src }, contentCatalog, logger)
-        // See kroki-mermaid-theme.js's own header: this has to be the
-        // SAME transform kroki.js applies before computing its own
-        // lookup key, or a prewarmed entry becomes unreachable from the
-        // synchronous side.
-        const effectiveSource = type === 'mermaid' ? applyDefaultMermaidTheme(source) : source
-        const key = kroki.keyFor(type, effectiveSource, format, options)
-        if (!jobs.has(key)) jobs.set(key, { type, source: effectiveSource, format, options })
-      }
+      collectDiagramJobs(file, pattern, enabledTypes, contentCatalog, logger, jobs)
     }
     if (!jobs.size) return
 
-    logger.info('Rendering %d diagram(s) via Kroki at %s', jobs.size, KROKI_URL)
-    let rendered = 0
-    await Promise.all(
-      Array.from(jobs, async ([key, { type, source, format, options }]) => {
-        const data = await fetchDiagram(type, source, format, options, logger)
-        if (data) {
-          kroki.set(key, { format, data })
-          rendered++
-        }
-      })
-    )
-    if (rendered === jobs.size) {
-      logger.info('Kroki rendered all %d diagram(s) successfully', jobs.size)
-    } else {
-      logger.warn(
-        'Kroki rendered %d/%d diagram(s); %d fell back to raw source — see warnings above for why',
-        rendered,
-        jobs.size,
-        jobs.size - rendered
-      )
-    }
+    await renderDiagramJobs(jobs, logger)
   })
 }

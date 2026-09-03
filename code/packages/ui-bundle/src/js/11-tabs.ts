@@ -36,12 +36,12 @@
 ;(function () {
   'use strict'
 
-  var blockEls = [].slice.call(document.querySelectorAll<HTMLElement>('[data-tabs]'))
+  var blockEls = Array.prototype.slice.call(document.querySelectorAll<HTMLElement>('[data-tabs]'))
   if (!blockEls.length) return
 
   blockEls.forEach(function (block: HTMLElement) {
-    var tabs = [].slice.call(block.querySelectorAll<HTMLButtonElement>('.docouture-tabs__tab')) as HTMLButtonElement[]
-    var panels = [].slice.call(block.querySelectorAll<HTMLElement>('.docouture-tabs__panel')) as HTMLElement[]
+    var tabs = Array.prototype.slice.call(block.querySelectorAll<HTMLButtonElement>('.docouture-tabs__tab')) as HTMLButtonElement[]
+    var panels = Array.prototype.slice.call(block.querySelectorAll<HTMLElement>('.docouture-tabs__panel')) as HTMLElement[]
     // One tab per panel or the pairing below is guesswork — leave the
     // block in its server-rendered state (first tab selected) rather than
     // half-upgrade it.

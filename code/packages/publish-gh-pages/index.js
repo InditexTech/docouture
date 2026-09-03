@@ -138,97 +138,93 @@ async function assertSafeGitBranch(branch, fieldName = 'branch') {
   }
 }
 
-const defaultGit = {
-  /** @returns {Promise<boolean>} Whether `branch` already exists on `remote`. */
-  async branchExists(remote, branch) {
-    // Two layers of defence against CodeQL's js/second-order-command-line-
-    // injection (alert #40, `--upload-pack=<cmd>`-shaped remotes tricking
-    // `git ls-remote` into running arbitrary commands):
-    //
-    //   1. The `--` end-of-options marker on the execFileAsync call below is
-    //      the actual, provable fix: it forces git to treat everything after
-    //      it as a positional pathname, never as an option, no matter what
-    //      it looks like. Verified locally —
-    //      `git ls-remote --exit-code --upload-pack=touch x` runs the flag;
-    //      `git ls-remote --exit-code -- --upload-pack=touch x` fails with
-    //      "strange pathname ... blocked" instead. This alone closes the
-    //      vulnerability regardless of what static analysis concludes.
-    //   2. The whitelist checks below are defence in depth, re-validated
-    //      here inline (not via `assertSafeGitRemote`/`assertSafeGitBranch`
-    //      above) and written as separate `if (<test>) throw` /
-    //      `if (!(<test>)) throw` statements — the same shape as GitHub's
-    //      own documented fix for this rule — rather than one compound
-    //      expression, since a prior fix using a single compound condition
-    //      here was still flagged by a fresh scan even though the logic was
-    //      equivalent.
-    if (remote.startsWith('-')) {
-      throw new Error('Invalid remote: unsupported remote format')
-    }
-    if (/[\r\n\t ]/.test(remote)) {
-      throw new Error('Invalid remote: unsupported remote format')
-    }
-    if (!(
-      /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
-      /^[A-Za-z0-9._-]+$/.test(remote) ||
-      /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
-    )) {
-      throw new Error('Invalid remote: unsupported remote format')
-    }
-    if (branch.startsWith('-')) {
-      throw new Error('Invalid branch: unsupported branch name format')
-    }
-    if (!/^[A-Za-z0-9._/-]+$/.test(branch)) {
-      throw new Error('Invalid branch: unsupported branch name format')
-    }
-    try {
-      await execFileAsync('git', ['ls-remote', '--exit-code', '--', remote, branch])
-      return true
-    } catch (err) {
-      if (err?.code === 2) return false
-      throw err
-    }
-  },
-
-  /** Creates `branch` on `remote` as a single, empty, historyless commit. */
-  async createOrphanBranch(remote, branch, user) {
-    // Same reasoning as `branchExists` above: the `--` marker on the `push`
-    // call below is the real fix; these inline checks (literal here, not a
-    // call to `assertSafeGitRemote`/`assertSafeGitBranch`) are defence in
-    // depth, kept in the same shape for consistency.
-    if (remote.startsWith('-')) {
-      throw new Error('Invalid remote: unsupported remote format')
-    }
-    if (/[\r\n\t ]/.test(remote)) {
-      throw new Error('Invalid remote: unsupported remote format')
-    }
-    if (!(
-      /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
-      /^[A-Za-z0-9._-]+$/.test(remote) ||
-      /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
-    )) {
-      throw new Error('Invalid remote: unsupported remote format')
-    }
-    if (branch.startsWith('-')) {
-      throw new Error('Invalid branch: unsupported branch name format')
-    }
-    if (!/^[A-Za-z0-9._/-]+$/.test(branch)) {
-      throw new Error('Invalid branch: unsupported branch name format')
-    }
-    const dir = await mkdtemp(path.join(os.tmpdir(), 'docouture-gh-pages-'))
-    try {
-      await execFileAsync('git', ['init', '--quiet', dir])
-      await execFileAsync('git', ['checkout', '--quiet', '--orphan', branch], { cwd: dir })
-      await execFileAsync('git', ['config', 'user.email', user.email], { cwd: dir })
-      await execFileAsync('git', ['config', 'user.name', user.name], { cwd: dir })
-      await execFileAsync('git', ['commit', '--quiet', '--allow-empty', '-m', 'Initial gh-pages branch'], {
-        cwd: dir,
-      })
-      await execFileAsync('git', ['push', '--quiet', '--', remote, `HEAD:refs/heads/${branch}`], { cwd: dir })
-    } finally {
-      await rm(dir, { recursive: true, force: true })
-    }
-  },
+// Shared by `branchExists` and `createOrphanBranch` below. Both call straight
+// into `git ls-remote`/`git push` with a `remote`/`branch` pair, so both need
+// the same guard right next to their own sink.
+//
+// The REAL fix for CodeQL's js/second-order-command-line-injection (alert
+// #40, a `--upload-pack=<cmd>`-shaped remote tricking `git ls-remote`/`git
+// push` into running arbitrary commands) is the `--` end-of-options marker on
+// the execFileAsync calls themselves: it forces git to treat everything
+// after it as a positional pathname, never as an option, no matter what it
+// looks like. Verified locally — `git ls-remote --exit-code
+// --upload-pack=touch x` runs the flag; `git ls-remote --exit-code --
+// --upload-pack=touch x` fails with "strange pathname ... blocked" instead.
+// That alone closes the vulnerability regardless of what static analysis
+// concludes, which is why this guard can safely be shared (a prior version
+// duplicated it inline in both functions on the assumption that CodeQL only
+// recognises a barrier written in the same function as its sink — that
+// assumption doesn't matter once the actual sink is neutralised by `--`).
+//
+// This whitelist check is defence in depth: reject anything that isn't
+// recognisably a URL, a plain remote name, or an scp-like address, and
+// reject anything `-`-prefixed or containing whitespace/control characters
+// that could otherwise be read as a flag.
+function assertSafeGitTarget(remote, branch) {
+  if (remote.startsWith('-')) {
+    throw new Error('Invalid remote: unsupported remote format')
+  }
+  if (/[\r\n\t ]/.test(remote)) {
+    throw new Error('Invalid remote: unsupported remote format')
+  }
+  if (!(
+    /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
+    /^[A-Za-z0-9._-]+$/.test(remote) ||
+    /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
+  )) {
+    throw new Error('Invalid remote: unsupported remote format')
+  }
+  if (branch.startsWith('-')) {
+    throw new Error('Invalid branch: unsupported branch name format')
+  }
+  if (!/^[A-Za-z0-9._/-]+$/.test(branch)) {
+    throw new Error('Invalid branch: unsupported branch name format')
+  }
 }
+
+/**
+ * Builds the real git plumbing object. A factory rather than a plain object
+ * literal so tests can inject a fake `exec` (an async `(file, args, options?)
+ * => Promise` — the same shape `promisify(execFile)` produces) in place of
+ * a real git binary, without resorting to mocking the `node:child_process`
+ * module itself. `defaultGit` below is `createGitPlumbing()` — this factory
+ * called with no override, i.e. the real thing `publishGhPages` uses.
+ */
+function createGitPlumbing(exec = execFileAsync) {
+  return {
+    /** @returns {Promise<boolean>} Whether `branch` already exists on `remote`. */
+    async branchExists(remote, branch) {
+      assertSafeGitTarget(remote, branch)
+      try {
+        await exec('git', ['ls-remote', '--exit-code', '--', remote, branch])
+        return true
+      } catch (err) {
+        if (err?.code === 2) return false
+        throw err
+      }
+    },
+
+    /** Creates `branch` on `remote` as a single, empty, historyless commit. */
+    async createOrphanBranch(remote, branch, user) {
+      assertSafeGitTarget(remote, branch)
+      const dir = await mkdtemp(path.join(os.tmpdir(), 'docouture-gh-pages-'))
+      try {
+        await exec('git', ['init', '--quiet', dir])
+        await exec('git', ['checkout', '--quiet', '--orphan', branch], { cwd: dir })
+        await exec('git', ['config', 'user.email', user.email], { cwd: dir })
+        await exec('git', ['config', 'user.name', user.name], { cwd: dir })
+        await exec('git', ['commit', '--quiet', '--allow-empty', '-m', 'Initial gh-pages branch'], {
+          cwd: dir,
+        })
+        await exec('git', ['push', '--quiet', '--', remote, `HEAD:refs/heads/${branch}`], { cwd: dir })
+      } finally {
+        await rm(dir, { recursive: true, force: true })
+      }
+    },
+  }
+}
+
+const defaultGit = createGitPlumbing()
 
 /**
  * @param {string} dir - Absolute path to the already-built site.
@@ -268,7 +264,7 @@ const defaultGit = {
  *   `ghpages`.
  * @returns {Promise<boolean>} Whether the push actually happened.
  */
-module.exports = async function publishGhPages(dir, options = {}, ghpages = require('gh-pages'), git = defaultGit) {
+async function publishGhPages(dir, options = {}, ghpages = require('gh-pages'), git = defaultGit) {
   const logger = options.logger || console
 
   // Two independent guards, both meant to make an accidental push
@@ -353,3 +349,12 @@ module.exports = async function publishGhPages(dir, options = {}, ghpages = requ
   logger.info('GitHub Pages publish complete')
   return true
 }
+
+module.exports = publishGhPages
+// Exposed purely so tests can exercise the real git plumbing's own guard
+// clauses and argv construction — via `createGitPlumbing(fakeExec)`, a fake
+// `exec` in place of a real git binary — without going through the
+// `ghpages`/`git` injection seam above, which every other test in this file
+// uses instead.
+module.exports.createGitPlumbing = createGitPlumbing
+module.exports.defaultGit = defaultGit

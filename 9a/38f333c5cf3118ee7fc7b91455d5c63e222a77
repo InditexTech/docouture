@@ -1,0 +1,28 @@
+code/packages/antora-extensions/lib/changelog-pages.js
+  h_c93d154c7c7074 200-206
+code/packages/antora-extensions/lib/kroki-include-line-filters.js
+  h_c93d154c7c7074 196-224,229,233-235,238-246,249-264,270-289
+code/packages/cli/src/commands/doctor.ts
+  h_c93d154c7c7074 50-55
+code/packages/cli/src/lib/branch-detect.ts
+  h_c93d154c7c7074 37-43
+code/packages/tooling/src/commands/release-local.ts
+  h_c93d154c7c7074 64-71
+code/packages/ui-bundle/gulp.d/tasks/build-preview-pages.js
+  h_c93d154c7c7074 56
+code/packages/ui-bundle/src/js/06-copy-to-clipboard.ts
+  h_c93d154c7c7074 152
+code/packages/ui-bundle/src/js/09-heading-anchors.ts
+  h_c93d154c7c7074 67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9a38f333c5cf3118ee7fc7b91455d5c63e222a77",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

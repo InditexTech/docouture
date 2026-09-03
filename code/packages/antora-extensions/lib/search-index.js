@@ -277,7 +277,7 @@ function resolveLayout(page, defaultLayout) {
 function dedupeAdjacent(parts) {
   const out = []
   for (const part of parts) {
-    if (part && part !== out[out.length - 1]) out.push(part)
+    if (part && part !== out.at(-1)) out.push(part)
   }
   return out
 }

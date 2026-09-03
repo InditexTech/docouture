@@ -90,7 +90,6 @@ module.exports = function registerRedirects(context, rules) {
     // so in a real build they already agree — normalizing here is just
     // cheap insurance, not a workaround for a real discrepancy.
     const realUrls = new Set(pages.map((page) => stripTrailingSlash(page.pub.url)))
-    const aliasFiles = []
 
     // Raw match count per rule, computed independently of precedence below
     // — a rule that never matches ANY real page is worth flagging even when
@@ -100,54 +99,77 @@ module.exports = function registerRedirects(context, rules) {
     // already claims it).
     const rawMatchCounts = compiled.map((rule) => pages.filter((page) => rule.toRegex.test(page.pub.url)).length)
 
+    const aliasFiles = []
     for (const page of pages) {
-      // First rule (in authoring order) whose `to` matches this page wins —
-      // a later rule (e.g. a broad `**` catch-all) never gets a say once an
-      // earlier, more specific rule already claims the same real page, even
-      // if it would have computed a different legacy URL.
-      for (const rule of compiled) {
-        const match = rule.toRegex.exec(page.pub.url)
-        if (!match) continue
-
-        const legacyPath = substitute(rule.from, match.slice(1))
-        const { pubUrl, outPath } = buildUrlAndOutPath(legacyPath, htmlExtensionStyle)
-
-        if (realUrls.has(stripTrailingSlash(pubUrl))) {
-          logger.warn(
-            "Skipping redirects rule (from: '%s', to: '%s'): computed legacy URL %s collides with a real page",
-            rule.from,
-            rule.to,
-            pubUrl
-          )
-        } else {
-          aliasFiles.push({ out: { path: outPath }, pub: { url: pubUrl }, rel: { pub: { url: page.pub.url } } })
-        }
-        break // this page is claimed (matched or collided) — no lower-priority rule gets to touch it
-      }
+      const aliasFile = resolvePageAlias(page, compiled, realUrls, htmlExtensionStyle, logger)
+      if (aliasFile) aliasFiles.push(aliasFile)
     }
 
-    compiled.forEach((rule, i) => {
-      if (!rawMatchCounts[i]) {
-        logger.warn("redirects rule (from: '%s', to: '%s') matched no real pages", rule.from, rule.to)
-      }
-    })
+    warnUnmatchedRules(compiled, rawMatchCounts, logger)
 
     if (!aliasFiles.length) return
+    publishAliasFiles(aliasFiles, playbook, siteCatalog)
+  })
+}
 
-    // Mirrors what @antora/site-generator's own generate-site.js does with
-    // Antora's own alias family: for the 'static' facility (this site's
-    // default, and the only one a plain static host like GitHub Pages can
-    // use) produceRedirects mutates each file's `contents` in place and
-    // returns an empty array; for nginx/httpd/netlify/gitlab it instead
-    // returns the one rewrite-rule file to add, having stripped `out` off
-    // the (now unpublished as individual files) aliases itself.
-    const produced = produceRedirects(playbook, aliasFiles)
-    if (produced.length) {
-      for (const file of produced) siteCatalog.addFile(file)
-    } else {
-      for (const file of aliasFiles) if (file.out) siteCatalog.addFile(file)
+// First rule (in authoring order) whose `to` matches this page's own
+// pub.url — a later rule (e.g. a broad `**` catch-all) never gets a say
+// once an earlier, more specific rule already claims the same real page,
+// even if it would have computed a different legacy URL. Returns the alias
+// file to add, or undefined when no rule matched this page at all, or the
+// matching rule's computed legacy URL collided with a real page (logged,
+// not silently dropped, but this page is still claimed either way — no
+// lower-priority rule gets to touch it).
+function resolvePageAlias(page, compiled, realUrls, htmlExtensionStyle, logger) {
+  for (const rule of compiled) {
+    const match = rule.toRegex.exec(page.pub.url)
+    if (!match) continue
+
+    const legacyPath = substitute(rule.from, match.slice(1))
+    const { pubUrl, outPath } = buildUrlAndOutPath(legacyPath, htmlExtensionStyle)
+
+    if (realUrls.has(stripTrailingSlash(pubUrl))) {
+      logger.warn(
+        "Skipping redirects rule (from: '%s', to: '%s'): computed legacy URL %s collides with a real page",
+        rule.from,
+        rule.to,
+        pubUrl
+      )
+      return undefined
+    }
+    return { out: { path: outPath }, pub: { url: pubUrl }, rel: { pub: { url: page.pub.url } } }
+  }
+  return undefined
+}
+
+// A rule that matches zero real pages warns (and, under this site's
+// `runtime.log.failure_level: warn`, fails the build) — the same treatment
+// as a broken xref — rather than silently shipping a rule that never does
+// anything.
+function warnUnmatchedRules(compiled, rawMatchCounts, logger) {
+  compiled.forEach((rule, i) => {
+    if (!rawMatchCounts[i]) {
+      logger.warn("redirects rule (from: '%s', to: '%s') matched no real pages", rule.from, rule.to)
     }
   })
+}
+
+// Mirrors what @antora/site-generator's own generate-site.js does with
+// Antora's own alias family: for the 'static' facility (this site's
+// default, and the only one a plain static host like GitHub Pages can
+// use) produceRedirects mutates each file's `contents` in place and
+// returns an empty array; for nginx/httpd/netlify/gitlab it instead
+// returns the one rewrite-rule file to add, having stripped `out` off
+// the (now unpublished as individual files) aliases itself.
+function publishAliasFiles(aliasFiles, playbook, siteCatalog) {
+  const produced = produceRedirects(playbook, aliasFiles)
+  if (produced.length) {
+    for (const file of produced) siteCatalog.addFile(file)
+    return
+  }
+  for (const file of aliasFiles) {
+    if (file.out) siteCatalog.addFile(file)
+  }
 }
 
 function compileRules(rules, logger) {
@@ -184,7 +206,15 @@ function compilePattern(template) {
   while (i < template.length) {
     if (template[i] === '*') {
       if (template[i + 1] === '*') {
-        pattern += '(.+)'
+        // Lazy, not greedy: against the `^...$`-anchored whole pattern this
+        // still captures the identical, maximal remainder (the anchor
+        // forces it to expand until the rest of the pattern is satisfied
+        // either way) — but a lazy quantifier here doesn't compound into
+        // catastrophic backtracking the way two adjacent GREEDY `.+`
+        // groups can when a template happens to chain wildcards with no
+        // literal separator between them (e.g. a stray `**` immediately
+        // followed by another wildcard).
+        pattern += '(.+?)'
         i += 2
       } else {
         pattern += '([^/]+)'

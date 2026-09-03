@@ -30,7 +30,11 @@ export async function runTestPackage(argv: string[]): Promise<number> {
     return 2
   }
 
+  // Resolves 'pnpm' off PATH, same as any shell script would — this
+  // internal tooling CLI runs only on a maintainer's own machine/CI, and
+  // needs whichever pnpm is already on it (nvm/asdf/volta/corepack, ...).
   const result = spawnSync('pnpm', ['nx', 'run-many', '-t', 'test', '-p', projects.join(','), ...rest], {
+    // NOSONAR
     stdio: 'inherit',
   })
   return result.status ?? 1

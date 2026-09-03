@@ -140,32 +140,42 @@
     }
     find(nav, '.side-menu__toggle').forEach(function (btn) {
       var owner = btn.closest('li')
-      if (owner && keep.indexOf(owner) === -1) btn.setAttribute('aria-expanded', 'false')
+      if (owner && !keep.includes(owner)) btn.setAttribute('aria-expanded', 'false')
     })
   }
 
-  function onHashChange () {
-    var navLink: HTMLElement | null = null
-    var hash = window.location.hash
-    if (hash) {
-      if (hash.indexOf('%')) hash = decodeURIComponent(hash)
-      navLink = nav.querySelector<HTMLElement>('.dt-list-item[href="' + hash + '"]')
-      if (!navLink) {
-        var targetNode = document.getElementById(hash.slice(1))
-        if (targetNode) {
-          var current: Element = targetNode
-          var ceiling = document.querySelector('article.doc')
-          current = current.parentElement
-          while (current && current !== ceiling) {
-            var id = current.id
-            // NOTE: look for section heading
-            if (!id && SECT_CLASS_RX.test(current.className)) id = current.firstElementChild?.id
-            if (id && (navLink = nav.querySelector<HTMLElement>('.dt-list-item[href="#' + id + '"]'))) break
-            current = current.parentElement
-          }
-        }
+  // A hash that IS a real nav entry's own href matches directly; otherwise
+  // it names some in-page element (a heading's own anchor, or content
+  // nested inside a `sectN` heading block) — walked up to the nearest
+  // ancestor whose own id (or, for a bare `sectN` wrapper with no id of its
+  // own, its first child heading's id) matches a nav entry's href instead.
+  function resolveNavLinkFromHash (hash: string): HTMLElement | null {
+    if (hash.indexOf('%')) hash = decodeURIComponent(hash)
+    var navLink = nav.querySelector<HTMLElement>('.dt-list-item[href="' + hash + '"]')
+    if (navLink) return navLink
+
+    var targetNode = document.getElementById(hash.slice(1))
+    if (!targetNode) return null
+
+    var ceiling = document.querySelector('article.doc')
+    var current: Element | null = targetNode.parentElement
+    while (current && current !== ceiling) {
+      var id = current.id
+      // NOTE: look for section heading
+      if (!id && SECT_CLASS_RX.test(current.className)) id = current.firstElementChild?.id
+      if (id) {
+        navLink = nav.querySelector<HTMLElement>('.dt-list-item[href="#' + id + '"]')
+        if (navLink) return navLink
       }
+      current = current.parentElement
     }
+    return null
+  }
+
+  function onHashChange () {
+    var hash = window.location.hash
+    var navLink = hash ? resolveNavLinkFromHash(hash) : null
+
     var navItem: HTMLElement | null
     if (navLink) {
       navItem = navLink
@@ -194,7 +204,7 @@
   }
 
   function find (from: ParentNode, selector: string) {
-    return [].slice.call(from.querySelectorAll(selector)) as HTMLElement[]
+    return Array.prototype.slice.call(from.querySelectorAll(selector)) as HTMLElement[]
   }
 })()
 

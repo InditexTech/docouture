@@ -69,6 +69,17 @@ function blockToMarkdown(node, listDepth) {
   return out
 }
 
+// Trailing newline(s) only — deliberately not a regex: `\n+$`, though safe
+// in practice (there's nothing else in the pattern to backtrack against),
+// still reads as the "quantifier immediately touching an anchor" shape a
+// catastrophic-backtracking scanner flags on sight. A plain reverse scan is
+// unambiguously linear and needs no such judgment call.
+function trimTrailingNewlines(text) {
+  let end = text.length
+  while (end > 0 && text[end - 1] === '\n') end -= 1
+  return text.slice(0, end)
+}
+
 function nodeToMarkdown(node, listDepth) {
   if (node.nodeType === NodeType.TEXT_NODE) return node.text
   if (node.nodeType !== NodeType.ELEMENT_NODE) return ''
@@ -91,7 +102,7 @@ function nodeToMarkdown(node, listDepth) {
     case 'pre': {
       const code = node.querySelector('code')
       const lang = (code?.classList?.value || []).map((c) => c.replace(/^language-/, '')).find(Boolean) || ''
-      const text = (code || node).text.replace(/\n+$/, '')
+      const text = trimTrailingNewlines((code || node).text)
       return `\n\n\`\`\`${lang}\n${text}\n\`\`\`\n\n`
     }
 
@@ -99,31 +110,15 @@ function nodeToMarkdown(node, listDepth) {
       return `\`${node.text}\``
 
     case 'strong':
-    case 'b': {
-      const text = inlineText(node)
-      // An icon font glyph (`<i class="fa icon-warning">`, no text content —
-      // the glyph is painted by CSS `content`) falls through here empty.
-      // Emphasising nothing would render as a bare `**`/`*`, so it is
-      // dropped rather than kept.
-      return text ? `**${text}**` : ''
-    }
+    case 'b':
+      return renderEmphasis(node, '**')
 
     case 'em':
-    case 'i': {
-      const text = inlineText(node)
-      return text ? `*${text}*` : ''
-    }
+    case 'i':
+      return renderEmphasis(node, '*')
 
-    case 'a': {
-      const href = node.getAttribute('href')
-      const text = inlineText(node)
-      // Antora's `sectanchors` emits an empty `<a class="anchor">` right
-      // before every heading's own text, purely for a CSS hover affordance —
-      // see the asciidoc skill's own note on the attribute. No text, no link
-      // worth keeping.
-      if (!text) return ''
-      return href ? `[${text}](${href})` : text
-    }
+    case 'a':
+      return renderLink(node)
 
     case 'img': {
       const alt = node.getAttribute('alt') || ''
@@ -165,9 +160,33 @@ function nodeToMarkdown(node, listDepth) {
       // etc.) — open it up rather than drop its text. Block-level tags get
       // paragraph breaks around them so prose from adjacent wrappers doesn't
       // run together; the smaller set of pure-inline unknown tags does not.
-      if (BLOCK_TAGS.has(tag)) return `\n\n${blockToMarkdown(node, listDepth).trim()}\n\n`
-      return blockToMarkdown(node, listDepth)
+      return renderGenericWrapper(node, tag, listDepth)
   }
+}
+
+// An icon font glyph (`<i class="fa icon-warning">`, no text content — the
+// glyph is painted by CSS `content`) falls through here empty. Emphasising
+// nothing would render as a bare `**`/`*`, so it is dropped rather than
+// kept.
+function renderEmphasis(node, marker) {
+  const text = inlineText(node)
+  return text ? `${marker}${text}${marker}` : ''
+}
+
+function renderLink(node) {
+  const href = node.getAttribute('href')
+  const text = inlineText(node)
+  // Antora's `sectanchors` emits an empty `<a class="anchor">` right before
+  // every heading's own text, purely for a CSS hover affordance — see the
+  // asciidoc skill's own note on the attribute. No text, no link worth
+  // keeping.
+  if (!text) return ''
+  return href ? `[${text}](${href})` : text
+}
+
+function renderGenericWrapper(node, tag, listDepth) {
+  if (BLOCK_TAGS.has(tag)) return `\n\n${blockToMarkdown(node, listDepth).trim()}\n\n`
+  return blockToMarkdown(node, listDepth)
 }
 
 function inlineText(node) {
@@ -259,7 +278,7 @@ function tableToMarkdown(tableNode) {
   const [header, ...body] = rows
   const lines = [
     `| ${pad(header).join(' | ')} |`,
-    `| ${Array(colCount).fill('---').join(' | ')} |`,
+    `| ${new Array(colCount).fill('---').join(' | ')} |`,
     ...body.map((row) => `| ${pad(row).join(' | ')} |`),
   ]
   return lines.join('\n')

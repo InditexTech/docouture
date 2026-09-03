@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url'
 
 import { parseArgs } from '../lib/args.js'
 import { readCliInfo } from '../lib/cli-info.js'
-import { copyTemplate, exists } from '../lib/copy-template.js'
+import { copyTemplate, exists, type TemplateValues } from '../lib/copy-template.js'
 import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-manager.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { readBranches, writeBranches } from '../lib/playbook-yml.js'
@@ -24,7 +24,9 @@ const BRANCH_MODELS = ['trunk-based', 'git-flow'] as const
 // logic reused rather than importing the wizard-heavy module it lives in.
 function isInsideGitWorkTree(dir: string): boolean {
   try {
-    execFileSync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: dir, stdio: 'ignore' })
+    // Resolves 'git' off PATH, same as any shell script would — same
+    // reasoning as upgrade.ts's own copy of this function.
+    execFileSync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: dir, stdio: 'ignore' }) // NOSONAR
     return true
   } catch {
     return false
@@ -57,6 +59,136 @@ async function writeBranching(packageJsonFile: string, branching: Branching): Pr
   const pkg = JSON.parse(content) as DocouturePackageJson
   pkg.docouture = { ...pkg.docouture, branching }
   await writeFile(packageJsonFile, `${JSON.stringify(pkg, null, 2)}\n`, 'utf8')
+}
+
+interface DetectedBranches {
+  prerelease: string
+  release: string
+}
+
+type BranchNameResolution = { ok: true; newPrerelease: string; newRelease: string } | { ok: false; errors: string[] }
+
+// The one piece of real decision logic in this command: given where the
+// site currently is and where it's headed, what should the two branch
+// names become? Four cases (trunk<->trunk, trunk->git-flow, git-flow->
+// trunk, git-flow<->git-flow), each either a straight computation or a
+// missing/invalid flag to reject — every branch here is a guard clause, so
+// nesting never goes past the two the trunk-based/git-flow split itself
+// requires.
+function resolveNewBranchNames(params: {
+  targetModel: Branching
+  currentModel: Branching
+  detected: DetectedBranches
+  branchFlag: string | undefined
+  integrationBranchFlag: string | undefined
+  releaseBranchFlag: string | undefined
+}): BranchNameResolution {
+  const { targetModel, currentModel, detected, branchFlag, integrationBranchFlag, releaseBranchFlag } = params
+
+  if (targetModel === 'trunk-based') {
+    if (currentModel !== 'git-flow') {
+      const branch = branchFlag ?? detected.release
+      return { ok: true, newPrerelease: branch, newRelease: branch }
+    }
+    if (!branchFlag) {
+      return {
+        ok: false,
+        errors: [
+          'switching from git-flow to trunk-based requires --branch <name>',
+          `  must match one of the current two branches: '${detected.prerelease}' or '${detected.release}'`,
+        ],
+      }
+    }
+    if (branchFlag !== detected.prerelease && branchFlag !== detected.release) {
+      return {
+        ok: false,
+        errors: [
+          `--branch '${branchFlag}' does not match either current branch`,
+          `  current prerelease branch: '${detected.prerelease}'`,
+          `  current release branch: '${detected.release}'`,
+          'refusing to invent a third branch name — collapsing two branches into one is lossy: pick one of the two that already exist',
+        ],
+      }
+    }
+    return { ok: true, newPrerelease: branchFlag, newRelease: branchFlag }
+  }
+
+  // targetModel === 'git-flow'
+  if (currentModel !== 'trunk-based') {
+    return {
+      ok: true,
+      newPrerelease: integrationBranchFlag ?? detected.prerelease,
+      newRelease: releaseBranchFlag ?? detected.release,
+    }
+  }
+  // Least-disruption default (see the issue's own design note): the
+  // current single branch becomes *release* — whatever already got tagged
+  // off it keeps working unchanged — and a NEW name is required for the
+  // integration/prerelease branch, since there is nothing already on disk
+  // to infer that from.
+  if (!integrationBranchFlag) {
+    return {
+      ok: false,
+      errors: [
+        'switching from trunk-based to git-flow requires --integration-branch <name>',
+        `  the current branch ('${detected.release}') becomes the release branch by default`,
+        '  (override with --release-branch if you want a different name for it too)',
+      ],
+    }
+  }
+  return { ok: true, newPrerelease: integrationBranchFlag, newRelease: releaseBranchFlag ?? detected.release }
+}
+
+// docs/antora.yml's own name/title if the site has one yet, or this
+// command's neutral fallback otherwise — branch-model runs against
+// already-scaffolded sites, but a hand-assembled one might not have
+// gotten this far yet.
+async function readSiteNameAndTitle(descriptorPath: string): Promise<{ name: string; title: string }> {
+  if (!(await exists(descriptorPath))) return { name: 'docs', title: 'Docs' }
+  const content = await readFile(descriptorPath, 'utf8')
+  return {
+    name: readAntoraField(content, 'name') ?? 'docs',
+    title: readAntoraField(content, 'title') ?? 'Docs',
+  }
+}
+
+// --dry-run's entire report: what copyTemplate would write, plus the two
+// branch renames, without touching disk — split out so the for-loop over
+// planned paths doesn't add its own nesting to runBranchModel.
+async function printDryRunPlan(params: {
+  workflowsTemplateDir: string
+  workflowsDir: string
+  values: TemplateValues
+  repoRoot: string
+  playbookFile: string
+  packageJsonFile: string
+  currentModel: Branching
+  targetModel: Branching
+  detected: DetectedBranches
+  newPrerelease: string
+  newRelease: string
+}): Promise<void> {
+  const {
+    workflowsTemplateDir,
+    workflowsDir,
+    values,
+    repoRoot,
+    playbookFile,
+    packageJsonFile,
+    currentModel,
+    targetModel,
+    detected,
+    newPrerelease,
+    newRelease,
+  } = params
+  const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
+  console.log(`would switch ${currentModel} -> ${targetModel}`)
+  console.log(`  prerelease branch: '${detected.prerelease}' -> '${newPrerelease}'`)
+  console.log(`  release branch: '${detected.release}' -> '${newRelease}'`)
+  console.log('would write:')
+  for (const path of [...plannedWorkflows, playbookFile, packageJsonFile]) {
+    console.log(`  ${relative(repoRoot, path)}`)
+  }
 }
 
 export async function runBranchModel(argv: string[]): Promise<number> {
@@ -111,60 +243,27 @@ export async function runBranchModel(argv: string[]): Promise<number> {
     console.error('is this a docouture-scaffolded site? (run docouture new first, or check --dir)')
     return 1
   }
+  const detectedBranches: DetectedBranches = { prerelease: detected.prerelease, release: detected.release }
 
   const currentModel: Branching = detected.prerelease === detected.release ? 'trunk-based' : 'git-flow'
 
-  let newPrerelease: string
-  let newRelease: string
-
-  if (targetModel === 'trunk-based') {
-    if (currentModel === 'git-flow') {
-      if (!branchFlag) {
-        console.error('switching from git-flow to trunk-based requires --branch <name>')
-        console.error(`  must match one of the current two branches: '${detected.prerelease}' or '${detected.release}'`)
-        return 1
-      }
-      if (branchFlag !== detected.prerelease && branchFlag !== detected.release) {
-        console.error(`--branch '${branchFlag}' does not match either current branch`)
-        console.error(`  current prerelease branch: '${detected.prerelease}'`)
-        console.error(`  current release branch: '${detected.release}'`)
-        console.error(
-          'refusing to invent a third branch name — collapsing two branches into one is lossy: pick one of the two that already exist'
-        )
-        return 1
-      }
-      newPrerelease = branchFlag
-      newRelease = branchFlag
-    } else {
-      const branch = branchFlag ?? detected.release
-      newPrerelease = branch
-      newRelease = branch
-    }
-  } else {
-    if (currentModel === 'trunk-based') {
-      // Least-disruption default (see the issue's own design note): the
-      // current single branch becomes *release* — whatever already got
-      // tagged off it keeps working unchanged — and a NEW name is required
-      // for the integration/prerelease branch, since there is nothing
-      // already on disk to infer that from.
-      if (!integrationBranchFlag) {
-        console.error('switching from trunk-based to git-flow requires --integration-branch <name>')
-        console.error(`  the current branch ('${detected.release}') becomes the release branch by default`)
-        console.error('  (override with --release-branch if you want a different name for it too)')
-        return 1
-      }
-      newPrerelease = integrationBranchFlag
-      newRelease = releaseBranchFlag ?? detected.release
-    } else {
-      newPrerelease = integrationBranchFlag ?? detected.prerelease
-      newRelease = releaseBranchFlag ?? detected.release
-    }
+  const resolution = resolveNewBranchNames({
+    targetModel,
+    currentModel,
+    detected: detectedBranches,
+    branchFlag,
+    integrationBranchFlag,
+    releaseBranchFlag,
+  })
+  if (!resolution.ok) {
+    for (const line of resolution.errors) console.error(line)
+    return 1
   }
+  const { newPrerelease, newRelease } = resolution
 
   if (targetModel === currentModel && newPrerelease === detected.prerelease && newRelease === detected.release) {
-    console.log(
-      `already ${currentModel} (${newPrerelease === newRelease ? newPrerelease : `${newPrerelease}/${newRelease}`}) — nothing to do`
-    )
+    const branchLabel = newPrerelease === newRelease ? newPrerelease : `${newPrerelease}/${newRelease}`
+    console.log(`already ${currentModel} (${branchLabel}) — nothing to do`)
     return 0
   }
 
@@ -177,13 +276,7 @@ export async function runBranchModel(argv: string[]): Promise<number> {
   const pm = packageManagerPlan(detectPackageManager(repoRoot))
 
   const descriptorPath = join(siteRoot, 'src', 'antora.yml')
-  let name = 'docs'
-  let title = 'Docs'
-  if (await exists(descriptorPath)) {
-    const content = await readFile(descriptorPath, 'utf8')
-    name = readAntoraField(content, 'name') ?? name
-    title = readAntoraField(content, 'title') ?? title
-  }
+  const { name, title } = await readSiteNameAndTitle(descriptorPath)
 
   const values = {
     name,
@@ -217,14 +310,19 @@ export async function runBranchModel(argv: string[]): Promise<number> {
   const packageJsonFile = join(siteRoot, 'package.json')
 
   if (dryRun) {
-    const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
-    console.log(`would switch ${currentModel} -> ${targetModel}`)
-    console.log(`  prerelease branch: '${detected.prerelease}' -> '${newPrerelease}'`)
-    console.log(`  release branch: '${detected.release}' -> '${newRelease}'`)
-    console.log('would write:')
-    for (const path of [...plannedWorkflows, playbookFile, packageJsonFile]) {
-      console.log(`  ${relative(repoRoot, path)}`)
-    }
+    await printDryRunPlan({
+      workflowsTemplateDir,
+      workflowsDir,
+      values,
+      repoRoot,
+      playbookFile,
+      packageJsonFile,
+      currentModel,
+      targetModel,
+      detected: detectedBranches,
+      newPrerelease,
+      newRelease,
+    })
     return 0
   }
 

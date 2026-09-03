@@ -83,7 +83,10 @@ function titleCase(name: string): string {
 
 function isInsideGitWorkTree(dir: string): boolean {
   try {
-    execFileSync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: dir, stdio: 'ignore' })
+    // Resolves 'git' off PATH, same as any shell script would — `docouture
+    // new` runs on a user's own machine and has no way to check "is this a
+    // git repo" other than asking whichever `git` is already on that PATH.
+    execFileSync('git', ['rev-parse', '--is-inside-work-tree'], { cwd: dir, stdio: 'ignore' }) // NOSONAR
     return true
   } catch {
     return false
@@ -96,7 +99,8 @@ function isInsideGitWorkTree(dir: string): boolean {
 // only one execFileSync call to fail/mock, not two.
 function originRemoteUrl(dir: string): string | undefined {
   try {
-    return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: dir, stdio: ['ignore', 'pipe', 'ignore'] })
+    // Same PATH reasoning as isInsideGitWorkTree above.
+    return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: dir, stdio: ['ignore', 'pipe', 'ignore'] }) // NOSONAR
       .toString()
       .trim()
   } catch {
@@ -196,7 +200,7 @@ function keepOutputOpen(output: NodeJS.WritableStream): NodeJS.WritableStream {
     get(target, prop, receiver) {
       if (prop === 'end') {
         return (...args: unknown[]) => {
-          const cb = typeof args[args.length - 1] === 'function' ? (args.pop() as () => void) : undefined
+          const cb = typeof args.at(-1) === 'function' ? (args.pop() as () => void) : undefined
           cb?.()
           return receiver
         }
@@ -411,47 +415,83 @@ async function promptWizard(
   }
 }
 
+// `undefined` if the flag wasn't passed as a string at all (missing, or
+// passed as a bare boolean) — the one place that check lives, so every
+// string flag below reads as a plain assignment instead of its own
+// `typeof x === 'string' ? x : undefined` ternary.
+function stringFlag(flags: Record<string, string | boolean>, name: string): string | undefined {
+  const value = flags[name]
+  return typeof value === 'string' ? value : undefined
+}
+
+// Same idea for a boolean-only flag with no --no-* counterpart (see
+// url-segment below): only "explicitly on" is worth threading through,
+// everything else defers to its default.
+function trueFlag(flags: Record<string, string | boolean>, name: string): true | undefined {
+  return flags[name] === true ? true : undefined
+}
+
+// --dir (or cwd) resolved the same way at both of runNew's two call sites
+// (the package-manager guess, and the real repo-root lookup) — a plain
+// helper instead of repeating the ternary twice.
+function resolveStartDir(flags: Record<string, string | boolean>): string {
+  const dir = stringFlag(flags, 'dir')
+  return dir !== undefined ? resolve(dir) : resolve(process.cwd())
+}
+
+// A --mode/--flow/--pm flag is either: absent (value undefined, no error —
+// the wizard or a default fills it in later), a valid member of its enum
+// (value set, no error), or present but not a member (error message to
+// print verbatim, caller returns 1). Three flags, one shape, so the
+// validation itself — and its error wording — lives in exactly one place.
+function parseEnumFlag<T extends string>(
+  flags: Record<string, string | boolean>,
+  flagName: string,
+  allowed: readonly T[],
+  expected: string
+): { value: T | undefined; error: string | null } {
+  const raw = stringFlag(flags, flagName)
+  if (raw === undefined) return { value: undefined, error: null }
+  if (!(allowed as readonly string[]).includes(raw)) {
+    return { value: undefined, error: `invalid --${flagName}: '${raw}' — expected ${expected}` }
+  }
+  return { value: raw as T, error: null }
+}
+
 export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<number> {
   const { positional, flags } = parseArgs(argv)
 
   let name = positional[0]
-  let title = typeof flags.title === 'string' ? flags.title : undefined
+  let title = stringFlag(flags, 'title')
   // Boolean-only flag (no --no-url-segment counterpart): the default is
   // already "off", so the only thing worth scripting is turning it on.
-  let urlSegment: boolean | undefined = flags['url-segment'] === true ? true : undefined
-  let mode: Mode | undefined
-  let branching: Branching | undefined
+  let urlSegment: boolean | undefined = trueFlag(flags, 'url-segment')
   let prereleaseBranch: string | undefined
   let releaseBranch: string | undefined
-  const branchFlag = typeof flags.branch === 'string' ? flags.branch : undefined
-  const integrationBranchFlag =
-    typeof flags['integration-branch'] === 'string' ? flags['integration-branch'] : undefined
-  const releaseBranchFlag = typeof flags['release-branch'] === 'string' ? flags['release-branch'] : undefined
-  let pmChoice: PackageManager | undefined
+  const branchFlag = stringFlag(flags, 'branch')
+  const integrationBranchFlag = stringFlag(flags, 'integration-branch')
+  const releaseBranchFlag = stringFlag(flags, 'release-branch')
 
-  if (typeof flags.mode === 'string') {
-    if (!(MODES as readonly string[]).includes(flags.mode)) {
-      console.error(`invalid --mode: '${flags.mode}' — expected 'standalone' or 'versioned'`)
-      return 1
-    }
-    mode = flags.mode as Mode
+  const modeFlag = parseEnumFlag(flags, 'mode', MODES, "'standalone' or 'versioned'")
+  if (modeFlag.error) {
+    console.error(modeFlag.error)
+    return 1
   }
+  let mode = modeFlag.value
 
-  if (typeof flags.flow === 'string') {
-    if (!(BRANCH_MODELS as readonly string[]).includes(flags.flow)) {
-      console.error(`invalid --flow: '${flags.flow}' — expected 'trunk-based' or 'git-flow'`)
-      return 1
-    }
-    branching = flags.flow as Branching
+  const flowFlag = parseEnumFlag(flags, 'flow', BRANCH_MODELS, "'trunk-based' or 'git-flow'")
+  if (flowFlag.error) {
+    console.error(flowFlag.error)
+    return 1
   }
+  let branching = flowFlag.value
 
-  if (typeof flags.pm === 'string') {
-    if (!(PACKAGE_MANAGERS as readonly string[]).includes(flags.pm)) {
-      console.error(`invalid --pm: '${flags.pm}' — expected 'npm' or 'pnpm'`)
-      return 1
-    }
-    pmChoice = flags.pm as PackageManager
+  const pmFlag = parseEnumFlag(flags, 'pm', PACKAGE_MANAGERS, "'npm' or 'pnpm'")
+  if (pmFlag.error) {
+    console.error(pmFlag.error)
+    return 1
   }
+  let pmChoice = pmFlag.value
 
   // Best-effort guess for the wizard's own default (an existing
   // packageManager field/lockfile at --dir/cwd, or how docouture itself was
@@ -459,7 +499,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // --dir/cwd directly rather than the eventual repo root (not resolved
   // until after the wizard runs, see below): a reasonable guess either way,
   // and the user can always override it in the prompt or with --pm.
-  const pmGuess = detectPackageManager(typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd()))
+  const pmGuess = detectPackageManager(resolveStartDir(flags))
 
   // Wizard runs only in an interactive terminal, and only when not
   // explicitly skipped with --yes — a script or CI pipe (io.isTTY false)
@@ -534,7 +574,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // every other command that operates on a whole repo (dev/build/doctor/
   // eject/teardown/publish) — rather than requiring --dir/cwd to already
   // be the root itself.
-  const startDir = typeof flags.dir === 'string' ? resolve(flags.dir) : resolve(process.cwd())
+  const startDir = resolveStartDir(flags)
 
   if (!isInsideGitWorkTree(startDir)) {
     console.error(`'${startDir}' is not inside a git repository`)
@@ -550,56 +590,142 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   const workflowsDir = join(target, '.github', 'workflows')
   const agentsMdFile = join(target, AGENTS_MD_FILENAME)
 
-  if ((await exists(docsDir)) && !(await isEmptyOrMissing(docsDir))) {
+  if (!(await isEmptyOrMissing(docsDir))) {
     console.error(`'${docsDir}' already exists and is not empty`)
     return 1
   }
 
-  const existingWorkflows: string[] = []
+  const conflictResult = await resolveConflicts({ target, workflowsDir, agentsMdFile, skipWizard, io })
+  if (!conflictResult) return 1
+  const { existingAgentsMd } = conflictResult
+
+  const pm = await scaffoldSite({
+    target,
+    docsDir,
+    workflowsDir,
+    agentsMdFile,
+    existingAgentsMd,
+    name,
+    title,
+    urlSegment,
+    mode,
+    branching,
+    prereleaseBranch,
+    releaseBranch,
+    pmChoice,
+  })
+
+  printNextSteps({
+    mode,
+    branching,
+    prereleaseBranch,
+    releaseBranch,
+    pm,
+    target,
+    docsDir,
+    workflowsDir,
+    ghPagesUrl: githubPagesUrl(target),
+  })
+
+  return 0
+}
+
+async function findExistingWorkflows(workflowsDir: string): Promise<string[]> {
+  const existing: string[] = []
   for (const workflowName of WORKFLOW_NAMES) {
-    if (await exists(join(workflowsDir, workflowName))) {
-      existingWorkflows.push(join('.github', 'workflows', workflowName))
-    }
+    if (await exists(join(workflowsDir, workflowName))) existing.push(join('.github', 'workflows', workflowName))
   }
+  return existing
+}
 
-  // AGENTS.md is never an all-or-nothing conflict the way a workflow file
-  // is: a foreign/human-written file (no docouture-managed block yet — see
-  // lib/agents-md.ts) is always safe to append docouture' own section to
-  // without asking. Only a file that already HAS a managed block counts as
-  // something this run would actually overwrite.
-  let existingAgentsMd: string | undefined
-  let agentsMdConflict = false
-  if (await exists(agentsMdFile)) {
-    existingAgentsMd = await readFile(agentsMdFile, 'utf8')
-    agentsMdConflict = hasManagedSection(existingAgentsMd)
-  }
+// AGENTS.md is never an all-or-nothing conflict the way a workflow file is:
+// a foreign/human-written file (no docouture-managed block yet — see
+// lib/agents-md.ts) is always safe to append docouture's own section to
+// without asking. Only a file that already HAS a managed block counts as
+// something this run would actually overwrite.
+async function readExistingAgentsMd(agentsMdFile: string): Promise<{ content: string | undefined; conflict: boolean }> {
+  if (!(await exists(agentsMdFile))) return { content: undefined, conflict: false }
+  const content = await readFile(agentsMdFile, 'utf8')
+  return { content, conflict: hasManagedSection(content) }
+}
 
+// Every pre-existing file/dir this run would touch, confirmed to overwrite
+// (or found not to conflict at all) — or null if the user (or --yes/
+// non-TTY) refused, in which case the caller should just return 1: this
+// function has already printed why.
+async function resolveConflicts(params: {
+  target: string
+  workflowsDir: string
+  agentsMdFile: string
+  skipWizard: boolean
+  io: NewIO
+}): Promise<{ existingAgentsMd: string | undefined } | null> {
+  const { target, workflowsDir, agentsMdFile, skipWizard, io } = params
+  const existingWorkflows = await findExistingWorkflows(workflowsDir)
+  const { content: existingAgentsMd, conflict: agentsMdConflict } = await readExistingAgentsMd(agentsMdFile)
   const conflicts = [...existingWorkflows, ...(agentsMdConflict ? [AGENTS_MD_FILENAME] : [])]
 
-  if (conflicts.length > 0) {
-    if (skipWizard) {
-      // Non-interactive (--yes, or no TTY) — nobody to confirm with, so this
-      // stays a hard refusal, same as every other pre-flight check above,
-      // rather than silently overwriting something already there.
-      console.error(`refusing to overwrite existing file(s)/dir(s) under '${target}':`)
-      console.error(`  ${conflicts.join(', ')}`)
-      console.error("run 'docouture upgrade' instead if you want to re-sync them")
-      return 1
-    }
+  if (conflicts.length === 0) return { existingAgentsMd }
 
-    console.log(theme.bold('Already exist and would be overwritten:'))
-    for (const path of conflicts) console.log(`  ${path}`)
-    console.log('')
-    const proceed = await confirm(
-      { message: 'Overwrite them?', default: false },
-      { input: io.input, output: keepOutputOpen(io.output) }
-    )
-    if (!proceed) {
-      console.log('aborted — nothing written')
-      return 1
-    }
-    io.output.write('\n')
+  if (skipWizard) {
+    // Non-interactive (--yes, or no TTY) — nobody to confirm with, so this
+    // stays a hard refusal, same as every other pre-flight check above,
+    // rather than silently overwriting something already there.
+    console.error(`refusing to overwrite existing file(s)/dir(s) under '${target}':`)
+    console.error(`  ${conflicts.join(', ')}`)
+    console.error("run 'docouture upgrade' instead if you want to re-sync them")
+    return null
   }
+
+  console.log(theme.bold('Already exist and would be overwritten:'))
+  for (const path of conflicts) console.log(`  ${path}`)
+  console.log('')
+  const proceed = await confirm(
+    { message: 'Overwrite them?', default: false },
+    { input: io.input, output: keepOutputOpen(io.output) }
+  )
+  if (!proceed) {
+    console.log('aborted — nothing written')
+    return null
+  }
+  io.output.write('\n')
+  return { existingAgentsMd }
+}
+
+// Writes every file `docouture new` scaffolds — docs/, .github/workflows/,
+// AGENTS.md, and (mode === 'versioned' only) the two files versioned mode
+// adds on top of the standalone shape — and returns the resolved
+// package-manager plan printNextSteps reports back.
+async function scaffoldSite(params: {
+  target: string
+  docsDir: string
+  workflowsDir: string
+  agentsMdFile: string
+  existingAgentsMd: string | undefined
+  name: string
+  title: string
+  urlSegment: boolean
+  mode: Mode
+  branching: Branching
+  prereleaseBranch: string
+  releaseBranch: string
+  pmChoice: PackageManager
+}): Promise<PackageManagerPlan> {
+  const {
+    target,
+    docsDir,
+    workflowsDir,
+    agentsMdFile,
+    existingAgentsMd,
+    name,
+    title,
+    urlSegment,
+    mode,
+    branching,
+    prereleaseBranch,
+    releaseBranch,
+    pmChoice,
+  } = params
 
   // build/commands/new.js -> build/templates/{starter,workflows,agent-support}
   // — see scripts/copy-templates.mjs, which puts the templates/ directory
@@ -624,8 +750,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   const nodeVersion = process.version.replace(/^v/, '')
 
   // The user's own choice (--pm, wizard answer, or the auto-guess computed
-  // above if neither was given) — never re-detected against `target`, so
-  // whatever was actually chosen/confirmed is what the workflows and
+  // in runNew if neither was given) — never re-detected against `target`,
+  // so whatever was actually chosen/confirmed is what the workflows and
   // printed next-steps agree on.
   const pm = packageManagerPlan(pmChoice)
 
@@ -697,19 +823,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     )
   }
 
-  printNextSteps({
-    mode,
-    branching,
-    prereleaseBranch,
-    releaseBranch,
-    pm,
-    target,
-    docsDir,
-    workflowsDir,
-    ghPagesUrl: githubPagesUrl(target),
-  })
-
-  return 0
+  return pm
 }
 
 // Everything printed after scaffolding finishes, grouped into labeled

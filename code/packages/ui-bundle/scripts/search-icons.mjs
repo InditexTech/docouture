@@ -40,7 +40,7 @@ async function main() {
     const tagHit = (tags[name] ?? []).some((tag) => tag.toLowerCase().includes(term))
     if (nameHit || tagHit) matches.push(name)
   }
-  matches.sort()
+  matches.sort((a, b) => a.localeCompare(b))
 
   if (!matches.length) {
     console.log(`${style.yellow}no match${style.off} for "${term}"`)
@@ -64,4 +64,8 @@ async function main() {
   )
 }
 
-main().catch(fail)
+try {
+  await main()
+} catch (err) {
+  fail(err)
+}

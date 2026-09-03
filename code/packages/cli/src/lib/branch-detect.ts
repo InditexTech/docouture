@@ -34,7 +34,12 @@ import { readBranches } from './playbook-yml.js'
  * matching how upgrade.ts already treats docs/antora.yml.
  */
 export function readReleaseBranchFromWorkflow(workflowContent: string): string | null {
-  const match = /^\s*ref:\s*(\S+?)\s*$/m.exec(workflowContent)
+  // No trailing `\s*$`: `\S+` can never itself capture into trailing
+  // whitespace, so that anchor was redundant — and paired with a lazy `+?`
+  // it's exactly the "ambiguous where the boundary is" shape a
+  // catastrophic-backtracking scanner flags, for zero behavioural
+  // difference (the captured group is identical either way).
+  const match = /^\s*ref:\s*(\S+)/m.exec(workflowContent)
   if (!match?.[1]) return null
   return match[1].replace(/^['"]|['"]$/g, '')
 }

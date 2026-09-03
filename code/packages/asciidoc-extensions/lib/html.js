@@ -59,6 +59,16 @@ const ESCAPES = {
 
 const ESCAPE_RX = /[&<>"']/g
 
+// `value` is typed `unknown` below (see its own JSDoc) precisely because it
+// arrives however Asciidoctor handed it over — in real use always a string,
+// number or nullish (the `== null` guard below), never a plain object. This
+// is what makes stringifying it SAFE in practice — `String()` alone can't
+// prove that statically, and would silently produce `'[object Object]'` if
+// it were ever wrong, so this narrows first instead.
+function safeStringify(value) {
+  return typeof value === 'string' || typeof value === 'number' ? String(value) : JSON.stringify(value)
+}
+
 /**
  * Escapes a RAW authored string for interpolation into HTML.
  *
@@ -72,7 +82,7 @@ const ESCAPE_RX = /[&<>"']/g
  */
 function escapeHtml(value) {
   if (value == null) return ''
-  return String(value).replace(ESCAPE_RX, (char) => ESCAPES[/** @type {keyof typeof ESCAPES} */ (char)])
+  return safeStringify(value).replace(ESCAPE_RX, (char) => ESCAPES[/** @type {keyof typeof ESCAPES} */ (char)])
 }
 
 /**
@@ -112,13 +122,23 @@ const TAG_RX = /<[^>]*>/g
  * @param {string} html
  * @returns {string}
  */
+// Capped rather than unbounded: each pass removes at least one tag, so
+// nesting depth (not input length) bounds how many passes a real page ever
+// needs — legitimate content never comes close to this cap. Bounding it
+// anyway turns adversarially-deep nesting into a fixed, constant amount of
+// extra work, rather than relying on realistic content alone to keep this
+// fast.
+const MAX_STRIP_PASSES = 100
+
 function stripTags(html) {
   let previous
   let current = html
+  let passes = 0
   do {
     previous = current
     current = previous.replace(TAG_RX, '')
-  } while (current !== previous)
+    passes += 1
+  } while (current !== previous && passes < MAX_STRIP_PASSES)
   return current
 }
 

@@ -93,31 +93,17 @@ describe('runNew', () => {
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('invalid name'))
   })
 
-  it('rejects an invalid --mode value', async () => {
+  it.each([
+    ['--mode', "invalid --mode: 'bogus'"],
+    ['--pm', "invalid --pm: 'bogus'"],
+    ['--flow', "invalid --flow: 'bogus'"],
+  ])('rejects an invalid %s value', async (flag, expectedMessage) => {
     const repo = join(base, 'repo')
     await initRepo(repo)
 
-    const code = await runNew(['my-project-docs', '--dir', repo, '--mode', 'bogus'])
+    const code = await runNew(['my-project-docs', '--dir', repo, flag, 'bogus'])
     expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('invalid --mode'))
-  })
-
-  it('rejects an invalid --pm value', async () => {
-    const repo = join(base, 'repo')
-    await initRepo(repo)
-
-    const code = await runNew(['my-project-docs', '--dir', repo, '--pm', 'bogus'])
-    expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("invalid --pm: 'bogus'"))
-  })
-
-  it('rejects an invalid --flow value', async () => {
-    const repo = join(base, 'repo')
-    await initRepo(repo)
-
-    const code = await runNew(['my-project-docs', '--dir', repo, '--flow', 'bogus'])
-    expect(code).toBe(1)
-    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('invalid --flow'))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining(expectedMessage))
   })
 
   it('scaffolds git-flow shape with --flow git-flow, --integration-branch and --release-branch', async () => {

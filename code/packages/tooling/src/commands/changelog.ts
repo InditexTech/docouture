@@ -12,7 +12,7 @@ import { join } from 'node:path'
  * justfile's own `changelog` recipe (GH-140), an inline awk one-liner.
  */
 export async function runChangelog(argv: string[]): Promise<number> {
-  void argv // no command-specific flags today
+  void argv // no command-specific flags today — NOSONAR: kept to satisfy this file's own @typescript-eslint/no-unused-vars, not an avoidable no-op
   const cwd = process.cwd()
   const content = readFileSync(join(cwd, 'CHANGELOG.md'), 'utf8')
   const lines = content.split('\n')

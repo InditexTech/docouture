@@ -84,57 +84,75 @@
  *         - require: '@inditextech/docouture-antora-extensions'
  *           duplicate_latest_version: true
  */
+// The fixed URL segment every component's latest real release is duplicated
+// under — see this file's own header for why this is always `latest`
+// regardless of standalone/versioned mode.
+const ALIAS_SEGMENT = 'latest'
+
 module.exports = function registerDuplicateLatestVersion(context, config) {
   const logger = context.getLogger('docouture-duplicate-latest-version')
   if (!config?.duplicateLatestVersion) return
 
-  const ALIAS_SEGMENT = 'latest'
-
   context.on('pagesComposed', ({ contentCatalog, siteCatalog }) => {
     for (const component of contentCatalog.getComponents()) {
-      const latest = component.latest
-      if (!latest || latest.prerelease) continue // no real release yet — nothing to duplicate
-      const sourceVersion = latest.version
-      if (sourceVersion === ALIAS_SEGMENT) continue // already the alias segment itself
-
-      const componentSegment = component.name === 'ROOT' ? '' : component.name
-      const sourceFiles = contentCatalog
-        .getFiles()
-        .filter((file) => file.out && file.src.component === component.name && file.src.version === sourceVersion)
-
-      let cloned = 0
-      for (const file of sourceFiles) {
-        const outPath = withReplacedVersionSegment(file.out.path, componentSegment, sourceVersion, ALIAS_SEGMENT)
-        if (outPath === undefined) {
-          logger.warn(
-            "Could not compute a '%s' alias path for %s (component '%s', version '%s') — skipping",
-            ALIAS_SEGMENT,
-            file.out.path,
-            component.name,
-            sourceVersion
-          )
-          continue
-        }
-        const clone = { out: { path: outPath }, contents: file.contents }
-        if (file.pub?.url) {
-          const pubUrl = withReplacedVersionSegment(file.pub.url, componentSegment, sourceVersion, ALIAS_SEGMENT, true)
-          if (pubUrl !== undefined) clone.pub = { url: pubUrl }
-        }
-        siteCatalog.addFile(clone)
-        cloned++
-      }
-
-      if (cloned) {
-        logger.info(
-          "Duplicated %s file(s) of %s's '%s' version under '/%s/' as a second, independent copy",
-          cloned,
-          component.name,
-          sourceVersion,
-          ALIAS_SEGMENT
-        )
-      }
+      duplicateComponentLatestVersion(component, contentCatalog, siteCatalog, logger)
     }
   })
+}
+
+// Clones one already-rendered file's `out.path`/`pub.url` under the alias
+// segment, adding it straight to `siteCatalog` — returns whether the clone
+// actually happened (an unparseable path is skipped with a warning instead
+// of failing the whole component).
+function cloneFileUnderAlias(file, componentSegment, sourceVersion, siteCatalog, logger, componentName) {
+  const outPath = withReplacedVersionSegment(file.out.path, componentSegment, sourceVersion, ALIAS_SEGMENT)
+  if (outPath === undefined) {
+    logger.warn(
+      "Could not compute a '%s' alias path for %s (component '%s', version '%s') — skipping",
+      ALIAS_SEGMENT,
+      file.out.path,
+      componentName,
+      sourceVersion
+    )
+    return false
+  }
+  const clone = { out: { path: outPath }, contents: file.contents }
+  if (file.pub?.url) {
+    const pubUrl = withReplacedVersionSegment(file.pub.url, componentSegment, sourceVersion, ALIAS_SEGMENT, true)
+    if (pubUrl !== undefined) clone.pub = { url: pubUrl }
+  }
+  siteCatalog.addFile(clone)
+  return true
+}
+
+// One component's worth of duplication: every already-rendered file of its
+// `latest` (real, non-prerelease) version, cloned under the alias segment —
+// see this file's own header for exactly when this is a no-op.
+function duplicateComponentLatestVersion(component, contentCatalog, siteCatalog, logger) {
+  const latest = component.latest
+  if (!latest || latest.prerelease) return // no real release yet — nothing to duplicate
+  const sourceVersion = latest.version
+  if (sourceVersion === ALIAS_SEGMENT) return // already the alias segment itself
+
+  const componentSegment = component.name === 'ROOT' ? '' : component.name
+  const sourceFiles = contentCatalog
+    .getFiles()
+    .filter((file) => file.out && file.src.component === component.name && file.src.version === sourceVersion)
+
+  let cloned = 0
+  for (const file of sourceFiles) {
+    if (cloneFileUnderAlias(file, componentSegment, sourceVersion, siteCatalog, logger, component.name)) cloned++
+  }
+
+  if (cloned) {
+    logger.info(
+      "Duplicated %s file(s) of %s's '%s' version under '/%s/' as a second, independent copy",
+      cloned,
+      component.name,
+      sourceVersion,
+      ALIAS_SEGMENT
+    )
+  }
 }
 
 // Replaces the `<version>` path segment in a real file's already-computed

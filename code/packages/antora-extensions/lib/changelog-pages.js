@@ -124,7 +124,12 @@ function resolveChangelogPath(playbook, changelogPath) {
 // `main` since the last cut — that `buildAppendedSource` renders on the
 // `prerelease` component version only. See that function's own comment.
 function parseReleases(raw, logger) {
-  const headingRe = /^##\s+\[(.+?)\](?:\s*-\s*(.+))?\s*$/
+  // No trailing `\s*$`: whichever branch matches, its own captured group is
+  // already greedy all the way to the true end of the line, so that anchor
+  // never changed what's captured — it only left a `(.+)…\s*$` shape a
+  // catastrophic-backtracking scanner flags for the no-date branch, with no
+  // actual behavioural payoff.
+  const headingRe = /^##\s+\[(.+?)\](?:\s*-\s*(.+))?/
   const releases = []
   let unreleased = null
   let current = null
@@ -187,14 +192,20 @@ function convertBody(lines, logger, versionLabel) {
       out.push('')
       continue
     }
-    const heading = line.match(/^###\s+(.+)$/)
+    const heading = line.match(/^###\s+(.+)/)
     if (heading) {
       out.push(`=== ${heading[1].trim()}`)
       continue
     }
-    const bullet = line.match(/^-\s+\[#(\d+)\]\((\S+?)\)\s*(.*)$/)
+    // No `\s*` before the final capture: it and the `.*` right after it can
+    // both match the very same trailing spaces, which is exactly the
+    // ambiguous-boundary shape a catastrophic-backtracking scanner flags —
+    // trimming the captured group in JS gets the identical rendered text
+    // (there is always at most one such space in a real changelog bullet)
+    // with no such ambiguity.
+    const bullet = line.match(/^-\s+\[#(\d+)\]\((\S+?)\)(.*)$/)
     if (bullet) {
-      out.push(`* link:${bullet[2]}[#${bullet[1]}] ${unescapeMarkdownBrackets(bullet[3])}`.trimEnd())
+      out.push(`* link:${bullet[2]}[#${bullet[1]}] ${unescapeMarkdownBrackets(bullet[3].trim())}`.trimEnd())
       continue
     }
     // Keep a Changelog reference-style link definitions, e.g.

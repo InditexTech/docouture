@@ -19,11 +19,11 @@
   var config: Record<string, string | undefined> =
     (document.getElementById('site-script') || { dataset: {} }).dataset
   var supportsCopy = window.navigator.clipboard
-  var uiRootPath = (config.uiRootPath == null ? window.uiRootPath : config.uiRootPath) || '.'
+  var uiRootPath = (config.uiRootPath ?? window.uiRootPath) || '.'
 
   if (!supportsCopy) return
 
-  ;[].slice
+  ;Array.prototype.slice
     .call(
       document.querySelectorAll(
         '.doc h2:not(.discrete) > a.anchor, .doc h3:not(.discrete) > a.anchor, ' +
@@ -54,11 +54,17 @@
       // ends up showing exactly what was just copied. `href` is read fresh
       // rather than cached, matching how the anchor itself was rendered.
       anchor.addEventListener('click', function () {
-        var url = window.location.href.replace(/#.*$/, '') + anchor.getAttribute('href')
+        // Everything from the first '#' on, dropped in favour of the new
+        // fragment appended below — split()[0] rather than
+        // `.replace(/#.*$/, '')`: same result (there's always at most one
+        // '#' in a real URL, and even with more this still keeps only what
+        // came before the first one), without a bare quantifier sitting
+        // right against an anchor.
+        var url = window.location.href.split('#')[0] + anchor.getAttribute('href')
         window.navigator.clipboard.writeText(url).then(
           function () {
             anchor.classList.add('clicked')
-            anchor.offsetHeight // force reflow so the animation restarts
+            void anchor.offsetHeight // force reflow so the animation restarts
             anchor.classList.remove('clicked')
           },
           function () {}

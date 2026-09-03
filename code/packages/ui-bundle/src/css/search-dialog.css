@@ -61,19 +61,13 @@
  *      would make it win unconditionally at every breakpoint, m/l included.
  *      Below m, modal.css's own `.dt-modal--fullscreen` padding steps still
  *      hardcode `@media (min-width:1024px)` — upstream's own M, not this
- *      project's — so the 1024-1239px zone would use the wrong (m-sized)
+ *      project's — so the 1024-1239px zone uses the wrong (m-sized)
  *      padding step for the roughly 216px of that range where the dialog is
- *      fullscreen but this project still considers it `s`.
- *      `tools/ids/sync.mjs`'s BREAKPOINT_OVERRIDES only rewrites the
- *      `@custom-media` tokens this bundle's own CSS references, not literal
- *      media queries baked into vendored component bodies, so that zone is
- *      fixed below instead: re-forcing the `s` padding step across the
- *      project's entire xs-s range, source order alone winning over the
- *      vendored rule (same specificity, this file loads after
- *      dt-components.css). Once `m` genuinely starts (1240px), fullscreen
- *      is no longer applied at all (12-search.ts), so the DS's own
- *      `.dt-modal--small` sizing takes over cleanly with no override
- *      needed there.
+ *      fullscreen but this project still considers it `s`. A fix for that
+ *      (re-forcing the `s` padding step across the project's entire xs-s
+ *      range below, source order winning over the vendored rule) was
+ *      drafted but disabled mid-refactor and never re-verified — known,
+ *      not yet corrected; see GH-68 before re-attempting it.
  */
 
 .search-dialog {
@@ -164,18 +158,11 @@
 }
 
 /*
- * Deviation 2 (see file header, GH-68): forces modal.css's fullscreen
- * padding step to `s` across this project's entire xs-s range (≤1239.98px),
- * undoing the DS's own premature switch to its `m` step at 1024px.
- * `.dt-modal--fullscreen` is only ever present below the project's real
- * `m` (12-search.ts), so there's no m+ case to handle here — modal.css's own
- * rules apply unmodified once the class is gone.
+ * Removed: a disabled, never-reactivated attempt at forcing modal.css's
+ * fullscreen padding step to `s` across the xs-s range — see the GH-68
+ * paragraph in this file's own header for the still-open bug it would
+ * have addressed, and version control history for the draft rule itself.
  */
-/* @media screen and (--dt-breakpoints-xs-s) {
-  .search-dialog__panel.dt-modal--fullscreen .dt-modal__container {
-    padding-inline: var(--comp-grid-margin-s);
-  }
-} */
 
 /*
  * Footer key hints (`↑↓ navigate · ↵ select · esc close`) assume a physical

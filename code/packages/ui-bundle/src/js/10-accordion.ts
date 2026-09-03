@@ -62,7 +62,7 @@
 ;(function () {
   'use strict'
 
-  var allDetails = [].slice.call(document.querySelectorAll<HTMLDetailsElement>('.doc details'))
+  var allDetails = Array.prototype.slice.call(document.querySelectorAll<HTMLDetailsElement>('.doc details'))
   if (!allDetails.length) return
 
   allDetails.forEach(function (details: HTMLDetailsElement) {
@@ -84,9 +84,9 @@
   // Keyboard roving focus, unlike the animation above, is scoped to items
   // that share a `.docouture-accordion-group` — see the header comment's point
   // (2) for why a standalone `[%collapsible]` deliberately gets none of it.
-  var groups = [].slice.call(document.querySelectorAll<HTMLElement>('.docouture-accordion-group'))
+  var groups = Array.prototype.slice.call(document.querySelectorAll<HTMLElement>('.docouture-accordion-group'))
   groups.forEach(function (group: HTMLElement) {
-    var items = [].slice.call(group.querySelectorAll<HTMLDetailsElement>(':scope > details'))
+    var items = Array.prototype.slice.call(group.querySelectorAll<HTMLDetailsElement>(':scope > details'))
     var summaries = items.map(function (details: HTMLDetailsElement) {
       return details.querySelector<HTMLElement>(':scope > summary')
     })

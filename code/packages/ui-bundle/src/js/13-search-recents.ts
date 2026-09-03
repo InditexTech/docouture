@@ -28,7 +28,7 @@
   var STORAGE_LIMIT = 8
 
   var scriptConfig = (document.getElementById('site-script') || { dataset: {} as DOMStringMap }).dataset
-  var uiRootPath = (scriptConfig.uiRootPath == null ? window.uiRootPath : scriptConfig.uiRootPath) || '.'
+  var uiRootPath = (scriptConfig.uiRootPath ?? window.uiRootPath) || '.'
 
   // Namespaced per site, not just per component version: two docouture sites
   // hosted under different sub-paths of the same origin must not share a
@@ -51,15 +51,17 @@
       if (!raw) return []
       var parsed = JSON.parse(raw)
       return Array.isArray(parsed) ? parsed.filter(function (t) { return typeof t === 'string' }) : []
-    } catch (e) {
-      return [] // private browsing, storage disabled, or corrupt JSON — no history rather than a thrown error
+    } catch {
+      // private browsing, storage disabled, or corrupt JSON — no history
+      // rather than a thrown error.
+      return []
     }
   }
 
   function save (terms: string[]) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(terms))
-    } catch (e) {
+    } catch {
       // storage disabled or full: the choice simply does not persist
     }
   }

@@ -19,7 +19,11 @@ import { execFile } from 'node:child_process'
  */
 export function findRepoRoot(startDir: string): Promise<string> {
   return new Promise((resolvePromise) => {
+    // Resolves 'git' off PATH, same as any shell script would — this CLI
+    // runs on a user's own machine and has no way to find the repo root
+    // other than asking whichever `git` is already on that PATH.
     execFile('git', ['rev-parse', '--show-toplevel'], { cwd: startDir }, (err, stdout) => {
+      // NOSONAR
       resolvePromise(err ? startDir : stdout.trim())
     })
   })

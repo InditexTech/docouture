@@ -47,7 +47,10 @@ log:
   try {
     // Foreground, inherited stdio: Ctrl-C reaches npx/verdaccio directly,
     // same as the justfile recipe's own `exec`-less invocation did.
+    // Resolves 'npx' off PATH, same as any shell script would — this
+    // internal tooling CLI runs only on a maintainer's own machine/CI.
     const result = spawnSync('npx', ['--yes', 'verdaccio', '--config', configPath, '--listen', '4873'], {
+      // NOSONAR
       stdio: 'inherit',
     })
     return result.status ?? 0

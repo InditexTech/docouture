@@ -85,7 +85,7 @@ const BREAKPOINTS = ['s', 'm', 'l']
 const DEFAULT_COLUMNS = '1 s:2 m:3'
 const MAX_COLUMNS = 4
 
-const COLUMN_RX = /^(?:([a-z]+):)?([0-9]+)$/
+const COLUMN_RX = /^(?:([a-z]+):)?(\d+)$/
 // A bare Lucide icon name (lucide.dev/icons/<name>), lowercase and
 // hyphen-separated — the shape `icons.yml` uses. Whether that icon is
 // actually MASKED is checked by ui-bundle's own `just icons-build`
@@ -310,15 +310,18 @@ function cardsBlock() {
     // See steps.js's own comment: a literal JS `null` "source" crashes Opal
     // (2.2) inside `Block#initialize`'s `.nil_or_empty?()` check.
     const wrapper = this.createBlock(parent, 'open', '', attrs)
-    // See label-macro.js's own comment on this same pattern.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this
+    // No `self = this` needed: this callback is already an arrow
+    // function (see this.process(...) below), so `this` here is
+    // already the outer block processor's own `this` (Asciidoctor
+    // never rebinds it the way it does inside a plain `function`
+    // callback — see label-macro.js's own comment on that different
+    // case) — passed straight through to finish() below.
     // See async-compat.js's own header comment: parseContent is sync under
     // 2.2 (Opal, real Antora builds) and Promise-returning under 4.0 (the
     // ui-bundle preview harness) — chain() handles either without making
     // this function `async` unconditionally.
     return chain(this.parseContent(wrapper, reader.getLines()), () =>
-      chain(precomputeSubtree(wrapper), () => finish(parent, wrapper, attrs, self))
+      chain(precomputeSubtree(wrapper), () => finish(parent, wrapper, attrs, this))
     )
   })
 }

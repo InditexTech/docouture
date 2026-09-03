@@ -24,7 +24,7 @@ const DEFAULT_VARIANT = 'grey'
 // 4.0 for the ui-bundle preview harness, see reference/extensions.md): a
 // bare `label:[String]` with the colour omitted never reaches `process`
 // at all under the default regex, it renders as literal text. Overriding
-// the match regexp (`self.match`, the DSL's documented escape hatch for
+// the match regexp (`this.match`, the DSL's documented escape hatch for
 // this) with our own — target group `([a-z]*)`, zero or more — is what
 // makes the empty-colour form work.
 const MACRO_RX = /\blabel:([a-z]*)\[((?:\\\]|[^\]])*?)\]/
@@ -43,17 +43,16 @@ const MACRO_RX = /\blabel:([a-z]*)\[((?:\\\]|[^\]])*?)\]/
  */
 module.exports = function registerLabelMacro(registry) {
   registry.inlineMacro('label', function () {
-    // `self` is captured so `self.createInline(...)` below can still reach
-    // the processor instance from inside the nested `process` callback,
-    // where `this` is rebound to the macro's runtime context instead —
-    // Asciidoctor's own extension DSL idiom (see extend/extensions/
-    // inline-macro-processor/), not an avoidable local alias.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this
-    self.match(MACRO_RX)
-    self.process(function (parent, target, attrs) {
+    this.match(MACRO_RX)
+    // Arrow function, not `self = this`: Asciidoctor's own extension DSL
+    // (see extend/extensions/inline-macro-processor/) rebinds `this` inside
+    // `process`'s callback to the macro's runtime context, not the
+    // processor instance `match`/`createInline` live on — an arrow
+    // function sidesteps that entirely by capturing the outer `this` (the
+    // processor instance) lexically instead of needing a local alias.
+    this.process((parent, target, attrs) => {
       const variant = target || DEFAULT_VARIANT
-      if (VARIANTS.indexOf(variant) === -1) {
+      if (!VARIANTS.includes(variant)) {
         warn(parent, 'label:' + target + '[]', 'unknown IDS Label variant "' + variant + '"', VARIANTS)
       }
       // The bracket content has already been through Asciidoctor's own
@@ -66,7 +65,7 @@ module.exports = function registerLabelMacro(registry) {
       const text = firstPositional(attrs) || ''
       const html =
         '<span class="dt-label dt-label--' + variant + '"><span class="dt-label__content">' + text + '</span></span>'
-      return self.createInline(parent, 'quoted', html)
+      return this.createInline(parent, 'quoted', html)
     })
   })
 }

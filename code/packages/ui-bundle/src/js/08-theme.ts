@@ -66,6 +66,9 @@
     apply(theme)
     label(button, theme)
   }
-  if (media.addEventListener) media.addEventListener('change', onSystemChange)
-  else if (media.addListener) media.addListener(onSystemChange)
+  // `addEventListener` on a MediaQueryList has been supported everywhere
+  // this bundle's own browserslist target ("last 2 versions, not dead")
+  // still reaches since Safari 14 (Sept 2020) — no `addListener` fallback
+  // needed for a target that already excludes anything older.
+  media.addEventListener('change', onSystemChange)
 })()

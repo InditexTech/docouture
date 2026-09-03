@@ -33,7 +33,9 @@ module.exports = async function loadIconCatalog(previewDest) {
   await fs.copyFile(LUCIDE_SPRITE, ospath.join(destDir, 'sprite.svg'))
 
   const index = await loadLucideIndex()
-  const icons = [...index.keys()].sort().map((name) => ({ name, vendored: vendored.has(name) }))
+  const icons = [...index.keys()]
+    .sort((a, b) => a.localeCompare(b))
+    .map((name) => ({ name, vendored: vendored.has(name) }))
 
   return { available: true, total: icons.length, icons }
 }

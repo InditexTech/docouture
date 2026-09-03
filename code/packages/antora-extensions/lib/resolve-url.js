@@ -18,7 +18,7 @@
 // case-insensitive pattern is concerned, so every module-qualified page ID
 // written in the conventional uppercase ROOT sailed through unresolved and
 // rendered as a literal href.
-const PAGE_ID_RX = /\.adoc$/
+const PAGE_ID_EXTENSION = '.adoc'
 
 /**
  * Resolve an authored link target to a URL.
@@ -43,7 +43,7 @@ module.exports = function resolveUrl(spec, contentCatalog, context) {
   const hashIdx = spec.indexOf('#')
   const target = hashIdx === -1 ? spec : spec.slice(0, hashIdx)
   const hash = hashIdx === -1 ? '' : spec.slice(hashIdx)
-  if (!PAGE_ID_RX.test(target)) return spec
+  if (!target.endsWith(PAGE_ID_EXTENSION)) return spec
   const url = contentCatalog.resolvePage(target, context)?.pub?.url
   return url ? url + hash : undefined
 }

@@ -121,6 +121,64 @@ export interface NamesInput {
   packageName: string | null
 }
 
+function checkComponentNameAgrees(antoraYmlName: string | null, startPageComponent: string | null): CheckResult | null {
+  if (!antoraYmlName || !startPageComponent) return null
+  if (antoraYmlName === startPageComponent) {
+    return { ok: true, label: 'component name', message: `'${antoraYmlName}' matches site.start_page` }
+  }
+  return {
+    ok: false,
+    label: 'component name',
+    message: `docs/antora.yml name '${antoraYmlName}' != site.start_page component '${startPageComponent}'`,
+    detail: "site.start_page must be '<name>::index.adoc' using docs/antora.yml's own name",
+  }
+}
+
+function checkContentPathAgrees(startPath: string | null, descriptorPath: string | null): CheckResult | null {
+  if (!startPath || !descriptorPath) return null
+  if (startPath === descriptorPath) {
+    return {
+      ok: true,
+      label: 'content path',
+      message: `start_path '${startPath}' matches docs/antora.yml's location`,
+    }
+  }
+  return {
+    ok: false,
+    label: 'content path',
+    message: `playbook start_path '${startPath}' != actual docs/antora.yml location '${descriptorPath}' (both repo-root relative)`,
+    detail:
+      'content.sources[0].start_path must be the repository-root-relative directory that directly contains antora.yml',
+  }
+}
+
+// `ROOT` is Antora's own reserved component name (dropped from every
+// published URL — see how-antora-builds-urls's "Component segment"), set by
+// `docouture new` when the "extra URL path segment" question/`--url-segment`
+// flag is declined (the default) — see new.ts's own comment on
+// TemplateValues.componentName. It is never derived from package.json's
+// name, so the two are expected to differ in that case; only a real, chosen
+// component name must still match package.json's own name.
+function checkPackageNameAgrees(packageName: string | null, antoraYmlName: string | null): CheckResult | null {
+  if (!packageName || !antoraYmlName) return null
+  if (antoraYmlName === 'ROOT') {
+    return {
+      ok: true,
+      label: 'package name',
+      message: `docs/antora.yml name is 'ROOT' (no URL segment) — package.json name '${packageName}' is independent`,
+    }
+  }
+  if (packageName === antoraYmlName) {
+    return { ok: true, label: 'package name', message: `package.json name '${packageName}' matches component name` }
+  }
+  return {
+    ok: false,
+    label: 'package name',
+    message: `package.json name '${packageName}' != docs/antora.yml name '${antoraYmlName}'`,
+    detail: 'docouture new sets both from the same value — if one was renamed by hand, rename the other to match',
+  }
+}
+
 /**
  * The four names the docs-site-package skill documents as having to agree,
  * or a site builds to zero pages, or dies on "start page not found" — see
@@ -129,74 +187,12 @@ export interface NamesInput {
  * something, somewhere, did.
  */
 export function checkNamesAgree(input: NamesInput): CheckResult[] {
-  const results: CheckResult[] = []
-
-  if (input.antoraYmlName && input.startPageComponent) {
-    results.push(
-      input.antoraYmlName === input.startPageComponent
-        ? { ok: true, label: 'component name', message: `'${input.antoraYmlName}' matches site.start_page` }
-        : {
-            ok: false,
-            label: 'component name',
-            message: `docs/antora.yml name '${input.antoraYmlName}' != site.start_page component '${input.startPageComponent}'`,
-            detail: "site.start_page must be '<name>::index.adoc' using docs/antora.yml's own name",
-          }
-    )
-  }
-
-  if (input.startPath && input.descriptorPath) {
-    results.push(
-      input.startPath === input.descriptorPath
-        ? {
-            ok: true,
-            label: 'content path',
-            message: `start_path '${input.startPath}' matches docs/antora.yml's location`,
-          }
-        : {
-            ok: false,
-            label: 'content path',
-            message: `playbook start_path '${input.startPath}' != actual docs/antora.yml location '${input.descriptorPath}' (both repo-root relative)`,
-            detail:
-              'content.sources[0].start_path must be the repository-root-relative directory that directly contains antora.yml',
-          }
-    )
-  }
-
-  if (input.packageName && input.antoraYmlName) {
-    if (input.antoraYmlName === 'ROOT') {
-      // `ROOT` is Antora's own reserved component name (dropped from every
-      // published URL — see how-antora-builds-urls's "Component segment"),
-      // set by `docouture new` when the "extra URL path segment" question/
-      // `--url-segment` flag is declined (the default) — see new.ts's own
-      // comment on TemplateValues.componentName. It is never derived from
-      // package.json's name, so the two are expected to differ here; only
-      // a real, chosen component name must still match package.json's own
-      // name, which is what the else branch below still enforces.
-      results.push({
-        ok: true,
-        label: 'package name',
-        message: `docs/antora.yml name is 'ROOT' (no URL segment) — package.json name '${input.packageName}' is independent`,
-      })
-    } else {
-      results.push(
-        input.packageName === input.antoraYmlName
-          ? {
-              ok: true,
-              label: 'package name',
-              message: `package.json name '${input.packageName}' matches component name`,
-            }
-          : {
-              ok: false,
-              label: 'package name',
-              message: `package.json name '${input.packageName}' != docs/antora.yml name '${input.antoraYmlName}'`,
-              detail:
-                'docouture new sets both from the same value — if one was renamed by hand, rename the other to match',
-            }
-      )
-    }
-  }
-
-  return results
+  const results = [
+    checkComponentNameAgrees(input.antoraYmlName, input.startPageComponent),
+    checkContentPathAgrees(input.startPath, input.descriptorPath),
+    checkPackageNameAgrees(input.packageName, input.antoraYmlName),
+  ]
+  return results.filter((result): result is CheckResult => result !== null)
 }
 
 /**
@@ -208,7 +204,15 @@ export function checkNamesAgree(input: NamesInput): CheckResult[] {
 export function checkGitHasCommit(dir: string): Promise<CheckResult> {
   const label = 'git history'
   return new Promise((resolvePromise) => {
+    // Resolves 'git' off PATH, same as any shell script would — `docouture
+    // doctor` runs on a maintainer's own machine/CI and has no way to check
+    // "does this repo have a commit" other than asking whichever `git` is
+    // already on that PATH; hardcoding a path would break on any setup that
+    // doesn't match the one this was written on, for no real gain against a
+    // threat model this tool has no way to defend against differently than
+    // any other script already doesn't.
     execFile('git', ['rev-parse', 'HEAD'], { cwd: dir, timeout: 10_000 }, (err) => {
+      // NOSONAR
       resolvePromise(
         err
           ? {
@@ -287,7 +291,11 @@ const RELEASE_LABEL = 'docs/release'
 export function checkReleaseLabelExists(repoRoot: string): Promise<CheckResult> {
   const label = 'docs/release label'
   return new Promise((resolvePromise) => {
+    // Resolves 'gh' off PATH, same reasoning as checkGitHasCommit's own
+    // comment above — this only ever runs locally/in CI for whoever's
+    // already using the GitHub CLI, never against untrusted input.
     execFile('gh', ['label', 'list', '--json', 'name'], { cwd: repoRoot, timeout: 10_000 }, (err, stdout) => {
+      // NOSONAR
       if (err) {
         resolvePromise({
           ok: true,

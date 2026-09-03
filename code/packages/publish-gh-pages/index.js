@@ -141,13 +141,35 @@ async function assertSafeGitBranch(branch, fieldName = 'branch') {
 const defaultGit = {
   /** @returns {Promise<boolean>} Whether `branch` already exists on `remote`. */
   async branchExists(remote, branch) {
-    // Re-validated here, right next to the `execFileAsync` sink, even though
-    // `publishGhPages` already validates `remoteTarget` before calling in:
-    // CodeQL's second-order-command-line-injection query only recognises an
-    // inline whitelist guard as sanitizing the sink in the SAME function —
-    // it doesn't trace the barrier across the call into this object method
-    // (same reasoning as the inline check in `assertSafeGitBranch` above).
-    assertSafeGitRemote(remote, 'remote')
+    // Re-validated here, literally inline, right next to the `execFileAsync`
+    // sink below — even though `publishGhPages` already validates both
+    // `remoteTarget` and `branch` before calling in. Calling back out to
+    // `assertSafeGitRemote`/`assertSafeGitBranch` above is NOT enough: those
+    // are separate function calls, and CodeQL's second-order-command-line-
+    // injection query only recognises a barrier shaped as an inline
+    // `if (!<regex>.test(x)) throw` written directly in the SAME function as
+    // the sink — it doesn't credit a call to an external validator with
+    // having sanitized anything, no matter how thoroughly that validator
+    // actually checks. (An earlier fix added exactly such a call here and
+    // the alerts stayed open across a fresh scan — this literal, duplicated
+    // check is what actually closes them.) `assertSafeGitBranch`'s own
+    // `execFileAsync` sink two functions up, by contrast, carries no alert
+    // at all: its whitelist check is inline in that same function, which is
+    // the positive case proving this heuristic.
+    if (
+      !(
+        /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
+        /^[A-Za-z0-9._-]+$/.test(remote) ||
+        /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
+      ) ||
+      remote.startsWith('-') ||
+      /[\r\n\t ]/.test(remote)
+    ) {
+      throw new Error('Invalid remote: unsupported remote format')
+    }
+    if (!/^[A-Za-z0-9._/-]+$/.test(branch) || branch.startsWith('-')) {
+      throw new Error('Invalid branch: unsupported branch name format')
+    }
     try {
       await execFileAsync('git', ['ls-remote', '--exit-code', remote, branch])
       return true
@@ -159,7 +181,24 @@ const defaultGit = {
 
   /** Creates `branch` on `remote` as a single, empty, historyless commit. */
   async createOrphanBranch(remote, branch, user) {
-    assertSafeGitRemote(remote, 'remote')
+    // Same reasoning as the inline re-check in `branchExists` above: literal
+    // here, not a call to `assertSafeGitRemote`/`assertSafeGitBranch`, so
+    // CodeQL's barrier heuristic actually recognises it next to the
+    // `checkout --orphan`/`push` sinks below.
+    if (
+      !(
+        /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
+        /^[A-Za-z0-9._-]+$/.test(remote) ||
+        /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
+      ) ||
+      remote.startsWith('-') ||
+      /[\r\n\t ]/.test(remote)
+    ) {
+      throw new Error('Invalid remote: unsupported remote format')
+    }
+    if (!/^[A-Za-z0-9._/-]+$/.test(branch) || branch.startsWith('-')) {
+      throw new Error('Invalid branch: unsupported branch name format')
+    }
     const dir = await mkdtemp(path.join(os.tmpdir(), 'docouture-gh-pages-'))
     try {
       await execFileAsync('git', ['init', '--quiet', dir])

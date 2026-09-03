@@ -98,7 +98,7 @@
           <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-menu"></use></svg></span>
         </span>
       </button>
-      <a class="header-toolbar__brand" href="../../../1.0.0/">
+      <a class="header-toolbar__brand" href="../../../1.1.0/">
         <img class="header-toolbar__logo header-toolbar__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="header-toolbar__logo header-toolbar__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="header-toolbar__product-name dt-text dt-text--label-l-high">Docouture</span>
@@ -123,10 +123,13 @@
       <span class="version__label">prerelease</span>
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </span>
-    <a class="version" href="../../../1.0.0/main/guides-branching-model/">
-      <span class="version__label">1.0.0</span>
+    <a class="version" href="../../../1.1.0/main/guides-branching-model/">
+      <span class="version__label">1.1.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </a>
+    <a class="version" href="../../../1.0.0/main/guides-branching-model/">
+      <span class="version__label">1.0.0</span>
+    </a>
   </div>
 </div>
 
@@ -214,7 +217,7 @@
   </div>
 
 <div class="side-menu__brand">
-  <a class="side-menu__brand-link" href="../../../1.0.0/">
+  <a class="side-menu__brand-link" href="../../../1.1.0/">
     <img class="side-menu__brand-logo side-menu__brand-logo--light" src="../../../_/product-logo.png" width="40" height="40" alt="">
     <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="../../../_/product-logo-dark.png" width="40" height="40" alt="">
     <span class="side-menu__brand-title dt-text dt-text--title-m">Docouture</span>
@@ -653,10 +656,13 @@
       <span class="version__label">prerelease</span>
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </span>
-    <a class="version" href="../../../1.0.0/main/guides-branching-model/">
-      <span class="version__label">1.0.0</span>
+    <a class="version" href="../../../1.1.0/main/guides-branching-model/">
+      <span class="version__label">1.1.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </a>
+    <a class="version" href="../../../1.0.0/main/guides-branching-model/">
+      <span class="version__label">1.0.0</span>
+    </a>
   </div>
 </div>
   </div>
@@ -761,7 +767,8 @@ covered by the two roles above.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-pr-verify.yml</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Neither — branch-agnostic, builds every PR&#8217;s own HEAD via
-<code>antora-playbook.local.yml</code></p></td>
+<code>antora-playbook.local.yml</code> (but path-filtered: only fires when the PR touches <code>docs/**</code>
+or its own workflow file)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-publish-prerelease.yml</code></p></td>
@@ -769,7 +776,8 @@ covered by the two roles above.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-kroki-cache-warm.yml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>both</strong>, unconditionally (push trigger — see below)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>both</strong>, unconditionally (push trigger — see below;
+also path-filtered to <code>docs/**</code> + its own workflow file)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-release-preview.yml</code></p></td>
@@ -796,6 +804,15 @@ written either way; the other branch&#8217;s push still produces a normal
 base-branch-scoped cache, so nothing is wasted. (On a trunk-based site this
 collapses to a single entry — both roles are the same branch.)</p>
 </div>
+<div class="paragraph">
+<p>Both <code>docouture-pr-verify.yml</code> and <code>docouture-kroki-cache-warm.yml</code> are path-filtered to
+<code>docs/**</code> + their own workflow file — neither has anything to usefully check or warm a
+cache for from a change elsewhere in the repo. If <code>docouture-pr-verify.yml</code> is configured
+as a required status check in branch protection, confirm that setup tolerates a skipped
+run (GitHub&#8217;s "Do not require status checks on creation," or rulesets' own equivalent):
+a PR that never touches <code>docs/</code> now means it never reports at all, rather than reporting
+green.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -804,15 +821,16 @@ collapses to a single entry — both roles are the same branch.)</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Feature branch → <code>develop</code>: only <code>docouture-pr-verify.yml</code> fires on the PR (it&#8217;s
-branch-agnostic). On merge, <code>docouture-publish-prerelease.yml</code> republishes the
-prerelease docs from <code>develop</code>.</p>
+<p>Feature branch → <code>develop</code>: <code>docouture-pr-verify.yml</code> fires on the PR if it touches
+<code>docs/**</code> (it&#8217;s branch-agnostic, but path-filtered — see above). On merge,
+<code>docouture-publish-prerelease.yml</code> republishes the prerelease docs from <code>develop</code>.</p>
 </li>
 <li>
-<p><code>develop</code> → <code>main</code>, labelled <code>docs/release</code>: <code>docouture-pr-verify.yml</code> fires (always)
-and <code>docouture-release-preview.yml</code> now fires too (targets <code>main</code>), posting a preview
-comment. On merge, <code>docouture-release.yml</code> cuts the release (checks out <code>main</code>, tags
-it, pushes the tag) and calls <code>docouture-publish.yml</code> to build and publish.</p>
+<p><code>develop</code> → <code>main</code>, labelled <code>docs/release</code>: <code>docouture-pr-verify.yml</code> fires under the
+same <code>docs/**</code> path filter, and <code>docouture-release-preview.yml</code> now fires too (targets
+<code>main</code>), posting a preview comment. On merge, <code>docouture-release.yml</code> cuts the release
+(checks out <code>main</code>, tags it, pushes the tag) and calls <code>docouture-publish.yml</code> to build
+and publish.</p>
 </li>
 <li>
 <p>The merge to <code>main</code> is also an ordinary push — but <code>docouture-publish-prerelease.yml</code>
@@ -950,7 +968,7 @@ docs site&#8217;s branching to the code&#8217;s avoids a confusing mismatch betw
 <footer class="site-footer">
   <div class="dt-grid-layout dt-grid-layout--with-margin site-footer__grid">
     <div class="dt-grid-layout__item site-footer__col site-footer__brand">
-      <a class="site-footer__brand-link" href="../../../1.0.0/">
+      <a class="site-footer__brand-link" href="../../../1.1.0/">
         <img class="site-footer__logo site-footer__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="site-footer__logo site-footer__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="dt-text dt-text--label-l-high">Docouture</span>

@@ -35,9 +35,11 @@ covered by the two roles above.
 |Workflow |Branch role it watches
 
 |`docouture-pr-verify.yml` |Neither — branch-agnostic, builds every PR's own HEAD via
-`antora-playbook.local.yml`
+`antora-playbook.local.yml` (but path-filtered: only fires when the PR touches `docs/**`
+or its own workflow file)
 |`docouture-publish-prerelease.yml` |prerelease branch (push trigger)
-|`docouture-kroki-cache-warm.yml` |*both*, unconditionally (push trigger — see below)
+|`docouture-kroki-cache-warm.yml` |*both*, unconditionally (push trigger — see below;
+also path-filtered to `docs/**` + its own workflow file)
 |`docouture-release-preview.yml` |release branch (pull_request trigger)
 |`docouture-release.yml` |release branch (pull_request:closed + workflow_dispatch)
 |`docouture-publish.yml` |Neither — never push-triggered, only `workflow_call`-chained
@@ -53,15 +55,24 @@ written either way; the other branch's push still produces a normal
 base-branch-scoped cache, so nothing is wasted. (On a trunk-based site this
 collapses to a single entry — both roles are the same branch.)
 
+Both `docouture-pr-verify.yml` and `docouture-kroki-cache-warm.yml` are path-filtered to
+`docs/**` + their own workflow file — neither has anything to usefully check or warm a
+cache for from a change elsewhere in the repo. If `docouture-pr-verify.yml` is configured
+as a required status check in branch protection, confirm that setup tolerates a skipped
+run (GitHub's "Do not require status checks on creation," or rulesets' own equivalent):
+a PR that never touches `docs/` now means it never reports at all, rather than reporting
+green.
+
 == A release under git-flow, end to end
 
-. Feature branch → `develop`: only `docouture-pr-verify.yml` fires on the PR (it's
-  branch-agnostic). On merge, `docouture-publish-prerelease.yml` republishes the
-  prerelease docs from `develop`.
-. `develop` → `main`, labelled `docs/release`: `docouture-pr-verify.yml` fires (always)
-  and `docouture-release-preview.yml` now fires too (targets `main`), posting a preview
-  comment. On merge, `docouture-release.yml` cuts the release (checks out `main`, tags
-  it, pushes the tag) and calls `docouture-publish.yml` to build and publish.
+. Feature branch → `develop`: `docouture-pr-verify.yml` fires on the PR if it touches
+  `docs/**` (it's branch-agnostic, but path-filtered — see above). On merge,
+  `docouture-publish-prerelease.yml` republishes the prerelease docs from `develop`.
+. `develop` → `main`, labelled `docs/release`: `docouture-pr-verify.yml` fires under the
+  same `docs/**` path filter, and `docouture-release-preview.yml` now fires too (targets
+  `main`), posting a preview comment. On merge, `docouture-release.yml` cuts the release
+  (checks out `main`, tags it, pushes the tag) and calls `docouture-publish.yml` to build
+  and publish.
 . The merge to `main` is also an ordinary push — but `docouture-publish-prerelease.yml`
   does *not* fire a second time: its trigger is `develop`-only, so there's no overlap
   with `docouture-release.yml`'s own publish. (Under trunk-based, where both roles are

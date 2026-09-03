@@ -14,6 +14,13 @@ Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a o
 commit built on the release branch's current tip, `git tag docs/v<value>` is created
 there, and the tag is pushed — the release branch itself is never advanced.
 
+Before any of that: `docs/.release-version` (or the `workflow_dispatch` version input,
+in versioned mode) is validated against full SemVer 2.0.0 — a leading `v`, a bare `1.2`,
+or any other malformed value fails the workflow immediately with a clear error, instead
+of tagging first and only failing later inside the version-bump step.
+`docouture-release-preview.yml` runs the same check earlier, as a PR comment, before the
+merge that would have triggered it.
+
 == Standalone mode
 
 Every release retargets the same `docs/stable` tag — force-moved, not appended to. Nothing

@@ -1,0 +1,14 @@
+code/packages/antora-extensions/lib/changelog-pages.js
+  h_c93d154c7c7074 183-184
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4800f16178001567799f2d712b7f66409d68298a",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

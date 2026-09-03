@@ -180,7 +180,8 @@ function isPrereleaseVersion(contentCatalog, component, version) {
 // copied through verbatim with a build-time warning, rather than silently
 // mis-rendering: a real convention drift in CHANGELOG.md should be visible
 // in build logs.
-function convertBody(lines, logger, versionLabel) {  const out = []
+function convertBody(lines, logger, versionLabel) {
+  const out = []
   for (const line of lines) {
     if (line.trim() === '') {
       out.push('')

@@ -1,0 +1,21 @@
+code/packages/publish-gh-pages/index.js
+  s_e7671f1140164f::t_d73070c28e7e73 141-183,185-224,227-228,267,352-360
+code/packages/publish-gh-pages/index.spec.js
+  s_e7671f1140164f::t_49c70b7a6b7d52 10,297-422
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "09b6805c7630d7953cf2d20c2d472de1d1a56632",
+  "prompts": {},
+  "sessions": {
+    "s_e7671f1140164f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f98b740f6ffeZ42U2XNDzDYQdB",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

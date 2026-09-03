@@ -12,9 +12,11 @@ at all).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-03
+
 ### Added
 
-- [#220](https://github.com/InditexTech/docouture/pull/220) \[tooling] Improve execution of docouture-* workflows
+- [#220](https://github.com/InditexTech/docouture/pull/220) \[tooling] Improve execution of docouture-\* workflows
 - [#215](https://github.com/InditexTech/docouture/pull/215) \[cli] check-links starter template: no timeout / no per-host limiting, so a single repeated link (e.g. repo link on every page) dominates crawl time
 
 ## [1.0.0] - 2026-09-02
@@ -100,5 +102,8 @@ at all).
 - [#47](https://github.com/InditexTech/docouture/pull/47) \[internal] migrate Weave.js content to example package
 - [#33](https://github.com/InditexTech/docouture/pull/33) \[skills] Correct the iop-ds-components skill against the shipped package
 
-[Unreleased]: https://github.com/InditexTech/docouture/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/InditexTech/docouture/compare/1.1.0...HEAD
+
+[1.1.0]: https://github.com/InditexTech/docouture/compare/1.0.0...1.1.0
+
 [1.0.0]: https://github.com/InditexTech/docouture/releases/tag/1.0.0

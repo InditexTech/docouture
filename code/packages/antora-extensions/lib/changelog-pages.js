@@ -180,8 +180,7 @@ function isPrereleaseVersion(contentCatalog, component, version) {
 // copied through verbatim with a build-time warning, rather than silently
 // mis-rendering: a real convention drift in CHANGELOG.md should be visible
 // in build logs.
-function convertBody(lines, logger, versionLabel) {
-  const out = []
+function convertBody(lines, logger, versionLabel) {  const out = []
   for (const line of lines) {
     if (line.trim() === '') {
       out.push('')
@@ -194,7 +193,7 @@ function convertBody(lines, logger, versionLabel) {
     }
     const bullet = line.match(/^-\s+\[#(\d+)\]\((\S+?)\)\s*(.*)$/)
     if (bullet) {
-      out.push(`* link:${bullet[2]}[#${bullet[1]}] ${bullet[3]}`.trimEnd())
+      out.push(`* link:${bullet[2]}[#${bullet[1]}] ${unescapeMarkdownBrackets(bullet[3])}`.trimEnd())
       continue
     }
     // Keep a Changelog reference-style link definitions, e.g.
@@ -212,6 +211,21 @@ function convertBody(lines, logger, versionLabel) {
     out.push(line)
   }
   return out.join('\n')
+}
+
+// This repo's own CHANGELOG.md convention escapes a leading `[type]` tag as
+// `\[type]` (e.g. `\[cli] Add docouture new`) — a Markdown-only concern:
+// GitHub renders CHANGELOG.md as Markdown, where a bare `[foo]` can be read
+// as the start of a reference-style link, so contributors escape it there.
+// AsciiDoc has no equivalent meaning for `\[` — a bare `[...]` in running
+// prose isn't special syntax — so Asciidoctor doesn't strip the backslash
+// either; left alone, it renders as a literal `\` character on the
+// changelog page (GH #223). `\*`/`\_`/`` \` ``/etc are deliberately left
+// untouched here: those escape AsciiDoc's own quoted-text formatting marks
+// the same way they escape Markdown's, so passing them through unchanged is
+// already correct.
+function unescapeMarkdownBrackets(text) {
+  return text.replace(/\\([[\]])/g, '$1')
 }
 
 // `isPrerelease` is only true for the component version Antora flagged

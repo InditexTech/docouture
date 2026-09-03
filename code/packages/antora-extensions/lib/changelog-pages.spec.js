@@ -157,6 +157,19 @@ describe('registerChangelogPages', () => {
     expect(source).toContain('* link:https://github.com/InditexTech/x/pull/98[#98] [cli] Fix a crash')
   })
 
+  it('unescapes a Markdown-escaped `\\[type]` tag instead of rendering the backslash literally (GH-223)', async () => {
+    const { dir } = writeChangelog(
+      '# Changelog\n\n## [1.0.0] - 2026-01-15\n\n### Added\n\n' +
+        '- [#100](https://github.com/InditexTech/x/pull/100) \\[cli] Add docouture new\n'
+    )
+    const indexFile = createIndexFile('ROOT', 'prerelease', 'main')
+    await run('CHANGELOG.md', { files: [indexFile], playbookDir: dir })
+
+    const source = indexFile.contents.toString()
+    expect(source).toContain('* link:https://github.com/InditexTech/x/pull/100[#100] [cli] Add docouture new')
+    expect(source).not.toContain('\\[cli]')
+  })
+
   it('appends a "no tagged release yet" placeholder on a real version when nothing has been cut', async () => {
     const { dir } = writeChangelog('# Changelog\n\n## [Unreleased]\n\n### Added\n\n- [#1](url) thing\n')
     const indexFile = createIndexFile('ROOT', 'stable', 'main') // a real, tagged version — never shows Unreleased

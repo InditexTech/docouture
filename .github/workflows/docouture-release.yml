@@ -120,7 +120,7 @@ jobs:
       (github.event.pull_request.merged == true &&
         contains(github.event.pull_request.labels.*.name, 'docs/release') &&
         (contains(github.event.pull_request.labels.*.name, 'skip-release') ||
-          !contains(github.event.pull_request.labels.*.name, 'release-type')))
+          !contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type')))
     steps:
       - name: Require main
         # Only meaningful for a manual dispatch: someone could run this

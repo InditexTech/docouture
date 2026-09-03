@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Fixed
+
+- [#222](https://github.com/InditexTech/docouture/pull/222) \[tooling] docouture-release.yml: release-type/* guard never matches, so docs/release fires immediately even when a code release is also pending
+
 ## [1.1.0] - 2026-09-03
 
 ### Added

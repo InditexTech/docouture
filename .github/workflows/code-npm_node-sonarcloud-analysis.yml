@@ -8,6 +8,8 @@ concurrency:
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'
   pull_request:
     types: [opened, synchronize, reopened]
     branches: ['develop', 'develop-*', 'main', 'main-*']
@@ -27,7 +29,8 @@ jobs:
     timeout-minutes: 30
     if: ${{ (github.event_name == 'pull_request' ||
         github.event_name == 'workflow_dispatch' ||
-        github.event_name == 'release') &&
+        github.event_name == 'release' ||
+        github.event_name == 'schedule') &&
         vars.IS_INDITEXTECH_REPO == 'true' }}
     runs-on: ubuntu-24.04
     steps:

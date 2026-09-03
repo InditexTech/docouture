@@ -152,6 +152,20 @@ jobs:
             exit 0
           fi
 
+          # Same full SemVer 2.0.0 grammar docouture-release.yml's own
+          # "Validate version" step checks — see that step's own comment for
+          # why plain groups instead of `(?:...)` (bash's [[ =~ ]] runs glibc
+          # POSIX ERE, not PCRE). Catching this here, before merge, is the
+          # whole point of a preview: docouture-release.yml checks the same
+          # thing, but only finds out after the PR has already merged.
+          SEMVER_RE='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$'
+          if [ "$MODE" = "versioned" ] && ! [[ "$VERSION" =~ $SEMVER_RE ]]; then
+            gh pr comment ${{ github.event.number }} --body "
+          ### :x: docs/release: invalid target version
+          \`docs/.release-version\` contains \`${VERSION}\`, which is not a valid SemVer version — use something like \`1.2.0\` (see https://semver.org). A leading \`v\` or a two-part \`1.2\` are not valid; the release workflow will fail on merge otherwise."
+            exit 0
+          fi
+
           MESSAGE="
           ### :rocket: Docs Release Preview
           Merging this Pull Request will release the docs site as **\`${TAG}\`**."

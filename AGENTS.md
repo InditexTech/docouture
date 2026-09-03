@@ -139,13 +139,15 @@ issue belongs to.
 | doc page                                 | derived from                                                                          | status  |
 | ---------------------------------------- | -------------------------------------------------------------------------------------- | ------- |
 | index.adoc (home)                        | manual (hand-written)                                                                 | —       |
-| cli-api.adoc                             | `code/packages/cli/src/bin.ts` (COMMAND_INFO) + `src/commands/*.ts`                    | current |
-| antora-playbook-configuration.adoc       | `code/packages/cli/templates/starter/antora-playbook.yml`                              | current |
-| antora-yml-configuration.adoc            | `code/packages/cli/templates/starter/src/antora.yml` + `antora-extensions/lib/{nav-modules,footer,llms-txt}.js` | current |
-| ui-bundle.adoc                           | `code/packages/ui-bundle/src/partials/*`, `src/js/*`                                    | current |
+| reference-cli.adoc                       | `code/packages/cli/src/bin.ts` (COMMAND_INFO) + `src/commands/*.ts`                    | current |
+| reference-antora-playbook-configuration.adoc | `code/packages/cli/templates/starter/antora-playbook.yml`                          | current |
+| reference-antora-descriptor-configuration.adoc | `code/packages/cli/templates/starter/src/antora.yml` + `antora-extensions/lib/{nav-modules,footer,llms-txt}.js` | current |
+| reference-ui-bundle.adoc                 | `code/packages/ui-bundle/src/partials/*`, `src/js/*`                                    | current |
 | reference-integrations.adoc              | `code/packages/antora-extensions/lib/*.js`, `code/packages/asciidoc-extensions/lib/*.js` | current |
-| custom-asciidoc-components.adoc          | `code/packages/asciidoc-extensions/lib/*.js` (via the starter's own `components.adoc`)  | current |
+| reference-custom-asciidoc-components.adoc | `code/packages/asciidoc-extensions/lib/*.js` (via the starter's own `components.adoc`) | current |
 | architecture.adoc                        | `code/README.md`, `code/packages/*/package.json`                                       | current |
 | structure.adoc                           | `code/README.md`, workspace `packages/` layout                                          | current |
+| guides-branching-model.adoc              | `code/packages/cli/templates/workflows/*.yml`                                          | current |
+| guides-releasing-a-documentation.adoc    | `code/packages/cli/templates/workflows/docouture-release.yml`, `docouture-release-preview.yml` | current |
 | release-notes/1-0-0.adoc (v1.0.0 entry)  | manual (hand-written, real v1.0.0 release summary)                                       | current |
 | changelog/index.adoc (generated sections) | `code/packages/antora-extensions/lib/changelog-pages.js` (parses `code/CHANGELOG.md` at build time) | current |

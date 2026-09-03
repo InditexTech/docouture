@@ -302,6 +302,25 @@ jobs:
             exit 1
           fi
 
+          # Full SemVer 2.0.0 grammar (semver.org's own regex, rewritten with
+          # plain groups instead of `(?:...)` — bash's [[ =~ ]] runs glibc
+          # POSIX ERE, not PCRE, and doesn't understand non-capturing
+          # groups). Catches a hand-edited docs/.release-version (or a typo'd
+          # workflow_dispatch input) BEFORE any tag is pushed below — without
+          # this, a malformed value sails through here, tags and pushes fine
+          # in "Cut release"/"Push release tag", and only fails later inside
+          # "Bump release descriptor" (npm's `version patch` rejects
+          # non-semver input) — by which point the tag already exists but the
+          # job as a whole reads as failed, so the `publish` job below never
+          # runs. Prerelease/build-metadata suffixes (1.2.0-beta.1,
+          # 1.2.0+build) are valid SemVer and accepted; a leading 'v' or a
+          # bare '1.2' are not.
+          SEMVER_RE='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$'
+          if [ "$MODE" = "versioned" ] && [ -n "$VERSION" ] && ! [[ "$VERSION" =~ $SEMVER_RE ]]; then
+            echo "::error::docs/.release-version (or the 'version' input) must be a valid SemVer version like 1.2.0 — got '${VERSION}'. See https://semver.org — prerelease/build metadata (1.2.0-beta.1, 1.2.0+build) is fine, a leading 'v' or a two-part '1.2' is not."
+            exit 1
+          fi
+
           if [ "$MODE" = "standalone" ] && [ -n "$VERSION" ] && [ "$VERSION" != "stable" ]; then
             echo "::warning::Standalone mode always releases to the 'stable' tag — ignoring provided version '${VERSION}'."
           fi

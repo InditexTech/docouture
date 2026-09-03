@@ -112,9 +112,12 @@ this CLI never scaffolds or verifies.
 
 == `docouture upgrade`
 
-Re-sync `.github/workflows/` and agent support files (`AGENTS.md`) from the
-CLI's current templates. Workflows are fully overwritten; `AGENTS.md` is merged — only
-docouture's own managed section is replaced. Never touches `docs/` content itself.
+Re-sync `.github/workflows/`, `docs/scripts/check-links.mjs`, and agent support files
+(`AGENTS.md`) from the CLI's current templates. Workflows and the check-links script are
+fully overwritten (there is nothing site-specific in either — link ignores are
+configured separately, in `package.json`'s `docouture.checkLinks.ignore`); `AGENTS.md` is
+merged — only docouture's own managed section is replaced. The rest of `docs/` — every
+page a site owner has written — is never touched.
 
 [cols="1,2"]
 |===

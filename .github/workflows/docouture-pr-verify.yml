@@ -16,8 +16,20 @@ name: docouture-pr-verify
 # that file's own header) exists for exactly this: one content source,
 # `branches: HEAD`, so this always validates whatever the PR actually
 # changed — no `fetch-depth: 0` needed, since no other ref is ever read.
+#
+# Path-filtered so it doesn't run at all on a PR that touches neither `docs/`
+# content nor this file — this site's own `docs/package.json` pins published
+# npm versions of the docouture packages (not a local workspace link), so a
+# pure `code/**` change here has nothing to affect this build either way.
+# Safe to skip entirely rather than merely no-op: this job (`Verify`, this
+# workflow) is not a required status check — the required ones are
+# `Code / Verify` and `SonarCloud / Unit Tests`, from different workflows —
+# so a path-filtered-out run can't leave a required check stuck pending.
 on:
-  pull_request: {}
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docouture-pr-verify.yml'
 
 permissions:
   contents: read

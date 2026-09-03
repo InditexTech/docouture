@@ -14,6 +14,7 @@ at all).
 
 ### Added
 
+- [#220](https://github.com/InditexTech/docouture/pull/220) \[tooling] Improve execution of docouture-* workflows
 - [#215](https://github.com/InditexTech/docouture/pull/215) \[cli] check-links starter template: no timeout / no per-host limiting, so a single repeated link (e.g. repo link on every page) dominates crawl time
 
 ## [1.0.0] - 2026-09-02

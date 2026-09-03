@@ -1,0 +1,32 @@
+# CODEOWNERS
+# See https://docs.github.com/articles/about-codeowners for syntax.
+# Rules are evaluated in order; the last matching pattern wins, so keep
+# more specific paths below the default.
+
+# Default owner for everything not matched below
+* @InditexTech/docouture-admins
+
+# Nx workspace root config
+/code/*.json @InditexTech/docouture-admins
+/code/pnpm-workspace.yaml @InditexTech/docouture-admins
+/code/CHANGELOG.md @InditexTech/docouture-admins
+
+# Packages
+/code/packages/cli/ @InditexTech/docouture-admins
+/code/packages/ui-bundle/ @InditexTech/docouture-admins
+/code/packages/antora-extensions/ @InditexTech/docouture-admins
+/code/packages/asciidoc-extensions/ @InditexTech/docouture-admins
+/code/packages/example/ @InditexTech/docouture-admins
+/code/packages/tooling/ @InditexTech/docouture-admins
+/code/packages/publish-gh-pages/ @InditexTech/docouture-admins
+
+# This repo's own docs site
+/docs/ @InditexTech/docouture-admins
+
+# CI/CD and repo automation
+/.github/workflows/ @InditexTech/docouture-admins
+/.github/ @InditexTech/docouture-admins
+
+# Skills / agent config
+/.opencode/ @InditexTech/docouture-admins
+/.agents/ @InditexTech/docouture-admins

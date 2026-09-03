@@ -61,8 +61,14 @@ function packageName(cwd: string, pkg: string): string {
  * bump/build/publish/revert, with the revert guaranteed via try/finally
  * even on failure or Ctrl-C.
  */
-export async function runReleaseLocal(argv: string[]): Promise<number> {
-  void argv // no command-specific flags today — NOSONAR: kept to satisfy this file's own @typescript-eslint/no-unused-vars, not an avoidable no-op
+// No `argv` parameter: no command-specific flags today, and `Runner` (the
+// type `RUNNERS['release-local']` is checked against in bin.ts) is
+// `(argv: string[]) => Promise<number>` — TypeScript's structural typing
+// accepts a function with fewer parameters than the type it's assigned to,
+// so dropping the unused parameter here satisfies both the compiler and
+// eslint's `@typescript-eslint/no-unused-vars` without a `void`-operator
+// no-op to silence it.
+export async function runReleaseLocal(): Promise<number> {
   const cwd = process.cwd()
   const packages = publishablePackages(cwd)
 

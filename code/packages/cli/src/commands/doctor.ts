@@ -47,13 +47,12 @@ async function readJson<T>(file: string): Promise<T | null> {
 }
 
 function readAntoraYmlName(content: string): string | null {
-  // No trailing `\s*$`: a lazy `.+?` immediately followed by `\s*$` is
-  // ambiguous about where the captured value ends and the trimmed
-  // whitespace begins (both can match a trailing space) — the classic
-  // shape a catastrophic-backtracking scanner flags. Capturing greedily to
-  // the real end of the line and trimming in JS gets the identical value
-  // with no such ambiguity.
-  const match = /^name:\s*(.+)$/m.exec(content)
+  // No `\s*` before the capture: `\s*` and `.+` both match plain spaces, so
+  // the two quantifiers overlap on every space after `name:` — the classic
+  // shape a catastrophic-backtracking scanner flags. Capturing everything
+  // after the colon and trimming in JS gets the identical value with no
+  // such overlap.
+  const match = /^name:(.+)$/m.exec(content)
   return match?.[1]?.trim() || null
 }
 

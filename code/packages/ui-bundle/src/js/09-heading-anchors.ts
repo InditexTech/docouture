@@ -64,7 +64,7 @@
         window.navigator.clipboard.writeText(url).then(
           function () {
             anchor.classList.add('clicked')
-            void anchor.offsetHeight // force reflow so the animation restarts
+            anchor.offsetHeight // force reflow so the animation restarts
             anchor.classList.remove('clicked')
           },
           function () {}

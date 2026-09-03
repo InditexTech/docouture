@@ -197,13 +197,13 @@ function convertBody(lines, logger, versionLabel) {
       out.push(`=== ${heading[1].trim()}`)
       continue
     }
-    // No `\s*` before the final capture: it and the `.*` right after it can
-    // both match the very same trailing spaces, which is exactly the
-    // ambiguous-boundary shape a catastrophic-backtracking scanner flags —
-    // trimming the captured group in JS gets the identical rendered text
-    // (there is always at most one such space in a real changelog bullet)
-    // with no such ambiguity.
-    const bullet = line.match(/^-\s+\[#(\d+)\]\((\S+?)\)(.*)$/)
+    // `[^)\s]+` instead of a lazy `\S+?`: since `)` itself can't appear
+    // inside the character class, the engine never has to backtrack to
+    // decide where the URL ends and the literal `)` delimiter begins — the
+    // ambiguous-boundary shape a catastrophic-backtracking scanner flags.
+    // Real changelog PR links never contain `)` in the URL, so this is the
+    // identical match with none of that ambiguity.
+    const bullet = line.match(/^-\s+\[#(\d+)\]\(([^)\s]+)\)(.*)$/)
     if (bullet) {
       out.push(`* link:${bullet[2]}[#${bullet[1]}] ${unescapeMarkdownBrackets(bullet[3].trim())}`.trimEnd())
       continue

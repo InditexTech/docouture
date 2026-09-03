@@ -53,7 +53,7 @@ const buildPreviewPages =
     const iconCatalog = await loadIconCatalog(previewDest)
 
     const extensions = (sampleUiModel.asciidoc?.extensions || []).map((request) => {
-      ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replaceAll(/\//g, '-') + '-loaded'] = ''
+      ASCIIDOC_ATTRIBUTES[request.replace(/^@|\.js$/, '').replaceAll('/', '-') + '-loaded'] = ''
       const extension = require(request)
       extension.register.call(Asciidoctor.Extensions)
       return extension

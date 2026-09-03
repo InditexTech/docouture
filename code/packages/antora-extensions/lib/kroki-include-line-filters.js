@@ -193,75 +193,100 @@ function mapContainsValue(map, value) {
  * @returns {[string[], number]} the selected lines, and the 1-based line
  *   number the first selected line was found at.
  */
+// The `globstar === undefined` half of `resolveTagSelectionDefaults`, split
+// out so neither half counts against the other's complexity budget —
+// unchanged decision table from upstream's own `filterLinesByTags`.
+function resolveTagSelectionDefaultsWithoutGlobstar(tags, star) {
+  if (star === undefined) {
+    const selectingDefault = !mapContainsValue(tags, true)
+    return { selectingDefault, selecting: selectingDefault, wildcard: undefined }
+  }
+  const wildcard = star
+  const selectingDefault = wildcard || tags.keys().next().value !== '*' ? false : !wildcard
+  tags.delete('*')
+  return { selectingDefault, selecting: selectingDefault, wildcard }
+}
+
+// The `globstar !== undefined` half of `resolveTagSelectionDefaults` — see
+// that function and its sibling half above for the split rationale.
+function resolveTagSelectionDefaultsWithGlobstar(tags, globstar, star) {
+  tags.delete('**')
+  const selectingDefault = globstar
+  let wildcard
+  if (star === undefined) {
+    if (!globstar && tags.values().next().value === false) wildcard = true
+  } else {
+    tags.delete('*')
+    wildcard = star
+  }
+  return { selectingDefault, selecting: selectingDefault, wildcard }
+}
+
 // The three pieces of running state every tag-directive decision in
 // `applyTagDirective` reads from but never changes: `selectingDefault`
 // (what to fall back to once every tag closes), the initial `selecting`
 // value before any directive is seen, and `wildcard` (the `*`/`**`
-// wildcard's own select/exclude value, if either was declared) — unchanged
-// from upstream's own `filterLinesByTags`, just split out so it doesn't
-// count against that function's own complexity budget.
+// wildcard's own select/exclude value, if either was declared).
 function resolveTagSelectionDefaults(tags) {
   const globstar = tags.get('**')
   const star = tags.get('*')
-  let selectingDefault, selecting, wildcard
-  if (globstar === undefined) {
-    if (star === undefined) {
-      selectingDefault = selecting = !mapContainsValue(tags, true)
-    } else {
-      wildcard = star
-      if (wildcard || tags.keys().next().value !== '*') {
-        selectingDefault = selecting = false
-      } else {
-        selectingDefault = selecting = !wildcard
-      }
-      tags.delete('*')
-    }
-  } else {
-    tags.delete('**')
-    selectingDefault = selecting = globstar
-    if (star === undefined) {
-      if (!globstar && tags.values().next().value === false) wildcard = true
-    } else {
-      tags.delete('*')
-      wildcard = star
-    }
+  return globstar === undefined
+    ? resolveTagSelectionDefaultsWithoutGlobstar(tags, star)
+    : resolveTagSelectionDefaultsWithGlobstar(tags, globstar, star)
+}
+
+// Applies one recognised `end::name[]` directive — the `m[1]` half of
+// `applyTagDirective`'s decision table, split out so neither half counts
+// against the other's complexity budget. `tagStack`/`state.selecting`/
+// `state.activeTag` are mutated in place, matching upstream.
+function applyEndTagDirective(thisTag, lineNum, state) {
+  const { tags, tagStack, onWarn, selectingDefault } = state
+  if (thisTag === state.activeTag) {
+    tagStack.shift()
+    ;[state.activeTag, state.selecting] = tagStack.length ? tagStack[0] : [undefined, selectingDefault]
+    return
   }
-  return { selectingDefault, selecting, wildcard }
+  if (!tags.has(thisTag)) return
+  const idx = tagStack.findIndex(([name]) => name === thisTag)
+  if (~idx) {
+    tagStack.splice(idx, 1)
+    onWarn(`mismatched end tag (expected '${state.activeTag}' but found '${thisTag}') at line ${lineNum}`)
+  } else {
+    onWarn(`unexpected end tag '${thisTag}' at line ${lineNum}`)
+  }
+}
+
+// Applies one recognised `tag::name[]` directive — the `!m[1]` half of
+// `applyTagDirective`'s decision table. Only pushes onto `tagStack` when the
+// tag is actually recognised (a known tag, or a wildcard is in play);
+// anything else leaves `state` untouched, matching upstream.
+function applyStartTagDirective(thisTag, lineNum, state) {
+  const { tags, wildcard, tagStack, tagsSelected } = state
+  if (tags.has(thisTag)) {
+    state.selecting = tags.get(thisTag)
+    if (state.selecting) tagsSelected.push(thisTag)
+  } else if (wildcard !== undefined) {
+    state.selecting = state.activeTag && !state.selecting ? false : wildcard
+  } else {
+    return
+  }
+  state.activeTag = thisTag
+  tagStack.unshift([state.activeTag, state.selecting, lineNum])
 }
 
 // Applies one recognised `tag::name[]`/`end::name[]` directive to the
 // running tag-selection state — same decision table as upstream's
-// `filterLinesByTags`, extracted verbatim so the per-line loop below stays
-// readable. `state.tagStack`/`state.tagsSelected` are mutated in place
-// (upstream mutates its own closure variables the same way); `state.tags`/
-// `state.wildcard`/`state.selectingDefault`/`state.onWarn` are read-only.
+// `filterLinesByTags`, split into its two halves above so the per-line loop
+// below stays readable. `state.tagStack`/`state.tagsSelected` are mutated in
+// place (upstream mutates its own closure variables the same way);
+// `state.tags`/`state.wildcard`/`state.selectingDefault`/`state.onWarn` are
+// read-only.
 function applyTagDirective(m, lineNum, state) {
-  const { tags, wildcard, selectingDefault, onWarn, tagStack, tagsSelected } = state
   const thisTag = m[2]
   if (m[1]) {
-    if (thisTag === state.activeTag) {
-      tagStack.shift()
-      ;[state.activeTag, state.selecting] = tagStack.length ? tagStack[0] : [undefined, selectingDefault]
-    } else if (tags.has(thisTag)) {
-      const idx = tagStack.findIndex(([name]) => name === thisTag)
-      if (~idx) {
-        tagStack.splice(idx, 1)
-        onWarn(`mismatched end tag (expected '${state.activeTag}' but found '${thisTag}') at line ${lineNum}`)
-      } else {
-        onWarn(`unexpected end tag '${thisTag}' at line ${lineNum}`)
-      }
-    }
-    return
-  }
-  if (tags.has(thisTag)) {
-    state.selecting = tags.get(thisTag)
-    if (state.selecting) tagsSelected.push(thisTag)
-    state.activeTag = thisTag
-    tagStack.unshift([state.activeTag, state.selecting, lineNum])
-  } else if (wildcard !== undefined) {
-    state.selecting = state.activeTag && !state.selecting ? false : wildcard
-    state.activeTag = thisTag
-    tagStack.unshift([state.activeTag, state.selecting, lineNum])
+    applyEndTagDirective(thisTag, lineNum, state)
+  } else {
+    applyStartTagDirective(thisTag, lineNum, state)
   }
 }
 

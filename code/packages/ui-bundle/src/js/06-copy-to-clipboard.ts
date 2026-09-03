@@ -149,8 +149,7 @@
     var lines = text.split('\n')
     var cmds = []
     var current = null
-    for (var i = 0; i < lines.length; i++) {
-      var line = lines[i]
+    for (var line of lines) {
       if (current !== null && /\\$/.test(current) && line.slice(0, 2) !== '$ ') {
         current += '\n' + line
         continue

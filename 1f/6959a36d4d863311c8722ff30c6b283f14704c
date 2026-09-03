@@ -1,0 +1,24 @@
+.github/workflows/docouture-release.yml
+  h_c93d154c7c7074 123
+code/CHANGELOG.md
+  h_c93d154c7c7074 15-18
+code/packages/antora-extensions/lib/changelog-pages.js
+  h_c93d154c7c7074 183,196,216-230
+code/packages/antora-extensions/lib/changelog-pages.spec.js
+  h_c93d154c7c7074 159-171
+code/packages/cli/templates/workflows/docouture-release.yml
+  h_c93d154c7c7074 23,35-56,82-83,108-117,120,122-124
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  h_c93d154c7c7074 4-5,14-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1f6959a36d4d863311c8722ff30c6b283f14704c",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

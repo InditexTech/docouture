@@ -141,37 +141,49 @@ async function assertSafeGitBranch(branch, fieldName = 'branch') {
 const defaultGit = {
   /** @returns {Promise<boolean>} Whether `branch` already exists on `remote`. */
   async branchExists(remote, branch) {
-    // Re-validated here, literally inline, right next to the `execFileAsync`
-    // sink below — even though `publishGhPages` already validates both
-    // `remoteTarget` and `branch` before calling in. Calling back out to
-    // `assertSafeGitRemote`/`assertSafeGitBranch` above is NOT enough: those
-    // are separate function calls, and CodeQL's second-order-command-line-
-    // injection query only recognises a barrier shaped as an inline
-    // `if (!<regex>.test(x)) throw` written directly in the SAME function as
-    // the sink — it doesn't credit a call to an external validator with
-    // having sanitized anything, no matter how thoroughly that validator
-    // actually checks. (An earlier fix added exactly such a call here and
-    // the alerts stayed open across a fresh scan — this literal, duplicated
-    // check is what actually closes them.) `assertSafeGitBranch`'s own
-    // `execFileAsync` sink two functions up, by contrast, carries no alert
-    // at all: its whitelist check is inline in that same function, which is
-    // the positive case proving this heuristic.
+    // Two layers of defence against CodeQL's js/second-order-command-line-
+    // injection (alert #40, `--upload-pack=<cmd>`-shaped remotes tricking
+    // `git ls-remote` into running arbitrary commands):
+    //
+    //   1. The `--` end-of-options marker on the execFileAsync call below is
+    //      the actual, provable fix: it forces git to treat everything after
+    //      it as a positional pathname, never as an option, no matter what
+    //      it looks like. Verified locally —
+    //      `git ls-remote --exit-code --upload-pack=touch x` runs the flag;
+    //      `git ls-remote --exit-code -- --upload-pack=touch x` fails with
+    //      "strange pathname ... blocked" instead. This alone closes the
+    //      vulnerability regardless of what static analysis concludes.
+    //   2. The whitelist checks below are defence in depth, re-validated
+    //      here inline (not via `assertSafeGitRemote`/`assertSafeGitBranch`
+    //      above) and written as separate `if (<test>) throw` /
+    //      `if (!(<test>)) throw` statements — the same shape as GitHub's
+    //      own documented fix for this rule — rather than one compound
+    //      expression, since a prior fix using a single compound condition
+    //      here was still flagged by a fresh scan even though the logic was
+    //      equivalent.
+    if (remote.startsWith('-')) {
+      throw new Error('Invalid remote: unsupported remote format')
+    }
+    if (/[\r\n\t ]/.test(remote)) {
+      throw new Error('Invalid remote: unsupported remote format')
+    }
     if (
       !(
         /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
         /^[A-Za-z0-9._-]+$/.test(remote) ||
         /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
-      ) ||
-      remote.startsWith('-') ||
-      /[\r\n\t ]/.test(remote)
+      )
     ) {
       throw new Error('Invalid remote: unsupported remote format')
     }
-    if (!/^[A-Za-z0-9._/-]+$/.test(branch) || branch.startsWith('-')) {
+    if (branch.startsWith('-')) {
+      throw new Error('Invalid branch: unsupported branch name format')
+    }
+    if (!/^[A-Za-z0-9._/-]+$/.test(branch)) {
       throw new Error('Invalid branch: unsupported branch name format')
     }
     try {
-      await execFileAsync('git', ['ls-remote', '--exit-code', remote, branch])
+      await execFileAsync('git', ['ls-remote', '--exit-code', '--', remote, branch])
       return true
     } catch (err) {
       if (err?.code === 2) return false
@@ -181,22 +193,29 @@ const defaultGit = {
 
   /** Creates `branch` on `remote` as a single, empty, historyless commit. */
   async createOrphanBranch(remote, branch, user) {
-    // Same reasoning as the inline re-check in `branchExists` above: literal
-    // here, not a call to `assertSafeGitRemote`/`assertSafeGitBranch`, so
-    // CodeQL's barrier heuristic actually recognises it next to the
-    // `checkout --orphan`/`push` sinks below.
+    // Same reasoning as `branchExists` above: the `--` marker on the `push`
+    // call below is the real fix; these inline checks (literal here, not a
+    // call to `assertSafeGitRemote`/`assertSafeGitBranch`) are defence in
+    // depth, kept in the same shape for consistency.
+    if (remote.startsWith('-')) {
+      throw new Error('Invalid remote: unsupported remote format')
+    }
+    if (/[\r\n\t ]/.test(remote)) {
+      throw new Error('Invalid remote: unsupported remote format')
+    }
     if (
       !(
         /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
         /^[A-Za-z0-9._-]+$/.test(remote) ||
         /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
-      ) ||
-      remote.startsWith('-') ||
-      /[\r\n\t ]/.test(remote)
+      )
     ) {
       throw new Error('Invalid remote: unsupported remote format')
     }
-    if (!/^[A-Za-z0-9._/-]+$/.test(branch) || branch.startsWith('-')) {
+    if (branch.startsWith('-')) {
+      throw new Error('Invalid branch: unsupported branch name format')
+    }
+    if (!/^[A-Za-z0-9._/-]+$/.test(branch)) {
       throw new Error('Invalid branch: unsupported branch name format')
     }
     const dir = await mkdtemp(path.join(os.tmpdir(), 'docouture-gh-pages-'))
@@ -208,7 +227,7 @@ const defaultGit = {
       await execFileAsync('git', ['commit', '--quiet', '--allow-empty', '-m', 'Initial gh-pages branch'], {
         cwd: dir,
       })
-      await execFileAsync('git', ['push', '--quiet', remote, `HEAD:refs/heads/${branch}`], { cwd: dir })
+      await execFileAsync('git', ['push', '--quiet', '--', remote, `HEAD:refs/heads/${branch}`], { cwd: dir })
     } finally {
       await rm(dir, { recursive: true, force: true })
     }

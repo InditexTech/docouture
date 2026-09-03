@@ -77,7 +77,23 @@ describe('runUpgrade', () => {
     expect(agentsMd).toContain('My Project Docs')
   })
 
-  it('does not touch docs/', async () => {
+  it('overwrites existing check-links.mjs, same as workflows', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-project-docs', '--dir', repo, '--yes'])
+
+    const scriptPath = join(repo, 'docs', 'scripts', 'check-links.mjs')
+    await writeFile(scriptPath, 'stale content', 'utf8')
+
+    const code = await runUpgrade(['--dir', repo])
+    expect(code).toBe(0)
+
+    const script = await readFile(scriptPath, 'utf8')
+    expect(script).not.toBe('stale content')
+    expect(script).toContain('linkinator')
+  })
+
+  it('does not touch docs/ content, only the regenerable docs/scripts/check-links.mjs', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await runNew(['my-project-docs', '--dir', repo, '--yes'])
@@ -109,6 +125,7 @@ describe('runUpgrade', () => {
     expect(logSpy).toHaveBeenCalledWith('would write:')
     const allLogs = logSpy.mock.calls.map((call) => String(call[0])).join('\n')
     expect(allLogs).toContain('docouture-release.yml')
+    expect(allLogs).toContain('check-links.mjs')
     expect(allLogs).toContain('AGENTS.md')
   })
 

@@ -79,6 +79,14 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const templatesRoot = join(here, '..', 'templates')
   const workflowsTemplateDir = join(templatesRoot, 'workflows')
   const agentSupportDir = join(templatesRoot, 'agent-support')
+  // Unlike the rest of `docs/` (never re-copied — see the comment above the
+  // dry-run/real-run split below), `scripts/check-links.mjs` gets the same
+  // "regenerate wholesale" treatment as workflows: it carries zero
+  // `__DOCOUTURE_*__` placeholder tokens (nothing site-specific to lose),
+  // and its own comments already say the one thing a site owner is meant
+  // to customise — which links to ignore — belongs in package.json's
+  // `docouture.checkLinks.ignore`, not in edits to the script body itself.
+  const scriptsTemplateDir = join(templatesRoot, 'starter', 'scripts')
 
   // build/commands/upgrade.js -> package root, 2 levels up — see
   // readCliInfo's own comment. Always re-read fresh: an upgrade run re-pins
@@ -172,33 +180,39 @@ export async function runUpgrade(argv: string[]): Promise<number> {
 
   const workflowsDir = join(target, '.github', 'workflows')
   const agentsMdFile = join(target, AGENTS_MD_FILENAME)
+  const scriptsDir = join(target, 'docs', 'scripts')
 
   // Unlike `new.ts`, this command's whole purpose is to overwrite what's
   // already there — workflows are meant to be regenerable from the
   // template on every upgrade, not merged with local edits (there is no
   // content-hash/diff tracking anywhere in this CLI to tell a stock file
   // from a user-edited one). `docs/` itself — the starter content a site
-  // has since written its own pages into — is never touched here. Skills
+  // has since written its own pages into — is never touched here, with one
+  // exception: `docs/scripts/` gets the same blind-overwrite treatment as
+  // workflows (see scriptsTemplateDir's own comment above for why). Skills
   // are never touched here either: `docouture upgrade` only re-syncs the
   // starter site and its GitHub workflows, same as `docouture new` only
   // scaffolds them — skills are a separate, self-serve install via
-  // `npx skills add InditexTech/docouture`. AGENTS.md is the one exception:
-  // copyTemplate's own SKIP_FILENAMES skip (see copy-template.ts) leaves it
-  // untouched by the walk above, and it's merged instead — see
-  // lib/agents-md.ts for why a blind overwrite here would silently destroy
-  // the 'Documentation state' table the docouture-documenting-changes skill
-  // maintains outside docouture' own managed section.
+  // `npx skills add InditexTech/docouture`. AGENTS.md is the other
+  // exception: copyTemplate's own SKIP_FILENAMES skip (see
+  // copy-template.ts) leaves it untouched by the walk above, and it's
+  // merged instead — see lib/agents-md.ts for why a blind overwrite here
+  // would silently destroy the 'Documentation state' table the
+  // docouture-documenting-changes skill maintains outside docouture' own
+  // managed section.
   if (dryRun) {
     const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
+    const plannedScripts = await copyTemplate(scriptsTemplateDir, scriptsDir, values, { dryRun: true })
 
     console.log('would write:')
-    for (const path of [...plannedWorkflows, agentsMdFile]) {
+    for (const path of [...plannedWorkflows, ...plannedScripts, agentsMdFile]) {
       console.log(`  ${relative(target, path)}`)
     }
     return 0
   }
 
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
+  await copyTemplate(scriptsTemplateDir, scriptsDir, values)
 
   const existingAgentsMd = (await exists(agentsMdFile)) ? await readFile(agentsMdFile, 'utf8') : undefined
   const renderedAgentsMd = await renderTemplateFile(join(agentSupportDir, AGENTS_MD_FILENAME), values)
@@ -209,6 +223,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // relative(cwd, ...) produces a useless '../../..' chain for paths that
   // are actually just '.github/workflows', 'AGENTS.md' etc. at the root.
   console.log(`updated ${relative(target, workflowsDir)}`)
+  console.log(`updated ${relative(target, scriptsDir)}`)
   console.log(`updated ${relative(target, agentsMdFile)}`)
 
   return 0

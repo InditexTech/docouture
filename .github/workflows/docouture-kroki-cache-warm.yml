@@ -28,9 +28,18 @@ permissions:
 #
 # Gated on `kroki-enabled` the same way those three are — no point warming a
 # cache for images a disabled site's build will never touch.
+#
+# Path-filtered for the same reason docouture-pr-verify.yml is: this site's
+# docs/package.json pins published npm versions of the docouture packages, so
+# a push that touches neither `docs/` nor this file has nothing for this job
+# to usefully warm a cache for. Not a required status check and nothing else
+# depends on this job running — safe to skip entirely rather than no-op.
 on:
   push:
     branches: ['main*']
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docouture-kroki-cache-warm.yml'
 
 concurrency:
   group: docouture-kroki-cache-warm

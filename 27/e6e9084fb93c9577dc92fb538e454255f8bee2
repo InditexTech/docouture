@@ -1,0 +1,20 @@
+AGENTS.md
+  h_c93d154c7c7074 142-145,147,150-151
+docs/src/modules/main/pages/guides-branching-model.adoc
+  h_c93d154c7c7074 38-39,41-42,58-65,68-75
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  h_c93d154c7c7074 17-23
+docs/src/modules/main/pages/reference-cli.adoc
+  h_c93d154c7c7074 115-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "27e6e9084fb93c9577dc92fb538e454255f8bee2",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

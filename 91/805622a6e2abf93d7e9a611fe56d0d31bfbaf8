@@ -1,0 +1,20 @@
+code/CHANGELOG.md
+  h_c93d154c7c7074 15-18
+code/packages/cli/src/commands/upgrade.spec.ts
+  h_c93d154c7c7074 80-96,128
+code/packages/cli/src/commands/upgrade.ts
+  h_c93d154c7c7074 82-89,183,190-192,196-202,205,208,215,226
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  h_c93d154c7c7074 143-164
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "91805622a6e2abf93d7e9a611fe56d0d31bfbaf8",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

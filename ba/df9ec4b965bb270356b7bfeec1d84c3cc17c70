@@ -1,0 +1,51 @@
+code/packages/asciidoc-extensions/lib/accordion.js
+  s_d3d79ebe717e9b::t_6521776e169c9b 229-234,242
+code/packages/asciidoc-extensions/lib/cta.js
+  s_d3d79ebe717e9b::t_7ea450d0b84047 317-322,329
+code/packages/asciidoc-extensions/lib/feature-tabs.js
+  s_d3d79ebe717e9b::t_505005de8d96d7 384-389,396
+code/packages/asciidoc-extensions/lib/kroki-config.js
+  s_d3d79ebe717e9b::t_af2948c55ecdd4 160-170,220,272,276
+code/packages/asciidoc-extensions/lib/tabs.js
+  s_d3d79ebe717e9b::t_1eb138260cbff9 251-256,262
+code/packages/cli/src/lib/doctor-checks.ts
+  s_d3d79ebe717e9b::t_8e9c5d2839f739 124-181,190-195,207-213,215,294-296,298
+code/packages/cli/src/lib/repo-root.ts
+  s_d3d79ebe717e9b::t_8375476053566a 22-24,26
+code/packages/tooling/src/commands/registry.ts
+  s_d3d79ebe717e9b::t_28dbcd355993e3 50-51,53
+code/packages/tooling/src/commands/test-package.ts
+  s_d3d79ebe717e9b::t_9b6dc4fa8560a7 33-35,37
+code/packages/tooling/src/lib/doctor-checks.ts
+  s_d3d79ebe717e9b::t_1909d3bb1e9168 24,82-85,87
+code/packages/ui-bundle/src/js/02-on-this-page.ts
+  s_d3d79ebe717e9b::t_ffe658cb923f29 13,20-38,40,131,174
+code/packages/ui-bundle/src/js/06-copy-to-clipboard.ts
+  s_d3d79ebe717e9b::t_2cda0194b7f77b 14,37,138-147,149,151-164
+code/packages/ui-bundle/src/js/07-feature-tabs.ts
+  s_d3d79ebe717e9b::t_fcb911ed5a4698 29,34,37,48
+code/packages/ui-bundle/src/js/09-heading-anchors.ts
+  s_d3d79ebe717e9b::t_14e61d31ceef24 22,26,57-63,67
+code/packages/ui-bundle/src/js/10-accordion.ts
+  s_d3d79ebe717e9b::t_b8faa8efe785b9 65,87,89
+code/packages/ui-bundle/src/js/11-tabs.ts
+  s_d3d79ebe717e9b::t_bb1dfa5e3886c1 39,43-44
+code/packages/ui-bundle/src/js/14-image-zoom.ts
+  s_d3d79ebe717e9b::t_6242df51dd2c16 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "badf9ec4b965bb270356b7bfeec1d84c3cc17c70",
+  "prompts": {},
+  "sessions": {
+    "s_d3d79ebe717e9b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f99449c54ffeOawIf0EJ3htQv5",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

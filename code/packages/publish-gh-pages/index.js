@@ -141,6 +141,13 @@ async function assertSafeGitBranch(branch, fieldName = 'branch') {
 const defaultGit = {
   /** @returns {Promise<boolean>} Whether `branch` already exists on `remote`. */
   async branchExists(remote, branch) {
+    // Re-validated here, right next to the `execFileAsync` sink, even though
+    // `publishGhPages` already validates `remoteTarget` before calling in:
+    // CodeQL's second-order-command-line-injection query only recognises an
+    // inline whitelist guard as sanitizing the sink in the SAME function —
+    // it doesn't trace the barrier across the call into this object method
+    // (same reasoning as the inline check in `assertSafeGitBranch` above).
+    assertSafeGitRemote(remote, 'remote')
     try {
       await execFileAsync('git', ['ls-remote', '--exit-code', remote, branch])
       return true
@@ -152,6 +159,7 @@ const defaultGit = {
 
   /** Creates `branch` on `remote` as a single, empty, historyless commit. */
   async createOrphanBranch(remote, branch, user) {
+    assertSafeGitRemote(remote, 'remote')
     const dir = await mkdtemp(path.join(os.tmpdir(), 'docouture-gh-pages-'))
     try {
       await execFileAsync('git', ['init', '--quiet', dir])

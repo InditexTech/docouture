@@ -1,0 +1,14 @@
+code/packages/publish-gh-pages/index.js
+  h_c93d154c7c7074 144-169,175,179-182,186,196-205,211,215-218,230
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "786d3c22a6b14f96bc5bb5f774b550052a289e3e",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -167,13 +167,11 @@ const defaultGit = {
     if (/[\r\n\t ]/.test(remote)) {
       throw new Error('Invalid remote: unsupported remote format')
     }
-    if (
-      !(
-        /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
-        /^[A-Za-z0-9._-]+$/.test(remote) ||
-        /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
-      )
-    ) {
+    if (!(
+      /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
+      /^[A-Za-z0-9._-]+$/.test(remote) ||
+      /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
+    )) {
       throw new Error('Invalid remote: unsupported remote format')
     }
     if (branch.startsWith('-')) {
@@ -203,13 +201,11 @@ const defaultGit = {
     if (/[\r\n\t ]/.test(remote)) {
       throw new Error('Invalid remote: unsupported remote format')
     }
-    if (
-      !(
-        /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
-        /^[A-Za-z0-9._-]+$/.test(remote) ||
-        /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
-      )
-    ) {
+    if (!(
+      /^(?:https?:\/\/|ssh:\/\/|git:\/\/)/.test(remote) ||
+      /^[A-Za-z0-9._-]+$/.test(remote) ||
+      /^[^@\s]+@[^:\s]+:[^\s]+$/.test(remote)
+    )) {
       throw new Error('Invalid remote: unsupported remote format')
     }
     if (branch.startsWith('-')) {

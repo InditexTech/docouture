@@ -18,7 +18,7 @@
     "lint": "nx run-many -t lint",
     "typecheck": "nx run-many -t typecheck",
     "test": "nx run-many -t test",
-    "test:merge-coverage": "mkdir -p coverage && lcov-result-merger 'packages/*/reports/vite-coverage/lcov.info' 'coverage/lcov.info'",
+    "test:merge-coverage": "mkdir -p coverage && lcov-result-merger --prepend-source-files --prepend-path-fix '../..' 'packages/*/reports/vite-coverage/lcov.info' 'coverage/lcov.info'",
     "clean": "nx run-many -t clean",
     "format": "prettier --write . ../README.md",
     "format:check": "prettier --check . ../README.md",

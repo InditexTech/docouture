@@ -12,9 +12,11 @@ at all).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-03
+
 ### Fixed
 
-- [#222](https://github.com/InditexTech/docouture/pull/222) \[tooling] docouture-release.yml: release-type/* guard never matches, so docs/release fires immediately even when a code release is also pending
+- [#222](https://github.com/InditexTech/docouture/pull/222) \[tooling] docouture-release.yml: release-type/\* guard never matches, so docs/release fires immediately even when a code release is also pending
 
 ## [1.1.0] - 2026-09-03
 
@@ -106,6 +108,10 @@ at all).
 - [#47](https://github.com/InditexTech/docouture/pull/47) \[internal] migrate Weave.js content to example package
 - [#33](https://github.com/InditexTech/docouture/pull/33) \[skills] Correct the iop-ds-components skill against the shipped package
 
-[Unreleased]: https://github.com/InditexTech/docouture/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/InditexTech/docouture/compare/1.1.1...HEAD
+
+[1.1.1]: https://github.com/InditexTech/docouture/compare/1.1.0...1.1.1
+
 [1.1.0]: https://github.com/InditexTech/docouture/compare/1.0.0...1.1.0
+
 [1.0.0]: https://github.com/InditexTech/docouture/releases/tag/1.0.0

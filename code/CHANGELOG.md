@@ -109,9 +109,6 @@ at all).
 - [#33](https://github.com/InditexTech/docouture/pull/33) \[skills] Correct the iop-ds-components skill against the shipped package
 
 [Unreleased]: https://github.com/InditexTech/docouture/compare/1.1.1...HEAD
-
 [1.1.1]: https://github.com/InditexTech/docouture/compare/1.1.0...1.1.1
-
 [1.1.0]: https://github.com/InditexTech/docouture/compare/1.0.0...1.1.0
-
 [1.0.0]: https://github.com/InditexTech/docouture/releases/tag/1.0.0

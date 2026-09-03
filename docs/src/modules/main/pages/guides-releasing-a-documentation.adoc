@@ -1,7 +1,8 @@
 = Releasing a documentation
 
 A release is cut by running `.github/workflows/docouture-release.yml` (scaffolded by
-`docouture new`), not by hand-editing anything under `docs/`. Two triggers:
+`docouture new`), not by hand-editing anything under `docs/`. Two triggers actually do
+anything on a fresh site:
 
 * *Manually* — Actions tab → "docouture-release" → Run workflow. Works immediately.
 * *Automatically* — merge a pull request into the release branch (`main` on a
@@ -9,6 +10,14 @@ A release is cut by running `.github/workflows/docouture-release.yml` (scaffolde
   carrying the `docs/release` label. That label isn't created automatically — see
   xref:main:prerequisites.adoc[] — so until it exists, only the manual trigger works;
   a merge without it is a silent no-op, not an error.
+
+A third trigger — a published GitHub Release — is scaffolded alongside these but stays
+dormant on a fresh site: it only fires once the repo separately labels PRs
+`release-type/*`/`skip-release` and publishes its own Releases, a convention this
+scaffolding doesn't set up. It exists so that, if a repo's own code releases and docs
+releases can land in the same merged PR, the docs release waits for the code release to
+actually publish instead of firing twice for one merge — adopting that convention later
+is then a label/workflow change elsewhere, not a rewrite of this file.
 
 Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a one-off
 commit built on the release branch's current tip, `git tag docs/v<value>` is created

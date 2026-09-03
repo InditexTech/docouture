@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Fixed
+
+- [#222](https://github.com/InditexTech/docouture/pull/222) \[tooling] docouture-release.yml: release-type/* guard never matches, so docs/release fires immediately even when a code release is also pending
+
 ## [1.1.0] - 2026-09-03
 
 ### Added
@@ -103,7 +107,5 @@ at all).
 - [#33](https://github.com/InditexTech/docouture/pull/33) \[skills] Correct the iop-ds-components skill against the shipped package
 
 [Unreleased]: https://github.com/InditexTech/docouture/compare/1.1.0...HEAD
-
 [1.1.0]: https://github.com/InditexTech/docouture/compare/1.0.0...1.1.0
-
 [1.0.0]: https://github.com/InditexTech/docouture/releases/tag/1.0.0

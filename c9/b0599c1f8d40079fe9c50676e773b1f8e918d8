@@ -1,0 +1,19 @@
+.github/CODEOWNERS
+  s_59b1d04a5435fc::t_d6cbdd25119692 7,10-12,15-21,24,27-28,31-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c9b0599c1f8d40079fe9c50676e773b1f8e918d8",
+  "prompts": {},
+  "sessions": {
+    "s_59b1d04a5435fc": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "2227ea57-60f8-4c37-a750-b793508c5f0e",
+        "model": "unknown"
+      },
+      "human_author": "amagan <andreamr@ext.zara.com>"
+    }
+  }
+}

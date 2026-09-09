@@ -4,29 +4,29 @@
 # more specific paths below the default.
 
 # Default owner for everything not matched below
-* @InditexTech/docouture-admins
+* @InditexTech/docouture-maintainers
 
 # Nx workspace root config
-/code/*.json @InditexTech/docouture-admins
-/code/pnpm-workspace.yaml @InditexTech/docouture-admins
-/code/CHANGELOG.md @InditexTech/docouture-admins
+/code/*.json @InditexTech/docouture-maintainers
+/code/pnpm-workspace.yaml @InditexTech/docouture-maintainers
+/code/CHANGELOG.md @InditexTech/docouture-maintainers
 
 # Packages
-/code/packages/cli/ @InditexTech/docouture-admins
-/code/packages/ui-bundle/ @InditexTech/docouture-admins
-/code/packages/antora-extensions/ @InditexTech/docouture-admins
-/code/packages/asciidoc-extensions/ @InditexTech/docouture-admins
-/code/packages/example/ @InditexTech/docouture-admins
-/code/packages/tooling/ @InditexTech/docouture-admins
-/code/packages/publish-gh-pages/ @InditexTech/docouture-admins
+/code/packages/cli/ @InditexTech/docouture-maintainers
+/code/packages/ui-bundle/ @InditexTech/docouture-maintainers
+/code/packages/antora-extensions/ @InditexTech/docouture-maintainers
+/code/packages/asciidoc-extensions/ @InditexTech/docouture-maintainers
+/code/packages/example/ @InditexTech/docouture-maintainers
+/code/packages/tooling/ @InditexTech/docouture-maintainers
+/code/packages/publish-gh-pages/ @InditexTech/docouture-maintainers
 
 # This repo's own docs site
-/docs/ @InditexTech/docouture-admins
+/docs/ @InditexTech/docouture-maintainers
 
 # CI/CD and repo automation
-/.github/workflows/ @InditexTech/docouture-admins
-/.github/ @InditexTech/docouture-admins
+/.github/workflows/ @InditexTech/docouture-maintainers
+/.github/ @InditexTech/docouture-maintainers
 
 # Skills / agent config
-/.opencode/ @InditexTech/docouture-admins
-/.agents/ @InditexTech/docouture-admins
+/.opencode/ @InditexTech/docouture-maintainers
+/.agents/ @InditexTech/docouture-maintainers

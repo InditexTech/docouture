@@ -57,7 +57,7 @@
     "postcss-url": "~10.1.4",
     "require-directory": "~2.1.1",
     "require-from-string": "~2.0.2",
-    "svgo": "~4.0.2",
+    "svgo": "~4.1.0",
     "typescript": "6.0.3",
     "vinyl": "~3.0.1",
     "vinyl-fs": "~4.0.2",

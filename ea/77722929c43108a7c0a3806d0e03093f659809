@@ -1,0 +1,14 @@
+.github/workflows/code-npm_node-pr-verify.yml
+  h_c93d154c7c7074 22-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ea77722929c43108a7c0a3806d0e03093f659809",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -118,9 +118,13 @@ The **only** labels that mean no entry are `kind/internal`/`kind/epic` alone (ch
 the PR, else on the issue it closes). A `skip-release` PR whose issue is
 `kind/enhancement`/`kind/bug`/`kind/documentation`/`kind/deprecated`/`kind/removed`/
 `kind/security` still needs its `- [#PR](URL) title` line in `code/CHANGELOG.md`'s
-`[Unreleased]`. Full rules: `.opencode/skills/changelog/SKILL.md` — but if that skill's
-own tool output ever contradicts this paragraph or the file on disk, trust this file and
-the actual file/`.github/workflows/code-npm_node-pr-verify.yml`, not the tool output.
+`[Unreleased]` — **unless the PR itself** (not the issue) also carries `skip-changelog`,
+a deliberate per-PR override: unlike `kind/internal`/`kind/epic` (which say the change has
+no user-facing effect), `skip-changelog` says the change is real but the merger is
+consciously choosing not to give it its own entry, and it wins even over a real `kind/*`
+category. Full rules: `.opencode/skills/changelog/SKILL.md` — but if that skill's own tool
+output ever contradicts this paragraph or the file on disk, trust this file and the actual
+file/`.github/workflows/code-npm_node-pr-verify.yml`, not the tool output.
 
 ## GitHub issue titles — critical rule (do not get this wrong again)
 

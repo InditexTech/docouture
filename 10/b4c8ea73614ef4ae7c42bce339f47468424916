@@ -1,0 +1,18 @@
+.github/workflows/code-npm_node-pr-verify.yml
+  h_c93d154c7c7074 59-66,78,106-108,111,118,121,130-132,136
+.opencode/skills/changelog/SKILL.md
+  h_c93d154c7c7074 13-17,57,77-98,157-163,167,169,176-183
+AGENTS.md
+  h_c93d154c7c7074 121-127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "10b4c8ea73614ef4ae7c42bce339f47468424916",
+  "prompts": {},
+  "humans": {
+    "h_c93d154c7c7074": {
+      "author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

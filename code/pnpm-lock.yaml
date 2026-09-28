@@ -8,7 +8,8 @@ overrides:
   send: ^0.19.2
   qs: ^6.16.0
   fast-uri: ^3.1.6
-  brace-expansion: ^5.0.9
+  nx>brace-expansion: ^5.0.9
+  minimatch@10.2.5>brace-expansion: ^5.0.9
 
 importers:
 
@@ -1386,6 +1387,9 @@ packages:
     resolution: {integrity: sha512-A7bvGMGiTOxGMpNupYl9HQTf0FFDNF4VCmks4PJpFyN1AX2pdKuxuwdvUz2Hu388wcgp+OvGFNsumBfFNkR7eg==}
     engines: {node: '>=10.13.0'}
 
+  balanced-match@1.0.2:
+    resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
   balanced-match@4.0.3:
     resolution: {integrity: sha512-1pHv8LX9CpKut1Zp4EXey7Z8OfH11ONNH6Dhi2WDUt31VVZFXZzKwXcysBgqSumFCmR+0dqjMK5v5JiFHzi0+g==}
     engines: {node: 20 || >=22}
@@ -1428,6 +1432,12 @@ packages:
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
+
+  brace-expansion@1.1.21:
+    resolution: {integrity: sha512-9zeA+KLZNNzglF2TPKRQEDyx6Yby7daAkuy8MiPzpXPsYDWi/DRM8jmwUDxokQjYqBpv5DgPiwD4h4ZZSy1Ujw==}
+
+  brace-expansion@2.1.7:
+    resolution: {integrity: sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g==}
 
   brace-expansion@5.0.9:
     resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
@@ -1614,6 +1624,9 @@ packages:
 
   commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
+
+  concat-map@0.0.1:
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   connect-livereload@0.6.1:
     resolution: {integrity: sha512-3R0kMOdL7CjJpU66fzAkCe6HNtd3AavCS4m+uW4KtJjrdGPT0SQEZieAYd+cm+lJoBznNQ4lqipYWkhBMgk00g==}
@@ -5335,6 +5348,8 @@ snapshots:
       async-settle: 2.0.0
       now-and-later: 3.0.0
 
+  balanced-match@1.0.2: {}
+
   balanced-match@4.0.3: {}
 
   balanced-match@4.0.4: {}
@@ -5369,6 +5384,15 @@ snapshots:
       safe-json-parse: 1.0.1
 
   boolbase@1.0.0: {}
+
+  brace-expansion@1.1.21:
+    dependencies:
+      balanced-match: 1.0.2
+      concat-map: 0.0.1
+
+  brace-expansion@2.1.7:
+    dependencies:
+      balanced-match: 1.0.2
 
   brace-expansion@5.0.9:
     dependencies:
@@ -5554,6 +5578,8 @@ snapshots:
   commander@14.0.3: {}
 
   commondir@1.0.1: {}
+
+  concat-map@0.0.1: {}
 
   connect-livereload@0.6.1: {}
 
@@ -6826,11 +6852,11 @@ snapshots:
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 1.1.21
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 2.1.7
 
   minimist@1.2.8: {}
 

@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Security
+
+- [#242](https://github.com/InditexTech/docouture/pull/242) Avoid security vulnerabilities
+
 ## [1.1.1] - 2026-09-03
 
 ### Fixed

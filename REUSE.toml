@@ -81,6 +81,10 @@ path = [
     ".agents/**",
     ".opencode/**/*.md",
     "skills/**",
+
+    # openspec/ scaffolding (config.yaml, .gitkeep placeholders) — generated
+    # by `openspec init`, not hand-authored project code
+    "openspec/**",
 ]
 SPDX-FileCopyrightText = "2026 INDUSTRIA DE DISEÑO TEXTIL S.A. (INDITEX S.A.)"
 SPDX-License-Identifier = "Apache-2.0"

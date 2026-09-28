@@ -19,6 +19,14 @@ permissions:
 
 on:
   pull_request:
+    # `labeled`/`unlabeled` alongside the defaults (opened/synchronize/reopened):
+    # `github.event.pull_request.labels` is a snapshot taken when each webhook
+    # event fires, not a live read — a `kind/internal`/`kind/epic`/
+    # `skip-changelog` label added *after* the code was pushed would otherwise
+    # never re-trigger this check with the label actually visible to it,
+    # leaving `Verify` stuck on a stale FAILURE until an unrelated commit
+    # forces a fresh `synchronize` event.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
     paths:
       - "code/**"
       - ".github/workflows/code-npm_node-pr-verify.yml"

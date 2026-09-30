@@ -10,11 +10,11 @@ metadata:
 > **Common mistake — read this before deciding "no entry needed":**
 > `skip-release` is NOT a stop condition. It only tells the release-flow bump action to
 > defer the version bump; it says nothing about whether a CHANGELOG entry is needed. The
-> **only** labels that mean "no entry" are `kind/internal` and/or `kind/epic`, and only
-> when checked on the right thing: the PR's own label if it carries a real category, else
-> the label(s) of the **issue the PR closes** — never the PR's `skip-release` label taken
-> in isolation. If you catch yourself writing "labeled skip-release → no entry", stop:
-> go check the closing issue's `kind/*` label instead (see "Two-tier" below for the
+> **only** labels that mean "no entry" are `kind/internal` and/or `kind/epic` (checked on
+> the PR, else the closing issue), or `skip-changelog` **on the PR itself** (a deliberate
+> override that wins even over a real `kind/*` category — see below). If you catch
+> yourself writing "labeled skip-release → no entry", stop: go check for `skip-changelog`
+> on the PR or the closing issue's `kind/*` label instead (see "Two-tier" below for the
 > lookup command).
 
 `code/CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) +
@@ -54,6 +54,7 @@ owns the canonical name.
 | `kind/internal` | **no entry** (see below) |
 | `kind/epic` | not a section — a size/container flag only, never on its own decides anything |
 | `skip-release` | **not exempt on its own** — blocks the version bump only, still needs a normal entry unless `kind/internal`/`kind/epic` also applies (see below) |
+| `skip-changelog` | **no entry** — but unlike every other row, this one is PR-only (never resolved via the closing issue) and overrides regardless of category (see below) |
 
 Omit empty section headings entirely rather than leaving them with no bullets under them.
 
@@ -72,6 +73,28 @@ the last PR should trigger the release). It does **not** exempt the PR from the
 CHANGELOG.md requirement — a `skip-release` PR still needs its entry in `[Unreleased]`
 if it (or its closing issue) carries a real category label; the entry just gets promoted
 into a versioned section later, whenever some other PR does trigger the bump.
+
+### `skip-changelog`: a deliberate per-PR override, distinct from `kind/internal`/`kind/epic`
+
+`kind/internal`/`kind/epic` say the change **has no user-facing effect** — that's a fact
+about the change itself, and it's just as true whoever reviews it. `skip-changelog` says
+something different: the change is real (it may well carry `kind/security`, `kind/bug`,
+etc.) but the person merging this specific PR is **consciously choosing** not to give it
+its own line — e.g. a narrow CI/tooling fixup on a PR whose substantive change was already
+documented, or a judgment call that this diff doesn't need its own entry despite its
+category.
+
+Because it's a judgment call about *this diff*, not a property of the tracked issue, it's
+checked **only on the PR itself** — never resolved via the closing issue the way every
+other label in this table is. It overrides even a real `kind/*` category: a PR labeled
+both `kind/security` and `skip-changelog` gets no entry. It does not, however, exempt the
+PR from needing a real category or the internal/epic exemption in the first place (see
+"Require a changelog category label" in CI enforcement below) — it only waives the entry,
+not the classification.
+
+Reach for it rarely, and leave a one-line reason in the PR description when you do (not
+CI-enforced, just convention — the label alone doesn't explain itself to the next reader
+of `git log`).
 
 ## Two-tier: issue vs PR, and how to resolve the label
 
@@ -131,25 +154,30 @@ gh api repos/InditexTech/docouture/pulls/<PR_NUMBER> -X PATCH -f title="<issue t
 
 ## Adding a CHANGELOG entry for a new PR — checklist
 
-1. Is the PR (or its closing issue, per the resolution order above) labeled only
-   `kind/internal`/`kind/epic`, with no real category label anywhere? → no entry needed,
-   stop here. (`skip-release` by itself does **not** stop here — keep going.)
-2. Otherwise it needs exactly one of the six real category labels (`kind/enhancement`,
+1. Is the PR itself labeled `skip-changelog`? → no entry needed, stop here — this
+   overrides even a real category, but doesn't exempt the PR from needing one (see step 2
+   below still applying for labeling-hygiene purposes).
+2. Otherwise, is the PR (or its closing issue, per the resolution order above) labeled
+   only `kind/internal`/`kind/epic`, with no real category label anywhere? → no entry
+   needed, stop here. (`skip-release` by itself does **not** stop here — keep going.)
+3. Otherwise it needs exactly one of the six real category labels (`kind/enhancement`,
    `kind/bug`, `kind/documentation`, `kind/deprecated`, `kind/removed`, `kind/security`),
    resolved per the order above. If none is present, add the correct label on GitHub
    first.
-3. Make sure the PR's title matches its issue's title verbatim (rename via the `gh api`
+4. Make sure the PR's title matches its issue's title verbatim (rename via the `gh api`
    command above if not).
-4. Add `- [#<PR_ID>](<PR_URL>) <PR title>` under the matching `###` section in
+5. Add `- [#<PR_ID>](<PR_URL>) <PR title>` under the matching `###` section in
    `[Unreleased]`, newest-first within the section.
 
 ## CI enforcement
 
 `.github/workflows/code-npm_node-pr-verify.yml` fails a PR touching `code/**` that doesn't
 update `code/CHANGELOG.md`, unless the PR (or its closing issue) is `kind/internal`/
-`kind/epic`-only. `skip-release` is deliberately **not** in that exemption list — it only
-affects `release-flow/keep-a-changelog-action`'s version-bump step in the publish workflow,
-so a `skip-release` PR still fails this check if it hasn't added its entry. The same job
-also fails when `CHANGELOG.md` **is** touched but neither the PR nor its closing issue
-carries exactly one of the six real category labels — closing the gap where an entry gets
-added under the wrong (or no) section.
+`kind/epic`-only, or the PR itself carries `skip-changelog`. `skip-release` is
+deliberately **not** in that exemption list — it only affects
+`release-flow/keep-a-changelog-action`'s version-bump step in the publish workflow, so a
+`skip-release` PR still fails this check if it hasn't added its entry. The same job also
+fails when `CHANGELOG.md` **is** touched but neither the PR nor its closing issue carries
+exactly one of the six real category labels — closing the gap where an entry gets added
+under the wrong (or no) section. `skip-changelog` does not exempt a PR from that second
+check either — it waives the entry, not the classification.

@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Documentation
+
+- [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js's showcase URL
+
 ## [1.1.1] - 2026-09-03
 
 ### Fixed

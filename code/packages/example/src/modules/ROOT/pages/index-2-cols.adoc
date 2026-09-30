@@ -3,8 +3,6 @@
 :page-nav-module: main
 :description: Weave.js — the framework for building visual collaborative applications.
 :page-tags: collaborative, canvas, real-time
-:page-action: Open the showcase
-:page-action-url: https://weavejs.cloud.inditex.com
 :page-action-secondary: Quickstart
 :page-action-secondary-url: main:quickstart.adoc
 :page-hero-image: home-hero.png

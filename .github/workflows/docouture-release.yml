@@ -130,8 +130,10 @@ jobs:
         # and by the time a `closed`+`merged` event fires, main already
         # reflects the merge.
         if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        env:
+          REF: ${{ github.ref }}
         run: |
-          echo "::error::docouture-release must run against main (got ${{ github.ref }})"
+          echo "::error::docouture-release must run against main (got $REF)"
           exit 1
 
       - name: Checkout

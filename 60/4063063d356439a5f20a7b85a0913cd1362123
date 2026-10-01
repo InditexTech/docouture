@@ -1,0 +1,19 @@
+code/CHANGELOG.md
+  s_0e4a788b2fef94::t_e61d73c218678b 15-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "604063063d356439a5f20a7b85a0913cd1362123",
+  "prompts": {},
+  "sessions": {
+    "s_0e4a788b2fef94": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "77ffb7a3-d2c0-48b2-b62f-287a626ffe99",
+        "model": "unknown"
+      },
+      "human_author": "Alejandro Montes <alejandromogarcia@ext.inditex.com>"
+    }
+  }
+}

@@ -41,7 +41,7 @@ export interface PackageManagerPlan {
 
 const PNPM_ACTION_SETUP_STEP =
   '      - name: Setup pnpm\n' +
-  '        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4\n' +
+  '        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4\n' +
   '        with:\n' +
   // `package_json_file` "must be relative to the repository root
   // (GITHUB_WORKSPACE)" per the action's own action.yml — its default

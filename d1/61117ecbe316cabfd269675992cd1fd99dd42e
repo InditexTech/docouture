@@ -1,0 +1,45 @@
+code/packages/cli/templates/workflows/docouture-publish-prerelease.yml
+  s_5937b045de96da::t_d37a7a58f6e15e 38-42,47,56-59,63-67,69,72,74-77,80-94,100-104,118-121,123,137-139,141,143-144
+.github/workflows/docouture-kroki-cache-warm.yml
+  s_5937b045de96da::t_ad2d018e3aac88 5-13,24-39,41,44-47,55-62,70,72-73,84,86,89,94,98,101,103-105,117-118,126,136-137
+code/packages/cli/templates/workflows/docouture-pr-verify.yml
+  s_5937b045de96da::t_cbd548e2837bb4 36-38,47,49-50,61-63,67,108,124-125,143
+.github/workflows/docouture-publish-prerelease.yml
+  s_5937b045de96da::t_973f726a630de8 3-8,10-13,19-22,34-42,47,56-59,63-67,69,72,74-77,80-94,100-104,113-115,118-121,123,137-139,141,143-144
+code/packages/cli/src/lib/detect-package-manager.ts
+  s_5937b045de96da::t_d94a0e6d9162fd 44
+.github/workflows/docouture-publish.yml
+  s_5937b045de96da::t_882eb054d92fa2 27-40,42-46,49-50,58-59,61,72,78,81,86-88,91,93-96,98,107,109-119,122,126-128,130-133
+.github/workflows/docouture-release-preview.yml
+  s_5937b045de96da::t_f025d1f2c9ae53 5,21-24,30-31,33-34,41-42,45,52-62,68-69,71-72,83-85,89-90,133-137,141-142,144,147,152,160-162,169,183,200,206-207,209,212-215,217,225-226,228,231-234,236
+code/packages/cli/templates/workflows/docouture-publish.yml
+  s_5937b045de96da::t_ebc03459f928b1 28-40,42-46,49-50,58-59,61,72,78,81,86-88,91,93-96,98,107,117-119,122,126-128,130-133
+.github/workflows/docouture-release.yml
+  s_5937b045de96da::t_abfc26bfd6c756 9,17-21,29-30,35-43,45-56,63-79,97,106-109,122-131,134,140,142-146,148-149,151,155,160-162,172,176,181-184,202-203,221-231,234,238-240,344-355,377-379,447-449,473-484,489-490,492-493
+code/packages/cli/templates/workflows/docouture-kroki-cache-warm.yml
+  s_5937b045de96da::t_8e21a21a84a4c5 24-28,41,59-61,70,72-73,84-86,89,94,98,101,117-118,126,136-137
+.github/workflows/docouture-pr-verify.yml
+  s_5937b045de96da::t_b97848401955e7 21-26,33-38,47,49-50,61-63,66,70,111,127-128,146
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_5937b045de96da::t_1566d652e1067d 17-18,68-79,97,106-109,122-123,134,148-149,151,155,173,178-181,231,235-237,486-487,489-490
+code/packages/cli/templates/workflows/docouture-release-preview.yml
+  s_5937b045de96da::t_9b47718cba3258 5,21-24,30-31,33-34,41-42,45,52-62,68-69,71-72,83-85,133-137,141-142,144,147,152,160-162,169,183,200,206-207,209,212-215,217,225-226,228,231-234,236
+code/CHANGELOG.md
+  s_5937b045de96da::t_61e11eed8e6f60 15-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d161117ecbe316cabfd269675992cd1fd99dd42e",
+  "prompts": {},
+  "sessions": {
+    "s_5937b045de96da": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "s_5937b045de96da",
+        "model": "unknown"
+      },
+      "human_author": "Ivan Alvarez Sabin <ivanasabi@ext.inditex.com>"
+    }
+  }
+}

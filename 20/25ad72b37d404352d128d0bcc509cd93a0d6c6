@@ -1,0 +1,18 @@
+.github/CODEOWNERS
+  h_e3804906c674bd 7,10-12,15-21,24,27-28,31-32
+code/CHANGELOG.md
+  h_e3804906c674bd 15-18
+docs/.release-version
+  h_e3804906c674bd 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2025ad72b37d404352d128d0bcc509cd93a0d6c6",
+  "prompts": {},
+  "humans": {
+    "h_e3804906c674bd": {
+      "author": "Ivan Alvarez Sabin <ivanasabi@ext.inditex.com>"
+    }
+  }
+}

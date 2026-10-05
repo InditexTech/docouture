@@ -12,6 +12,15 @@ at all).
 
 ## [Unreleased]
 
+### Changed
+
+- Hardened the scaffold's docouture workflows (and this repo's own copies)
+  to least-privilege tokens: workflow-level `permissions: {}`, job
+  permissions limited to what each job needs, `gh-pages`/tag pushes through
+  an App token narrowed to the target repository, `APP_PRIVATE_KEY` passed
+  explicitly to `docouture-publish.yml` instead of `secrets: inherit`, and
+  no dependency or Kroki image caches on the lanes that publish (#250).
+
 ## [1.1.1] - 2026-09-03
 
 ### Fixed

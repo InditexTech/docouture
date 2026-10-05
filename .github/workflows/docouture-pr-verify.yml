@@ -18,21 +18,24 @@ name: docouture-pr-verify
 # changed — no `fetch-depth: 0` needed, since no other ref is ever read.
 #
 # Path-filtered so it doesn't run at all on a PR that touches neither `docs/`
-# content nor this file — this site's own `docs/package.json` pins published
-# npm versions of the docouture packages (not a local workspace link), so a
-# pure `code/**` change here has nothing to affect this build either way.
-# Safe to skip entirely rather than merely no-op: this job (`Verify`, this
-# workflow) is not a required status check — the required ones are
-# `Code / Verify` and `SonarCloud / Unit Tests`, from different workflows —
-# so a path-filtered-out run can't leave a required check stuck pending.
+# content nor this file — nothing else in this job's build can be affected by
+# changes elsewhere in the repo. If this job (`Verify`, this workflow) is a
+# required status check in your own branch protection, confirm that's set up
+# to tolerate a skipped run (e.g. GitHub's "Do not require status checks on
+# creation" / rulesets' own equivalent) rather than blocking merges on a
+# check that now never reports for docs-untouched PRs.
 on:
   pull_request:
     paths:
       - 'docs/**'
       - '.github/workflows/docouture-pr-verify.yml'
 
-permissions:
-  contents: read
+# Least-privilege default: this job only checks out the PR's own HEAD,
+# builds it, and checks links — it never writes to the repository, comments
+# on the PR, or otherwise uses GITHUB_TOKEN, so it never needs more than
+# read access. The workflow grants nothing and the job asks for exactly that,
+# the same shape every docouture workflow uses.
+permissions: {}
 
 concurrency:
   group: docouture-pr-verify-${{ github.event.pull_request.number }}
@@ -41,8 +44,10 @@ concurrency:
 jobs:
   verify:
     name: Verify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
+    permissions:
+      contents: read
     # `docouture new` scaffolds this site's package.json, antora-playbook.yml
     # etc. under docs/ (not the repository root) — see the docs-site-package
     # skill's reference/versioning-modes.md. Every step below runs from
@@ -53,15 +58,16 @@ jobs:
         working-directory: docs
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           package_json_file: docs/package.json
-
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Reads engines.node from docs/package.json — no separate version
           # file to keep in sync.
@@ -102,7 +108,7 @@ jobs:
       - name: Kroki / Docker image cache
         id: kroki-cache
         if: steps.kroki-check.outputs.enabled == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: /tmp/kroki-images.tar
           key: ${{ runner.os }}-kroki-images-${{ hashFiles('**/kroki-compose.yml') }}
@@ -118,7 +124,8 @@ jobs:
           # file's own header), else the bundled default under node_modules.
           compose_file="$(find . -name kroki-compose.yml 2>/dev/null | head -1)"
           docker compose -f "$compose_file" pull
-          docker save -o /tmp/kroki-images.tar $(docker compose -f "$compose_file" config --images)
+          mapfile -t images < <(docker compose -f "$compose_file" config --images)
+          docker save -o /tmp/kroki-images.tar "${images[@]}"
 
       - name: Build
         run: npx antora --fetch antora-playbook.local.yml
@@ -136,4 +143,4 @@ jobs:
       # legitimately point at another version/component this reduced build
       # doesn't have. See that script's own header comment.
       - name: Check links
-        run: pnpm run check-links
+        run: npm run check-links

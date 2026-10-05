@@ -12,14 +12,13 @@ at all).
 
 ## [Unreleased]
 
+### Documentation
+
+- [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js's showcase URL
+
 ### Changed
 
-- Hardened the scaffold's docouture workflows (and this repo's own copies)
-  to least-privilege tokens: workflow-level `permissions: {}`, job
-  permissions limited to what each job needs, `gh-pages`/tag pushes through
-  an App token narrowed to the target repository, `APP_PRIVATE_KEY` passed
-  explicitly to `docouture-publish.yml` instead of `secrets: inherit`, and
-  no dependency or Kroki image caches on the lanes that publish (#250).
+- [#250](https://github.com/InditexTech/docouture/pull/250) [ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB_TOKENs
 
 ## [1.1.1] - 2026-09-03
 

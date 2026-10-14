@@ -14,7 +14,7 @@ at all).
 
 ### Fixed
 
-- [#231](https://github.com/InditexTech/docouture/issues/231) [cli] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
+- [#251](https://github.com/InditexTech/docouture/pull/251) \[cli\] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
 
 ### Documentation
 

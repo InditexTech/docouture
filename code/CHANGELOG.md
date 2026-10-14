@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Fixed
+
+- [#251](https://github.com/InditexTech/docouture/pull/251) \[cli\] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
+
 ### Documentation
 
 - [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js's showcase URL

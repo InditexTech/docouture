@@ -1,0 +1,19 @@
+code/CHANGELOG.md
+  s_fa0ed1589ece8d::t_1b4c4ab110af6f 15-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ac3137a369cfb23dd47f724363b29b098002c1e2",
+  "prompts": {},
+  "sessions": {
+    "s_fa0ed1589ece8d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e8ba208a-c21f-484b-bdf2-81b06f6e2dbf",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Ivan Alvarez Sabin <ivanasabi@ext.inditex.com>"
+    }
+  }
+}

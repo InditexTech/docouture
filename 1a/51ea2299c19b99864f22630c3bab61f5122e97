@@ -1,0 +1,23 @@
+.github/workflows/docouture-release-preview.yml
+  s_fa0ed1589ece8d::t_b66a54edf90ab2 41-45
+code/packages/cli/templates/workflows/docouture-release-preview.yml
+  s_fa0ed1589ece8d::t_926f5efa931825 41-45
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_fa0ed1589ece8d::t_e4bd341c13d68c 32-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1a51ea2299c19b99864f22630c3bab61f5122e97",
+  "prompts": {},
+  "sessions": {
+    "s_fa0ed1589ece8d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e8ba208a-c21f-484b-bdf2-81b06f6e2dbf",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Ivan Alvarez Sabin <ivanasabi@ext.inditex.com>"
+    }
+  }
+}

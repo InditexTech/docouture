@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Fixed
+
+- [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
+
 ### Documentation
 
 - [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js's showcase URL

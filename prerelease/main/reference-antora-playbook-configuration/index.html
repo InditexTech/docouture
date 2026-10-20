@@ -949,8 +949,10 @@ for why the <code>/latest/</code> alias is implemented differently here instead.
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>log.failure_level</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>warn</code> — a broken xref, a missing include target, or an
-unresolved attribute reference fails the build rather than shipping a gap.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>error</code> — a broken xref, a missing include target, or an authoring
+mistake reported by a docouture extension fails the build rather than shipping a gap.
+Warnings (an unresolved attribute reference, an out-of-sequence section level,
+"only the first image is rendered"-style notices) are logged but do not fail it.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>log.level</code></p></td>

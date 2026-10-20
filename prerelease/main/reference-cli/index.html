@@ -619,6 +619,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-3-0/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.3.0</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-2-0/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.2.0</span></span>
       </a>
@@ -985,11 +994,9 @@ this CLI never scaffolds or verifies.</p>
 <h2 id="docouture-upgrade"><a class="anchor" href="#docouture-upgrade"></a><code>docouture upgrade</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Re-sync <code>.github/workflows/</code>, <code>docs/scripts/check-links.mjs</code>, and agent support files
-(<code>AGENTS.md</code>) from the CLI&#8217;s current templates. Workflows and the check-links script are
-fully overwritten (there is nothing site-specific in either — link ignores are
-configured separately, in <code>package.json&#8217;s `docouture.checkLinks.ignore</code>); <code>AGENTS.md</code> is
-merged — only docouture&#8217;s own managed section is replaced. The rest of <code>docs/</code> — every
+<p>Re-sync <code>.github/workflows/</code> and agent support files (<code>AGENTS.md</code>) from the CLI&#8217;s
+current templates. Workflows are fully overwritten (there is nothing site-specific in
+them); <code>AGENTS.md</code> is merged — only docouture&#8217;s own managed section is replaced. The rest of <code>docs/</code> — every
 page a site owner has written — is never touched, with one exception: on a git-flow site
 it writes or corrects <code>docouture.branching</code> and <code>docouture.prereleaseBranch</code> in
 <code>docs/package.json</code> (derived from <code>antora-playbook.yml</code>), which <code>docouture-release.yml</code>
@@ -997,7 +1004,13 @@ reads to open the prerelease sync PR. This also backfills sites scaffolded befor
 It also sets <code>runtime.log.failure_level</code> to <code>error</code> in <code>docs/antora-playbook*.yml</code>, replacing
 any other value and printing each file it changed: builds then fail on errors such as a
 broken <code>xref:</code> or a missing include, so run <code>docouture build</code> and fix what it reports before
-your next CI run.</p>
+your next CI run.
+It also removes the retired <code>check-links</code> feature, printing each change: it deletes
+<code>docs/scripts/check-links.mjs</code> and drops the <code>check-links</code> script and
+<code>docouture.checkLinks</code> from <code>docs/package.json</code>, plus the <code>linkinator</code> devDependency
+unless another script uses it. After that, run your package manager&#8217;s <code>install</code> to
+refresh the lockfile. It warns about any of your own workflows that still mention
+<code>check-links</code>. <code>--dry-run</code> lists these removals without applying them.</p>
 </div>
 <div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
 <colgroup>

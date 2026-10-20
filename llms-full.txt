@@ -1940,7 +1940,7 @@ Check environment and site health: [Node](https://nodejs.org) version, that the 
 
 ## `docouture upgrade`
 
-Re-sync `.github/workflows/`, `docs/scripts/check-links.mjs`, and agent support files (`AGENTS.md`) from the CLI’s current templates. Workflows and the check-links script are fully overwritten (there is nothing site-specific in either — link ignores are configured separately, in `package.json’s `docouture.checkLinks.ignore`); `AGENTS.md` is merged — only docouture’s own managed section is replaced. The rest of `docs/` — every page a site owner has written — is never touched, with one exception: on a git-flow site it writes or corrects `docouture.branching` and `docouture.prereleaseBranch` in `docs/package.json` (derived from `antora-playbook.yml`), which `docouture-release.yml` reads to open the prerelease sync PR. This also backfills sites scaffolded before that field existed. It also sets `runtime.log.failure_level` to `error` in `docs/antora-playbook*.yml`, replacing any other value and printing each file it changed: builds then fail on errors such as a broken `xref:` or a missing include, so run `docouture build` and fix what it reports before your next CI run.
+Re-sync `.github/workflows/` and agent support files (`AGENTS.md`) from the CLI’s current templates. Workflows are fully overwritten (there is nothing site-specific in them); `AGENTS.md` is merged — only docouture’s own managed section is replaced. The rest of `docs/` — every page a site owner has written — is never touched, with one exception: on a git-flow site it writes or corrects `docouture.branching` and `docouture.prereleaseBranch` in `docs/package.json` (derived from `antora-playbook.yml`), which `docouture-release.yml` reads to open the prerelease sync PR. This also backfills sites scaffolded before that field existed. It also sets `runtime.log.failure_level` to `error` in `docs/antora-playbook*.yml`, replacing any other value and printing each file it changed: builds then fail on errors such as a broken `xref:` or a missing include, so run `docouture build` and fix what it reports before your next CI run. It also removes the retired `check-links` feature, printing each change: it deletes `docs/scripts/check-links.mjs` and drops the `check-links` script and `docouture.checkLinks` from `docs/package.json`, plus the `linkinator` devDependency unless another script uses it. After that, run your package manager’s `install` to refresh the lockfile. It warns about any of your own workflows that still mention `check-links`. `--dry-run` lists these removals without applying them.
 
 | Flag | Effect |
 | --- | --- |
@@ -2569,7 +2569,7 @@ Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full 
 
 ### External link checking
 
-A scaffolded site ships `scripts/check-links.mjs` (via [linkinator](https://github.com/JustinBeckwith/linkinator)) and a `check-links` [npm](https://www.npmjs.com) script. `package.json’s own `docouture.checkLinks.ignore` is a list of URL globs to skip — pre-seeded with this repository’s own URL, so a build doesn’t fail checking a link to itself before it’s ever been published.
+Docouture no longer ships an external link checker: crawling live hosts from CI failed releases on healthy links and on the site’s own not-yet-published `site.url`. Antora’s strict build (`runtime.log.failure_level: error`) still fails on a broken `xref:` or a missing include. See [v1.3.0](../release-notes/1-3-0/).
 
 ### URL routing: the `/latest/` alias
 
@@ -2749,10 +2749,13 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ## Unreleased
 
+### Fixed
+
+- [#273](https://github.com/InditexTech/docouture/issues/273) [tooling] Remove the check-links feature (brittle; fails publish on the site’s own site.url links)
+
 ### Documentation
 
 - [#275](https://github.com/InditexTech/docouture/pull/275) [documentation] Ignore the site’s own URL in docs check-links
-- [#272](https://github.com/InditexTech/docouture/pull/272) Update the docs to docouture 1.2.0
 
 ## v1.2.0 — 2026-10-20
 
@@ -2941,6 +2944,26 @@ Existing sites only get this release’s workflow and script fixes by running `d
 
 ---
 
+# v1.3.0
+
+Source: https://inditextech.github.io/docouture/prerelease/main/release-notes/1-3-0/
+
+This release removes `check-links`. Existing sites are cleaned up by running `docouture upgrade`.
+
+## Do this
+
+1. Run `docouture upgrade`, review the diff, and commit `.github/workflows/` and `docs/package.json`. See [CLI](../../reference-cli/).
+2. Run your package manager’s `install` (for example `pnpm install`) to refresh the lockfile, which no longer contains `linkinator`.
+3. If you call `<pm> run check-links` from your own workflow or script, remove that call: `upgrade` warns about workflows that still mention it.
+
+## What changed
+
+- **Breaking: `check-links` is removed.** The `Check links` step is gone from `docouture-pr-verify.yml`, `docouture-release.yml` and `docouture-publish.yml`, and a scaffolded site no longer has `scripts/check-links.mjs`, the `check-links` script, the `linkinator` devDependency or `docouture.checkLinks`.
+- **Why.** The check depended on external hosts, failed releases on healthy links, and could never pass on the first publish of a version once `site.url` was set.
+- **What still protects you.** Antora’s strict build still fails on a broken `xref:` or a missing include.
+
+---
+
 # Release notes
 
 Source: https://inditextech.github.io/docouture/prerelease/main/release-notes/
@@ -2949,6 +2972,7 @@ What changed for users in each release, newest first — in contrast to [Changel
 
 ## Versions
 
+- [v1.3.0](1-3-0/)
 - [v1.2.0](1-2-0/)
 - [v1.0.0](1-0-0/)
 
@@ -3017,18 +3041,6 @@ How a scaffolded site’s shape grows over time: new modules, new pages within t
 
 ---
 
-# Guides
-
-Source: https://inditextech.github.io/docouture/1.2.0/main/guides-overview/
-
-Task-oriented how-tos for a scaffolded site, grouped by what they’re for:
-
-- [Content & structure](../guides-content-structure/) — growing the site’s shape: modules, pages, navigation.
-- [Branding & customization](../guides-branding/) — the landing page, favicon, and product logo.
-- [Versioning & publishing](../guides-versioning-publishing/) — taking a local build to a published, versioned one.
-
----
-
 # Modifying the navigation
 
 Source: https://inditextech.github.io/docouture/1.2.0/main/guides-modifying-the-navigation/
@@ -3063,6 +3075,18 @@ Renaming a component (not just adding/removing nav entries) touches four places 
 ## Adding a new module’s navigation
 
 Covered separately in [Adding a module](../guides-adding-a-module/) — a new module needs both a `nav.adoc` of its own **and** an entry in `docs/src/antora.yml’s top-level `nav:` list and `nav_modules:`.
+
+---
+
+# Guides
+
+Source: https://inditextech.github.io/docouture/1.2.0/main/guides-overview/
+
+Task-oriented how-tos for a scaffolded site, grouped by what they’re for:
+
+- [Content & structure](../guides-content-structure/) — growing the site’s shape: modules, pages, navigation.
+- [Branding & customization](../guides-branding/) — the landing page, favicon, and product logo.
+- [Versioning & publishing](../guides-versioning-publishing/) — taking a local build to a published, versioned one.
 
 ---
 
@@ -4443,6 +4467,19 @@ antora:
 
 ---
 
+# Release notes
+
+Source: https://inditextech.github.io/docouture/1.2.0/main/release-notes/
+
+What changed for users in each release, newest first — in contrast to [Changelog](../changelog/), the unabridged commit-level record.
+
+## Versions
+
+- [v1.2.0](1-2-0/)
+- [v1.0.0](1-0-0/)
+
+---
+
 # v1.2.0
 
 Source: https://inditextech.github.io/docouture/1.2.0/main/release-notes/1-2-0/
@@ -4475,19 +4512,6 @@ Existing sites only get this release’s workflow and script fixes by running `d
 - `docouture upgrade` overwrites workflows, so hand edits to them are lost.
 - The strict build means a broken `xref:` or a missing include now fails the build.
 - Builds start cold: the dependency and Kroki image caches were removed from the release and publish workflows.
-
----
-
-# Release notes
-
-Source: https://inditextech.github.io/docouture/1.2.0/main/release-notes/
-
-What changed for users in each release, newest first — in contrast to [Changelog](../changelog/), the unabridged commit-level record.
-
-## Versions
-
-- [v1.2.0](1-2-0/)
-- [v1.0.0](1-0-0/)
 
 ---
 
@@ -4672,36 +4696,6 @@ The package a publish target resolves to: named `@inditextech/docouture-publish-
 
 ---
 
-# v1.0.0
-
-Source: https://inditextech.github.io/docouture/1.2.0/main/release-notes/1-0-0/
-
-![Pipeline diagram showing docouture’s four stages — scaffold](../../_images/v1.0.0-release-notes-hero.jpg)
-
-docouture turns "we should really document this" into a real, versioned documentation site in minutes, not weeks — scaffolded straight into the repository the product it documents already lives in, themed with Inditex’s own design system, and built to be written and kept in sync by AI agents just as easily as by hand.
-
-## Ship a site, not a project
-
-One command, `docouture new`, is the whole setup: a full [Antora](https://antora.org) content tree, [GitHub](https://github.com/features/actions) workflows, and an `AGENTS.md` briefing so an AI agent can pick up the site immediately — dropped into an existing repository, interactively or with flags, in one pass. `docouture dev` serves it with live reload while writing; `docouture build`, `publish`, `doctor`, `upgrade`, `eject`, `teardown` and `completion` cover everything from there to a published site and back. See [CLI](../../reference-cli/).
-
-## Grow it the way the project actually grows
-
-Every site picks its own versioning story from day one: a rolling **standalone** stable prerelease pair for a product that only ever needs "the current docs", or a full **versioned** history where every release keeps its own docs forever. Either way, nothing about how pages are written changes — only how many copies of them the site ends up publishing. See [Versioning modes](../../guides-versioning-modes/).
-
-## Look like the product, not like a template
-
-The UI bundle is a themed fork of Antora’s own default UI on top of Inditex’s IOP Design System: dark/light mode, a version switcher, full-text search that needs no extra wiring, and a set of authoring blocks — `[tabs]`, `[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]` — for the parts of a page plain [AsciiDoc](https://asciidoc.org) was never going to express on its own.
-
-## Content that does more than sit still
-
-Diagrams render for real — [Kroki](https://kroki.io)-backed mermaid, plantuml, bpmn and excalidraw — code blocks get build-time [Shiki](https://shiki.style) syntax highlighting instead of a client-side afterthought, and every build produces [`llms.txt`](https://llmstxt.org)/`llms-full.txt` so an AI agent can read the site as plainly as a person can. External link checking catches rot before it ships. See [Integrations](../../reference-integrations/).
-
-## Publish and move on
-
-`docouture publish gh-pages` — a CNAME custom-domain option and automatic `.nojekyll` handling included — is the entire path from a finished build to a live URL. See [Publishing a documentation](../../guides-publishing-a-documentation/).
-
----
-
 # Branching model
 
 Source: https://inditextech.github.io/docouture/1.2.0/main/guides-branching-model/
@@ -4776,32 +4770,33 @@ Trunk-based if one branch is genuinely enough — most sites. Git-flow if the re
 
 ---
 
-# Contributing
+# v1.0.0
 
-Source: https://inditextech.github.io/docouture/1.2.0/main/contributing/
+Source: https://inditextech.github.io/docouture/1.2.0/main/release-notes/1-0-0/
 
-docouture is developed at [InditexTech/docouture](https://github.com/InditexTech/docouture). Contributions there follow the repository’s own guide, not this scaffolded site’s — the summary below is what actually applies; see `CONTRIBUTING.md` in that repository for the full text.
+![Pipeline diagram showing docouture’s four stages — scaffold](../../_images/v1.0.0-release-notes-hero.jpg)
 
-## Before contributing
+docouture turns "we should really document this" into a real, versioned documentation site in minutes, not weeks — scaffolded straight into the repository the product it documents already lives in, themed with Inditex’s own design system, and built to be written and kept in sync by AI agents just as easily as by hand.
 
-- Sign the [Contributor License Agreement (CLA)](https://github.com/InditexTech/foss/blob/main/CLA.md) — required before any code contribution is accepted.
-- Install `just`, `asdf`, and the pinned [Node](https://nodejs.org)/https://pnpm.io[pnpm] versions the repository’s own `README.md` documents.
+## Ship a site, not a project
 
-## Workflow
+One command, `docouture new`, is the whole setup: a full [Antora](https://antora.org) content tree, [GitHub](https://github.com/features/actions) workflows, and an `AGENTS.md` briefing so an AI agent can pick up the site immediately — dropped into an existing repository, interactively or with flags, in one pass. `docouture dev` serves it with live reload while writing; `docouture build`, `publish`, `doctor`, `upgrade`, `eject`, `teardown` and `completion` cover everything from there to a published site and back. See [CLI](../../reference-cli/).
 
-1. Open an issue to discuss the change first.
-2. Fork, branch, and make the change.
-3. Run `just check` (lint, typecheck, formatting — what CI runs).
-4. Update `code/CHANGELOG.md’s `[Unreleased]` section — required on every PR touching `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
-5. Open a pull request linking the issue.
+## Grow it the way the project actually grows
 
-## Contributing to this site specifically
+Every site picks its own versioning story from day one: a rolling **standalone** stable prerelease pair for a product that only ever needs "the current docs", or a full **versioned** history where every release keeps its own docs forever. Either way, nothing about how pages are written changes — only how many copies of them the site ends up publishing. See [Versioning modes](../../guides-versioning-modes/).
 
-If what needs fixing is a page under `docs/` (this site, not docouture itself), that’s a normal docs PR against whatever repository this site was scaffolded into — see [Adding a page](../guides-adding-a-page/) for the mechanics, and [AI-First approach](../reference-ai-first-approach/)'s `docouture-documenting-changes` skill for keeping content in sync as the underlying repo changes.
+## Look like the product, not like a template
 
-## License
+The UI bundle is a themed fork of Antora’s own default UI on top of Inditex’s IOP Design System: dark/light mode, a version switcher, full-text search that needs no extra wiring, and a set of authoring blocks — `[tabs]`, `[cards]`, `[accordion]`, `[feature-tabs]`, `[cta]` — for the parts of a page plain [AsciiDoc](https://asciidoc.org) was never going to express on its own.
 
-Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which mixes MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each file’s own SPDX header for which applies to it.
+## Content that does more than sit still
+
+Diagrams render for real — [Kroki](https://kroki.io)-backed mermaid, plantuml, bpmn and excalidraw — code blocks get build-time [Shiki](https://shiki.style) syntax highlighting instead of a client-side afterthought, and every build produces [`llms.txt`](https://llmstxt.org)/`llms-full.txt` so an AI agent can read the site as plainly as a person can. External link checking catches rot before it ships. See [Integrations](../../reference-integrations/).
+
+## Publish and move on
+
+`docouture publish gh-pages` — a CNAME custom-domain option and automatic `.nojekyll` handling included — is the entire path from a finished build to a live URL. See [Publishing a documentation](../../guides-publishing-a-documentation/).
 
 ---
 
@@ -4848,6 +4843,35 @@ Yes — `npx skills@latest add InditexTech/docouture --all` installs a set of ag
 10. Is docouture open source?
 
 Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0; the UI bundle’s own fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default) mixes MPL-2.0 (files that are a Modification of an upstream file) with Apache-2.0 (files with no upstream counterpart), per its own LICENSE and NOTICE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are all original or openly licensed, with nothing embedded that restricts publishing a site built with it.
+
+---
+
+# Contributing
+
+Source: https://inditextech.github.io/docouture/1.2.0/main/contributing/
+
+docouture is developed at [InditexTech/docouture](https://github.com/InditexTech/docouture). Contributions there follow the repository’s own guide, not this scaffolded site’s — the summary below is what actually applies; see `CONTRIBUTING.md` in that repository for the full text.
+
+## Before contributing
+
+- Sign the [Contributor License Agreement (CLA)](https://github.com/InditexTech/foss/blob/main/CLA.md) — required before any code contribution is accepted.
+- Install `just`, `asdf`, and the pinned [Node](https://nodejs.org)/https://pnpm.io[pnpm] versions the repository’s own `README.md` documents.
+
+## Workflow
+
+1. Open an issue to discuss the change first.
+2. Fork, branch, and make the change.
+3. Run `just check` (lint, typecheck, formatting — what CI runs).
+4. Update `code/CHANGELOG.md’s `[Unreleased]` section — required on every PR touching `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
+5. Open a pull request linking the issue.
+
+## Contributing to this site specifically
+
+If what needs fixing is a page under `docs/` (this site, not docouture itself), that’s a normal docs PR against whatever repository this site was scaffolded into — see [Adding a page](../guides-adding-a-page/) for the mechanics, and [AI-First approach](../reference-ai-first-approach/)'s `docouture-documenting-changes` skill for keeping content in sync as the underlying repo changes.
+
+## License
+
+Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which mixes MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each file’s own SPDX header for which applies to it.
 
 ---
 
@@ -6473,6 +6497,128 @@ See [Publishing a documentation](../guides-publishing-a-documentation/) and [Rel
 
 ---
 
+# Landing page modifications
+
+Source: https://inditextech.github.io/docouture/1.1.2/main/guides-landing-page-modifications/
+
+The landing page (`ROOT/pages/index.adoc`) is the one page rendered through the UI bundle’s `home` layout (`:page-layout: home`). The layout itself builds only the hero — everything below it is the page’s own ordinary AsciiDoc body, using blocks that happen to have no plain-AsciiDoc equivalent. Its section order is therefore fixed — each block is optional, but present blocks appear in this order:
+
+1. **Hero** — the page’s own header attributes.
+2. **Get started** — a `[cards]` block, typically 4 entry points.
+3. **Key features** — a `[feature-tabs]` block, a handful of capability slides.
+4. **A CTA** — a `[cta]` block, one pitch plus one action.
+5. **FAQ** — an `[accordion]` block.
+
+`:page-nav-module: main` is what gives the landing page a side menu at all — `ROOT` itself has no `nav.adoc`, so it borrows whichever module this attribute names.
+
+Every block below is documented in full syntax in [Custom AsciiDoc components](../reference-custom-asciidoc-components/) — this page is what’s actually editable on **this** landing page and what each change does, not the block reference.
+
+## Hero
+
+Set as page attributes on `index.adoc` itself, not a block:
+
+```
+:description: One sentence, used as the page's meta description only — it is not
+              shown anywhere in the hero itself.
+:page-tags: antora, cli, design-system
+:page-action: Get started
+:page-action-url: main:quickstart.adoc
+:page-action-secondary: About
+:page-action-secondary-url: main:index.adoc
+:page-hero-image: hero-placeholder.png
+:page-hero-image-alt: A one-line description of the image, for screen readers.
+:page-hero-image-bordered:
+```
+
+- `:description:` is meta-only on the `home` layout — unlike the default page layout’s hero, it never renders as a visible subtitle. Write it for search engines and link-preview cards, not as landing-page copy.
+- `:page-tags:` is a comma-separated list, rendered as chips under the title.
+- `:page-action:`/`:page-action-url:` is the primary button — **both halves are required**; set only one and neither renders (a button that goes nowhere is worse than no button).
+- `:page-action-secondary:`/`:page-action-secondary-url:` is the same rule, and it’s nested inside the primary action’s markup — if the primary pair is unset, the secondary button doesn’t render either, even with both of its own halves set.
+- `:page-hero-image:`/`:page-hero-image-alt:` is optional — the hero renders fine as text-only with no image. There’s no dark-mode variant for it (unlike feature/CTA images); pick artwork that reads on both themes, or skip it.
+- `:page-hero-image-bordered:` is an opt-in, presence-only switch (no value needed) — set it and the media slot (image or video) renders with a black/white frame and a 10px radius, instead of the bare slot the layout renders by default. Turn it on for artwork that carries no framing of its own; leave it off for a screenshot that already has its own bezel, which a second frame would just stack on top of.
+- `:page-hero-video:`/`:page-hero-video-poster:` is the same media slot, for a video instead of an image — if both `:page-hero-image:` and `:page-hero-video:` are set, the video wins. `:page-hero-image-bordered:` applies to whichever one renders.
+
+## Get started
+
+The site’s own real example:
+
+```
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
+====
+[card,subheader="Start here"]
+.xref:main:quickstart.adoc[Quickstart]
+--
+image::card-placeholder.png[Placeholder card image]
+
+Scaffold a site and see it running locally in a few commands.
+--
+====
+```
+
+What each attribute changes:
+
+- `type=` — `no-image` (default, text-only), `image-landscape`, `image-square`, or `image-portrait`. An unknown value warns and falls back to `no-image`.
+- `columns=` — space-separated `breakpoint:count` tokens (bare `count` = the base/ mobile column count); breakpoints are `s`, `m`, `l` only, max 4 columns per breakpoint. Defaults to `"1 s:2 m:3"` if omitted.
+- `width=` — `content` (default, matches the page’s text measure) or `container` (full page width — what this site’s own Get started section uses).
+- Per-card `subheader=` and `icon=` share one header row and can be combined — they are not alternatives to each other, despite how the two examples in [Custom AsciiDoc components](../reference-custom-asciidoc-components/) read side by side. `icon=` only accepts a bare icon name with a working CSS mask — see [Icon gallery](../guides-icon-gallery/) for which ones actually render.
+- Per-card `labels=` is a comma-separated list rendered as small grey chips, separate from `subheader=`.
+
+Adding, removing or reordering a card is just adding, removing or reordering a `[card]` block inside the `====`; there’s no fixed count (4 is this template’s starting point, not a limit).
+
+## Key features
+
+Each `[feature]` is one tab. At least one of `label=` (the tab’s own text) or `.Title` (a heading shown in the panel) is required — set both when the tab label and the in-panel heading should read differently, set just one otherwise:
+
+```
+[feature,label="Scaffold in one command"]
+--
+image::feature-placeholder.png[Placeholder feature image]
+image::feature-placeholder-dark.png[role=dark]
+
+Prose for this slide.
+
+[.cta]
+xref:main:quickstart.adoc[Try it]
+--
+```
+
+The `role=dark` image is optional but recommended whenever the light one wouldn’t read on a dark background — it’s swapped in automatically under the dark theme. The `[.cta]` link is optional and limited to one per slide (a second one is dropped, not an error). Regardless of the order these are authored in, a slide always renders as media, then prose, then the call to action.
+
+Add, remove or reorder slides the same way as cards — one `[feature]` block per tab, no fixed count.
+
+## A CTA
+
+One pitch, one `[.primary]` action — and, less commonly needed, one `[.secondary]` action alongside it:
+
+```
+[cta]
+====
+A short pitch.
+
+[.primary]
+https://github.com/InditexTech/docouture[View the repository]
+
+[.secondary]
+xref:main:faq.adoc[Read the FAQ]
+====
+```
+
+`align=` (`center`, the default, or `start`) controls whether the pitch and actions centre or left-align. `title=` adds a second, larger heading line inside the band itself — most callers don’t need it, since the `==` heading above the block (`Free & open source` on this site) already does that job.
+
+## FAQ
+
+Add or remove a question by adding or removing a `[%collapsible]` item inside the `[accordion]` block — see [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for the `[%collapsible]` syntax itself. `%single-open` (an option on the `[accordion]` block, not this site’s current setting) closes whichever other item was open when a new one is expanded; without it, items toggle independently, which is what this landing page actually uses.
+
+## A different layout shape
+
+`:page-layout: home` (two-column: hero as a fixed side column, everything else scrolling in the main column) is one of two shipped landing shapes. `:page-layout: home-single` renders the identical hero and body content stacked in a single column instead — same attributes, same blocks, just a different arrangement. Switching is a one-line change on `index.adoc` itself.
+
+## Replacing the placeholder images
+
+`ROOT/images/{hero,card,feature,feature-dark}-placeholder.png` are stand-ins. Replace them with real artwork under the same filenames (or update the `image::` references to new ones) — they’re a separate concern from the **site** logo/favicon, which [Setup the product logo](../guides-setup-the-product-logo/) and [Setup a favicon](../guides-setup-a-favicon/) cover.
+
+---
+
 # Icon gallery
 
 Source: https://inditextech.github.io/docouture/1.1.2/main/guides-icon-gallery/
@@ -6604,128 +6750,6 @@ These exist in the sprite and work fine in `nav_modules[].icon`, but have no CSS
 | `sun` | Light-mode icon on the light/dark theme toggle. |
 
 See [Adding a module](../guides-adding-a-module/) for `nav_modules[].icon` syntax and [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for `[card,icon=]` syntax.
-
----
-
-# Landing page modifications
-
-Source: https://inditextech.github.io/docouture/1.1.2/main/guides-landing-page-modifications/
-
-The landing page (`ROOT/pages/index.adoc`) is the one page rendered through the UI bundle’s `home` layout (`:page-layout: home`). The layout itself builds only the hero — everything below it is the page’s own ordinary AsciiDoc body, using blocks that happen to have no plain-AsciiDoc equivalent. Its section order is therefore fixed — each block is optional, but present blocks appear in this order:
-
-1. **Hero** — the page’s own header attributes.
-2. **Get started** — a `[cards]` block, typically 4 entry points.
-3. **Key features** — a `[feature-tabs]` block, a handful of capability slides.
-4. **A CTA** — a `[cta]` block, one pitch plus one action.
-5. **FAQ** — an `[accordion]` block.
-
-`:page-nav-module: main` is what gives the landing page a side menu at all — `ROOT` itself has no `nav.adoc`, so it borrows whichever module this attribute names.
-
-Every block below is documented in full syntax in [Custom AsciiDoc components](../reference-custom-asciidoc-components/) — this page is what’s actually editable on **this** landing page and what each change does, not the block reference.
-
-## Hero
-
-Set as page attributes on `index.adoc` itself, not a block:
-
-```
-:description: One sentence, used as the page's meta description only — it is not
-              shown anywhere in the hero itself.
-:page-tags: antora, cli, design-system
-:page-action: Get started
-:page-action-url: main:quickstart.adoc
-:page-action-secondary: About
-:page-action-secondary-url: main:index.adoc
-:page-hero-image: hero-placeholder.png
-:page-hero-image-alt: A one-line description of the image, for screen readers.
-:page-hero-image-bordered:
-```
-
-- `:description:` is meta-only on the `home` layout — unlike the default page layout’s hero, it never renders as a visible subtitle. Write it for search engines and link-preview cards, not as landing-page copy.
-- `:page-tags:` is a comma-separated list, rendered as chips under the title.
-- `:page-action:`/`:page-action-url:` is the primary button — **both halves are required**; set only one and neither renders (a button that goes nowhere is worse than no button).
-- `:page-action-secondary:`/`:page-action-secondary-url:` is the same rule, and it’s nested inside the primary action’s markup — if the primary pair is unset, the secondary button doesn’t render either, even with both of its own halves set.
-- `:page-hero-image:`/`:page-hero-image-alt:` is optional — the hero renders fine as text-only with no image. There’s no dark-mode variant for it (unlike feature/CTA images); pick artwork that reads on both themes, or skip it.
-- `:page-hero-image-bordered:` is an opt-in, presence-only switch (no value needed) — set it and the media slot (image or video) renders with a black/white frame and a 10px radius, instead of the bare slot the layout renders by default. Turn it on for artwork that carries no framing of its own; leave it off for a screenshot that already has its own bezel, which a second frame would just stack on top of.
-- `:page-hero-video:`/`:page-hero-video-poster:` is the same media slot, for a video instead of an image — if both `:page-hero-image:` and `:page-hero-video:` are set, the video wins. `:page-hero-image-bordered:` applies to whichever one renders.
-
-## Get started
-
-The site’s own real example:
-
-```
-[cards,type=image-square,columns="1 s:2 m:4",width=container]
-====
-[card,subheader="Start here"]
-.xref:main:quickstart.adoc[Quickstart]
---
-image::card-placeholder.png[Placeholder card image]
-
-Scaffold a site and see it running locally in a few commands.
---
-====
-```
-
-What each attribute changes:
-
-- `type=` — `no-image` (default, text-only), `image-landscape`, `image-square`, or `image-portrait`. An unknown value warns and falls back to `no-image`.
-- `columns=` — space-separated `breakpoint:count` tokens (bare `count` = the base/ mobile column count); breakpoints are `s`, `m`, `l` only, max 4 columns per breakpoint. Defaults to `"1 s:2 m:3"` if omitted.
-- `width=` — `content` (default, matches the page’s text measure) or `container` (full page width — what this site’s own Get started section uses).
-- Per-card `subheader=` and `icon=` share one header row and can be combined — they are not alternatives to each other, despite how the two examples in [Custom AsciiDoc components](../reference-custom-asciidoc-components/) read side by side. `icon=` only accepts a bare icon name with a working CSS mask — see [Icon gallery](../guides-icon-gallery/) for which ones actually render.
-- Per-card `labels=` is a comma-separated list rendered as small grey chips, separate from `subheader=`.
-
-Adding, removing or reordering a card is just adding, removing or reordering a `[card]` block inside the `====`; there’s no fixed count (4 is this template’s starting point, not a limit).
-
-## Key features
-
-Each `[feature]` is one tab. At least one of `label=` (the tab’s own text) or `.Title` (a heading shown in the panel) is required — set both when the tab label and the in-panel heading should read differently, set just one otherwise:
-
-```
-[feature,label="Scaffold in one command"]
---
-image::feature-placeholder.png[Placeholder feature image]
-image::feature-placeholder-dark.png[role=dark]
-
-Prose for this slide.
-
-[.cta]
-xref:main:quickstart.adoc[Try it]
---
-```
-
-The `role=dark` image is optional but recommended whenever the light one wouldn’t read on a dark background — it’s swapped in automatically under the dark theme. The `[.cta]` link is optional and limited to one per slide (a second one is dropped, not an error). Regardless of the order these are authored in, a slide always renders as media, then prose, then the call to action.
-
-Add, remove or reorder slides the same way as cards — one `[feature]` block per tab, no fixed count.
-
-## A CTA
-
-One pitch, one `[.primary]` action — and, less commonly needed, one `[.secondary]` action alongside it:
-
-```
-[cta]
-====
-A short pitch.
-
-[.primary]
-https://github.com/InditexTech/docouture[View the repository]
-
-[.secondary]
-xref:main:faq.adoc[Read the FAQ]
-====
-```
-
-`align=` (`center`, the default, or `start`) controls whether the pitch and actions centre or left-align. `title=` adds a second, larger heading line inside the band itself — most callers don’t need it, since the `==` heading above the block (`Free & open source` on this site) already does that job.
-
-## FAQ
-
-Add or remove a question by adding or removing a `[%collapsible]` item inside the `[accordion]` block — see [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for the `[%collapsible]` syntax itself. `%single-open` (an option on the `[accordion]` block, not this site’s current setting) closes whichever other item was open when a new one is expanded; without it, items toggle independently, which is what this landing page actually uses.
-
-## A different layout shape
-
-`:page-layout: home` (two-column: hero as a fixed side column, everything else scrolling in the main column) is one of two shipped landing shapes. `:page-layout: home-single` renders the identical hero and body content stacked in a single column instead — same attributes, same blocks, just a different arrangement. Switching is a one-line change on `index.adoc` itself.
-
-## Replacing the placeholder images
-
-`ROOT/images/{hero,card,feature,feature-dark}-placeholder.png` are stand-ins. Replace them with real artwork under the same filenames (or update the `image::` references to new ones) — they’re a separate concern from the **site** logo/favicon, which [Setup the product logo](../guides-setup-the-product-logo/) and [Setup a favicon](../guides-setup-a-favicon/) cover.
 
 ---
 
@@ -7765,6 +7789,516 @@ See the [full FAQ](main/faq/) for more, including diagrams, search and publishin
 
 ---
 
+# Custom AsciiDoc components
+
+Source: https://inditextech.github.io/docouture/1.1.2/main/reference-custom-asciidoc-components/
+
+This site’s own blocks, registered by `@inditextech/docouture-asciidoc-extensions` and documented in full in the `docouture-writing-docs-pages` skill’s `reference/docouture-blocks.md`. Every one of these degrades to plain, readable HTML with JavaScript disabled. See [AsciiDoc basics](../reference-asciidoc-basics/) for plain AsciiDoc first, and [Integrations](../reference-integrations/) for the build-time capabilities (diagrams, syntax highlighting) mentioned below, in full. Same pattern throughout: raw markup first, then the same markup rendered live.
+
+## Tabs
+
+A switcher for equivalent alternatives. Each `[tabs]` block is independent — picking a tab in one never affects another further down the page.
+
+```
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,bash]
+----
+pnpm add some-package
+----
+****
+
+[tab,label="npm"]
+****
+[,bash]
+----
+npm install some-package
+----
+****
+
+[tab,label="yarn"]
+****
+[,bash]
+----
+yarn add some-package
+----
+****
+--
+```
+
+- pnpm
+- npm
+- yarn
+
+```
+pnpm add some-package
+```
+
+```
+npm install some-package
+```
+
+```
+yarn add some-package
+```
+
+A second, independent set:
+
+```
+[tabs]
+--
+[tab,label="pnpm"]
+****
+[,bash]
+----
+pnpm run dev
+----
+****
+
+[tab,label="npm"]
+****
+[,bash]
+----
+npm run dev
+----
+****
+--
+```
+
+- pnpm
+- npm
+
+```
+pnpm run dev
+```
+
+```
+npm run dev
+```
+
+## Cards
+
+Text-only — no image, no open block needed:
+
+```
+[cards]
+====
+[card]
+.xref:main:quickstart.adoc[Quickstart]
+Scaffold, build, publish — the smallest path to a working result.
+
+[card,subheader="Reference"]
+.xref:main:guides-adding-a-page.adoc[Adding a page]
+Create a file, add it to nav.adoc, done.
+
+[card,icon="grid-3x3"]
+.xref:main:architecture.adoc[Architecture]
+This one carries a header icon — `icon=` and `subheader=` share one header row and
+combine fine on the same card, they aren't alternatives to each other.
+====
+```
+
+[Quickstart](../quickstart/)
+
+Scaffold, build, publish — the smallest path to a working result.
+
+Reference
+
+[Adding a page](../guides-adding-a-page/)
+
+Create a file, add it to nav.adoc, done.
+
+[Architecture](../architecture/)
+
+This one carries a header icon — `icon=` and `subheader=` share one header row and combine fine on the same card, they aren’t alternatives to each other.
+
+`icon=` takes a bare icon name (Lucide’s own, e.g. `store`), and only renders if that icon has a generated CSS mask — see [Icon gallery](../guides-icon-gallery/) for the full, working set. A per-card `labels=` attribute (comma-separated) renders a separate row of small grey chips, independent of `subheader=`.
+
+With images, a fixed square aspect, four columns, let out to the container’s full width — the same shape the landing’s own quicklinks use (`ROOT:card-placeholder.png` reused across modules via a cross-module image resource ID):
+
+```
+[cards,type=image-square,columns="1 s:2 m:4",width=container]
+====
+[card,subheader="One"]
+.xref:main:quickstart.adoc[First]
+--
+image::ROOT:card-placeholder.png[Placeholder card image]
+
+Every card in a block shares one aspect ratio.
+--
+
+[card,subheader="Two"]
+.xref:main:index.adoc[Second]
+--
+image::ROOT:card-placeholder.png[Placeholder card image]
+
+The image crops to fill; it is never letterboxed.
+--
+====
+```
+
+![Placeholder card image](../../_images/card-placeholder.png)
+
+One
+
+[First](../quickstart/)
+
+Every card in a block shares one aspect ratio.
+
+![Placeholder card image](../../_images/card-placeholder.png)
+
+Two
+
+[Second](../)
+
+The image crops to fill; it is never letterboxed.
+
+- `type=` — `no-image` (default), `image-landscape`, `image-square`, or `image-portrait`.
+- `columns=` — space-separated `breakpoint:count` tokens (a bare number sets the base/mobile count); breakpoints are `s`, `m`, `l` only, up to 4 columns each. Defaults to `"1 s:2 m:3"` if omitted.
+- `width=` — `content` (default, matches the page’s text measure) or `container` (full page width, as above).
+
+## Accordion
+
+Groups a run of `[%collapsible]` items with `role=group` semantics. `%single-open` closes whichever other item was open; without it, items are independent.
+
+```
+[accordion%single-open,aria-label="Single-open example"]
+--
+.First question?
+[%collapsible]
+====
+First answer.
+====
+
+.Second question?
+[%collapsible]
+====
+Second answer. Opening this closes the first.
+====
+--
+```
+
+First question?
+
+First answer.
+
+Second question?
+
+Second answer. Opening this closes the first.
+
+Grouped, but independent (the default — no `%single-open`):
+
+```
+[accordion,aria-label="Multiple-open example"]
+--
+.Can both of these be open at once?
+[%collapsible]
+====
+Yes — this group has no `%single-open`, so each item toggles independently.
+====
+
+.Is this still one accessible group?
+[%collapsible]
+====
+Yes — `aria-label=` (or a block `.Title`) names the group as a whole.
+====
+--
+```
+
+Can both of these be open at once?
+
+Yes — this group has no `%single-open`, so each item toggles independently.
+
+Is this still one accessible group?
+
+Yes — `aria-label=` (or a block `.Title`) names the group as a whole.
+
+## Feature tabs
+
+A media-plus-prose switcher for a handful of top-level capabilities, same block the landing’s "Key features" section uses:
+
+```
+[feature-tabs]
+====
+[feature,label="With a call to action"]
+--
+image::ROOT:feature-placeholder.png[Placeholder feature image]
+image::ROOT:feature-placeholder-dark.png[role=dark]
+
+A slide is a media still, prose, and an optional call to action, in that order.
+
+[.cta]
+xref:main:quickstart.adoc[Learn more]
+--
+
+[feature,label="Without one"]
+--
+image::ROOT:feature-placeholder.png[Placeholder feature image]
+image::ROOT:feature-placeholder-dark.png[role=dark]
+
+A call to action is optional — a slide without one just ends at its prose.
+--
+====
+```
+
+- [With a call to action](#feature-tabs-panel-1)
+- [Without one](#feature-tabs-panel-2)
+
+![Placeholder feature image](../../_images/feature-placeholder.png)![feature placeholder dark](../../_images/feature-placeholder-dark.png)
+
+A slide is a media still, prose, and an optional call to action, in that order.
+
+[Learn more](../quickstart/)
+
+![Placeholder feature image](../../_images/feature-placeholder.png)![feature placeholder dark](../../_images/feature-placeholder-dark.png)
+
+A call to action is optional — a slide without one just ends at its prose.
+
+## CTA
+
+A single, full-width call-to-action band:
+
+```
+[cta]
+====
+A short pitch, plus one prominent action.
+
+[.primary]
+xref:main:quickstart.adoc[Get started]
+====
+```
+
+A short pitch, plus one prominent action.
+
+[Get started](../quickstart/)
+
+## Diagrams
+
+`[mermaid]`, `[plantuml]`, `[graphviz]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service — a literal block (four dots, not a fenced code block) styled with the diagram language’s name:
+
+```
+[mermaid]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+```
+
+This feature is **enabled by default** in this starter (see `antora-playbook.yml’s `kroki-enabled`/`kroki-diagram-types` attributes) — it needs [Docker](https://www.docker.com) available, since the build starts a self-hosted Kroki service the first time a build needs it, no manual step required (it isn’t stopped automatically either — run `docouture teardown kroki` once you’re done with it). Run `docouture eject kroki` if you ever need to customize the container definition, or comment the two attributes back out to turn the feature off entirely — a block like the one above then renders exactly as plain AsciiDoc already would: the raw diagram source, as literal text, same as the fenced listing shows it above.
+
+### Positional shorthand and diagram-specific options
+
+The classic asciidoctor-diagram/asciidoctor-kroki `[type,target,format]` positional form works alongside the named `format=` attribute already shown above — the second comma-separated value is a `target` (accepted but otherwise unused: this extension always inlines, never writes a named file to disk), the third is the `format`:
+
+```
+[plantuml,connectivity-flow,png]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
+```
+
+![](data:image/png;base64,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)
+
+Any named attribute beyond the built-in set (`target`, `width`, `height`, `format`, `role`, `title`, `caption`, …) is a Kroki diagram-specific option, forwarded to Kroki as a `Kroki-Diagram-Options-<key>` HTTP header — exactly as the real asciidoctor-kroki extension forwards them. Structurizr’s `view-key` selects which view of a multi-view workspace to render:
+
+```
+[structurizr,view-key=SystemContext]
+....
+workspace {
+  model {
+    user = person "User"
+    system = softwareSystem "Software System"
+    user -> system "Uses"
+  }
+  views {
+    systemContext system "SystemContext" {
+      include *
+      autoLayout
+    }
+  }
+}
+....
+```
+
+### Styling
+
+[Mermaid](https://mermaid.js.org) diagrams are themed to match this site automatically — square corners, black-on-white, body typography — via a `%%{init: {…​}}%%` directive this extension prepends to the diagram’s own source before it ever reaches Kroki, not via CSS. Write your own `%%{init…​}%%` as the diagram’s first line to opt out and take full control of Mermaid’s own theming instead. Every other diagram type’s font is still normalized via CSS (safe — a tool’s typeface choice carries no meaning). [BPMN](https://www.bpmn.org)'s own rounded task-box corners could not be un-rounded by any means found — bpmn-js hardcodes that radius; this is a real, currently-unfixed limitation, not an oversight.
+
+The card framing a diagram follows this site’s own light/dark theme, same as any other card — but the diagram’s own canvas underneath it is always a fixed white, regardless of theme: diagram tools don’t agree on whether they draw a background at all (GraphViz bakes its own opaque white one; Mermaid and PlantUML bake none), so a fixed canvas is what makes every diagram read the same rather than depending on that inconsistency — and it means a diagram’s own colors never need inverting for dark mode, avoiding the distortion that would cause for anything genuinely colorful (a PlantUML `skinparam` palette, a Structurizr diagram’s own color-coded boxes, an Excalidraw scene).
+
+### Output formats
+
+`[mermaid,format=png]` (or any other diagram language and format Kroki’s own server accepts for it — see `kroki-config.js’s `FORMAT_SUPPORT` for the exact, live-verified matrix; it varies per type, not a blanket rule) renders a raster image instead of inline SVG:
+
+```
+[mermaid,format=png]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+```
+
+![](data:image/png;base64,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)
+
+Embedded as a plain `<img>` with a base64 `data:` URI — no extra file written, no extra HTTP request. Reach for this only when you actually need a raster image (an export, an email, a renderer that can’t handle inline SVG); the inline-SVG default stays sharper at every zoom level and lets a reader select/search the diagram’s own text, neither of which a raster format can do. Beyond `png`: `jpeg` (`jpg` also accepted), `pdf` (embedded as an `<embed>`, since a browser can’t display a PDF through `<img>`) and `base64` all render the same way. An unsupported type/format combination, or a typo’d `format=` value, falls back to `svg` with a build warning, the same degrade-not-fail posture as an unknown `kroki-diagram-types` entry.
+
+`txt`/`atxt`/`utxt` are different in kind, not just encoding — Kroki renders these as a literal ASCII-art-style text representation, not an image at all:
+
+```
+[plantuml,format=txt]
+....
+Alice -> Bob : request
+Bob --> Alice : response
+....
+```
+
+```
+     ,-----.          ,---.
+     |Alice|          |Bob|
+     `--+--'          `-+-'
+        |   request     |
+        |-------------->|
+        |               |
+        |   response    |
+        |<- - - - - - - |
+     ,--+--.          ,-+-.
+     |Alice|          |Bob|
+     `-----'          `---'
+```
+
+### BPMN
+
+`[bpmn]` renders BPMN 2.0 XML (the same format bpmn.io and most process-modeling tools export). Like `mermaid` and `excalidraw`, it needs its own headless-Chrome companion container — the bundled `kroki-compose.yml` already includes one:
+
+```
+[bpmn]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+    id="definitions" targetNamespace="http://bpmn.io/schema/bpmn">
+  <process id="process_1" isExecutable="false">
+    <startEvent id="start" name="Request received"/>
+    <task id="task" name="Handle request"/>
+    <endEvent id="end" name="Done"/>
+    <sequenceFlow id="flow_1" sourceRef="start" targetRef="task"/>
+    <sequenceFlow id="flow_2" sourceRef="task" targetRef="end"/>
+  </process>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane" bpmnElement="process_1">
+      <bpmndi:BPMNShape id="start_di" bpmnElement="start">
+        <omgdc:Bounds x="100" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="task_di" bpmnElement="task">
+        <omgdc:Bounds x="200" y="78" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_di" bpmnElement="end">
+        <omgdc:Bounds x="360" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="flow_1_di" bpmnElement="flow_1">
+        <omgdi:waypoint x="136" y="118"/>
+        <omgdi:waypoint x="200" y="118"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow_2_di" bpmnElement="flow_2">
+        <omgdi:waypoint x="300" y="118"/>
+        <omgdi:waypoint x="360" y="118"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
+....
+```
+
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+### Excalidraw
+
+`[excalidraw]` renders an Excalidraw scene (the JSON a `.excalidraw` file, or [excalidraw.com](https://excalidraw.com)'s own "Save to…​" export, contains). Unlike `bpmn`, this type **does** need its own companion — the bundled `kroki-compose.yml` includes an `excalidraw` service alongside `mermaid` for exactly that reason:
+
+```
+[excalidraw]
+....
+{
+  "type": "excalidraw",
+  "version": 2,
+  "elements": [
+    {
+      "type": "rectangle",
+      "id": "rect1",
+      "x": 100,
+      "y": 100,
+      "width": 200,
+      "height": 100,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "seed": 1
+    },
+    {
+      "type": "text",
+      "id": "text1",
+      "x": 130,
+      "y": 135,
+      "width": 140,
+      "height": 25,
+      "text": "Hello, Excalidraw",
+      "fontSize": 20,
+      "seed": 2
+    }
+  ]
+}
+....
+```
+
+### Zoom
+
+Any diagram — or a plain `image::` block, which already gets this for free from Asciidoctor’s own role-to-class handling — marked `role=zoom-in` gets a click-to-zoom affordance: a `zoom-in` cursor and a subtle hover tint for a mouse, a small persistent badge for touch, and clicking/tapping opens a fullscreen overlay with a bigger view. Esc, the close icon, or clicking the backdrop all dismiss it — static, no pan/pinch-zoom, just a bigger still image:
+
+```
+[mermaid,role=zoom-in]
+....
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Running : start
+  Running --> Idle : stop
+....
+```
+
+## Inline macros: `label:` and `mono:`
+
+```
+label:grey[Default] label:red[Blocked] label:orange[Pending] label:green[Stable]
+label:blue[Info] label:purple[Beta] label:pink[New] label:teal[Docs] label:white[White]
+
+mono:[className]
+```
+
+Default Blocked Pending Stable Info Beta New Docs White
+
+`mono:` is plain monospaced text with no code-chip styling — for a table cell whose entire content is a bare token (see [AsciiDoc basics](../reference-asciidoc-basics/)'s Tables section, which uses backtick code instead; `className` is the deliberate opt-out when a whole column of cells is tokens and the chip would be noise): `className`
+
+## Table and video sizing attributes
+
+`table-width=` and `nowrap-cols=` are demonstrated in [AsciiDoc basics](../reference-asciidoc-basics/)'s Tables section. The one remaining sizing attribute, for a video block, is not rendered live on this page (it would embed a real, unrelated third-party video) — the syntax is:
+
+```
+video::VIDEO_ID[youtube,640,360]
+```
+
+`640,360` both caps the embed’s width and locks its aspect ratio at any narrower viewport; width alone caps the width and leaves the ratio at the 16:9 fallback.
+
+---
+
 # Integrations
 
 Source: https://inditextech.github.io/docouture/1.1.2/main/reference-integrations/
@@ -8286,516 +8820,6 @@ Rendered as a native `<details>` element — works with JavaScript off.
 
 ---
 
-# Custom AsciiDoc components
-
-Source: https://inditextech.github.io/docouture/1.1.2/main/reference-custom-asciidoc-components/
-
-This site’s own blocks, registered by `@inditextech/docouture-asciidoc-extensions` and documented in full in the `docouture-writing-docs-pages` skill’s `reference/docouture-blocks.md`. Every one of these degrades to plain, readable HTML with JavaScript disabled. See [AsciiDoc basics](../reference-asciidoc-basics/) for plain AsciiDoc first, and [Integrations](../reference-integrations/) for the build-time capabilities (diagrams, syntax highlighting) mentioned below, in full. Same pattern throughout: raw markup first, then the same markup rendered live.
-
-## Tabs
-
-A switcher for equivalent alternatives. Each `[tabs]` block is independent — picking a tab in one never affects another further down the page.
-
-```
-[tabs]
---
-[tab,label="pnpm"]
-****
-[,bash]
-----
-pnpm add some-package
-----
-****
-
-[tab,label="npm"]
-****
-[,bash]
-----
-npm install some-package
-----
-****
-
-[tab,label="yarn"]
-****
-[,bash]
-----
-yarn add some-package
-----
-****
---
-```
-
-- pnpm
-- npm
-- yarn
-
-```
-pnpm add some-package
-```
-
-```
-npm install some-package
-```
-
-```
-yarn add some-package
-```
-
-A second, independent set:
-
-```
-[tabs]
---
-[tab,label="pnpm"]
-****
-[,bash]
-----
-pnpm run dev
-----
-****
-
-[tab,label="npm"]
-****
-[,bash]
-----
-npm run dev
-----
-****
---
-```
-
-- pnpm
-- npm
-
-```
-pnpm run dev
-```
-
-```
-npm run dev
-```
-
-## Cards
-
-Text-only — no image, no open block needed:
-
-```
-[cards]
-====
-[card]
-.xref:main:quickstart.adoc[Quickstart]
-Scaffold, build, publish — the smallest path to a working result.
-
-[card,subheader="Reference"]
-.xref:main:guides-adding-a-page.adoc[Adding a page]
-Create a file, add it to nav.adoc, done.
-
-[card,icon="grid-3x3"]
-.xref:main:architecture.adoc[Architecture]
-This one carries a header icon — `icon=` and `subheader=` share one header row and
-combine fine on the same card, they aren't alternatives to each other.
-====
-```
-
-[Quickstart](../quickstart/)
-
-Scaffold, build, publish — the smallest path to a working result.
-
-Reference
-
-[Adding a page](../guides-adding-a-page/)
-
-Create a file, add it to nav.adoc, done.
-
-[Architecture](../architecture/)
-
-This one carries a header icon — `icon=` and `subheader=` share one header row and combine fine on the same card, they aren’t alternatives to each other.
-
-`icon=` takes a bare icon name (Lucide’s own, e.g. `store`), and only renders if that icon has a generated CSS mask — see [Icon gallery](../guides-icon-gallery/) for the full, working set. A per-card `labels=` attribute (comma-separated) renders a separate row of small grey chips, independent of `subheader=`.
-
-With images, a fixed square aspect, four columns, let out to the container’s full width — the same shape the landing’s own quicklinks use (`ROOT:card-placeholder.png` reused across modules via a cross-module image resource ID):
-
-```
-[cards,type=image-square,columns="1 s:2 m:4",width=container]
-====
-[card,subheader="One"]
-.xref:main:quickstart.adoc[First]
---
-image::ROOT:card-placeholder.png[Placeholder card image]
-
-Every card in a block shares one aspect ratio.
---
-
-[card,subheader="Two"]
-.xref:main:index.adoc[Second]
---
-image::ROOT:card-placeholder.png[Placeholder card image]
-
-The image crops to fill; it is never letterboxed.
---
-====
-```
-
-![Placeholder card image](../../_images/card-placeholder.png)
-
-One
-
-[First](../quickstart/)
-
-Every card in a block shares one aspect ratio.
-
-![Placeholder card image](../../_images/card-placeholder.png)
-
-Two
-
-[Second](../)
-
-The image crops to fill; it is never letterboxed.
-
-- `type=` — `no-image` (default), `image-landscape`, `image-square`, or `image-portrait`.
-- `columns=` — space-separated `breakpoint:count` tokens (a bare number sets the base/mobile count); breakpoints are `s`, `m`, `l` only, up to 4 columns each. Defaults to `"1 s:2 m:3"` if omitted.
-- `width=` — `content` (default, matches the page’s text measure) or `container` (full page width, as above).
-
-## Accordion
-
-Groups a run of `[%collapsible]` items with `role=group` semantics. `%single-open` closes whichever other item was open; without it, items are independent.
-
-```
-[accordion%single-open,aria-label="Single-open example"]
---
-.First question?
-[%collapsible]
-====
-First answer.
-====
-
-.Second question?
-[%collapsible]
-====
-Second answer. Opening this closes the first.
-====
---
-```
-
-First question?
-
-First answer.
-
-Second question?
-
-Second answer. Opening this closes the first.
-
-Grouped, but independent (the default — no `%single-open`):
-
-```
-[accordion,aria-label="Multiple-open example"]
---
-.Can both of these be open at once?
-[%collapsible]
-====
-Yes — this group has no `%single-open`, so each item toggles independently.
-====
-
-.Is this still one accessible group?
-[%collapsible]
-====
-Yes — `aria-label=` (or a block `.Title`) names the group as a whole.
-====
---
-```
-
-Can both of these be open at once?
-
-Yes — this group has no `%single-open`, so each item toggles independently.
-
-Is this still one accessible group?
-
-Yes — `aria-label=` (or a block `.Title`) names the group as a whole.
-
-## Feature tabs
-
-A media-plus-prose switcher for a handful of top-level capabilities, same block the landing’s "Key features" section uses:
-
-```
-[feature-tabs]
-====
-[feature,label="With a call to action"]
---
-image::ROOT:feature-placeholder.png[Placeholder feature image]
-image::ROOT:feature-placeholder-dark.png[role=dark]
-
-A slide is a media still, prose, and an optional call to action, in that order.
-
-[.cta]
-xref:main:quickstart.adoc[Learn more]
---
-
-[feature,label="Without one"]
---
-image::ROOT:feature-placeholder.png[Placeholder feature image]
-image::ROOT:feature-placeholder-dark.png[role=dark]
-
-A call to action is optional — a slide without one just ends at its prose.
---
-====
-```
-
-- [With a call to action](#feature-tabs-panel-1)
-- [Without one](#feature-tabs-panel-2)
-
-![Placeholder feature image](../../_images/feature-placeholder.png)![feature placeholder dark](../../_images/feature-placeholder-dark.png)
-
-A slide is a media still, prose, and an optional call to action, in that order.
-
-[Learn more](../quickstart/)
-
-![Placeholder feature image](../../_images/feature-placeholder.png)![feature placeholder dark](../../_images/feature-placeholder-dark.png)
-
-A call to action is optional — a slide without one just ends at its prose.
-
-## CTA
-
-A single, full-width call-to-action band:
-
-```
-[cta]
-====
-A short pitch, plus one prominent action.
-
-[.primary]
-xref:main:quickstart.adoc[Get started]
-====
-```
-
-A short pitch, plus one prominent action.
-
-[Get started](../quickstart/)
-
-## Diagrams
-
-`[mermaid]`, `[plantuml]`, `[graphviz]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service — a literal block (four dots, not a fenced code block) styled with the diagram language’s name:
-
-```
-[mermaid]
-....
-stateDiagram-v2
-  [*] --> Idle
-  Idle --> Running : start
-  Running --> Idle : stop
-....
-```
-
-This feature is **enabled by default** in this starter (see `antora-playbook.yml’s `kroki-enabled`/`kroki-diagram-types` attributes) — it needs [Docker](https://www.docker.com) available, since the build starts a self-hosted Kroki service the first time a build needs it, no manual step required (it isn’t stopped automatically either — run `docouture teardown kroki` once you’re done with it). Run `docouture eject kroki` if you ever need to customize the container definition, or comment the two attributes back out to turn the feature off entirely — a block like the one above then renders exactly as plain AsciiDoc already would: the raw diagram source, as literal text, same as the fenced listing shows it above.
-
-### Positional shorthand and diagram-specific options
-
-The classic asciidoctor-diagram/asciidoctor-kroki `[type,target,format]` positional form works alongside the named `format=` attribute already shown above — the second comma-separated value is a `target` (accepted but otherwise unused: this extension always inlines, never writes a named file to disk), the third is the `format`:
-
-```
-[plantuml,connectivity-flow,png]
-....
-Alice -> Bob : request
-Bob --> Alice : response
-....
-```
-
-![](data:image/png;base64,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)
-
-Any named attribute beyond the built-in set (`target`, `width`, `height`, `format`, `role`, `title`, `caption`, …) is a Kroki diagram-specific option, forwarded to Kroki as a `Kroki-Diagram-Options-<key>` HTTP header — exactly as the real asciidoctor-kroki extension forwards them. Structurizr’s `view-key` selects which view of a multi-view workspace to render:
-
-```
-[structurizr,view-key=SystemContext]
-....
-workspace {
-  model {
-    user = person "User"
-    system = softwareSystem "Software System"
-    user -> system "Uses"
-  }
-  views {
-    systemContext system "SystemContext" {
-      include *
-      autoLayout
-    }
-  }
-}
-....
-```
-
-### Styling
-
-[Mermaid](https://mermaid.js.org) diagrams are themed to match this site automatically — square corners, black-on-white, body typography — via a `%%{init: {…​}}%%` directive this extension prepends to the diagram’s own source before it ever reaches Kroki, not via CSS. Write your own `%%{init…​}%%` as the diagram’s first line to opt out and take full control of Mermaid’s own theming instead. Every other diagram type’s font is still normalized via CSS (safe — a tool’s typeface choice carries no meaning). [BPMN](https://www.bpmn.org)'s own rounded task-box corners could not be un-rounded by any means found — bpmn-js hardcodes that radius; this is a real, currently-unfixed limitation, not an oversight.
-
-The card framing a diagram follows this site’s own light/dark theme, same as any other card — but the diagram’s own canvas underneath it is always a fixed white, regardless of theme: diagram tools don’t agree on whether they draw a background at all (GraphViz bakes its own opaque white one; Mermaid and PlantUML bake none), so a fixed canvas is what makes every diagram read the same rather than depending on that inconsistency — and it means a diagram’s own colors never need inverting for dark mode, avoiding the distortion that would cause for anything genuinely colorful (a PlantUML `skinparam` palette, a Structurizr diagram’s own color-coded boxes, an Excalidraw scene).
-
-### Output formats
-
-`[mermaid,format=png]` (or any other diagram language and format Kroki’s own server accepts for it — see `kroki-config.js’s `FORMAT_SUPPORT` for the exact, live-verified matrix; it varies per type, not a blanket rule) renders a raster image instead of inline SVG:
-
-```
-[mermaid,format=png]
-....
-stateDiagram-v2
-  [*] --> Idle
-  Idle --> Running : start
-  Running --> Idle : stop
-....
-```
-
-![](data:image/png;base64,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)
-
-Embedded as a plain `<img>` with a base64 `data:` URI — no extra file written, no extra HTTP request. Reach for this only when you actually need a raster image (an export, an email, a renderer that can’t handle inline SVG); the inline-SVG default stays sharper at every zoom level and lets a reader select/search the diagram’s own text, neither of which a raster format can do. Beyond `png`: `jpeg` (`jpg` also accepted), `pdf` (embedded as an `<embed>`, since a browser can’t display a PDF through `<img>`) and `base64` all render the same way. An unsupported type/format combination, or a typo’d `format=` value, falls back to `svg` with a build warning, the same degrade-not-fail posture as an unknown `kroki-diagram-types` entry.
-
-`txt`/`atxt`/`utxt` are different in kind, not just encoding — Kroki renders these as a literal ASCII-art-style text representation, not an image at all:
-
-```
-[plantuml,format=txt]
-....
-Alice -> Bob : request
-Bob --> Alice : response
-....
-```
-
-```
-     ,-----.          ,---.
-     |Alice|          |Bob|
-     `--+--'          `-+-'
-        |   request     |
-        |-------------->|
-        |               |
-        |   response    |
-        |<- - - - - - - |
-     ,--+--.          ,-+-.
-     |Alice|          |Bob|
-     `-----'          `---'
-```
-
-### BPMN
-
-`[bpmn]` renders BPMN 2.0 XML (the same format bpmn.io and most process-modeling tools export). Like `mermaid` and `excalidraw`, it needs its own headless-Chrome companion container — the bundled `kroki-compose.yml` already includes one:
-
-```
-[bpmn]
-....
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-    xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
-    xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
-    id="definitions" targetNamespace="http://bpmn.io/schema/bpmn">
-  <process id="process_1" isExecutable="false">
-    <startEvent id="start" name="Request received"/>
-    <task id="task" name="Handle request"/>
-    <endEvent id="end" name="Done"/>
-    <sequenceFlow id="flow_1" sourceRef="start" targetRef="task"/>
-    <sequenceFlow id="flow_2" sourceRef="task" targetRef="end"/>
-  </process>
-  <bpmndi:BPMNDiagram id="diagram">
-    <bpmndi:BPMNPlane id="plane" bpmnElement="process_1">
-      <bpmndi:BPMNShape id="start_di" bpmnElement="start">
-        <omgdc:Bounds x="100" y="100" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="task_di" bpmnElement="task">
-        <omgdc:Bounds x="200" y="78" width="100" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="end_di" bpmnElement="end">
-        <omgdc:Bounds x="360" y="100" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="flow_1_di" bpmnElement="flow_1">
-        <omgdi:waypoint x="136" y="118"/>
-        <omgdi:waypoint x="200" y="118"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="flow_2_di" bpmnElement="flow_2">
-        <omgdi:waypoint x="300" y="118"/>
-        <omgdi:waypoint x="360" y="118"/>
-      </bpmndi:BPMNEdge>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
-</definitions>
-....
-```
-
-<?xml version="1.0" encoding="utf-8"?>
-
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
-### Excalidraw
-
-`[excalidraw]` renders an Excalidraw scene (the JSON a `.excalidraw` file, or [excalidraw.com](https://excalidraw.com)'s own "Save to…​" export, contains). Unlike `bpmn`, this type **does** need its own companion — the bundled `kroki-compose.yml` includes an `excalidraw` service alongside `mermaid` for exactly that reason:
-
-```
-[excalidraw]
-....
-{
-  "type": "excalidraw",
-  "version": 2,
-  "elements": [
-    {
-      "type": "rectangle",
-      "id": "rect1",
-      "x": 100,
-      "y": 100,
-      "width": 200,
-      "height": 100,
-      "strokeColor": "#1e1e1e",
-      "backgroundColor": "transparent",
-      "seed": 1
-    },
-    {
-      "type": "text",
-      "id": "text1",
-      "x": 130,
-      "y": 135,
-      "width": 140,
-      "height": 25,
-      "text": "Hello, Excalidraw",
-      "fontSize": 20,
-      "seed": 2
-    }
-  ]
-}
-....
-```
-
-### Zoom
-
-Any diagram — or a plain `image::` block, which already gets this for free from Asciidoctor’s own role-to-class handling — marked `role=zoom-in` gets a click-to-zoom affordance: a `zoom-in` cursor and a subtle hover tint for a mouse, a small persistent badge for touch, and clicking/tapping opens a fullscreen overlay with a bigger view. Esc, the close icon, or clicking the backdrop all dismiss it — static, no pan/pinch-zoom, just a bigger still image:
-
-```
-[mermaid,role=zoom-in]
-....
-stateDiagram-v2
-  [*] --> Idle
-  Idle --> Running : start
-  Running --> Idle : stop
-....
-```
-
-## Inline macros: `label:` and `mono:`
-
-```
-label:grey[Default] label:red[Blocked] label:orange[Pending] label:green[Stable]
-label:blue[Info] label:purple[Beta] label:pink[New] label:teal[Docs] label:white[White]
-
-mono:[className]
-```
-
-Default Blocked Pending Stable Info Beta New Docs White
-
-`mono:` is plain monospaced text with no code-chip styling — for a table cell whose entire content is a bare token (see [AsciiDoc basics](../reference-asciidoc-basics/)'s Tables section, which uses backtick code instead; `className` is the deliberate opt-out when a whole column of cells is tokens and the chip would be noise): `className`
-
-## Table and video sizing attributes
-
-`table-width=` and `nowrap-cols=` are demonstrated in [AsciiDoc basics](../reference-asciidoc-basics/)'s Tables section. The one remaining sizing attribute, for a video block, is not rendered live on this page (it would embed a real, unrelated third-party video) — the syntax is:
-
-```
-video::VIDEO_ID[youtube,640,360]
-```
-
-`640,360` both caps the embed’s width and locks its aspect ratio at any narrower viewport; width alone caps the width and leaves the ratio at the 16:9 fallback.
-
----
-
 # Additional information
 
 Source: https://inditextech.github.io/docouture/1.1.1/main/additional-information-overview/
@@ -8896,18 +8920,6 @@ Covered separately in [Adding a module](../guides-adding-a-module/) — a new mo
 
 ---
 
-# Guides
-
-Source: https://inditextech.github.io/docouture/1.1.1/main/guides-overview/
-
-Task-oriented how-tos for a scaffolded site, grouped by what they’re for:
-
-- [Content & structure](../guides-content-structure/) — growing the site’s shape: modules, pages, navigation.
-- [Branding & customization](../guides-branding/) — the landing page, favicon, and product logo.
-- [Versioning & publishing](../guides-versioning-publishing/) — taking a local build to a published, versioned one.
-
----
-
 # Publishing a documentation
 
 Source: https://inditextech.github.io/docouture/1.1.1/main/guides-publishing-a-documentation/
@@ -8969,6 +8981,18 @@ needs Jekyll on.
 ## What the driver fixes for you
 
 `@inditextech/docouture-publish-gh-pages` wraps the underlying `gh-pages` package with three fixes: a default `github-actions[bot]` git identity (a fresh CI runner has none), surfacing failures the underlying package would otherwise swallow silently, and pre-creating the target branch as a clean orphan commit on first publish (avoiding a dirty first commit inherited from `main`).
+
+---
+
+# Guides
+
+Source: https://inditextech.github.io/docouture/1.1.1/main/guides-overview/
+
+Task-oriented how-tos for a scaffolded site, grouped by what they’re for:
+
+- [Content & structure](../guides-content-structure/) — growing the site’s shape: modules, pages, navigation.
+- [Branding & customization](../guides-branding/) — the landing page, favicon, and product logo.
+- [Versioning & publishing](../guides-versioning-publishing/) — taking a local build to a published, versioned one.
 
 ---
 
@@ -9670,19 +9694,6 @@ Release tags live under `docs/` — `docs/stable` and `docs/vX.Y.Z`, not bare `s
 
 ---
 
-# Versioning &amp; publishing
-
-Source: https://inditextech.github.io/docouture/1.1.1/main/guides-versioning-publishing/
-
-Taking a site from a local build to a published, versioned one: the mode chosen at scaffold time, cutting a release, and the workflows that actually publish it.
-
-- [Versioning modes](../guides-versioning-modes/) — Standalone (Stable + Prerelease) vs. Versioned (Full History), decided once at scaffold time.
-- [Branching model](../guides-branching-model/) — trunk-based vs. git-flow, switchable later with `docouture branch-model`.
-- [Releasing a documentation](../guides-releasing-a-documentation/) — cutting a release via `docouture-release.yml`, manually or on a labelled merge to `main`.
-- [Publishing a documentation](../guides-publishing-a-documentation/) — the prerelease and release publish workflows that run `docouture publish gh-pages`.
-
----
-
 # About
 
 Source: https://inditextech.github.io/docouture/1.1.1/main/
@@ -9702,6 +9713,19 @@ Mainly InditexTech teams documenting an InditexTech Open Source project — this
 ## What it isn’t
 
 docouture is not a general-purpose static site generator — it’s opinionated about being an Antora site built with this specific UI bundle. Antora’s own content model (components, versions, modules, resource IDs) is the model docouture builds on, not one it hides; see [Architecture](architecture/) and [Glossary](glossary/) for the vocabulary.
+
+---
+
+# Versioning &amp; publishing
+
+Source: https://inditextech.github.io/docouture/1.1.1/main/guides-versioning-publishing/
+
+Taking a site from a local build to a published, versioned one: the mode chosen at scaffold time, cutting a release, and the workflows that actually publish it.
+
+- [Versioning modes](../guides-versioning-modes/) — Standalone (Stable + Prerelease) vs. Versioned (Full History), decided once at scaffold time.
+- [Branching model](../guides-branching-model/) — trunk-based vs. git-flow, switchable later with `docouture branch-model`.
+- [Releasing a documentation](../guides-releasing-a-documentation/) — cutting a release via `docouture-release.yml`, manually or on a labelled merge to `main`.
+- [Publishing a documentation](../guides-publishing-a-documentation/) — the prerelease and release publish workflows that run `docouture publish gh-pages`.
 
 ---
 
@@ -10736,6 +10760,449 @@ in authoring order — an exact override belongs ahead of a broad `` catch-all.
 
 ---
 
+# AsciiDoc basics
+
+Source: https://inditextech.github.io/docouture/1.1.1/main/reference-asciidoc-basics/
+
+Plain [AsciiDoc](https://asciidoc.org) — nothing docouture-specific — every block this page shows is standard Asciidoctor syntax, documented in full in the `docouture-writing-docs-pages` skill’s `reference/language-basics.md`. Each subsection below shows the raw markup first, then the same markup rendered live. See [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for this site’s own custom blocks, and [Integrations](../reference-integrations/) for the build-time capabilities (diagrams, syntax highlighting) mentioned along the way.
+
+One exception: `== Includes` below uses a plain Asciidoctor directive (`include::`), but the `partial$`/`example$` targets it points at are Antora’s own resource-family classification, not something core AsciiDoc knows about — noted there, not silently folded in with the rest.
+
+## Headings and structure
+
+Sections nest by repeating `=`, never by skipping a level:
+
+```
+= Page title
+== Section
+=== Subsection
+==== Sub-subsection
+```
+
+This page is itself at the first real section level (`==`); the next few subsections go one level deeper — the nav/TOC outline you see for this very page is the live rendering of that nesting.
+
+#### A discrete heading
+
+```
+[discrete]
+==== A discrete heading
+```
+
+`[discrete]` above a heading keeps it out of both the navigation outline and the page’s own TOC — useful for a heading that organizes the page visually without being a real subsection of it.
+
+## Text formatting
+
+```
+*bold* and **b*o*ld mid-word**, _italic_ and it__ali__c mid-word, `mono`, `+literal, no
+subs+`, #marked text#, [.underline]#a span with a role#. Chemical formula: H~2~0.
+Exponent: E = mc^2^. A footnote after this sentencefootnote:[The footnote text itself,
+rendered at the bottom of the page.].
+```
+
+**bold** and **b*o*ld mid-word**, *italic* and it*ali*c mid-word, `mono`, `literal, no subs`, marked text, a span with a role. Chemical formula: H20. Exponent: E = mc2. A footnote after this sentence[[1](#_footnotedef_1)].
+
+## Lists
+
+Unordered, with a nested item carrying its own attached paragraph:
+
+```
+* first
+* second
+** nested
++
+Attached via the `+` continuation.
+```
+
+- first
+- second - nested Attached via the `+` continuation.
+
+Ordered, custom numbering:
+
+```
+[upperalpha]
+. first
+. second
+. third
+```
+
+1. first
+2. second
+3. third
+
+Custom unordered markers:
+
+```
+[square]
+* square-marked
+* another
+```
+
+- square-marked
+- another
+
+```
+[circle]
+* circle-marked
+* another
+```
+
+- circle-marked
+- another
+
+Description list, then its horizontal variant:
+
+```
+term:: definition
+another term:: definition
+```
+
+term
+
+definition
+
+another term
+
+definition
+
+```
+[horizontal]
+term:: definition
+another term:: definition
+```
+
+| term | definition |
+| --- | --- |
+| another term | definition |
+
+A checklist:
+
+```
+* [ ] not done yet
+* [x] done
+```
+
+- not done yet
+- done
+
+## Links and cross references
+
+```
+https://example.com[An external link], https://example.com[same, opened in a new
+tab^], link:https://example.com[the explicit macro], mailto:docs@example.com[a mail
+link]. Referring to another page on this site: xref:main:guides-adding-a-page.adoc[] —
+empty xref text renders that page's own title, so it stays correct if the title
+changes. A fragment:
+xref:main:guides-adding-a-page.adoc#group-without-a-page-of-its-own[a specific section
+on that page].
+```
+
+[An external link](https://example.com), [same, opened in a new tab](https://example.com), [the explicit macro](https://example.com), [a mail link](mailto:docs@example.com). Referring to another page on this site: [Adding a page](../guides-adding-a-page/) — empty xref text renders that page’s own title, so it stays correct if the title changes. A fragment: [a specific section on that page](../guides-adding-a-page/#group-without-a-page-of-its-own).
+
+## Images and icons
+
+```
+.A block image, capped at its own natural size
+image::ROOT:hero-placeholder.png[A placeholder image,480]
+
+An inline image sits mid-paragraph: image:ROOT:card-placeholder.png[A small inline
+placeholder,20,20] like so. Font icons, keyboard shortcuts and UI paths:
+icon:check[] done, kbd:[Ctrl+C] to copy, btn:[Save] to save, menu:File[Save As] to open
+the save-as dialog.
+```
+
+![A placeholder image](../../_images/hero-placeholder.png)
+
+Figure 1. A block image, capped at its own natural size
+
+An inline image sits mid-paragraph: ![A small inline placeholder](../../_images/card-placeholder.png) like so. Font icons, keyboard shortcuts and UI paths: done, Ctrl+C to copy, **Save** to save, **File** **Save As** to open the save-as dialog.
+
+## Admonitions
+
+Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION — a sixth needs a role plus custom CSS, not a new admonition type. The one-line form is good for a single sentence; the multi-line (delimited) form can hold anything, including another block:
+
+```
+NOTE: The one-line form — good for a single sentence.
+
+[TIP]
+====
+The multi-line form — anything can go inside, including another block.
+
+[,console]
+```
+
+$ npm run build
+
+```
+====
+
+[IMPORTANT]
+====
+Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION.
+====
+
+[WARNING]
+====
+Multi-line WARNING.
+====
+
+[CAUTION]
+====
+Multi-line CAUTION.
+====
+```
+
+> **Note**
+> The one-line form — good for a single sentence.
+
+> **Tip**
+> The multi-line form — anything can go inside, including another block.
+>
+> ```
+> $ npm run build
+> ```
+
+> **Important**
+> Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION. A sixth needs a role plus custom CSS, not a new admonition type.
+
+> **Warning**
+> Multi-line WARNING.
+
+> **Caution**
+> Multi-line CAUTION.
+
+## Source code
+
+```
+[,typescript]
+```
+
+const answer: number = 42
+
+```
+
+```
+
+```
+const answer: number = 42
+```
+
+A block with no language at all still gets the code surface and copy button, just no syntax colour:
+
+```
+plain text, no highlighting
+```
+
+Callouts, explained in a colon list right after the block:
+
+```
+[,js]
+```
+
+const x = 1 // <1> const y = x + 1 // <2>
+
+```
+<1> Set `x` to `1`.
+<2> Derive `y` from it.
+```
+
+```
+const x = 1 (1)
+const y = x + 1 (2)
+```
+
+| **1** | Set `x` to `1`. |
+| --- | --- |
+| **2** | Derive `y` from it. |
+
+The `.wrap` role lets long lines wrap instead of scrolling horizontally:
+
+```
+const config = { alpha: 1, beta: 2, gamma: 3, delta: 4, epsilon: 5, zeta: 6, eta: 7 }
+```
+
+## Tables
+
+A basic table with a header row:
+
+```
+[cols="1,2,1"]
+|===
+|Name |Description |Default
+
+|`retry.max-attempts`
+|Number of times a failed request is retried.
+|`3`
+
+|`retry.backoff`
+|Base delay between retries; doubles each attempt.
+|`200ms`
+|===
+```
+
+| Name | Description | Default |
+| --- | --- | --- |
+| `retry.max-attempts` | Number of times a failed request is retried. | `3` |
+| `retry.backoff` | Base delay between retries; doubles each attempt. | `200ms` |
+
+`%autowidth` shrinks the table to its content instead of filling the column:
+
+```
+[%autowidth]
+|===
+|Status |Value
+|Build |passing
+|Coverage |92%
+|===
+```
+
+| Status | Value |
+| --- | --- |
+| Build | passing |
+| Coverage | 92% |
+
+`%noheader` with a percentage width:
+
+```
+[%noheader,width=50%]
+|===
+|Node.js |`>= 24`
+|pnpm |`>= 10`
+|===
+```
+
+| Node.js | `>= 24` |
+| --- | --- |
+| pnpm | `>= 10` |
+
+An absolute pixel width via `table-width=` (bypasses [Asciidoctor](https://asciidoctor.org)'s own percentage-only `width=`), with `nowrap-cols=` pinning specific columns so their tokens never break mid-word:
+
+```
+[table-width=520px,cols="2,1,2",nowrap-cols="1,2"]
+|===
+|Property |Type |Notes
+
+|`timeout.connect`
+|`duration`
+|Maximum time to wait for a connection.
+
+|`timeout.read`
+|`duration`
+|Maximum time to wait for a response once connected.
+|===
+```
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `timeout.connect` | `duration` | Maximum time to wait for a connection. |
+| `timeout.read` | `duration` | Maximum time to wait for a response once connected. |
+
+Column/cell styles (`a` asciidoc, `l` literal, `m` monospace, `h` header, `s` strong) and a column span:
+
+```
+[cols="1,1,2"]
+|===
+|Name |Type |Values
+
+|size
+|enum
+|`small` \| `medium` \| `large`
+
+2+|spans two columns
+|third cell
+|===
+```
+
+| Name | Type | Values |
+| --- | --- | --- |
+| size | enum | `small` \| `medium` \| `large` |
+| spans two columns | third cell |   |
+
+## Includes
+
+Content lives once, in its own file, and gets pulled into a page with `include::`. Antora restricts the target to a resource ID naming one of its content families — `partial$` for a reusable AsciiDoc fragment under a module’s own `partials/` directory (never rendered as a page of its own), `example$` for a file under `examples/` (source code, config, fixtures). A relative path (`include::../other.adoc[]`) or a URL does not work — only these resource-ID families do.
+
+```
+This paragraph lives in its own file under `modules/main/partials/` and is pulled
+into whichever page includes it — edit it once, and every page that includes it
+picks up the change.
+
+// tag::callout[]
+This line is wrapped in a tagged region — a page can include just this part with
+`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+// end::callout[]
+
+A tagged region only, from the same file:
+
+This line is wrapped in a tagged region — a page can include just this part with
+`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+```
+
+This paragraph lives in its own file under `modules/main/partials/` and is pulled into whichever page includes it — edit it once, and every page that includes it picks up the change.
+
+This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+
+A tagged region only, from the same file:
+
+This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+
+Tagged regions are marked in the *included* file with comments in that file’s own comment syntax (`// tag::callout[]` / `// end::callout[]` for AsciiDoc). `leveloffset=+1` demotes every section title in an included file that carries its own `=` heading — required when the included file is a page-shaped fragment rather than a bare partial.
+
+## Quotes and sidebars
+
+```
+[quote,Grace Hopper]
+____
+The most dangerous phrase in the language is, "We've always done it this way."
+____
+
+[verse]
+____
+Two roads diverged in a wood, and I—
+I took the one less traveled by.
+____
+
+.A sidebar
+****
+Asides, pull quotes, or background information that supplements the main flow without
+interrupting it.
+****
+```
+
+> The most dangerous phrase in the language is, "We’ve always done it this way."
+
+— Grace Hopper
+
+```
+Two roads diverged in a wood, and I—
+I took the one less traveled by.
+```
+
+A sidebar
+
+Asides, pull quotes, or background information that supplements the main flow without interrupting it.
+
+## Collapsible
+
+A single, standalone collapsible — for grouping several together with proper `role=group` semantics and single-open behaviour, see [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s `[accordion]` block instead.
+
+```
+.Click to expand
+[%collapsible]
+====
+Rendered as a native `<details>` element — works with JavaScript off.
+====
+```
+
+Click to expand
+
+Rendered as a native `<details>` element — works with JavaScript off.
+
+---
+
+[1](#_footnoteref_1). The footnote text itself, rendered at the bottom of the page.
+
+---
+
 # Custom AsciiDoc components
 
 Source: https://inditextech.github.io/docouture/1.1.1/main/reference-custom-asciidoc-components/
@@ -11243,449 +11710,6 @@ video::VIDEO_ID[youtube,640,360]
 ```
 
 `640,360` both caps the embed’s width and locks its aspect ratio at any narrower viewport; width alone caps the width and leaves the ratio at the 16:9 fallback.
-
----
-
-# AsciiDoc basics
-
-Source: https://inditextech.github.io/docouture/1.1.1/main/reference-asciidoc-basics/
-
-Plain [AsciiDoc](https://asciidoc.org) — nothing docouture-specific — every block this page shows is standard Asciidoctor syntax, documented in full in the `docouture-writing-docs-pages` skill’s `reference/language-basics.md`. Each subsection below shows the raw markup first, then the same markup rendered live. See [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for this site’s own custom blocks, and [Integrations](../reference-integrations/) for the build-time capabilities (diagrams, syntax highlighting) mentioned along the way.
-
-One exception: `== Includes` below uses a plain Asciidoctor directive (`include::`), but the `partial$`/`example$` targets it points at are Antora’s own resource-family classification, not something core AsciiDoc knows about — noted there, not silently folded in with the rest.
-
-## Headings and structure
-
-Sections nest by repeating `=`, never by skipping a level:
-
-```
-= Page title
-== Section
-=== Subsection
-==== Sub-subsection
-```
-
-This page is itself at the first real section level (`==`); the next few subsections go one level deeper — the nav/TOC outline you see for this very page is the live rendering of that nesting.
-
-#### A discrete heading
-
-```
-[discrete]
-==== A discrete heading
-```
-
-`[discrete]` above a heading keeps it out of both the navigation outline and the page’s own TOC — useful for a heading that organizes the page visually without being a real subsection of it.
-
-## Text formatting
-
-```
-*bold* and **b*o*ld mid-word**, _italic_ and it__ali__c mid-word, `mono`, `+literal, no
-subs+`, #marked text#, [.underline]#a span with a role#. Chemical formula: H~2~0.
-Exponent: E = mc^2^. A footnote after this sentencefootnote:[The footnote text itself,
-rendered at the bottom of the page.].
-```
-
-**bold** and **b*o*ld mid-word**, *italic* and it*ali*c mid-word, `mono`, `literal, no subs`, marked text, a span with a role. Chemical formula: H20. Exponent: E = mc2. A footnote after this sentence[[1](#_footnotedef_1)].
-
-## Lists
-
-Unordered, with a nested item carrying its own attached paragraph:
-
-```
-* first
-* second
-** nested
-+
-Attached via the `+` continuation.
-```
-
-- first
-- second - nested Attached via the `+` continuation.
-
-Ordered, custom numbering:
-
-```
-[upperalpha]
-. first
-. second
-. third
-```
-
-1. first
-2. second
-3. third
-
-Custom unordered markers:
-
-```
-[square]
-* square-marked
-* another
-```
-
-- square-marked
-- another
-
-```
-[circle]
-* circle-marked
-* another
-```
-
-- circle-marked
-- another
-
-Description list, then its horizontal variant:
-
-```
-term:: definition
-another term:: definition
-```
-
-term
-
-definition
-
-another term
-
-definition
-
-```
-[horizontal]
-term:: definition
-another term:: definition
-```
-
-| term | definition |
-| --- | --- |
-| another term | definition |
-
-A checklist:
-
-```
-* [ ] not done yet
-* [x] done
-```
-
-- not done yet
-- done
-
-## Links and cross references
-
-```
-https://example.com[An external link], https://example.com[same, opened in a new
-tab^], link:https://example.com[the explicit macro], mailto:docs@example.com[a mail
-link]. Referring to another page on this site: xref:main:guides-adding-a-page.adoc[] —
-empty xref text renders that page's own title, so it stays correct if the title
-changes. A fragment:
-xref:main:guides-adding-a-page.adoc#group-without-a-page-of-its-own[a specific section
-on that page].
-```
-
-[An external link](https://example.com), [same, opened in a new tab](https://example.com), [the explicit macro](https://example.com), [a mail link](mailto:docs@example.com). Referring to another page on this site: [Adding a page](../guides-adding-a-page/) — empty xref text renders that page’s own title, so it stays correct if the title changes. A fragment: [a specific section on that page](../guides-adding-a-page/#group-without-a-page-of-its-own).
-
-## Images and icons
-
-```
-.A block image, capped at its own natural size
-image::ROOT:hero-placeholder.png[A placeholder image,480]
-
-An inline image sits mid-paragraph: image:ROOT:card-placeholder.png[A small inline
-placeholder,20,20] like so. Font icons, keyboard shortcuts and UI paths:
-icon:check[] done, kbd:[Ctrl+C] to copy, btn:[Save] to save, menu:File[Save As] to open
-the save-as dialog.
-```
-
-![A placeholder image](../../_images/hero-placeholder.png)
-
-Figure 1. A block image, capped at its own natural size
-
-An inline image sits mid-paragraph: ![A small inline placeholder](../../_images/card-placeholder.png) like so. Font icons, keyboard shortcuts and UI paths: done, Ctrl+C to copy, **Save** to save, **File** **Save As** to open the save-as dialog.
-
-## Admonitions
-
-Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION — a sixth needs a role plus custom CSS, not a new admonition type. The one-line form is good for a single sentence; the multi-line (delimited) form can hold anything, including another block:
-
-```
-NOTE: The one-line form — good for a single sentence.
-
-[TIP]
-====
-The multi-line form — anything can go inside, including another block.
-
-[,console]
-```
-
-$ npm run build
-
-```
-====
-
-[IMPORTANT]
-====
-Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION.
-====
-
-[WARNING]
-====
-Multi-line WARNING.
-====
-
-[CAUTION]
-====
-Multi-line CAUTION.
-====
-```
-
-> **Note**
-> The one-line form — good for a single sentence.
-
-> **Tip**
-> The multi-line form — anything can go inside, including another block.
->
-> ```
-> $ npm run build
-> ```
-
-> **Important**
-> Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION. A sixth needs a role plus custom CSS, not a new admonition type.
-
-> **Warning**
-> Multi-line WARNING.
-
-> **Caution**
-> Multi-line CAUTION.
-
-## Source code
-
-```
-[,typescript]
-```
-
-const answer: number = 42
-
-```
-
-```
-
-```
-const answer: number = 42
-```
-
-A block with no language at all still gets the code surface and copy button, just no syntax colour:
-
-```
-plain text, no highlighting
-```
-
-Callouts, explained in a colon list right after the block:
-
-```
-[,js]
-```
-
-const x = 1 // <1> const y = x + 1 // <2>
-
-```
-<1> Set `x` to `1`.
-<2> Derive `y` from it.
-```
-
-```
-const x = 1 (1)
-const y = x + 1 (2)
-```
-
-| **1** | Set `x` to `1`. |
-| --- | --- |
-| **2** | Derive `y` from it. |
-
-The `.wrap` role lets long lines wrap instead of scrolling horizontally:
-
-```
-const config = { alpha: 1, beta: 2, gamma: 3, delta: 4, epsilon: 5, zeta: 6, eta: 7 }
-```
-
-## Tables
-
-A basic table with a header row:
-
-```
-[cols="1,2,1"]
-|===
-|Name |Description |Default
-
-|`retry.max-attempts`
-|Number of times a failed request is retried.
-|`3`
-
-|`retry.backoff`
-|Base delay between retries; doubles each attempt.
-|`200ms`
-|===
-```
-
-| Name | Description | Default |
-| --- | --- | --- |
-| `retry.max-attempts` | Number of times a failed request is retried. | `3` |
-| `retry.backoff` | Base delay between retries; doubles each attempt. | `200ms` |
-
-`%autowidth` shrinks the table to its content instead of filling the column:
-
-```
-[%autowidth]
-|===
-|Status |Value
-|Build |passing
-|Coverage |92%
-|===
-```
-
-| Status | Value |
-| --- | --- |
-| Build | passing |
-| Coverage | 92% |
-
-`%noheader` with a percentage width:
-
-```
-[%noheader,width=50%]
-|===
-|Node.js |`>= 24`
-|pnpm |`>= 10`
-|===
-```
-
-| Node.js | `>= 24` |
-| --- | --- |
-| pnpm | `>= 10` |
-
-An absolute pixel width via `table-width=` (bypasses [Asciidoctor](https://asciidoctor.org)'s own percentage-only `width=`), with `nowrap-cols=` pinning specific columns so their tokens never break mid-word:
-
-```
-[table-width=520px,cols="2,1,2",nowrap-cols="1,2"]
-|===
-|Property |Type |Notes
-
-|`timeout.connect`
-|`duration`
-|Maximum time to wait for a connection.
-
-|`timeout.read`
-|`duration`
-|Maximum time to wait for a response once connected.
-|===
-```
-
-| Property | Type | Notes |
-| --- | --- | --- |
-| `timeout.connect` | `duration` | Maximum time to wait for a connection. |
-| `timeout.read` | `duration` | Maximum time to wait for a response once connected. |
-
-Column/cell styles (`a` asciidoc, `l` literal, `m` monospace, `h` header, `s` strong) and a column span:
-
-```
-[cols="1,1,2"]
-|===
-|Name |Type |Values
-
-|size
-|enum
-|`small` \| `medium` \| `large`
-
-2+|spans two columns
-|third cell
-|===
-```
-
-| Name | Type | Values |
-| --- | --- | --- |
-| size | enum | `small` \| `medium` \| `large` |
-| spans two columns | third cell |   |
-
-## Includes
-
-Content lives once, in its own file, and gets pulled into a page with `include::`. Antora restricts the target to a resource ID naming one of its content families — `partial$` for a reusable AsciiDoc fragment under a module’s own `partials/` directory (never rendered as a page of its own), `example$` for a file under `examples/` (source code, config, fixtures). A relative path (`include::../other.adoc[]`) or a URL does not work — only these resource-ID families do.
-
-```
-This paragraph lives in its own file under `modules/main/partials/` and is pulled
-into whichever page includes it — edit it once, and every page that includes it
-picks up the change.
-
-// tag::callout[]
-This line is wrapped in a tagged region — a page can include just this part with
-`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-// end::callout[]
-
-A tagged region only, from the same file:
-
-This line is wrapped in a tagged region — a page can include just this part with
-`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-```
-
-This paragraph lives in its own file under `modules/main/partials/` and is pulled into whichever page includes it — edit it once, and every page that includes it picks up the change.
-
-This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-
-A tagged region only, from the same file:
-
-This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-
-Tagged regions are marked in the *included* file with comments in that file’s own comment syntax (`// tag::callout[]` / `// end::callout[]` for AsciiDoc). `leveloffset=+1` demotes every section title in an included file that carries its own `=` heading — required when the included file is a page-shaped fragment rather than a bare partial.
-
-## Quotes and sidebars
-
-```
-[quote,Grace Hopper]
-____
-The most dangerous phrase in the language is, "We've always done it this way."
-____
-
-[verse]
-____
-Two roads diverged in a wood, and I—
-I took the one less traveled by.
-____
-
-.A sidebar
-****
-Asides, pull quotes, or background information that supplements the main flow without
-interrupting it.
-****
-```
-
-> The most dangerous phrase in the language is, "We’ve always done it this way."
-
-— Grace Hopper
-
-```
-Two roads diverged in a wood, and I—
-I took the one less traveled by.
-```
-
-A sidebar
-
-Asides, pull quotes, or background information that supplements the main flow without interrupting it.
-
-## Collapsible
-
-A single, standalone collapsible — for grouping several together with proper `role=group` semantics and single-open behaviour, see [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s `[accordion]` block instead.
-
-```
-.Click to expand
-[%collapsible]
-====
-Rendered as a native `<details>` element — works with JavaScript off.
-====
-```
-
-Click to expand
-
-Rendered as a native `<details>` element — works with JavaScript off.
-
----
-
-[1](#_footnoteref_1). The footnote text itself, rendered at the bottom of the page.
 
 ---
 
@@ -13375,6 +13399,35 @@ Diagrams render for real — [Kroki](https://kroki.io)-backed mermaid, plantuml,
 
 ---
 
+# Contributing
+
+Source: https://inditextech.github.io/docouture/1.1.0/main/contributing/
+
+docouture is developed at [InditexTech/docouture](https://github.com/InditexTech/docouture). Contributions there follow the repository’s own guide, not this scaffolded site’s — the summary below is what actually applies; see `CONTRIBUTING.md` in that repository for the full text.
+
+## Before contributing
+
+- Sign the [Contributor License Agreement (CLA)](https://github.com/InditexTech/foss/blob/main/CLA.md) — required before any code contribution is accepted.
+- Install `just`, `asdf`, and the pinned [Node](https://nodejs.org)/https://pnpm.io[pnpm] versions the repository’s own `README.md` documents.
+
+## Workflow
+
+1. Open an issue to discuss the change first.
+2. Fork, branch, and make the change.
+3. Run `just check` (lint, typecheck, formatting — what CI runs).
+4. Update `code/CHANGELOG.md’s `[Unreleased]` section — required on every PR touching `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
+5. Open a pull request linking the issue.
+
+## Contributing to this site specifically
+
+If what needs fixing is a page under `docs/` (this site, not docouture itself), that’s a normal docs PR against whatever repository this site was scaffolded into — see [Adding a page](../guides-adding-a-page/) for the mechanics, and [AI-First approach](../reference-ai-first-approach/)'s `docouture-documenting-changes` skill for keeping content in sync as the underlying repo changes.
+
+## License
+
+Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which mixes MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each file’s own SPDX header for which applies to it.
+
+---
+
 # FAQ
 
 Source: https://inditextech.github.io/docouture/1.1.0/main/faq/
@@ -13418,113 +13471,6 @@ Yes — `npx skills@latest add InditexTech/docouture --all` installs a set of ag
 10. Is docouture open source?
 
 Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0; the UI bundle’s own fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default) mixes MPL-2.0 (files that are a Modification of an upstream file) with Apache-2.0 (files with no upstream counterpart), per its own LICENSE and NOTICE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are all original or openly licensed, with nothing embedded that restricts publishing a site built with it.
-
----
-
-# Contributing
-
-Source: https://inditextech.github.io/docouture/1.1.0/main/contributing/
-
-docouture is developed at [InditexTech/docouture](https://github.com/InditexTech/docouture). Contributions there follow the repository’s own guide, not this scaffolded site’s — the summary below is what actually applies; see `CONTRIBUTING.md` in that repository for the full text.
-
-## Before contributing
-
-- Sign the [Contributor License Agreement (CLA)](https://github.com/InditexTech/foss/blob/main/CLA.md) — required before any code contribution is accepted.
-- Install `just`, `asdf`, and the pinned [Node](https://nodejs.org)/https://pnpm.io[pnpm] versions the repository’s own `README.md` documents.
-
-## Workflow
-
-1. Open an issue to discuss the change first.
-2. Fork, branch, and make the change.
-3. Run `just check` (lint, typecheck, formatting — what CI runs).
-4. Update `code/CHANGELOG.md’s `[Unreleased]` section — required on every PR touching `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
-5. Open a pull request linking the issue.
-
-## Contributing to this site specifically
-
-If what needs fixing is a page under `docs/` (this site, not docouture itself), that’s a normal docs PR against whatever repository this site was scaffolded into — see [Adding a page](../guides-adding-a-page/) for the mechanics, and [AI-First approach](../reference-ai-first-approach/)'s `docouture-documenting-changes` skill for keeping content in sync as the underlying repo changes.
-
-## License
-
-Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which mixes MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each file’s own SPDX header for which applies to it.
-
----
-
-# Integrations
-
-Source: https://inditextech.github.io/docouture/1.1.0/main/reference-integrations/
-
-Build-time and content capabilities that ship with every scaffolded site — as opposed to [UI Bundle](../reference-ui-bundle/)'s site chrome, or [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s authoring blocks. Grouped by what they’re for.
-
-## Authoring & content
-
-### Diagrams — Kroki
-
-`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
-
-The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a click-to-zoom fullscreen overlay. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
-
-### Syntax highlighting — Shiki
-
-`source-highlighter: shiki` in `antora-playbook.yml` switches every code block from [Antora](https://antora.org)'s own client-side default ([highlight.js](https://highlightjs.org)) to build-time, static highlighting. `@inditextech/docouture-antora-extensions’ [Shiki](https://shiki.style) prewarm step builds the highlighter once up front rather than per-block.
-
-### Changelog pages
-
-[Changelog](../changelog/)'s per-version sections are generated at build time from
-`code/CHANGELOG.md`, not hand-copied: `@inditextech/docouture-antora-extensions` parses
-every cut  [x.y.z] section, converts its `# Section` headings and `- [#PR](url)
-text` bullets to AsciiDoc, and appends each one as a `== vX.Y.Z` section directly onto
-whatever page already lives at `changelog/index.adoc` — only on a site that has one; a
-site with no changelog page is left untouched.
-
-`## [Unreleased]` is handled differently from a real cut release: it never becomes a `== vX.Y.Z` section (Keep a Changelog doesn’t consider "unreleased" a version either), but its content still renders as a plain `== Unreleased` section — and only on the component version Antora resolved as `prerelease` (the version built from `main`, never itself tagged). Any real, tagged release’s own changelog page never shows it: a tag is an immutable snapshot, and `[Unreleased]` is by definition whatever has landed on `main` since. An empty `[Unreleased]` heading (nothing merged since the last cut) renders no section at all rather than an empty one.
-
-The file is read once per build, off disk, applied identically to every component version being built — not resolved per-ref through git, so a real release tag’s own changelog page reflects whatever `code/CHANGELOG.md` says on disk right now, not that tag’s own historical copy of the file. In practice this only matters for the cut releases: a tagged version’s page shows every `## [x.y.z]` section on disk, no more and no less, regardless of which ref cut it. Override the default `code/CHANGELOG.md` location (resolved relative to the playbook’s own directory) with `changelog_path` on the extension’s registration entry:
-
-```
-antora:
-  extensions:
-    - require: '@inditextech/docouture-antora-extensions'
-      changelog_path: ../code/CHANGELOG.md
-```
-
-## Discovery & search
-
-### Full-text search
-
-`@inditextech/docouture-antora-extensions` builds a search index at build time, published per component version, that the UI bundle’s search dialog reads directly ([UI Bundle](../reference-ui-bundle/)). No manual wiring — registering the extension is enough.
-
-### AI ingestion — `llms.txt`
-
-Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the [llms.txt convention](https://llmstxt.org), letting an agent read the site without scraping rendered HTML. Configured under `docs/src/antora.yml’s `llms` key (see [Antora Descriptor](../reference-antora-descriptor-configuration/)) — `summary` becomes the blockquote under the site title; `exclude` leaves specific pages out of both files. See also [AI-First approach](../reference-ai-first-approach/) for the broader philosophy this feeds into.
-
-## Site reliability & URLs
-
-### External link checking
-
-A scaffolded site ships `scripts/check-links.mjs` (via [linkinator](https://github.com/JustinBeckwith/linkinator)) and a `check-links` [npm](https://www.npmjs.com) script. `package.json’s own `docouture.checkLinks.ignore` is a list of URL globs to skip — pre-seeded with this repository’s own URL, so a build doesn’t fail checking a link to itself before it’s ever been published.
-
-### URL routing: the `/latest/` alias
-
-Rather than Antora’s own `urls.latest_version_segment` (whose default `replace` strategy turns one real version segment into a permanent redirect stub the moment a release exists — see [Versioning modes](../guides-versioning-modes/)), `duplicate_latest_version: true` on the `antora.extensions` registration entry republishes whichever version Antora computes as latest a **second** time, under `/latest/…`, as a genuinely independent copy — so both the real version segment and `/latest/` stay real content.
-
-### Legacy URL redirects
-
-For a site migrated from another documentation tool, arbitrary literal legacy URLs can redirect to whatever real page now answers the equivalent URL — configured as `from`/`to` URL templates on the `@inditextech/docouture-antora-extensions` registration entry itself (not `antora.yml`, since these apply across every ref a build aggregates, not per-version):
-
-```
-antora:
-  extensions:
-    - require: '@inditextech/docouture-antora-extensions'
-      redirects:
-        - from: '/docs/main/old-page'
-          to: '/main/new-page'
-        - from: '/docs/**'
-          to: '/main/**'
-```
-
-`*` captures one path segment,  captures the remainder. Rules are first-match-wins
-in authoring order — an exact override belongs ahead of a broad `` catch-all.
 
 ---
 
@@ -13624,449 +13570,6 @@ Is docouture open source?
 Yes — the CLI, extensions and UI bundle are all Apache-2.0 or MPL-2.0, with nothing embedded that restricts publishing a site — see the [full FAQ](main/faq/) for the licence breakdown.
 
 See the [full FAQ](main/faq/) for more, including diagrams, search and publishing.
-
----
-
-# AsciiDoc basics
-
-Source: https://inditextech.github.io/docouture/1.1.0/main/reference-asciidoc-basics/
-
-Plain [AsciiDoc](https://asciidoc.org) — nothing docouture-specific — every block this page shows is standard Asciidoctor syntax, documented in full in the `docouture-writing-docs-pages` skill’s `reference/language-basics.md`. Each subsection below shows the raw markup first, then the same markup rendered live. See [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for this site’s own custom blocks, and [Integrations](../reference-integrations/) for the build-time capabilities (diagrams, syntax highlighting) mentioned along the way.
-
-One exception: `== Includes` below uses a plain Asciidoctor directive (`include::`), but the `partial$`/`example$` targets it points at are Antora’s own resource-family classification, not something core AsciiDoc knows about — noted there, not silently folded in with the rest.
-
-## Headings and structure
-
-Sections nest by repeating `=`, never by skipping a level:
-
-```
-= Page title
-== Section
-=== Subsection
-==== Sub-subsection
-```
-
-This page is itself at the first real section level (`==`); the next few subsections go one level deeper — the nav/TOC outline you see for this very page is the live rendering of that nesting.
-
-#### A discrete heading
-
-```
-[discrete]
-==== A discrete heading
-```
-
-`[discrete]` above a heading keeps it out of both the navigation outline and the page’s own TOC — useful for a heading that organizes the page visually without being a real subsection of it.
-
-## Text formatting
-
-```
-*bold* and **b*o*ld mid-word**, _italic_ and it__ali__c mid-word, `mono`, `+literal, no
-subs+`, #marked text#, [.underline]#a span with a role#. Chemical formula: H~2~0.
-Exponent: E = mc^2^. A footnote after this sentencefootnote:[The footnote text itself,
-rendered at the bottom of the page.].
-```
-
-**bold** and **b*o*ld mid-word**, *italic* and it*ali*c mid-word, `mono`, `literal, no subs`, marked text, a span with a role. Chemical formula: H20. Exponent: E = mc2. A footnote after this sentence[[1](#_footnotedef_1)].
-
-## Lists
-
-Unordered, with a nested item carrying its own attached paragraph:
-
-```
-* first
-* second
-** nested
-+
-Attached via the `+` continuation.
-```
-
-- first
-- second - nested Attached via the `+` continuation.
-
-Ordered, custom numbering:
-
-```
-[upperalpha]
-. first
-. second
-. third
-```
-
-1. first
-2. second
-3. third
-
-Custom unordered markers:
-
-```
-[square]
-* square-marked
-* another
-```
-
-- square-marked
-- another
-
-```
-[circle]
-* circle-marked
-* another
-```
-
-- circle-marked
-- another
-
-Description list, then its horizontal variant:
-
-```
-term:: definition
-another term:: definition
-```
-
-term
-
-definition
-
-another term
-
-definition
-
-```
-[horizontal]
-term:: definition
-another term:: definition
-```
-
-| term | definition |
-| --- | --- |
-| another term | definition |
-
-A checklist:
-
-```
-* [ ] not done yet
-* [x] done
-```
-
-- not done yet
-- done
-
-## Links and cross references
-
-```
-https://example.com[An external link], https://example.com[same, opened in a new
-tab^], link:https://example.com[the explicit macro], mailto:docs@example.com[a mail
-link]. Referring to another page on this site: xref:main:guides-adding-a-page.adoc[] —
-empty xref text renders that page's own title, so it stays correct if the title
-changes. A fragment:
-xref:main:guides-adding-a-page.adoc#group-without-a-page-of-its-own[a specific section
-on that page].
-```
-
-[An external link](https://example.com), [same, opened in a new tab](https://example.com), [the explicit macro](https://example.com), [a mail link](mailto:docs@example.com). Referring to another page on this site: [Adding a page](../guides-adding-a-page/) — empty xref text renders that page’s own title, so it stays correct if the title changes. A fragment: [a specific section on that page](../guides-adding-a-page/#group-without-a-page-of-its-own).
-
-## Images and icons
-
-```
-.A block image, capped at its own natural size
-image::ROOT:hero-placeholder.png[A placeholder image,480]
-
-An inline image sits mid-paragraph: image:ROOT:card-placeholder.png[A small inline
-placeholder,20,20] like so. Font icons, keyboard shortcuts and UI paths:
-icon:check[] done, kbd:[Ctrl+C] to copy, btn:[Save] to save, menu:File[Save As] to open
-the save-as dialog.
-```
-
-![A placeholder image](../../_images/hero-placeholder.png)
-
-Figure 1. A block image, capped at its own natural size
-
-An inline image sits mid-paragraph: ![A small inline placeholder](../../_images/card-placeholder.png) like so. Font icons, keyboard shortcuts and UI paths: done, Ctrl+C to copy, **Save** to save, **File** **Save As** to open the save-as dialog.
-
-## Admonitions
-
-Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION — a sixth needs a role plus custom CSS, not a new admonition type. The one-line form is good for a single sentence; the multi-line (delimited) form can hold anything, including another block:
-
-```
-NOTE: The one-line form — good for a single sentence.
-
-[TIP]
-====
-The multi-line form — anything can go inside, including another block.
-
-[,console]
-```
-
-$ npm run build
-
-```
-====
-
-[IMPORTANT]
-====
-Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION.
-====
-
-[WARNING]
-====
-Multi-line WARNING.
-====
-
-[CAUTION]
-====
-Multi-line CAUTION.
-====
-```
-
-> **Note**
-> The one-line form — good for a single sentence.
-
-> **Tip**
-> The multi-line form — anything can go inside, including another block.
->
-> ```
-> $ npm run build
-> ```
-
-> **Important**
-> Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION. A sixth needs a role plus custom CSS, not a new admonition type.
-
-> **Warning**
-> Multi-line WARNING.
-
-> **Caution**
-> Multi-line CAUTION.
-
-## Source code
-
-```
-[,typescript]
-```
-
-const answer: number = 42
-
-```
-
-```
-
-```
-const answer: number = 42
-```
-
-A block with no language at all still gets the code surface and copy button, just no syntax colour:
-
-```
-plain text, no highlighting
-```
-
-Callouts, explained in a colon list right after the block:
-
-```
-[,js]
-```
-
-const x = 1 // <1> const y = x + 1 // <2>
-
-```
-<1> Set `x` to `1`.
-<2> Derive `y` from it.
-```
-
-```
-const x = 1 (1)
-const y = x + 1 (2)
-```
-
-| **1** | Set `x` to `1`. |
-| --- | --- |
-| **2** | Derive `y` from it. |
-
-The `.wrap` role lets long lines wrap instead of scrolling horizontally:
-
-```
-const config = { alpha: 1, beta: 2, gamma: 3, delta: 4, epsilon: 5, zeta: 6, eta: 7 }
-```
-
-## Tables
-
-A basic table with a header row:
-
-```
-[cols="1,2,1"]
-|===
-|Name |Description |Default
-
-|`retry.max-attempts`
-|Number of times a failed request is retried.
-|`3`
-
-|`retry.backoff`
-|Base delay between retries; doubles each attempt.
-|`200ms`
-|===
-```
-
-| Name | Description | Default |
-| --- | --- | --- |
-| `retry.max-attempts` | Number of times a failed request is retried. | `3` |
-| `retry.backoff` | Base delay between retries; doubles each attempt. | `200ms` |
-
-`%autowidth` shrinks the table to its content instead of filling the column:
-
-```
-[%autowidth]
-|===
-|Status |Value
-|Build |passing
-|Coverage |92%
-|===
-```
-
-| Status | Value |
-| --- | --- |
-| Build | passing |
-| Coverage | 92% |
-
-`%noheader` with a percentage width:
-
-```
-[%noheader,width=50%]
-|===
-|Node.js |`>= 24`
-|pnpm |`>= 10`
-|===
-```
-
-| Node.js | `>= 24` |
-| --- | --- |
-| pnpm | `>= 10` |
-
-An absolute pixel width via `table-width=` (bypasses [Asciidoctor](https://asciidoctor.org)'s own percentage-only `width=`), with `nowrap-cols=` pinning specific columns so their tokens never break mid-word:
-
-```
-[table-width=520px,cols="2,1,2",nowrap-cols="1,2"]
-|===
-|Property |Type |Notes
-
-|`timeout.connect`
-|`duration`
-|Maximum time to wait for a connection.
-
-|`timeout.read`
-|`duration`
-|Maximum time to wait for a response once connected.
-|===
-```
-
-| Property | Type | Notes |
-| --- | --- | --- |
-| `timeout.connect` | `duration` | Maximum time to wait for a connection. |
-| `timeout.read` | `duration` | Maximum time to wait for a response once connected. |
-
-Column/cell styles (`a` asciidoc, `l` literal, `m` monospace, `h` header, `s` strong) and a column span:
-
-```
-[cols="1,1,2"]
-|===
-|Name |Type |Values
-
-|size
-|enum
-|`small` \| `medium` \| `large`
-
-2+|spans two columns
-|third cell
-|===
-```
-
-| Name | Type | Values |
-| --- | --- | --- |
-| size | enum | `small` \| `medium` \| `large` |
-| spans two columns | third cell |   |
-
-## Includes
-
-Content lives once, in its own file, and gets pulled into a page with `include::`. Antora restricts the target to a resource ID naming one of its content families — `partial$` for a reusable AsciiDoc fragment under a module’s own `partials/` directory (never rendered as a page of its own), `example$` for a file under `examples/` (source code, config, fixtures). A relative path (`include::../other.adoc[]`) or a URL does not work — only these resource-ID families do.
-
-```
-This paragraph lives in its own file under `modules/main/partials/` and is pulled
-into whichever page includes it — edit it once, and every page that includes it
-picks up the change.
-
-// tag::callout[]
-This line is wrapped in a tagged region — a page can include just this part with
-`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-// end::callout[]
-
-A tagged region only, from the same file:
-
-This line is wrapped in a tagged region — a page can include just this part with
-`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-```
-
-This paragraph lives in its own file under `modules/main/partials/` and is pulled into whichever page includes it — edit it once, and every page that includes it picks up the change.
-
-This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-
-A tagged region only, from the same file:
-
-This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
-
-Tagged regions are marked in the *included* file with comments in that file’s own comment syntax (`// tag::callout[]` / `// end::callout[]` for AsciiDoc). `leveloffset=+1` demotes every section title in an included file that carries its own `=` heading — required when the included file is a page-shaped fragment rather than a bare partial.
-
-## Quotes and sidebars
-
-```
-[quote,Grace Hopper]
-____
-The most dangerous phrase in the language is, "We've always done it this way."
-____
-
-[verse]
-____
-Two roads diverged in a wood, and I—
-I took the one less traveled by.
-____
-
-.A sidebar
-****
-Asides, pull quotes, or background information that supplements the main flow without
-interrupting it.
-****
-```
-
-> The most dangerous phrase in the language is, "We’ve always done it this way."
-
-— Grace Hopper
-
-```
-Two roads diverged in a wood, and I—
-I took the one less traveled by.
-```
-
-A sidebar
-
-Asides, pull quotes, or background information that supplements the main flow without interrupting it.
-
-## Collapsible
-
-A single, standalone collapsible — for grouping several together with proper `role=group` semantics and single-open behaviour, see [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s `[accordion]` block instead.
-
-```
-.Click to expand
-[%collapsible]
-====
-Rendered as a native `<details>` element — works with JavaScript off.
-====
-```
-
-Click to expand
-
-Rendered as a native `<details>` element — works with JavaScript off.
-
----
-
-[1](#_footnoteref_1). The footnote text itself, rendered at the bottom of the page.
 
 ---
 
@@ -14577,6 +14080,527 @@ video::VIDEO_ID[youtube,640,360]
 ```
 
 `640,360` both caps the embed’s width and locks its aspect ratio at any narrower viewport; width alone caps the width and leaves the ratio at the 16:9 fallback.
+
+---
+
+# Integrations
+
+Source: https://inditextech.github.io/docouture/1.1.0/main/reference-integrations/
+
+Build-time and content capabilities that ship with every scaffolded site — as opposed to [UI Bundle](../reference-ui-bundle/)'s site chrome, or [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s authoring blocks. Grouped by what they’re for.
+
+## Authoring & content
+
+### Diagrams — Kroki
+
+`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
+
+The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a click-to-zoom fullscreen overlay. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
+
+### Syntax highlighting — Shiki
+
+`source-highlighter: shiki` in `antora-playbook.yml` switches every code block from [Antora](https://antora.org)'s own client-side default ([highlight.js](https://highlightjs.org)) to build-time, static highlighting. `@inditextech/docouture-antora-extensions’ [Shiki](https://shiki.style) prewarm step builds the highlighter once up front rather than per-block.
+
+### Changelog pages
+
+[Changelog](../changelog/)'s per-version sections are generated at build time from
+`code/CHANGELOG.md`, not hand-copied: `@inditextech/docouture-antora-extensions` parses
+every cut  [x.y.z] section, converts its `# Section` headings and `- [#PR](url)
+text` bullets to AsciiDoc, and appends each one as a `== vX.Y.Z` section directly onto
+whatever page already lives at `changelog/index.adoc` — only on a site that has one; a
+site with no changelog page is left untouched.
+
+`## [Unreleased]` is handled differently from a real cut release: it never becomes a `== vX.Y.Z` section (Keep a Changelog doesn’t consider "unreleased" a version either), but its content still renders as a plain `== Unreleased` section — and only on the component version Antora resolved as `prerelease` (the version built from `main`, never itself tagged). Any real, tagged release’s own changelog page never shows it: a tag is an immutable snapshot, and `[Unreleased]` is by definition whatever has landed on `main` since. An empty `[Unreleased]` heading (nothing merged since the last cut) renders no section at all rather than an empty one.
+
+The file is read once per build, off disk, applied identically to every component version being built — not resolved per-ref through git, so a real release tag’s own changelog page reflects whatever `code/CHANGELOG.md` says on disk right now, not that tag’s own historical copy of the file. In practice this only matters for the cut releases: a tagged version’s page shows every `## [x.y.z]` section on disk, no more and no less, regardless of which ref cut it. Override the default `code/CHANGELOG.md` location (resolved relative to the playbook’s own directory) with `changelog_path` on the extension’s registration entry:
+
+```
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      changelog_path: ../code/CHANGELOG.md
+```
+
+## Discovery & search
+
+### Full-text search
+
+`@inditextech/docouture-antora-extensions` builds a search index at build time, published per component version, that the UI bundle’s search dialog reads directly ([UI Bundle](../reference-ui-bundle/)). No manual wiring — registering the extension is enough.
+
+### AI ingestion — `llms.txt`
+
+Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the [llms.txt convention](https://llmstxt.org), letting an agent read the site without scraping rendered HTML. Configured under `docs/src/antora.yml’s `llms` key (see [Antora Descriptor](../reference-antora-descriptor-configuration/)) — `summary` becomes the blockquote under the site title; `exclude` leaves specific pages out of both files. See also [AI-First approach](../reference-ai-first-approach/) for the broader philosophy this feeds into.
+
+## Site reliability & URLs
+
+### External link checking
+
+A scaffolded site ships `scripts/check-links.mjs` (via [linkinator](https://github.com/JustinBeckwith/linkinator)) and a `check-links` [npm](https://www.npmjs.com) script. `package.json’s own `docouture.checkLinks.ignore` is a list of URL globs to skip — pre-seeded with this repository’s own URL, so a build doesn’t fail checking a link to itself before it’s ever been published.
+
+### URL routing: the `/latest/` alias
+
+Rather than Antora’s own `urls.latest_version_segment` (whose default `replace` strategy turns one real version segment into a permanent redirect stub the moment a release exists — see [Versioning modes](../guides-versioning-modes/)), `duplicate_latest_version: true` on the `antora.extensions` registration entry republishes whichever version Antora computes as latest a **second** time, under `/latest/…`, as a genuinely independent copy — so both the real version segment and `/latest/` stay real content.
+
+### Legacy URL redirects
+
+For a site migrated from another documentation tool, arbitrary literal legacy URLs can redirect to whatever real page now answers the equivalent URL — configured as `from`/`to` URL templates on the `@inditextech/docouture-antora-extensions` registration entry itself (not `antora.yml`, since these apply across every ref a build aggregates, not per-version):
+
+```
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      redirects:
+        - from: '/docs/main/old-page'
+          to: '/main/new-page'
+        - from: '/docs/**'
+          to: '/main/**'
+```
+
+`*` captures one path segment,  captures the remainder. Rules are first-match-wins
+in authoring order — an exact override belongs ahead of a broad `` catch-all.
+
+---
+
+# AsciiDoc basics
+
+Source: https://inditextech.github.io/docouture/1.1.0/main/reference-asciidoc-basics/
+
+Plain [AsciiDoc](https://asciidoc.org) — nothing docouture-specific — every block this page shows is standard Asciidoctor syntax, documented in full in the `docouture-writing-docs-pages` skill’s `reference/language-basics.md`. Each subsection below shows the raw markup first, then the same markup rendered live. See [Custom AsciiDoc components](../reference-custom-asciidoc-components/) for this site’s own custom blocks, and [Integrations](../reference-integrations/) for the build-time capabilities (diagrams, syntax highlighting) mentioned along the way.
+
+One exception: `== Includes` below uses a plain Asciidoctor directive (`include::`), but the `partial$`/`example$` targets it points at are Antora’s own resource-family classification, not something core AsciiDoc knows about — noted there, not silently folded in with the rest.
+
+## Headings and structure
+
+Sections nest by repeating `=`, never by skipping a level:
+
+```
+= Page title
+== Section
+=== Subsection
+==== Sub-subsection
+```
+
+This page is itself at the first real section level (`==`); the next few subsections go one level deeper — the nav/TOC outline you see for this very page is the live rendering of that nesting.
+
+#### A discrete heading
+
+```
+[discrete]
+==== A discrete heading
+```
+
+`[discrete]` above a heading keeps it out of both the navigation outline and the page’s own TOC — useful for a heading that organizes the page visually without being a real subsection of it.
+
+## Text formatting
+
+```
+*bold* and **b*o*ld mid-word**, _italic_ and it__ali__c mid-word, `mono`, `+literal, no
+subs+`, #marked text#, [.underline]#a span with a role#. Chemical formula: H~2~0.
+Exponent: E = mc^2^. A footnote after this sentencefootnote:[The footnote text itself,
+rendered at the bottom of the page.].
+```
+
+**bold** and **b*o*ld mid-word**, *italic* and it*ali*c mid-word, `mono`, `literal, no subs`, marked text, a span with a role. Chemical formula: H20. Exponent: E = mc2. A footnote after this sentence[[1](#_footnotedef_1)].
+
+## Lists
+
+Unordered, with a nested item carrying its own attached paragraph:
+
+```
+* first
+* second
+** nested
++
+Attached via the `+` continuation.
+```
+
+- first
+- second - nested Attached via the `+` continuation.
+
+Ordered, custom numbering:
+
+```
+[upperalpha]
+. first
+. second
+. third
+```
+
+1. first
+2. second
+3. third
+
+Custom unordered markers:
+
+```
+[square]
+* square-marked
+* another
+```
+
+- square-marked
+- another
+
+```
+[circle]
+* circle-marked
+* another
+```
+
+- circle-marked
+- another
+
+Description list, then its horizontal variant:
+
+```
+term:: definition
+another term:: definition
+```
+
+term
+
+definition
+
+another term
+
+definition
+
+```
+[horizontal]
+term:: definition
+another term:: definition
+```
+
+| term | definition |
+| --- | --- |
+| another term | definition |
+
+A checklist:
+
+```
+* [ ] not done yet
+* [x] done
+```
+
+- not done yet
+- done
+
+## Links and cross references
+
+```
+https://example.com[An external link], https://example.com[same, opened in a new
+tab^], link:https://example.com[the explicit macro], mailto:docs@example.com[a mail
+link]. Referring to another page on this site: xref:main:guides-adding-a-page.adoc[] —
+empty xref text renders that page's own title, so it stays correct if the title
+changes. A fragment:
+xref:main:guides-adding-a-page.adoc#group-without-a-page-of-its-own[a specific section
+on that page].
+```
+
+[An external link](https://example.com), [same, opened in a new tab](https://example.com), [the explicit macro](https://example.com), [a mail link](mailto:docs@example.com). Referring to another page on this site: [Adding a page](../guides-adding-a-page/) — empty xref text renders that page’s own title, so it stays correct if the title changes. A fragment: [a specific section on that page](../guides-adding-a-page/#group-without-a-page-of-its-own).
+
+## Images and icons
+
+```
+.A block image, capped at its own natural size
+image::ROOT:hero-placeholder.png[A placeholder image,480]
+
+An inline image sits mid-paragraph: image:ROOT:card-placeholder.png[A small inline
+placeholder,20,20] like so. Font icons, keyboard shortcuts and UI paths:
+icon:check[] done, kbd:[Ctrl+C] to copy, btn:[Save] to save, menu:File[Save As] to open
+the save-as dialog.
+```
+
+![A placeholder image](../../_images/hero-placeholder.png)
+
+Figure 1. A block image, capped at its own natural size
+
+An inline image sits mid-paragraph: ![A small inline placeholder](../../_images/card-placeholder.png) like so. Font icons, keyboard shortcuts and UI paths: done, Ctrl+C to copy, **Save** to save, **File** **Save As** to open the save-as dialog.
+
+## Admonitions
+
+Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION — a sixth needs a role plus custom CSS, not a new admonition type. The one-line form is good for a single sentence; the multi-line (delimited) form can hold anything, including another block:
+
+```
+NOTE: The one-line form — good for a single sentence.
+
+[TIP]
+====
+The multi-line form — anything can go inside, including another block.
+
+[,console]
+```
+
+$ npm run build
+
+```
+====
+
+[IMPORTANT]
+====
+Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION.
+====
+
+[WARNING]
+====
+Multi-line WARNING.
+====
+
+[CAUTION]
+====
+Multi-line CAUTION.
+====
+```
+
+> **Note**
+> The one-line form — good for a single sentence.
+
+> **Tip**
+> The multi-line form — anything can go inside, including another block.
+>
+> ```
+> $ npm run build
+> ```
+
+> **Important**
+> Five types exist: NOTE, TIP, IMPORTANT, WARNING, CAUTION. A sixth needs a role plus custom CSS, not a new admonition type.
+
+> **Warning**
+> Multi-line WARNING.
+
+> **Caution**
+> Multi-line CAUTION.
+
+## Source code
+
+```
+[,typescript]
+```
+
+const answer: number = 42
+
+```
+
+```
+
+```
+const answer: number = 42
+```
+
+A block with no language at all still gets the code surface and copy button, just no syntax colour:
+
+```
+plain text, no highlighting
+```
+
+Callouts, explained in a colon list right after the block:
+
+```
+[,js]
+```
+
+const x = 1 // <1> const y = x + 1 // <2>
+
+```
+<1> Set `x` to `1`.
+<2> Derive `y` from it.
+```
+
+```
+const x = 1 (1)
+const y = x + 1 (2)
+```
+
+| **1** | Set `x` to `1`. |
+| --- | --- |
+| **2** | Derive `y` from it. |
+
+The `.wrap` role lets long lines wrap instead of scrolling horizontally:
+
+```
+const config = { alpha: 1, beta: 2, gamma: 3, delta: 4, epsilon: 5, zeta: 6, eta: 7 }
+```
+
+## Tables
+
+A basic table with a header row:
+
+```
+[cols="1,2,1"]
+|===
+|Name |Description |Default
+
+|`retry.max-attempts`
+|Number of times a failed request is retried.
+|`3`
+
+|`retry.backoff`
+|Base delay between retries; doubles each attempt.
+|`200ms`
+|===
+```
+
+| Name | Description | Default |
+| --- | --- | --- |
+| `retry.max-attempts` | Number of times a failed request is retried. | `3` |
+| `retry.backoff` | Base delay between retries; doubles each attempt. | `200ms` |
+
+`%autowidth` shrinks the table to its content instead of filling the column:
+
+```
+[%autowidth]
+|===
+|Status |Value
+|Build |passing
+|Coverage |92%
+|===
+```
+
+| Status | Value |
+| --- | --- |
+| Build | passing |
+| Coverage | 92% |
+
+`%noheader` with a percentage width:
+
+```
+[%noheader,width=50%]
+|===
+|Node.js |`>= 24`
+|pnpm |`>= 10`
+|===
+```
+
+| Node.js | `>= 24` |
+| --- | --- |
+| pnpm | `>= 10` |
+
+An absolute pixel width via `table-width=` (bypasses [Asciidoctor](https://asciidoctor.org)'s own percentage-only `width=`), with `nowrap-cols=` pinning specific columns so their tokens never break mid-word:
+
+```
+[table-width=520px,cols="2,1,2",nowrap-cols="1,2"]
+|===
+|Property |Type |Notes
+
+|`timeout.connect`
+|`duration`
+|Maximum time to wait for a connection.
+
+|`timeout.read`
+|`duration`
+|Maximum time to wait for a response once connected.
+|===
+```
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `timeout.connect` | `duration` | Maximum time to wait for a connection. |
+| `timeout.read` | `duration` | Maximum time to wait for a response once connected. |
+
+Column/cell styles (`a` asciidoc, `l` literal, `m` monospace, `h` header, `s` strong) and a column span:
+
+```
+[cols="1,1,2"]
+|===
+|Name |Type |Values
+
+|size
+|enum
+|`small` \| `medium` \| `large`
+
+2+|spans two columns
+|third cell
+|===
+```
+
+| Name | Type | Values |
+| --- | --- | --- |
+| size | enum | `small` \| `medium` \| `large` |
+| spans two columns | third cell |   |
+
+## Includes
+
+Content lives once, in its own file, and gets pulled into a page with `include::`. Antora restricts the target to a resource ID naming one of its content families — `partial$` for a reusable AsciiDoc fragment under a module’s own `partials/` directory (never rendered as a page of its own), `example$` for a file under `examples/` (source code, config, fixtures). A relative path (`include::../other.adoc[]`) or a URL does not work — only these resource-ID families do.
+
+```
+This paragraph lives in its own file under `modules/main/partials/` and is pulled
+into whichever page includes it — edit it once, and every page that includes it
+picks up the change.
+
+// tag::callout[]
+This line is wrapped in a tagged region — a page can include just this part with
+`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+// end::callout[]
+
+A tagged region only, from the same file:
+
+This line is wrapped in a tagged region — a page can include just this part with
+`include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+```
+
+This paragraph lives in its own file under `modules/main/partials/` and is pulled into whichever page includes it — edit it once, and every page that includes it picks up the change.
+
+This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+
+A tagged region only, from the same file:
+
+This line is wrapped in a tagged region — a page can include just this part with `include::partial$example-partial.adoc[tag=callout]`, skipping the paragraph above.
+
+Tagged regions are marked in the *included* file with comments in that file’s own comment syntax (`// tag::callout[]` / `// end::callout[]` for AsciiDoc). `leveloffset=+1` demotes every section title in an included file that carries its own `=` heading — required when the included file is a page-shaped fragment rather than a bare partial.
+
+## Quotes and sidebars
+
+```
+[quote,Grace Hopper]
+____
+The most dangerous phrase in the language is, "We've always done it this way."
+____
+
+[verse]
+____
+Two roads diverged in a wood, and I—
+I took the one less traveled by.
+____
+
+.A sidebar
+****
+Asides, pull quotes, or background information that supplements the main flow without
+interrupting it.
+****
+```
+
+> The most dangerous phrase in the language is, "We’ve always done it this way."
+
+— Grace Hopper
+
+```
+Two roads diverged in a wood, and I—
+I took the one less traveled by.
+```
+
+A sidebar
+
+Asides, pull quotes, or background information that supplements the main flow without interrupting it.
+
+## Collapsible
+
+A single, standalone collapsible — for grouping several together with proper `role=group` semantics and single-open behaviour, see [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s `[accordion]` block instead.
+
+```
+.Click to expand
+[%collapsible]
+====
+Rendered as a native `<details>` element — works with JavaScript off.
+====
+```
+
+Click to expand
+
+Rendered as a native `<details>` element — works with JavaScript off.
+
+---
+
+[1](#_footnoteref_1). The footnote text itself, rendered at the bottom of the page.
 
 ---
 
@@ -16436,6 +16460,84 @@ See the [full FAQ](main/faq/) for more, including diagrams, search and publishin
 
 ---
 
+# Integrations
+
+Source: https://inditextech.github.io/docouture/1.0.0/main/reference-integrations/
+
+Build-time and content capabilities that ship with every scaffolded site — as opposed to [UI Bundle](../reference-ui-bundle/)'s site chrome, or [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s authoring blocks. Grouped by what they’re for.
+
+## Authoring & content
+
+### Diagrams — Kroki
+
+`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
+
+The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a click-to-zoom fullscreen overlay. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
+
+### Syntax highlighting — Shiki
+
+`source-highlighter: shiki` in `antora-playbook.yml` switches every code block from [Antora](https://antora.org)'s own client-side default ([highlight.js](https://highlightjs.org)) to build-time, static highlighting. `@inditextech/docouture-antora-extensions’ [Shiki](https://shiki.style) prewarm step builds the highlighter once up front rather than per-block.
+
+### Changelog pages
+
+[Changelog](../changelog/)'s per-version sections are generated at build time from
+`code/CHANGELOG.md`, not hand-copied: `@inditextech/docouture-antora-extensions` parses
+every cut  [x.y.z] section, converts its `# Section` headings and `- [#PR](url)
+text` bullets to AsciiDoc, and appends each one as a `== vX.Y.Z` section directly onto
+whatever page already lives at `changelog/index.adoc` — only on a site that has one; a
+site with no changelog page is left untouched.
+
+`## [Unreleased]` is handled differently from a real cut release: it never becomes a `== vX.Y.Z` section (Keep a Changelog doesn’t consider "unreleased" a version either), but its content still renders as a plain `== Unreleased` section — and only on the component version Antora resolved as `prerelease` (the version built from `main`, never itself tagged). Any real, tagged release’s own changelog page never shows it: a tag is an immutable snapshot, and `[Unreleased]` is by definition whatever has landed on `main` since. An empty `[Unreleased]` heading (nothing merged since the last cut) renders no section at all rather than an empty one.
+
+The file is read once per build, off disk, applied identically to every component version being built — not resolved per-ref through git, so a real release tag’s own changelog page reflects whatever `code/CHANGELOG.md` says on disk right now, not that tag’s own historical copy of the file. In practice this only matters for the cut releases: a tagged version’s page shows every `## [x.y.z]` section on disk, no more and no less, regardless of which ref cut it. Override the default `code/CHANGELOG.md` location (resolved relative to the playbook’s own directory) with `changelog_path` on the extension’s registration entry:
+
+```
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      changelog_path: ../code/CHANGELOG.md
+```
+
+## Discovery & search
+
+### Full-text search
+
+`@inditextech/docouture-antora-extensions` builds a search index at build time, published per component version, that the UI bundle’s search dialog reads directly ([UI Bundle](../reference-ui-bundle/)). No manual wiring — registering the extension is enough.
+
+### AI ingestion — `llms.txt`
+
+Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the [llms.txt convention](https://llmstxt.org), letting an agent read the site without scraping rendered HTML. Configured under `docs/src/antora.yml’s `llms` key (see [Antora Descriptor](../reference-antora-descriptor-configuration/)) — `summary` becomes the blockquote under the site title; `exclude` leaves specific pages out of both files. See also [AI-First approach](../reference-ai-first-approach/) for the broader philosophy this feeds into.
+
+## Site reliability & URLs
+
+### External link checking
+
+A scaffolded site ships `scripts/check-links.mjs` (via [linkinator](https://github.com/JustinBeckwith/linkinator)) and a `check-links` [npm](https://www.npmjs.com) script. `package.json’s own `docouture.checkLinks.ignore` is a list of URL globs to skip — pre-seeded with this repository’s own URL, so a build doesn’t fail checking a link to itself before it’s ever been published.
+
+### URL routing: the `/latest/` alias
+
+Rather than Antora’s own `urls.latest_version_segment` (whose default `replace` strategy turns one real version segment into a permanent redirect stub the moment a release exists — see [Versioning modes](../guides-versioning-modes/)), `duplicate_latest_version: true` on the `antora.extensions` registration entry republishes whichever version Antora computes as latest a **second** time, under `/latest/…`, as a genuinely independent copy — so both the real version segment and `/latest/` stay real content.
+
+### Legacy URL redirects
+
+For a site migrated from another documentation tool, arbitrary literal legacy URLs can redirect to whatever real page now answers the equivalent URL — configured as `from`/`to` URL templates on the `@inditextech/docouture-antora-extensions` registration entry itself (not `antora.yml`, since these apply across every ref a build aggregates, not per-version):
+
+```
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      redirects:
+        - from: '/docs/main/old-page'
+          to: '/main/new-page'
+        - from: '/docs/**'
+          to: '/main/**'
+```
+
+`*` captures one path segment,  captures the remainder. Rules are first-match-wins
+in authoring order — an exact override belongs ahead of a broad `` catch-all.
+
+---
+
 # AsciiDoc basics
 
 Source: https://inditextech.github.io/docouture/1.0.0/main/reference-asciidoc-basics/
@@ -16876,84 +16978,6 @@ Rendered as a native `<details>` element — works with JavaScript off.
 ---
 
 [1](#_footnoteref_1). The footnote text itself, rendered at the bottom of the page.
-
----
-
-# Integrations
-
-Source: https://inditextech.github.io/docouture/1.0.0/main/reference-integrations/
-
-Build-time and content capabilities that ship with every scaffolded site — as opposed to [UI Bundle](../reference-ui-bundle/)'s site chrome, or [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s authoring blocks. Grouped by what they’re for.
-
-## Authoring & content
-
-### Diagrams — Kroki
-
-`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
-
-The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a click-to-zoom fullscreen overlay. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
-
-### Syntax highlighting — Shiki
-
-`source-highlighter: shiki` in `antora-playbook.yml` switches every code block from [Antora](https://antora.org)'s own client-side default ([highlight.js](https://highlightjs.org)) to build-time, static highlighting. `@inditextech/docouture-antora-extensions’ [Shiki](https://shiki.style) prewarm step builds the highlighter once up front rather than per-block.
-
-### Changelog pages
-
-[Changelog](../changelog/)'s per-version sections are generated at build time from
-`code/CHANGELOG.md`, not hand-copied: `@inditextech/docouture-antora-extensions` parses
-every cut  [x.y.z] section, converts its `# Section` headings and `- [#PR](url)
-text` bullets to AsciiDoc, and appends each one as a `== vX.Y.Z` section directly onto
-whatever page already lives at `changelog/index.adoc` — only on a site that has one; a
-site with no changelog page is left untouched.
-
-`## [Unreleased]` is handled differently from a real cut release: it never becomes a `== vX.Y.Z` section (Keep a Changelog doesn’t consider "unreleased" a version either), but its content still renders as a plain `== Unreleased` section — and only on the component version Antora resolved as `prerelease` (the version built from `main`, never itself tagged). Any real, tagged release’s own changelog page never shows it: a tag is an immutable snapshot, and `[Unreleased]` is by definition whatever has landed on `main` since. An empty `[Unreleased]` heading (nothing merged since the last cut) renders no section at all rather than an empty one.
-
-The file is read once per build, off disk, applied identically to every component version being built — not resolved per-ref through git, so a real release tag’s own changelog page reflects whatever `code/CHANGELOG.md` says on disk right now, not that tag’s own historical copy of the file. In practice this only matters for the cut releases: a tagged version’s page shows every `## [x.y.z]` section on disk, no more and no less, regardless of which ref cut it. Override the default `code/CHANGELOG.md` location (resolved relative to the playbook’s own directory) with `changelog_path` on the extension’s registration entry:
-
-```
-antora:
-  extensions:
-    - require: '@inditextech/docouture-antora-extensions'
-      changelog_path: ../code/CHANGELOG.md
-```
-
-## Discovery & search
-
-### Full-text search
-
-`@inditextech/docouture-antora-extensions` builds a search index at build time, published per component version, that the UI bundle’s search dialog reads directly ([UI Bundle](../reference-ui-bundle/)). No manual wiring — registering the extension is enough.
-
-### AI ingestion — `llms.txt`
-
-Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the [llms.txt convention](https://llmstxt.org), letting an agent read the site without scraping rendered HTML. Configured under `docs/src/antora.yml’s `llms` key (see [Antora Descriptor](../reference-antora-descriptor-configuration/)) — `summary` becomes the blockquote under the site title; `exclude` leaves specific pages out of both files. See also [AI-First approach](../reference-ai-first-approach/) for the broader philosophy this feeds into.
-
-## Site reliability & URLs
-
-### External link checking
-
-A scaffolded site ships `scripts/check-links.mjs` (via [linkinator](https://github.com/JustinBeckwith/linkinator)) and a `check-links` [npm](https://www.npmjs.com) script. `package.json’s own `docouture.checkLinks.ignore` is a list of URL globs to skip — pre-seeded with this repository’s own URL, so a build doesn’t fail checking a link to itself before it’s ever been published.
-
-### URL routing: the `/latest/` alias
-
-Rather than Antora’s own `urls.latest_version_segment` (whose default `replace` strategy turns one real version segment into a permanent redirect stub the moment a release exists — see [Versioning modes](../guides-versioning-modes/)), `duplicate_latest_version: true` on the `antora.extensions` registration entry republishes whichever version Antora computes as latest a **second** time, under `/latest/…`, as a genuinely independent copy — so both the real version segment and `/latest/` stay real content.
-
-### Legacy URL redirects
-
-For a site migrated from another documentation tool, arbitrary literal legacy URLs can redirect to whatever real page now answers the equivalent URL — configured as `from`/`to` URL templates on the `@inditextech/docouture-antora-extensions` registration entry itself (not `antora.yml`, since these apply across every ref a build aggregates, not per-version):
-
-```
-antora:
-  extensions:
-    - require: '@inditextech/docouture-antora-extensions'
-      redirects:
-        - from: '/docs/main/old-page'
-          to: '/main/new-page'
-        - from: '/docs/**'
-          to: '/main/**'
-```
-
-`*` captures one path segment,  captures the remainder. Rules are first-match-wins
-in authoring order — an exact override belongs ahead of a broad `` catch-all.
 
 ---
 

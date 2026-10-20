@@ -1,0 +1,25 @@
+code/packages/antora-extensions/lib/llms-txt.spec.js
+  s_f81f6ba5e44cf1::t_2f21987acbb221 7,11,14,57-58,176-195
+code/packages/antora-extensions/lib/redirects.spec.js
+  s_f81f6ba5e44cf1::t_5cf120948a94c4 133-146
+code/packages/asciidoc-extensions/lib/cta.spec.js
+  s_f81f6ba5e44cf1::t_e700bfb97a8e1d 201-240
+code/packages/asciidoc-extensions/lib/feature-tabs.spec.js
+  s_f81f6ba5e44cf1::t_254b838dba5df3 178-215
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "75f00a45e445121a52a672e32a1d54380ac1c35d",
+  "prompts": {},
+  "sessions": {
+    "s_f81f6ba5e44cf1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea758151fffedWt2f980imffcN",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

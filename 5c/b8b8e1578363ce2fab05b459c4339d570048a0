@@ -1,0 +1,45 @@
+code/CHANGELOG.md
+  s_5464c4b76df40b::t_c1a01dd2dec810 22
+code/packages/antora-extensions/lib/llms-txt.js
+  s_5464c4b76df40b::t_f598e213f7a6b2 9,76,84-93,150,157,161,172-173,184,214,216
+code/packages/antora-extensions/lib/llms-txt.spec.js
+  s_5464c4b76df40b::t_14694be118dd3b 57,70,197-212
+code/packages/antora-extensions/lib/search-index.js
+  s_5464c4b76df40b::t_3be266d613d19a 8,62-63,85-91,139,159,164,173
+code/packages/antora-extensions/lib/search-index.spec.js
+  s_5464c4b76df40b::t_e406d670229936 46,53,109-132
+code/packages/antora-extensions/lib/site-url.js
+  s_5464c4b76df40b::t_5921cc83ff7bc0 1-31
+code/packages/antora-extensions/lib/site-url.spec.js
+  s_5464c4b76df40b::t_a4c3168d9c757e 1-32
+docs/src/modules/main/pages/reference-integrations.adoc
+  s_5464c4b76df40b::t_ec4048eda36f82 85,92
+openspec/changes/archive/2026-10-20-fix-search-llms-site-path/.openspec.yaml
+  s_5464c4b76df40b::t_69649029607919 1-2
+openspec/changes/archive/2026-10-20-fix-search-llms-site-path/design.md
+  s_5464c4b76df40b::t_ad01845bb1550e 1-21
+openspec/changes/archive/2026-10-20-fix-search-llms-site-path/proposal.md
+  s_5464c4b76df40b::t_3a12293dbcfbd2 1-25
+openspec/changes/archive/2026-10-20-fix-search-llms-site-path/specs/site-published-urls/spec.md
+  s_5464c4b76df40b::t_0670f3fcde29a1 1-38
+openspec/changes/archive/2026-10-20-fix-search-llms-site-path/tasks.md
+  s_5464c4b76df40b::t_c447cc545f3984 1-24
+openspec/specs/site-published-urls/spec.md
+  s_5464c4b76df40b::t_2be45d03196f2b 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5cb8b8e1578363ce2fab05b459c4339d570048a0",
+  "prompts": {},
+  "sessions": {
+    "s_5464c4b76df40b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea6d2494fffe7eW2SBTd0lb5ls",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

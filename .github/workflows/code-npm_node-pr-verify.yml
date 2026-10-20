@@ -33,7 +33,7 @@ on:
 
 jobs:
   verify:
-    name: Verify
+    name: Code / Verify
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:

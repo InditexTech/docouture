@@ -148,7 +148,7 @@ jobs:
         env:
           REF: ${{ github.ref }}
         run: |
-          echo "::error::docouture-release must run against main (got ${REF})"
+          echo "::error::docouture-release must run against main (got $REF)"
           exit 1
 
       - name: Checkout

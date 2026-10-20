@@ -20,9 +20,10 @@ at all).
 
 - [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js's showcase URL
 
-### Changed
+### Security
 
-- [#250](https://github.com/InditexTech/docouture/pull/250) [ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB_TOKENs
+- [#250](https://github.com/InditexTech/docouture/pull/250) \[ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB_TOKENs
+- [#249](https://github.com/InditexTech/docouture/pull/249) \[tooling] docouture-release.yml: pass github.ref via env instead of interpolating it into run
 
 ## [1.1.1] - 2026-09-03
 

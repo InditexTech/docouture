@@ -148,7 +148,7 @@ jobs:
         env:
           REF: ${{ github.ref }}
         run: |
-          echo "::error::docouture-release must run against __DOCOUTURE_RELEASE_BRANCH__ (got ${REF})"
+          echo "::error::docouture-release must run against __DOCOUTURE_RELEASE_BRANCH__ (got $REF)"
           exit 1
 
       - name: Checkout

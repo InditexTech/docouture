@@ -1,0 +1,57 @@
+code/CHANGELOG.md
+  s_cf81bdfd4966b2::t_503a49c20f0e71 15-18
+code/packages/cli/src/commands/branch-model.ts
+  s_cf81bdfd4966b2::t_14033503e0a071 307
+code/packages/cli/src/commands/new.spec.ts
+  s_cf81bdfd4966b2::t_7ff728b68c8f19 530-531,568-569,601-602,674-675,718-719,758-881
+code/packages/cli/src/commands/new.ts
+  s_cf81bdfd4966b2::t_dfc7a4adf9fc2b 24,165-185,239,260,269,304-324,454,515-526,567-570,577,586,590,604-605,622,676,774,790,860
+code/packages/cli/src/commands/upgrade.ts
+  s_cf81bdfd4966b2::t_ed4664e487d973 183-184
+code/packages/cli/src/lib/copy-template.spec.ts
+  s_cf81bdfd4966b2::t_e6975273e959ad 64-77
+code/packages/cli/src/lib/copy-template.ts
+  s_cf81bdfd4966b2::t_47aafe1f077c08 101-105,135
+code/packages/cli/src/lib/site-url.spec.ts
+  s_cf81bdfd4966b2::t_2dc392bb797f31 1-31
+code/packages/cli/src/lib/site-url.ts
+  s_cf81bdfd4966b2::t_ae9f11308187c2 1-30
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  s_cf81bdfd4966b2::t_c4fb1f53af2777 30
+code/packages/cli/templates/starter/antora-playbook.yml
+  s_cf81bdfd4966b2::t_acc9faa3f22512 30
+docs/antora-playbook.yml
+  s_cf81bdfd4966b2::t_d2a7378e4a2b50 30
+docs/src/modules/main/pages/reference-antora-playbook-configuration.adoc
+  s_cf81bdfd4966b2::t_6d1e444df123c7 14,27-30
+docs/src/modules/main/pages/reference-cli.adoc
+  s_cf81bdfd4966b2::t_7d8046641e6245 25-28
+openspec/changes/archive/2026-10-20-setup-site-url-from-github-pages/.openspec.yaml
+  s_cf81bdfd4966b2::t_616d691ce99d01 1-2
+openspec/changes/archive/2026-10-20-setup-site-url-from-github-pages/design.md
+  s_cf81bdfd4966b2::t_3b63a0e411edc0 1-30
+openspec/changes/archive/2026-10-20-setup-site-url-from-github-pages/proposal.md
+  s_cf81bdfd4966b2::t_4892976f5b5634 1-31
+openspec/changes/archive/2026-10-20-setup-site-url-from-github-pages/specs/cli-new-site-url/spec.md
+  s_cf81bdfd4966b2::t_edb1102c6c070e 1-73
+openspec/changes/archive/2026-10-20-setup-site-url-from-github-pages/tasks.md
+  s_cf81bdfd4966b2::t_0554f5c8fd31b8 1-23
+openspec/specs/cli-new-site-url/spec.md
+  s_cf81bdfd4966b2::t_3e7484d0baf989 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8a9e40855ffe33cdb75a3530fd4dc951a1ab02c8",
+  "prompts": {},
+  "sessions": {
+    "s_cf81bdfd4966b2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea787bdc6ffeoXW6AzpOYSmeCe",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

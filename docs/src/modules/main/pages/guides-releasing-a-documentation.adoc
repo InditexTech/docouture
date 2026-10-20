@@ -29,6 +29,9 @@ or any other malformed value fails the workflow immediately with a clear error, 
 of tagging first and only failing later inside the version-bump step.
 `docouture-release-preview.yml` runs the same check earlier, as a PR comment, before the
 merge that would have triggered it.
+It runs only on pull requests opened from a branch of the repository itself: a fork's
+pull request gets a read-only token that cannot post the comment, so the preview is
+skipped there.
 
 == Standalone mode
 

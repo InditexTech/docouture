@@ -14,11 +14,17 @@ at all).
 
 ### Fixed
 
+- [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
 - [#251](https://github.com/InditexTech/docouture/pull/251) \[cli\] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
 
 ### Documentation
 
 - [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js's showcase URL
+
+### Security
+
+- [#250](https://github.com/InditexTech/docouture/pull/250) \[ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB_TOKENs
+- [#249](https://github.com/InditexTech/docouture/pull/249) \[tooling] docouture-release.yml: pass github.ref via env instead of interpolating it into run
 
 ## [1.1.1] - 2026-09-03
 

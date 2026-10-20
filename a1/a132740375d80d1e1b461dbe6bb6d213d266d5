@@ -1,0 +1,19 @@
+code/packages/asciidoc-extensions/lib/warn.js
+  s_f81f6ba5e44cf1::t_60905442a27f92 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a1a132740375d80d1e1b461dbe6bb6d213d266d5",
+  "prompts": {},
+  "sessions": {
+    "s_f81f6ba5e44cf1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea758151fffedWt2f980imffcN",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+.github/workflows/code-npm_node-pr-verify.yml
+  s_4eb6dcbb65b876::t_91b2eb324d815b 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7bb9f453d9dc56ded216394618f550454607bd57",
+  "prompts": {},
+  "sessions": {
+    "s_4eb6dcbb65b876": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea7e01ebdffeOly9Ut8vO6Ets7",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -107,9 +107,22 @@ jobs:
       - name: Store project information
         id: version
         run: |
-          echo "app-version=$(jq -r '.version' code/package.json)" >> "$GITHUB_OUTPUT"
-          echo "app-name=$(jq -r '.name' code/package.json)" >> "$GITHUB_OUTPUT"
-          echo "github-repository=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)" >> "$GITHUB_OUTPUT"
+          app_version=$(jq -r '.version' code/package.json)
+          app_name=$(jq -r '.name' code/package.json)
+          repo_name="${GITHUB_REPOSITORY#*/}"
+          for v in "$app_version" "$app_name" "$repo_name"; do
+            case "$v" in
+              *$'\n'* | *$'\r'*)
+                echo "::error::Refusing multi-line value for GITHUB_OUTPUT"
+                exit 1
+                ;;
+            esac
+          done
+          {
+            printf 'app-version=%s\n' "$app_version"
+            printf 'app-name=%s\n' "$app_name"
+            printf 'github-repository=%s\n' "$repo_name"
+          } >> "$GITHUB_OUTPUT"
 
       - name: SonarCloud / Setup Java
         uses: actions/setup-java@v4
@@ -135,6 +148,8 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_NAME: ${{ steps.version.outputs.github-repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         if: ${{ github.event_name == 'release' }}
         working-directory: code
         run: |
@@ -142,32 +157,43 @@ jobs:
             -Dproject.settings=sonar-project.properties \
             -Dsonar.host.url="https://sonarcloud.io/" \
             -Dsonar.organization=inditextech \
-            -Dsonar.projectKey=InditexTech_"${{ steps.version.outputs.github-repository }}" \
-            -Dsonar.projectName="${{ steps.version.outputs.github-repository }}" \
-            -Dsonar.projectVersion="${{ github.event.release.tag_name }}" \
-            -Dsonar.branch.name="release/${{ github.event.release.tag_name }}"
+            -Dsonar.projectKey="InditexTech_${REPO_NAME}" \
+            -Dsonar.projectName="${REPO_NAME}" \
+            -Dsonar.projectVersion="${RELEASE_TAG}" \
+            -Dsonar.branch.name="release/${RELEASE_TAG}"
 
       - name: SonarCloud / Run analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+          REF_NAME: ${{ github.ref_name }}
+          REPO_NAME: ${{ steps.version.outputs.github-repository }}
+          APP_VERSION: ${{ steps.version.outputs.app-version }}
         if: ${{ github.event_name != 'release' }}
         working-directory: code
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            SCOPE_OPTIONS="-Dsonar.pullrequest.key=${{ github.event.pull_request.number }} -Dsonar.pullrequest.branch=${{ github.head_ref }} -Dsonar.pullrequest.base=${{ github.base_ref }}"
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            scope=(
+              "-Dsonar.pullrequest.key=${PR_NUMBER}"
+              "-Dsonar.pullrequest.branch=${HEAD_REF}"
+              "-Dsonar.pullrequest.base=${BASE_REF}"
+            )
           else
-            SCOPE_OPTIONS="-Dsonar.branch.name=${{ github.ref_name }}"
+            scope=("-Dsonar.branch.name=${REF_NAME}")
           fi
 
           npx sonar-scanner \
             -Dproject.settings=sonar-project.properties \
             -Dsonar.host.url="https://sonarcloud.io/" \
             -Dsonar.organization=inditextech \
-            -Dsonar.projectKey=InditexTech_"${{ steps.version.outputs.github-repository }}" \
-            -Dsonar.projectName="${{ steps.version.outputs.github-repository }}" \
-            -Dsonar.projectVersion="${{ steps.version.outputs.app-version }}" \
-            $SCOPE_OPTIONS
+            -Dsonar.projectKey="InditexTech_${REPO_NAME}" \
+            -Dsonar.projectName="${REPO_NAME}" \
+            -Dsonar.projectVersion="${APP_VERSION}" \
+            "${scope[@]}"
 
       # sonar-scanner only uploads the analysis — the Quality Gate is computed
       # asynchronously on SonarCloud's side, so the step above exits 0 no

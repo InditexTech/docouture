@@ -19,7 +19,7 @@ at all).
 
 ### Fixed
 
-- \[cli] `docouture upgrade` sets `runtime.log.failure_level: error` in existing playbooks and reports the change
+- [#263](https://github.com/InditexTech/docouture/pull/263) \[cli] `docouture upgrade` sets `runtime.log.failure_level: error` in existing playbooks and reports the change
 - [#264](https://github.com/InditexTech/docouture/pull/264) Docouture release WF, bump release version is taking into account only trunk-based development
 - [#263](https://github.com/InditexTech/docouture/pull/263) Setup failure_level to error on template
 - [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
@@ -32,6 +32,7 @@ at all).
 ### Security
 
 - [#250](https://github.com/InditexTech/docouture/pull/250) \[ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB_TOKENs
+- [#265](https://github.com/InditexTech/docouture/pull/265) \[tooling] code-npm_node-sonarcloud-analysis.yml: pass untrusted context via env instead of interpolating it into run
 - [#249](https://github.com/InditexTech/docouture/pull/249) \[tooling] docouture-release.yml: pass github.ref via env instead of interpolating it into run
 
 ## [1.1.1] - 2026-09-03

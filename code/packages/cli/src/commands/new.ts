@@ -97,8 +97,7 @@ function isInsideGitWorkTree(dir: string): boolean {
 
 // origin's remote URL as git reports it, or undefined if there isn't one
 // configured yet (a fresh `git init` with no remote added) — the shared
-// starting point for both repoWebUrl and githubPagesUrl below, so there's
-// only one execFileSync call to fail/mock, not two.
+// starting point for githubPagesUrl below.
 function originRemoteUrl(dir: string): string | undefined {
   try {
     // Same PATH reasoning as isInsideGitWorkTree above.
@@ -110,32 +109,13 @@ function originRemoteUrl(dir: string): string | undefined {
   }
 }
 
-// The web (https) form of this repo's `origin` remote, or undefined if
-// there isn't one configured yet. Baked into the scaffolded package.json's
-// `docouture.checkLinks.ignore` (see TemplateValues.repoIgnoreGlob, and
-// scripts/check-links.mjs's own comment on that key) so the repo-link.hbs
-// header/nav link — which 404s to an anonymous crawler whenever this repo
-// is private, indistinguishable from one that doesn't exist — doesn't fail
-// docouture-pr-verify.yml/docouture-release.yml out of the box. Converts an SSH
-// remote (`git@host:owner/repo.git`) to its https equivalent the same way
-// an https remote is just stripped of its trailing `.git`; anything else
-// unparseable is treated the same as "no remote yet".
-function repoWebUrl(dir: string): string | undefined {
-  const remote = originRemoteUrl(dir)
-  if (remote === undefined) return undefined
-  const ssh = /^git@([^:]+):(.+?)(\.git)?$/.exec(remote)
-  if (ssh) return `https://${ssh[1]}/${ssh[2]}`
-  if (/^https?:\/\//.test(remote)) return remote.replace(/\.git$/, '')
-  return undefined
-}
-
 // The GitHub Pages project-site URL 'docouture publish gh-pages' will produce
 // once published — GitHub's own convention is
 // https://<owner>.github.io/<repo>/, derived here from origin's remote
 // rather than asked for, so printNextSteps can tell a first-time user what
 // to expect before they've published anything. Only predictable when
 // origin is actually hosted on github.com (not an enterprise host, and not
-// "no remote configured yet"), same restriction repoWebUrl operates under.
+// "no remote configured yet"), same restriction as any origin-derived value.
 // The owner is lower-cased: GitHub Pages hostnames are always served
 // lower-case (hostnames are case-insensitive, and GitHub canonicalizes to
 // lower-case) regardless of the org/user's actual display case — e.g.
@@ -152,16 +132,6 @@ function githubPagesUrl(dir: string): string | undefined {
   if (https) return `https://${https[1]!.toLowerCase()}.github.io/${https[2]}/`
   return undefined
 }
-
-// TemplateValues.repoIgnoreGlob is always present as its own array element
-// in the scaffolded package.json (see copy-template.ts's own comment on why
-// that array can't ever shrink an element away) — when there's no `origin`
-// remote yet to derive a real glob from, this sentinel fills the same slot
-// instead of an empty string. It has no `*`/`?`, so globToRegExp
-// (check-links.mjs) compiles it to a literal-substring match that will
-// never occur inside a real URL, rather than an empty pattern (which would
-// match — and silently ignore — every single link).
-const NO_REPO_REMOTE_GLOB = 'docouture-new:no-origin-remote-configured'
 
 // '-' is the explicit skip answer: @inquirer/prompts' input falls back to
 // its `default` on an empty submit, so with a derived default pre-filled a
@@ -182,11 +152,6 @@ function normalizeDerivedSiteUrl(dir: string): string | undefined {
   if (url === undefined) return undefined
   const parsed = normalizeSiteUrl(url)
   return parsed.ok ? parsed.value : undefined
-}
-
-function repoIgnoreGlob(dir: string): string {
-  const url = repoWebUrl(dir)
-  return url !== undefined ? `${url}*` : NO_REPO_REMOTE_GLOB
 }
 
 // The bits of stdin/stdout the interactive wizard needs, pulled behind an
@@ -786,7 +751,6 @@ async function scaffoldSite(params: {
   pmChoice: PackageManager
 }): Promise<PackageManagerPlan> {
   const {
-    target,
     docsDir,
     workflowsDir,
     agentsMdFile,
@@ -858,7 +822,6 @@ async function scaffoldSite(params: {
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
     pmPackageManagerField: pm.packageManagerField,
-    repoIgnoreGlob: repoIgnoreGlob(target),
     prereleaseBranch,
     releaseBranch,
     branching,

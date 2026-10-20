@@ -5,7 +5,7 @@
 'use strict'
 
 import { execFileSync } from 'node:child_process'
-import { readFile, writeFile } from 'node:fs/promises'
+import { readdir, readFile, rmdir, rm, writeFile } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -17,6 +17,7 @@ import { resolveConfig } from '../lib/config-resolver.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { AGENTS_MD_FILENAME, mergeAgentsMd } from '../lib/agents-md.js'
 import { setBranching } from '../lib/package-branching.js'
+import { removeCheckLinks } from '../lib/check-links-removal.js'
 import { setFailureLevel } from '../lib/playbook-yml.js'
 import { cacheWarmBranchesYaml, detectBranches } from '../lib/branch-detect.js'
 
@@ -61,6 +62,20 @@ function readAntoraField(content: string, key: 'name' | 'title'): string | null 
   return value.length > 0 ? value : null
 }
 
+// Files outside what upgrade manages that still mention check-links: custom
+// workflows (everything under .github/workflows that docouture does not
+// regenerate is left alone, so any remaining hit is the user's own).
+async function leftoverCheckLinksRefs(target: string): Promise<string[]> {
+  const dir = join(target, '.github', 'workflows')
+  if (!(await exists(dir))) return []
+  const hits: string[] = []
+  for (const name of await readdir(dir)) {
+    if (!/\.ya?ml$/.test(name)) continue
+    if ((await readFile(join(dir, name), 'utf8')).includes('check-links')) hits.push(`.github/workflows/${name}`)
+  }
+  return hits
+}
+
 export async function runUpgrade(argv: string[]): Promise<number> {
   const { flags } = parseArgs(argv)
 
@@ -85,15 +100,6 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const templatesRoot = join(here, '..', 'templates')
   const workflowsTemplateDir = join(templatesRoot, 'workflows')
   const agentSupportDir = join(templatesRoot, 'agent-support')
-  // Unlike the rest of `docs/` (never re-copied — see the comment above the
-  // dry-run/real-run split below), `scripts/check-links.mjs` gets the same
-  // "regenerate wholesale" treatment as workflows: it carries zero
-  // `__DOCOUTURE_*__` placeholder tokens (nothing site-specific to lose),
-  // and its own comments already say the one thing a site owner is meant
-  // to customise — which links to ignore — belongs in package.json's
-  // `docouture.checkLinks.ignore`, not in edits to the script body itself.
-  const scriptsTemplateDir = join(templatesRoot, 'starter', 'scripts')
-
   // build/commands/upgrade.js -> package root, 2 levels up — see
   // readCliInfo's own comment. Always re-read fresh: an upgrade run re-pins
   // whatever templates reference the CLI version to the one actually
@@ -146,7 +152,7 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const values = {
     name,
     title,
-    // Same reasoning as repoIgnoreGlob below: __DOCOUTURE_COMPONENT_NAME__ only
+    // __DOCOUTURE_COMPONENT_NAME__ only
     // appears in docs/antora.yml and antora-playbook.yml, neither of which
     // upgrade ever re-copies (see the comment above `name` itself) — this
     // value is structurally required by TemplateValues but never actually
@@ -164,22 +170,14 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     pmLockfile: pm.lockfile,
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
-    // Same reasoning as repoIgnoreGlob below: package.json (the only
-    // template file this placeholder appears in) is never re-copied by
-    // upgrade either, so there's nothing meaningful to compute it from.
+    // package.json (the only template file this placeholder appears in) is
+    // never re-copied by upgrade, so there's nothing meaningful to compute.
     pmPackageManagerField: 'unused-by-upgrade',
-    // upgrade never re-copies docs/ (see below) — package.json, the only
-    // template file this placeholder appears in, is never touched here — so
-    // there's nothing meaningful to compute it from. Not an empty string:
-    // an empty glob (see check-links.mjs's globToRegExp) compiles to a
-    // pattern matching every URL, which would be a silent, dangerous no-op
-    // if this value were ever actually substituted somewhere.
-    repoIgnoreGlob: 'unused-by-upgrade',
     prereleaseBranch,
     releaseBranch,
     // docs/package.json (the only template file this placeholder appears
     // in) is never re-copied by upgrade — same reasoning as
-    // pmPackageManagerField/repoIgnoreGlob above.
+    // pmPackageManagerField above.
     branching: 'unused-by-upgrade',
     cacheWarmBranchesYaml: cacheWarmBranchesYaml(prereleaseBranch, releaseBranch),
     // antora-playbook.yml is never re-copied by upgrade.
@@ -189,15 +187,16 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const workflowsDir = join(target, '.github', 'workflows')
   const agentsMdFile = join(target, AGENTS_MD_FILENAME)
   const scriptsDir = join(target, 'docs', 'scripts')
+  const checkLinksScript = join(scriptsDir, 'check-links.mjs')
+  const siteRootPackageJson = join(target, 'docs', 'package.json')
 
   // Unlike `new.ts`, this command's whole purpose is to overwrite what's
   // already there — workflows are meant to be regenerable from the
   // template on every upgrade, not merged with local edits (there is no
   // content-hash/diff tracking anywhere in this CLI to tell a stock file
   // from a user-edited one). `docs/` itself — the starter content a site
-  // has since written its own pages into — is never touched here, with one
-  // exception: `docs/scripts/` gets the same blind-overwrite treatment as
-  // workflows (see scriptsTemplateDir's own comment above for why). Skills
+  // has since written its own pages into — is never touched here, apart from
+  // the removed check-links feature's leftovers (cleaned below). Skills
   // are never touched here either: `docouture upgrade` only re-syncs the
   // starter site and its GitHub workflows, same as `docouture new` only
   // scaffolds them — skills are a separate, self-serve install via
@@ -223,19 +222,49 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     else if (result.changed) strictPlans.push({ file, content: result.content, previous: result.previous })
   }
 
+  // Removed feature (GH #273): check-links. Plan the cleanup up front so
+  // --dry-run can list it.
+  const hasScript = await exists(checkLinksScript)
+  const pkgText = (await exists(siteRootPackageJson)) ? await readFile(siteRootPackageJson, 'utf8') : null
+  const pkgRemoval = pkgText === null ? null : removeCheckLinks(pkgText)
+
   if (dryRun) {
     const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
-    const plannedScripts = await copyTemplate(scriptsTemplateDir, scriptsDir, values, { dryRun: true })
 
     console.log('would write:')
-    for (const path of [...plannedWorkflows, ...plannedScripts, agentsMdFile, ...strictPlans.map((p) => p.file)]) {
+    for (const path of [...plannedWorkflows, agentsMdFile, ...strictPlans.map((p) => p.file)]) {
       console.log(`  ${relative(target, path)}`)
+    }
+    if (hasScript || pkgRemoval?.changed) {
+      console.log('would remove (check-links is no longer part of docouture):')
+      if (hasScript) console.log(`  ${relative(target, checkLinksScript)}`)
+      if (pkgRemoval?.changed) {
+        for (const what of pkgRemoval.removed) console.log(`  ${relative(target, siteRootPackageJson)}: ${what}`)
+      }
     }
     return 0
   }
 
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
-  await copyTemplate(scriptsTemplateDir, scriptsDir, values)
+
+  if (hasScript) {
+    await rm(checkLinksScript)
+    console.log(`removed ${relative(target, checkLinksScript)}`)
+    if ((await readdir(scriptsDir)).length === 0) await rmdir(scriptsDir)
+  }
+  if (pkgRemoval?.changed) {
+    await writeFile(siteRootPackageJson, pkgRemoval.content, 'utf8')
+    console.log(`updated ${relative(target, siteRootPackageJson)} (removed ${pkgRemoval.removed.join(', ')})`)
+  }
+  if (pkgRemoval?.keptLinkinator) {
+    console.log('note: kept devDependencies.linkinator because another script in package.json uses it.')
+  }
+  if (pkgRemoval?.removed.includes('devDependencies.linkinator')) {
+    console.log(`note: dependencies changed — run '${pm.pm} install' to refresh your lockfile.`)
+  }
+  for (const file of await leftoverCheckLinksRefs(target)) {
+    console.warn(`warning: ${file} still references check-links, which docouture no longer provides — remove it`)
+  }
 
   const existingAgentsMd = (await exists(agentsMdFile)) ? await readFile(agentsMdFile, 'utf8') : undefined
   const renderedAgentsMd = await renderTemplateFile(join(agentSupportDir, AGENTS_MD_FILENAME), values)
@@ -277,7 +306,6 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   }
 
   console.log(`updated ${relative(target, workflowsDir)}`)
-  console.log(`updated ${relative(target, scriptsDir)}`)
   if (updatedPackageJson) {
     console.log(
       `updated ${relative(target, packageJsonFile)} (docouture.branching 'git-flow', prereleaseBranch '${detected.prerelease}')`

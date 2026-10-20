@@ -98,11 +98,10 @@ xref:main:reference-ai-first-approach.adoc[] for the broader philosophy this fee
 
 === External link checking
 
-A scaffolded site ships `scripts/check-links.mjs` (via
-https://github.com/JustinBeckwith/linkinator[linkinator]) and a `check-links`
-https://www.npmjs.com[npm] script. `package.json`'s own `docouture.checkLinks.ignore`
-is a list of URL globs to skip — pre-seeded with this repository's own URL, so a build
-doesn't fail checking a link to itself before it's ever been published.
+Docouture no longer ships an external link checker: crawling live hosts from CI failed
+releases on healthy links and on the site's own not-yet-published `site.url`. Antora's
+strict build (`runtime.log.failure_level: error`) still fails on a broken `xref:` or a
+missing include. See xref:main:release-notes/1-3-0.adoc[].
 
 === URL routing: the `/latest/` alias
 

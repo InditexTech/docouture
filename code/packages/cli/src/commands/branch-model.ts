@@ -277,7 +277,6 @@ export async function runBranchModel(argv: string[]): Promise<number> {
     pmCiCmd: pm.ciCmd,
     pmSetupStepYaml: pm.setupStepYaml,
     pmPackageManagerField: 'unused-by-branch-model',
-    repoIgnoreGlob: 'unused-by-branch-model',
     prereleaseBranch: newPrerelease,
     releaseBranch: newRelease,
     // docs/package.json is patched directly below (setBranching), not via

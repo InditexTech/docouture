@@ -11,8 +11,7 @@
   "scripts": {
     "build": "antora --fetch antora-playbook.yml",
     "dev": "docouture dev",
-    "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\"",
-    "check-links": "node scripts/check-links.mjs"
+    "clean": "node -e \"require('fs').rmSync('build', { recursive: true, force: true })\""
   },
   "devDependencies": {
     "@inditextech/docouture-cli": "__DOCOUTURE_CLI_VERSION__",
@@ -20,20 +19,12 @@
     "@inditextech/docouture-asciidoc-extensions": "__DOCOUTURE_CLI_VERSION__",
     "@inditextech/docouture-antora-extensions": "__DOCOUTURE_CLI_VERSION__",
     "@inditextech/docouture-publish-gh-pages": "__DOCOUTURE_CLI_VERSION__",
-    "antora": "3.2.0",
-    "linkinator": "8.0.4"
+    "antora": "3.2.0"
   },
   "docouture": {
     "branching": "__DOCOUTURE_BRANCHING__",
     "publish": {
       "gh-pages": {}
-    },
-    "checkLinks": {
-      "ignore": [
-        "*/edit/HEAD/*",
-        "https://<org>.github.io/<repo>",
-        "__DOCOUTURE_REPO_IGNORE_GLOB__"
-      ]
     }
   }
 }

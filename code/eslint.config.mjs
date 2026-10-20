@@ -94,10 +94,8 @@ export default tseslint.config(
   {
     // Developer scripts: standalone Node programs, ES modules, run by hand or
     // through a package script. Not part of any bundle. The `templates/*/scripts`
-    // entry covers the CLI's own scaffolded-site scripts (e.g.
-    // packages/cli/templates/starter/scripts/check-links.mjs) — these ship
-    // inside a template dir, never executed here, but still real Node ESM
-    // that lints as such.
+    // entry covers any scaffolded-site scripts a CLI template ships — never
+    // executed here, but still real Node ESM that lints as such.
     files: [
       'scripts/**/*.mjs',
       'packages/*/scripts/**/*.mjs',

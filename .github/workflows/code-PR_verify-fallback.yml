@@ -1,9 +1,10 @@
 ---
 name: code-PR-verify-fallback
 
-# Reports a skipped `Code / Verify` on every PR so PRs that don't touch
-# `code/**` (where the real job is path-filtered out) aren't left waiting on
-# the required status check. A skipped check counts as passing.
+# Reports skipped `Code / Verify` and `SonarCloud / Unit Tests` checks on every
+# PR, so PRs that don't touch `code/**` (where the real jobs are path-filtered
+# out) aren't left waiting on the required status checks. A skipped check
+# counts as passing.
 on:
   pull_request:
 
@@ -14,3 +15,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - run: 'echo "No Code / Verify required"'
+
+  sonarcloud:
+    if: 'false'
+    name: SonarCloud / Unit Tests
+    runs-on: ubuntu-24.04
+    steps:
+      - run: 'echo "No SonarCloud / Unit Tests required"'

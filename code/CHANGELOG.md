@@ -19,6 +19,8 @@ at all).
 
 ### Fixed
 
+- \[cli] `docouture upgrade` sets `runtime.log.failure_level: error` in existing playbooks and reports the change
+- [#264](https://github.com/InditexTech/docouture/pull/264) Docouture release WF, bump release version is taking into account only trunk-based development
 - [#263](https://github.com/InditexTech/docouture/pull/263) Setup failure_level to error on template
 - [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
 - [#251](https://github.com/InditexTech/docouture/pull/251) \[cli] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken

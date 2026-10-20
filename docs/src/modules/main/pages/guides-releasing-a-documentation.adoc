@@ -52,6 +52,25 @@ triggered by a labelled PR merge:
 version directly — its form field is what a versioned-mode release actually requires
 there, unlike standalone's, where the default is fine.)
 
+=== Under git-flow: the sync pull request
+
+The forward-bump is committed on the release branch only. On a git-flow site the
+workflow's `sync-prerelease` job then opens a pull request from
+`automated/sync-docs-release-<version>-to-<prerelease>` into the prerelease branch, so
+`docs/.release-version` (and anything else the release branch gained) reaches it —
+merge that PR. The prerelease branch name comes from `docs/package.json`'s
+`docouture.prereleaseBranch`; if it is missing the release fails before tagging, with a
+message pointing at `docouture upgrade`, which adds it.
+
+* The job is skipped on trunk-based sites, on a republish, when the prerelease branch
+  already contains the release branch, and when that branch doesn't exist.
+* A failure there turns the run red and comments on the merged `docs/release` PR, but
+  the docs are still published — `publish` doesn't wait on its result.
+* The GitHub App that `docouture-release.yml` already uses needs `pull-requests: write`
+  (and `workflows: write`, since the release branch can carry workflow-file changes)
+  in addition to `contents: write`. Existing git-flow sites run `docouture upgrade`
+  once to get the new job and the `package.json` field.
+
 == `docouture version` vs. a real release
 
 `docouture version <value>` is the narrower tool the workflow itself calls internally

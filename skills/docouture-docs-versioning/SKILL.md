@@ -35,3 +35,6 @@ a release tag, and what the release workflow actually does).
   `docs/.release-version` forward to the next patch version automatically and commits
   that to `main` — you shouldn't normally need to edit it yourself except to set an
   intentionally different next target (e.g. jumping to a new minor).
+- On a git-flow site the workflow also opens a sync pull request from the release branch
+  into the prerelease branch (`docs/package.json`'s `docouture.prereleaseBranch`) to carry
+  that bump over — merge it.

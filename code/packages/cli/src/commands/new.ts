@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { theme } from '../lib/theme.js'
 import { parseArgs } from '../lib/args.js'
 import { readCliInfo } from '../lib/cli-info.js'
+import { setBranching } from '../lib/package-branching.js'
 import { copyTemplate, exists, isEmptyOrMissing, renderTemplateFile, writeTemplateFile } from '../lib/copy-template.js'
 import {
   detectPackageManager,
@@ -871,6 +872,7 @@ async function scaffoldSite(params: {
   // copy at the true repo root, since GitHub Actions never discovers
   // workflows anywhere else.
   await copyTemplate(starterDir, docsDir, values)
+  await setBranching(join(docsDir, 'package.json'), branching, prereleaseBranch)
   await copyTemplate(workflowsTemplateDir, workflowsDir, values)
 
   // AGENTS.md lands at the true repo root, same as workflows — an agent

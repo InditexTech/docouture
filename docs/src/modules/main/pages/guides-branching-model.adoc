@@ -41,7 +41,7 @@ or its own workflow file)
 |`docouture-kroki-cache-warm.yml` |*both*, unconditionally (push trigger — see below;
 also path-filtered to `docs/**` + its own workflow file)
 |`docouture-release-preview.yml` |release branch (pull_request trigger)
-|`docouture-release.yml` |release branch (pull_request:closed + workflow_dispatch)
+|`docouture-release.yml` |release branch (pull_request:closed + workflow_dispatch); under git-flow its `sync-prerelease` job also opens a PR into the prerelease branch
 |`docouture-publish.yml` |Neither — never push-triggered, only `workflow_call`-chained
 from `docouture-release.yml` or manually dispatched
 |===
@@ -73,6 +73,11 @@ green.
   `main`), posting a preview comment. On merge, `docouture-release.yml` cuts the release
   (checks out `main`, tags it, pushes the tag) and calls `docouture-publish.yml` to build
   and publish.
+  A versioned release also bumps `docs/.release-version` on `main`; its
+  `sync-prerelease` job then opens a pull request into `develop` carrying that bump
+  (branch `automated/sync-docs-release-<version>-to-develop`) — merge it so `develop`
+  doesn't go stale. It runs before the publish, which doesn't wait on its result: a
+  failed sync turns the run red but the docs still publish.
 . The merge to `main` is also an ordinary push — but `docouture-publish-prerelease.yml`
   does *not* fire a second time: its trigger is `develop`-only, so there's no overlap
   with `docouture-release.yml`'s own publish. (Under trunk-based, where both roles are
@@ -111,18 +116,27 @@ upgrade` uses) and patches `antora-playbook.yml`'s `content.sources[0].branches`
 branches, touch branch-protection/ruleset rules, or change GitHub's configured default
 branch — those stay manual steps, printed as a reminder after every real run.
 
-== `docouture.branching` is a declared signal, not the source of truth
+== The `docouture` block in `docs/package.json` declares the flow
 
-`docs/package.json`'s `"docouture": {"branching": "trunk-based"}` (or `"git-flow"`) is
-cheap and redundant by design — the actual branch names are never persisted anywhere.
-`docouture branch-model`/`docouture doctor` always re-derive them live, from
-`antora-playbook.yml`'s `content.sources[0].branches` and `docouture-release.yml`'s
-checkout `ref:`, the same way standalone-vs-versioned mode is already derived live
-(`docouture-release.yml`'s own "Detect mode" step) rather than stored anywhere. This
-field only exists so `docouture doctor` has something to compare that derivation
-against — a mismatch between the two is reported as an advisory warning, not a hard
-failure, since it can only ever be *stale*, never a build-breaking config error the
-way the four names in xref:main:guides-modifying-the-navigation.adoc[] are.
+[,json]
+----
+"docouture": { "branching": "trunk-based" }
+"docouture": { "branching": "git-flow", "prereleaseBranch": "develop" }
+----
+
+`docouture-release.yml` reads this block to know whether to open the prerelease sync
+pull request (see above) and which branch to target — the only place the workflow reads
+the flow from. Trunk-based declares `branching` only; git-flow also declares
+`prereleaseBranch`. `docouture new`, `docouture branch-model` and `docouture upgrade`
+keep it in step with `antora-playbook.yml`'s `content.sources[0].branches` (what Antora
+actually builds from): `upgrade` writes or corrects it on a git-flow site, which also
+backfills sites scaffolded before the field existed. The release branch name is not
+stored — it's the checkout `ref:` in `docouture-release.yml`.
+
+`docouture doctor` compares the declaration against what the playbook and workflow
+actually say: a git-flow site without `prereleaseBranch`, or with a stale one, is reported
+with `docouture upgrade` as the fix. A hand-edited playbook leaves the declaration stale
+until `upgrade` (or `branch-model`) runs again.
 
 == Which one to pick
 

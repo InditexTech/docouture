@@ -14,6 +14,7 @@ import {
   readStartPage,
   readStartPageComponent,
   readStartPath,
+  setFailureLevel,
   writeBranches,
 } from './playbook-yml.js'
 
@@ -145,5 +146,44 @@ describe('writeBranches', () => {
     const updated = writeBranches(withDecoy, 'develop')
     expect(updated).toContain('branches: [decoy]')
     expect(updated).toContain('branches: [develop]')
+  })
+})
+
+describe('setFailureLevel', () => {
+  it('replaces an existing value and keeps comments', () => {
+    const src = 'site:\n  x: 1\nruntime:\n  log:\n    failure_level: warn # keep\n    level: info\n'
+    const r = setFailureLevel(src, 'error')!
+    expect(r).toEqual({
+      content: 'site:\n  x: 1\nruntime:\n  log:\n    failure_level: error # keep\n    level: info\n',
+      previous: 'warn',
+      changed: true,
+    })
+  })
+
+  it('is a no-op when already error', () => {
+    const src = 'runtime:\n  log:\n    failure_level: error\n'
+    expect(setFailureLevel(src, 'error')).toEqual({ content: src, previous: 'error', changed: false })
+  })
+
+  it('inserts the key under an existing log block', () => {
+    const r = setFailureLevel('runtime:\n  log:\n    level: info\nother: 1\n', 'error')!
+    expect(r.content).toBe('runtime:\n  log:\n    failure_level: error\n    level: info\nother: 1\n')
+    expect(r.previous).toBeNull()
+  })
+
+  it('adds log under runtime when missing', () => {
+    const r = setFailureLevel('runtime:\n  cache_dir: x\nother: 1\n', 'error')!
+    expect(r.content).toBe('runtime:\n  log:\n    failure_level: error\n  cache_dir: x\nother: 1\n')
+  })
+
+  it('appends a runtime block when absent', () => {
+    const r = setFailureLevel('site:\n  x: 1\n', 'error')!
+    expect(r.content).toBe('site:\n  x: 1\n\nruntime:\n  log:\n    failure_level: error\n')
+    expect(r.changed).toBe(true)
+  })
+
+  it('returns null for flow-style runtime or log', () => {
+    expect(setFailureLevel('runtime: {log: {failure_level: warn}}\n', 'error')).toBeNull()
+    expect(setFailureLevel('runtime:\n  log: {failure_level: warn}\n', 'error')).toBeNull()
   })
 })

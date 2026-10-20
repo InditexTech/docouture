@@ -38,6 +38,7 @@
 * xref:main:additional-information-overview.adoc[Overview]
 * xref:main:changelog/index.adoc[Changelog]
 * xref:main:release-notes/index.adoc[Release notes]
+** xref:main:release-notes/1-2-0.adoc[v1.2.0]
 ** xref:main:release-notes/1-0-0.adoc[v1.0.0]
 * xref:main:faq.adoc[FAQ]
 * Contributing

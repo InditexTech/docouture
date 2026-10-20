@@ -16,6 +16,8 @@ import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-
 import { resolveConfig } from '../lib/config-resolver.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { AGENTS_MD_FILENAME, mergeAgentsMd } from '../lib/agents-md.js'
+import { setBranching } from '../lib/package-branching.js'
+import { setFailureLevel } from '../lib/playbook-yml.js'
 import { cacheWarmBranchesYaml, detectBranches } from '../lib/branch-detect.js'
 
 // Same check `new.ts` uses, duplicated rather than imported — it's three
@@ -206,12 +208,27 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // would silently destroy the 'Documentation state' table the
   // docouture-documenting-changes skill maintains outside docouture' own
   // managed section.
+  // Strict build: new scaffolds set runtime.log.failure_level: error, so an
+  // existing site is moved to it here too. Replaced unconditionally (no
+  // opt-out) and always reported, so the change is a conscious one.
+  const playbookFiles = ['antora-playbook.yml', 'antora-playbook.local.yml', 'antora-playbook.versioned.yml'].map(
+    (name) => join(siteRoot, name)
+  )
+  const strictPlans: { file: string; content: string; previous: string | null }[] = []
+  const strictSkipped: string[] = []
+  for (const file of playbookFiles) {
+    if (!(await exists(file))) continue
+    const result = setFailureLevel(await readFile(file, 'utf8'), 'error')
+    if (!result) strictSkipped.push(file)
+    else if (result.changed) strictPlans.push({ file, content: result.content, previous: result.previous })
+  }
+
   if (dryRun) {
     const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
     const plannedScripts = await copyTemplate(scriptsTemplateDir, scriptsDir, values, { dryRun: true })
 
     console.log('would write:')
-    for (const path of [...plannedWorkflows, ...plannedScripts, agentsMdFile]) {
+    for (const path of [...plannedWorkflows, ...plannedScripts, agentsMdFile, ...strictPlans.map((p) => p.file)]) {
       console.log(`  ${relative(target, path)}`)
     }
     return 0
@@ -228,8 +245,44 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   // nested subdirectory findRepoRoot walked up from, in which case
   // relative(cwd, ...) produces a useless '../../..' chain for paths that
   // are actually just '.github/workflows', 'AGENTS.md' etc. at the root.
+  // Git-flow sites: docouture-release.yml reads the prerelease branch from
+  // docs/package.json to open the sync PR, so write/correct it here (derived
+  // live from the playbook, the same source the workflows above were just
+  // re-rendered from). Never fails on a mismatch — corrects and reports.
+  const packageJsonFile = join(siteRoot, 'package.json')
+  let updatedPackageJson = false
+  if (
+    detected.prerelease &&
+    detected.release &&
+    detected.prerelease !== detected.release &&
+    (await exists(packageJsonFile))
+  ) {
+    updatedPackageJson = await setBranching(packageJsonFile, 'git-flow', detected.prerelease)
+  }
+
+  for (const plan of strictPlans) {
+    await writeFile(plan.file, plan.content, 'utf8')
+    console.log(
+      `updated ${relative(target, plan.file)} (runtime.log.failure_level: ${plan.previous ?? '(unset)'} -> error)`
+    )
+  }
+  for (const file of strictSkipped) {
+    console.warn(
+      `skipped ${relative(target, file)}: could not safely edit runtime.log.failure_level — set it to error by hand`
+    )
+  }
+  if (strictPlans.length > 0) {
+    console.log('note: builds now fail on errors such as a broken xref or a missing include.')
+    console.log("      Run 'docouture build' and fix what it reports before your next CI run.")
+  }
+
   console.log(`updated ${relative(target, workflowsDir)}`)
   console.log(`updated ${relative(target, scriptsDir)}`)
+  if (updatedPackageJson) {
+    console.log(
+      `updated ${relative(target, packageJsonFile)} (docouture.branching 'git-flow', prereleaseBranch '${detected.prerelease}')`
+    )
+  }
   console.log(`updated ${relative(target, agentsMdFile)}`)
 
   return 0

@@ -238,6 +238,37 @@ describe('checkReleaseLabelExists', () => {
 })
 
 describe('checkBranchingAgrees', () => {
+  it('fails a git-flow site with no declared prereleaseBranch, pointing at docouture upgrade', () => {
+    const result = checkBranchingAgrees({
+      declaredBranching: 'git-flow',
+      actualBranching: 'git-flow',
+      declaredPrereleaseBranch: null,
+      actualPrereleaseBranch: 'develop',
+    })
+    expect(result.ok).toBe(false)
+    expect(result.detail).toContain('docouture upgrade')
+  })
+
+  it('fails when the declared prereleaseBranch differs from the playbook', () => {
+    const result = checkBranchingAgrees({
+      declaredBranching: 'git-flow',
+      actualBranching: 'git-flow',
+      declaredPrereleaseBranch: 'old',
+      actualPrereleaseBranch: 'develop',
+    })
+    expect(result.ok).toBe(false)
+  })
+
+  it('passes when the declared prereleaseBranch matches', () => {
+    const result = checkBranchingAgrees({
+      declaredBranching: 'git-flow',
+      actualBranching: 'git-flow',
+      declaredPrereleaseBranch: 'develop',
+      actualPrereleaseBranch: 'develop',
+    })
+    expect(result.ok).toBe(true)
+  })
+
   it('is advisory-only (ok: true) when no docouture.branching is declared yet — predates GH #175', () => {
     const result = checkBranchingAgrees({ declaredBranching: null, actualBranching: 'trunk-based' })
     expect(result.ok).toBe(true)

@@ -129,6 +129,12 @@ describe('runNew', () => {
     const releaseWorkflow = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
     expect(releaseWorkflow).toContain('ref: main')
     expect(releaseWorkflow).toContain("branches: ['main*']")
+    // Git-flow sync of the .release-version bump into the prerelease branch,
+    // reading the flow from docs/package.json; publish must not depend on its result.
+    expect(releaseWorkflow).toContain('sync-prerelease:')
+    expect(releaseWorkflow).toContain('needs: [release, sync-prerelease]')
+    expect(releaseWorkflow).toContain("if: always() && needs.release.result == 'success'")
+    expect(releaseWorkflow).toContain("needs.release.outputs.branching == 'git-flow'")
 
     const releasePreview = await readFile(join(repo, '.github', 'workflows', 'docouture-release-preview.yml'), 'utf8')
     expect(releasePreview).toContain("branches: ['main*']")
@@ -143,9 +149,10 @@ describe('runNew', () => {
     expect(krokiWarm).toContain("branches: ['main*', 'develop*']")
 
     const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
-      docouture?: { branching?: string }
+      docouture?: { branching?: string; prereleaseBranch?: string }
     }
     expect(pkg.docouture?.branching).toBe('git-flow')
+    expect(pkg.docouture?.prereleaseBranch).toBe('develop')
 
     for (const file of [playbook, releaseWorkflow, releasePreview, publishPrerelease, krokiWarm]) {
       expect(file).not.toContain('__DOCOUTURE_')
@@ -164,9 +171,16 @@ describe('runNew', () => {
     expect(krokiWarm).not.toContain('develop')
 
     const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
-      docouture?: { branching?: string }
+      docouture?: { branching?: string; prereleaseBranch?: string }
     }
     expect(pkg.docouture?.branching).toBe('trunk-based')
+    expect(pkg.docouture?.prereleaseBranch).toBeUndefined()
+
+    // The sync job is always rendered; trunk-based sites skip it at runtime
+    // because docs/package.json declares no git-flow.
+    const trunkRelease = await readFile(join(repo, '.github', 'workflows', 'docouture-release.yml'), 'utf8')
+    expect(trunkRelease).toContain('sync-prerelease:')
+    expect(trunkRelease).toContain("needs.release.outputs.branching == 'git-flow'")
   })
 
   it('honours --pm pnpm in both the scaffolded workflows and the printed next steps', async () => {

@@ -28,6 +28,16 @@ None of these jobs release anything — they only comment on the PR with what _w
 - **Path filter**: `code/**` and `.github/workflows/code**`, not weave.js's bare `code/**` — matching the filter `code-npm_node-pr-verify.yml` already uses for its own `CHANGELOG.md` check.
 - **Action pins**: `dorny/paths-filter` and `release-flow/keep-a-changelog-action` are pinned to the same commit SHAs `code-npm_node-publish-release-and-snapshot.yml` already uses, rather than weave.js's own (potentially different) pins.
 
+## Fork pull requests
+
+On a `pull_request` from a fork, GitHub gives the workflow a read-only `GITHUB_TOKEN`, so `gh pr comment` cannot post. Comment-only work is skipped for forks; the checks still run:
+
+| | same-repo PR | fork PR |
+|---|---|---|
+| `CHANGELOG.md` diff check | runs | runs, fails the job if missing (annotation only, no comment) |
+| version bump computation | runs | runs |
+| PR comments | posted | skipped |
+
 ## Jobs
 
 - ### `check-changes-in-paths`

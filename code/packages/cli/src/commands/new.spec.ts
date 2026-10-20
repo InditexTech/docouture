@@ -795,7 +795,7 @@ describe('runNew', () => {
 
       const pb = await playbook(repo)
       expect(pb).toContain('\n  # url: https://<org>.github.io/<repo>\n')
-      expect(pb).not.toMatch(/^  url:/m)
+      expect(pb).not.toMatch(/^ {2}url:/m)
     })
 
     it('keeps the commented hint for a non-github.com origin', async () => {
@@ -805,7 +805,7 @@ describe('runNew', () => {
 
       expect(await runNew(['my-docs', '--dir', repo, '--yes'])).toBe(0)
 
-      expect(await playbook(repo)).not.toMatch(/^  url:/m)
+      expect(await playbook(repo)).not.toMatch(/^ {2}url:/m)
     })
 
     it('--site-url overrides the derived default and strips a trailing slash', async () => {
@@ -867,7 +867,7 @@ describe('runNew', () => {
 
       expect(await runWizardWithSiteUrlAnswer(repo, '-\n')).toBe(0)
 
-      expect(await playbook(repo)).not.toMatch(/^  url:/m)
+      expect(await playbook(repo)).not.toMatch(/^ {2}url:/m)
     })
 
     it('wizard: a typed URL is used, trailing slash stripped', async () => {

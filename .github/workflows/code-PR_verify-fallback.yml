@@ -1,0 +1,16 @@
+---
+name: code-PR-verify-fallback
+
+# Reports a skipped `Code / Verify` on every PR so PRs that don't touch
+# `code/**` (where the real job is path-filtered out) aren't left waiting on
+# the required status check. A skipped check counts as passing.
+on:
+  pull_request:
+
+jobs:
+  unit-tests:
+    if: 'false'
+    name: Code / Verify
+    runs-on: ubuntu-24.04
+    steps:
+      - run: 'echo "No Code / Verify required"'

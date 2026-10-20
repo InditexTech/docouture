@@ -1,0 +1,25 @@
+.github/workflows/docouture-release-preview.yml
+  s_4eb6dcbb65b876::t_ce12ccff929e17 46-50
+code/CHANGELOG.md
+  s_4eb6dcbb65b876::t_ea300c24a32bfa 15-18
+code/packages/cli/templates/workflows/docouture-release-preview.yml
+  s_4eb6dcbb65b876::t_fa7a0493b5ffde 46-50
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_4eb6dcbb65b876::t_f857fb6bbb8a52 32-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "845ab9f64aaf178949559715dc594e6615dec084",
+  "prompts": {},
+  "sessions": {
+    "s_4eb6dcbb65b876": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea7e01ebdffeOly9Ut8vO6Ets7",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

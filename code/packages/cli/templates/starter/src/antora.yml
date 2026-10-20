@@ -3,7 +3,7 @@
 #
 # `name` is either this site's own name (a real URL path segment on
 # publish) or Antora's reserved `ROOT` (contributes no segment at all) —
-# decided by the `docouture new` wizard's "extra URL path segment" question (or
+# decided by the `docouture new` wizard's "Give the docs their own URL segment?" question (or
 # `--url-segment`), default off/ROOT. See antora-playbook.yml's own
 # site.url comment for the full GitHub Pages URL shape either way.
 name: __DOCOUTURE_COMPONENT_NAME__

@@ -15,6 +15,7 @@ at all).
 ### Added
 
 - [#261](https://github.com/InditexTech/docouture/pull/261) \[cli] Set up site.url from the repository's GitHub Pages URL
+- [#262](https://github.com/InditexTech/docouture/pull/262) \[cli] Template setup ROOT as component to avoid dual context on GitHub Pages
 
 ### Fixed
 

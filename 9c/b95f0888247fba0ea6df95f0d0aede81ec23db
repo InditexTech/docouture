@@ -1,0 +1,43 @@
+code/CHANGELOG.md
+  s_60c1d31b096cde::t_8fce9e1dec66b2 18
+code/packages/cli/src/bin.ts
+  s_60c1d31b096cde::t_fc0cb59b7e4262 56,74-76
+code/packages/cli/src/commands/new.spec.ts
+  s_60c1d31b096cde::t_a6c203ded0e5ff 532,570,603,676,720,838
+code/packages/cli/src/commands/new.ts
+  s_60c1d31b096cde::t_1d044bf91cdead 342-350
+code/packages/cli/templates/starter/src/antora.yml
+  s_60c1d31b096cde::t_a191733d241e81 6
+docs/src/modules/main/pages/quickstart.adoc
+  s_60c1d31b096cde::t_c9f26d648c57b2 21-24
+docs/src/modules/main/pages/reference-cli.adoc
+  s_60c1d31b096cde::t_5cf533d253db66 29-31
+openspec/changes/archive/2026-10-20-clarify-url-segment-wizard/.openspec.yaml
+  s_60c1d31b096cde::t_811b382f87ac5f 1-2
+openspec/changes/archive/2026-10-20-clarify-url-segment-wizard/design.md
+  s_60c1d31b096cde::t_c978ce1c1d9abb 1-23
+openspec/changes/archive/2026-10-20-clarify-url-segment-wizard/proposal.md
+  s_60c1d31b096cde::t_31d9473fbdd7e2 1-26
+openspec/changes/archive/2026-10-20-clarify-url-segment-wizard/specs/cli-new-url-segment/spec.md
+  s_60c1d31b096cde::t_cc422df432fc8e 1-32
+openspec/changes/archive/2026-10-20-clarify-url-segment-wizard/tasks.md
+  s_60c1d31b096cde::t_77880d6bfd034b 1-12
+openspec/specs/cli-new-url-segment/spec.md
+  s_60c1d31b096cde::t_670bae1eac4327 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9cb95f0888247fba0ea6df95f0d0aede81ec23db",
+  "prompts": {},
+  "sessions": {
+    "s_60c1d31b096cde": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea76b24efffe1hfPVAaf71M8tn",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -77,12 +77,18 @@ jobs:
         run: echo "RELEASE_VERSION=major" >> "$GITHUB_ENV"
 
       - name: Check if CHANGELOG.md has changes
+        env:
+          IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
         run: |
           if git diff --quiet HEAD^ HEAD -- code/CHANGELOG.md; then
             echo "::error title={No CHANGELOG.md changes}::{No CHANGELOG.md changes were found. Update the UNRELEASED section with the new changes.}"
-            gh pr comment ${{ github.event.number }} --body "
+            # Fork PRs get a read-only GITHUB_TOKEN: the annotation above is
+            # the only feedback they can receive, the comment would fail.
+            if [[ "$IS_FORK" != "true" ]]; then
+              gh pr comment ${{ github.event.number }} --body "
           ### :x: No changes in the \`CHANGELOG.md\` file
           No changes were found in the \`CHANGELOG.md\` file. Please, update the UNRELEASED section, listing the new changes that applies to this release."
+            fi
             exit 1
           fi
 
@@ -101,7 +107,9 @@ jobs:
       # squash-vs-merge-commit between) — weave.js's "Check merge strategy"
       # step and its "Merge Strategy" comment line have no docouture equivalent
       # and are dropped here.
+      # Fork PRs get a read-only GITHUB_TOKEN, so `gh pr comment` cannot post.
       - name: Add PR comment with release preview
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
           TASKS=$(awk -v version="${{ steps.update-changelog.outputs.version }}" '
             BEGIN { capture=0; found_version=0 }
@@ -130,7 +138,8 @@ jobs:
   release-preview-no-code-changes:
     name: Add PR comment with configuration management information
     needs: check-changes-in-paths
-    if: ${{ contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') && needs.check-changes-in-paths.outputs.detected == 'false' }}
+    # Comment-only job: skipped on fork PRs, whose read-only GITHUB_TOKEN cannot comment.
+    if: ${{ contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') && needs.check-changes-in-paths.outputs.detected == 'false' && github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-24.04
     permissions:
       pull-requests: write
@@ -154,7 +163,8 @@ jobs:
   release-preview-no-release-labels:
     name: Add PR comment with release information
     needs: check-changes-in-paths
-    if: ${{ !contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') && needs.check-changes-in-paths.outputs.detected == 'true' && github.event.pull_request.draft == false }}
+    # Comment-only job: skipped on fork PRs, whose read-only GITHUB_TOKEN cannot comment.
+    if: ${{ !contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type') && needs.check-changes-in-paths.outputs.detected == 'true' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-24.04
     permissions:
       pull-requests: write

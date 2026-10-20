@@ -1,0 +1,29 @@
+.github/workflows/code-npm_node-sonarcloud-analysis.yml
+  s_618f35ec4de226::t_b3f50017caafaa 110-125,151-152,160-163,169-175,179-184,186,193-196
+code/CHANGELOG.md
+  s_618f35ec4de226::t_351221ba360019 22,35
+openspec/changes/harden-sonarcloud-workflow-injection/.openspec.yaml
+  s_618f35ec4de226::t_1d309a06b21564 1-3
+openspec/changes/harden-sonarcloud-workflow-injection/design.md
+  s_618f35ec4de226::t_bad84bbf546ff7 1-28
+openspec/changes/harden-sonarcloud-workflow-injection/proposal.md
+  s_618f35ec4de226::t_cf92d887ff4802 1-28
+openspec/changes/harden-sonarcloud-workflow-injection/tasks.md
+  s_618f35ec4de226::t_26ab52db875176 1-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8553f0576e980bcd20b8e30dcbc11264f68035c4",
+  "prompts": {},
+  "sessions": {
+    "s_618f35ec4de226": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea6dd071dffe1nWOki5aOy9J5q",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

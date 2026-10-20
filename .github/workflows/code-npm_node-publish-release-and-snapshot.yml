@@ -10,14 +10,20 @@ name: code-npm-publish-release-and-snapshot
 run-name: "Publish workflow: ${{ github.event_name }}"
 
 on:
-  issue_comment:
-    types: [created]
   pull_request:
     types: [closed]
     branches: ["main", "main-*"]
     paths: ["code/**", ".github/workflows/code**"]
   workflow_dispatch:
     inputs:
+      ACTION:
+        description: "What to run: cut a real release, or publish an npm snapshot of the selected branch"
+        required: true
+        default: "release"
+        type: choice
+        options:
+          - "release"
+          - "snapshot"
       BASELINE:
         description: "Baseline branch"
         required: true
@@ -48,11 +54,7 @@ jobs:
     concurrency: code-build-snapshot-${{ github.ref }}
     permissions:
       contents: read
-      pull-requests: read
-    if: >
-      github.event_name == 'issue_comment' &&
-      github.event.issue.pull_request != null &&
-      github.event.comment.body == '/publish-snapshot'
+    if: github.event_name == 'workflow_dispatch' && inputs.ACTION == 'snapshot'
     runs-on: ubuntu-24.04
     env:
       ASDF_BRANCH_VERSION: 0.18.0
@@ -79,36 +81,14 @@ jobs:
             }
 
       - name: Get input parameters
-        run: |
-          RELEASE_LABELS="${{ join(github.event.issue.labels.*.name, ', ') }}"
-          if [[ $RELEASE_LABELS != *release-type/* ]]; then
-            RELEASE_LABELS="$RELEASE_LABELS, release-type/minor"
-          fi
-          echo "RELEASE_LABELS=$RELEASE_LABELS" >> "$GITHUB_ENV"
+        env:
+          RELEASE_TYPE: ${{ inputs.RELEASE_TYPE }}
+        run: echo "RELEASE_LABELS=$RELEASE_TYPE" >> "$GITHUB_ENV"
 
-      # Resolved as close as possible to the checkout below, and pinned to an
-      # exact commit SHA rather than the mutable `refs/pull/<n>/head` — a PR
-      # author (or anyone able to push to that PR branch) could otherwise push
-      # a new commit in the window between the admin's `/publish-snapshot`
-      # comment and this job's checkout, and this privileged, secret-bearing
-      # job would build and publish that new, unreviewed commit instead of
-      # whatever the admin actually approved by commenting.
-      - name: Resolve PR head SHA
-        id: pr-head
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
-        with:
-          script: |
-            const { data } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.issue.number
-            });
-            core.setOutput('sha', data.head.sha);
-
-      - name: Checkout PR branch
+      - name: Checkout selected branch
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
-          ref: ${{ steps.pr-head.outputs.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -116,10 +96,9 @@ jobs:
       # pnpm store instead of weave.js's ~/.npm, keyed off pnpm-lock.yaml.
       #
       # actions/cache/restore, not actions/cache: this job builds an
-      # admin-approved but still author-controlled PR branch, and this
-      # workflow's issue_comment trigger gets write access to the *default
-      # branch's* cache scope (not the PR's own), not read-only like
-      # pull_request would. actions/cache's implicit save-on-exit would let
+      # admin-approved but still author-controlled branch, and a manual
+      # dispatch gets write access to that branch's cache scope.
+      # actions/cache's implicit save-on-exit would let
       # a malicious PR branch poison a cache entry later restored by trusted
       # workflows (release, pr-verify) — CodeQL's cache-poisoning query flags
       # exactly this shape. Restoring an existing, legitimately-populated
@@ -425,12 +404,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-      issues: write
-      pull-requests: write
-    if: >
-      github.event_name == 'issue_comment' &&
-      github.event.issue.pull_request != null &&
-      github.event.comment.body == '/publish-snapshot'
+    if: github.event_name == 'workflow_dispatch' && inputs.ACTION == 'snapshot'
     runs-on: ubuntu-24.04
     env:
       SNAPSHOT_VERSION: ${{ needs.build-snapshot.outputs.snapshot_version }}
@@ -501,36 +475,33 @@ jobs:
             npm publish "$tarball" --access public --tag next
           done
 
-      - name: Result / Comment on PR
+      - name: Result / Job summary
         if: always()
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
-        with:
-          script: |
-            const status = '${{ job.status }}';
-            const authMethod = '${{ env.HAS_NEW_PACKAGES }}' === 'true'
-              ? 'NPM_TOKEN (new packages detected)'
-              : 'OIDC trusted publishing (provenance)';
-
-            const body = status === 'success'
-              ? [
-                  "### :rocket: NPM snapshot published",
-                  "",
-                  `- Version: \`${{ env.SNAPSHOT_VERSION }}\``,
-                  "- Tag: `next`",
-                  `- Auth: ${authMethod}`
-                ]
-              : [
-                  "### :x: NPM snapshot publication failed",
-                  "",
-                  "Please check the workflow logs for details."
-                ]
-
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body.join("\n")
-            });
+        env:
+          JOB_STATUS: ${{ job.status }}
+          AUTH_METHOD: ${{ env.HAS_NEW_PACKAGES == 'true' && 'NPM_TOKEN (new packages detected)' || 'OIDC trusted publishing (provenance)' }}
+        run: |
+          if [[ "$JOB_STATUS" == "success" ]]; then
+            {
+              echo "### :rocket: NPM snapshot published"
+              echo ""
+              echo "- Version: \`${SNAPSHOT_VERSION}\`"
+              echo "- Tag: \`next\`"
+              echo "- Branch: \`${GITHUB_REF_NAME}\` (\`${GITHUB_SHA}\`)"
+              echo "- Auth: ${AUTH_METHOD}"
+              echo ""
+              echo "Install with: \`npm i @inditextech/docouture-cli@${SNAPSHOT_VERSION}\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### :x: NPM snapshot publication failed"
+              echo ""
+              echo "- Version attempted: \`${SNAPSHOT_VERSION}\`"
+              echo "- Branch: \`${GITHUB_REF_NAME}\` (\`${GITHUB_SHA}\`)"
+              echo ""
+              echo "Please check the workflow logs for details."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
 
   release:
     name: Release
@@ -540,7 +511,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-    if: github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'workflow_dispatch' && inputs.ACTION == 'release')
       || (github.event_name == 'pull_request' && github.event.pull_request.merged == true
       && !contains(join(github.event.pull_request.labels.*.name, ', '), 'skip-release')
       && contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type'))

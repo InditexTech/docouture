@@ -746,7 +746,10 @@ question opts in, the Antora component too.</p>
 it, <code>-</code> skips it (leaving a commented hint), or type a custom-domain URL.</p>
 </li>
 <li>
-<p><strong>Add an extra URL segment?</strong> — off by default. GitHub Pages project sites already
+<p><strong>Give the docs their own URL segment?</strong> — recommended: no. A <em>component</em> is one
+documentation product with its own versions; a <em>module</em> is a section inside it (this
+site starts with <code>main</code>); see <a href="../glossary/" class="xref page">Glossary</a>. Answering no gives
+<code><a href="https://&lt;org&gt;.github.io/&lt;repo&gt;/&lt;version&gt;/main/page/" class="bare">https://&lt;org&gt;.github.io/&lt;repo&gt;/&lt;version&gt;/main/page/</a></code>, yes adds <code>/&lt;name&gt;/</code> before the version. GitHub Pages project sites already
 publish under <code><a href="https://&lt;org&gt;.github.io/&lt;repo&gt;/" class="bare">https://&lt;org&gt;.github.io/&lt;repo&gt;/</a></code>; a real component name would add a
 further <code>/&lt;name&gt;/</code> segment on top of that. Only answer yes if this repository will
 host more than one documentation component later.</p>

@@ -20,7 +20,6 @@ site:
   # this as a path segment; Antora uses it to generate correct absolute
   # asset URLs — e.g.:
   #
-  # url: https://<org>.github.io/<repo>
   # url: https://docs.example.com
   #
   # A second /<component-name>/ segment only appears below (in
@@ -28,6 +27,7 @@ site:
   # path segment" question, or `--url-segment`) — off by default, in which
   # case docs/antora.yml's component name is Antora's reserved `ROOT` and
   # contributes no segment.
+  # __DOCOUTURE_SITE_URL_LINE__
   start_page: __DOCOUTURE_COMPONENT_NAME__::index.adoc
   # Side-menu brand mark (nav-brand.hbs) and browser tab icon (head-icons.hbs)
   # — placeholder artwork under supplemental-ui/, wired via

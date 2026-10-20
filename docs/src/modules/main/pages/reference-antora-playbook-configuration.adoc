@@ -11,6 +11,7 @@ docs].
 ----
 site:
   title: docouture
+  url: https://inditextech.github.io/docouture
   start_page: ROOT::index.adoc
   keys:
     product_logo: /_/product-logo.png
@@ -23,6 +24,10 @@ site:
 |Key |Effect
 
 |`title` |The site's own name, used in the UI bundle's chrome and generated `<title>` tags.
+|`url` |The public URL of the deployed site, without a trailing slash. Required for the
+sitemap, canonical links and `404.html`. For a GitHub Pages project site it is
+`+https://<org>.github.io/<repo>+`; `docouture new` asks for it (see
+xref:main:reference-cli.adoc[]) and writes it here, or leaves a commented hint when unknown.
 |`start_page` |A resource ID (`<component>::index.adoc`) generating the redirect at the site root.
 |`keys.product_logo` / `product_logo_dark` |Side-menu brand logo, light/dark variants — see
 xref:main:guides-setup-the-product-logo.adoc[].

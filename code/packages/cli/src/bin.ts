@@ -52,8 +52,8 @@ const COMMAND_INFO: Record<(typeof COMMAND_ORDER)[number], CommandInfo> = {
     usageLine: 'new <name>',
     summary: 'Scaffold a new documentation site',
     help: `Usage:
-  docouture new <name> [--dir <path>] [--title <title>] [--mode standalone|versioned]
-    [--flow trunk-based|git-flow] [--branch <name>] [--integration-branch <name>]
+  docouture new <name> [--dir <path>] [--title <title>] [--site-url <url>]
+    [--mode standalone|versioned] [--flow trunk-based|git-flow] [--branch <name>] [--integration-branch <name>]
     [--release-branch <name>] [--pm npm|pnpm] [--yes]
 
 Scaffold an Antora documentation site into docs/ (and its workflows into
@@ -69,6 +69,8 @@ to never prompt to overwrite, instead).
 Options:
   --dir <path>     Repository root to scaffold into (default: cwd, or its enclosing repo)
   --title <title>  Site title (default: title-cased from <name>)
+  --site-url <url> Public site URL, written as site.url (default: derived from a github.com
+                   origin remote; skips the prompt)
   --mode <mode>    'standalone' (default) or 'versioned'
   --flow <flow>    'trunk-based' (default) or 'git-flow' — see 'docouture branch-model --help'
   --branch <name>  Trunk-based only: the one branch (default: main)

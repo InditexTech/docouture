@@ -61,4 +61,18 @@ describe('copyTemplate', () => {
     expect(written.sort()).toEqual([join(dest, 'nested', 'inner.txt'), join(dest, 'top.txt')].sort())
     expect(await exists(dest)).toBe(false)
   })
+
+  it('substitutes the whole site url line, active or as the commented hint', async () => {
+    const src = join(base, 'src-url')
+    await mkdir(src, { recursive: true })
+    await writeFile(join(src, 'p.yml'), 'site:\n  # __DOCOUTURE_SITE_URL_LINE__\n  start: x\n', 'utf8')
+
+    await copyTemplate(src, join(base, 'd1'), { ...values, siteUrlLine: '  url: https://a.io/r\n' })
+    expect(await readFile(join(base, 'd1', 'p.yml'), 'utf8')).toBe('site:\n  url: https://a.io/r\n  start: x\n')
+
+    await copyTemplate(src, join(base, 'd2'), { ...values, siteUrlLine: '  # url: https://<org>.github.io/<repo>\n' })
+    expect(await readFile(join(base, 'd2', 'p.yml'), 'utf8')).toBe(
+      'site:\n  # url: https://<org>.github.io/<repo>\n  start: x\n'
+    )
+  })
 })

@@ -304,6 +304,7 @@ export async function runBranchModel(argv: string[]): Promise<number> {
     // copyTemplate — this placeholder only ever appears in that file.
     branching: 'unused-by-branch-model',
     cacheWarmBranchesYaml: cacheWarmBranchesYaml(newPrerelease, newRelease),
+    siteUrlLine: 'unused-by-branch-model',
   }
 
   const playbookFile = join(siteRoot, 'antora-playbook.yml')

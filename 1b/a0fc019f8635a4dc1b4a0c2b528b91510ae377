@@ -1,0 +1,25 @@
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  s_f81f6ba5e44cf1::t_ccc482cfbb951a 573-578
+code/packages/antora-extensions/lib/kroki-prewarm.spec.js
+  s_f81f6ba5e44cf1::t_a29d722f1d560b 21-25
+code/packages/asciidoc-extensions/lib/cta.js
+  s_f81f6ba5e44cf1::t_bf903b1eeff031 254-258
+code/packages/asciidoc-extensions/lib/warn.spec.js
+  s_f81f6ba5e44cf1::t_7be4f931a8a20c 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1ba0fc019f8635a4dc1b4a0c2b528b91510ae377",
+  "prompts": {},
+  "sessions": {
+    "s_f81f6ba5e44cf1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea758151fffedWt2f980imffcN",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

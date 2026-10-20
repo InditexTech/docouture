@@ -203,4 +203,3 @@ if (external.length > 0) {
       (ignored > 0 ? `, ${ignored} local/non-representative link(s) ignored (see warnings above).` : '.')
   )
 }
-

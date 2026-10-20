@@ -19,6 +19,7 @@ at all).
 
 ### Fixed
 
+- [#267](https://github.com/InditexTech/docouture/issues/267) \[tooling] Snapshot publish uses `workflow_dispatch` (`ACTION=snapshot`) instead of an `issue_comment`, which npm trusted publishing now rejects; the job summary reports the snapshot version
 - [#263](https://github.com/InditexTech/docouture/pull/263) \[cli] `docouture upgrade` sets `runtime.log.failure_level: error` in existing playbooks and reports the change
 - [#264](https://github.com/InditexTech/docouture/pull/264) Docouture release WF, bump release version is taking into account only trunk-based development
 - [#263](https://github.com/InditexTech/docouture/pull/263) Setup failure_level to error on template

@@ -1,0 +1,47 @@
+= v1.2.0
+
+[.lead]
+Existing sites only get this release's workflow and script fixes by running
+`docouture upgrade`. Do that first, then follow the checklist below.
+
+== Do this
+
+. Run `docouture upgrade`, review the diff, and commit `.github/workflows/` and
+  `docs/scripts/`. See xref:main:reference-cli.adoc[].
+. If you have your own workflow that calls `docouture-publish.yml`, pass it the
+  `APP_PRIVATE_KEY` secret — it is now required.
+. Git-flow sites: check that `docs/package.json` now has `docouture.prereleaseBranch`
+  (`upgrade` adds it), and grant the GitHub App `pull-requests: write` and
+  `workflows: write` in addition to `contents: write`. See
+  xref:main:guides-branching-model.adoc[] and xref:main:guides-releasing-a-documentation.adoc[].
+. Run `docouture build` and fix whatever it reports, then `docouture doctor`.
+
+== What you get
+
+* *Git-flow release sync.* A versioned release bumps `docs/.release-version` on the
+  release branch; a new `sync-prerelease` job now opens a pull request carrying that bump
+  into the prerelease branch, so it no longer goes stale. A failed sync turns the run red
+  but never blocks publishing.
+* *Least-privilege workflows.* Read-only default token, a narrowed GitHub App token,
+  pinned actions and runners, and `github.ref` passed through `env` instead of being
+  interpolated into a script.
+* *Fixes.* The release preview no longer fails on pull requests from forks, and
+  `check-links` no longer truncates its output when links are broken.
+* *Strict build for existing sites.* `docouture upgrade` now sets
+  `runtime.log.failure_level` to `error` in `docs/antora-playbook*.yml`, replacing any
+  other value and printing each file it changed.
+
+== New in scaffolding only
+
+`docouture upgrade` does not apply these to an existing site; they only affect new ones:
+
+* `docouture new --site-url`, defaulting to the GitHub Pages URL derived from a
+  github.com `origin` remote.
+* `ROOT` as the starter's component, avoiding a duplicate context on GitHub Pages.
+
+== Heads up
+
+* `docouture upgrade` overwrites workflows, so hand edits to them are lost.
+* The strict build means a broken `xref:` or a missing include now fails the build.
+* Builds start cold: the dependency and Kroki image caches were removed from the
+  release and publish workflows.

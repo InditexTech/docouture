@@ -104,7 +104,8 @@ package manager (`package.json`'s `packageManager` field) is installed, the four
 that must agree (see xref:main:guides-modifying-the-navigation.adoc[]), git history, that
 Antora is installed, and (advisory only) whether `AGENTS.md` is still present, whether the
 `docs/release` label exists, and whether the declared branching model
-(`docs/package.json`'s `docouture.branching`) agrees with what
+(`docs/package.json`'s `docouture.branching`, plus `docouture.prereleaseBranch` under
+git-flow) agrees with what
 `antora-playbook.yml`/`docouture-release.yml` actually say — see
 xref:main:guides-branching-model.adoc[]. Does not check for the agent skills — see
 xref:main:reference-ai-first-approach.adoc[], those are a separate, self-serve install
@@ -124,7 +125,14 @@ Re-sync `.github/workflows/`, `docs/scripts/check-links.mjs`, and agent support 
 fully overwritten (there is nothing site-specific in either — link ignores are
 configured separately, in `package.json`'s `docouture.checkLinks.ignore`); `AGENTS.md` is
 merged — only docouture's own managed section is replaced. The rest of `docs/` — every
-page a site owner has written — is never touched.
+page a site owner has written — is never touched, with one exception: on a git-flow site
+it writes or corrects `docouture.branching` and `docouture.prereleaseBranch` in
+`docs/package.json` (derived from `antora-playbook.yml`), which `docouture-release.yml`
+reads to open the prerelease sync PR. This also backfills sites scaffolded before that field existed.
+It also sets `runtime.log.failure_level` to `error` in `docs/antora-playbook*.yml`, replacing
+any other value and printing each file it changed: builds then fail on errors such as a
+broken `xref:` or a missing include, so run `docouture build` and fix what it reports before
+your next CI run.
 
 [cols="1,2"]
 |===
@@ -152,7 +160,8 @@ current branches exactly; a third, invented name is refused.
 
 Re-renders `.github/workflows/` (same machinery `docouture upgrade` uses) and patches
 `antora-playbook.yml`'s `content.sources[0].branches` and `docs/package.json`'s
-`docouture.branching` field. Does NOT rename actual git branches, touch
+`docouture.branching` field (adding `docouture.prereleaseBranch` for git-flow, removing it
+for trunk-based). Does NOT rename actual git branches, touch
 branch-protection/ruleset rules, or change GitHub's configured default branch — these
 stay manual steps, printed as a reminder after every real run.
 

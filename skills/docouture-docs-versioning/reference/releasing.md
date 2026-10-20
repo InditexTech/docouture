@@ -84,6 +84,12 @@ on a republish (the target tag already existed): that run's target version was t
 already superseded by whatever the file currently holds as the next planned target, so
 bumping forward from the republished version would clobber that already-planned value.
 
+On a **git-flow** site the bump lands on the release branch only, so the workflow's
+`sync-prerelease` job opens a pull request into the prerelease branch (named by
+`docs/package.json`'s `docouture.prereleaseBranch`) to carry it over — merge that PR. A
+failed sync turns the run red but does not block publishing. Needs `pull-requests: write`
+on the GitHub App; older sites run `docouture upgrade` once to get the job and field.
+
 ## Why there's no `docouture release` command
 
 `docouture-release.yml`'s own steps depend on CI-only concerns a portable local CLI command

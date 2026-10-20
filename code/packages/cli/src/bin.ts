@@ -163,8 +163,9 @@ field) is installed, the four names that must agree (component name, start
 page, content path, package name), git history, that antora is installed,
 and (advisory only) whether AGENTS.md and the scaffolded skills are
 still present, whether the docs/release label exists, and whether the
-declared branching model (docs/package.json's docouture.branching)
-agrees with what antora-playbook.yml/docouture-release.yml actually say.
+declared branching model (docs/package.json's docouture.branching, and
+docouture.prereleaseBranch under git-flow) agrees with what
+antora-playbook.yml/docouture-release.yml actually say.
 
 Options:
   --dir <path>  Repository root (default: cwd, or its enclosing repo)
@@ -183,8 +184,14 @@ from the CLI's current templates — --dir/cwd can be anywhere inside
 that repository, the actual top-level is found automatically.
 Workflows and skills are fully overwritten; AGENTS.md is merged
 instead — only docouture' own managed section is replaced, anything a
-human added around it survives. Does not touch docs/. --dry-run lists
-what would be written without changing anything.
+human added around it survives. Does not touch docs/ content; the one
+exception is a git-flow site's docs/package.json, where docouture.branching
+and docouture.prereleaseBranch (read by docouture-release.yml to open the
+prerelease sync PR) are written or corrected, derived from
+antora-playbook.yml. It also sets runtime.log.failure_level to error in
+docs/antora-playbook*.yml (replacing any other value, and reporting each
+file it changed) so builds fail on a broken xref or missing include.
+--dry-run lists what would be written without changing anything.
 
 Options:
   --dir <path>   Repository root (default: cwd, or its enclosing repo)
@@ -218,7 +225,9 @@ is refused.
 
 Re-renders .github/workflows/ (same machinery 'docouture upgrade' uses)
 and patches antora-playbook.yml's content.sources[0].branches and
-docs/package.json's docouture.branching field. Does NOT rename actual
+docs/package.json's docouture.branching field (adding
+docouture.prereleaseBranch for git-flow, removing it for trunk-based).
+Does NOT rename actual
 git branches, touch branch-protection/ruleset rules, or change GitHub's
 configured default branch — these stay manual steps, printed as a
 reminder after every real run.

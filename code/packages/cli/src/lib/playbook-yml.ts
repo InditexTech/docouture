@@ -149,3 +149,83 @@ export function writeBranches(content: string, branch: string): string {
 
   return content
 }
+
+export interface FailureLevelResult {
+  content: string
+  /** The value before the rewrite, or null when the key (or its block) was absent. */
+  previous: string | null
+  changed: boolean
+}
+
+/**
+ * Sets `runtime.log.failure_level`, used by `docouture upgrade` to move an
+ * existing site to the strict-build default new scaffolds already get. Same
+ * line-based, comment-preserving idiom as writeBranches. Handles the key
+ * present (value replaced), `log:` present without the key, `runtime:`
+ * present without `log:`, and no `runtime:` at all (block appended). Returns
+ * null when the shape isn't safe to edit (flow-style `runtime: {...}` or
+ * `log: {...}`).
+ */
+export function setFailureLevel(content: string, level: string): FailureLevelResult | null {
+  const lines = content.split('\n')
+  let runtimeIdx = -1
+  let runtimeEnd = lines.length
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]!
+    if (/^\s*(?:#.*)?$/.test(line)) continue
+    if (/^\S/.test(line)) {
+      if (runtimeIdx !== -1) {
+        runtimeEnd = i
+        break
+      }
+      if (/^runtime:/.test(line)) {
+        if (!/^runtime:\s*(?:#.*)?$/.test(line)) return null
+        runtimeIdx = i
+      }
+    }
+  }
+
+  if (runtimeIdx === -1) {
+    const base = content.endsWith('\n') ? content : `${content}\n`
+    return {
+      content: `${base}\nruntime:\n  log:\n    failure_level: ${level}\n`,
+      previous: null,
+      changed: true,
+    }
+  }
+
+  let logIdx = -1
+  for (let i = runtimeIdx + 1; i < runtimeEnd; i++) {
+    const line = lines[i]!
+    const log = /^(\s+)log:(.*)$/.exec(line)
+    if (log) {
+      if (!/^\s*(?:#.*)?$/.test(log[2]!)) return null
+      logIdx = i
+      break
+    }
+  }
+
+  if (logIdx === -1) {
+    lines.splice(runtimeIdx + 1, 0, '  log:', `    failure_level: ${level}`)
+    return { content: lines.join('\n'), previous: null, changed: true }
+  }
+
+  const logIndent = /^(\s*)/.exec(lines[logIdx]!)![1]!.length
+  for (let i = logIdx + 1; i < runtimeEnd; i++) {
+    const line = lines[i]!
+    if (/^\s*(?:#.*)?$/.test(line)) continue
+    const indent = /^(\s*)/.exec(line)![1]!.length
+    if (indent <= logIndent) break
+    const match = /^(\s*failure_level:\s*)([^\s#]+)(.*)$/.exec(line)
+    if (match) {
+      const previous = match[2]!.replace(/^['"]|['"]$/g, '')
+      if (previous === level) return { content, previous, changed: false }
+      lines[i] = `${match[1]}${level}${match[3]}`
+      return { content: lines.join('\n'), previous, changed: true }
+    }
+  }
+
+  lines.splice(logIdx + 1, 0, `${' '.repeat(logIndent + 2)}failure_level: ${level}`)
+  return { content: lines.join('\n'), previous: null, changed: true }
+}

@@ -354,6 +354,10 @@ export interface BranchingInput {
    * signal, this is the actual state it's compared against.
    */
   actualBranching: Branching | null
+  /** `docs/package.json` -> `docouture.prereleaseBranch`, or null if absent. Only checked when provided. */
+  declaredPrereleaseBranch?: string | null
+  /** antora-playbook.yml's content.sources[0].branches, or null if unreadable. Only checked when provided. */
+  actualPrereleaseBranch?: string | null
 }
 
 /**
@@ -368,6 +372,33 @@ export interface BranchingInput {
  */
 export function checkBranchingAgrees(input: BranchingInput): CheckResult {
   const label = 'branching model'
+
+  // The release workflow reads the prerelease branch from package.json under
+  // git-flow, so a missing or stale value there is a real problem (the sync
+  // PR cannot be opened) — checked first, and also for legacy sites that
+  // declare nothing yet.
+  if (
+    input.actualBranching === 'git-flow' &&
+    input.actualPrereleaseBranch &&
+    input.declaredPrereleaseBranch !== undefined
+  ) {
+    if (!input.declaredPrereleaseBranch) {
+      return {
+        ok: false,
+        label,
+        message: 'git-flow site has no docouture.prereleaseBranch declared in docs/package.json',
+        detail: "run 'docouture upgrade' to add it — docouture-release.yml needs it to open the prerelease sync PR",
+      }
+    }
+    if (input.declaredPrereleaseBranch !== input.actualPrereleaseBranch) {
+      return {
+        ok: false,
+        label,
+        message: `docouture.prereleaseBranch '${input.declaredPrereleaseBranch}' != '${input.actualPrereleaseBranch}' (antora-playbook.yml)`,
+        detail: "run 'docouture upgrade' to correct docs/package.json",
+      }
+    }
+  }
 
   if (!input.declaredBranching) {
     return {

@@ -30,7 +30,7 @@ interface PackageJson {
   name?: string
   engines?: { node?: string }
   packageManager?: string
-  docouture?: { branching?: string }
+  docouture?: { branching?: string; prereleaseBranch?: string }
 }
 
 interface JsonCheckResult extends CheckResult {
@@ -253,6 +253,8 @@ export async function runDoctor(argv: string[]): Promise<number> {
     checkBranchingAgrees({
       declaredBranching: pkg?.docouture?.branching ?? null,
       actualBranching: inferBranching(detectedBranches),
+      declaredPrereleaseBranch: pkg?.docouture?.prereleaseBranch ?? null,
+      actualPrereleaseBranch: detectedBranches.prerelease,
     }),
     'warn',
     json

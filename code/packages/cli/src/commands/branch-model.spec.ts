@@ -110,9 +110,10 @@ describe('runBranchModel', () => {
     expect(publishPrerelease).toContain("branches: ['develop*']")
 
     const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
-      docouture?: { branching?: string }
+      docouture?: { branching?: string; prereleaseBranch?: string }
     }
     expect(pkg.docouture?.branching).toBe('git-flow')
+    expect(pkg.docouture?.prereleaseBranch).toBe('develop')
   })
 
   it('switches trunk-based -> git-flow with an explicit --release-branch too', async () => {
@@ -169,9 +170,10 @@ describe('runBranchModel', () => {
     expect(workflow).toContain('ref: develop')
 
     const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
-      docouture?: { branching?: string }
+      docouture?: { branching?: string; prereleaseBranch?: string }
     }
     expect(pkg.docouture?.branching).toBe('trunk-based')
+    expect(pkg.docouture?.prereleaseBranch).toBeUndefined()
   })
 
   it('--dry-run lists planned writes without touching disk', async () => {

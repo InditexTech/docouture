@@ -40,6 +40,58 @@ async function initRepo(dir: string): Promise<void> {
 }
 
 describe('runUpgrade', () => {
+  it('sets runtime.log.failure_level to error in existing playbooks and tells the user', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-docs', '--dir', repo, '--yes'])
+    const playbook = join(repo, 'docs', 'antora-playbook.yml')
+    const original = await readFile(playbook, 'utf8')
+    await writeFile(playbook, original.replace('failure_level: error', 'failure_level: warn'), 'utf8')
+
+    expect(await runUpgrade(['--dir', repo, '--dry-run'])).toBe(0)
+    expect(await readFile(playbook, 'utf8')).toContain('failure_level: warn')
+
+    expect(await runUpgrade(['--dir', repo])).toBe(0)
+    expect(await readFile(playbook, 'utf8')).toContain('failure_level: error')
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('failure_level: warn -> error'))
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('builds now fail on errors'))
+  })
+
+  it('prints no strict-build note when playbooks already say error', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-docs', '--dir', repo, '--yes'])
+    logSpy.mockClear()
+    expect(await runUpgrade(['--dir', repo])).toBe(0)
+    expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining('builds now fail on errors'))
+  })
+
+  it('backfills docouture.prereleaseBranch in docs/package.json for a git-flow site', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-docs', '--dir', repo, '--flow', 'git-flow', '--integration-branch', 'develop', '--yes'])
+
+    const pkgPath = join(repo, 'docs', 'package.json')
+    const pkg = JSON.parse(await readFile(pkgPath, 'utf8'))
+    delete pkg.docouture.prereleaseBranch
+    await writeFile(pkgPath, JSON.stringify(pkg, null, 2), 'utf8')
+
+    expect(await runUpgrade(['--dir', repo])).toBe(0)
+    const after = JSON.parse(await readFile(pkgPath, 'utf8'))
+    expect(after.docouture.branching).toBe('git-flow')
+    expect(after.docouture.prereleaseBranch).toBe('develop')
+  })
+
+  it('leaves a trunk-based site package.json untouched', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-docs', '--dir', repo, '--yes'])
+    const pkgPath = join(repo, 'docs', 'package.json')
+    const before = await readFile(pkgPath, 'utf8')
+    expect(await runUpgrade(['--dir', repo])).toBe(0)
+    expect(await readFile(pkgPath, 'utf8')).toBe(before)
+  })
+
   it('refuses to run when --dir is not inside a git repository', async () => {
     const notARepo = join(base, 'not-a-repo')
     await mkdir(notARepo, { recursive: true })

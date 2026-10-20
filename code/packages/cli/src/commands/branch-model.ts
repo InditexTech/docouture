@@ -14,6 +14,7 @@ import { readCliInfo } from '../lib/cli-info.js'
 import { copyTemplate, exists, type TemplateValues } from '../lib/copy-template.js'
 import { detectPackageManager, packageManagerPlan } from '../lib/detect-package-manager.js'
 import { findRepoRoot } from '../lib/repo-root.js'
+import { setBranching } from '../lib/package-branching.js'
 import { readBranches, writeBranches } from '../lib/playbook-yml.js'
 import { cacheWarmBranchesYaml, detectBranches, type Branching } from '../lib/branch-detect.js'
 
@@ -38,27 +39,6 @@ function readAntoraField(content: string, key: 'name' | 'title'): string | null 
   if (!match) return null
   const value = match[0].slice(key.length + 1).trim()
   return value.length > 0 ? value : null
-}
-
-interface DocouturePackageJson {
-  docouture?: { branching?: string; [key: string]: unknown }
-  [key: string]: unknown
-}
-
-// The one JSON write this command performs — a single field
-// (`docouture.branching`), read-modify-write rather than a regex patch
-// (unlike antora-playbook.yml/docouture-release.yml, package.json is
-// already JSON, so there is no comment-preservation reason to avoid
-// JSON.parse/stringify here the way playbook-yml.ts avoids a full YAML
-// round-trip). Re-serializes the whole file at 2-space indent — matching
-// every template's own style — rather than only touching the one line, so
-// key ordering is preserved (JSON.parse/stringify both preserve insertion
-// order) but incidental whitespace a human introduced is not.
-async function writeBranching(packageJsonFile: string, branching: Branching): Promise<void> {
-  const content = await readFile(packageJsonFile, 'utf8')
-  const pkg = JSON.parse(content) as DocouturePackageJson
-  pkg.docouture = { ...pkg.docouture, branching }
-  await writeFile(packageJsonFile, `${JSON.stringify(pkg, null, 2)}\n`, 'utf8')
 }
 
 interface DetectedBranches {
@@ -300,7 +280,7 @@ export async function runBranchModel(argv: string[]): Promise<number> {
     repoIgnoreGlob: 'unused-by-branch-model',
     prereleaseBranch: newPrerelease,
     releaseBranch: newRelease,
-    // docs/package.json is patched directly below (writeBranching), not via
+    // docs/package.json is patched directly below (setBranching), not via
     // copyTemplate — this placeholder only ever appears in that file.
     branching: 'unused-by-branch-model',
     cacheWarmBranchesYaml: cacheWarmBranchesYaml(newPrerelease, newRelease),
@@ -337,7 +317,7 @@ export async function runBranchModel(argv: string[]): Promise<number> {
     await writeFile(playbookFile, writeBranches(playbookContent, newPrerelease), 'utf8')
   }
 
-  await writeBranching(packageJsonFile, targetModel)
+  await setBranching(packageJsonFile, targetModel, targetModel === 'git-flow' ? newPrerelease : undefined)
 
   console.log(`switched ${currentModel} -> ${targetModel}`)
   console.log(`  prerelease branch: '${detected.prerelease}' -> '${newPrerelease}'`)

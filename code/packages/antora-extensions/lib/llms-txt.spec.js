@@ -54,7 +54,7 @@ function createContentCatalog(componentVersion, pages) {
   }
 }
 
-async function run({ llms, navigation, pages, logger }) {
+async function run({ llms, navigation, pages, logger, siteUrl }) {
   const context = createContext(logger)
   registerLlmsTxt(context)
 
@@ -67,7 +67,7 @@ async function run({ llms, navigation, pages, logger }) {
   const contentCatalog = createContentCatalog(componentVersion, pages)
   const files = []
   const siteCatalog = { addFile: (f) => files.push(f) }
-  const playbook = { site: { title: 'Weave.js' }, ui: {} }
+  const playbook = { site: { title: 'Weave.js', url: siteUrl }, ui: {} }
 
   await context.emit('contentAggregated', {
     contentAggregate: llms ? [{ name: 'weavejs', version: '', llms }] : [],
@@ -192,5 +192,21 @@ describe('registerLlmsTxt', () => {
       'main:ghost.adoc',
       expect.anything()
     )
+  })
+})
+
+describe('registerLlmsTxt site.url', () => {
+  const pages = () => [
+    createPage({ module: 'main', relative: 'index.adoc', url: '/weavejs/main/', title: 'Start', html: '<p>Hi</p>' }),
+  ]
+  it('emits absolute links when site.url is set', async () => {
+    const { llmsTxt, llmsFullTxt } = await run({ pages: pages(), siteUrl: 'https://o.github.io/repo/' })
+    expect(llmsTxt).toContain('- [Start](https://o.github.io/repo/weavejs/main/)')
+    expect(llmsFullTxt).toContain('Source: https://o.github.io/repo/weavejs/main/')
+  })
+  it('keeps root-relative links without site.url', async () => {
+    const { llmsTxt, llmsFullTxt } = await run({ pages: pages() })
+    expect(llmsTxt).toContain('- [Start](/weavejs/main/)')
+    expect(llmsFullTxt).toContain('Source: /weavejs/main/')
   })
 })

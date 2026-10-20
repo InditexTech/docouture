@@ -96,10 +96,10 @@ on:
           target is always the 'docs/stable' tag, this input is ignored there.
         required: true
         type: string
-        default: "stable"
+        default: 'stable'
   pull_request:
     types: [closed]
-    branches: ["main*"]
+    branches: ['main*']
   release:
     types: [published]
 
@@ -189,6 +189,7 @@ jobs:
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           package_json_file: docs/package.json
+
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:

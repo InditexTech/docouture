@@ -30,7 +30,7 @@
 <!-- nx configuration end-->
 
 <!-- docouture:start - managed by docouture; edits inside this block are overwritten by `docouture new`/`docouture upgrade` -->
-# docouture documentation
+# Docouture documentation
 
 This repository's `docs/` directory is an Antora documentation site, scaffolded by
 `docouture new` (`@inditextech/docouture-cli`). This file is the baseline for any coding agent

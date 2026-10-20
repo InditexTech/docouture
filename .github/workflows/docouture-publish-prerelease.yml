@@ -45,7 +45,7 @@ name: docouture-publish-prerelease
 # explicit secret rather than `secrets: inherit`.
 on:
   push:
-    branches: ["main*"]
+    branches: ['main*']
 
 permissions: {}
 

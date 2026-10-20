@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Added
+
+- [#236](https://github.com/InditexTech/docouture/issues/236) \[cli] Setup site.url based on https://inditextech.github.io/<repo>
+
 ### Fixed
 
 - [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks

@@ -527,6 +527,8 @@ describe('runNew', () => {
     input.write('my-wizard-docs\n')
     await waitForPrompt('Site title')
     input.write('\n') // Enter — accept the default title
+    await waitForPrompt('Public site URL')
+    input.write('\n')
     await waitForPrompt('extra URL path segment')
     input.write('\n') // Enter — accept the default (no, i.e. ROOT)
     await waitForPrompt('Versioning mode')
@@ -563,6 +565,8 @@ describe('runNew', () => {
     input.write('my-wizard-docs\n')
     await waitForPrompt('Site title')
     input.write('\n')
+    await waitForPrompt('Public site URL')
+    input.write('\n')
     await waitForPrompt('extra URL path segment')
     input.write('y\n')
     await waitForPrompt('Versioning mode')
@@ -593,6 +597,8 @@ describe('runNew', () => {
     await waitForPrompt('Site slug')
     input.write('my-wizard-docs\n')
     await waitForPrompt('Site title')
+    input.write('\n')
+    await waitForPrompt('Public site URL')
     input.write('\n')
     await waitForPrompt('extra URL path segment')
     input.write('\n')
@@ -665,6 +671,8 @@ describe('runNew', () => {
     input.write('\n')
     await waitForPrompt('Site title')
     input.write('\n')
+    await waitForPrompt('Public site URL')
+    input.write('\n')
     await waitForPrompt('extra URL path segment')
     input.write('\n')
     await waitForPrompt('Versioning mode')
@@ -707,6 +715,8 @@ describe('runNew', () => {
     input.write('\n')
     await waitForPrompt('Site title')
     input.write('\n')
+    await waitForPrompt('Public site URL')
+    input.write('\n')
     await waitForPrompt('extra URL path segment')
     input.write('\n')
     await waitForPrompt('Versioning mode')
@@ -744,5 +754,129 @@ describe('runNew', () => {
     expect(pkg.name).toBe('my-project-docs')
     await readFile(join(repo, 'AGENTS.md'), 'utf8')
     await expect(readFile(join(nested, 'docs', 'src', 'antora.yml'), 'utf8')).rejects.toThrow()
+  })
+  describe('site URL', () => {
+    async function playbook(repo: string, file = 'antora-playbook.yml'): Promise<string> {
+      return readFile(join(repo, 'docs', file), 'utf8')
+    }
+    function addOrigin(repo: string, url: string): void {
+      execFileSync('git', ['remote', 'add', 'origin', url], { cwd: repo })
+    }
+
+    it.each([
+      ['https remote', 'https://github.com/InditexTech/docouture.git'],
+      ['ssh remote', 'git@github.com:InditexTech/docouture.git'],
+    ])('--yes derives site.url from a github.com %s', async (_label, remote) => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      addOrigin(repo, remote)
+
+      expect(await runNew(['my-docs', '--dir', repo, '--yes'])).toBe(0)
+
+      const pb = await playbook(repo)
+      expect(pb).toContain('\n  url: https://inditextech.github.io/docouture\n')
+    })
+
+    it('writes the same url line in versioned mode', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      addOrigin(repo, 'https://github.com/InditexTech/docouture')
+
+      expect(await runNew(['my-docs', '--dir', repo, '--yes', '--mode', 'versioned'])).toBe(0)
+
+      expect(await playbook(repo)).toContain('\n  url: https://inditextech.github.io/docouture\n')
+    })
+
+    it('keeps the commented hint when there is no origin remote', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+
+      expect(await runNew(['my-docs', '--dir', repo, '--yes'])).toBe(0)
+
+      const pb = await playbook(repo)
+      expect(pb).toContain('\n  # url: https://<org>.github.io/<repo>\n')
+      expect(pb).not.toMatch(/^  url:/m)
+    })
+
+    it('keeps the commented hint for a non-github.com origin', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      addOrigin(repo, 'https://git.example.com/org/repo.git')
+
+      expect(await runNew(['my-docs', '--dir', repo, '--yes'])).toBe(0)
+
+      expect(await playbook(repo)).not.toMatch(/^  url:/m)
+    })
+
+    it('--site-url overrides the derived default and strips a trailing slash', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      addOrigin(repo, 'https://github.com/InditexTech/docouture.git')
+
+      expect(await runNew(['my-docs', '--dir', repo, '--yes', '--site-url', 'https://docs.example.com/'])).toBe(0)
+
+      expect(await playbook(repo)).toContain('\n  url: https://docs.example.com\n')
+    })
+
+    it('rejects an invalid --site-url with exit 1', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+
+      expect(await runNew(['my-docs', '--dir', repo, '--yes', '--site-url', 'ftp://x'])).toBe(1)
+      expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('invalid --site-url'))
+    })
+
+    async function runWizardWithSiteUrlAnswer(repo: string, answer: string): Promise<number> {
+      const { input, output, isTTY, waitForPrompt } = makeInteractiveIo()
+      const resultPromise = runNew(['my-docs', '--dir', repo, '--title', 'T'], { input, output, isTTY })
+      await waitForPrompt('Site slug')
+      input.write('\n')
+      await waitForPrompt('Site title')
+      input.write('\n')
+      await waitForPrompt('Public site URL')
+      input.write(answer)
+      await waitForPrompt('extra URL path segment')
+      input.write('\n')
+      await waitForPrompt('Versioning mode')
+      input.write('\n')
+      await waitForPrompt('Branching model')
+      input.write('\n')
+      await waitForPrompt('Branch (plays both')
+      input.write('\n')
+      await waitForPrompt('Package manager')
+      input.write('\n')
+      const code = await resultPromise
+      input.end()
+      return code
+    }
+
+    it('wizard: Enter accepts the pre-filled derived default', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      addOrigin(repo, 'git@github.com:InditexTech/docouture.git')
+
+      expect(await runWizardWithSiteUrlAnswer(repo, '\n')).toBe(0)
+
+      expect(await playbook(repo)).toContain('\n  url: https://inditextech.github.io/docouture\n')
+    })
+
+    it("wizard: '-' skips even when a default exists", async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      addOrigin(repo, 'git@github.com:InditexTech/docouture.git')
+
+      expect(await runWizardWithSiteUrlAnswer(repo, '-\n')).toBe(0)
+
+      expect(await playbook(repo)).not.toMatch(/^  url:/m)
+    })
+
+    it('wizard: a typed URL is used, trailing slash stripped', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+
+      expect(await runWizardWithSiteUrlAnswer(repo, 'https://docs.example.com/\n')).toBe(0)
+
+      expect(await playbook(repo)).toContain('\n  url: https://docs.example.com\n')
+    })
   })
 })

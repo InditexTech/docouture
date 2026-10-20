@@ -98,6 +98,11 @@ export interface TemplateValues {
   // releaseBranch (trunk-based) rather than a pointless literal duplicate —
   // see lib/branch-detect.ts's cacheWarmBranchesYaml().
   cacheWarmBranchesYaml: string
+  // antora-playbook.yml's `site.url` line, already indented and
+  // newline-terminated: either `  url: <url>\n` or the commented
+  // `  # url: https://<org>.github.io/<repo>\n` hint when no URL is known.
+  // Whole-line token (see pmSetupStepYaml) so the template stays valid YAML.
+  siteUrlLine: string
 }
 
 const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
@@ -127,6 +132,7 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   // value (which ends in its own `\n` — see packageManagerPlan) or the
   // empty npm value drop cleanly in its place.
   '      # __DOCOUTURE_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
+  '  # __DOCOUTURE_SITE_URL_LINE__\n': 'siteUrlLine',
   __DOCOUTURE_PM_PACKAGE_MANAGER__: 'pmPackageManagerField',
   // A bare token this time, unlike pmSetupStepYaml above — see
   // TemplateValues.repoIgnoreGlob's own comment for why the whole-segment

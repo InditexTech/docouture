@@ -180,6 +180,8 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     // pmPackageManagerField/repoIgnoreGlob above.
     branching: 'unused-by-upgrade',
     cacheWarmBranchesYaml: cacheWarmBranchesYaml(prereleaseBranch, releaseBranch),
+    // antora-playbook.yml is never re-copied by upgrade.
+    siteUrlLine: 'unused-by-upgrade',
   }
 
   const workflowsDir = join(target, '.github', 'workflows')

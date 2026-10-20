@@ -21,6 +21,7 @@ import {
   type PackageManagerPlan,
 } from '../lib/detect-package-manager.js'
 import { findRepoRoot } from '../lib/repo-root.js'
+import { normalizeSiteUrl, siteUrlLine } from '../lib/site-url.js'
 import { AGENTS_MD_FILENAME, hasManagedSection, mergeAgentsMd } from '../lib/agents-md.js'
 import { cacheWarmBranchesYaml, type Branching } from '../lib/branch-detect.js'
 
@@ -161,6 +162,27 @@ function githubPagesUrl(dir: string): string | undefined {
 // match — and silently ignore — every single link).
 const NO_REPO_REMOTE_GLOB = 'docouture-new:no-origin-remote-configured'
 
+// '-' is the explicit skip answer: @inquirer/prompts' input falls back to
+// its `default` on an empty submit, so with a derived default pre-filled a
+// blank answer could never mean "skip". The prompt's validator already
+// rejected anything invalid, so a failed parse here can only mean skipped.
+const SKIP_SITE_URL = '-'
+
+function validSiteUrl(raw: string): string | undefined {
+  if (raw.trim() === SKIP_SITE_URL) return undefined
+  const parsed = normalizeSiteUrl(raw)
+  return parsed.ok ? parsed.value : undefined
+}
+
+// githubPagesUrl() run through normalizeSiteUrl (no trailing slash) — the
+// shape site.url wants. undefined when there is nothing to derive.
+function normalizeDerivedSiteUrl(dir: string): string | undefined {
+  const url = githubPagesUrl(dir)
+  if (url === undefined) return undefined
+  const parsed = normalizeSiteUrl(url)
+  return parsed.ok ? parsed.value : undefined
+}
+
 function repoIgnoreGlob(dir: string): string {
   const url = repoWebUrl(dir)
   return url !== undefined ? `${url}*` : NO_REPO_REMOTE_GLOB
@@ -214,6 +236,7 @@ function keepOutputOpen(output: NodeJS.WritableStream): NodeJS.WritableStream {
 interface WizardAnswers {
   name: string
   title: string
+  siteUrl: string | undefined
   urlSegment: boolean
   mode: Mode
   branching: Branching
@@ -234,6 +257,7 @@ async function promptWizard(
   initial: {
     name?: string
     title?: string
+    siteUrl?: string
     urlSegment?: boolean
     mode?: Mode
     branching?: Branching
@@ -242,7 +266,7 @@ async function promptWizard(
     releaseBranch?: string
     pm?: PackageManager
   },
-  defaults: { pm: PackageManager }
+  defaults: { pm: PackageManager; siteUrl: string | undefined }
 ): Promise<WizardAnswers> {
   const context = { input: io.input, output: keepOutputOpen(io.output) }
 
@@ -276,6 +300,27 @@ async function promptWizard(
       context
     )
   ).trim()
+
+  // Public site URL -> the playbook's `site.url`. Always asked (unless
+  // --site-url was given), pre-filled with the origin-derived GitHub Pages
+  // URL so the user sees what will be written; blank skips it.
+  const siteUrl =
+    initial.siteUrl !== undefined
+      ? initial.siteUrl || undefined // '' from --site-url '' means skip
+      : validSiteUrl(
+          await input(
+            {
+              message: "Public site URL (written to the playbook as site.url; Enter accepts the default, '-' skips):\n",
+              default: defaults.siteUrl,
+              validate: (value) => {
+                if (value.trim() === SKIP_SITE_URL) return true
+                const result = normalizeSiteUrl(value)
+                return result.ok || result.error
+              },
+            },
+            context
+          )
+        )
 
   // Off by default: GitHub Pages project sites already publish under
   // https://<org>.github.io/<repo>/, and Antora adds a second /<name>/
@@ -406,6 +451,7 @@ async function promptWizard(
   return {
     name,
     title: title.length > 0 ? title : defaultTitle,
+    siteUrl,
     urlSegment,
     mode,
     branching,
@@ -466,6 +512,18 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // Boolean-only flag (no --no-url-segment counterpart): the default is
   // already "off", so the only thing worth scripting is turning it on.
   let urlSegment: boolean | undefined = trueFlag(flags, 'url-segment')
+  // --site-url: validated and normalized here; '' (an explicitly empty
+  // value) means "skip", undefined means "not given, ask or derive".
+  let siteUrl: string | undefined
+  const siteUrlFlag = stringFlag(flags, 'site-url')
+  if (siteUrlFlag !== undefined) {
+    const parsed = normalizeSiteUrl(siteUrlFlag)
+    if (!parsed.ok) {
+      console.error(`invalid --site-url: ${parsed.error}`)
+      return 1
+    }
+    siteUrl = parsed.value ?? ''
+  }
   let prereleaseBranch: string | undefined
   let releaseBranch: string | undefined
   const branchFlag = stringFlag(flags, 'branch')
@@ -506,12 +564,17 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   // gets exactly today's non-interactive behaviour, defaults and all.
   const skipWizard = flags.yes === true || !io.isTTY
 
+  // The origin-derived GitHub Pages URL: the wizard's pre-filled default and
+  // the non-interactive fallback. undefined when origin isn't on github.com.
+  const derivedSiteUrl = normalizeDerivedSiteUrl(resolveStartDir(flags))
+
   if (!skipWizard) {
     const answers = await promptWizard(
       io,
       {
         name,
         title,
+        siteUrl,
         urlSegment,
         mode,
         branching,
@@ -520,10 +583,11 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
         releaseBranch: releaseBranchFlag,
         pm: pmChoice,
       },
-      { pm: pmGuess }
+      { pm: pmGuess, siteUrl: derivedSiteUrl }
     )
     name = answers.name
     title = answers.title
+    siteUrl = answers.siteUrl ?? ''
     urlSegment = answers.urlSegment
     mode = answers.mode
     branching = answers.branching
@@ -537,6 +601,8 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   branching = branching ?? 'trunk-based'
   pmChoice = pmChoice ?? pmGuess
   urlSegment = urlSegment ?? false
+  // '' (explicitly skipped) -> undefined; not given at all -> derived default.
+  const finalSiteUrl = siteUrl === undefined ? derivedSiteUrl : siteUrl || undefined
 
   // Non-interactive path (--yes, or no TTY): resolve from flags/defaults
   // the same way the wizard would have, rather than leaving these unset —
@@ -553,7 +619,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
 
   if (!name) {
     console.error(
-      'usage: docouture new <name> [--dir <path>] [--title <title>] [--url-segment] [--mode standalone|versioned] ' +
+      'usage: docouture new <name> [--dir <path>] [--title <title>] [--site-url <url>] [--url-segment] [--mode standalone|versioned] ' +
         '[--flow trunk-based|git-flow] [--branch <name>] [--integration-branch <name>] [--release-branch <name>] ' +
         '[--pm npm|pnpm]'
     )
@@ -607,6 +673,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     existingAgentsMd,
     name,
     title,
+    siteUrl: finalSiteUrl,
     urlSegment,
     mode,
     branching,
@@ -704,6 +771,7 @@ async function scaffoldSite(params: {
   existingAgentsMd: string | undefined
   name: string
   title: string
+  siteUrl: string | undefined
   urlSegment: boolean
   mode: Mode
   branching: Branching
@@ -719,6 +787,7 @@ async function scaffoldSite(params: {
     existingAgentsMd,
     name,
     title,
+    siteUrl,
     urlSegment,
     mode,
     branching,
@@ -788,6 +857,7 @@ async function scaffoldSite(params: {
     releaseBranch,
     branching,
     cacheWarmBranchesYaml: cacheWarmBranchesYaml(prereleaseBranch, releaseBranch),
+    siteUrlLine: siteUrlLine(siteUrl),
   }
 
   // The whole starter subtree — package.json, antora-playbook.yml, its own

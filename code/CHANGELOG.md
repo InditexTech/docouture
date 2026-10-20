@@ -15,7 +15,7 @@ at all).
 ### Fixed
 
 - [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
-- [#251](https://github.com/InditexTech/docouture/pull/251) \[cli\] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
+- [#251](https://github.com/InditexTech/docouture/pull/251) \[cli] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
 
 ### Documentation
 

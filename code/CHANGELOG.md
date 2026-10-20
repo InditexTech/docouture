@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Documentation
+
+- [#272](https://github.com/InditexTech/docouture/pull/272) Update the docs to docouture 1.2.0
+
 ## [1.2.0] - 2026-10-20
 
 ### Added

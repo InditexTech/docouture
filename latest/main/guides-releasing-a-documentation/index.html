@@ -72,7 +72,7 @@
 
 <title>Releasing a documentation | Docouture</title>
 
-    <link rel="canonical" href="https://inditextech.github.io/docouture/1.1.2/main/guides-releasing-a-documentation/">
+    <link rel="canonical" href="https://inditextech.github.io/docouture/1.2.0/main/guides-releasing-a-documentation/">
     <link rel="prev" href="../guides-branching-model/">
     <link rel="next" href="../guides-publishing-a-documentation/">
     <meta name="generator" content="Antora 3.2.0">
@@ -116,7 +116,7 @@
 
 <div class="page-versions">
   <button type="button" class="dt-tag dt-tag--solid dt-tag--selected header-toolbar__version header-toolbar__version--latest version-menu-toggle" title="Show other versions of page" aria-expanded="false">
-    <span class="dt-tag__label">1.1.2</span>
+    <span class="dt-tag__label">1.2.0</span>
     <span class="dt-tag__icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg></span>
   </button>
   <div class="version-menu">
@@ -125,9 +125,12 @@
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </a>
     <span class="version is-current" aria-current="page">
-      <span class="version__label">1.1.2</span>
+      <span class="version__label">1.2.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </span>
+    <a class="version" href="../../../1.1.2/main/guides-releasing-a-documentation/">
+      <span class="version__label">1.1.2</span>
+    </a>
     <a class="version" href="../../../1.1.1/main/guides-releasing-a-documentation/">
       <span class="version__label">1.1.1</span>
     </a>
@@ -156,7 +159,7 @@
   </div>
 </header>
 
-<dialog id="search-dialog" class="search-dialog" aria-label="Search" data-search-index="ROOT-1.1.2.json">
+<dialog id="search-dialog" class="search-dialog" aria-label="Search" data-search-index="ROOT-1.2.0.json">
   <div class="dt-overlay dt-overlay--visible search-dialog__overlay">
     <div class="dt-overlay__content"></div>
     <div class="dt-modal dt-modal--small search-dialog__panel">
@@ -213,7 +216,7 @@
 
 <div class="body">
 
-<div id="side-menu" class="side-menu" data-component="ROOT" data-version="1.1.2" data-module="main">
+<div id="side-menu" class="side-menu" data-component="ROOT" data-version="1.2.0" data-module="main">
   <div class="side-menu__header">
     <div class="side-menu__header-start">
       <img class="side-menu__header-logo side-menu__header-logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
@@ -616,6 +619,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-2-0/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.2.0</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-0-0/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.0.0</span></span>
       </a>
@@ -655,7 +667,7 @@
 
 <div class="page-versions">
   <button type="button" class="dt-tag dt-tag--solid dt-tag--selected header-toolbar__version header-toolbar__version--latest version-menu-toggle" title="Show other versions of page" aria-expanded="false">
-    <span class="dt-tag__label">1.1.2</span>
+    <span class="dt-tag__label">1.2.0</span>
     <span class="dt-tag__icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg></span>
   </button>
   <div class="version-menu">
@@ -664,9 +676,12 @@
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </a>
     <span class="version is-current" aria-current="page">
-      <span class="version__label">1.1.2</span>
+      <span class="version__label">1.2.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </span>
+    <a class="version" href="../../../1.1.2/main/guides-releasing-a-documentation/">
+      <span class="version__label">1.1.2</span>
+    </a>
     <a class="version" href="../../../1.1.1/main/guides-releasing-a-documentation/">
       <span class="version__label">1.1.1</span>
     </a>
@@ -754,7 +769,10 @@ in versioned mode) is validated against full SemVer 2.0.0 — a leading <code>v<
 or any other malformed value fails the workflow immediately with a clear error, instead
 of tagging first and only failing later inside the version-bump step.
 <code>docouture-release-preview.yml</code> runs the same check earlier, as a PR comment, before the
-merge that would have triggered it.</p>
+merge that would have triggered it.
+It runs only on pull requests opened from a branch of the repository itself: a fork&#8217;s
+pull request gets a read-only token that cannot post the comment, so the preview is
+skipped there.</p>
 </div>
 </div>
 </div>
@@ -792,6 +810,36 @@ version so it&#8217;s always ready for whatever comes next</p>
 <p>(Or skip the PR: run the workflow manually via <code>workflow_dispatch</code> and type the
 version directly — its form field is what a versioned-mode release actually requires
 there, unlike standalone&#8217;s, where the default is fine.)</p>
+</div>
+<div class="sect2">
+<h3 id="under-git-flow-the-sync-pull-request"><a class="anchor" href="#under-git-flow-the-sync-pull-request"></a>Under git-flow: the sync pull request</h3>
+<div class="paragraph">
+<p>The forward-bump is committed on the release branch only. On a git-flow site the
+workflow&#8217;s <code>sync-prerelease</code> job then opens a pull request from
+<code>automated/sync-docs-release-&lt;version&gt;-to-&lt;prerelease&gt;</code> into the prerelease branch, so
+<code>docs/.release-version</code> (and anything else the release branch gained) reaches it —
+merge that PR. The prerelease branch name comes from <code>docs/package.json&#8217;s
+`docouture.prereleaseBranch</code>; if it is missing the release fails before tagging, with a
+message pointing at <code>docouture upgrade</code>, which adds it.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The job is skipped on trunk-based sites, on a republish, when the prerelease branch
+already contains the release branch, and when that branch doesn&#8217;t exist.</p>
+</li>
+<li>
+<p>A failure there turns the run red and comments on the merged <code>docs/release</code> PR, but
+the docs are still published — <code>publish</code> doesn&#8217;t wait on its result.</p>
+</li>
+<li>
+<p>The GitHub App that <code>docouture-release.yml</code> already uses needs <code>pull-requests: write</code>
+(and <code>workflows: write</code>, since the release branch can carry workflow-file changes)
+in addition to <code>contents: write</code>. Existing git-flow sites run <code>docouture upgrade</code>
+once to get the new job and the <code>package.json</code> field.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -861,7 +909,7 @@ since that file&#8217;s current value was typically already the next planned tar
       </div>
       <div class="page-footer__contribute-buttons">
 
-<a class="dt-button dt-button--ghost dt-button--icon-and-label dt-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/blob/docs/v1.1.2/docs/src/modules/main/pages/guides-releasing-a-documentation.adoc">
+<a class="dt-button dt-button--ghost dt-button--icon-and-label dt-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/blob/docs/v1.2.0/docs/src/modules/main/pages/guides-releasing-a-documentation.adoc">
   <span class="dt-button__content">
     Propose a change
     <span class="dt-button__icon dt-button__icon-action"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-external-link"></use></svg></span>

@@ -72,7 +72,7 @@
 
 <title>Integrations | Docouture</title>
 
-    <link rel="canonical" href="https://inditextech.github.io/docouture/1.1.2/main/reference-integrations/">
+    <link rel="canonical" href="https://inditextech.github.io/docouture/1.2.0/main/reference-integrations/">
     <link rel="prev" href="../reference-custom-asciidoc-components/">
     <link rel="next" href="../reference-ai-first-approach/">
     <meta name="generator" content="Antora 3.2.0">
@@ -99,7 +99,7 @@
           <span class="dt-button__icon dt-button__icon-icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-menu"></use></svg></span>
         </span>
       </button>
-      <a class="header-toolbar__brand" href="../../../1.1.2/">
+      <a class="header-toolbar__brand" href="../../../1.2.0/">
         <img class="header-toolbar__logo header-toolbar__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="header-toolbar__logo header-toolbar__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="header-toolbar__product-name dt-text dt-text--label-l-high">Docouture</span>
@@ -124,10 +124,13 @@
       <span class="version__label">prerelease</span>
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </span>
-    <a class="version" href="../../../1.1.2/main/reference-integrations/">
-      <span class="version__label">1.1.2</span>
+    <a class="version" href="../../../1.2.0/main/reference-integrations/">
+      <span class="version__label">1.2.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </a>
+    <a class="version" href="../../../1.1.2/main/reference-integrations/">
+      <span class="version__label">1.1.2</span>
+    </a>
     <a class="version" href="../../../1.1.1/main/reference-integrations/">
       <span class="version__label">1.1.1</span>
     </a>
@@ -224,7 +227,7 @@
   </div>
 
 <div class="side-menu__brand">
-  <a class="side-menu__brand-link" href="../../../1.1.2/">
+  <a class="side-menu__brand-link" href="../../../1.2.0/">
     <img class="side-menu__brand-logo side-menu__brand-logo--light" src="../../../_/product-logo.png" width="40" height="40" alt="">
     <img class="side-menu__brand-logo side-menu__brand-logo--dark" src="../../../_/product-logo-dark.png" width="40" height="40" alt="">
     <span class="side-menu__brand-title dt-text dt-text--title-m">Docouture</span>
@@ -672,10 +675,13 @@
       <span class="version__label">prerelease</span>
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </span>
-    <a class="version" href="../../../1.1.2/main/reference-integrations/">
-      <span class="version__label">1.1.2</span>
+    <a class="version" href="../../../1.2.0/main/reference-integrations/">
+      <span class="version__label">1.2.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </a>
+    <a class="version" href="../../../1.1.2/main/reference-integrations/">
+      <span class="version__label">1.1.2</span>
+    </a>
     <a class="version" href="../../../1.1.1/main/reference-integrations/">
       <span class="version__label">1.1.1</span>
     </a>
@@ -820,7 +826,8 @@ the extension&#8217;s registration entry:</p>
 <div class="paragraph">
 <p><code>@inditextech/docouture-antora-extensions</code> builds a search index at build time,
 published per component version, that the UI bundle&#8217;s search dialog reads directly
-(<a href="../reference-ui-bundle/" class="xref page">UI Bundle</a>). No manual wiring — registering the extension is enough.</p>
+(<a href="../reference-ui-bundle/" class="xref page">UI Bundle</a>). No manual wiring — registering the extension is enough.
+Result links include the path of the playbook&#8217;s <code>site.url</code> (for example <code>/&lt;repo&gt;</code> on GitHub Pages).</p>
 </div>
 </div>
 <div class="sect2">
@@ -829,7 +836,7 @@ published per component version, that the UI bundle&#8217;s search dialog reads 
 <p>Every build publishes <code>llms.txt</code> (a Markdown index) and <code>llms-full.txt</code> (a full
 aggregated Markdown dump) at the site root, alongside <code>sitemap.xml</code> — the
 <a href="https://llmstxt.org">llms.txt convention</a>, letting an agent read the site without
-scraping rendered HTML. Configured under <code>docs/src/antora.yml&#8217;s `llms</code> key (see
+scraping rendered HTML. Links are absolute (built from <code>site.url</code>) when it is set, and root-relative otherwise. Configured under <code>docs/src/antora.yml&#8217;s `llms</code> key (see
 <a href="../reference-antora-descriptor-configuration/" class="xref page">Antora Descriptor</a>) — <code>summary</code> becomes the blockquote under
 the site title; <code>exclude</code> leaves specific pages out of both files. See also
 <a href="../reference-ai-first-approach/" class="xref page">AI-First approach</a> for the broader philosophy this feeds into.</p>
@@ -944,7 +951,7 @@ in authoring order — an exact override belongs ahead of a broad <code></strong
 <footer class="site-footer">
   <div class="dt-grid-layout dt-grid-layout--with-margin site-footer__grid">
     <div class="dt-grid-layout__item site-footer__col site-footer__brand">
-      <a class="site-footer__brand-link" href="../../../1.1.2/">
+      <a class="site-footer__brand-link" href="../../../1.2.0/">
         <img class="site-footer__logo site-footer__logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
         <img class="site-footer__logo site-footer__logo--dark" src="../../../_/product-logo-dark.png" width="24" height="24" alt="">
         <span class="dt-text dt-text--label-l-high">Docouture</span>

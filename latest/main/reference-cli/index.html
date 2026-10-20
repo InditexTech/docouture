@@ -72,7 +72,7 @@
 
 <title>CLI | Docouture</title>
 
-    <link rel="canonical" href="https://inditextech.github.io/docouture/1.1.2/main/reference-cli/">
+    <link rel="canonical" href="https://inditextech.github.io/docouture/1.2.0/main/reference-cli/">
     <link rel="prev" href="../reference-antora-descriptor-configuration/">
     <link rel="next" href="../reference-ui-bundle/">
     <meta name="generator" content="Antora 3.2.0">
@@ -116,7 +116,7 @@
 
 <div class="page-versions">
   <button type="button" class="dt-tag dt-tag--solid dt-tag--selected header-toolbar__version header-toolbar__version--latest version-menu-toggle" title="Show other versions of page" aria-expanded="false">
-    <span class="dt-tag__label">1.1.2</span>
+    <span class="dt-tag__label">1.2.0</span>
     <span class="dt-tag__icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg></span>
   </button>
   <div class="version-menu">
@@ -125,9 +125,12 @@
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </a>
     <span class="version is-current" aria-current="page">
-      <span class="version__label">1.1.2</span>
+      <span class="version__label">1.2.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </span>
+    <a class="version" href="../../../1.1.2/main/reference-cli/">
+      <span class="version__label">1.1.2</span>
+    </a>
     <a class="version" href="../../../1.1.1/main/reference-cli/">
       <span class="version__label">1.1.1</span>
     </a>
@@ -156,7 +159,7 @@
   </div>
 </header>
 
-<dialog id="search-dialog" class="search-dialog" aria-label="Search" data-search-index="ROOT-1.1.2.json">
+<dialog id="search-dialog" class="search-dialog" aria-label="Search" data-search-index="ROOT-1.2.0.json">
   <div class="dt-overlay dt-overlay--visible search-dialog__overlay">
     <div class="dt-overlay__content"></div>
     <div class="dt-modal dt-modal--small search-dialog__panel">
@@ -213,7 +216,7 @@
 
 <div class="body">
 
-<div id="side-menu" class="side-menu" data-component="ROOT" data-version="1.1.2" data-module="main">
+<div id="side-menu" class="side-menu" data-component="ROOT" data-version="1.2.0" data-module="main">
   <div class="side-menu__header">
     <div class="side-menu__header-start">
       <img class="side-menu__header-logo side-menu__header-logo--light" src="../../../_/product-logo.png" width="24" height="24" alt="">
@@ -616,6 +619,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-2-0/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.2.0</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-0-0/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.0.0</span></span>
       </a>
@@ -655,7 +667,7 @@
 
 <div class="page-versions">
   <button type="button" class="dt-tag dt-tag--solid dt-tag--selected header-toolbar__version header-toolbar__version--latest version-menu-toggle" title="Show other versions of page" aria-expanded="false">
-    <span class="dt-tag__label">1.1.2</span>
+    <span class="dt-tag__label">1.2.0</span>
     <span class="dt-tag__icon"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-chevron-down"></use></svg></span>
   </button>
   <div class="version-menu">
@@ -664,9 +676,12 @@
       <span class="dt-label dt-label--orange"><span class="dt-label__content">Prerelease</span></span>
     </a>
     <span class="version is-current" aria-current="page">
-      <span class="version__label">1.1.2</span>
+      <span class="version__label">1.2.0</span>
       <span class="dt-label dt-label--green"><span class="dt-label__content">Latest</span></span>
           </span>
+    <a class="version" href="../../../1.1.2/main/reference-cli/">
+      <span class="version__label">1.1.2</span>
+    </a>
     <a class="version" href="../../../1.1.1/main/reference-cli/">
       <span class="version__label">1.1.1</span>
     </a>
@@ -758,6 +773,19 @@ git repository. Prompts interactively for anything not given as a flag, in a ter
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--title &lt;title&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Site title (default: title-cased from <code>&lt;name&gt;</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--site-url &lt;url&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public site URL written as <code>site.url</code> in <code>antora-playbook.yml</code> (http(s), trailing
+slash stripped). Skips the wizard question. Without it, the question is pre-filled with
+<code>https://&lt;org&gt;.github.io/&lt;repo&gt;</code> derived from a github.com <code>origin</code> remote (Enter accepts,
+<code>-</code> skips); with <code>--yes</code>, that derived URL is used, or none is written when there is no github.com <code>origin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--url-segment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name the Antora component after the site, adding an extra <code>/&lt;name&gt;/</code> URL segment.
+Off by default: the component is Antora&#8217;s reserved <code>ROOT</code>, which adds no segment, because GitHub Pages
+already puts the repository name in the URL. See <a href="../glossary/" class="xref page">Glossary</a> for component and module</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mode &lt;mode&gt;</code></p></td>
@@ -926,7 +954,8 @@ package manager (<code>package.json&#8217;s `packageManager</code> field) is ins
 that must agree (see <a href="../guides-modifying-the-navigation/" class="xref page">Modifying the navigation</a>), git history, that
 Antora is installed, and (advisory only) whether <code>AGENTS.md</code> is still present, whether the
 <code>docs/release</code> label exists, and whether the declared branching model
-(<code>docs/package.json&#8217;s `docouture.branching</code>) agrees with what
+(<code>docs/package.json&#8217;s `docouture.branching</code>, plus <code>docouture.prereleaseBranch</code> under
+git-flow) agrees with what
 <code>antora-playbook.yml</code>/<code>docouture-release.yml</code> actually say — see
 <a href="../guides-branching-model/" class="xref page">Branching model</a>. Does not check for the agent skills — see
 <a href="../reference-ai-first-approach/" class="xref page">AI-First approach</a>, those are a separate, self-serve install
@@ -961,7 +990,14 @@ this CLI never scaffolds or verifies.</p>
 fully overwritten (there is nothing site-specific in either — link ignores are
 configured separately, in <code>package.json&#8217;s `docouture.checkLinks.ignore</code>); <code>AGENTS.md</code> is
 merged — only docouture&#8217;s own managed section is replaced. The rest of <code>docs/</code> — every
-page a site owner has written — is never touched.</p>
+page a site owner has written — is never touched, with one exception: on a git-flow site
+it writes or corrects <code>docouture.branching</code> and <code>docouture.prereleaseBranch</code> in
+<code>docs/package.json</code> (derived from <code>antora-playbook.yml</code>), which <code>docouture-release.yml</code>
+reads to open the prerelease sync PR. This also backfills sites scaffolded before that field existed.
+It also sets <code>runtime.log.failure_level</code> to <code>error</code> in <code>docs/antora-playbook*.yml</code>, replacing
+any other value and printing each file it changed: builds then fail on errors such as a
+broken <code>xref:</code> or a missing include, so run <code>docouture build</code> and fix what it reports before
+your next CI run.</p>
 </div>
 <div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1010,7 +1046,8 @@ current branches exactly; a third, invented name is refused.</p>
 <div class="paragraph">
 <p>Re-renders <code>.github/workflows/</code> (same machinery <code>docouture upgrade</code> uses) and patches
 <code>antora-playbook.yml&#8217;s `content.sources[0].branches</code> and <code>docs/package.json&#8217;s
-`docouture.branching</code> field. Does NOT rename actual git branches, touch
+`docouture.branching</code> field (adding <code>docouture.prereleaseBranch</code> for git-flow, removing it
+for trunk-based). Does NOT rename actual git branches, touch
 branch-protection/ruleset rules, or change GitHub&#8217;s configured default branch — these
 stay manual steps, printed as a reminder after every real run.</p>
 </div>
@@ -1177,7 +1214,7 @@ else the bundled default)</p></td>
       </div>
       <div class="page-footer__contribute-buttons">
 
-<a class="dt-button dt-button--ghost dt-button--icon-and-label dt-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/blob/docs/v1.1.2/docs/src/modules/main/pages/reference-cli.adoc">
+<a class="dt-button dt-button--ghost dt-button--icon-and-label dt-button--icon-action page-footer__propose-change" href="https://github.com/InditexTech/docouture/blob/docs/v1.2.0/docs/src/modules/main/pages/reference-cli.adoc">
   <span class="dt-button__content">
     Propose a change
     <span class="dt-button__icon dt-button__icon-action"><svg class="dt-icon" aria-hidden="true" focusable="false"><use href="../../../_/img/icons.svg#icon-external-link"></use></svg></span>

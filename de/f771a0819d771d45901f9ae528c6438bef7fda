@@ -1,0 +1,135 @@
+.agents/skills/docouture-writing-docs-pages/SKILL.md
+  s_f81f6ba5e44cf1::t_5fbc51d0cfd51c 101-104
+.agents/skills/docouture-writing-docs-pages/reference/language-basics.md
+  s_f81f6ba5e44cf1::t_f546e10b971634 29-30
+.github/workflows/docouture-pr-verify.yml
+  s_f81f6ba5e44cf1::t_ecc93c8a80a0ce 134
+.github/workflows/docouture-release.yml
+  s_f81f6ba5e44cf1::t_7ace8c27a1f0aa 208
+.opencode/skills/asciidoc/SKILL.md
+  s_f81f6ba5e44cf1::t_ef5bb26c2cbb33 141-144
+.opencode/skills/asciidoc/reference/extensions.md
+  s_f81f6ba5e44cf1::t_1a310217244a93 174-176
+.opencode/skills/asciidoc/reference/syntax.md
+  s_f81f6ba5e44cf1::t_9a36e9d492acad 31-32
+.opencode/skills/docs-site-package/SKILL.md
+  s_f81f6ba5e44cf1::t_c1f3c722b34cbf 68,134-135
+.opencode/skills/docs-site-package/reference/playbook.md
+  s_f81f6ba5e44cf1::t_b14bdf4d25aba8 100,103-104
+AGENTS.md
+  s_f81f6ba5e44cf1::t_a42da851089386 75-78
+code/CHANGELOG.md
+  s_f81f6ba5e44cf1::t_cee93734794a00 22
+code/packages/antora-extensions/lib/footer.js
+  s_f81f6ba5e44cf1::t_d2fdb9112f54f2 89,101,107,112
+code/packages/antora-extensions/lib/footer.spec.js
+  s_f81f6ba5e44cf1::t_e3dd8f12ec8ab2 11,54-55,100,105,109,123,127,139,143,155
+code/packages/antora-extensions/lib/kroki-prewarm.js
+  s_f81f6ba5e44cf1::t_a4362fdc6026c3 573
+code/packages/antora-extensions/lib/kroki-prewarm.spec.js
+  s_f81f6ba5e44cf1::t_1c72ad4fe112f0 18,21,29,433
+code/packages/antora-extensions/lib/llms-txt.js
+  s_f81f6ba5e44cf1::t_291f7c5dc2c17c 182,196
+code/packages/antora-extensions/lib/llms-txt.spec.js
+  s_f81f6ba5e44cf1::t_acb90cda564ce3 14
+code/packages/antora-extensions/lib/nav-modules.js
+  s_f81f6ba5e44cf1::t_7f9017100ce7ff 58-59,141,145,241,249
+code/packages/antora-extensions/lib/nav-modules.spec.js
+  s_f81f6ba5e44cf1::t_7c5efaf157c677 11,48-51,113,129,140,173,175,179,183,187,201,205,216,218
+code/packages/antora-extensions/lib/not-found-page.js
+  s_f81f6ba5e44cf1::t_b2927696da967a 126,134
+code/packages/antora-extensions/lib/redirects.js
+  s_f81f6ba5e44cf1::t_cead6e5040ff78 61-62,78,132,145-146,152,179,185
+code/packages/antora-extensions/lib/redirects.spec.js
+  s_f81f6ba5e44cf1::t_96a080f061a728 11,29-30,97,104,108,115,119,126
+code/packages/asciidoc-extensions/README.md
+  s_f81f6ba5e44cf1::t_8022ab3a002e9f 142-143,151,155-157
+code/packages/asciidoc-extensions/lib/accordion.js
+  s_f81f6ba5e44cf1::t_c0c3386d14646d 10,173,178,197
+code/packages/asciidoc-extensions/lib/accordion.spec.js
+  s_f81f6ba5e44cf1::t_7fe14918942f23 102
+code/packages/asciidoc-extensions/lib/card-grid.js
+  s_f81f6ba5e44cf1::t_61297798632332 9,123,128,133,164,224,230,239,242,245,249,278,283,288
+code/packages/asciidoc-extensions/lib/cta.js
+  s_f81f6ba5e44cf1::t_b5c1cf4117970a 9,153,156,159,201,238,248,251,254,257,261
+code/packages/asciidoc-extensions/lib/cta.spec.js
+  s_f81f6ba5e44cf1::t_74909180f10080 182-200
+code/packages/asciidoc-extensions/lib/feature-tabs.js
+  s_f81f6ba5e44cf1::t_4776ad2454aef9 10,170,173,176,224,269,276,279,352
+code/packages/asciidoc-extensions/lib/kroki.js
+  s_f81f6ba5e44cf1::t_ea8c4ba097a9ad 8,144,208,218,234
+code/packages/asciidoc-extensions/lib/label-macro.js
+  s_f81f6ba5e44cf1::t_9adf3edbb31022 8,56
+code/packages/asciidoc-extensions/lib/nowrap-cols.js
+  s_f81f6ba5e44cf1::t_edc2f1248aca27 36
+code/packages/asciidoc-extensions/lib/shiki-syntax-highlighter.js
+  s_f81f6ba5e44cf1::t_4cb998f9e61d61 93
+code/packages/asciidoc-extensions/lib/table-width.js
+  s_f81f6ba5e44cf1::t_b99dbc79e0fb77 48
+code/packages/asciidoc-extensions/lib/tabs.js
+  s_f81f6ba5e44cf1::t_f0e0a923bf840c 10,146,151,153,218
+code/packages/asciidoc-extensions/lib/warn.js
+  s_f81f6ba5e44cf1::t_f8c70ef9aa6490 9,11,17-20,41,45-46,49,63,73,76,78,81-110
+code/packages/asciidoc-extensions/lib/warn.spec.js
+  s_f81f6ba5e44cf1::t_150943e4fb4f15 8,10,12-15,19-22,26-29,35-38,42,47,50,52,54-75
+code/packages/cli/templates/agent-support/AGENTS.md
+  s_f81f6ba5e44cf1::t_2428fd4ea560ad 45-48
+code/packages/cli/templates/starter/antora-playbook.local.yml
+  s_f81f6ba5e44cf1::t_9687b7e15f2942 73
+code/packages/cli/templates/starter/antora-playbook.versioned.yml
+  s_f81f6ba5e44cf1::t_ff081f757eba67 111-113,115
+code/packages/cli/templates/starter/antora-playbook.yml
+  s_f81f6ba5e44cf1::t_10dd31caceecdb 122-124,126
+code/packages/cli/templates/starter/scripts/check-links.mjs
+  s_f81f6ba5e44cf1::t_efc8e3330f322b 12
+code/packages/cli/templates/workflows/docouture-pr-verify.yml
+  s_f81f6ba5e44cf1::t_d87e1e6eb754a1 130
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_f81f6ba5e44cf1::t_d73fad24c8fb4f 205
+code/packages/example/antora-playbook.local.yml
+  s_f81f6ba5e44cf1::t_1a21464d98e7e3 58
+code/packages/example/antora-playbook.yml
+  s_f81f6ba5e44cf1::t_ad507f04510ef3 127-129,131
+docs/antora-playbook.local.yml
+  s_f81f6ba5e44cf1::t_045038598f4d7a 72
+docs/antora-playbook.yml
+  s_f81f6ba5e44cf1::t_f0dfc518566595 116-118,120
+docs/scripts/check-links.mjs
+  s_f81f6ba5e44cf1::t_e92149a1459bd6 12
+docs/src/modules/main/pages/reference-antora-playbook-configuration.adoc
+  s_f81f6ba5e44cf1::t_5c7c7f8baf033b 120-123
+justfile
+  s_f81f6ba5e44cf1::t_ff4b642ad680a3 139
+openspec/changes/archive/2026-10-20-starter-failure-level-error/.openspec.yaml
+  s_f81f6ba5e44cf1::t_a44ea373f5861e 1-2
+openspec/changes/archive/2026-10-20-starter-failure-level-error/design.md
+  s_f81f6ba5e44cf1::t_95a8753bd0fc08 1-29
+openspec/changes/archive/2026-10-20-starter-failure-level-error/proposal.md
+  s_f81f6ba5e44cf1::t_94a145491c3e3d 1-31
+openspec/changes/archive/2026-10-20-starter-failure-level-error/specs/starter-build-strictness/spec.md
+  s_f81f6ba5e44cf1::t_aa2cf6c3534994 1-43
+openspec/changes/archive/2026-10-20-starter-failure-level-error/tasks.md
+  s_f81f6ba5e44cf1::t_7f947c27152b91 1-34
+openspec/specs/starter-build-strictness/spec.md
+  s_f81f6ba5e44cf1::t_46331abb91bb85 1-43
+skills/docouture-writing-docs-pages/SKILL.md
+  s_f81f6ba5e44cf1::t_7fcf260de9ac45 133-136
+skills/docouture-writing-docs-pages/reference/language-basics.md
+  s_f81f6ba5e44cf1::t_6712c1a1f7c5a4 29-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "def771a0819d771d45901f9ae528c6438bef7fda",
+  "prompts": {},
+  "sessions": {
+    "s_f81f6ba5e44cf1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea758151fffedWt2f980imffcN",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

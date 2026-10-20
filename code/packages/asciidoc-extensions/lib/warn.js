@@ -38,7 +38,7 @@
  * than imported from `@asciidoctor/core`, because the object at runtime comes
  * from 2.2 under Antora and 4.0 under the preview harness.
  *
- * @typedef {{ warn: (message: string) => void, error: (message: string) => void }} Logger
+ * @typedef {{ warn?: (message: string) => void, error?: (message: string) => void }} Logger
  */
 
 /**

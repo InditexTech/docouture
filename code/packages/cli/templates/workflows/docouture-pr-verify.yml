@@ -126,4 +126,3 @@ jobs:
 
       - name: Build
         run: npx antora --fetch antora-playbook.local.yml
-

@@ -1,0 +1,91 @@
+.github/workflows/docouture-publish-prerelease.yml
+  s_9cd95ab51b3c40::t_2fd9fdc0d8182a 20-23,48
+.github/workflows/docouture-release.yml
+  s_9cd95ab51b3c40::t_54b52999008fe8 58-66,99,102,119-126,293-315,494,509,512-633,651-655
+AGENTS.md
+  s_9cd95ab51b3c40::t_7f79967540ba0e 157
+code/CHANGELOG.md
+  s_9cd95ab51b3c40::t_3f4c9597850f9e 22-23
+code/packages/cli/src/bin.ts
+  s_9cd95ab51b3c40::t_77981491141c47 166-168,187-194,228-230
+code/packages/cli/src/commands/branch-model.spec.ts
+  s_9cd95ab51b3c40::t_a68ac18370e255 113,116,173,176
+code/packages/cli/src/commands/branch-model.ts
+  s_9cd95ab51b3c40::t_b750c06e427d82 17,283,320
+code/packages/cli/src/commands/doctor.ts
+  s_9cd95ab51b3c40::t_2fed0b25fe2db4 33,256-257
+code/packages/cli/src/commands/new.spec.ts
+  s_9cd95ab51b3c40::t_f153b24dfd3072 132-137,152,155,174,177-183
+code/packages/cli/src/commands/new.ts
+  s_9cd95ab51b3c40::t_ad2797102d3339 16,875
+code/packages/cli/src/commands/upgrade.spec.ts
+  s_9cd95ab51b3c40::t_87fad345861d91 43-94
+code/packages/cli/src/commands/upgrade.ts
+  s_9cd95ab51b3c40::t_62c57b4da2a3c5 19-20,211-225,231,248-278,281-285
+code/packages/cli/src/lib/doctor-checks.spec.ts
+  s_9cd95ab51b3c40::t_310daa2400093e 241-271
+code/packages/cli/src/lib/doctor-checks.ts
+  s_9cd95ab51b3c40::t_8d824611c79c2e 357-360,376-402
+code/packages/cli/src/lib/package-branching.spec.ts
+  s_9cd95ab51b3c40::t_c145cd027cb288 1-65
+code/packages/cli/src/lib/package-branching.ts
+  s_9cd95ab51b3c40::t_2a7cc6d64aeac8 1-66
+code/packages/cli/src/lib/playbook-yml.spec.ts
+  s_9cd95ab51b3c40::t_85e4ed6540fc0d 17,151-189
+code/packages/cli/src/lib/playbook-yml.ts
+  s_9cd95ab51b3c40::t_c790373502c7a2 152-231
+code/packages/cli/templates/starter/src/modules/main/pages/getting-started.adoc
+  s_9cd95ab51b3c40::t_58afb49f3826a4 83-84
+code/packages/cli/templates/workflows/docouture-publish-prerelease.yml
+  s_9cd95ab51b3c40::t_9d82173ac69515 20-23
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_9cd95ab51b3c40::t_0eacda8b703511 58-66,119-126,290-312,491,506,509-630,648-652
+docs/src/modules/main/nav.adoc
+  s_9cd95ab51b3c40::t_4e8bdcd0efa78d 41
+docs/src/modules/main/pages/guides-branching-model.adoc
+  s_9cd95ab51b3c40::t_fe4cd20cef0948 44,76-80,119-139
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_9cd95ab51b3c40::t_37cdec82f4260d 55-73
+docs/src/modules/main/pages/reference-cli.adoc
+  s_9cd95ab51b3c40::t_3cffbb2fe07b54 107-108,128-135,163-164
+docs/src/modules/main/pages/release-notes/1-2-0.adoc
+  s_9cd95ab51b3c40::t_8e527c1d06fc25 1-47
+docs/src/modules/main/pages/release-notes/index.adoc
+  s_9cd95ab51b3c40::t_07c3311c2379d7 8
+openspec/changes/archive/2026-10-20-git-flow-release-bump-sync/.openspec.yaml
+  s_9cd95ab51b3c40::t_14a33426a8522b 1-2
+openspec/changes/archive/2026-10-20-git-flow-release-bump-sync/design.md
+  s_9cd95ab51b3c40::t_f77c59ef93ba69 1-36
+openspec/changes/archive/2026-10-20-git-flow-release-bump-sync/proposal.md
+  s_9cd95ab51b3c40::t_8048a03871416d 1-28
+openspec/changes/archive/2026-10-20-git-flow-release-bump-sync/specs/cli-branching-declaration/spec.md
+  s_9cd95ab51b3c40::t_dec1e7d2b93117 1-33
+openspec/changes/archive/2026-10-20-git-flow-release-bump-sync/specs/docs-release-prerelease-sync/spec.md
+  s_9cd95ab51b3c40::t_8182b74db3df18 1-33
+openspec/changes/archive/2026-10-20-git-flow-release-bump-sync/tasks.md
+  s_9cd95ab51b3c40::t_27513fd0244e3e 1-24
+openspec/specs/cli-branching-declaration/spec.md
+  s_9cd95ab51b3c40::t_718b16bbe16989 1-38
+openspec/specs/docs-release-prerelease-sync/spec.md
+  s_9cd95ab51b3c40::t_289fa751dc2cce 1-38
+skills/docouture-docs-versioning/SKILL.md
+  s_9cd95ab51b3c40::t_1d7e795c4b2370 38-40
+skills/docouture-docs-versioning/reference/releasing.md
+  s_9cd95ab51b3c40::t_47844511b0ac07 87-92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6c84bbbb3a0caafafccab2bdc45fdbb1d2dc3d23",
+  "prompts": {},
+  "sessions": {
+    "s_9cd95ab51b3c40": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea7133e9affe2JDTzMZM4hb6xB",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

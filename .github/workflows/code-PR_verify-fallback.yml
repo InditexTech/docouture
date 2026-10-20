@@ -8,6 +8,8 @@ name: code-PR-verify-fallback
 on:
   pull_request:
 
+permissions: {}
+
 jobs:
   unit-tests:
     if: 'false'

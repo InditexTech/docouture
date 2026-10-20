@@ -1,0 +1,29 @@
+code/packages/antora-extensions/lib/not-found-page.spec.js
+  s_f81f6ba5e44cf1::t_4edbf7367b89fd 1-54
+code/packages/asciidoc-extensions/lib/card-grid.spec.js
+  s_f81f6ba5e44cf1::t_b68cda4385a17c 1-70
+code/packages/asciidoc-extensions/lib/kroki.spec.js
+  s_f81f6ba5e44cf1::t_f327facdeb993d 1-27
+code/packages/asciidoc-extensions/lib/label-macro.spec.js
+  s_f81f6ba5e44cf1::t_924531e4370137 1-24
+code/packages/asciidoc-extensions/lib/nowrap-cols.spec.js
+  s_f81f6ba5e44cf1::t_bdd8072b9654d2 1-27
+code/packages/asciidoc-extensions/lib/tabs.spec.js
+  s_f81f6ba5e44cf1::t_54e66b1448c8e9 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "401ec60776e4790f147901f657d6be03e1850d80",
+  "prompts": {},
+  "sessions": {
+    "s_f81f6ba5e44cf1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea758151fffedWt2f980imffcN",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -195,11 +195,11 @@ if (external.length > 0) {
     console.log(`::error::broken external link: ${link.url} (parent: ${link.parent ?? 'unknown'})`)
   }
   console.error(`\n${external.length} broken external link(s) found.`)
-  process.exit(1)
+  process.exitCode = 1
+} else {
+  const ignored = local.length + nonRepresentative.length
+  console.log(
+    `Checked ${result.links.length} link(s): 0 broken external link(s)` +
+      (ignored > 0 ? `, ${ignored} local/non-representative link(s) ignored (see warnings above).` : '.')
+  )
 }
-
-const ignored = local.length + nonRepresentative.length
-console.log(
-  `Checked ${result.links.length} link(s): 0 broken external link(s)` +
-    (ignored > 0 ? `, ${ignored} local/non-representative link(s) ignored (see warnings above).` : '.')
-)

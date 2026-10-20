@@ -1,0 +1,21 @@
+.github/workflows/code-release_preview.yml
+  s_42695fd6aa08fc::t_4d717f59fecff1 80-81,85-88,91,110,112,141-142,166-167
+.github/workflows/docs/code-release_preview.md
+  s_42695fd6aa08fc::t_12e66fc6cf5460 31-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f919c8c980961d398dcdda6e53803e2e6809af96",
+  "prompts": {},
+  "sessions": {
+    "s_42695fd6aa08fc": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea79ffaa6ffecUDxuzrOfUxpV5",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -753,7 +753,10 @@ in versioned mode) is validated against full SemVer 2.0.0 — a leading <code>v<
 or any other malformed value fails the workflow immediately with a clear error, instead
 of tagging first and only failing later inside the version-bump step.
 <code>docouture-release-preview.yml</code> runs the same check earlier, as a PR comment, before the
-merge that would have triggered it.</p>
+merge that would have triggered it.
+It runs only on pull requests opened from a branch of the repository itself: a fork&#8217;s
+pull request gets a read-only token that cannot post the comment, so the preview is
+skipped there.</p>
 </div>
 </div>
 </div>

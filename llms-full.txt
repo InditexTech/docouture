@@ -824,7 +824,7 @@ A third trigger — a published GitHub Release — is scaffolded alongside these
 
 Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a one-off commit built on the release branch’s current tip, `git tag docs/v<value>` is created there, and the tag is pushed — the release branch itself is never advanced.
 
-Before any of that: `docs/.release-version` (or the `workflow_dispatch` version input, in versioned mode) is validated against full SemVer 2.0.0 — a leading `v`, a bare `1.2`, or any other malformed value fails the workflow immediately with a clear error, instead of tagging first and only failing later inside the version-bump step. `docouture-release-preview.yml` runs the same check earlier, as a PR comment, before the merge that would have triggered it.
+Before any of that: `docs/.release-version` (or the `workflow_dispatch` version input, in versioned mode) is validated against full SemVer 2.0.0 — a leading `v`, a bare `1.2`, or any other malformed value fails the workflow immediately with a clear error, instead of tagging first and only failing later inside the version-bump step. `docouture-release-preview.yml` runs the same check earlier, as a PR comment, before the merge that would have triggered it. It runs only on pull requests opened from a branch of the repository itself: a fork’s pull request gets a read-only token that cannot post the comment, so the preview is skipped there.
 
 ## Standalone mode
 
@@ -2729,6 +2729,10 @@ Every entry is `- [#PR_ID](PR_URL) PR_NAME`, linking the pull request that shipp
 
 ## Unreleased
 
+### Fixed
+
+- [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
+
 ### Documentation
 
 - [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js’s showcase URL
@@ -3049,6 +3053,40 @@ needs Jekyll on.
 
 ---
 
+# Setup the product logo
+
+Source: /1.1.2/main/guides-setup-the-product-logo/
+
+The side-menu brand mark next to the site title is `site.keys.product_logo` (and, for the dark theme, `product_logo_dark`), served the same way the favicon is — from `ui.supplemental_files`:
+
+```
+site:
+  keys:
+    product_logo: /_/product-logo.png
+    product_logo_dark: /_/product-logo-dark.png
+
+ui:
+  supplemental_files: ./supplemental-ui
+```
+
+`docouture new` seeds both keys with placeholder artwork under `docs/supplemental-ui/product-logo.png` / `product-logo-dark.png`. Replace them with real logos, same filenames, and rebuild.
+
+## Why two files
+
+The brand mark sits on whatever the current theme’s background is — see [UI Bundle](../reference-ui-bundle/)'s theme section. `product_logo_dark` is swapped in automatically under the dark theme; omit it and `product_logo` is reused unchanged for both, which only reads well if the artwork already works on both backgrounds (a monochrome or already-inverted mark, for instance).
+
+## Sizing
+
+The brand mark’s slot is a small, roughly-square product mark next to a **separately rendered** text title (the site’s `title` from `docs/src/antora.yml`) — not a wide wordmark. A logo that already contains the product name as text usually duplicates what’s already there next to it.
+
+`nav-brand.hbs` renders both images at a fixed **40×40 CSS px** (`width="40" height="40"`), so export at **at least 80×80** (2x, for HiDPI screens) — the seeded placeholder ships as a 256×256 PNG, which is generous headroom rather than a requirement. A transparent-background PNG or an SVG both work; square canvas, no padding baked into the file itself (the 40×40 box already gives it breathing room).
+
+## Removing it entirely
+
+Delete both keys — the side menu falls back to a text-only brand block (the site title alone, no mark) rather than failing the build.
+
+---
+
 # Setup a favicon
 
 Source: /1.1.2/main/guides-setup-a-favicon/
@@ -3081,40 +3119,6 @@ Rename the file under `supplemental-ui/` and update `site.keys.favicon` to match
 ## Removing it entirely
 
 Delete the `favicon` key (and the file, if nothing else in `supplemental-ui/` references it) — the UI bundle falls back to no favicon rather than failing the build.
-
----
-
-# Setup the product logo
-
-Source: /1.1.2/main/guides-setup-the-product-logo/
-
-The side-menu brand mark next to the site title is `site.keys.product_logo` (and, for the dark theme, `product_logo_dark`), served the same way the favicon is — from `ui.supplemental_files`:
-
-```
-site:
-  keys:
-    product_logo: /_/product-logo.png
-    product_logo_dark: /_/product-logo-dark.png
-
-ui:
-  supplemental_files: ./supplemental-ui
-```
-
-`docouture new` seeds both keys with placeholder artwork under `docs/supplemental-ui/product-logo.png` / `product-logo-dark.png`. Replace them with real logos, same filenames, and rebuild.
-
-## Why two files
-
-The brand mark sits on whatever the current theme’s background is — see [UI Bundle](../reference-ui-bundle/)'s theme section. `product_logo_dark` is swapped in automatically under the dark theme; omit it and `product_logo` is reused unchanged for both, which only reads well if the artwork already works on both backgrounds (a monochrome or already-inverted mark, for instance).
-
-## Sizing
-
-The brand mark’s slot is a small, roughly-square product mark next to a **separately rendered** text title (the site’s `title` from `docs/src/antora.yml`) — not a wide wordmark. A logo that already contains the product name as text usually duplicates what’s already there next to it.
-
-`nav-brand.hbs` renders both images at a fixed **40×40 CSS px** (`width="40" height="40"`), so export at **at least 80×80** (2x, for HiDPI screens) — the seeded placeholder ships as a 256×256 PNG, which is generous headroom rather than a requirement. A transparent-background PNG or an SVG both work; square canvas, no padding baked into the file itself (the 40×40 box already gives it breathing room).
-
-## Removing it entirely
-
-Delete both keys — the side menu falls back to a text-only brand block (the site title alone, no mark) rather than failing the build.
 
 ---
 
@@ -4537,6 +4541,35 @@ Diagrams render for real — [Kroki](https://kroki.io)-backed mermaid, plantuml,
 
 ---
 
+# Contributing
+
+Source: /1.1.2/main/contributing/
+
+docouture is developed at [InditexTech/docouture](https://github.com/InditexTech/docouture). Contributions there follow the repository’s own guide, not this scaffolded site’s — the summary below is what actually applies; see `CONTRIBUTING.md` in that repository for the full text.
+
+## Before contributing
+
+- Sign the [Contributor License Agreement (CLA)](https://github.com/InditexTech/foss/blob/main/CLA.md) — required before any code contribution is accepted.
+- Install `just`, `asdf`, and the pinned [Node](https://nodejs.org)/https://pnpm.io[pnpm] versions the repository’s own `README.md` documents.
+
+## Workflow
+
+1. Open an issue to discuss the change first.
+2. Fork, branch, and make the change.
+3. Run `just check` (lint, typecheck, formatting — what CI runs).
+4. Update `code/CHANGELOG.md’s `[Unreleased]` section — required on every PR touching `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
+5. Open a pull request linking the issue.
+
+## Contributing to this site specifically
+
+If what needs fixing is a page under `docs/` (this site, not docouture itself), that’s a normal docs PR against whatever repository this site was scaffolded into — see [Adding a page](../guides-adding-a-page/) for the mechanics, and [AI-First approach](../reference-ai-first-approach/)'s `docouture-documenting-changes` skill for keeping content in sync as the underlying repo changes.
+
+## License
+
+Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which mixes MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each file’s own SPDX header for which applies to it.
+
+---
+
 # FAQ
 
 Source: /1.1.2/main/faq/
@@ -4580,35 +4613,6 @@ Yes — `npx skills@latest add InditexTech/docouture --all` installs a set of ag
 10. Is docouture open source?
 
 Yes. The CLI, the Antora/Asciidoctor extensions and the release tooling are Apache-2.0; the UI bundle’s own fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default) mixes MPL-2.0 (files that are a Modification of an upstream file) with Apache-2.0 (files with no upstream counterpart), per its own LICENSE and NOTICE. Its design tokens, component CSS and icons (Lucide, ISC licensed) are all original or openly licensed, with nothing embedded that restricts publishing a site built with it.
-
----
-
-# Contributing
-
-Source: /1.1.2/main/contributing/
-
-docouture is developed at [InditexTech/docouture](https://github.com/InditexTech/docouture). Contributions there follow the repository’s own guide, not this scaffolded site’s — the summary below is what actually applies; see `CONTRIBUTING.md` in that repository for the full text.
-
-## Before contributing
-
-- Sign the [Contributor License Agreement (CLA)](https://github.com/InditexTech/foss/blob/main/CLA.md) — required before any code contribution is accepted.
-- Install `just`, `asdf`, and the pinned [Node](https://nodejs.org)/https://pnpm.io[pnpm] versions the repository’s own `README.md` documents.
-
-## Workflow
-
-1. Open an issue to discuss the change first.
-2. Fork, branch, and make the change.
-3. Run `just check` (lint, typecheck, formatting — what CI runs).
-4. Update `code/CHANGELOG.md’s `[Unreleased]` section — required on every PR touching `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
-5. Open a pull request linking the issue.
-
-## Contributing to this site specifically
-
-If what needs fixing is a page under `docs/` (this site, not docouture itself), that’s a normal docs PR against whatever repository this site was scaffolded into — see [Adding a page](../guides-adding-a-page/) for the mechanics, and [AI-First approach](../reference-ai-first-approach/)'s `docouture-documenting-changes` skill for keeping content in sync as the underlying repo changes.
-
-## License
-
-Apache-2.0, except `packages/ui-bundle` (a fork of [antora-ui-default](https://gitlab.com/antora/antora-ui-default)), which mixes MPL-2.0 and Apache-2.0 file by file under its own LICENSE/NOTICE — see each file’s own SPDX header for which applies to it.
 
 ---
 
@@ -7924,6 +7928,183 @@ Rendered as a native `<details>` element — works with JavaScript off.
 
 ---
 
+# Docouture
+
+Source: /1.1.1/
+
+docouture turns an [Antora](https://antora.org) content tree into a themed, searchable documentation site in one command — `docouture new` scaffolds it, `docouture dev` serves it with live reload, and `docouture publish gh-pages` ships it.
+
+## Get started
+
+![A scaffold command turning into a running site](_images/card-quickstart.jpg)
+
+Start here
+
+[Quickstart](main/quickstart/)
+
+Scaffold a site and see it running locally in a few commands.
+
+![A content pipeline diagram connecting a page](_images/card-about.jpg)
+
+Overview
+
+[About](main/)
+
+What docouture actually ships, and why it exists.
+
+![A terminal-style browser window with a command palette and a folder navigation tree](_images/card-cli-reference.png)
+
+Reference
+
+[CLI reference](main/reference-cli/)
+
+Every `docouture` command, its flags, and what it actually does.
+
+![Layered building blocks connecting content sources](_images/card-architecture.jpg)
+
+Design
+
+[Architecture](main/architecture/)
+
+How the CLI, the Antora pipeline and the themed UI bundle fit together.
+
+## Key features
+
+- [Scaffold in one command](#feature-tabs-panel-1)
+- [Its own design tokens](#feature-tabs-panel-2)
+- [Diagrams and search, built in](#feature-tabs-panel-3)
+- [AI-ready docs](#feature-tabs-panel-4)
+
+![A `docouture new` terminal command producing a scaffolded docs/ directory with content](_images/feature-scaffold.png)
+
+`docouture new` lays down a full Antora site — content tree, [GitHub](https://github.com/features/actions) workflows, an AGENTS.md briefing for coding agents — into an existing repository. `docouture dev`, `docouture build` and `docouture publish` take it from there.
+
+[Try it](main/quickstart/)
+
+![A grid of light and dark themed UI components — buttons](_images/feature-design-tokens.jpg)
+
+The UI bundle is a themed fork of Antora’s own default UI: dark/light mode, a version switcher, full-text search, and a set of authoring blocks — tabs, cards, accordions, feature tabs — with no plain [AsciiDoc](https://asciidoc.org) equivalent.
+
+[See the UI bundle](main/reference-ui-bundle/)
+
+![A magnifying glass over search results feeding into a document and a linked network graph](_images/feature-diagrams-search.jpg)
+
+Mermaid/PlantUML/BPMN/Excalidraw diagrams render via a self-hosted [Kroki](https://kroki.io) service, code blocks get build-time [Shiki](https://shiki.style) highlighting, and a full-text search index ships with every build — all with zero configuration beyond what `docouture new` already wrote.
+
+[See what ships](main/reference-integrations/)
+
+![Documentation files being processed and split into a rendered site page and a structured](_images/feature-ai-ready-docs.jpg)
+
+Every build publishes [`llms.txt`](https://llmstxt.org)/`llms-full.txt` for LLM ingestion, and `npx skills add InditexTech/docouture` installs a set of agent skills that plan, scaffold and keep a site’s content in sync with the repo it documents.
+
+[See the skills](main/reference-ai-first-approach/)
+
+## Open source
+
+The CLI, the Antora/[Asciidoctor](https://asciidoctor.org) extensions, the UI bundle (Apache-2.0/MPL-2.0 split, being a fork of antora-ui-default) and the release tooling are all open — see the FAQ below for the licence breakdown.
+
+[View the repository](https://github.com/InditexTech/docouture)
+
+## Frequently asked questions
+
+What is docouture?
+
+An Antora documentation platform: a themed UI bundle, a set of Antora/Asciidoctor extensions, and the `docouture` CLI that scaffolds, serves, builds and publishes a site built on top of them. See [About](main/).
+
+How do I create a new site?
+
+`npx @inditextech/docouture-cli new <name>` — see [Quickstart](main/quickstart/).
+
+Can documentation be versioned?
+
+Yes — standalone (stable + prerelease) or versioned (full release history). See [Versioning modes](main/guides-versioning-modes/).
+
+Is docouture open source?
+
+Yes — the CLI, extensions and UI bundle are all Apache-2.0 or MPL-2.0, with nothing embedded that restricts publishing a site — see the [full FAQ](main/faq/) for the licence breakdown.
+
+See the [full FAQ](main/faq/) for more, including diagrams, search and publishing.
+
+---
+
+# Integrations
+
+Source: /1.1.1/main/reference-integrations/
+
+Build-time and content capabilities that ship with every scaffolded site — as opposed to [UI Bundle](../reference-ui-bundle/)'s site chrome, or [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s authoring blocks. Grouped by what they’re for.
+
+## Authoring & content
+
+### Diagrams — Kroki
+
+`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
+
+The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a click-to-zoom fullscreen overlay. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
+
+### Syntax highlighting — Shiki
+
+`source-highlighter: shiki` in `antora-playbook.yml` switches every code block from [Antora](https://antora.org)'s own client-side default ([highlight.js](https://highlightjs.org)) to build-time, static highlighting. `@inditextech/docouture-antora-extensions’ [Shiki](https://shiki.style) prewarm step builds the highlighter once up front rather than per-block.
+
+### Changelog pages
+
+[Changelog](../changelog/)'s per-version sections are generated at build time from
+`code/CHANGELOG.md`, not hand-copied: `@inditextech/docouture-antora-extensions` parses
+every cut  [x.y.z] section, converts its `# Section` headings and `- [#PR](url)
+text` bullets to AsciiDoc, and appends each one as a `== vX.Y.Z` section directly onto
+whatever page already lives at `changelog/index.adoc` — only on a site that has one; a
+site with no changelog page is left untouched.
+
+`## [Unreleased]` is handled differently from a real cut release: it never becomes a `== vX.Y.Z` section (Keep a Changelog doesn’t consider "unreleased" a version either), but its content still renders as a plain `== Unreleased` section — and only on the component version Antora resolved as `prerelease` (the version built from `main`, never itself tagged). Any real, tagged release’s own changelog page never shows it: a tag is an immutable snapshot, and `[Unreleased]` is by definition whatever has landed on `main` since. An empty `[Unreleased]` heading (nothing merged since the last cut) renders no section at all rather than an empty one.
+
+The file is read once per build, off disk, applied identically to every component version being built — not resolved per-ref through git, so a real release tag’s own changelog page reflects whatever `code/CHANGELOG.md` says on disk right now, not that tag’s own historical copy of the file. In practice this only matters for the cut releases: a tagged version’s page shows every `## [x.y.z]` section on disk, no more and no less, regardless of which ref cut it. Override the default `code/CHANGELOG.md` location (resolved relative to the playbook’s own directory) with `changelog_path` on the extension’s registration entry:
+
+```
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      changelog_path: ../code/CHANGELOG.md
+```
+
+## Discovery & search
+
+### Full-text search
+
+`@inditextech/docouture-antora-extensions` builds a search index at build time, published per component version, that the UI bundle’s search dialog reads directly ([UI Bundle](../reference-ui-bundle/)). No manual wiring — registering the extension is enough.
+
+### AI ingestion — `llms.txt`
+
+Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the [llms.txt convention](https://llmstxt.org), letting an agent read the site without scraping rendered HTML. Configured under `docs/src/antora.yml’s `llms` key (see [Antora Descriptor](../reference-antora-descriptor-configuration/)) — `summary` becomes the blockquote under the site title; `exclude` leaves specific pages out of both files. See also [AI-First approach](../reference-ai-first-approach/) for the broader philosophy this feeds into.
+
+## Site reliability & URLs
+
+### External link checking
+
+A scaffolded site ships `scripts/check-links.mjs` (via [linkinator](https://github.com/JustinBeckwith/linkinator)) and a `check-links` [npm](https://www.npmjs.com) script. `package.json’s own `docouture.checkLinks.ignore` is a list of URL globs to skip — pre-seeded with this repository’s own URL, so a build doesn’t fail checking a link to itself before it’s ever been published.
+
+### URL routing: the `/latest/` alias
+
+Rather than Antora’s own `urls.latest_version_segment` (whose default `replace` strategy turns one real version segment into a permanent redirect stub the moment a release exists — see [Versioning modes](../guides-versioning-modes/)), `duplicate_latest_version: true` on the `antora.extensions` registration entry republishes whichever version Antora computes as latest a **second** time, under `/latest/…`, as a genuinely independent copy — so both the real version segment and `/latest/` stay real content.
+
+### Legacy URL redirects
+
+For a site migrated from another documentation tool, arbitrary literal legacy URLs can redirect to whatever real page now answers the equivalent URL — configured as `from`/`to` URL templates on the `@inditextech/docouture-antora-extensions` registration entry itself (not `antora.yml`, since these apply across every ref a build aggregates, not per-version):
+
+```
+antora:
+  extensions:
+    - require: '@inditextech/docouture-antora-extensions'
+      redirects:
+        - from: '/docs/main/old-page'
+          to: '/main/new-page'
+        - from: '/docs/**'
+          to: '/main/**'
+```
+
+`*` captures one path segment,  captures the remainder. Rules are first-match-wins
+in authoring order — an exact override belongs ahead of a broad `` catch-all.
+
+---
+
 # Custom AsciiDoc components
 
 Source: /1.1.1/main/reference-custom-asciidoc-components/
@@ -8431,183 +8612,6 @@ video::VIDEO_ID[youtube,640,360]
 ```
 
 `640,360` both caps the embed’s width and locks its aspect ratio at any narrower viewport; width alone caps the width and leaves the ratio at the 16:9 fallback.
-
----
-
-# Integrations
-
-Source: /1.1.1/main/reference-integrations/
-
-Build-time and content capabilities that ship with every scaffolded site — as opposed to [UI Bundle](../reference-ui-bundle/)'s site chrome, or [Custom AsciiDoc components](../reference-custom-asciidoc-components/)'s authoring blocks. Grouped by what they’re for.
-
-## Authoring & content
-
-### Diagrams — Kroki
-
-`[mermaid]`, `[plantuml]`, `[graphviz]`, `[bpmn]`, `[excalidraw]` and over a dozen more diagram languages (see `@inditextech/docouture-asciidoc-extensions’ `lib/kroki-config.js` for the full, live-verified list) render as real diagrams via a self-hosted [Kroki](https://kroki.io) service, enabled by default (`kroki-enabled: true`, `kroki-diagram-types` in `antora-playbook.yml` — see [Antora Playbook](../reference-antora-playbook-configuration/)). The service starts itself automatically the first time a build needs it ([Docker](https://www.docker.com) required); `docouture teardown kroki` stops it, `docouture eject kroki` copies its compose definition out for customization. Mermaid diagrams get this site’s own theming baked in server-side.
-
-The classic asciidoctor-diagram/asciidoctor-kroki positional shorthand works — `[plantuml,architecture,png]` resolves `target`/`format` from position, same as `[plantuml,format=png]` — alongside `jpeg`/`pdf`/`base64` raster formats and a `txt`/`atxt`/`utxt` text-rendering family (Kroki’s own ASCII-art-style output, no image at all), each gated per diagram type against what Kroki’s own server actually accepts. Any named attribute beyond the built-in set is forwarded to Kroki as a diagram-specific option (e.g. `[structurizr,view-key=SystemContext]`). Without Docker, or with the feature disabled, a diagram block renders as its own literal source text rather than failing the build. `role=zoom-in` (also honored on a plain `image::` block) adds a click-to-zoom fullscreen overlay. Full syntax: [Custom AsciiDoc components](../reference-custom-asciidoc-components/).
-
-### Syntax highlighting — Shiki
-
-`source-highlighter: shiki` in `antora-playbook.yml` switches every code block from [Antora](https://antora.org)'s own client-side default ([highlight.js](https://highlightjs.org)) to build-time, static highlighting. `@inditextech/docouture-antora-extensions’ [Shiki](https://shiki.style) prewarm step builds the highlighter once up front rather than per-block.
-
-### Changelog pages
-
-[Changelog](../changelog/)'s per-version sections are generated at build time from
-`code/CHANGELOG.md`, not hand-copied: `@inditextech/docouture-antora-extensions` parses
-every cut  [x.y.z] section, converts its `# Section` headings and `- [#PR](url)
-text` bullets to AsciiDoc, and appends each one as a `== vX.Y.Z` section directly onto
-whatever page already lives at `changelog/index.adoc` — only on a site that has one; a
-site with no changelog page is left untouched.
-
-`## [Unreleased]` is handled differently from a real cut release: it never becomes a `== vX.Y.Z` section (Keep a Changelog doesn’t consider "unreleased" a version either), but its content still renders as a plain `== Unreleased` section — and only on the component version Antora resolved as `prerelease` (the version built from `main`, never itself tagged). Any real, tagged release’s own changelog page never shows it: a tag is an immutable snapshot, and `[Unreleased]` is by definition whatever has landed on `main` since. An empty `[Unreleased]` heading (nothing merged since the last cut) renders no section at all rather than an empty one.
-
-The file is read once per build, off disk, applied identically to every component version being built — not resolved per-ref through git, so a real release tag’s own changelog page reflects whatever `code/CHANGELOG.md` says on disk right now, not that tag’s own historical copy of the file. In practice this only matters for the cut releases: a tagged version’s page shows every `## [x.y.z]` section on disk, no more and no less, regardless of which ref cut it. Override the default `code/CHANGELOG.md` location (resolved relative to the playbook’s own directory) with `changelog_path` on the extension’s registration entry:
-
-```
-antora:
-  extensions:
-    - require: '@inditextech/docouture-antora-extensions'
-      changelog_path: ../code/CHANGELOG.md
-```
-
-## Discovery & search
-
-### Full-text search
-
-`@inditextech/docouture-antora-extensions` builds a search index at build time, published per component version, that the UI bundle’s search dialog reads directly ([UI Bundle](../reference-ui-bundle/)). No manual wiring — registering the extension is enough.
-
-### AI ingestion — `llms.txt`
-
-Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the [llms.txt convention](https://llmstxt.org), letting an agent read the site without scraping rendered HTML. Configured under `docs/src/antora.yml’s `llms` key (see [Antora Descriptor](../reference-antora-descriptor-configuration/)) — `summary` becomes the blockquote under the site title; `exclude` leaves specific pages out of both files. See also [AI-First approach](../reference-ai-first-approach/) for the broader philosophy this feeds into.
-
-## Site reliability & URLs
-
-### External link checking
-
-A scaffolded site ships `scripts/check-links.mjs` (via [linkinator](https://github.com/JustinBeckwith/linkinator)) and a `check-links` [npm](https://www.npmjs.com) script. `package.json’s own `docouture.checkLinks.ignore` is a list of URL globs to skip — pre-seeded with this repository’s own URL, so a build doesn’t fail checking a link to itself before it’s ever been published.
-
-### URL routing: the `/latest/` alias
-
-Rather than Antora’s own `urls.latest_version_segment` (whose default `replace` strategy turns one real version segment into a permanent redirect stub the moment a release exists — see [Versioning modes](../guides-versioning-modes/)), `duplicate_latest_version: true` on the `antora.extensions` registration entry republishes whichever version Antora computes as latest a **second** time, under `/latest/…`, as a genuinely independent copy — so both the real version segment and `/latest/` stay real content.
-
-### Legacy URL redirects
-
-For a site migrated from another documentation tool, arbitrary literal legacy URLs can redirect to whatever real page now answers the equivalent URL — configured as `from`/`to` URL templates on the `@inditextech/docouture-antora-extensions` registration entry itself (not `antora.yml`, since these apply across every ref a build aggregates, not per-version):
-
-```
-antora:
-  extensions:
-    - require: '@inditextech/docouture-antora-extensions'
-      redirects:
-        - from: '/docs/main/old-page'
-          to: '/main/new-page'
-        - from: '/docs/**'
-          to: '/main/**'
-```
-
-`*` captures one path segment,  captures the remainder. Rules are first-match-wins
-in authoring order — an exact override belongs ahead of a broad `` catch-all.
-
----
-
-# Docouture
-
-Source: /1.1.1/
-
-docouture turns an [Antora](https://antora.org) content tree into a themed, searchable documentation site in one command — `docouture new` scaffolds it, `docouture dev` serves it with live reload, and `docouture publish gh-pages` ships it.
-
-## Get started
-
-![A scaffold command turning into a running site](_images/card-quickstart.jpg)
-
-Start here
-
-[Quickstart](main/quickstart/)
-
-Scaffold a site and see it running locally in a few commands.
-
-![A content pipeline diagram connecting a page](_images/card-about.jpg)
-
-Overview
-
-[About](main/)
-
-What docouture actually ships, and why it exists.
-
-![A terminal-style browser window with a command palette and a folder navigation tree](_images/card-cli-reference.png)
-
-Reference
-
-[CLI reference](main/reference-cli/)
-
-Every `docouture` command, its flags, and what it actually does.
-
-![Layered building blocks connecting content sources](_images/card-architecture.jpg)
-
-Design
-
-[Architecture](main/architecture/)
-
-How the CLI, the Antora pipeline and the themed UI bundle fit together.
-
-## Key features
-
-- [Scaffold in one command](#feature-tabs-panel-1)
-- [Its own design tokens](#feature-tabs-panel-2)
-- [Diagrams and search, built in](#feature-tabs-panel-3)
-- [AI-ready docs](#feature-tabs-panel-4)
-
-![A `docouture new` terminal command producing a scaffolded docs/ directory with content](_images/feature-scaffold.png)
-
-`docouture new` lays down a full Antora site — content tree, [GitHub](https://github.com/features/actions) workflows, an AGENTS.md briefing for coding agents — into an existing repository. `docouture dev`, `docouture build` and `docouture publish` take it from there.
-
-[Try it](main/quickstart/)
-
-![A grid of light and dark themed UI components — buttons](_images/feature-design-tokens.jpg)
-
-The UI bundle is a themed fork of Antora’s own default UI: dark/light mode, a version switcher, full-text search, and a set of authoring blocks — tabs, cards, accordions, feature tabs — with no plain [AsciiDoc](https://asciidoc.org) equivalent.
-
-[See the UI bundle](main/reference-ui-bundle/)
-
-![A magnifying glass over search results feeding into a document and a linked network graph](_images/feature-diagrams-search.jpg)
-
-Mermaid/PlantUML/BPMN/Excalidraw diagrams render via a self-hosted [Kroki](https://kroki.io) service, code blocks get build-time [Shiki](https://shiki.style) highlighting, and a full-text search index ships with every build — all with zero configuration beyond what `docouture new` already wrote.
-
-[See what ships](main/reference-integrations/)
-
-![Documentation files being processed and split into a rendered site page and a structured](_images/feature-ai-ready-docs.jpg)
-
-Every build publishes [`llms.txt`](https://llmstxt.org)/`llms-full.txt` for LLM ingestion, and `npx skills add InditexTech/docouture` installs a set of agent skills that plan, scaffold and keep a site’s content in sync with the repo it documents.
-
-[See the skills](main/reference-ai-first-approach/)
-
-## Open source
-
-The CLI, the Antora/[Asciidoctor](https://asciidoctor.org) extensions, the UI bundle (Apache-2.0/MPL-2.0 split, being a fork of antora-ui-default) and the release tooling are all open — see the FAQ below for the licence breakdown.
-
-[View the repository](https://github.com/InditexTech/docouture)
-
-## Frequently asked questions
-
-What is docouture?
-
-An Antora documentation platform: a themed UI bundle, a set of Antora/Asciidoctor extensions, and the `docouture` CLI that scaffolds, serves, builds and publishes a site built on top of them. See [About](main/).
-
-How do I create a new site?
-
-`npx @inditextech/docouture-cli new <name>` — see [Quickstart](main/quickstart/).
-
-Can documentation be versioned?
-
-Yes — standalone (stable + prerelease) or versioned (full release history). See [Versioning modes](main/guides-versioning-modes/).
-
-Is docouture open source?
-
-Yes — the CLI, extensions and UI bundle are all Apache-2.0 or MPL-2.0, with nothing embedded that restricts publishing a site — see the [full FAQ](main/faq/) for the licence breakdown.
-
-See the [full FAQ](main/faq/) for more, including diagrams, search and publishing.
 
 ---
 
@@ -11900,6 +11904,17 @@ This site you’re reading was itself scaffolded and drafted this way — see [A
 
 ---
 
+# AsciiDoc
+
+Source: /1.0.0/main/reference-asciidoc/
+
+Every block and macro this scaffold’s toolchain understands, each rendered live so you can see what it actually looks like before reaching for it in real content.
+
+- [AsciiDoc basics](../reference-asciidoc-basics/) — plain [AsciiDoc](https://asciidoc.org), nothing docouture-specific: headings, text formatting, lists, links, images, admonitions, source code, tables, includes, quotes and collapsibles.
+- [Custom AsciiDoc components](../reference-custom-asciidoc-components/) — this site’s own blocks, registered by `@inditextech/docouture-asciidoc-extensions`: tabs, cards, accordions, feature-tabs, cta, diagrams, and the inline macros.
+
+---
+
 # CLI
 
 Source: /1.0.0/main/reference-cli/
@@ -12026,17 +12041,6 @@ Print a shell completion script to stdout.
 $ eval "$(docouture completion bash)"
 $ docouture completion zsh > "${fpath[1]}/_docouture"
 ```
-
----
-
-# AsciiDoc
-
-Source: /1.0.0/main/reference-asciidoc/
-
-Every block and macro this scaffold’s toolchain understands, each rendered live so you can see what it actually looks like before reaching for it in real content.
-
-- [AsciiDoc basics](../reference-asciidoc-basics/) — plain [AsciiDoc](https://asciidoc.org), nothing docouture-specific: headings, text formatting, lists, links, images, admonitions, source code, tables, includes, quotes and collapsibles.
-- [Custom AsciiDoc components](../reference-custom-asciidoc-components/) — this site’s own blocks, registered by `@inditextech/docouture-asciidoc-extensions`: tabs, cards, accordions, feature-tabs, cta, diagrams, and the inline macros.
 
 ---
 

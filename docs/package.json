@@ -31,7 +31,8 @@
       "ignore": [
         "*/edit/HEAD/*",
         "https://<org>.github.io/<repo>",
-        "https://github.com/InditexTech/docouture*"
+        "https://github.com/InditexTech/docouture*",
+        "https://inditextech.github.io/docouture*"
       ]
     }
   }

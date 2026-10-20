@@ -120,11 +120,9 @@ this CLI never scaffolds or verifies.
 
 == `docouture upgrade`
 
-Re-sync `.github/workflows/`, `docs/scripts/check-links.mjs`, and agent support files
-(`AGENTS.md`) from the CLI's current templates. Workflows and the check-links script are
-fully overwritten (there is nothing site-specific in either — link ignores are
-configured separately, in `package.json`'s `docouture.checkLinks.ignore`); `AGENTS.md` is
-merged — only docouture's own managed section is replaced. The rest of `docs/` — every
+Re-sync `.github/workflows/` and agent support files (`AGENTS.md`) from the CLI's
+current templates. Workflows are fully overwritten (there is nothing site-specific in
+them); `AGENTS.md` is merged — only docouture's own managed section is replaced. The rest of `docs/` — every
 page a site owner has written — is never touched, with one exception: on a git-flow site
 it writes or corrects `docouture.branching` and `docouture.prereleaseBranch` in
 `docs/package.json` (derived from `antora-playbook.yml`), which `docouture-release.yml`
@@ -133,6 +131,12 @@ It also sets `runtime.log.failure_level` to `error` in `docs/antora-playbook*.ym
 any other value and printing each file it changed: builds then fail on errors such as a
 broken `xref:` or a missing include, so run `docouture build` and fix what it reports before
 your next CI run.
+It also removes the retired `check-links` feature, printing each change: it deletes
+`docs/scripts/check-links.mjs` and drops the `check-links` script and
+`docouture.checkLinks` from `docs/package.json`, plus the `linkinator` devDependency
+unless another script uses it. After that, run your package manager's `install` to
+refresh the lockfile. It warns about any of your own workflows that still mention
+`check-links`. `--dry-run` lists these removals without applying them.
 
 [cols="1,2"]
 |===

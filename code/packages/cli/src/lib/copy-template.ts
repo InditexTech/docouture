@@ -55,19 +55,6 @@ export interface TemplateValues {
   // on packageManagerField for why pnpm/action-setup (CI) needs this
   // present, not just corepack (local installs).
   pmPackageManagerField: string
-  // A glob string for `package.json`'s scaffolded `docouture.checkLinks.ignore`
-  // (see scripts/check-links.mjs's own comment on that key) — either
-  // `https://github.com/owner/repo*`, or, when there's no `origin` remote
-  // yet configured, a sentinel string that can never realistically match a
-  // real URL (see new.ts's own repoIgnoreGlob()). A bare token substituted
-  // directly into a JSON string literal already in the template — unlike
-  // the comma-and-quotes "whole segment" trick pmSetupStepYaml above uses,
-  // this one has to survive `package.json` being reformatted by prettier
-  // (which freely reflows a JSON array's elements across lines, unlike a
-  // YAML comment), so it can't depend on anything being on the same line as
-  // anything else. Always present as an array element either way — no
-  // "empty means the element vanishes" case to get wrong.
-  repoIgnoreGlob: string
   // Git-flow support (GH #175) — see the guides-branching-model guide for
   // the full mechanism. Two independently-named branch *roles*, not a
   // single hardcoded name: prereleaseBranch is what antora-playbook.yml's
@@ -134,10 +121,6 @@ const PLACEHOLDERS: Record<string, keyof TemplateValues> = {
   '      # __DOCOUTURE_PM_SETUP_STEP__\n': 'pmSetupStepYaml',
   '  # __DOCOUTURE_SITE_URL_LINE__\n': 'siteUrlLine',
   __DOCOUTURE_PM_PACKAGE_MANAGER__: 'pmPackageManagerField',
-  // A bare token this time, unlike pmSetupStepYaml above — see
-  // TemplateValues.repoIgnoreGlob's own comment for why the whole-segment
-  // trick doesn't survive here.
-  __DOCOUTURE_REPO_IGNORE_GLOB__: 'repoIgnoreGlob',
   __DOCOUTURE_PRERELEASE_BRANCH__: 'prereleaseBranch',
   __DOCOUTURE_RELEASE_BRANCH__: 'releaseBranch',
   __DOCOUTURE_BRANCHING__: 'branching',

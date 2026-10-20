@@ -1,0 +1,25 @@
+= v1.3.0
+
+[.lead]
+This release removes `check-links`. Existing sites are cleaned up by running
+`docouture upgrade`.
+
+== Do this
+
+. Run `docouture upgrade`, review the diff, and commit `.github/workflows/` and
+  `docs/package.json`. See xref:main:reference-cli.adoc[].
+. Run your package manager's `install` (for example `pnpm install`) to refresh the
+  lockfile, which no longer contains `linkinator`.
+. If you call `<pm> run check-links` from your own workflow or script, remove that call:
+  `upgrade` warns about workflows that still mention it.
+
+== What changed
+
+* *Breaking: `check-links` is removed.* The `Check links` step is gone from
+  `docouture-pr-verify.yml`, `docouture-release.yml` and `docouture-publish.yml`, and a
+  scaffolded site no longer has `scripts/check-links.mjs`, the `check-links` script, the
+  `linkinator` devDependency or `docouture.checkLinks`.
+* *Why.* The check depended on external hosts, failed releases on healthy links, and could
+  never pass on the first publish of a version once `site.url` was set.
+* *What still protects you.* Antora's strict build still fails on a broken `xref:` or a
+  missing include.

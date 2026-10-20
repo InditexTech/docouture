@@ -5,7 +5,7 @@
 'use strict'
 
 import { execFileSync } from 'node:child_process'
-import { mkdir, mkdtemp, readFile, realpath, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readFile, realpath, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -22,16 +22,19 @@ import { runNew } from '../../build/commands/new.js'
 let base: string
 let errorSpy: ReturnType<typeof vi.spyOn>
 let logSpy: ReturnType<typeof vi.spyOn>
+let warnSpy: ReturnType<typeof vi.spyOn>
 
 beforeEach(async () => {
   base = await realpath(await mkdtemp(join(tmpdir(), 'docouture-cli-upgrade-')))
   errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
   logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+  warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
 afterEach(() => {
   errorSpy.mockRestore()
   logSpy.mockRestore()
+  warnSpy.mockRestore()
 })
 
 async function initRepo(dir: string): Promise<void> {
@@ -129,23 +132,48 @@ describe('runUpgrade', () => {
     expect(agentsMd).toContain('My Project Docs')
   })
 
-  it('overwrites existing check-links.mjs, same as workflows', async () => {
+  it('removes check-links leftovers from an old-style site and reports them', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await runNew(['my-project-docs', '--dir', repo, '--yes'])
 
+    const pkgPath = join(repo, 'docs', 'package.json')
+    const pkg = JSON.parse(await readFile(pkgPath, 'utf8'))
+    pkg.scripts['check-links'] = 'node scripts/check-links.mjs'
+    pkg.devDependencies.linkinator = '8.0.4'
+    pkg.docouture.checkLinks = { ignore: ['x'] }
+    await writeFile(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8')
     const scriptPath = join(repo, 'docs', 'scripts', 'check-links.mjs')
-    await writeFile(scriptPath, 'stale content', 'utf8')
+    await mkdir(join(repo, 'docs', 'scripts'), { recursive: true })
+    await writeFile(scriptPath, 'old', 'utf8')
+    await writeFile(join(repo, '.github', 'workflows', 'mine.yml'), 'run: pnpm run check-links\n', 'utf8')
 
     const code = await runUpgrade(['--dir', repo])
     expect(code).toBe(0)
 
-    const script = await readFile(scriptPath, 'utf8')
-    expect(script).not.toBe('stale content')
-    expect(script).toContain('linkinator')
+    await expect(access(scriptPath)).rejects.toThrow()
+    await expect(access(join(repo, 'docs', 'scripts'))).rejects.toThrow()
+    const after = JSON.parse(await readFile(pkgPath, 'utf8'))
+    expect(after.scripts['check-links']).toBeUndefined()
+    expect(after.devDependencies.linkinator).toBeUndefined()
+    expect(after.docouture.checkLinks).toBeUndefined()
+    const logs = logSpy.mock.calls.map((c) => String(c[0])).join('\n')
+    expect(logs).toContain('removed docs/scripts/check-links.mjs')
+    expect(logs).toContain(' install')
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('.github/workflows/mine.yml'))
   })
 
-  it('does not touch docs/ content, only the regenerable docs/scripts/check-links.mjs', async () => {
+  it('leaves a fresh scaffold free of check-links and prints no removal', async () => {
+    const repo = join(base, 'repo')
+    await initRepo(repo)
+    await runNew(['my-project-docs', '--dir', repo, '--yes'])
+    await runUpgrade(['--dir', repo])
+    const logs = logSpy.mock.calls.map((c) => String(c[0])).join('\n')
+    expect(logs).not.toContain('removed')
+    await expect(access(join(repo, 'docs', 'scripts', 'check-links.mjs'))).rejects.toThrow()
+  })
+
+  it('does not touch docs/ content, ', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
     await runNew(['my-project-docs', '--dir', repo, '--yes'])
@@ -177,7 +205,6 @@ describe('runUpgrade', () => {
     expect(logSpy).toHaveBeenCalledWith('would write:')
     const allLogs = logSpy.mock.calls.map((call) => String(call[0])).join('\n')
     expect(allLogs).toContain('docouture-release.yml')
-    expect(allLogs).toContain('check-links.mjs')
     expect(allLogs).toContain('AGENTS.md')
   })
 

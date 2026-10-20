@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Fixed
+
+- [#273](https://github.com/InditexTech/docouture/issues/273) \[tooling] Remove the check-links feature (brittle; fails publish on the site's own site.url links)
+
 ### Documentation
 
 - [#275](https://github.com/InditexTech/docouture/pull/275) \[documentation] Ignore the site's own URL in docs check-links

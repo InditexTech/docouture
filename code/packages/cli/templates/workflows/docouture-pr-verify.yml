@@ -140,4 +140,4 @@ jobs:
       # legitimately point at another version/component this reduced build
       # doesn't have. See that script's own header comment.
       - name: Check links
-        run: npm run check-links
+        run: __DOCOUTURE_PM__ run check-links

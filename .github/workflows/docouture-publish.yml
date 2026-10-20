@@ -77,25 +77,30 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          package_json_file: docs/package.json
+
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Reads engines.node from docs/package.json — no separate version
           # file to keep in sync.
           node-version-file: docs/package.json
-          # package.json names npm as its packageManager, which would turn
-          # setup-node's automatic cache on. See the header: no caches here.
+          # package.json names the package manager in `packageManager`, which
+          # would turn setup-node's automatic cache on. See the header: no caches here.
           package-manager-cache: false
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # The build starts Kroki itself (docouture-antora-extensions'
       # kroki-prewarm.js runs `docker compose` the moment it finds nothing
       # listening) and pulls the pinned images cold, since this job restores
       # no image cache.
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       # See docouture-pr-verify.yml's own comment: Antora's strict mode already
       # catches broken cross-references during Build above; check-links
@@ -104,7 +109,7 @@ jobs:
       # gets published. Only a broken EXTERNAL link fails this step; a
       # broken local one is a warning only.
       - name: Check links
-        run: npm run check-links
+        run: pnpm run check-links
 
       # Mints an installation token for a GitHub App that's on this repo's
       # branch-ruleset bypass list, if `gh-pages` is protected by one

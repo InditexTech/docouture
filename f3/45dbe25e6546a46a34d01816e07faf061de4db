@@ -1,0 +1,25 @@
+code/CHANGELOG.md
+  s_cf81bdfd4966b2::t_990c295140681c 17
+docs/src/modules/main/pages/quickstart.adoc
+  s_cf81bdfd4966b2::t_9fe981e10ef837 19
+docs/src/modules/main/pages/reference-antora-playbook-configuration.adoc
+  s_cf81bdfd4966b2::t_96c63714fafd4d 29
+docs/src/modules/main/pages/reference-cli.adoc
+  s_cf81bdfd4966b2::t_4c75886ab07d3f 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f345dbe25e6546a46a34d01816e07faf061de4db",
+  "prompts": {},
+  "sessions": {
+    "s_cf81bdfd4966b2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea787bdc6ffeoXW6AzpOYSmeCe",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

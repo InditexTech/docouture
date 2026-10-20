@@ -131,8 +131,10 @@ jobs:
         # branch before the job started, and by the time a `closed`+`merged`
         # event fires, that branch already reflects the merge.
         if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/__DOCOUTURE_RELEASE_BRANCH__'
+        env:
+          REF: ${{ github.ref }}
         run: |
-          echo "::error::docouture-release must run against __DOCOUTURE_RELEASE_BRANCH__ (got ${{ github.ref }})"
+          echo "::error::docouture-release must run against __DOCOUTURE_RELEASE_BRANCH__ (got $REF)"
           exit 1
 
       - name: Checkout

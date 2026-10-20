@@ -18,7 +18,11 @@ function createContext() {
   const errors = []
   const infos = []
   return {
-    getLogger: () => ({ warn: (...args) => warnings.push(args), error: (...args) => errors.push(args), info: (...args) => infos.push(args) }),
+    getLogger: () => ({
+      warn: (...args) => warnings.push(args),
+      error: (...args) => errors.push(args),
+      info: (...args) => infos.push(args),
+    }),
     on(event, fn) {
       ;(listeners[event] ||= []).push(fn)
     },

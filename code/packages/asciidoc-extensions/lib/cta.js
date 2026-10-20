@@ -251,7 +251,11 @@ function finish(parent, wrapper, attrs, self) {
     notice(parent, '[cta]', 'a cta has ' + primaries.length + ' `[.primary]` paragraphs; only the first is rendered')
   }
   if (secondaries.length > 1) {
-    notice(parent, '[cta]', 'a cta has ' + secondaries.length + ' `[.secondary]` paragraphs; only the first is rendered')
+    notice(
+      parent,
+      '[cta]',
+      'a cta has ' + secondaries.length + ' `[.secondary]` paragraphs; only the first is rendered'
+    )
   }
   if (secondaries.length && !primaries.length) {
     error(parent, '[cta]', 'a cta has a `[.secondary]` action but no `[.primary]` one')

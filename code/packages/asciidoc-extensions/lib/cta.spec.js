@@ -198,4 +198,44 @@ https://example.com[Go]
     expect(msgs.length).toBeGreaterThan(0)
     expect(msgs.every((m) => m.getSeverity().toString() === 'WARN')).toBe(true)
   })
+
+  /** @param {string} source @returns {Promise<string[]>} severities logged */
+  async function severities(source) {
+    const logger = asciidoctor.MemoryLogger.create()
+    await convert(source, { logger })
+    return logger.getMessages().map((m) => m.getSeverity().toString())
+  }
+
+  it('errors on a dark-only mark and notices extra dark marks, extra primaries and secondaries', async () => {
+    const dark = await severities(`[cta,title="T"]
+====
+image::d.svg[role=dark]
+
+[.primary]
+https://example.com[Go]
+====
+`)
+    expect(dark).toContain('ERROR')
+    const extras = await severities(`[cta,title="T"]
+====
+image::a.svg[A]
+image::d1.svg[role=dark]
+image::d2.svg[role=dark]
+
+[.primary]
+https://example.com[One]
+
+[.primary]
+https://example.com[Two]
+
+[.secondary]
+https://example.com[S1]
+
+[.secondary]
+https://example.com[S2]
+====
+`)
+    expect(extras).toHaveLength(3)
+    expect(extras.every((x) => x === 'WARN')).toBe(true)
+  })
 })

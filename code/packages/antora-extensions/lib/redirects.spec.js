@@ -130,4 +130,18 @@ describe('registerRedirects', () => {
     const { files } = await run(undefined, { pages: [] })
     expect(files).toHaveLength(0)
   })
+
+  it('logs an error and produces nothing when the config is not a list', async () => {
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
+    const { files } = await run('nope', { pages: [], logger })
+    expect(files).toHaveLength(0)
+    expect(erroredAbout(logger, 'expected a list of {from, to} rules')).toBe(true)
+  })
+
+  it('logs an error and skips a malformed rule', async () => {
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
+    const { files } = await run([{ from: '/a' }], { pages: [], logger })
+    expect(files).toHaveLength(0)
+    expect(erroredAbout(logger, 'Ignoring malformed redirects rule')).toBe(true)
+  })
 })

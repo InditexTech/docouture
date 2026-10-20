@@ -17,7 +17,9 @@ branch selected in Settings → Pages, the `docs/release` label created), plus:
   the scaffolded `package.json`.
 . `site.url` set in `antora-playbook.yml` to the site's real public URL — for a GitHub
   Pages project page, `https://<org>.github.io/<repo>` (the repo name has to be baked
-  in as a path segment, or generated asset URLs come out wrong).
+  in as a path segment, or generated asset URLs come out wrong). `docouture new` asks
+  for it and pre-fills it from a github.com `origin` remote; if you skipped it, set it
+  by hand.
 
 == Publishing manually
 

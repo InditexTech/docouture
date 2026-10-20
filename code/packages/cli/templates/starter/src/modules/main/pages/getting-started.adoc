@@ -124,7 +124,8 @@ side of this):
 . Set `site.url` in `antora-playbook.yml` to this site's public URL. For a
   GitHub Pages project page, that is `https://<org>.github.io/<repo>` — the
   repository name has to be baked in as a path segment, or generated asset
-  URLs come out wrong.
+  URLs come out wrong. `docouture new` already wrote it if you gave (or accepted) one;
+  otherwise it is a commented hint in the playbook.
 
 Optional: a custom domain is a `cname` string under this package's own
 `"docouture": { "publish": { "gh-pages": { "cname": "docs.example.com" } } }` in

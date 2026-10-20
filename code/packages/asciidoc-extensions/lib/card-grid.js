@@ -6,7 +6,7 @@
 
 const { chain, chainAll, precomputeSubtree } = require('./async-compat')
 const { escapeHtml } = require('./html')
-const warn = require('./warn')
+const { error, notice } = require('./warn')
 
 // Card grid — the ATD Card (Figma component set 2669:33855, states and types
 // at 2610:29000 for light and 2669:42541 for dark), rendered as IDS Card
@@ -120,17 +120,17 @@ function parseColumns(spec, parent) {
     if (!token) continue
     const match = COLUMN_RX.exec(token)
     if (!match) {
-      warn(parent, '[cards,columns="' + spec + '"]', 'cannot read the column "' + token + '"; expected `3` or `m:3`')
+      error(parent, '[cards,columns="' + spec + '"]', 'cannot read the column "' + token + '"; expected `3` or `m:3`')
       continue
     }
     const [, breakpoint, count] = match
     if (breakpoint && !BREAKPOINTS.includes(breakpoint)) {
-      warn(parent, '[cards,columns="' + spec + '"]', 'unknown breakpoint "' + breakpoint + '"', BREAKPOINTS)
+      error(parent, '[cards,columns="' + spec + '"]', 'unknown breakpoint "' + breakpoint + '"', BREAKPOINTS)
       continue
     }
     const columns = Number(count)
     if (columns < 1 || columns > MAX_COLUMNS) {
-      warn(
+      error(
         parent,
         '[cards,columns="' + spec + '"]',
         columns + ' columns is outside the supported range 1-' + MAX_COLUMNS
@@ -161,7 +161,7 @@ function renderHeader(icon, subheader, parent) {
     if (ICON_RX.test(icon)) {
       iconHtml = '<span class="docouture-card__icon dt-icon-mask--' + escapeHtml(icon) + '" aria-hidden="true"></span>'
     } else {
-      warn(
+      error(
         parent,
         '[card,icon="' + icon + '"]',
         'not an icon reference; expected a bare Lucide icon name, e.g. `store`'
@@ -221,13 +221,13 @@ function renderCard(block, type, parent) {
   // already safe.
   const title = block.getTitle()
   if (!title) {
-    warn(parent, '[card]', 'a card has no title; give it a `.Title` line carrying the link')
+    error(parent, '[card]', 'a card has no title; give it a `.Title` line carrying the link')
     return ''
   }
 
   const href = (HREF_RX.exec(title) || [])[1]
   if (!href) {
-    warn(
+    error(
       parent,
       '[card] ' + block.getAttribute('title'),
       'a card title carries no link; make it an `xref:` or a `link:`'
@@ -236,17 +236,17 @@ function renderCard(block, type, parent) {
 
   const { images, bodies } = cardParts(block)
   if (type === 'no-image' && images.length) {
-    warn(parent, '[card]', 'this card has an image but the block is `type=' + type + '`', TYPES.slice(1))
+    error(parent, '[card]', 'this card has an image but the block is `type=' + type + '`', TYPES.slice(1))
   }
   if (type !== 'no-image' && !images.length) {
-    warn(parent, '[card]', 'a `type=' + type + '` card needs an `image::` of its own')
+    error(parent, '[card]', 'a `type=' + type + '` card needs an `image::` of its own')
   }
   if (images.length > 1) {
-    warn(parent, '[card]', 'a card has ' + images.length + ' images; only the first is rendered')
+    notice(parent, '[card]', 'a card has ' + images.length + ' images; only the first is rendered')
   }
   for (const body of bodies) {
     if (body.getContext() !== 'paragraph') {
-      warn(parent, '[card]', 'a card body holds a ' + body.getContext() + ' block; only paragraphs are supported')
+      error(parent, '[card]', 'a card body holds a ' + body.getContext() + ' block; only paragraphs are supported')
     }
   }
 
@@ -275,17 +275,17 @@ function renderCard(block, type, parent) {
 function finish(parent, wrapper, attrs, self) {
   const type = attrs.type || DEFAULT_TYPE
   if (!TYPES.includes(type)) {
-    warn(parent, '[cards,type=' + attrs.type + ']', 'unknown card type "' + attrs.type + '"', TYPES)
+    error(parent, '[cards,type=' + attrs.type + ']', 'unknown card type "' + attrs.type + '"', TYPES)
   }
 
   const width = attrs.width || DEFAULT_WIDTH
   if (!WIDTHS.includes(width)) {
-    warn(parent, '[cards,width=' + attrs.width + ']', 'unknown width "' + attrs.width + '"', WIDTHS)
+    error(parent, '[cards,width=' + attrs.width + ']', 'unknown width "' + attrs.width + '"', WIDTHS)
   }
 
   const cards = wrapper.getBlocks().filter((block) => block.getStyle() === 'card')
   if (!cards.length) {
-    warn(parent, '[cards]', 'a cards block with no `[card]` in it')
+    error(parent, '[cards]', 'a cards block with no `[card]` in it')
   }
 
   const cardHtmls = cards.map((card) => renderCard(card, TYPES.includes(type) ? type : DEFAULT_TYPE, parent))

@@ -11,7 +11,7 @@ const registerLlmsTxt = require('./llms-txt')
 function createContext() {
   const listeners = {}
   return {
-    getLogger: () => ({ warn: () => {}, info: () => {} }),
+    getLogger: () => ({ warn: () => {}, error: () => {}, info: () => {} }),
     on(event, fn) {
       ;(listeners[event] ||= []).push(fn)
     },

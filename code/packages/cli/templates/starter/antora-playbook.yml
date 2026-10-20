@@ -119,10 +119,11 @@ urls:
   # as a genuinely independent copy, so BOTH URLs stay real.
 
 runtime:
-  # Fail the build on broken xrefs and other content problems rather than
-  # publishing a site with silent gaps.
+  # Fail the build on errors (broken xrefs, missing includes, authoring
+  # mistakes reported by the docouture extensions) rather than publishing a
+  # site with silent gaps. Warnings are informational and do not fail it.
   log:
-    failure_level: warn
+    failure_level: error
     # Antora's own default is 'warn' (@antora/playbook-builder's convict
     # schema, not @antora/logger's own 'info' default, which never actually
     # applies here) — below that, @inditextech/docouture-antora-extensions'

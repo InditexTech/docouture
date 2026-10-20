@@ -33,7 +33,7 @@ function parseColumnIndexes(raw, doc, table) {
     .forEach((token) => {
       const n = Number(token)
       if (!Number.isInteger(n) || n < 1 || n > MAX_COLS) {
-        logger.warn(
+        logger.error(
           'nowrap-cols="' +
             raw +
             '" on table "' +

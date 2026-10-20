@@ -179,7 +179,7 @@ function buildExcludedSet(exclude, contentCatalog, componentVersion, logger, whe
   const excluded = new Set()
   if (exclude === undefined) return excluded
   if (!Array.isArray(exclude)) {
-    logger.warn('Ignoring llms.exclude in %s: expected a list of page IDs, got %s', where, typeof exclude)
+    logger.error('Ignoring llms.exclude in %s: expected a list of page IDs, got %s', where, typeof exclude)
     return excluded
   }
 
@@ -193,7 +193,7 @@ function buildExcludedSet(exclude, contentCatalog, componentVersion, logger, whe
     if (url) {
       excluded.add(url)
     } else {
-      logger.warn('llms.exclude entry %s in %s resolves to no page', spec, where)
+      logger.error('llms.exclude entry %s in %s resolves to no page', spec, where)
     }
   }
   return excluded

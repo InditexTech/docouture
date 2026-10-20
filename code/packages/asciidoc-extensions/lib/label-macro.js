@@ -5,7 +5,7 @@
 'use strict'
 
 const firstPositional = require('./first-positional')
-const warn = require('./warn')
+const { error } = require('./warn')
 
 // Label variants shipped in ui-bundle's dt-components.css (`.dt-label--*`) —
 // see .opencode/skills/docouture-components. Anything outside this list is an
@@ -53,7 +53,7 @@ module.exports = function registerLabelMacro(registry) {
     this.process((parent, target, attrs) => {
       const variant = target || DEFAULT_VARIANT
       if (!VARIANTS.includes(variant)) {
-        warn(parent, 'label:' + target + '[]', 'unknown IDS Label variant "' + variant + '"', VARIANTS)
+        error(parent, 'label:' + target + '[]', 'unknown IDS Label variant "' + variant + '"', VARIANTS)
       }
       // The bracket content has already been through Asciidoctor's own
       // `specialcharacters` substitution by the time macros run (verified:

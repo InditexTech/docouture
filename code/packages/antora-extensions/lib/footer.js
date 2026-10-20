@@ -86,7 +86,7 @@ function resolveFooter(footer, componentVersion, contentCatalog, logger) {
   const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
 
   if (footer.constructor !== Object || !Array.isArray(footer.groups)) {
-    logger.warn('Ignoring footer in %s: expected a groups list', where)
+    logger.error('Ignoring footer in %s: expected a groups list', where)
     return undefined
   }
 
@@ -98,18 +98,18 @@ function resolveFooter(footer, componentVersion, contentCatalog, logger) {
   const groups = []
   for (const group of footer.groups) {
     if (group?.constructor !== Object || !Array.isArray(group?.links)) {
-      logger.warn('Ignoring footer group in %s: every group needs a links list', where)
+      logger.error('Ignoring footer group in %s: every group needs a links list', where)
       continue
     }
     const links = []
     for (const link of group.links) {
       if (link?.constructor !== Object || !link?.text || !link?.url) {
-        logger.warn('Ignoring footer link in %s: every link needs a text and a url', where)
+        logger.error('Ignoring footer link in %s: every link needs a text and a url', where)
         continue
       }
       const url = resolveUrl(link.url, contentCatalog, context)
       if (!url) {
-        logger.warn('Dropping footer link %s in %s: %s resolves to no page', link.text, where, link.url)
+        logger.error('Dropping footer link %s in %s: %s resolves to no page', link.text, where, link.url)
         continue
       }
       links.push({ text: link.text, url })

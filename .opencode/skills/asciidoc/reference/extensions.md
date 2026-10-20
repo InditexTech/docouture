@@ -171,8 +171,9 @@ anything that touches Antora's model.
 - A block extension that never fires: `onContext` must match the context the parser
   assigned (a delimited `--` block is `open`, an indented block is `literal`, a plain
   paragraph is `paragraph`).
-- `runtime.log.failure_level: warn` means an extension that logs a warning fails the
-  build. Use the document's logger deliberately.
+- `runtime.log.failure_level: error` means an extension that logs an error fails the
+  build, while a warning does not. Log authoring mistakes with `error()` and degraded-but-
+  correct output with `notice()` (see `warn.js`); use the document's logger deliberately.
 - Extensions run against content Antora has already resolved, so a preprocessor sees
   include-expanded source, not the `include::` lines.
 

@@ -65,7 +65,7 @@ A site builds to zero pages, or dies on "start page not found", when these drift
 | `ui.bundle.snapshot` | `true` | local build, changes constantly — do not cache it |
 | `output.dir` | `build/site` | matches the Nx `outputs` glob; changing it breaks caching |
 | `output.clean` | `true` | Antora otherwise leaves whatever is already in the output directory, so a renamed component or a deleted page keeps being served from a previous build |
-| `runtime.log.failure_level` | `warn` | a broken xref fails the build instead of shipping a gap |
+| `runtime.log.failure_level` | `error` | a broken xref fails the build instead of shipping a gap |
 | `asciidoc.attributes` | `experimental`, `icons: font`, `sectanchors`, `idprefix: ''`, `idseparator: '-'` | see `asciidoc` skill for what each enables |
 
 `url: .`/`../../..` is the single most surprising line: Antora clones or reads a **git
@@ -131,8 +131,8 @@ and instead publish BOTH segments as real, independent content via `duplicateLat
 so either is a valid `to` target on this site.
 Rules are first-match-wins in authoring order, so exact overrides belong ahead of a broad `**`
 catch-all. A rule matching zero real pages, or whose `from`/`to` wildcard counts disagree, or
-whose computed legacy URL collides with a real page's own URL, warns — and, under this site's
-`runtime.log.failure_level: warn`, fails the build — the same treatment as a broken xref.
+whose computed legacy URL collides with a real page's own URL, logs an error — and, under this site's
+`runtime.log.failure_level: error`, fails the build — the same treatment as a broken xref.
 
 Implementation reuses `@antora/redirect-producer` directly (the same library
 `urls.latest_version_segment` and the built-in `page-aliases` attribute are built on, for a

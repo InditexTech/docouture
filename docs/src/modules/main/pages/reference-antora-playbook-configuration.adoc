@@ -117,8 +117,10 @@ for why the `/latest/` alias is implemented differently here instead.
 |===
 |Key |Effect
 
-|`log.failure_level` |`warn` — a broken xref, a missing include target, or an
-unresolved attribute reference fails the build rather than shipping a gap.
+|`log.failure_level` |`error` — a broken xref, a missing include target, or an authoring
+mistake reported by a docouture extension fails the build rather than shipping a gap.
+Warnings (an unresolved attribute reference, an out-of-sequence section level,
+"only the first image is rendered"-style notices) are logged but do not fail it.
 |`log.level` |`info` — without it, every docouture extension's own diagnostic
 logging (search-index counts, version-report, https://kroki.io[Kroki]'s lifecycle)
 is silently dropped, since Antora's own default is `warn`.

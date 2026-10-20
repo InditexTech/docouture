@@ -90,7 +90,7 @@ function highlightSource(source, lang) {
     // shiki-prewarm.js) never ran — the ui-bundle preview harness, which has
     // no Antora pipeline at all (see extensions.md), or a future caller that
     // forgets to list the extension. Degrade to plain escaped text rather
-    // than throwing: a build with `runtime.log.failure_level: warn` should
+    // than throwing: a build with `runtime.log.failure_level: error` should
     // fail loudly on a real authoring mistake, not on missing highlighting.
     return escapeHtml(source)
   }

@@ -570,7 +570,7 @@ module.exports = function registerKrokiPrewarm(context, deps = {}) {
     const attributes = playbook?.asciidoc?.attributes || {}
     const logger = context.getLogger('docouture-kroki-prewarm')
     const enabledTypes = resolveEnabledTypes(attributes[ENABLED_ATTR], attributes[TYPES_ATTR], (unknown) =>
-      logger.warn('Ignoring unknown %s entry "%s"; expected one of %s', TYPES_ATTR, unknown, SUPPORTED_TYPES.join(', '))
+      logger.error('Ignoring unknown %s entry "%s"; expected one of %s', TYPES_ATTR, unknown, SUPPORTED_TYPES.join(', '))
     )
     if (!enabledTypes.size) return
 

@@ -7,7 +7,7 @@
 const { chain, chainAll, precomputeSubtree } = require('./async-compat')
 const { escapeHtml, attr } = require('./html')
 const uniqueId = require('./unique-id')
-const warn = require('./warn')
+const { error, notice } = require('./warn')
 
 // Feature tabs — the landing's "Key features" switcher (GH-22, Figma
 // 2696:54801 at l, 2696:92583 at m, 2696:94328 at s, 2696:95691 at xs).
@@ -167,13 +167,13 @@ function splitImages(images, parent) {
   const dark = images.filter((image) => image.hasRole(DARK_ROLE))
   const light = images.filter((image) => !image.hasRole(DARK_ROLE))
   if (light.length > 1) {
-    warn(parent, '[feature]', 'a slide has ' + light.length + ' images; only the first is rendered')
+    notice(parent, '[feature]', 'a slide has ' + light.length + ' images; only the first is rendered')
   }
   if (dark.length > 1) {
-    warn(parent, '[feature]', 'a slide has ' + dark.length + ' `role=dark` images; only the first is rendered')
+    notice(parent, '[feature]', 'a slide has ' + dark.length + ' `role=dark` images; only the first is rendered')
   }
   if (dark.length && !light.length) {
-    warn(parent, '[feature]', 'a slide has a `role=dark` image but no image for the light theme')
+    error(parent, '[feature]', 'a slide has a `role=dark` image but no image for the light theme')
   }
   return { light: light[0], dark: dark[0] }
 }
@@ -221,7 +221,7 @@ function renderCta(converted, parent) {
   if (!converted) return ''
   const match = CTA_RX.exec(converted)
   if (!match) {
-    warn(parent, '[.cta]', "a slide's call to action carries no link; make it an `xref:` or a `link:`")
+    error(parent, '[.cta]', "a slide's call to action carries no link; make it an `xref:` or a `link:`")
     return ''
   }
   const href = match[1] || ''
@@ -266,17 +266,17 @@ function renderFeature(block, index, parent) {
   // A block attribute, so raw, so escaped — the other half of that same rule.
   const label = block.getAttribute('label')
   if (!title && !label) {
-    warn(parent, '[feature]', 'a slide has no label; give it a `.Title` line or a `label=` attribute')
+    error(parent, '[feature]', 'a slide has no label; give it a `.Title` line or a `label=` attribute')
     return { tab: '', panel: '' }
   }
   const tabLabel = label ? escapeHtml(label) : title
 
   const { images, ctas, bodies } = featureParts(block)
   if (!images.length) {
-    warn(parent, '[feature] ' + (label || block.getAttribute('title')), 'a slide has no `image::` of its own')
+    error(parent, '[feature] ' + (label || block.getAttribute('title')), 'a slide has no `image::` of its own')
   }
   if (ctas.length > 1) {
-    warn(parent, '[feature]', 'a slide has ' + ctas.length + ' `[.cta]` paragraphs; only the first is rendered')
+    notice(parent, '[feature]', 'a slide has ' + ctas.length + ' `[.cta]` paragraphs; only the first is rendered')
   }
   const { light, dark } = splitImages(images, parent)
 
@@ -349,7 +349,7 @@ function renderFeature(block, index, parent) {
 function finish(parent, wrapper, attrs, self) {
   const features = wrapper.getBlocks().filter((block) => block.getStyle() === 'feature')
   if (!features.length) {
-    warn(parent, '[feature-tabs]', 'a feature-tabs block with no `[feature]` in it')
+    error(parent, '[feature-tabs]', 'a feature-tabs block with no `[feature]` in it')
   }
 
   const rendered = features.map((feature, index) => renderFeature(feature, index, parent))

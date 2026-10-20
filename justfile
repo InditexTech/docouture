@@ -136,7 +136,7 @@ dev site='example' port='' strict='false' no_cache='false': (_hdr "dev " + site)
     # about to watch: on a cache hit it is twenty lines describing 90ms. Hold it
     # and print it only if the build fails, when it is the whole story.
     #
-    # By default this recipe overrides the playbook's own `warn`
+    # By default this recipe overrides the playbook's own `error`
     # (see antora-playbook.yml's runtime.log.failure_level comment) with
     # `--log-failure-level=none`, because `example`'s corpus still carries 22
     # known, pre-existing Fumadocs content bugs (broken links, meta.json

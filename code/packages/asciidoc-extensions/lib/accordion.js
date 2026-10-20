@@ -7,7 +7,7 @@
 const { chain, chainAll, precomputeSubtree } = require('./async-compat')
 const { escapeHtml, attr, stripTags } = require('./html')
 const uniqueId = require('./unique-id')
-const warn = require('./warn')
+const { error } = require('./warn')
 
 // Accordion grouping — GH-61 Part 2. Adds only what a native `[%collapsible]`
 // cannot express on its own: group semantics (`role=group`, an accessible
@@ -170,12 +170,12 @@ function collapsibleChildren(wrapper) {
 function finish(parent, wrapper, attrs, self) {
   const children = collapsibleChildren(wrapper)
   if (!children.length) {
-    warn(parent, '[accordion]', 'an accordion group with no `[%collapsible]` items in it')
+    error(parent, '[accordion]', 'an accordion group with no `[%collapsible]` items in it')
   }
 
   const ariaLabel = ariaLabelFor(attrs, wrapper)
   if (!ariaLabel) {
-    warn(
+    error(
       parent,
       '[accordion]',
       'an accordion group has no `aria-label=` and no title; give it one — a `role=group` with no accessible name is a strongly-discouraged pattern for screen reader users'
@@ -194,7 +194,7 @@ function finish(parent, wrapper, attrs, self) {
       .map((html, index) => {
         if (!groupName) return html
         if (!DETAILS_OPEN_RX.test(html)) {
-          warn(
+          error(
             parent,
             '[accordion]',
             'child ' + (index + 1) + " didn't render as a <details>; single-open needs every item to be one"

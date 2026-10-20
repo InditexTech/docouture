@@ -179,4 +179,23 @@ https://example.com[Go]
       .join('\n')
     expect(messages).toContain('a cta body holds a')
   })
+
+  it('logs a notice (warn, not error) when extra mark images are ignored', async () => {
+    const logger = asciidoctor.MemoryLogger.create()
+    await convert(
+      `[cta,title="T"]
+====
+image::a.svg[A]
+image::b.svg[B]
+
+[.primary]
+https://example.com[Go]
+====
+`,
+      { logger }
+    )
+    const msgs = logger.getMessages()
+    expect(msgs.length).toBeGreaterThan(0)
+    expect(msgs.every((m) => m.getSeverity().toString() === 'WARN')).toBe(true)
+  })
 })

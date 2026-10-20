@@ -97,11 +97,11 @@ writes the site as a zip. Not used here.
 ```yaml
 runtime:
   log:
-    failure_level: warn
+    failure_level: error
 ```
 
-`failure_level: warn` makes Antora exit non-zero if it logged any warning: a broken xref,
-an unresolved include, a page missing from the nav. The alternative is a site that
+`failure_level: error` makes Antora exit non-zero if it logged any error: a broken xref,
+an unresolved include, an authoring mistake in a docouture block. Warnings are logged only. The alternative is a site that
 publishes with silent gaps.
 
 Also available: `runtime.cache_dir` (default `~/.cache/antora` — where remote content and

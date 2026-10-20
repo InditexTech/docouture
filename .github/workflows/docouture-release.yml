@@ -205,7 +205,7 @@ jobs:
         run: npx antora --fetch antora-playbook.local.yml
 
       # See docouture-pr-verify.yml's own comment: catches raw http(s) links
-      # Antora's own strict mode (runtime.log.failure_level: warn, already
+      # Antora's own strict mode (runtime.log.failure_level: error, already
       # exercised by Build above) can't see. Only a broken EXTERNAL link
       # fails this step — a broken local one is a warning only, since this
       # job also builds with antora-playbook.local.yml (see that comment for

@@ -6,7 +6,7 @@
 
 const { chain, chainAll, precomputeSubtree } = require('./async-compat')
 const { escapeHtml, attr } = require('./html')
-const warn = require('./warn')
+const { error, notice } = require('./warn')
 
 // Call to action — a full-width band closing out a landing section, styled
 // after Fumadocs' "Free & Open Source" block on the Weave.js docs home
@@ -150,13 +150,13 @@ function splitImages(images, parent) {
   const dark = images.filter((image) => image.hasRole(DARK_ROLE))
   const light = images.filter((image) => !image.hasRole(DARK_ROLE))
   if (light.length > 1) {
-    warn(parent, '[cta]', 'a cta has ' + light.length + ' mark images; only the first is rendered')
+    notice(parent, '[cta]', 'a cta has ' + light.length + ' mark images; only the first is rendered')
   }
   if (dark.length > 1) {
-    warn(parent, '[cta]', 'a cta has ' + dark.length + ' `role=dark` mark images; only the first is rendered')
+    notice(parent, '[cta]', 'a cta has ' + dark.length + ' `role=dark` mark images; only the first is rendered')
   }
   if (dark.length && !light.length) {
-    warn(parent, '[cta]', 'a cta has a `role=dark` mark image but no mark for the light theme')
+    error(parent, '[cta]', 'a cta has a `role=dark` mark image but no mark for the light theme')
   }
   return { light: light[0], dark: dark[0] }
 }
@@ -198,7 +198,7 @@ function renderAction(converted, variant, role, parent) {
   if (!converted) return ''
   const match = CTA_RX.exec(converted)
   if (!match) {
-    warn(parent, '[.' + role + ']', 'a cta action carries no link; make it an `xref:` or a `link:`')
+    error(parent, '[.' + role + ']', 'a cta action carries no link; make it an `xref:` or a `link:`')
     return ''
   }
   const href = match[1] || ''
@@ -235,7 +235,7 @@ function renderAction(converted, variant, role, parent) {
 function finish(parent, wrapper, attrs, self) {
   const align = attrs.align || DEFAULT_ALIGN
   if (!ALIGNMENTS.includes(align)) {
-    warn(parent, '[cta,align=' + attrs.align + ']', 'unknown alignment "' + attrs.align + '"', ALIGNMENTS)
+    error(parent, '[cta,align=' + attrs.align + ']', 'unknown alignment "' + attrs.align + '"', ALIGNMENTS)
   }
 
   // A block-style attribute, so raw, so escaped — see the header comment on
@@ -245,20 +245,20 @@ function finish(parent, wrapper, attrs, self) {
 
   const { images, primaries, secondaries, bodies } = ctaParts(wrapper)
   if (!primaries.length) {
-    warn(parent, '[cta]', 'a cta has no `[.primary]` action')
+    error(parent, '[cta]', 'a cta has no `[.primary]` action')
   }
   if (primaries.length > 1) {
-    warn(parent, '[cta]', 'a cta has ' + primaries.length + ' `[.primary]` paragraphs; only the first is rendered')
+    notice(parent, '[cta]', 'a cta has ' + primaries.length + ' `[.primary]` paragraphs; only the first is rendered')
   }
   if (secondaries.length > 1) {
-    warn(parent, '[cta]', 'a cta has ' + secondaries.length + ' `[.secondary]` paragraphs; only the first is rendered')
+    notice(parent, '[cta]', 'a cta has ' + secondaries.length + ' `[.secondary]` paragraphs; only the first is rendered')
   }
   if (secondaries.length && !primaries.length) {
-    warn(parent, '[cta]', 'a cta has a `[.secondary]` action but no `[.primary]` one')
+    error(parent, '[cta]', 'a cta has a `[.secondary]` action but no `[.primary]` one')
   }
   for (const body of bodies) {
     if (body.getContext() !== 'paragraph') {
-      warn(parent, '[cta]', 'a cta body holds a ' + body.getContext() + ' block; only paragraphs are supported')
+      error(parent, '[cta]', 'a cta body holds a ' + body.getContext() + ' block; only paragraphs are supported')
     }
   }
   const { light, dark } = splitImages(images, parent)

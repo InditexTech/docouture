@@ -9,7 +9,7 @@
 // Checks the built site (build/site) for broken links, but only ever FAILS
 // on a broken EXTERNAL (http/https) link — a raw link in content Antora
 // itself can't see, which is the whole reason this check exists (Antora's
-// own strict mode, runtime.log.failure_level: warn, already fails the build
+// own strict mode, runtime.log.failure_level: error, already fails the build
 // on a broken xref before this script ever runs).
 //
 // A broken LOCAL link is reported as a warning, never a failure. Two

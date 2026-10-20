@@ -5,7 +5,7 @@
 'use strict'
 
 import { execFileSync } from 'node:child_process'
-import { mkdir, mkdtemp, readFile, realpath, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readdir, readFile, realpath, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { PassThrough } from 'node:stream'
@@ -184,6 +184,50 @@ describe('runNew', () => {
     expect(allLogs).toContain('pnpm install')
     expect(allLogs).toContain('pnpm run dev')
   })
+
+  it.each([
+    ['pnpm', 'pnpm install --frozen-lockfile', 'pnpm run '],
+    ['npm', 'npm ci', 'npm run '],
+  ])(
+    'renders every workflow for --pm %s with no leftover placeholders or foreign package-manager commands',
+    async (pm, installCmd, runPrefix) => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+
+      const code = await runNew(['my-project-docs', '--dir', repo, '--pm', pm])
+      expect(code).toBe(0)
+
+      const dir = join(repo, '.github', 'workflows')
+      const names = (await readdir(dir)).filter((n) => n.startsWith('docouture-') && n.endsWith('.yml'))
+      expect(names.length).toBeGreaterThan(0)
+
+      for (const name of names) {
+        const content = await readFile(join(dir, name), 'utf8')
+        const lines = content.split('\n').filter((l) => !l.trim().startsWith('#'))
+        const body = lines.join('\n')
+        expect(content, name).not.toContain('__DOCOUTURE_')
+        if (pm === 'pnpm') {
+          expect(body, name).not.toMatch(/(?<![a-z])npm (ci|run)\b/)
+          expect(body, name).not.toContain('package-lock.json')
+        }
+        if (body.includes(installCmd)) {
+          // Every job that installs dependencies must set the package manager up first.
+          if (pm === 'pnpm') expect(body, name).toContain('pnpm/action-setup@')
+          expect(body, name).not.toMatch(pm === 'pnpm' ? /(?<![a-z])npm ci/ : /pnpm /)
+        }
+      }
+
+      const publish = await readFile(join(dir, 'docouture-publish.yml'), 'utf8')
+      expect(publish).toContain(installCmd)
+      expect(publish).toContain(`${runPrefix}build`)
+      expect(publish).not.toContain('actions/cache@')
+      expect(publish).toContain('package-manager-cache: false')
+
+      const warm = await readFile(join(dir, 'docouture-kroki-cache-warm.yml'), 'utf8')
+      expect(warm).toContain(installCmd)
+      expect(warm).toContain(pm === 'pnpm' ? 'docs/pnpm-lock.yaml' : 'docs/package-lock.json')
+    }
+  )
 
   it('scaffolds .tool-versions with only the nodejs line for --pm npm', async () => {
     const repo = join(base, 'repo')

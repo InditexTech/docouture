@@ -1,0 +1,31 @@
+.github/workflows/docouture-kroki-cache-warm.yml
+  s_4eb6dcbb65b876::t_e58d811c4ddde5 88-92,99,103,106
+.github/workflows/docouture-pr-verify.yml
+  s_4eb6dcbb65b876::t_20c9b2aa7e3b2e 69,147
+.github/workflows/docouture-publish.yml
+  s_4eb6dcbb65b876::t_562d2fa22b7008 80-84,91-92,96,103,112
+code/packages/cli/src/commands/new.spec.ts
+  s_4eb6dcbb65b876::t_eb80fd67b3b4d1 8,188-231
+code/packages/cli/templates/workflows/docouture-kroki-cache-warm.yml
+  s_4eb6dcbb65b876::t_494b9087a1804c 88,95,99,102
+code/packages/cli/templates/workflows/docouture-pr-verify.yml
+  s_4eb6dcbb65b876::t_58c9569f76744a 143
+code/packages/cli/templates/workflows/docouture-publish.yml
+  s_4eb6dcbb65b876::t_2b278fa0e25e81 80,87-88,92,99,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7287c35b595420b9cdfb781e2f7b19f8f661b28e",
+  "prompts": {},
+  "sessions": {
+    "s_4eb6dcbb65b876": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea7e01ebdffeOly9Ut8vO6Ets7",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

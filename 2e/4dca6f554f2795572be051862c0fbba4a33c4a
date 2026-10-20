@@ -1,0 +1,21 @@
+.github/workflows/code-PR_verify-fallback.yml
+  s_1ef68202514d54::t_47e4b92b23c903 1-24
+.github/workflows/code-npm_node-pr-verify.yml
+  s_1ef68202514d54::t_0eedcb6886b6d7 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2e4dca6f554f2795572be051862c0fbba4a33c4a",
+  "prompts": {},
+  "sessions": {
+    "s_1ef68202514d54": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea7c4d22cffecFJyVyV805tXm3",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

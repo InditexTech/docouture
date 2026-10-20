@@ -24,7 +24,7 @@ git repository. Prompts interactively for anything not given as a flag, in a ter
 |`--title <title>` |Site title (default: title-cased from `<name>`)
 |`--site-url <url>` |Public site URL written as `site.url` in `antora-playbook.yml` (http(s), trailing
 slash stripped). Skips the wizard question. Without it, the question is pre-filled with
-`+https://<owner>.github.io/<repo>+` derived from a github.com `origin` remote (Enter accepts,
+`+https://<org>.github.io/<repo>+` derived from a github.com `origin` remote (Enter accepts,
 `-` skips); with `--yes`, that derived URL is used, or none is written when there is no github.com `origin`
 |`--mode <mode>` |`standalone` (default) or `versioned` — see
 xref:main:guides-versioning-modes.adoc[]

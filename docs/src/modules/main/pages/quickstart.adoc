@@ -16,7 +16,7 @@ Asks these questions interactively, or take every default non-interactively with
   question opts in, the Antora component too.
 * **Site title** — shown in the page title and the nav header.
 * **Public site URL** — written to `antora-playbook.yml` as `site.url`. Pre-filled with
-  `https://<owner>.github.io/<repo>` when `origin` is a github.com remote; Enter accepts
+  `+https://<org>.github.io/<repo>+` when `origin` is a github.com remote; Enter accepts
   it, `-` skips it (leaving a commented hint), or type a custom-domain URL.
 * **Add an extra URL segment?** — off by default. GitHub Pages project sites already
   publish under `https://<org>.github.io/<repo>/`; a real component name would add a

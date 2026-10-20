@@ -14,7 +14,7 @@ at all).
 
 ### Added
 
-- [#261](https://github.com/InditexTech/docouture/pull/261) \[cli] Setup site.url based on https://inditextech.github.io/<repo>
+- [#261](https://github.com/InditexTech/docouture/pull/261) \[cli] Set up site.url from the repository's GitHub Pages URL
 
 ### Fixed
 

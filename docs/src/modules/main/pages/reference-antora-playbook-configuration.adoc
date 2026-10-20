@@ -26,7 +26,7 @@ site:
 |`title` |The site's own name, used in the UI bundle's chrome and generated `<title>` tags.
 |`url` |The public URL of the deployed site, without a trailing slash. Required for the
 sitemap, canonical links and `404.html`. For a GitHub Pages project site it is
-`+https://<owner>.github.io/<repo>+`; `docouture new` asks for it (see
+`+https://<org>.github.io/<repo>+`; `docouture new` asks for it (see
 xref:main:reference-cli.adoc[]) and writes it here, or leaves a commented hint when unknown.
 |`start_page` |A resource ID (`<component>::index.adoc`) generating the redirect at the site root.
 |`keys.product_logo` / `product_logo_dark` |Side-menu brand logo, light/dark variants — see

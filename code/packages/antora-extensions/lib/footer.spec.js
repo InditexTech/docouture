@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 const registerFooter = require('./footer')
 
-function createContext(logger = { warn: vi.fn(), info: () => {} }) {
+function createContext(logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }) {
   const listeners = {}
   return {
     logger,
@@ -51,8 +51,8 @@ async function run(buckets, { pages = {}, logger } = {}) {
   return { versions, logger: context.logger }
 }
 
-function warnedAbout(logger, text) {
-  return logger.warn.mock.calls.some((call) => typeof call[0] === 'string' && call[0].includes(text))
+function erroredAbout(logger, text) {
+  return logger.error.mock.calls.some((call) => typeof call[0] === 'string' && call[0].includes(text))
 }
 
 describe('registerFooter', () => {
@@ -97,16 +97,16 @@ describe('registerFooter', () => {
   })
 
   it('warns and drops a footer that is not a { groups: [...] } shape', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { versions } = await run([{ name: 'weavejs', version: 'latest', footer: { groups: 'not-a-list' } }], {
       logger,
     })
     expect(versions[0].footer).toBeUndefined()
-    expect(warnedAbout(logger, 'expected a groups list')).toBe(true)
+    expect(erroredAbout(logger, 'expected a groups list')).toBe(true)
   })
 
   it('warns and skips a group with no links list, but keeps other groups', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { versions } = await run(
       [
         {
@@ -120,11 +120,11 @@ describe('registerFooter', () => {
       { logger }
     )
     expect(versions[0].footer.groups).toEqual([{ title: 'Fine', links: [{ text: 'Home', url: '/plain.html' }] }])
-    expect(warnedAbout(logger, 'every group needs a links list')).toBe(true)
+    expect(erroredAbout(logger, 'every group needs a links list')).toBe(true)
   })
 
   it('warns and skips a link missing text or url', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { versions } = await run(
       [
         {
@@ -136,11 +136,11 @@ describe('registerFooter', () => {
       { logger }
     )
     expect(versions[0].footer).toBeUndefined()
-    expect(warnedAbout(logger, 'every link needs a text and a url')).toBe(true)
+    expect(erroredAbout(logger, 'every link needs a text and a url')).toBe(true)
   })
 
   it('drops a link whose page ID resolves to nothing, with a warning', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { versions } = await run(
       [
         {
@@ -152,7 +152,7 @@ describe('registerFooter', () => {
       { logger }
     )
     expect(versions[0].footer).toBeUndefined()
-    expect(warnedAbout(logger, 'resolves to no page')).toBe(true)
+    expect(erroredAbout(logger, 'resolves to no page')).toBe(true)
   })
 
   it('drops a group left with no links after filtering, without rendering an empty column', async () => {

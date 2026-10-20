@@ -45,7 +45,7 @@ function parseWidth(raw, doc, table) {
   if (!VALID_RX.test(trimmed)) {
     doc
       .getLogger()
-      .warn(
+      .error(
         ATTR_NAME +
           '="' +
           raw +

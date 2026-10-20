@@ -139,8 +139,8 @@ Antora's — treat them as a typing aid, not as proof that an API exists in 2.2.
 
 ## Reporting authoring mistakes
 
-Both site playbooks set `runtime.log.failure_level: warn`, so **a warning fails
-the build**. That is the right severity for an authoring error: an unknown label
+Scaffolded playbooks set `runtime.log.failure_level: error`, so **an error fails
+the build** and a warning does not. Log authoring mistakes as errors: an unknown label
 colour, a `[cards]` block with no cards, a tab set with no panels all render as
 something plausible but wrong, and shipping that is worse than not building.
 
@@ -148,9 +148,12 @@ Use `lib/warn.js` so every extension reports in the same shape — what the auth
 wrote, what is wrong, and what was expected:
 
 ```js
-warn(parent, 'label:mauve[]', 'unknown IDS Label variant "mauve"', VARIANTS)
+error(parent, 'label:mauve[]', 'unknown IDS Label variant "mauve"', VARIANTS)
 // → label:mauve[] — unknown IDS Label variant "mauve"; expected one of white, grey, …
 ```
+
+Output that is still correct but degraded ("only the first image is rendered")
+goes through `notice()` instead, which logs at `warn` and does not fail the build.
 
 ## Using this package in a site
 

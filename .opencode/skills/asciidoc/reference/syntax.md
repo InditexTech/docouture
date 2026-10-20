@@ -28,8 +28,8 @@ Body.
 
 - **One level-0 title per page.** `=` is the document title; `==` is the first real
   section. A second `=` is an error in `doctype: article` (the default).
-- Section levels must not skip: `==` then `====` is a warning, and a warning fails the
-  build here.
+- Section levels must not skip: `==` then `====` is a warning. Warnings do not fail the
+  build here, so check the log.
 - Attribute entries (`:name: value`) in the header apply to the whole page. Placed in the
   body they apply from that point on.
 - `page-*` attributes are Antora's convention: they are lifted onto the UI model and are

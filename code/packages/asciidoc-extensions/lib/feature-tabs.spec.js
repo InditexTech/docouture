@@ -175,4 +175,42 @@ Just a paragraph, no open block at all.
     expect(html).toContain('>Prose slide</a>')
     expect(html).toContain('Just a paragraph, no open block at all.')
   })
+
+  /** @param {string} source @returns {Promise<string[]>} severities logged */
+  async function severities(source) {
+    const logger = asciidoctor.MemoryLogger.create()
+    await convert(source, { logger })
+    return logger.getMessages().map((m) => m.getSeverity().toString())
+  }
+
+  it('errors on a dark-only slide image and notices extra images and ctas', async () => {
+    const dark = await severities(`[feature-tabs]
+====
+[feature,label="Dark only"]
+--
+image::d.png[role=dark]
+--
+====
+`)
+    expect(dark).toContain('ERROR')
+    const extras = await severities(`[feature-tabs]
+====
+[feature,label="Extras"]
+--
+image::a.png[A]
+image::b.png[B]
+image::d1.png[role=dark]
+image::d2.png[role=dark]
+
+[.cta]
+https://example.com[One]
+
+[.cta]
+https://example.com[Two]
+--
+====
+`)
+    expect(extras.length).toBeGreaterThanOrEqual(3)
+    expect(extras.every((x) => x === 'WARN')).toBe(true)
+  })
 })

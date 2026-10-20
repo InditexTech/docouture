@@ -58,8 +58,8 @@ const produceRedirects = require('@antora/redirect-producer')
  * REAL page's own URL is different — that's never silently allowed, since
  * it would mean overwriting real content with a redirect stub.
  *
- * A rule that matches zero real pages warns (and, under this site's
- * `runtime.log.failure_level: warn`, fails the build) — the same treatment
+ * A rule that matches zero real pages logs an error (and, under this site's
+ * `runtime.log.failure_level: error`, fails the build) — the same treatment
  * as a broken xref — rather than silently shipping a rule that never does
  * anything, which is how a typo, or a `to` accidentally naming an
  * alias-only segment, would otherwise go unnoticed.
@@ -75,7 +75,7 @@ module.exports = function registerRedirects(context, rules) {
   const logger = context.getLogger('docouture-redirects')
   if (rules === undefined) return
   if (!Array.isArray(rules)) {
-    logger.warn('Ignoring redirects extension config: expected a list of {from, to} rules, got %s', typeof rules)
+    logger.error('Ignoring redirects extension config: expected a list of {from, to} rules, got %s', typeof rules)
     return
   }
 
@@ -129,7 +129,7 @@ function resolvePageAlias(page, compiled, realUrls, htmlExtensionStyle, logger) 
     const { pubUrl, outPath } = buildUrlAndOutPath(legacyPath, htmlExtensionStyle)
 
     if (realUrls.has(stripTrailingSlash(pubUrl))) {
-      logger.warn(
+      logger.error(
         "Skipping redirects rule (from: '%s', to: '%s'): computed legacy URL %s collides with a real page",
         rule.from,
         rule.to,
@@ -142,14 +142,14 @@ function resolvePageAlias(page, compiled, realUrls, htmlExtensionStyle, logger) 
   return undefined
 }
 
-// A rule that matches zero real pages warns (and, under this site's
-// `runtime.log.failure_level: warn`, fails the build) — the same treatment
+// A rule that matches zero real pages logs an error (and, under this site's
+// `runtime.log.failure_level: error`, fails the build) — the same treatment
 // as a broken xref — rather than silently shipping a rule that never does
 // anything.
 function warnUnmatchedRules(compiled, rawMatchCounts, logger) {
   compiled.forEach((rule, i) => {
     if (!rawMatchCounts[i]) {
-      logger.warn("redirects rule (from: '%s', to: '%s') matched no real pages", rule.from, rule.to)
+      logger.error("redirects rule (from: '%s', to: '%s') matched no real pages", rule.from, rule.to)
     }
   })
 }
@@ -176,13 +176,13 @@ function compileRules(rules, logger) {
   const compiled = []
   for (const rule of rules) {
     if (!rule || typeof rule.from !== 'string' || typeof rule.to !== 'string') {
-      logger.warn('Ignoring malformed redirects rule: %s', JSON.stringify(rule))
+      logger.error('Ignoring malformed redirects rule: %s', JSON.stringify(rule))
       continue
     }
     const { regex, wildcardCount } = compilePattern(rule.to)
     const fromWildcardCount = countWildcards(rule.from)
     if (fromWildcardCount !== wildcardCount) {
-      logger.warn(
+      logger.error(
         "Ignoring redirects rule (from: '%s', to: '%s'): wildcard count mismatch (%s vs %s)",
         rule.from,
         rule.to,

@@ -98,9 +98,10 @@ a reader to.
   directory out from under that running server and breaks what the user is looking at
   in their browser. To verify a change, trust the running `dev` server's own
   live-reload — don't build a second copy.
-- **A warning is a build failure.** `antora-playbook.yml` sets
-  `runtime.log.failure_level: warn`. A broken xref, a missing include target, an
-  undefined attribute reference or a bad image path exits non-zero.
+- **An error is a build failure; a warning is not.** `antora-playbook.yml` sets
+  `runtime.log.failure_level: error`. A broken xref, a missing include target, a bad
+  image path or an authoring mistake in a docouture block exits non-zero. An undefined
+  attribute reference only warns, so read the build log for warnings too.
 - **A page missing from `nav.adoc` still builds.** It publishes at its URL, renders with
   an empty navigation context and is reachable only by direct link. Nothing warns.
 - **`include::` cannot read arbitrary paths.** Antora installs its own include processor

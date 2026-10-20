@@ -15,9 +15,14 @@ const { applyDefaultMermaidTheme } = require('@inditextech/docouture-asciidoc-ex
 function createContext() {
   const listeners = {}
   const warnings = []
+  const errors = []
   const infos = []
   return {
-    getLogger: () => ({ warn: (...args) => warnings.push(args), info: (...args) => infos.push(args) }),
+    getLogger: () => ({
+      warn: (...args) => warnings.push(args),
+      error: (...args) => errors.push(args),
+      info: (...args) => infos.push(args),
+    }),
     on(event, fn) {
       ;(listeners[event] ||= []).push(fn)
     },
@@ -25,6 +30,7 @@ function createContext() {
       for (const fn of listeners[event] || []) await fn(payload)
     },
     warnings,
+    errors,
     infos,
   }
 }
@@ -428,7 +434,7 @@ describe('registerKrokiPrewarm', () => {
       format: 'svg',
       data: svg,
     })
-    expect(context.warnings.some(([msg]) => msg.includes('unknown %s entry'))).toBe(true)
+    expect(context.errors.some(([msg]) => msg.includes('unknown %s entry'))).toBe(true)
   })
 
   it('ignores non-.adoc files', async () => {

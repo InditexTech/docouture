@@ -4,14 +4,14 @@
 
 'use strict'
 
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 const registerLlmsTxt = require('./llms-txt')
 
-function createContext() {
+function createContext(logger = { warn: () => {}, error: () => {}, info: () => {} }) {
   const listeners = {}
   return {
-    getLogger: () => ({ warn: () => {}, info: () => {} }),
+    getLogger: () => logger,
     on(event, fn) {
       ;(listeners[event] ||= []).push(fn)
     },
@@ -54,8 +54,8 @@ function createContentCatalog(componentVersion, pages) {
   }
 }
 
-async function run({ llms, navigation, pages }) {
-  const context = createContext()
+async function run({ llms, navigation, pages, logger }) {
+  const context = createContext(logger)
   registerLlmsTxt(context)
 
   const componentVersion = {
@@ -172,5 +172,25 @@ describe('registerLlmsTxt', () => {
 
     expect(llmsTxt.trim()).toBe('# Weave.js')
     expect(llmsFullTxt.trim()).toBe('')
+  })
+
+  it('logs an error when llms.exclude is not a list', async () => {
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
+    await run({ llms: { exclude: 'secret.adoc' }, pages: [], logger })
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining('expected a list of page IDs'),
+      expect.anything(),
+      'string'
+    )
+  })
+
+  it('logs an error when an llms.exclude entry resolves to no page', async () => {
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
+    await run({ llms: { exclude: ['main:ghost.adoc'] }, pages: [], logger })
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining('resolves to no page'),
+      'main:ghost.adoc',
+      expect.anything()
+    )
   })
 })

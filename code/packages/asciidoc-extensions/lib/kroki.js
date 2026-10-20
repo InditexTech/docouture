@@ -5,7 +5,7 @@
 'use strict'
 
 const { escapeHtml, attr } = require('./html')
-const warn = require('./warn')
+const { error, notice } = require('./warn')
 const kroki = require('./kroki-instance')
 const uniqueId = require('./unique-id')
 const namespaceSvgIds = require('./svg-namespace')
@@ -141,7 +141,7 @@ const { applyDefaultMermaidTheme } = require('./kroki-mermaid-theme')
 // of these blocks already rendered as before this extension existed. A
 // missing/unreachable Kroki service is therefore never a build failure;
 // only a genuine authoring mistake (an unknown entry in
-// `kroki-diagram-types`) is, via `warn()`, per this package's own
+// `kroki-diagram-types`) is, via `error()`, per this package's own
 // "Reporting authoring mistakes" convention.
 
 /** What Asciidoctor's own literal-block HTML5 converter emits — reproduced
@@ -205,7 +205,7 @@ function renderDiagram(parent, type, source, attrs) {
   const enabledAttr = document.getAttribute(ENABLED_ATTR)
   const typesAttr = document.getAttribute(TYPES_ATTR)
   const enabledTypes = resolveEnabledTypes(enabledAttr, typesAttr, (unknown) =>
-    warn(
+    error(
       parent,
       '[' + TYPES_ATTR + '=' + typesAttr + ']',
       'unknown Kroki diagram type "' + unknown + '"',
@@ -215,7 +215,7 @@ function renderDiagram(parent, type, source, attrs) {
   if (!enabledTypes.has(type)) return literalFallback(source, attrs.id)
 
   const format = resolveFormat(type, attrs.format, (t, requested) =>
-    warn(
+    notice(
       parent,
       '[' + t + ',format=' + requested + ']',
       'unsupported format "' + requested + '" for a ' + t + ' diagram — falling back to svg',
@@ -231,7 +231,7 @@ function renderDiagram(parent, type, source, attrs) {
 
   const payload = kroki.get(kroki.keyFor(type, effectiveSource, format, options))
   if (!payload) {
-    warn(
+    notice(
       parent,
       '[' + type + ']',
       'no prewarmed Kroki render for this diagram (service unreachable at build time, or the source changed after prewarm ran); showing raw source instead'

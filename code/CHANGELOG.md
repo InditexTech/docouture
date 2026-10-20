@@ -19,6 +19,7 @@ at all).
 
 ### Fixed
 
+- [#263](https://github.com/InditexTech/docouture/pull/263) Setup failure_level to error on template
 - [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
 - [#251](https://github.com/InditexTech/docouture/pull/251) \[cli] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
 

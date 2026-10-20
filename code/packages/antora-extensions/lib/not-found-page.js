@@ -123,7 +123,7 @@ module.exports = function registerNotFoundPage(context) {
       const where = `${component.name}@${componentVersion.version || 'default'}`
       const configured = notFoundModules.get(componentVersion.version + '@' + component.name)
       if (!configured) {
-        logger.warn(
+        logger.error(
           '%s has %s navigation modules and no not_found_module configured in its antora.yml: ' +
             "the 404 page's side menu will render empty. Set not_found_module to the module whose " +
             'navigation it should show.',
@@ -131,7 +131,7 @@ module.exports = function registerNotFoundPage(context) {
           navigation.length
         )
       } else if (!navigation.some((tree) => tree.module === configured)) {
-        logger.warn(
+        logger.error(
           "not_found_module '%s' in %s matches no navigation file; the 404 page's side menu will render empty.",
           configured,
           where

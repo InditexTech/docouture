@@ -7,7 +7,7 @@
 const { chain, chainAll, precomputeSubtree } = require('./async-compat')
 const { escapeHtml, attr } = require('./html')
 const uniqueId = require('./unique-id')
-const warn = require('./warn')
+const { error } = require('./warn')
 
 // Content tabs — GH-45. IDS Tabs (`Kind=Underlined`, Figma 2735:69397 for
 // light, 2735:69401 for dark), used for the one real case the migration
@@ -143,14 +143,14 @@ function renderTab(block, index, groupId, seenLabels, parent) {
   // lib/html.js's own table (row "block style attribute").
   const label = block.getAttribute('label')
   if (!label) {
-    warn(parent, '[tab]', 'a tab has no `label=`; give it one, e.g. `[tab,label="pnpm"]`')
+    error(parent, '[tab]', 'a tab has no `label=`; give it one, e.g. `[tab,label="pnpm"]`')
     return { tab: '', panel: '' }
   }
 
   if (seenLabels.includes(label)) {
-    warn(parent, '[tab,label="' + label + '"]', 'a tab set already has a tab labelled "' + label + '"')
+    error(parent, '[tab,label="' + label + '"]', 'a tab set already has a tab labelled "' + label + '"')
   } else if (seenLabels.some((seen) => seen.toLowerCase() === label.toLowerCase())) {
-    warn(
+    error(
       parent,
       '[tab,label="' + label + '"]',
       'a tab set already has a tab labelled "' +
@@ -215,7 +215,7 @@ function renderTab(block, index, groupId, seenLabels, parent) {
 function finish(parent, wrapper, attrs, self) {
   const tabBlocks = wrapper.getBlocks().filter((block) => block.getStyle() === 'tab')
   if (tabBlocks.length < 2) {
-    warn(parent, '[tabs]', tabBlocks.length + ' `[tab]` block(s) found; a tab set needs at least two')
+    error(parent, '[tabs]', tabBlocks.length + ' `[tab]` block(s) found; a tab set needs at least two')
   }
 
   const groupId = uniqueId(parent, 'tabs')

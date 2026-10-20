@@ -55,8 +55,8 @@ const MODULE_NAV_PATH_RX = /^modules\/([^/]+)\//
  *     belongs to no module (`modules/ROOT/nav.adoc`, rendered only on the
  *     landing — see the UI's `page-nav-module` attribute), which should not
  *     appear beside the real modules in the switcher. Declaring it is also
- *     what stops the "no nav_modules entry" warning below from failing a build
- *     whose playbook sets `failure_level: warn`.
+ *     what stops the "no nav_modules entry" warning below from being logged
+ *     for it.
  *   - `start_page` overrides where the switcher and the site footer send
  *     someone who picks this module. It is a page ID — the same string you
  *     would write inside `xref:...[]` — resolved against this component.
@@ -138,11 +138,11 @@ function collectDeclaredModules(navModules, where, logger) {
   const declared = new Map()
   for (const entry of navModules) {
     if (entry?.constructor !== Object || !entry?.module) {
-      logger.warn('Ignoring nav_modules entry in %s: every entry needs a module key', where)
+      logger.error('Ignoring nav_modules entry in %s: every entry needs a module key', where)
       continue
     }
     if (declared.has(entry.module)) {
-      logger.warn('Ignoring duplicate nav_modules entry for module %s in %s', entry.module, where)
+      logger.error('Ignoring duplicate nav_modules entry for module %s in %s', entry.module, where)
       continue
     }
     declared.set(entry.module, entry)
@@ -238,7 +238,7 @@ function warnUnmatchedModules(declared, matched, where, logger) {
     // Almost always a typo in the slug, or a module whose nav file is missing
     // from the descriptor's `nav` list — both of which silently produce a
     // module the switcher can never reach.
-    logger.warn('nav_modules entry for module %s in %s matches no navigation file', module_, where)
+    logger.error('nav_modules entry for module %s in %s matches no navigation file', module_, where)
   }
 }
 
@@ -246,7 +246,7 @@ function annotate(componentVersion, { nav, navModules }, contentCatalog, logger)
   const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
 
   if (!Array.isArray(navModules)) {
-    logger.warn('Ignoring nav_modules in %s: expected a list of entries, got %s', where, typeof navModules)
+    logger.error('Ignoring nav_modules in %s: expected a list of entries, got %s', where, typeof navModules)
     return
   }
 

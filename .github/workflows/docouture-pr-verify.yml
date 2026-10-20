@@ -131,7 +131,7 @@ jobs:
       - name: Build
         run: npx antora --fetch antora-playbook.local.yml
 
-      # Antora's own `runtime.log.failure_level: warn` (see
+      # Antora's own `runtime.log.failure_level: error` (see
       # antora-playbook.yml's own comment) already fails the Build step above
       # on a broken cross-reference — but that only covers refs Antora
       # itself resolves. Raw http(s) links in content are invisible to it, so

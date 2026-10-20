@@ -99,6 +99,7 @@ Just a stray paragraph.
       .map((m) => m.getText())
       .join('\n')
     expect(messages).toContain('an accordion group with no `[%collapsible]` items in it')
+    expect(logger.getMessages().every((m) => m.getSeverity().toString() === 'ERROR')).toBe(true)
   })
 
   it('warns when a group has no aria-label and no title', async () => {

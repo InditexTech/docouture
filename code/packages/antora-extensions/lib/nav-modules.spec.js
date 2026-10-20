@@ -8,7 +8,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 const registerNavModules = require('./nav-modules')
 
-function createContext(logger = { warn: vi.fn(), info: () => {} }) {
+function createContext(logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }) {
   const listeners = {}
   return {
     logger,
@@ -43,6 +43,10 @@ async function run(bucket, trees, { pages = {}, logger } = {}) {
   await context.emit('navigationBuilt', { contentCatalog })
 
   return { componentVersion, logger: context.logger }
+}
+
+function erroredAbout(logger, text) {
+  return logger.error.mock.calls.some((call) => typeof call[0] === 'string' && call[0].includes(text))
 }
 
 function warnedAbout(logger, text) {
@@ -106,7 +110,7 @@ describe('registerNavModules', () => {
   })
 
   it('warns and falls back to the navigation when start_page resolves to nothing', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { componentVersion } = await run(
       {
         name: 'weavejs',
@@ -122,7 +126,7 @@ describe('registerNavModules', () => {
   })
 
   it('warns when a module has no internal page to link to at all', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { componentVersion } = await run(
       { name: 'weavejs', version: 'latest', nav: ['modules/main/nav.adoc'], navModules: [{ module: 'main' }] },
       [tree(0, [])],
@@ -133,7 +137,7 @@ describe('registerNavModules', () => {
   })
 
   it('marks switcher:false without warning about a missing start page', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { componentVersion } = await run(
       {
         name: 'weavejs',
@@ -166,21 +170,21 @@ describe('registerNavModules', () => {
   })
 
   it('warns when navModules is not a list', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     await run({ name: 'weavejs', version: 'latest', nav: [], navModules: 'not-a-list' }, [], { logger })
-    expect(warnedAbout(logger, 'expected a list of entries')).toBe(true)
+    expect(erroredAbout(logger, 'expected a list of entries')).toBe(true)
   })
 
   it('warns and skips an entry missing a module key', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     await run({ name: 'weavejs', version: 'latest', nav: [], navModules: [{ title: 'No module key' }] }, [], {
       logger,
     })
-    expect(warnedAbout(logger, 'every entry needs a module key')).toBe(true)
+    expect(erroredAbout(logger, 'every entry needs a module key')).toBe(true)
   })
 
   it('warns and ignores a duplicate nav_modules entry for the same module', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     await run(
       {
         name: 'weavejs',
@@ -194,11 +198,11 @@ describe('registerNavModules', () => {
       [tree(0, [{ urlType: 'internal', url: '/x.html', items: [] }])],
       { logger }
     )
-    expect(warnedAbout(logger, 'Ignoring duplicate nav_modules entry')).toBe(true)
+    expect(erroredAbout(logger, 'Ignoring duplicate nav_modules entry')).toBe(true)
   })
 
   it('warns about a tree matching no nav_modules entry, without failing', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     const { componentVersion } = await run(
       { name: 'weavejs', version: 'latest', nav: ['modules/other/nav.adoc'], navModules: [{ module: 'main' }] },
       [tree(0, [{ urlType: 'internal', url: '/x.html', items: [] }])],
@@ -209,9 +213,9 @@ describe('registerNavModules', () => {
   })
 
   it('warns about a declared nav_modules entry that matches no navigation file', async () => {
-    const logger = { warn: vi.fn(), info: () => {} }
+    const logger = { warn: vi.fn(), error: vi.fn(), info: () => {} }
     await run({ name: 'weavejs', version: 'latest', nav: [], navModules: [{ module: 'ghost' }] }, [], { logger })
-    expect(warnedAbout(logger, 'matches no navigation file')).toBe(true)
+    expect(erroredAbout(logger, 'matches no navigation file')).toBe(true)
   })
 
   it('does nothing for a bucket with no navModules declared', async () => {

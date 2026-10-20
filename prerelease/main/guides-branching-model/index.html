@@ -616,6 +616,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-2-0/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.2.0</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-0-0/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.0.0</span></span>
       </a>
@@ -798,7 +807,7 @@ also path-filtered to <code>docs/**</code> + its own workflow file)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-release.yml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">release branch (pull_request:closed + workflow_dispatch)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">release branch (pull_request:closed + workflow_dispatch); under git-flow its <code>sync-prerelease</code> job also opens a PR into the prerelease branch</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>docouture-publish.yml</code></p></td>
@@ -843,7 +852,12 @@ green.</p>
 same <code>docs/**</code> path filter, and <code>docouture-release-preview.yml</code> now fires too (targets
 <code>main</code>), posting a preview comment. On merge, <code>docouture-release.yml</code> cuts the release
 (checks out <code>main</code>, tags it, pushes the tag) and calls <code>docouture-publish.yml</code> to build
-and publish.</p>
+and publish.
+A versioned release also bumps <code>docs/.release-version</code> on <code>main</code>; its
+<code>sync-prerelease</code> job then opens a pull request into <code>develop</code> carrying that bump
+(branch <code>automated/sync-docs-release-&lt;version&gt;-to-develop</code>) — merge it so <code>develop</code>
+doesn&#8217;t go stale. It runs before the publish, which doesn&#8217;t wait on its result: a
+failed sync turns the run red but the docs still publish.</p>
 </li>
 <li>
 <p>The merge to <code>main</code> is also an ordinary push — but <code>docouture-publish-prerelease.yml</code>
@@ -899,19 +913,29 @@ branch — those stay manual steps, printed as a reminder after every real run.<
 </div>
 </div>
 <div class="sect1">
-<h2 id="docouture-branching-is-a-declared-signal-not-the-source-of-truth"><a class="anchor" href="#docouture-branching-is-a-declared-signal-not-the-source-of-truth"></a><code>docouture.branching</code> is a declared signal, not the source of truth</h2>
+<h2 id="the-docouture-block-in-docspackage-json-declares-the-flow"><a class="anchor" href="#the-docouture-block-in-docspackage-json-declares-the-flow"></a>The <code>docouture</code> block in <code>docs/package.json</code> declares the flow</h2>
 <div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="shiki highlight"><code data-lang="json"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4;--shiki-light-bg:#1E1E1E;--shiki-dark-bg:#1E1E1E"><span class="line"><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">"docouture"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: { </span><span style="--shiki-light:#9CDCFE;--shiki-dark:#9CDCFE">"branching"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">"trunk-based"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4"> }</span></span>
+<span class="line"><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">"docouture"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: { </span><span style="--shiki-light:#9CDCFE;--shiki-dark:#9CDCFE">"branching"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">"git-flow"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">, </span><span style="--shiki-light:#9CDCFE;--shiki-dark:#9CDCFE">"prereleaseBranch"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">"develop"</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4"> }</span></span></span></code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p><code>docs/package.json&#8217;s `"docouture": {"branching": "trunk-based"}</code> (or <code>"git-flow"</code>) is
-cheap and redundant by design — the actual branch names are never persisted anywhere.
-<code>docouture branch-model</code>/<code>docouture doctor</code> always re-derive them live, from
-<code>antora-playbook.yml&#8217;s `content.sources[0].branches</code> and <code>docouture-release.yml&#8217;s
-checkout `ref:</code>, the same way standalone-vs-versioned mode is already derived live
-(<code>docouture-release.yml&#8217;s own "Detect mode" step) rather than stored anywhere. This
-field only exists so `docouture doctor</code> has something to compare that derivation
-against — a mismatch between the two is reported as an advisory warning, not a hard
-failure, since it can only ever be <strong>stale</strong>, never a build-breaking config error the
-way the four names in <a href="../guides-modifying-the-navigation/" class="xref page">Modifying the navigation</a> are.</p>
+<p><code>docouture-release.yml</code> reads this block to know whether to open the prerelease sync
+pull request (see above) and which branch to target — the only place the workflow reads
+the flow from. Trunk-based declares <code>branching</code> only; git-flow also declares
+<code>prereleaseBranch</code>. <code>docouture new</code>, <code>docouture branch-model</code> and <code>docouture upgrade</code>
+keep it in step with <code>antora-playbook.yml&#8217;s `content.sources[0].branches</code> (what Antora
+actually builds from): <code>upgrade</code> writes or corrects it on a git-flow site, which also
+backfills sites scaffolded before the field existed. The release branch name is not
+stored — it&#8217;s the checkout <code>ref:</code> in <code>docouture-release.yml</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>docouture doctor</code> compares the declaration against what the playbook and workflow
+actually say: a git-flow site without <code>prereleaseBranch</code>, or with a stale one, is reported
+with <code>docouture upgrade</code> as the fix. A hand-edited playbook leaves the declaration stale
+until <code>upgrade</code> (or <code>branch-model</code>) runs again.</p>
 </div>
 </div>
 </div>

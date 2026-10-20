@@ -616,6 +616,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-2-0/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.2.0</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-0-0/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.0.0</span></span>
       </a>
@@ -795,6 +804,36 @@ version so it&#8217;s always ready for whatever comes next</p>
 <p>(Or skip the PR: run the workflow manually via <code>workflow_dispatch</code> and type the
 version directly — its form field is what a versioned-mode release actually requires
 there, unlike standalone&#8217;s, where the default is fine.)</p>
+</div>
+<div class="sect2">
+<h3 id="under-git-flow-the-sync-pull-request"><a class="anchor" href="#under-git-flow-the-sync-pull-request"></a>Under git-flow: the sync pull request</h3>
+<div class="paragraph">
+<p>The forward-bump is committed on the release branch only. On a git-flow site the
+workflow&#8217;s <code>sync-prerelease</code> job then opens a pull request from
+<code>automated/sync-docs-release-&lt;version&gt;-to-&lt;prerelease&gt;</code> into the prerelease branch, so
+<code>docs/.release-version</code> (and anything else the release branch gained) reaches it —
+merge that PR. The prerelease branch name comes from <code>docs/package.json&#8217;s
+`docouture.prereleaseBranch</code>; if it is missing the release fails before tagging, with a
+message pointing at <code>docouture upgrade</code>, which adds it.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The job is skipped on trunk-based sites, on a republish, when the prerelease branch
+already contains the release branch, and when that branch doesn&#8217;t exist.</p>
+</li>
+<li>
+<p>A failure there turns the run red and comments on the merged <code>docs/release</code> PR, but
+the docs are still published — <code>publish</code> doesn&#8217;t wait on its result.</p>
+</li>
+<li>
+<p>The GitHub App that <code>docouture-release.yml</code> already uses needs <code>pull-requests: write</code>
+(and <code>workflows: write</code>, since the release branch can carry workflow-file changes)
+in addition to <code>contents: write</code>. Existing git-flow sites run <code>docouture upgrade</code>
+once to get the new job and the <code>package.json</code> field.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>

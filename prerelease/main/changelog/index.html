@@ -72,6 +72,7 @@
 
 <title>Changelog | Docouture</title>
 
+    <link rel="canonical" href="https://inditextech.github.io/docouture/1.1.2/main/changelog/">
     <link rel="prev" href="../additional-information-overview/">
     <link rel="next" href="../release-notes/">
     <meta name="generator" content="Antora 3.2.0">
@@ -80,7 +81,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap">
     <link rel="stylesheet" href="../../../_/css/site.css">
-    <style>:root { --home-background-image: url("/_/home-background.jpg") }</style>
+    <style>:root { --home-background-image: url("/docouture/_/home-background.jpg") }</style>
 
 
 
@@ -755,11 +756,24 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 <h2 id="unreleased"><a class="anchor" href="#unreleased"></a>Unreleased</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="added"><a class="anchor" href="#added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/InditexTech/docouture/pull/261">#261</a> \[cli] Set up site.url from the repository&#8217;s GitHub Pages URL</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
 <h3 id="fixed"><a class="anchor" href="#fixed"></a>Fixed</h3>
 <div class="ulist">
 <ul>
 <li>
 <p><a href="https://github.com/InditexTech/docouture/pull/253">#253</a> \[tooling] docouture-release-preview.yml fails on pull requests from forks</p>
+</li>
+<li>
+<p><a href="https://github.com/InditexTech/docouture/pull/251">#251</a> \[cli] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken</p>
 </li>
 </ul>
 </div>
@@ -770,6 +784,19 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 <ul>
 <li>
 <p><a href="https://github.com/InditexTech/docouture/pull/247">#247</a> [documentation] Temporarily remove references to Weave.js&#8217;s showcase URL</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="security"><a class="anchor" href="#security"></a>Security</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/InditexTech/docouture/pull/250">#250</a> \[ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB_TOKENs</p>
+</li>
+<li>
+<p><a href="https://github.com/InditexTech/docouture/pull/249">#249</a> \[tooling] docouture-release.yml: pass github.ref via env instead of interpolating it into run</p>
 </li>
 </ul>
 </div>
@@ -795,7 +822,7 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 <h2 id="v1-1-0-2026-09-03"><a class="anchor" href="#v1-1-0-2026-09-03"></a>v1.1.0 — 2026-09-03</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="added"><a class="anchor" href="#added"></a>Added</h3>
+<h3 id="added-2"><a class="anchor" href="#added-2"></a>Added</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -813,7 +840,7 @@ generated straight from that same file at build time, so it can&#8217;t drift fr
 <h2 id="v1-0-0-2026-09-02"><a class="anchor" href="#v1-0-0-2026-09-02"></a>v1.0.0 — 2026-09-02</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="added-2"><a class="anchor" href="#added-2"></a>Added</h3>
+<h3 id="added-3"><a class="anchor" href="#added-3"></a>Added</h3>
 <div class="ulist">
 <ul>
 <li>

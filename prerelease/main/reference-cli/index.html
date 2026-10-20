@@ -72,6 +72,7 @@
 
 <title>CLI | Docouture</title>
 
+    <link rel="canonical" href="https://inditextech.github.io/docouture/1.1.2/main/reference-cli/">
     <link rel="prev" href="../reference-antora-descriptor-configuration/">
     <link rel="next" href="../reference-ui-bundle/">
     <meta name="generator" content="Antora 3.2.0">
@@ -80,7 +81,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap">
     <link rel="stylesheet" href="../../../_/css/site.css">
-    <style>:root { --home-background-image: url("/_/home-background.jpg") }</style>
+    <style>:root { --home-background-image: url("/docouture/_/home-background.jpg") }</style>
 
 
 
@@ -757,6 +758,13 @@ git repository. Prompts interactively for anything not given as a flag, in a ter
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--title &lt;title&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Site title (default: title-cased from <code>&lt;name&gt;</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--site-url &lt;url&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public site URL written as <code>site.url</code> in <code>antora-playbook.yml</code> (http(s), trailing
+slash stripped). Skips the wizard question. Without it, the question is pre-filled with
+<code>https://&lt;org&gt;.github.io/&lt;repo&gt;</code> derived from a github.com <code>origin</code> remote (Enter accepts,
+<code>-</code> skips); with <code>--yes</code>, that derived URL is used, or none is written when there is no github.com <code>origin</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mode &lt;mode&gt;</code></p></td>

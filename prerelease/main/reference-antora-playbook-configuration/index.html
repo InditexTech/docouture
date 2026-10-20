@@ -72,6 +72,7 @@
 
 <title>Antora Playbook | Docouture</title>
 
+    <link rel="canonical" href="https://inditextech.github.io/docouture/1.1.2/main/reference-antora-playbook-configuration/">
     <link rel="prev" href="../reference-configuration/">
     <link rel="next" href="../reference-antora-descriptor-configuration/">
     <meta name="generator" content="Antora 3.2.0">
@@ -80,7 +81,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap">
     <link rel="stylesheet" href="../../../_/css/site.css">
-    <style>:root { --home-background-image: url("/_/home-background.jpg") }</style>
+    <style>:root { --home-background-image: url("/docouture/_/home-background.jpg") }</style>
 
 
 
@@ -729,6 +730,7 @@ docs</a>.</p>
 <div class="content">
 <pre class="shiki highlight"><code data-lang="yaml"><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4;--shiki-light-bg:#1E1E1E;--shiki-dark-bg:#1E1E1E"><span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">site</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">  title</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">docouture</span></span>
+<span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">  url</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">https://inditextech.github.io/docouture</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">  start_page</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">ROOT::index.adoc</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">  keys</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">:</span></span>
 <span class="line"><span style="--shiki-light:#569CD6;--shiki-dark:#569CD6">    product_logo</span><span style="--shiki-light:#D4D4D4;--shiki-dark:#D4D4D4">: </span><span style="--shiki-light:#CE9178;--shiki-dark:#CE9178">/_/product-logo.png</span></span>
@@ -751,6 +753,13 @@ docs</a>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The site&#8217;s own name, used in the UI bundle&#8217;s chrome and generated <code>&lt;title&gt;</code> tags.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The public URL of the deployed site, without a trailing slash. Required for the
+sitemap, canonical links and <code>404.html</code>. For a GitHub Pages project site it is
+<code>https://&lt;org&gt;.github.io/&lt;repo&gt;</code>; <code>docouture new</code> asks for it (see
+<a href="../reference-cli/" class="xref page">CLI</a>) and writes it here, or leaves a commented hint when unknown.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>start_page</code></p></td>

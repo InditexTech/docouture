@@ -72,6 +72,7 @@
 
 <title>Quickstart | Docouture</title>
 
+    <link rel="canonical" href="https://inditextech.github.io/docouture/1.1.2/main/quickstart/">
     <link rel="prev" href="../prerequisites/">
     <link rel="next" href="../guides-overview/">
     <meta name="generator" content="Antora 3.2.0">
@@ -80,7 +81,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Mono:wght@100..900&display=swap">
     <link rel="stylesheet" href="../../../_/css/site.css">
-    <style>:root { --home-background-image: url("/_/home-background.jpg") }</style>
+    <style>:root { --home-background-image: url("/docouture/_/home-background.jpg") }</style>
 
 
 
@@ -727,7 +728,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Asks five questions interactively, or take every default non-interactively with <code>--yes</code>
+<p>Asks these questions interactively, or take every default non-interactively with <code>--yes</code>
 (see <a href="../reference-cli/" class="xref page">CLI</a> for every flag to script them individually):</p>
 </div>
 <div class="ulist">
@@ -738,6 +739,11 @@ question opts in, the Antora component too.</p>
 </li>
 <li>
 <p><strong>Site title</strong> — shown in the page title and the nav header.</p>
+</li>
+<li>
+<p><strong>Public site URL</strong> — written to <code>antora-playbook.yml</code> as <code>site.url</code>. Pre-filled with
+<code>https://&lt;org&gt;.github.io/&lt;repo&gt;</code> when <code>origin</code> is a github.com remote; Enter accepts
+it, <code>-</code> skips it (leaving a commented hint), or type a custom-domain URL.</p>
 </li>
 <li>
 <p><strong>Add an extra URL segment?</strong> — off by default. GitHub Pages project sites already

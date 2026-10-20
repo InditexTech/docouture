@@ -26,6 +26,9 @@ git repository. Prompts interactively for anything not given as a flag, in a ter
 slash stripped). Skips the wizard question. Without it, the question is pre-filled with
 `+https://<org>.github.io/<repo>+` derived from a github.com `origin` remote (Enter accepts,
 `-` skips); with `--yes`, that derived URL is used, or none is written when there is no github.com `origin`
+|`--url-segment` |Name the Antora component after the site, adding an extra `/<name>/` URL segment.
+Off by default: the component is Antora's reserved `ROOT`, which adds no segment, because GitHub Pages
+already puts the repository name in the URL. See xref:main:glossary.adoc[] for component and module
 |`--mode <mode>` |`standalone` (default) or `versioned` — see
 xref:main:guides-versioning-modes.adoc[]
 |`--flow <flow>` |`trunk-based` (default) or `git-flow` — see

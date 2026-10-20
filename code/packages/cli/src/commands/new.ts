@@ -339,10 +339,15 @@ async function promptWizard(
     (await confirm(
       {
         message:
-          'Add the site name as an extra URL path segment when published?\n' +
-          'GitHub Pages project sites already publish under https://<org>.github.io/<repo>/ — ' +
-          'Antora would add a further /<name>/ segment per documentation component on top of ' +
-          'that. Off by default; turn it on only if this site will host more than one component later.\n',
+          'Give the docs their own URL segment? (recommended: no)\n\n' +
+          '  Antora organizes docs as: site > component > module > page.\n' +
+          '  - Component: one documentation product, with its own versions.\n' +
+          '  - Module: a section inside a component (this site starts with "main").\n\n' +
+          '  Published URL, with each answer:\n' +
+          '    No  (default): https://<org>.github.io/<repo>/<version>/main/page/\n' +
+          '    Yes:           https://<org>.github.io/<repo>/<name>/<version>/main/page/\n\n' +
+          '  GitHub Pages already puts your repo name in the URL, so "yes" repeats it.\n' +
+          '  Choose yes only if this repo will host several components later.\n',
         default: false,
       },
       context

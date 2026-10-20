@@ -12,6 +12,8 @@ at all).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-20
+
 ### Added
 
 - [#261](https://github.com/InditexTech/docouture/pull/261) \[cli] Set up site.url from the repository's GitHub Pages URL
@@ -24,14 +26,14 @@ at all).
 - [#267](https://github.com/InditexTech/docouture/issues/267) \[tooling] Snapshot publish uses `workflow_dispatch` (`ACTION=snapshot`) instead of an `issue_comment`, which npm trusted publishing now rejects; the job summary reports the snapshot version
 - [#263](https://github.com/InditexTech/docouture/pull/263) \[cli] `docouture upgrade` sets `runtime.log.failure_level: error` in existing playbooks and reports the change
 - [#264](https://github.com/InditexTech/docouture/pull/264) \[tooling] Docouture release WF, bump release version is taking into account only trunk-based development
-- [#263](https://github.com/InditexTech/docouture/pull/263) \[cli] Setup failure_level to error on template
+- [#263](https://github.com/InditexTech/docouture/pull/263) \[cli] Setup failure\_level to error on template
 - [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
 - [#251](https://github.com/InditexTech/docouture/pull/251) \[cli] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
 
 ### Security
 
-- [#250](https://github.com/InditexTech/docouture/pull/250) \[ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB_TOKENs
-- [#265](https://github.com/InditexTech/docouture/pull/265) \[tooling] code-npm_node-sonarcloud-analysis.yml: pass untrusted context via env instead of interpolating it into run
+- [#250](https://github.com/InditexTech/docouture/pull/250) \[ci] Harden the docouture workflows and CLI templates to least-privilege GITHUB\_TOKENs
+- [#265](https://github.com/InditexTech/docouture/pull/265) \[tooling] code-npm\_node-sonarcloud-analysis.yml: pass untrusted context via env instead of interpolating it into run
 - [#249](https://github.com/InditexTech/docouture/pull/249) \[tooling] docouture-release.yml: pass github.ref via env instead of interpolating it into run
 
 ## [1.1.1] - 2026-09-03
@@ -130,7 +132,12 @@ at all).
 - [#47](https://github.com/InditexTech/docouture/pull/47) \[internal] migrate Weave.js content to example package
 - [#33](https://github.com/InditexTech/docouture/pull/33) \[skills] Correct the iop-ds-components skill against the shipped package
 
-[Unreleased]: https://github.com/InditexTech/docouture/compare/1.1.1...HEAD
+[Unreleased]: https://github.com/InditexTech/docouture/compare/1.2.0...HEAD
+
+[1.2.0]: https://github.com/InditexTech/docouture/compare/1.1.1...1.2.0
+
 [1.1.1]: https://github.com/InditexTech/docouture/compare/1.1.0...1.1.1
+
 [1.1.0]: https://github.com/InditexTech/docouture/compare/1.0.0...1.1.0
+
 [1.0.0]: https://github.com/InditexTech/docouture/releases/tag/1.0.0

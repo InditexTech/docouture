@@ -43,14 +43,14 @@ function createContentCatalog(components, pages) {
   }
 }
 
-async function run({ components, pages }) {
+async function run({ components, pages, siteUrl }) {
   const context = createContext()
   registerSearchIndex(context)
 
   const contentCatalog = createContentCatalog(components, pages)
   const files = []
   const siteCatalog = { addFile: (f) => files.push(f) }
-  const playbook = { ui: {} }
+  const playbook = { ui: {}, ...(siteUrl ? { site: { url: siteUrl } } : {}) }
 
   await context.emit('navigationBuilt', { contentCatalog, siteCatalog, playbook })
 
@@ -104,5 +104,29 @@ describe('registerSearchIndex feedback', () => {
     const totalsLine = logs.info.find((args) => args[0].startsWith('search index totals'))
     expect(totalsLine).toEqual(['search index totals: %s pages, %s records, %s index file(s) written', 2, 2, 2])
     expect(logs.warn).toHaveLength(0)
+  })
+})
+
+describe('registerSearchIndex site.url path', () => {
+  const setup = () => {
+    const componentVersion = { name: 'd', version: '', title: 'D', navigation: [] }
+    return {
+      components: [{ versions: [componentVersion] }],
+      pages: [createPage({ component: 'd', url: '/d/faq/', title: 'FAQ' })],
+    }
+  }
+  const urls = (files) => JSON.parse(files[0].contents.toString()).records.map((r) => r.url)
+
+  it('prefixes the site path', async () => {
+    const { files } = await run({ ...setup(), siteUrl: 'https://o.github.io/repo' })
+    expect(urls(files)).toEqual(['/repo/d/faq/#x'])
+  })
+  it('adds no prefix for a root site.url', async () => {
+    const { files } = await run({ ...setup(), siteUrl: 'https://docs.example.com/' })
+    expect(urls(files)).toEqual(['/d/faq/#x'])
+  })
+  it('adds no prefix without site.url', async () => {
+    const { files } = await run(setup())
+    expect(urls(files)).toEqual(['/d/faq/#x'])
   })
 })

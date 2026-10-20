@@ -6,6 +6,7 @@
 
 const htmlToMarkdown = require('./html-to-markdown')
 const resolveUrl = require('./resolve-url')
+const siteUrlParts = require('./site-url')
 
 // Mirrors search-index.js's own constants and reasoning for both: a page
 // opts out of `:page-layout: home` because the landing is marketing surface
@@ -72,6 +73,7 @@ module.exports = function registerLlmsTxt(context) {
 
   context.on('navigationBuilt', ({ contentCatalog, siteCatalog, playbook }) => {
     const defaultLayout = playbook.ui?.defaultLayout || DEFAULT_LAYOUT_NAME
+    const { baseUrl } = siteUrlParts(playbook.site?.url)
     const components = contentCatalog.getComponents()
     const multiComponent = components.length > 1
 
@@ -79,7 +81,16 @@ module.exports = function registerLlmsTxt(context) {
     const fullParts = []
     let summary
 
-    const ctx = { descriptors, contentCatalog, defaultLayout, multiComponent, logger, sectionsByHeading, fullParts }
+    const ctx = {
+      baseUrl,
+      descriptors,
+      contentCatalog,
+      defaultLayout,
+      multiComponent,
+      logger,
+      sectionsByHeading,
+      fullParts,
+    }
     for (const component of components) {
       for (const componentVersion of component.versions) {
         const componentSummary = collectComponentVersionLlms(componentVersion, ctx)
@@ -136,18 +147,18 @@ function getEligiblePages(componentVersion, contentCatalog, defaultLayout, exclu
 // heading) and the full Markdown dump entry — pushed straight onto the
 // caller's shared accumulators, since both output files are built from the
 // same single pass over every component/page.
-function addPageEntry(page, heading, sectionsByHeading, fullParts) {
+function addPageEntry(page, heading, sectionsByHeading, fullParts, baseUrl) {
   const title = page.asciidoc?.doctitle
   if (!title) return // no AsciiDoc header at all — nothing to list or dump, same rule search-index.js applies
 
   if (!sectionsByHeading.has(heading)) sectionsByHeading.set(heading, [])
   sectionsByHeading.get(heading).push({
     title,
-    url: page.pub.url,
+    url: baseUrl + page.pub.url,
     description: page.asciidoc?.attributes?.description || '',
   })
 
-  fullParts.push(buildFullEntry(title, page))
+  fullParts.push(buildFullEntry(title, page, baseUrl))
 }
 
 // Everything one component version contributes: every eligible page's entry
@@ -158,7 +169,8 @@ function addPageEntry(page, heading, sectionsByHeading, fullParts) {
 // the first one seen (there is only one site-wide summary line, not one per
 // component).
 function collectComponentVersionLlms(componentVersion, ctx) {
-  const { descriptors, contentCatalog, defaultLayout, multiComponent, logger, sectionsByHeading, fullParts } = ctx
+  const { baseUrl, descriptors, contentCatalog, defaultLayout, multiComponent, logger, sectionsByHeading, fullParts } =
+    ctx
   const where = `${componentVersion.name}@${componentVersion.version || 'default'}`
   const descriptor = descriptors.get(componentVersion.version + '@' + componentVersion.name) || {}
 
@@ -169,7 +181,7 @@ function collectComponentVersionLlms(componentVersion, ctx) {
   for (const page of pages) {
     const moduleTitle = moduleTitleByModule.get(page.src.module) || componentVersion.title
     const heading = multiComponent ? `${componentVersion.title} — ${moduleTitle}` : moduleTitle
-    addPageEntry(page, heading, sectionsByHeading, fullParts)
+    addPageEntry(page, heading, sectionsByHeading, fullParts, baseUrl)
   }
 
   return descriptor.summary
@@ -199,9 +211,9 @@ function buildExcludedSet(exclude, contentCatalog, componentVersion, logger, whe
   return excluded
 }
 
-function buildFullEntry(title, page) {
+function buildFullEntry(title, page, baseUrl) {
   const markdown = htmlToMarkdown(page.contents.toString())
-  return `# ${title}\n\nSource: ${page.pub.url}\n\n${markdown}`
+  return `# ${title}\n\nSource: ${baseUrl}${page.pub.url}\n\n${markdown}`
 }
 
 function buildLlmsTxt(siteTitle, summary, sectionsByHeading) {

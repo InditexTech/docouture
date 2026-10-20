@@ -19,17 +19,14 @@ at all).
 
 ### Fixed
 
+- [#245](https://github.com/InditexTech/docouture/issues/245) \[antora-extensions] Search result links and `llms.txt` links include the path of `site.url`, so they no longer 404 on GitHub Pages; `llms.txt`/`llms-full.txt` links are now absolute when `site.url` is set
 - [#269](https://github.com/InditexTech/docouture/issues/269) \[tooling] Snapshot publish builds the `BASELINE` branch, like the release job, instead of the dispatched workflow ref
 - [#267](https://github.com/InditexTech/docouture/issues/267) \[tooling] Snapshot publish uses `workflow_dispatch` (`ACTION=snapshot`) instead of an `issue_comment`, which npm trusted publishing now rejects; the job summary reports the snapshot version
 - [#263](https://github.com/InditexTech/docouture/pull/263) \[cli] `docouture upgrade` sets `runtime.log.failure_level: error` in existing playbooks and reports the change
-- [#264](https://github.com/InditexTech/docouture/pull/264) Docouture release WF, bump release version is taking into account only trunk-based development
-- [#263](https://github.com/InditexTech/docouture/pull/263) Setup failure_level to error on template
+- [#264](https://github.com/InditexTech/docouture/pull/264) \[tooling] Docouture release WF, bump release version is taking into account only trunk-based development
+- [#263](https://github.com/InditexTech/docouture/pull/263) \[cli] Setup failure_level to error on template
 - [#253](https://github.com/InditexTech/docouture/pull/253) \[tooling] docouture-release-preview.yml fails on pull requests from forks
 - [#251](https://github.com/InditexTech/docouture/pull/251) \[cli] check-links.mjs: process.exit(1) truncates stdout, hiding which links are actually broken
-
-### Documentation
-
-- [#247](https://github.com/InditexTech/docouture/pull/247) [documentation] Temporarily remove references to Weave.js's showcase URL
 
 ### Security
 

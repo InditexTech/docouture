@@ -5,6 +5,7 @@
 'use strict'
 
 const { parse, NodeType } = require('node-html-parser')
+const siteUrlParts = require('./site-url')
 
 // h1-h4 are destinations worth their own record. h5/h6 are a label inside a
 // section rather than a destination — see this file's header — so they are
@@ -58,6 +59,8 @@ module.exports = function registerSearchIndex(context) {
   context.on('navigationBuilt', ({ contentCatalog, siteCatalog, playbook }) => {
     const outputDir = playbook.ui?.outputDir ?? '_'
     const defaultLayout = playbook.ui?.defaultLayout || DEFAULT_LAYOUT_NAME
+    // pub.url is site-root relative; search links must carry the site.url path (e.g. /<repo> on GitHub Pages).
+    const { pathPrefix } = siteUrlParts(playbook.site?.url)
 
     // Site-wide feedback (GH-103-adjacent): a component version producing
     // no search records used to fail silently — the index file for it
@@ -79,7 +82,13 @@ module.exports = function registerSearchIndex(context) {
             page.src.version === componentVersion.version &&
             resolveLayout(page, defaultLayout) !== HOME_LAYOUT_NAME
         )
-        const records = buildComponentVersionRecords(componentVersion, contentCatalog, defaultLayout, logger)
+        const records = buildComponentVersionRecords(
+          componentVersion,
+          contentCatalog,
+          defaultLayout,
+          logger,
+          pathPrefix
+        )
 
         if (!records.length) {
           logger.warn('%s produced no search records; no search index written', where)
@@ -127,7 +136,7 @@ module.exports = function registerSearchIndex(context) {
   })
 }
 
-function buildComponentVersionRecords(componentVersion, contentCatalog, defaultLayout, logger) {
+function buildComponentVersionRecords(componentVersion, contentCatalog, defaultLayout, logger, pathPrefix) {
   // Module -> category title. Empty when the component declares no
   // nav_modules at all, which is what makes a single-module site fall back
   // to one category (its own title) for every page.
@@ -147,12 +156,12 @@ function buildComponentVersionRecords(componentVersion, contentCatalog, defaultL
   const records = []
   for (const page of pages) {
     const category = categoryByModule.get(page.src.module) || componentVersion.title
-    records.push(...buildPageRecords(page, componentVersion.title, category, logger))
+    records.push(...buildPageRecords(page, componentVersion.title, category, logger, pathPrefix))
   }
   return records
 }
 
-function buildPageRecords(page, componentTitle, category, logger) {
+function buildPageRecords(page, componentTitle, category, logger, pathPrefix) {
   const title = page.asciidoc?.doctitle
   if (!title) {
     // No AsciiDoc header at all (rare, but a page-partial fragment or the
@@ -161,7 +170,7 @@ function buildPageRecords(page, componentTitle, category, logger) {
     return []
   }
 
-  const url = page.pub.url
+  const url = pathPrefix + page.pub.url
   const baseHierarchy = dedupeAdjacent([componentTitle, category])
 
   // Pass 1: flatten the article into chunks in document order — one for the

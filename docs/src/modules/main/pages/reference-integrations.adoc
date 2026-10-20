@@ -82,13 +82,14 @@ antora:
 `@inditextech/docouture-antora-extensions` builds a search index at build time,
 published per component version, that the UI bundle's search dialog reads directly
 (xref:main:reference-ui-bundle.adoc[]). No manual wiring — registering the extension is enough.
+Result links include the path of the playbook's `site.url` (for example `/<repo>` on GitHub Pages).
 
 === AI ingestion — `llms.txt`
 
 Every build publishes `llms.txt` (a Markdown index) and `llms-full.txt` (a full
 aggregated Markdown dump) at the site root, alongside `sitemap.xml` — the
 https://llmstxt.org[llms.txt convention], letting an agent read the site without
-scraping rendered HTML. Configured under `docs/src/antora.yml`'s `llms` key (see
+scraping rendered HTML. Links are absolute (built from `site.url`) when it is set, and root-relative otherwise. Configured under `docs/src/antora.yml`'s `llms` key (see
 xref:main:reference-antora-descriptor-configuration.adoc[]) — `summary` becomes the blockquote under
 the site title; `exclude` leaves specific pages out of both files. See also
 xref:main:reference-ai-first-approach.adoc[] for the broader philosophy this feeds into.

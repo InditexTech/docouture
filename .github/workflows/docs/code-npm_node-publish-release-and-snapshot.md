@@ -4,7 +4,7 @@
 
 ## Triggers
 
-- A manual dispatch (`workflow_dispatch`) with `ACTION=snapshot`, run on the branch selected in the GitHub UI (`build-snapshot` + `publish-snapshot` jobs). npm rejects trusted publishing tokens from `issue_comment` events, so the former `/publish-snapshot` comment trigger was removed.
+- A manual dispatch (`workflow_dispatch`) with `ACTION=snapshot`, built from the `BASELINE` branch (`build-snapshot` + `publish-snapshot` jobs; "Use workflow from" only selects the workflow file). npm rejects trusted publishing tokens from `issue_comment` events, so the former `/publish-snapshot` comment trigger was removed.
 - Any `closed` pull request to `main`/`main-*` on the `code/**` or `.github/workflows/code**` paths, if labeled `release-type/*` and not `skip-release` (`release` job).
 - A manual dispatch (`workflow_dispatch`) with `ACTION=release` (the default), taking a `BASELINE` branch and a `RELEASE_TYPE` (`release` job).
 
@@ -33,8 +33,8 @@ Permissions are scoped at the job level following the principle of least privile
 - **No gitflow sync-to-develop PR**: docouture is trunk-based (main + PRs only), so weave.js's "create a sync PR into develop" step and its failure-comment step are dropped entirely.
 - **ui-bundle release artifact**: docouture additionally locates `packages/ui-bundle/build/ui-bundle-<version>.zip` and attaches it to the GitHub Release — weave.js has no equivalent since it ships npm packages only, not a site-building tool with a distributable UI bundle.
 - **Tag scheme**: uses `tag-prefix: ""` (bare `X.Y.Z` tags), matching weave.js exactly.
-- **Snapshot publish is split into two jobs**, unlike weave.js's single `publish-snapshot` job: `build-snapshot` checks out the dispatched branch (only after an admin-checked manual dispatch) and packs `pnpm pack` tarballs, but never sees `NPM_TOKEN` or the OIDC id-token; `publish-snapshot` holds those credentials but only downloads the tarballs the first job produced and never checks out the branch itself. This closes off running an author-controlled `package.json`/lifecycle script in a job that can reach the npm registry — a snapshot of an author-controlled branch is inherently building untrusted code, and the admin check narrows *who* can trigger it but doesn't make *what* gets built trustworthy.
-- **`build-snapshot`'s caches are read-only**: it restores the pnpm store and asdf caches but never saves them back (`actions/cache/restore`, not `actions/cache`, and no paired save step). A dispatch gets write access to the selected branch's cache scope, so letting it save would let a malicious branch poison a cache entry later restored by `release` or `pr-verify`.
+- **Snapshot publish is split into two jobs**, unlike weave.js's single `publish-snapshot` job: `build-snapshot` checks out the `BASELINE` branch (only after an admin-checked manual dispatch) and packs `pnpm pack` tarballs, but never sees `NPM_TOKEN` or the OIDC id-token; `publish-snapshot` holds those credentials but only downloads the tarballs the first job produced and never checks out the branch itself. This closes off running an author-controlled `package.json`/lifecycle script in a job that can reach the npm registry — a snapshot of an author-controlled branch is inherently building untrusted code, and the admin check narrows *who* can trigger it but doesn't make *what* gets built trustworthy.
+- **`build-snapshot`'s caches are read-only**: it restores the pnpm store and asdf caches but never saves them back (`actions/cache/restore`, not `actions/cache`, and no paired save step). A dispatch gets write access to the workflow ref's cache scope, so letting it save would let a malicious branch poison a cache entry later restored by `release` or `pr-verify`.
 
 ## Jobs
 
@@ -44,7 +44,7 @@ Permissions are scoped at the job level following the principle of least privile
 
   - Validate the actor has admin permissions.
   - Take the release type from the `RELEASE_TYPE` input.
-  - Checkout the dispatched commit (`github.sha`).
+  - Checkout the `BASELINE` branch.
   - Restore (read-only) the pnpm store and asdf caches; configure asdf environment from `code/.tool-versions`.
   - Ensure minimum npm version (`>=11.5.1`) for OIDC support, upgrading only if needed.
   - Configure npmrc registry (no auth token — OIDC handles authentication in the publish job).
@@ -65,7 +65,7 @@ Permissions are scoped at the job level following the principle of least privile
   - Setup Node.js and ensure minimum npm version (`>=11.5.1`) for OIDC support.
   - Configure npmrc registry.
   - Publish the `existing/` tarballs via OIDC trusted publishing (`npm publish --tag next`), or the `new/` tarballs via `NPM_TOKEN` if any packages are being published for the first time.
-  - Write a job summary with the result: the snapshot version, tag, branch and auth method on success, or the attempted version on failure.
+  - Write a job summary with the result: the snapshot version, tag, baseline branch and auth method on success, or the attempted version on failure.
 
 - ### `release`
 

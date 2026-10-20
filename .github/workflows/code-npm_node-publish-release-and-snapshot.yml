@@ -25,7 +25,7 @@ on:
           - "release"
           - "snapshot"
       BASELINE:
-        description: "Baseline branch"
+        description: "Baseline branch: the release is cut from and pushed to it; the snapshot is built from it"
         required: true
         default: "main"
       RELEASE_TYPE:
@@ -85,10 +85,10 @@ jobs:
           RELEASE_TYPE: ${{ inputs.RELEASE_TYPE }}
         run: echo "RELEASE_LABELS=$RELEASE_TYPE" >> "$GITHUB_ENV"
 
-      - name: Checkout selected branch
+      - name: Checkout baseline branch
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.BASELINE }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -479,6 +479,7 @@ jobs:
         if: always()
         env:
           JOB_STATUS: ${{ job.status }}
+          BASELINE: ${{ inputs.BASELINE }}
           AUTH_METHOD: ${{ env.HAS_NEW_PACKAGES == 'true' && 'NPM_TOKEN (new packages detected)' || 'OIDC trusted publishing (provenance)' }}
         run: |
           if [[ "$JOB_STATUS" == "success" ]]; then
@@ -487,7 +488,7 @@ jobs:
               echo ""
               echo "- Version: \`${SNAPSHOT_VERSION}\`"
               echo "- Tag: \`next\`"
-              echo "- Branch: \`${GITHUB_REF_NAME}\` (\`${GITHUB_SHA}\`)"
+              echo "- Baseline branch: \`${BASELINE}\`"
               echo "- Auth: ${AUTH_METHOD}"
               echo ""
               echo "Install with: \`npm i @inditextech/docouture-cli@${SNAPSHOT_VERSION}\`"
@@ -497,7 +498,7 @@ jobs:
               echo "### :x: NPM snapshot publication failed"
               echo ""
               echo "- Version attempted: \`${SNAPSHOT_VERSION}\`"
-              echo "- Branch: \`${GITHUB_REF_NAME}\` (\`${GITHUB_SHA}\`)"
+              echo "- Baseline branch: \`${BASELINE}\`"
               echo ""
               echo "Please check the workflow logs for details."
             } >> "$GITHUB_STEP_SUMMARY"

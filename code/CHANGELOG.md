@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Security
+
+- [#286](https://github.com/InditexTech/docouture/pull/286) \[tooling] Raise handlebars floor to 4.7.10 (critical Dependabot alerts)
+
 ## [1.3.0] - 2026-10-20
 
 ### Fixed

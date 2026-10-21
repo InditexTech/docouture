@@ -1,0 +1,21 @@
+= v1.1.1
+
+[.lead]
+A single workflow fix for v1.1.0. Existing sites only get it by running
+`docouture upgrade`.
+
+== Do this
+
+. Run `docouture upgrade`, review the diff, and commit `.github/workflows/`. See
+  xref:main:reference-cli.adoc[].
+
+== What changed
+
+* *Fix: the `release-type/*` guard never matched.* In `docouture-release.yml`, the check
+  meant to stop a docs release from firing on pull request merge while a code release was
+  also pending always passed, so the docs release ran immediately and again when the code
+  release published. The guard now matches against the joined label list.
+* *Where it applies.* The fix is mirrored into the starter template's workflow, where it
+  stays dormant unless you adopt the `release-type/*` label convention.
+* *Changelog page.* The generated changelog no longer shows a literal backslash in front
+  of the leading `[type]` tag of each entry.

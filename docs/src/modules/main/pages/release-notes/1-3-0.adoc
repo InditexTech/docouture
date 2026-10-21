@@ -4,6 +4,12 @@
 This release removes `check-links`. Existing sites are cleaned up by running
 `docouture upgrade`.
 
+[IMPORTANT]
+====
+This release, like earlier ones, resolves the vulnerable `handlebars` 4.7.9 for existing
+lockfiles. Go straight to xref:main:release-notes/1-3-1.adoc[v1.3.1].
+====
+
 == Do this
 
 . Run `docouture upgrade`, review the diff, and commit `.github/workflows/` and

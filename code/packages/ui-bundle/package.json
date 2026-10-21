@@ -46,7 +46,7 @@
     "gulp": "~5.0.1",
     "gulp-connect": "~5.7.0",
     "gulp-postcss": "~10.0.0",
-    "handlebars": "~4.7.9",
+    "handlebars": "~4.7.10",
     "js-yaml": "~4.3.2",
     "jsdom": "~25.0.1",
     "lucide-static": "~1.38.0",

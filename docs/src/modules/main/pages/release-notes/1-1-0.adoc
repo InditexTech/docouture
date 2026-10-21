@@ -1,0 +1,34 @@
+= v1.1.0
+
+[.lead]
+This release makes the docs release workflow follow a real code release on its own, and
+stops a single repeated link from dominating the link check. Existing sites only get the
+workflow changes by running `docouture upgrade`.
+
+== Do this
+
+. Run `docouture upgrade`, review the diff, and commit `.github/workflows/` and
+  `docs/scripts/`. See xref:main:reference-cli.adoc[].
+. Run `docouture build` and fix whatever it reports, then `docouture doctor`.
+
+== What you get
+
+* *Docs release follows a code release.* `docouture-release.yml` now also runs when a
+  GitHub Release is published, so a docs release no longer needs a separate
+  `docs/release`-labeled pull request merge. When the same merge carries a
+  `release-type/*` label (and not `skip-release`), the pull request trigger backs off so
+  the workflow does not run twice for one merge. See
+  xref:main:guides-releasing-a-documentation.adoc[].
+* *Version validation up front.* `docs/.release-version`, or the manual dispatch input,
+  is checked against the full SemVer 2.0.0 grammar before any tag is cut, instead of
+  failing after the tag was pushed. `docouture-release-preview.yml` surfaces the same
+  check as a pull request comment before merge.
+* *Faster link check.* The starter's `check-links` script gained a timeout and per-host
+  limiting, so a link repeated on every page, such as the repository link, no longer
+  dominates the crawl.
+
+[NOTE]
+====
+`check-links` was removed in xref:main:release-notes/1-3-0.adoc[v1.3.0], so the last point
+only matters if you stay on v1.1.0 or v1.1.1.
+====

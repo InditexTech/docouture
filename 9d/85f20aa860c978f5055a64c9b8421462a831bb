@@ -1,0 +1,39 @@
+AGENTS.md
+  s_11ed4dab175cd0::t_18bd5a54a45ada 157,160-161
+code/CHANGELOG.md
+  s_11ed4dab175cd0::t_f49583fe99729b 15-18
+code/package.json
+  s_11ed4dab175cd0::t_048b09ece71ccb 44,58-59
+code/pnpm-lock.yaml
+  s_11ed4dab175cd0::t_19ad936b904555 18,66-68,71,93-95,209-210,2136-2137,2290-2291,3965-3966,4292,5086,5097,5103,5278,6073,6287,6871,7929-7930,8148,8161,8164,8181
+docs/pnpm-lock.yaml
+  s_11ed4dab175cd0::t_6f2c71f4f829c7 644-645,1235,1814
+docs/src/modules/main/nav.adoc
+  s_11ed4dab175cd0::t_815e15ac10abb3 41,44-45
+docs/src/modules/main/pages/release-notes/1-1-0.adoc
+  s_11ed4dab175cd0::t_0a2ec4339eedb9 1-34
+docs/src/modules/main/pages/release-notes/1-1-1.adoc
+  s_11ed4dab175cd0::t_a2b1d93db97a2a 1-21
+docs/src/modules/main/pages/release-notes/1-3-0.adoc
+  s_11ed4dab175cd0::t_85934ac9c62bd6 7-12
+docs/src/modules/main/pages/release-notes/1-3-1.adoc
+  s_11ed4dab175cd0::t_3ca59492e619f6 1-33
+docs/src/modules/main/pages/release-notes/index.adoc
+  s_11ed4dab175cd0::t_3a09763ac2a3c0 8,11-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9d85f20aa860c978f5055a64c9b8421462a831bb",
+  "prompts": {},
+  "sessions": {
+    "s_11ed4dab175cd0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ea2e2b2f6ffeNSJ38kDpRGr8Ed",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -17,7 +17,8 @@ dormant on a fresh site: it only fires once the repo separately labels PRs
 scaffolding doesn't set up. It exists so that, if a repo's own code releases and docs
 releases can land in the same merged PR, the docs release waits for the code release to
 actually publish instead of firing twice for one merge — adopting that convention later
-is then a label/workflow change elsewhere, not a rewrite of this file.
+is then a label/workflow change elsewhere, not a rewrite of this file. See
+<<combined-releases>> for how the two interact.
 
 Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a one-off
 commit built on the release branch's current tip, `git tag docs/v<value>` is created
@@ -90,3 +91,46 @@ Republishing an already-released version (fixing a docs typo caught after the ta
 went out) is a deliberate, ordinary act — no separate flag needed. The one
 difference: the `docs/.release-version` forward-bump step is skipped on a republish,
 since that file's current value was typically already the next planned target.
+
+[#combined-releases]
+== Combined code and docs releases
+
+If your repository also cuts code releases, labelling the merged pull request
+`release-type/*` and publishing a GitHub Release, the docs can be released together with
+the code. The `docouture-release.yml` workflow reacts to that Release being published, not to
+the merge itself:
+
+* *`release-type/*` alone* is enough. When the code release publishes a (non-pre-release)
+  GitHub Release, the docs are released as part of it, so the `docs/release` label is not
+  needed.
+* *`docs/release` together with `release-type/*`* does not release the docs on merge.
+  The merge-time path backs off, to avoid releasing the docs twice for one merge, and the
+  docs are released when the Release is published. The `docs/release` label is redundant.
+* *`skip-release` is not the answer.* In the code release convention it cancels the code
+  release. The docs workflow treats a pull request with `skip-release` as if it had no
+  `release-type/*` label, so `docs/release` releases the docs on merge again.
+
+`docouture-release-preview.yml` comments on the pull request with what will really happen
+for these label combinations. It stays silent on a code-only pull request that does not
+change `docs/`.
+
+=== When the docs are not released
+
+The docs release depends on the code release publishing a Release. They are not released when:
+
+* the code release fails before publishing a Release, or leaves it as a draft;
+* the Release is marked as a pre-release: a published pre-release never moves the stable
+  docs tag;
+* your code release does not publish a GitHub Release at all.
+
+In versioned mode there is one more case. If `docs/.release-version` is missing or
+invalid, the docs release fails when the Release is published, after the code release has
+already gone out. The preview flags this on a pull request with `docs/release`; with
+`release-type/*` alone it does not check the file, which is normally present because every
+release bumps it forward.
+
+=== Recovering
+
+Run the workflow by hand: Actions tab → "docouture-release" → Run workflow, supplying the
+version in versioned mode. Or release the docs in a separate pull request labelled
+`docs/release` without `release-type/*`.

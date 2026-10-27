@@ -1,0 +1,31 @@
+= v1.3.2
+
+[.lead]
+Two fixes. The release preview now tells the truth for pull requests that release code and
+docs together, and the UI bundle no longer shows `&amp;` where a page attribute contains
+`&`. Existing sites only get the new preview wording by running `docouture upgrade`.
+
+== Do this
+
+. Update every `@inditextech/docouture-*` package, and the CLI if you install it, to
+  `1.3.2`. In a scaffolded site these are pinned in `docs/package.json`.
+. Run `docouture upgrade`, review the diff, and commit `.github/workflows/`. See
+  xref:main:reference-cli.adoc[].
+
+No playbook or content changes are needed.
+
+== What changed
+
+* *Fix: the docs release preview misled on combined code and docs releases.*
+  `docouture-release-preview.yml` said a pull request with `docs/release` and
+  `release-type/*` would release the docs on merge, and that a pull request with
+  `release-type/*` alone would not release them. In fact the docs are released when the
+  code release publishes a GitHub Release. The preview now says so, explains what to do when
+  no Release is published (failure, draft, pre-release), and points to running
+  `docouture-release` manually. See xref:main:guides-releasing-a-documentation.adoc#combined-releases[].
+* *Clearer preview comments.* Every comment now says what happens, why, and what to do. A
+  missing or invalid `docs/.release-version` on a pull request that also has
+  `release-type/*` now says the docs release fails when the Release is published, after the
+  code release has gone out, not on merge.
+* *Fix: `&` shown as `&amp;`.* The hero, home hero and navigation labels no longer
+  double-escape `&` in page attributes.

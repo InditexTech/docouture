@@ -154,6 +154,7 @@ issue belongs to.
 | structure.adoc                           | `code/README.md`, workspace `packages/` layout                                          | current |
 | guides-branching-model.adoc              | `code/packages/cli/templates/workflows/*.yml`                                          | current |
 | guides-releasing-a-documentation.adoc    | `code/packages/cli/templates/workflows/docouture-release.yml`, `docouture-release-preview.yml` | current |
+| release-notes/1-3-2.adoc (v1.3.2 entry)  | manual (hand-written: combined-release preview wording and upgrade steps) | current |
 | release-notes/1-3-1.adoc (v1.3.1 entry)  | manual (hand-written: handlebars security floor and upgrade steps) | current |
 | release-notes/1-3-0.adoc (v1.3.0 entry)  | manual (hand-written: check-links removal and upgrade checklist) | current |
 | release-notes/1-2-0.adoc (v1.2.0 entry)  | manual (hand-written: upgrade checklist for 1.2.0)                                       | current |

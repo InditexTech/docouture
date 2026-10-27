@@ -14,6 +14,7 @@ at all).
 
 ### Fixed
 
+- [#292](https://github.com/InditexTech/docouture/issues/292) \[tooling] Release preview misleads on combined code+docs releases (release-type/* without a published Release)
 - [#293](https://github.com/InditexTech/docouture/pull/293) \[ui-bundle] Hero, home-hero and nav aria-label double-escape & in page attributes (shows &amp;)
 
 ## [1.3.1] - 2026-10-21

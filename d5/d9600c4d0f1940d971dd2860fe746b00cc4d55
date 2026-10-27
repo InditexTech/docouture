@@ -1,0 +1,37 @@
+code/CHANGELOG.md
+  s_3c269eb2f21eb9::t_85d4148b01f4be 15-18
+code/packages/ui-bundle/preview-src/content.adoc
+  s_3c269eb2f21eb9::t_e0e0d8fa93bd0c 9-10,14
+code/packages/ui-bundle/src/partials/escaping.spec.ts
+  s_3c269eb2f21eb9::t_9be0b3e5f721eb 1-144
+code/packages/ui-bundle/src/partials/hero.hbs
+  s_3c269eb2f21eb9::t_383318b3aaae59 73,79,87,91
+code/packages/ui-bundle/src/partials/home-hero.hbs
+  s_3c269eb2f21eb9::t_7c06078288dc56 92,97,105,109,143
+code/packages/ui-bundle/src/partials/nav-tree.hbs
+  s_3c269eb2f21eb9::t_21e08ed61b0924 81
+code/packages/ui-bundle/src/partials/search-dialog.hbs
+  s_3c269eb2f21eb9::t_346e6ee73c15b9 127
+openspec/changes/fix-ui-bundle-double-escaping/.openspec.yaml
+  s_3c269eb2f21eb9::t_1044d9050927bb 1-2
+openspec/changes/fix-ui-bundle-double-escaping/proposal.md
+  s_3c269eb2f21eb9::t_4d137a99086cf9 1-31
+openspec/changes/fix-ui-bundle-double-escaping/tasks.md
+  s_3c269eb2f21eb9::t_cd9ad097b995b5 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "d5d9600c4d0f1940d971dd2860fe746b00cc4d55",
+  "prompts": {},
+  "sessions": {
+    "s_3c269eb2f21eb9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e821c1029fferiScVXkhKZCIK3",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

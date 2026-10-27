@@ -120,7 +120,12 @@ describe('home-hero', () => {
 describe('nav-tree', () => {
   it('escapes the toggle aria-label once and strips markup', () => {
     const navigation = [
-      { content: 'R&amp;D <em>&quot;x&quot;</em>', url: '/a', urlType: 'internal', items: [{ content: 'Child', url: '/b', urlType: 'internal' }] },
+      {
+        content: 'R&amp;D <em>&quot;x&quot;</em>',
+        url: '/a',
+        urlType: 'internal',
+        items: [{ content: 'Child', url: '/b', urlType: 'internal' }],
+      },
     ]
     const html = render('nav-tree', { navigation, page: { url: '/' } })
     expect(html).toContain('aria-label="Toggle R&amp;D &quot;x&quot;"')

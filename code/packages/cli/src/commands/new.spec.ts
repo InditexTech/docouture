@@ -138,6 +138,10 @@ describe('runNew', () => {
 
     const releasePreview = await readFile(join(repo, '.github', 'workflows', 'docouture-release-preview.yml'), 'utf8')
     expect(releasePreview).toContain("branches: ['main*']")
+    // A code release (release-type/*) defers the docs release to the published GitHub Release.
+    expect(releasePreview).toContain('release-preview-code-release:')
+    expect(releasePreview).toContain('Docs will be released with the code release, not on merge')
+    expect(releasePreview).toContain('The docs release follows the code release')
 
     const publishPrerelease = await readFile(
       join(repo, '.github', 'workflows', 'docouture-publish-prerelease.yml'),

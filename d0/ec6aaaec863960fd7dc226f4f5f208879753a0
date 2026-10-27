@@ -1,0 +1,19 @@
+.gitignore
+  s_3c269eb2f21eb9::t_f67e6037b7e974 4-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "d0ec6aaaec863960fd7dc226f4f5f208879753a0",
+  "prompts": {},
+  "sessions": {
+    "s_3c269eb2f21eb9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e821c1029fferiScVXkhKZCIK3",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

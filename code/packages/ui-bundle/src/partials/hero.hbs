@@ -70,13 +70,13 @@ SPDX-License-Identifier: Apache-2.0
 {{> breadcrumbs}}
         <h1 class="hero__title dt-text dt-text--title-xl">{{{page.title}}}</h1>
 {{#with page.description}}
-        <p class="hero__excerpt dt-text dt-text--body-l">{{this}}</p>
+        <p class="hero__excerpt dt-text dt-text--body-l">{{{detag this}}}</p>
 {{/with}}
 {{#with (split page.attributes.tags ',')}}
         <div class="hero__tags">
         {{#each this}}
           <div class="dt-label dt-label--grey">
-            <span class="dt-label__content">{{this}}</span>
+            <span class="dt-label__content">{{{this}}}</span>
           </div>
         {{/each}}
         </div>
@@ -84,11 +84,11 @@ SPDX-License-Identifier: Apache-2.0
 {{#if (and page.attributes.action page.attributes.[action-url])}}
         <div class="hero__actions">
           <a class="dt-button dt-button--primary dt-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-url]) page.attributes.[action-url])}}}">
-            <span class="dt-button__content">{{page.attributes.action}}</span>
+            <span class="dt-button__content">{{{page.attributes.action}}}</span>
           </a>
         {{#if (and page.attributes.[action-secondary] page.attributes.[action-secondary-url])}}
           <a class="dt-button dt-button--secondary dt-button--icon-and-label" href="{{{relativize (or (resolvePageURL page.attributes.[action-secondary-url]) page.attributes.[action-secondary-url])}}}">
-            <span class="dt-button__content">{{page.attributes.[action-secondary]}}</span>
+            <span class="dt-button__content">{{{page.attributes.[action-secondary]}}}</span>
           </a>
         {{/if}}
         </div>

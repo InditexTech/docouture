@@ -89,12 +89,12 @@ SPDX-License-Identifier: Apache-2.0
 {{#with site.keys.productLogoDark}}
     <img class="home-hero__logo home-hero__logo--dark" src="{{{relativize this}}}" width="40" height="40" alt="">
 {{/with}}
-    <h1 class="home-hero__title">{{{site.title}}}</h1>
+    <h1 class="home-hero__title">{{site.title}}</h1>
 {{#with (split page.attributes.tags ',')}}
     <div class="home-hero__labels">
     {{#each this}}
       <div class="dt-label dt-label--grey">
-        <span class="dt-label__content">{{this}}</span>
+        <span class="dt-label__content">{{{this}}}</span>
       </div>
     {{/each}}
     </div>
@@ -102,11 +102,11 @@ SPDX-License-Identifier: Apache-2.0
 {{#if (and page.attributes.action page.attributes.[action-url])}}
     <div class="home-hero__actions">
       <a class="dt-button dt-button--primary{{#unless (resolvePageURL page.attributes.[action-url])}} dt-button--icon-and-label dt-button--icon-action{{/unless}}" href="{{{relativize (or (resolvePageURL page.attributes.[action-url]) page.attributes.[action-url])}}}">
-        <span class="dt-button__content">{{page.attributes.action}}{{#unless (resolvePageURL page.attributes.[action-url])}}<span class="dt-button__icon dt-button__icon-action">{{icon "external-link"}}</span>{{/unless}}</span>
+        <span class="dt-button__content">{{{page.attributes.action}}}{{#unless (resolvePageURL page.attributes.[action-url])}}<span class="dt-button__icon dt-button__icon-action">{{icon "external-link"}}</span>{{/unless}}</span>
       </a>
     {{#if (and page.attributes.[action-secondary] page.attributes.[action-secondary-url])}}
       <a class="dt-button dt-button--secondary{{#unless (resolvePageURL page.attributes.[action-secondary-url])}} dt-button--icon-and-label dt-button--icon-action{{/unless}}" href="{{{relativize (or (resolvePageURL page.attributes.[action-secondary-url]) page.attributes.[action-secondary-url])}}}">
-        <span class="dt-button__content">{{page.attributes.[action-secondary]}}{{#unless (resolvePageURL page.attributes.[action-secondary-url])}}<span class="dt-button__icon dt-button__icon-action">{{icon "external-link"}}</span>{{/unless}}</span>
+        <span class="dt-button__content">{{{page.attributes.[action-secondary]}}}{{#unless (resolvePageURL page.attributes.[action-secondary-url])}}<span class="dt-button__icon dt-button__icon-action">{{icon "external-link"}}</span>{{/unless}}</span>
       </a>
     {{/if}}
     </div>
@@ -140,7 +140,7 @@ SPDX-License-Identifier: Apache-2.0
   <video class="home-hero__media{{#unless (eq @root.page.attributes.[hero-image-bordered] undefined)}} home-hero__media--bordered{{/unless}}" src="{{{relativize (resolveResourceURL this)}}}" controls preload="metadata"{{#with @root.page.attributes.[hero-video-poster]}} poster="{{{relativize (resolveResourceURL this)}}}"{{/with}}></video>
 {{else}}
   {{#with page.attributes.[hero-image]}}
-  <img class="home-hero__media{{#unless (eq @root.page.attributes.[hero-image-bordered] undefined)}} home-hero__media--bordered{{/unless}}" src="{{{relativize (resolveResourceURL this)}}}" alt="{{@root.page.attributes.[hero-image-alt]}}">
+  <img class="home-hero__media{{#unless (eq @root.page.attributes.[hero-image-bordered] undefined)}} home-hero__media--bordered{{/unless}}" src="{{{relativize (resolveResourceURL this)}}}" alt="{{{@root.page.attributes.[hero-image-alt]}}}">
   {{/with}}
 {{/with}}
 </div>

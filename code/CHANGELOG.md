@@ -12,6 +12,10 @@ at all).
 
 ## [Unreleased]
 
+### Fixed
+
+- [#291](https://github.com/InditexTech/docouture/issues/291) \[ui-bundle] Hero, home-hero and nav aria-label double-escape & in page attributes (shows &amp;)
+
 ## [1.3.1] - 2026-10-21
 
 ### Security

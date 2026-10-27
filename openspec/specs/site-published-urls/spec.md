@@ -1,7 +1,7 @@
 # site-published-urls Specification
 
 ## Purpose
-TBD - created by archiving change fix-search-llms-site-path. Update Purpose after archive.
+Defines how the site's published URLs (search index records and llms.txt links) derive from the playbook's site.url, so links keep the site path prefix and are absolute when the URL is known.
 
 ## Requirements
 

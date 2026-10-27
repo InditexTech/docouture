@@ -1,7 +1,7 @@
 # docs-release-prerelease-sync Specification
 
 ## Purpose
-TBD - created by archiving change git-flow-release-bump-sync. Update Purpose after archive.
+Defines how the docs release workflow detects the branching model and, under git-flow, opens a sync PR from the stable branch back to the prerelease branch without blocking publication.
 
 ## Requirements
 

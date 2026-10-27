@@ -1,7 +1,7 @@
 # cli-branching-declaration Specification
 
 ## Purpose
-TBD - created by archiving change git-flow-release-bump-sync. Update Purpose after archive.
+Defines how a docouture site declares its branching model (trunk-based or git-flow) in docs/package.json, and how the CLI scaffolds, maintains, backfills and checks that declaration.
 
 ## Requirements
 

@@ -1,0 +1,25 @@
+openspec/changes/archive/2026-10-27-remove-check-links/tasks.md
+  s_3c269eb2f21eb9::t_351d7c45792792 24
+openspec/specs/cli-branching-declaration/spec.md
+  s_3c269eb2f21eb9::t_395fa7c7cdfe58 4
+openspec/specs/docs-release-prerelease-sync/spec.md
+  s_3c269eb2f21eb9::t_dfeff42a9d11e8 4
+openspec/specs/site-published-urls/spec.md
+  s_3c269eb2f21eb9::t_7ae23b698a8211 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "9aaa91eb100700ac4d2dd36036cfadfa979043b8",
+  "prompts": {},
+  "sessions": {
+    "s_3c269eb2f21eb9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e821c1029fferiScVXkhKZCIK3",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

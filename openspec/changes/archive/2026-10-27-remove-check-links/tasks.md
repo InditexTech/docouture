@@ -21,4 +21,4 @@
 
 ## 4. Integration
 
-- [ ] 4.1 After a snapshot CLI exists, run `docouture upgrade --dry-run` then `docouture upgrade` against an old-style scaffold and this repo; verify the reported changes and a clean `build`
+- [x] 4.1 After a snapshot CLI exists, run `docouture upgrade --dry-run` then `docouture upgrade` against an old-style scaffold and this repo; verify the reported changes and a clean `build`

@@ -1,0 +1,19 @@
+openspec/specs/ui-bundle-text-escaping/spec.md
+  s_3c269eb2f21eb9::t_02b9d6d5c8f609 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "ad1933470d6de724f0a8c3c085bf4a70d4f5e3a8",
+  "prompts": {},
+  "sessions": {
+    "s_3c269eb2f21eb9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e821c1029fferiScVXkhKZCIK3",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

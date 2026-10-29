@@ -1,0 +1,21 @@
+docs/package.json
+  s_0bdb2372902327::t_c3ae4b8a06496b 17-21
+docs/pnpm-lock.yaml
+  s_0bdb2372902327::t_095ffc4a54286a 12-13,15-16,18-19,21-22,24-25,108-109,112-113,116-117,121-122,125-126,1315,1320,1330,1335,1342,1346
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "523219e429ade2d7532e227a5a81329595fac9ef",
+  "prompts": {},
+  "sessions": {
+    "s_0bdb2372902327": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e78fd5892ffejAS6at2aOAMwuY",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

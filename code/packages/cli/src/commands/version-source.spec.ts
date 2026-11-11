@@ -23,7 +23,9 @@ function git(...args: string[]): void {
   execFileSync('git', args, { cwd: dir, stdio: 'ignore' }) // NOSONAR
 }
 
-async function scaffold(options: { mode?: 'versioned' | 'standalone'; docouture?: Record<string, unknown>; descriptor?: string } = {}) {
+async function scaffold(
+  options: { mode?: 'versioned' | 'standalone'; docouture?: Record<string, unknown>; descriptor?: string } = {}
+) {
   const { mode = 'versioned', docouture = { branching: 'trunk-based' }, descriptor } = options
   await mkdir(join(dir, 'docs'), { recursive: true })
   await writeFile(
@@ -110,7 +112,10 @@ describe('runVersionSource', () => {
   it('sets the github-release prefix and only for that source', async () => {
     await scaffold()
     expect(await runVersionSource(['github-release', '--prefix', 'docs-site@', '--dir', dir])).toBe(0)
-    expect((await pkg()).docouture).toMatchObject({ versionSource: 'github-release', versionSourcePrefix: 'docs-site@' })
+    expect((await pkg()).docouture).toMatchObject({
+      versionSource: 'github-release',
+      versionSourcePrefix: 'docs-site@',
+    })
     expect(await runVersionSource(['tag-bump', '--prefix', 'x', '--dir', dir])).toBe(1)
   })
 

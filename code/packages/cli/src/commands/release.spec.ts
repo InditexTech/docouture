@@ -109,7 +109,17 @@ describe('runRelease resolve', () => {
 
     it('resolves github-release from the release tag, stripping the prefix', async () => {
       await writeSource({ versionSource: 'github-release', versionSourcePrefix: 'docs-site@' })
-      const argv = ['resolve', '--mode', 'versioned', '--event', 'release', '--release-tag', 'docs-site@1.4.0', '--dir', dir]
+      const argv = [
+        'resolve',
+        '--mode',
+        'versioned',
+        '--event',
+        'release',
+        '--release-tag',
+        'docs-site@1.4.0',
+        '--dir',
+        dir,
+      ]
       expect(await runRelease(argv)).toBe(0)
       expect(out()).toContain('version=1.4.0')
       expect(out()).toContain('version_source=github-release')
@@ -118,7 +128,17 @@ describe('runRelease resolve', () => {
 
     it('fails a docs/release pull request under github-release', async () => {
       await writeSource({ versionSource: 'github-release' })
-      const argv = ['resolve', '--mode', 'versioned', '--event', 'pull_request', '--labels', 'docs/release', '--dir', dir]
+      const argv = [
+        'resolve',
+        '--mode',
+        'versioned',
+        '--event',
+        'pull_request',
+        '--labels',
+        'docs/release',
+        '--dir',
+        dir,
+      ]
       expect(await runRelease(argv)).toBe(1)
       expect(errorSpy.mock.calls.flat().join('\n')).toContain('github-release')
     })

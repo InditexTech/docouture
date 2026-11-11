@@ -40,12 +40,18 @@ describe('readProjectCli', () => {
   })
 
   it('falls back to an exact pin in package.json', async () => {
-    await writeFile(join(site, 'package.json'), JSON.stringify({ devDependencies: { '@inditextech/docouture-cli': '1.3.2' } }))
+    await writeFile(
+      join(site, 'package.json'),
+      JSON.stringify({ devDependencies: { '@inditextech/docouture-cli': '1.3.2' } })
+    )
     expect(await readProjectCli(site, root)).toEqual({ version: '1.3.2', hasReleaseResolve: null, from: 'declared' })
   })
 
   it('ignores a range it cannot compare', async () => {
-    await writeFile(join(site, 'package.json'), JSON.stringify({ devDependencies: { '@inditextech/docouture-cli': '^1.3.2' } }))
+    await writeFile(
+      join(site, 'package.json'),
+      JSON.stringify({ devDependencies: { '@inditextech/docouture-cli': '^1.3.2' } })
+    )
     expect((await readProjectCli(site, root)).version).toBeNull()
   })
 

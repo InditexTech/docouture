@@ -532,12 +532,15 @@ describe('runNew', () => {
       expect((await readFile(join(repo, 'docs', '.release-version'), 'utf8')).trim()).toBe('0.1.0')
     })
 
-    it.each(['github-release', 'tag-bump'])('%s declares the source and lays down no .release-version', async (source) => {
-      const { code, repo } = await scaffoldVersioned(['--version-source', source])
-      expect(code).toBe(0)
-      expect((await declared(repo))?.versionSource).toBe(source)
-      await expect(readFile(join(repo, 'docs', '.release-version'), 'utf8')).rejects.toThrow()
-    })
+    it.each(['github-release', 'tag-bump'])(
+      '%s declares the source and lays down no .release-version',
+      async (source) => {
+        const { code, repo } = await scaffoldVersioned(['--version-source', source])
+        expect(code).toBe(0)
+        expect((await declared(repo))?.versionSource).toBe(source)
+        await expect(readFile(join(repo, 'docs', '.release-version'), 'utf8')).rejects.toThrow()
+      }
+    )
 
     it('prints the exact label commands for tag-bump', async () => {
       await scaffoldVersioned(['--version-source', 'tag-bump'])
@@ -555,7 +558,15 @@ describe('runNew', () => {
     it('rejects a standalone site', async () => {
       const repo = join(base, 'repo')
       await initRepo(repo)
-      const code = await runNew(['my-project-docs', '--dir', repo, '--mode', 'standalone', '--version-source', 'tag-bump'])
+      const code = await runNew([
+        'my-project-docs',
+        '--dir',
+        repo,
+        '--mode',
+        'standalone',
+        '--version-source',
+        'tag-bump',
+      ])
       expect(code).toBe(1)
       expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('standalone'))
     })

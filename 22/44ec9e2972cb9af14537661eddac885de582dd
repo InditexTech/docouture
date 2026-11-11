@@ -1,0 +1,25 @@
+code/packages/cli/src/commands/new.spec.ts
+  s_6e8baf847b791c::t_2e0a28c81347c5 535-543,561-569
+code/packages/cli/src/commands/release.spec.ts
+  s_6e8baf847b791c::t_8bfd472faebdcf 112-122,131-141
+code/packages/cli/src/commands/version-source.spec.ts
+  s_6e8baf847b791c::t_eb3be4f69c4f71 26-28,115-118
+code/packages/cli/src/lib/project-cli.spec.ts
+  s_6e8baf847b791c::t_a5f14575aaba2a 43-46,51-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "2244ec9e2972cb9af14537661eddac885de582dd",
+  "prompts": {},
+  "sessions": {
+    "s_6e8baf847b791c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e354f9a62ffeXBiYvfMU21D1zZ",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -134,3 +134,18 @@ release bumps it forward.
 Run the workflow by hand: Actions tab → "docouture-release" → Run workflow, supplying the
 version in versioned mode. Or release the docs in a separate pull request labelled
 `docs/release` without `release-type/*`.
+
+[#protected-branches]
+== Protected release branches
+
+If the release branch is covered by a ruleset that requires pull requests, add the GitHub
+App behind `APP_CLIENT_ID` and `APP_PRIVATE_KEY` to the ruleset's bypass list. The release
+job pushes the release tag and the `docs/.release-version` bump with that App's token.
+
+That token is deliberately not narrowed with `owner`, `repositories` or `permission-*`
+inputs in the release job. A narrowed installation token loses the App's ruleset bypass:
+the bump is rejected with `GH013 Changes must be made through a pull request` and
+`docs/.release-version` stays on the released version. The tradeoff is that the release
+job's token carries all of the App's installation permissions, so install the App only
+where it is needed. The `sync-prerelease` and publish jobs never push to the release
+branch, so they keep narrowed tokens.

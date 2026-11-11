@@ -2,7 +2,7 @@
 
 ## 1. Generator script
 
-- [x] 1.1 Port `changelog-from-prs.mjs` and `changelog-from-prs.test.mjs` from `/Users/jesusmpc/Inditex/weavejs/.github/scripts/` to `.github/scripts/`, adapted to `kind/*` labels, a Documentation section and the "real category wins over `kind/internal`/`kind/epic`" rule; verify `node --test .github/scripts/changelog-from-prs.test.mjs` passes (36 tests)
+- [x] 1.1 Port `changelog-from-prs.mjs` and `changelog-from-prs.test.mjs` from `/Users/jesusmpc/Inditex/weavejs/.github/scripts/` to `.github/scripts/`, adapted to `kind/*` labels, a Documentation section and the "`kind/internal`/`kind/epic` always exclude" rule (#308); verify `node --test .github/scripts/changelog-from-prs.test.mjs` passes (36 tests)
 - [x] 1.2 Export `normalizeInvisibleWhitespace` from `sanitize-changelog.mjs`; verify the NBSP title test passes and `sanitize-changelog.mjs --check code/CHANGELOG.md` stays clean on a generated copy
 - [x] 1.3 Verify `--dry-run --from 1.2.0 --to 1.3.0` and `--from 1.3.1 --to 1.3.2` against the hand-written sections (differences are only PR-vs-issue links, serializer escaping and docs-only issues), `--pr 297` output, idempotent write on a copy of the changelog, and non-zero exit on a bad ref / missing token
 - [x] 1.4 Verify generated entries match the bullet format `changelog-pages.js` parses (`^- [#N](url)`)

@@ -25,12 +25,12 @@ The system SHALL place each entry in the section chosen by the first matching is
 - **THEN** its entry is placed under Changed and a "section guessed" warning is reported
 
 #### Scenario: Internal issue
-- **WHEN** an issue carries only `kind/internal` and/or `kind/epic`
+- **WHEN** an issue carries `kind/internal` and/or `kind/epic`
 - **THEN** no entry is written and the issue is listed in the report as out of scope
 
-#### Scenario: Real category wins
+#### Scenario: Internal wins over a real category
 - **WHEN** an issue carries `kind/epic` or `kind/internal` together with a real category label
-- **THEN** the entry is written in the section of the real category
+- **THEN** no entry is written and the issue is listed in the report as out of scope
 
 ### Requirement: Entry title is the issue title
 The system SHALL use the issue title verbatim, normalising only non-breaking and invisible whitespace.

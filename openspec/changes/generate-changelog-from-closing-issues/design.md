@@ -25,7 +25,7 @@ See proposal.md. Today `code-npm_node-pr-verify.yml` gates on a hand-edited `[Un
 - **Warn-only rollout via `CHANGELOG_LINK_ENFORCE`**, flipped by a follow-up PR after one end-to-end release.
 - **Generate step placed before `keep-a-changelog bump` in the release job only**; `fail-on-empty-release-notes: false` is already set, verify an empty `[Unreleased]` is tolerated.
 - **Plain Node (.mjs), GraphQL via `fetch` with retry+backoff on 5xx/429/rate limits**, tests with `node --test` and an injected `fetch`, matching existing `.github/scripts` style. Needs only `GITHUB_TOKEN`, no `gh`.
-- **Exclusion rule differs from weavejs:** weavejs drops any issue labelled `internal`; here `kind/internal`/`kind/epic` exclude an issue only when no real `kind/*` category is present, preserving the convention that a real category wins.
+- **Exclusion rule differs from weavejs:** weavejs drops any issue labelled `internal`; here `kind/internal`/`kind/epic` exclude an issue whatever other `kind/*` labels it has (#308), so the labels mean the same thing on every issue.
 - **Release preview in two passes** (`--to HEAD^1 --branch <base>`, then `--pr N`) instead of one `--include-pr`, so the preview includes entries pending from `skip-release` PRs and the PR's own report.
 
 ## Risks / Trade-offs

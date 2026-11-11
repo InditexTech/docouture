@@ -118,7 +118,7 @@ npx skills@latest add InditexTech/docouture --all
 that merged PRs close (`.github/scripts/changelog-from-prs.mjs`). Do not add entries by
 hand. Every PR must close an issue (`Closes #N` or the Development sidebar; a plain `#N`
 does not count) — the entry is `- [#N](issue URL) <issue title>`, in the section given by
-the issue's `kind/*` label. `kind/internal`/`kind/epic` alone means no entry. `skip-release`
+the issue's `kind/*` label. `kind/internal`/`kind/epic` always means no entry, even with another `kind/*` label. `skip-release`
 (and Dependabot) exempt a PR from needing an issue but do **not** stop an issue it does
 close from getting its entry. `skip-changelog` no longer exists and has no effect. To change
 an entry's wording, edit the issue title. Full rules:

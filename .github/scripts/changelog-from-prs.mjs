@@ -68,10 +68,10 @@ export const SECTION_RULES = [
 ];
 export const FALLBACK_SECTION = 'Changed';
 
-// Issues with only these labels (no SECTION_RULES category) are out of scope
-// for the changelog: `kind/epic` is a size flag and `kind/internal` means no
-// user-facing effect. A real category label wins over them. They are listed
-// in the report instead of the changelog, never dropped silently.
+// An issue with either of these labels is out of scope for the changelog,
+// whatever other `kind/*` labels it has: `kind/epic` is a size flag and
+// `kind/internal` means no user-facing effect. Such issues are listed in the
+// report instead of the changelog, never dropped silently.
 export const EXCLUDED_LABELS = ['kind/internal', 'kind/epic'];
 
 // Keep a Changelog order, used only to place a section that does not exist yet.
@@ -158,12 +158,12 @@ export function buildEntries(prs, { repo }) {
         continue;
       }
       seen.add(key);
-      const { section, guessed } = sectionFor(issue.labels);
-      const outOfScope = guessed && issue.labels.find((label) => EXCLUDED_LABELS.includes(label.toLowerCase()));
+      const outOfScope = issue.labels.find((label) => EXCLUDED_LABELS.includes(label.toLowerCase()));
       if (outOfScope) {
         excluded.push({ ref: issueRef(issue, repo), pr: pr.number, label: outOfScope });
         continue;
       }
+      const { section, guessed } = sectionFor(issue.labels);
       if (guessed) {
         warnings.push(
           `Section guessed for ${issueRef(issue, repo)}: the issue has none of the labels ` +

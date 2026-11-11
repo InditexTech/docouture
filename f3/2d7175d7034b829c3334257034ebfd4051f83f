@@ -1,0 +1,61 @@
+.github/pull_request_template.md
+  s_26134b855a4da9::t_aa47621630831c 1-13
+.github/scripts/changelog-from-prs.mjs
+  s_26134b855a4da9::t_475606958315ce 1-862
+.github/scripts/changelog-from-prs.test.mjs
+  s_26134b855a4da9::t_be9184190f9b94 1-478
+.github/scripts/sanitize-changelog.mjs
+  s_26134b855a4da9::t_d505715ff2e7df 63
+.github/workflows/code-changelog-check.yml
+  s_26134b855a4da9::t_66c87ab75ab228 1-63
+.github/workflows/code-npm_node-pr-verify.yml
+  s_26134b855a4da9::t_4f300282b389b3 8-11
+.github/workflows/code-npm_node-publish-release-and-snapshot.yml
+  s_26134b855a4da9::t_49206a8b109c16 678-689
+.github/workflows/code-release_preview.yml
+  s_26134b855a4da9::t_5c326a1a54ab72 5,49-50,81-92,94-95,97-100,113-114,119-121,123,137-154,156-158
+.github/workflows/docs/code-changelog-check.md
+  s_26134b855a4da9::t_09cd97114e2ed8 1-27
+.github/workflows/docs/code-npm_node-publish-release-and-snapshot.md
+  s_26134b855a4da9::t_0ee6094b5a1dd5 83
+.github/workflows/docs/code-release_preview.md
+  s_26134b855a4da9::t_47f355c8ed2aa3 3,15,21,28,37,39,53-54,56
+.opencode/skills/changelog/SKILL.md
+  s_26134b855a4da9::t_d68dd0be06308e 3,10-13,18-39,44,47-52,54,58,60-61,64-87,90-96,99-105
+AGENTS.md
+  s_26134b855a4da9::t_80c92d50d252fe 115-126
+CONTRIBUTING.md
+  s_26134b855a4da9::t_06219cd15ad766 89-109
+README.md
+  s_26134b855a4da9::t_36345530ea65ef 155-156
+code/CHANGELOG.md
+  s_26134b855a4da9::t_fa830cd5d4c93b 8-12
+docs/src/modules/main/pages/contributing.adoc
+  s_26134b855a4da9::t_e7b6f198e287d9 20-22
+openspec/changes/generate-changelog-from-closing-issues/.openspec.yaml
+  s_26134b855a4da9::t_766df7920cb2ca 1-2
+openspec/changes/generate-changelog-from-closing-issues/design.md
+  s_26134b855a4da9::t_d79a1322c74c85 1-40
+openspec/changes/generate-changelog-from-closing-issues/proposal.md
+  s_26134b855a4da9::t_54a329b5c5e4cd 1-35
+openspec/changes/generate-changelog-from-closing-issues/specs/changelog-generation/spec.md
+  s_26134b855a4da9::t_726d1fb1d5b0df 1-112
+openspec/changes/generate-changelog-from-closing-issues/tasks.md
+  s_26134b855a4da9::t_b8cc282dda2b1d 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "f32d7175d7034b829c3334257034ebfd4051f83f",
+  "prompts": {},
+  "sessions": {
+    "s_26134b855a4da9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e35842be9ffex5vjW8bklupxAq",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

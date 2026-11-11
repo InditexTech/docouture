@@ -97,8 +97,9 @@ logo is ever redesigned, update both locations.
     Security, `kind/bug` → Fixed, `kind/enhancement` → Added, `kind/documentation` →
     Documentation, `kind/deprecated` → Deprecated, `kind/removed` → Removed, anything else →
     Changed (flagged as guessed).
-  - Issues labelled only `kind/internal` or `kind/epic` get no entry, and an issue already
-    listed in an earlier release is not listed again. Both are shown in the report.
+  - Issues labelled `kind/internal` or `kind/epic` get no entry, even with another `kind/*`
+    label, and an issue already listed in an earlier release is not listed again. Both are
+    shown in the report.
   - To change the wording of an entry, edit the issue title; to change its section, change
     the issue labels.
   - Releases up to 1.3.2 keep their hand-written changelog sections as history.

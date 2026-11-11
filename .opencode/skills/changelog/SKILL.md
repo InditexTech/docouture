@@ -1,183 +1,105 @@
 ---
 name: changelog
-description: "How code/CHANGELOG.md is written and grouped in this monorepo — the entry format, which GitHub label puts a change under which Keep a Changelog section, and the issue/PR two-tier convention that decides what gets an entry at all. USE WHEN adding or editing a CHANGELOG.md entry, deciding whether a PR needs one, choosing which section (Added/Fixed/Documentation/...) an entry belongs in, labeling a PR or issue, or touching the pr-verify CHANGELOG gate. EXAMPLES: 'add a changelog entry for this PR', 'does this PR need a changelog line', 'which section does a kind/internal change go in', 'why does pr-verify say my CHANGELOG entry is missing a label', 'the changelog action failed to bump the version'."
+description: "How code/CHANGELOG.md is generated and grouped in this monorepo — the entry format, which GitHub issue label puts a change under which Keep a Changelog section, and the rule that every PR must close an issue. USE WHEN deciding whether a PR needs a CHANGELOG entry, choosing which section (Added/Fixed/Documentation/...) an entry belongs in, labeling a PR or issue, writing or reviewing an issue title, or touching changelog-from-prs.mjs or the changelog CI checks. EXAMPLES: 'does this PR need a changelog line', 'which section does a kind/internal change go in', 'how do I change the wording of a changelog entry', 'why does the changelog check say my PR closes no issue', 'the changelog action failed to bump the version'."
 metadata:
   internal: true
 ---
 
 # CHANGELOG.md conventions
 
-> **Common mistake — read this before deciding "no entry needed":**
-> `skip-release` is NOT a stop condition. It only tells the release-flow bump action to
-> defer the version bump; it says nothing about whether a CHANGELOG entry is needed. The
-> **only** labels that mean "no entry" are `kind/internal` and/or `kind/epic` (checked on
-> the PR, else the closing issue), or `skip-changelog` **on the PR itself** (a deliberate
-> override that wins even over a real `kind/*` category — see below). If you catch
-> yourself writing "labeled skip-release → no entry", stop: go check for `skip-changelog`
-> on the PR or the closing issue's `kind/*` label instead (see "Two-tier" below for the
-> lookup command).
+**Contributors do not edit `code/CHANGELOG.md`.** The `[Unreleased]` entries are generated
+at release time from the issues that merged PRs close (GitHub `closingIssuesReferences`),
+by `.github/scripts/changelog-from-prs.mjs`. What a contributor controls is the PR's
+closing issue: its title and its `kind/*` label.
 
 `code/CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) +
 [SemVer](https://semver.org/). Version bumps are performed by
 `release-flow/keep-a-changelog-action`'s `bump` command, called from
-`.github/workflows/code-npm_node-publish-release-and-snapshot.yml`. That action only
-parses the `## [Unreleased]` / `## [x.y.z]` H2 boundary (see its `src/types.ts` —
-`ReleaseHeading` keys off H2 headings only); the `### `-level section names underneath
-are a **repo convention we control**, not something the action validates or requires to
-match Keep a Changelog's canonical vocabulary. Which semver segment gets bumped is decided
-separately, by the `release-type/{major,minor,patch,hotfix,multi-hotfix}` label on the
-merged/closing PR — that label is completely orthogonal to which CHANGELOG section an
-entry lands in.
+`.github/workflows/code-npm_node-publish-release-and-snapshot.yml`, right after the
+generator ran. That action only parses the `## [Unreleased]` / `## [x.y.z]` H2 boundary;
+the `### `-level section names are a repo convention. Which semver segment gets bumped is
+decided separately, by the `release-type/{major,minor,patch,hotfix,multi-hotfix}` label on
+the merged PR — orthogonal to which section an entry lands in.
+
+```
+PR opened/edited/labeled -> Changelog / Closing issue -> changelog-from-prs.mjs --pr N
+PR merged (release)      -> release job -> changelog-from-prs.mjs (last tag..HEAD) -> [Unreleased]
+                                        -> keep-a-changelog bump -> sanitize -> signed commit -> tag
+```
+
+## The rule: every PR closes an issue
+
+Link it with a closing keyword (`Closes #N`) or the Development sidebar. A plain `#N`
+does not count. Exempt: PRs labelled `skip-release`, and Dependabot. An exempt PR with no
+issue simply gets no entry; a `skip-release` PR that **does** close an issue still gets
+its entry (those PRs are released later). `skip-release` is otherwise only the "don't
+bump the version yet" label.
+
+There is no `skip-changelog` label anymore: it has no effect. Whether an issue produces an
+entry is decided only by its labels.
 
 ## Entry format
 
 ```
-- [#PR_ID](PR_URL) PR_NAME
+- [#ISSUE_ID](ISSUE_URL) ISSUE_TITLE
 ```
 
-`PR_ID`/`PR_URL` always point at the **PR that shipped the code** (not a tracking issue —
-issues aren't browsable diffs and don't have a merge). `PR_NAME` is the PR's title, and
-the PR's title must be kept identical to its linked issue's title, scope tag included
-(e.g. `[ui-bundle] Header toolbar`) — see "Two-tier: issue vs PR" below for why the issue
-owns the canonical name.
+The title is the issue title verbatim, only normalising NBSP/zero-width whitespace. To fix
+the wording of an entry, edit the issue title (keep the `[scope]` tag, e.g.
+`[ui-bundle] Header toolbar`). Entries are deduplicated by issue number, so several PRs
+closing the same issue produce one line, and an issue already listed in an earlier
+released section is not listed again (it is reported as a warning). Entries up to
+1.3.2 link PRs instead; `changelog-pages.js` reads both.
 
-## Label → section mapping
+## Label → section mapping (on the issue, first match wins)
 
 | Label | Section |
 | --- | --- |
-| `kind/enhancement` | `### Added` |
+| `kind/security` | `### Security` |
 | `kind/bug` | `### Fixed` |
-| `kind/documentation` | `### Documentation` (not canonical Keep a Changelog vocabulary, but this repo ships a docs generator, so doc-only changes are common enough to deserve their own bucket instead of being buried in Added) |
+| `kind/enhancement` | `### Added` |
+| `kind/documentation` | `### Documentation` |
 | `kind/deprecated` | `### Deprecated` |
 | `kind/removed` | `### Removed` |
-| `kind/security` | `### Security` |
-| `kind/internal` | **no entry** (see below) |
-| `kind/epic` | not a section — a size/container flag only, never on its own decides anything |
-| `skip-release` | **not exempt on its own** — blocks the version bump only, still needs a normal entry unless `kind/internal`/`kind/epic` also applies (see below) |
-| `skip-changelog` | **no entry** — but unlike every other row, this one is PR-only (never resolved via the closing issue) and overrides regardless of category (see below) |
+| `kind/internal` / `kind/epic` alone | **no entry** (listed in the report as out of scope, never dropped silently) |
+| none of the above | `### Changed`, with a "section guessed" warning — fix the label |
 
-Omit empty section headings entirely rather than leaving them with no bullets under them.
+A real category label wins over `kind/internal`/`kind/epic`; `kind/epic` is a size flag
+only. Empty sections are omitted.
 
-### `kind/internal` and `kind/epic` mean "no changelog entry" — `skip-release` does not
+## Where it runs
 
-If, after resolving labels (below), the only labels that apply are `kind/internal` and/or
-`kind/epic` — with none of the six real category labels above also present — the PR/issue
-gets **no CHANGELOG entry at all**. `kind/epic` by itself never produces an entry either
-way; it just flags that an issue is a large, multi-PR unit of work. If a change is *both*
-e.g. `kind/enhancement` and `kind/epic`, the real category wins and it gets a normal
-`### Added` entry.
+- `.github/workflows/code-changelog-check.yml` — every PR to `main`/`main-*` (not
+  path-filtered): runs the script's tests, then previews the entry in the job summary and
+  flags a PR that closes no issue. Warn-only while `CHANGELOG_LINK_ENFORCE` is `"false"`;
+  flip it to `"true"` to fail the check instead.
+- `.github/workflows/code-release_preview.yml` — two passes into the local `[Unreleased]`:
+  the entries already pending on the base branch (`--to HEAD^1 --branch <base>`), then this
+  PR's (`--pr N`), before the dry-run bump that feeds the PR comment. Titles are wrapped in
+  code spans (`--wrap-titles`) so an `@user` in an issue title cannot notify anyone.
+- Release job in `code-npm_node-publish-release-and-snapshot.yml` — generates before the
+  bump with `--branch "$BASELINE_BRANCH"`; any error fails the job before the tag exists.
+  The snapshot job does not generate.
+- `.github/scripts/sanitize-changelog.mjs` still runs after every bump (and as
+  `--check` in pr-verify) to keep invisible whitespace out of the file; the generator
+  reuses its `normalizeInvisibleWhitespace` for titles.
 
-`skip-release` is a **separate, orthogonal concern**: it tells the release-flow bump
-action not to cut a version for this PR (e.g. one slice of a multi-PR issue where only
-the last PR should trigger the release). It does **not** exempt the PR from the
-CHANGELOG.md requirement — a `skip-release` PR still needs its entry in `[Unreleased]`
-if it (or its closing issue) carries a real category label; the entry just gets promoted
-into a versioned section later, whenever some other PR does trigger the bump.
-
-### `skip-changelog`: a deliberate per-PR override, distinct from `kind/internal`/`kind/epic`
-
-`kind/internal`/`kind/epic` say the change **has no user-facing effect** — that's a fact
-about the change itself, and it's just as true whoever reviews it. `skip-changelog` says
-something different: the change is real (it may well carry `kind/security`, `kind/bug`,
-etc.) but the person merging this specific PR is **consciously choosing** not to give it
-its own line — e.g. a narrow CI/tooling fixup on a PR whose substantive change was already
-documented, or a judgment call that this diff doesn't need its own entry despite its
-category.
-
-Because it's a judgment call about *this diff*, not a property of the tracked issue, it's
-checked **only on the PR itself** — never resolved via the closing issue the way every
-other label in this table is. It overrides even a real `kind/*` category: a PR labeled
-both `kind/security` and `skip-changelog` gets no entry. It does not, however, exempt the
-PR from needing a real category or the internal/epic exemption in the first place (see
-"Require a changelog category label" in CI enforcement below) — it only waives the entry,
-not the classification.
-
-Reach for it rarely, and leave a one-line reason in the PR description when you do (not
-CI-enforced, just convention — the label alone doesn't explain itself to the next reader
-of `git log`).
-
-## Two-tier: issue vs PR, and how to resolve the label
-
-This repo tracks larger changes with a GitHub **issue** (the user-facing unit of work,
-carrying the real `kind/*` category label and often a `[scope]` prefix in its title, e.g.
-`[cli]`, `[ui-bundle]`, `[tooling]`) that's implemented by one or more **PRs** (the
-concrete shipped diffs). Because an issue can span several PRs, those implementing PRs are
-routinely labeled `skip-release` — merging one slice of a multi-PR issue shouldn't bump
-the version yet, but each slice still gets its own CHANGELOG entry as it merges. The real
-category most often lives on the issue, not the PR.
-
-Resolution order when writing/reviewing an entry:
-
-1. **The PR's own label wins if it carries one of the six real category labels
-   directly** — a PR can legitimately be more/less user-facing than the issue it belongs
-   to (e.g. an issue is `kind/enhancement` overall, but one of its PRs was pure internal
-   scaffolding and is itself labeled `kind/internal` — that PR gets no entry even though
-   its issue would otherwise qualify).
-2. **Otherwise, fall back to the label(s) of the issue the PR closes** (GitHub's "Closes
-   #N" / `closingIssuesReferences`).
-3. If a PR closes more than one issue, prefer the **non-epic** issue as the source of
-   truth for the title/category — `kind/epic` issues are containers, not the concrete
-   change being shipped.
-4. If neither the PR nor any closed issue carries a real category label, and it isn't
-   `kind/internal`/`kind/epic` either, that's a labeling gap — fix the label on GitHub
-   before merging, don't guess a section. (`skip-release` alone never resolves this gap —
-   it doesn't carry a category and doesn't exempt the PR.)
-
-To find a PR's closing issue(s) from the CLI:
+## Running it locally
 
 ```bash
-gh api graphql -f query='
-  query($owner:String!,$repo:String!,$num:Int!){
-    repository(owner:$owner,name:$repo){
-      pullRequest(number:$num){
-        title
-        closingIssuesReferences(first:5){ nodes { number title labels(first:10){nodes{name}} } }
-      }
-    }
-  }' -f owner=InditexTech -f repo=docouture -F num=<PR_NUMBER>
+export GITHUB_TOKEN=$(gh auth token)
+# what would 1.3.1..1.3.2 produce? Compares with the hand-written [1.3.2] section (read-only)
+node .github/scripts/changelog-from-prs.mjs --dry-run --from 1.3.1 --to 1.3.2 --changelog code/CHANGELOG.md
+# preview one PR
+node .github/scripts/changelog-from-prs.mjs --pr 297
+# tests
+node --test .github/scripts/changelog-from-prs.test.mjs
 ```
 
-(`gh pr view --json closingIssuesReferences` doesn't expose this field; it has to go
-through `gh api graphql`.)
-
-## Keeping PR titles aligned to their issue
-
-Whenever a PR's title drifts from its linked issue's title (common — PRs tend to get a
-shorter, code-focused title while the issue keeps the fuller/scoped one), rename the PR to
-match the issue **verbatim, scope tag included**, before writing the CHANGELOG entry:
-
-```bash
-# gh pr edit can fail on this workspace's pinned gh CLI version (2.20.2) with a
-# "Projects (classic)" GraphQL error even for pure title edits — use the REST API instead:
-gh api repos/InditexTech/docouture/pulls/<PR_NUMBER> -X PATCH -f title="<issue title>"
-```
-
-## Adding a CHANGELOG entry for a new PR — checklist
-
-1. Is the PR itself labeled `skip-changelog`? → no entry needed, stop here — this
-   overrides even a real category, but doesn't exempt the PR from needing one (see step 2
-   below still applying for labeling-hygiene purposes).
-2. Otherwise, is the PR (or its closing issue, per the resolution order above) labeled
-   only `kind/internal`/`kind/epic`, with no real category label anywhere? → no entry
-   needed, stop here. (`skip-release` by itself does **not** stop here — keep going.)
-3. Otherwise it needs exactly one of the six real category labels (`kind/enhancement`,
-   `kind/bug`, `kind/documentation`, `kind/deprecated`, `kind/removed`, `kind/security`),
-   resolved per the order above. If none is present, add the correct label on GitHub
-   first.
-4. Make sure the PR's title matches its issue's title verbatim (rename via the `gh api`
-   command above if not).
-5. Add `- [#<PR_ID>](<PR_URL>) <PR title>` under the matching `###` section in
-   `[Unreleased]`, newest-first within the section.
-
-## CI enforcement
-
-`.github/workflows/code-npm_node-pr-verify.yml` fails a PR touching `code/**` that doesn't
-update `code/CHANGELOG.md`, unless the PR (or its closing issue) is `kind/internal`/
-`kind/epic`-only, or the PR itself carries `skip-changelog`. `skip-release` is
-deliberately **not** in that exemption list — it only affects
-`release-flow/keep-a-changelog-action`'s version-bump step in the publish workflow, so a
-`skip-release` PR still fails this check if it hasn't added its entry. The same job also
-fails when `CHANGELOG.md` **is** touched but neither the PR nor its closing issue carries
-exactly one of the six real category labels — closing the gap where an entry gets added
-under the wrong (or no) section. `skip-changelog` does not exempt a PR from that second
-check either — it waives the entry, not the classification.
+Range mode finds PRs from first-parent commits since
+`git describe --tags --abbrev=0 --match '[0-9]*'` (which skips `docs/*` tags), keeps only
+PRs merged into `--branch` (default `main`), and with `--changelog` writes only
+`[Unreleased]`: manual lines are kept, issues already listed there are not repeated, the
+rest of the file is verified byte-identical before writing, and it is idempotent. Any API
+or git error exits non-zero. Hitting a pagination limit also fails instead of silently
+dropping an issue or label.

@@ -86,11 +86,27 @@ logo is ever redesigned, update both locations.
 ### Before Submitting
 
 - Run `just check` — lint, typecheck and formatting, the same checks CI runs.
-- Update `code/CHANGELOG.md`'s `[Unreleased]` section with an entry describing
-  your change. CI enforces this on every PR that touches `code/**` unless the
-  PR is labelled `skip-release` (for changes with no user-facing effect —
-  internal tooling, CI config, etc.).
-- Link the corresponding issue in your pull request.
+- Link the issue your PR resolves: add `Closes #ISSUE_ID` to the PR description (the PR
+  template has the line), or link the issue from the Development sidebar. A plain
+  `#ISSUE_ID` mention does not count. GitHub only reads closing keywords on PRs to the
+  default branch, so for a `main-*` branch use the Development sidebar.
+  - Do not edit `code/CHANGELOG.md`: the release job generates one entry per linked issue,
+    `- [#ISSUE_ID](https://github.com/InditexTech/docouture/issues/ISSUE_ID) ISSUE_TITLE`,
+    with the **verbatim title of the issue** at release time.
+  - The section comes from the issue's `kind/*` label, first match wins: `kind/security` →
+    Security, `kind/bug` → Fixed, `kind/enhancement` → Added, `kind/documentation` →
+    Documentation, `kind/deprecated` → Deprecated, `kind/removed` → Removed, anything else →
+    Changed (flagged as guessed).
+  - Issues labelled only `kind/internal` or `kind/epic` get no entry, and an issue already
+    listed in an earlier release is not listed again. Both are shown in the report.
+  - To change the wording of an entry, edit the issue title; to change its section, change
+    the issue labels.
+  - Releases up to 1.3.2 keep their hand-written changelog sections as history.
+  - The `Changelog / Closing issue` check reports the entries the PR will generate, and
+    (once enforced) fails if the PR has no linked issue and no `skip-release` label.
+    Dependabot PRs are exempt. A maintainer adds `skip-release` for a PR that publishes no
+    release and does not need an issue; the issues it does close still get entries in the
+    next release.
 
 ## License
 

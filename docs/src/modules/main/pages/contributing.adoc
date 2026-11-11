@@ -17,9 +17,9 @@ what actually applies; see `CONTRIBUTING.md` in that repository for the full tex
 . Open an issue to discuss the change first.
 . Fork, branch, and make the change.
 . Run `just check` (lint, typecheck, formatting — what CI runs).
-. Update `code/CHANGELOG.md`'s `[Unreleased]` section — required on every PR touching
-  `code/**`, unless labelled `skip-release` for a change with no user-facing effect.
-. Open a pull request linking the issue.
+. Open a pull request that closes the issue (`Closes #N`; a plain `#N` does not count).
+  Do not edit `code/CHANGELOG.md`: its entries are generated at release time from the
+  closing issue's title and `kind/*` label. A PR labelled `skip-release` may omit the issue.
 
 == Contributing to this site specifically
 

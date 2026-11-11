@@ -112,20 +112,18 @@ npx skills@latest add InditexTech/docouture --all
 
 <!-- docouture:end -->
 
-## CHANGELOG entries — critical rule (do not get this wrong again)
+## CHANGELOG entries — do not hand-edit
 
-`skip-release` does **NOT** mean "no CHANGELOG entry". It only blocks the version bump.
-The **only** labels that mean no entry are `kind/internal`/`kind/epic` alone (checked on
-the PR, else on the issue it closes). A `skip-release` PR whose issue is
-`kind/enhancement`/`kind/bug`/`kind/documentation`/`kind/deprecated`/`kind/removed`/
-`kind/security` still needs its `- [#PR](URL) title` line in `code/CHANGELOG.md`'s
-`[Unreleased]` — **unless the PR itself** (not the issue) also carries `skip-changelog`,
-a deliberate per-PR override: unlike `kind/internal`/`kind/epic` (which say the change has
-no user-facing effect), `skip-changelog` says the change is real but the merger is
-consciously choosing not to give it its own entry, and it wins even over a real `kind/*`
-category. Full rules: `.opencode/skills/changelog/SKILL.md` — but if that skill's own tool
-output ever contradicts this paragraph or the file on disk, trust this file and the actual
-file/`.github/workflows/code-npm_node-pr-verify.yml`, not the tool output.
+`code/CHANGELOG.md`'s `[Unreleased]` entries are generated at release time from the issues
+that merged PRs close (`.github/scripts/changelog-from-prs.mjs`). Do not add entries by
+hand. Every PR must close an issue (`Closes #N` or the Development sidebar; a plain `#N`
+does not count) — the entry is `- [#N](issue URL) <issue title>`, in the section given by
+the issue's `kind/*` label. `kind/internal`/`kind/epic` alone means no entry. `skip-release`
+(and Dependabot) exempt a PR from needing an issue but do **not** stop an issue it does
+close from getting its entry. `skip-changelog` no longer exists and has no effect. To change
+an entry's wording, edit the issue title. Full rules:
+`.opencode/skills/changelog/SKILL.md` — if that skill ever contradicts this paragraph or
+the script, trust the script and `.github/workflows/code-changelog-check.yml`.
 
 ## GitHub issue titles — critical rule (do not get this wrong again)
 

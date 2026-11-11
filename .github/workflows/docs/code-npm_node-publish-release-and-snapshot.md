@@ -80,6 +80,7 @@ Permissions are scoped at the job level following the principle of least privile
   - Install dependencies and run `lint`, `typecheck`, `format:check`, and `test` before releasing.
   - Determine the release type from labels.
   - Prepare committer information and configure GPG signing (gpg-agent with loopback-pinentry and preset-passphrase).
+  - Generate `[Unreleased]` in `CHANGELOG.md` from the issues closed by the PRs merged since the last numeric tag (`.github/scripts/changelog-from-prs.mjs --branch <baseline>`); issues labelled only `kind/internal`/`kind/epic`, or already listed in an earlier release, are reported instead of written. Any error fails the job before the bump, the commit and the tag.
   - Update CHANGELOG.md and calculate next version using `release-flow/keep-a-changelog-action`.
   - Bump every package to the released version (same `npm run version:release` + `npm run release:prepare` pair as the snapshot job).
   - Build (`pnpm build`) and locate the `ui-bundle` release artifact.

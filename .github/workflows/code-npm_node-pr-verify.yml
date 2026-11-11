@@ -5,28 +5,15 @@ concurrency:
   cancel-in-progress: true
 
 # Least privilege: this workflow only ever checks out the PR and runs
-# read-only verification (changelog check, lint/test/build) — no step here
-# pushes, comments, or otherwise writes back to GitHub, so the default
-# broad token scope is more than it needs. `issues: read` and
-# `pull-requests: read` are needed by the changelog-label check below, which
-# reads the PR's own labels and, when it has none of its own, the labels of
-# any issue it closes (see the `changelog` skill for why: a change's real
-# `kind/*` category often lives on its tracking issue, not on the PR).
+# read-only verification (lint/test/build) — no step here pushes, comments,
+# or otherwise writes back to GitHub, so the default broad token scope is
+# more than it needs. CHANGELOG.md entries are not checked here: they are
+# generated at release time (see code-changelog-check.yml).
 permissions:
   contents: read
-  issues: read
-  pull-requests: read
 
 on:
   pull_request:
-    # `labeled`/`unlabeled` alongside the defaults (opened/synchronize/reopened):
-    # `github.event.pull_request.labels` is a snapshot taken when each webhook
-    # event fires, not a live read — a `kind/internal`/`kind/epic`/
-    # `skip-changelog` label added *after* the code was pushed would otherwise
-    # never re-trigger this check with the label actually visible to it,
-    # leaving `Code / Verify` stuck on a stale FAILURE until an unrelated commit
-    # forces a fresh `synchronize` event.
-    types: [opened, synchronize, reopened, labeled, unlabeled]
     paths:
       - "code/**"
       - ".github/workflows/code-npm_node-pr-verify.yml"
@@ -41,108 +28,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          # 0 rather than the default shallow clone: the CHANGELOG.md check
-          # below diffs against the PR's base commit, which needs to be
-          # present locally, not just the tip being verified.
-          fetch-depth: 0
-
-      # Resolves whether this PR needs a CHANGELOG.md entry and, if so, whether
-      # it's properly labeled — see the `changelog` skill for the full rules.
-      # Six labels (`kind/enhancement`, `kind/bug`, `kind/documentation`,
-      # `kind/deprecated`, `kind/removed`, `kind/security`) are "real"
-      # categories that require an entry; `kind/internal` and `kind/epic` mean
-      # no entry is needed. `skip-release` is NOT exempt here — it only blocks
-      # the version bump (see `release-flow/keep-a-changelog-action`'s `bump`
-      # command in the publish workflow), it does not exempt a PR from still
-      # documenting its change in [Unreleased]. The PR's own labels are checked
-      # first; if it carries none of the six real categories itself, this
-      # falls back to the labels of any issue it closes (`closingIssuesReferences`
-      # via the GraphQL API — not exposed by `gh pr view --json`), because the
-      # real category commonly lives on the tracking issue while its
-      # implementing PR(s) are deliberately `skip-release`. The exemption
-      # (`kind/internal`/`kind/epic`) is resolved the same way — checked on
-      # the PR AND on any issue it closes — since that label just as often
-      # lives on the tracking issue rather than the implementing PR.
-      #
-      # `skip-changelog` is a separate, PR-only override: unlike
-      # `kind/internal`/`kind/epic` (which say the change has no user-facing
-      # effect), it says the change IS real but the merger is deliberately
-      # choosing not to give it its own entry — so it overrides even a real
-      # `kind/*` category, and it is checked only on the PR itself, never on
-      # an issue it closes (it's a judgment call about this diff, not a
-      # property of the tracked issue).
-      - name: Resolve changelog requirement from labels
-        id: changelog-requirement
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO_OWNER: ${{ github.repository_owner }}
-          REPO_NAME: ${{ github.event.repository.name }}
-        run: |
-          CATEGORY_LABELS="kind/enhancement kind/bug kind/documentation kind/deprecated kind/removed kind/security"
-          EXEMPT_LABELS="kind/internal kind/epic"
-          OVERRIDE_LABELS="skip-changelog"
-
-          has_any() {
-            local haystack=",$1," needle
-            for needle in $2; do
-              [[ "$haystack" == *",$needle,"* ]] && return 0
-            done
-            return 1
-          }
-
-          issue_labels=$(gh api graphql -f query='
-            query($owner:String!,$repo:String!,$num:Int!){
-              repository(owner:$owner,name:$repo){
-                pullRequest(number:$num){
-                  closingIssuesReferences(first:10){ nodes { labels(first:20){ nodes { name } } } }
-                }
-              }
-            }' -f owner="$REPO_OWNER" -f repo="$REPO_NAME" -F num="$PR_NUMBER" \
-            --jq '[.data.repository.pullRequest.closingIssuesReferences.nodes[].labels.nodes[].name] | join(",")')
-
-          needs_entry=false
-          has_any "$PR_LABELS" "$CATEGORY_LABELS" && needs_entry=true
-          has_any "$issue_labels" "$CATEGORY_LABELS" && needs_entry=true
-
-          exempt=false
-          has_any "$PR_LABELS" "$EXEMPT_LABELS" && exempt=true
-          has_any "$issue_labels" "$EXEMPT_LABELS" && exempt=true
-
-          override=false
-          has_any "$PR_LABELS" "$OVERRIDE_LABELS" && override=true
-
-          echo "needs-entry=$needs_entry" >> "$GITHUB_OUTPUT"
-          echo "exempt=$exempt" >> "$GITHUB_OUTPUT"
-          echo "override=$override" >> "$GITHUB_OUTPUT"
-
-      # Homologated with weave.js's code-release_preview.yml: every PR that
-      # touches code/** must add its own entry to CHANGELOG.md's [Unreleased]
-      # section (code-npm_node-publish-release-and-snapshot.yml later promotes
-      # that section wholesale — nothing is invented at release time).
-      - name: Require CHANGELOG.md update
-        if: ${{ steps.changelog-requirement.outputs.needs-entry == 'true' && steps.changelog-requirement.outputs.override != 'true' }}
-        run: |
-          if git diff --quiet "${{ github.event.pull_request.base.sha }}" HEAD -- code/CHANGELOG.md; then
-            echo "::error title=No CHANGELOG.md changes::code/CHANGELOG.md's [Unreleased] section wasn't updated. Add an entry describing this change, label the PR (or the issue it closes) 'kind/internal'/'kind/epic' if it has no user-facing effect, or label the PR itself 'skip-changelog' if you're deliberately choosing not to document it. (skip-release alone does not exempt it — that label only blocks the version bump.)"
-            exit 1
-          fi
-
-      # Catches the labeling gap the requirement-resolution step above can't
-      # paper over: a PR that isn't exempt (not kind-internal/kind-epic-only)
-      # but also has no real `kind/*` category anywhere — neither on itself
-      # nor on an issue it closes. Without this, such a PR would silently
-      # skip the CHANGELOG.md requirement above instead of failing loudly.
-      # `skip-changelog` does not exempt a PR from this check — it still needs
-      # a real category or the internal/epic exemption; it only waives the
-      # *entry*, not the classification.
-      - name: Require a changelog category label
-        if: ${{ steps.changelog-requirement.outputs.needs-entry == 'false' && steps.changelog-requirement.outputs.exempt == 'false' }}
-        run: |
-          echo "::error title=Missing changelog category label::This PR needs one of kind/enhancement, kind/bug, kind/documentation, kind/deprecated, kind/removed or kind/security — on the PR itself or on an issue it closes — or kind/internal/kind/epic if it has no user-facing effect. (skip-release alone does not exempt it. skip-changelog does not apply here either — it waives the entry, not the classification.)"
-          exit 1
 
       # Homologated with weave.js's code-npm_node-PR_verify.yml: same asdf
       # setup pattern (cache keyed on .tool-versions, install skipped on

@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Each entry is `- [#PR_ID](PR_URL) PR_NAME`, where `PR_NAME` matches the title of the
-GitHub issue that tracks the change (see the `changelog` skill for the full convention:
-which GitHub label maps to which section below, and why some merged PRs carry no entry
-at all).
+The `[Unreleased]` entries are generated at release time from the issues that merged
+PRs close, so do not edit them by hand. Each entry is `- [#ISSUE_ID](ISSUE_URL) ISSUE_TITLE`
+and its section comes from the issue's `kind/*` label (see the `changelog` skill for the
+full convention, including why some issues produce no entry at all). Entries below
+`[1.3.2]` predate this and link the PR that shipped the change.
 
 ## [Unreleased]
 

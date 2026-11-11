@@ -152,8 +152,8 @@ dependencies.
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the contribution workflow,
-including the CLA prerequisite and the `code/CHANGELOG.md` entry every PR
-touching `code/**` is expected to carry.
+including the CLA prerequisite and the closing issue every PR must link
+(its changelog entry is generated from it at release time).
 
 ## License
 

@@ -1,6 +1,6 @@
 # `code-release-preview`
 
-[`code-release_preview.yml`](../code-release_preview.yml) is the same workflow (name, filename, job shape, triggers) as weave.js's workflow of the same name, adapted to docouture' own `release-type/*` label + `CHANGELOG.md` convention (already used identically by [`code-npm_node-publish-release-and-snapshot.yml`](../code-npm_node-publish-release-and-snapshot.yml)) and to docouture being trunk-based only.
+[`code-release_preview.yml`](../code-release_preview.yml) is the same workflow (name, filename, job shape, triggers) as weave.js's workflow of the same name, adapted to docouture' own `release-type/*` label + generated `CHANGELOG.md` convention (already used identically by [`code-npm_node-publish-release-and-snapshot.yml`](../code-npm_node-publish-release-and-snapshot.yml)) and to docouture being trunk-based only.
 
 ## Triggers
 
@@ -12,20 +12,20 @@ Any pull request targeting `main`/`main-*`, on `labeled`, `synchronize`, `ready_
 
 ## How does it work?
 
-Three jobs, gated by a shared `check-changes-in-paths` job (`dorny/paths-filter` on `code/**` and `.github/workflows/code**`, same paths `code-npm_node-pr-verify.yml` requires a `CHANGELOG.md` entry for) and by whether the PR carries a `release-type/*` label:
+Three jobs, gated by a shared `check-changes-in-paths` job (`dorny/paths-filter` on `code/**` and `.github/workflows/code**`, same paths `code-npm_node-pr-verify.yml` builds for) and by whether the PR carries a `release-type/*` label:
 
 - Label present + matching path changes → `release-preview`.
 - Label present, no matching path changes → `release-preview-no-code-changes`.
 - No label, matching path changes → `release-preview-no-release-labels`.
 
-None of these jobs release anything — they only comment on the PR with what _would_ happen, so a reviewer can catch a missing `CHANGELOG.md` entry or a missing label before merge, the same way weave.js's does.
+None of these jobs release anything — they only comment on the PR with what _would_ happen, so a reviewer can see the generated `CHANGELOG.md` entries and catch a missing label before merge, the same way weave.js's does.
 
 ## Divergences from weave.js's workflow of the same name
 
 - **No merge-strategy preview**: weave.js's `release-preview` job also computes and comments a "Merge Strategy" line (squash vs. merge-commit), driven by a `DEVELOPMENT_FLOW` repo variable and hotfix-branch-name heuristics for its gitflow-style branching. docouture is trunk-based only (main + PRs, no long-lived develop/hotfix branches to choose a strategy between — see `code-npm_node-publish-release-and-snapshot.md`'s "No gitflow sync-to-develop PR" note), so that step, its "Check merge strategy" logic and its comment line are dropped entirely.
 - **No `DEVELOPMENT_FLOW`-gated no-labels job**: weave.js only shows `release-preview-no-release-labels` when `vars.DEVELOPMENT_FLOW != 'trunk-based-development'`. Since docouture is always trunk-based, this job always fires when a matching-path PR carries no `release-type/*` label — no variable to gate on.
 - **Explicit `GITHUB_TOKEN`/`pull-requests: write` per job**: weave.js's workflow leaves these implicit (no `permissions:` block, no job-level `env:` for the token in its `release-preview` job's final comment step). Ported here with an explicit `permissions: pull-requests: write` and job-level `GITHUB_TOKEN` env in all three jobs, matching the least-privilege style `code-npm_node-publish-release-and-snapshot.yml` already uses.
-- **Path filter**: `code/**` and `.github/workflows/code**`, not weave.js's bare `code/**` — matching the filter `code-npm_node-pr-verify.yml` already uses for its own `CHANGELOG.md` check.
+- **Path filter**: `code/**` and `.github/workflows/code**`, not weave.js's bare `code/**` — matching the filter `code-npm_node-pr-verify.yml` already uses.
 - **Action pins**: `dorny/paths-filter` and `release-flow/keep-a-changelog-action` are pinned to the same commit SHAs `code-npm_node-publish-release-and-snapshot.yml` already uses, rather than weave.js's own (potentially different) pins.
 
 ## Fork pull requests
@@ -34,9 +34,9 @@ On a `pull_request` from a fork, GitHub gives the workflow a read-only `GITHUB_T
 
 | | same-repo PR | fork PR |
 |---|---|---|
-| `CHANGELOG.md` diff check | runs | runs, fails the job if missing (annotation only, no comment) |
+| `[Unreleased]` generation | runs | runs (read-only token is enough) |
 | version bump computation | runs | runs |
-| PR comments | posted | skipped |
+| PR comments | posted | skipped (preview goes to the job summary) |
 
 ## Jobs
 
@@ -50,9 +50,10 @@ On a `pull_request` from a fork, GitHub gives the workflow a read-only `GITHUB_T
 
   - Checkout the merge commit.
   - Map the `release-type/*` label to a semver bump (`hotfix`/`multi-hotfix`/`patch` → `patch`, `minor` → `minor`, `major` → `major`).
-  - Fail with a PR comment if `code/CHANGELOG.md` has no diff against the previous commit.
+  - Setup Node from `code/.tool-versions`.
+  - Generate `[Unreleased]` with `.github/scripts/changelog-from-prs.mjs` in two passes: the entries already pending on the base branch (`--to HEAD^1 --branch <base>`, the merge commit's first parent), then this PR's (`--pr <PR>`). Contributors no longer edit `CHANGELOG.md`.
   - Compute the next version via `release-flow/keep-a-changelog-action` (dry-run bump, same action the real release workflow uses).
-  - Comment on the PR with the version that will be released and the `[Unreleased]` entries that will move under it.
+  - Comment on the PR with the version that will be released and the `[Unreleased]` entries that will move under it, followed by the PR's own changelog report. Titles are wrapped in code spans so an `@mention` in an issue title cannot notify anyone. Fork PRs get the same text in the job summary instead.
 
 - ### `release-preview-no-code-changes`
 

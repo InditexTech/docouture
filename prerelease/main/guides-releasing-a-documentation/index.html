@@ -1011,6 +1011,25 @@ version in versioned mode. Or release the docs in a separate pull request labell
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="protected-branches"><a class="anchor" href="#protected-branches"></a>Protected release branches</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the release branch is covered by a ruleset that requires pull requests, add the GitHub
+App behind <code>APP_CLIENT_ID</code> and <code>APP_PRIVATE_KEY</code> to the ruleset&#8217;s bypass list. The release
+job pushes the release tag and the <code>docs/.release-version</code> bump with that App&#8217;s token.</p>
+</div>
+<div class="paragraph">
+<p>That token is deliberately not narrowed with <code>owner</code>, <code>repositories</code> or <code>permission-*</code>
+inputs in the release job. A narrowed installation token loses the App&#8217;s ruleset bypass:
+the bump is rejected with <code>GH013 Changes must be made through a pull request</code> and
+<code>docs/.release-version</code> stays on the released version. The tradeoff is that the release
+job&#8217;s token carries all of the App&#8217;s installation permissions, so install the App only
+where it is needed. The <code>sync-prerelease</code> and publish jobs never push to the release
+branch, so they keep narrowed tokens.</p>
+</div>
+</div>
+</div>
 </article>
   </div>
 </main>

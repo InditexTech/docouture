@@ -22,7 +22,7 @@
     "antora": "3.2.0"
   },
   "docouture": {
-    "versionSource": "descriptor",
+    "versionSource": "github-release",
     "publish": {
       "gh-pages": {}
     }

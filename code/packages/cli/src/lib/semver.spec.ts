@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { bumpVersion, compareSemver, highestSemver, parseSemver } from './semver.js'
+import { bumpVersion, compareSemver, highestSemver, isSemver, parseSemver } from './semver.js'
 
 describe('compareSemver', () => {
   // The ordering example from semver.org section 11, in ascending order.
@@ -77,5 +77,44 @@ describe('bumpVersion', () => {
 describe('parseSemver', () => {
   it('parses prerelease identifiers', () => {
     expect(parseSemver('1.2.3-beta.2+x')).toEqual({ major: 1, minor: 2, patch: 3, prerelease: ['beta', '2'] })
+  })
+})
+
+describe('isSemver', () => {
+  it.each([
+    '0.0.0',
+    '1.2.3',
+    '10.20.30',
+    '1.0.0-alpha',
+    '1.0.0-alpha.1',
+    '1.0.0-0.3.7',
+    '1.0.0-x.7.z.92',
+    '1.0.0-x-y-z.-',
+    '1.0.0+20130313144700',
+    '1.0.0-beta+exp.sha.5114f85',
+    '1.0.0+21AF26D3----117B344092BD',
+  ])('accepts %s', (value) => {
+    expect(isSemver(value)).toBe(true)
+  })
+
+  it.each([
+    '',
+    '1',
+    '1.2',
+    '1.2.3.4',
+    'v1.2.3',
+    '01.2.3',
+    '1.02.3',
+    '1.2.03',
+    '1.2.3-',
+    '1.2.3-01',
+    '1.2.3-a..b',
+    '1.2.3+',
+    '1.2.3+a..b',
+    '1.2.3-be$ta',
+    '-1.2.3',
+    'stable',
+  ])('rejects %j', (value) => {
+    expect(isSemver(value)).toBe(false)
   })
 })

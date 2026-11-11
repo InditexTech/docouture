@@ -11,10 +11,10 @@ import { TAG_PREFIX } from './release-resolve.js'
 // Existing docs/v* tag names, from the local clone — callers fetch tags first.
 export function listDocsTags(repoRoot: string): Promise<string[]> {
   return new Promise((resolvePromise) => {
-    // Resolves 'git' off PATH, same as the other commands that shell out to it.
-    execFile('git', ['tag', '-l', `${TAG_PREFIX}*`], { cwd: repoRoot }, (err, stdout) => {
-      // NOSONAR
+    const onDone = (err: Error | null, stdout: string): void => {
       resolvePromise(err ? [] : stdout.split('\n').filter((line) => line.trim() !== ''))
-    })
+    }
+    // Resolves 'git' off PATH, same as the other commands that shell out to it.
+    execFile('git', ['tag', '-l', `${TAG_PREFIX}*`], { cwd: repoRoot }, onDone) // NOSONAR
   })
 }

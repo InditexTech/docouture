@@ -4,7 +4,7 @@
 
 'use strict'
 
-import { bumpVersion, highestSemver, SEMVER_RE } from './semver.js'
+import { bumpVersion, highestSemver, isSemver } from './semver.js'
 
 export type ReleaseMode = 'versioned' | 'standalone'
 
@@ -22,8 +22,6 @@ export interface ReleaseResolution {
 
 export const DESCRIPTOR_SOURCE = 'docs/.release-version'
 export const INPUT_SOURCE = 'version input'
-
-export { SEMVER_RE }
 
 export type VersionSource = 'descriptor' | 'github-release' | 'tag-bump'
 
@@ -76,7 +74,7 @@ function checkVersion(version: string, source: string): ReleaseError | undefined
         "'stable' is standalone's target name, not a valid versioned-mode version — use a real version, e.g. 1.2.0",
     }
   }
-  if (!SEMVER_RE.test(version)) {
+  if (!isSemver(version)) {
     return {
       kind: 'invalid',
       value: version,

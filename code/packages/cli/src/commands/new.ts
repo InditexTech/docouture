@@ -516,6 +516,51 @@ function parseEnumFlag<T extends string>(
   return { value: raw as T, error: null }
 }
 
+interface EnumFlags {
+  mode: Mode | undefined
+  branching: Branching | undefined
+  versionSource: VersionSource | undefined
+  pmChoice: PackageManager | undefined
+  error: string | null
+}
+
+// The four enum-valued flags (--mode, --flow, --version-source, --pm), each
+// either absent, a valid member, or an error to print verbatim.
+function parseEnumFlags(flags: Record<string, string | boolean>): EnumFlags {
+  const mode = parseEnumFlag(flags, 'mode', MODES, "'standalone' or 'versioned'")
+  const flow = parseEnumFlag(flags, 'flow', BRANCH_MODELS, "'trunk-based' or 'git-flow'")
+  const versionSource = parseEnumFlag(
+    flags,
+    'version-source',
+    VERSION_SOURCES,
+    "'descriptor', 'github-release' or 'tag-bump'"
+  )
+  const pm = parseEnumFlag(flags, 'pm', PACKAGE_MANAGERS, "'npm' or 'pnpm'")
+  return {
+    mode: mode.value,
+    branching: flow.value,
+    versionSource: versionSource.value,
+    pmChoice: pm.value,
+    error: mode.error ?? flow.error ?? versionSource.error ?? pm.error,
+  }
+}
+
+// A version source only exists for versioned sites: standalone rejects one,
+// versioned defaults to `descriptor`.
+function resolveVersionSource(
+  mode: Mode,
+  versionSource: VersionSource | undefined
+): { value: VersionSource | undefined; error: string | null } {
+  if (mode === 'standalone') {
+    const error =
+      versionSource === undefined
+        ? null
+        : "--version-source only applies to versioned sites: a standalone site has no docs version source\n(standalone releases always target the 'docs/stable' tag)"
+    return { value: undefined, error }
+  }
+  return { value: versionSource ?? 'descriptor', error: null }
+}
+
 export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<number> {
   const { positional, flags } = parseArgs(argv)
 
@@ -542,38 +587,12 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   const integrationBranchFlag = stringFlag(flags, 'integration-branch')
   const releaseBranchFlag = stringFlag(flags, 'release-branch')
 
-  const modeFlag = parseEnumFlag(flags, 'mode', MODES, "'standalone' or 'versioned'")
-  if (modeFlag.error) {
-    console.error(modeFlag.error)
+  const enumFlags = parseEnumFlags(flags)
+  if (enumFlags.error) {
+    console.error(enumFlags.error)
     return 1
   }
-  let mode = modeFlag.value
-
-  const flowFlag = parseEnumFlag(flags, 'flow', BRANCH_MODELS, "'trunk-based' or 'git-flow'")
-  if (flowFlag.error) {
-    console.error(flowFlag.error)
-    return 1
-  }
-  let branching = flowFlag.value
-
-  const versionSourceFlag = parseEnumFlag(
-    flags,
-    'version-source',
-    VERSION_SOURCES,
-    "'descriptor', 'github-release' or 'tag-bump'"
-  )
-  if (versionSourceFlag.error) {
-    console.error(versionSourceFlag.error)
-    return 1
-  }
-  let versionSource = versionSourceFlag.value
-
-  const pmFlag = parseEnumFlag(flags, 'pm', PACKAGE_MANAGERS, "'npm' or 'pnpm'")
-  if (pmFlag.error) {
-    console.error(pmFlag.error)
-    return 1
-  }
-  let pmChoice = pmFlag.value
+  let { mode, branching, versionSource, pmChoice } = enumFlags
 
   // Best-effort guess for the wizard's own default (an existing
   // packageManager field/lockfile at --dir/cwd, or how docouture itself was
@@ -625,12 +644,12 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
 
   mode = mode ?? 'standalone'
   branching = branching ?? 'trunk-based'
-  if (mode === 'standalone' && versionSource !== undefined) {
-    console.error('--version-source only applies to versioned sites: a standalone site has no docs version source')
-    console.error("(standalone releases always target the 'docs/stable' tag)")
+  const versionSourceChoice = resolveVersionSource(mode, versionSource)
+  if (versionSourceChoice.error) {
+    console.error(versionSourceChoice.error)
     return 1
   }
-  if (mode === 'versioned') versionSource = versionSource ?? 'descriptor'
+  versionSource = versionSourceChoice.value
   pmChoice = pmChoice ?? pmGuess
   urlSegment = urlSegment ?? false
   // '' (explicitly skipped) -> undefined; not given at all -> derived default.

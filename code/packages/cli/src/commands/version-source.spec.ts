@@ -64,6 +64,12 @@ describe('runVersionSource', () => {
     expect(output(logSpy)).toContain('version source: tag-bump')
   })
 
+  it('fails naming the valid values when the declared source is unknown', async () => {
+    await scaffold({ docouture: { branching: 'trunk-based', versionSource: 'tag_bump' } })
+    expect(await runVersionSource(['--dir', dir])).toBe(1)
+    expect(output(errorSpy)).toContain('descriptor, github-release, tag-bump')
+  })
+
   it('refuses a standalone site', async () => {
     await scaffold({ mode: 'standalone' })
     expect(await runVersionSource(['tag-bump', '--dir', dir])).toBe(1)

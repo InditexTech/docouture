@@ -10,7 +10,8 @@ import { fileURLToPath } from 'node:url'
 
 import { describe, expect, it } from 'vitest'
 
-import { parseVersionSource, resolveDescriptor, resolveRelease, SEMVER_RE } from './release-resolve.js'
+import { parseVersionSource, resolveDescriptor, resolveRelease } from './release-resolve.js'
+import { isSemver } from './semver.js'
 
 describe('resolveDescriptor', () => {
   it('reads the descriptor in versioned mode', () => {
@@ -82,14 +83,20 @@ describe('preview workflow SemVer parity', () => {
     '1.2.0-beta+exp.sha.5114f85',
     'v1.2.0',
     '1.2',
+    '1.2.3.4',
     '01.2.3',
+    '1.02.3',
     '1.2.3-',
     '1.2.3-01',
+    '1.2.3-a..b',
+    '1.2.3+',
+    '1.0.0-x-y-z.-',
+    '1.0.0+21AF26D3----117B344092BD',
     '',
     'stable',
   ])('agrees on %j', (value) => {
     const bashRe = new RegExp(source ?? '(?!)')
-    expect(bashRe.test(value)).toBe(SEMVER_RE.test(value))
+    expect(bashRe.test(value)).toBe(isSemver(value))
   })
 })
 

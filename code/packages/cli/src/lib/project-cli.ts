@@ -33,18 +33,23 @@ async function readJson<T>(file: string): Promise<T | null> {
   }
 }
 
+interface InstalledCli {
+  version: string
+  hasReleaseResolve: boolean
+}
+
+async function readInstalledCli(base: string): Promise<InstalledCli | null> {
+  const dir = join(base, 'node_modules', ...CLI_PACKAGE.split('/'))
+  const pkg = await readJson<{ version?: string }>(join(dir, 'package.json'))
+  if (!pkg?.version) return null
+  return { version: pkg.version, hasReleaseResolve: await exists(join(dir, 'build', 'commands', 'release.js')) }
+}
+
 export async function readProjectCli(siteRoot: string, repoRoot: string): Promise<ProjectCli> {
-  for (const base of [siteRoot, repoRoot]) {
-    const dir = join(base, 'node_modules', ...CLI_PACKAGE.split('/'))
-    const pkg = await readJson<{ version?: string }>(join(dir, 'package.json'))
-    if (pkg?.version) {
-      return {
-        version: pkg.version,
-        hasReleaseResolve: await exists(join(dir, 'build', 'commands', 'release.js')),
-        from: 'installed',
-      }
-    }
-  }
+  // The site's own node_modules wins over the repository root's.
+  const candidates = await Promise.all([siteRoot, repoRoot].map(readInstalledCli))
+  const installed = candidates.find((candidate) => candidate !== null)
+  if (installed) return { ...installed, from: 'installed' }
 
   const sitePkg = await readJson<{ devDependencies?: Record<string, string>; dependencies?: Record<string, string> }>(
     join(siteRoot, 'package.json')

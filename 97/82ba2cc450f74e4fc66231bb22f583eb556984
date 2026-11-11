@@ -1,0 +1,21 @@
+.github/workflows/code-changelog-check.yml
+  s_e8f990e7ae45c0::t_08da30967502f7 25
+.github/workflows/docs/code-changelog-check.md
+  s_e8f990e7ae45c0::t_7618f24c9f25c4 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "9782ba2cc450f74e4fc66231bb22f583eb556984",
+  "prompts": {},
+  "sessions": {
+    "s_e8f990e7ae45c0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e34a554ccffe66vlS7KtX21x9l",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,135 @@
+.agents/skills/docouture-docs-versioning/SKILL.md
+  s_6e8baf847b791c::t_b5287466998028 3,38-48
+.agents/skills/docouture-docs-versioning/reference/releasing.md
+  s_6e8baf847b791c::t_413992f8bb19d9 77-104,114-119
+.github/workflows/docouture-release-preview.yml
+  s_6e8baf847b791c::t_141819ac4761a3 23-33,63,87,128-168,172-173,175-176,178-191,200-204,237,240,253-274,292,323,328-333,339,358,381
+.github/workflows/docouture-release.yml
+  s_6e8baf847b791c::t_9ca2de07d6488a 58-67,140,167-169,301-332,343,348,455,468,498
+AGENTS.md
+  s_6e8baf847b791c::t_75d0b538fabccb 111-112,156
+code/packages/cli/src/bin.ts
+  s_6e8baf847b791c::t_086b46e26f85f6 10,12,47-48,245-321,378-379,410-411
+code/packages/cli/src/commands/completion.ts
+  s_6e8baf847b791c::t_f897937ad1e38f 28-29
+code/packages/cli/src/commands/doctor.ts
+  s_6e8baf847b791c::t_9e1592f48ea38e 17-19,24-25,38,268-282
+code/packages/cli/src/commands/new.spec.ts
+  s_6e8baf847b791c::t_619bee7a0840e5 513-570,616-617,625-629
+code/packages/cli/src/commands/new.ts
+  s_6e8baf847b791c::t_1256f93665a338 28-30,214,237,413-447,471,559-570,608,621,628-633,656,714,720,814,830,924-934,946,956-967,1016-1046
+code/packages/cli/src/commands/release.spec.ts
+  s_6e8baf847b791c::t_80eeb30857ee47 1-161
+code/packages/cli/src/commands/release.ts
+  s_6e8baf847b791c::t_bc68b116cd93a6 1-109
+code/packages/cli/src/commands/upgrade.spec.ts
+  s_6e8baf847b791c::t_e3857f90099ff1 98-176
+code/packages/cli/src/commands/upgrade.ts
+  s_6e8baf847b791c::t_f4730ed6fca63c 20-22,234-241,249-251,306-310,334-344
+code/packages/cli/src/commands/version-source.spec.ts
+  s_6e8baf847b791c::t_918101d10d29b8 1-135
+code/packages/cli/src/commands/version-source.ts
+  s_6e8baf847b791c::t_5ee39af2f835a7 1-169
+code/packages/cli/src/lib/docs-tags.ts
+  s_6e8baf847b791c::t_4f837151d1c904 1-20
+code/packages/cli/src/lib/doctor-checks.spec.ts
+  s_6e8baf847b791c::t_341a117be0df8c 22,24,297-355
+code/packages/cli/src/lib/doctor-checks.ts
+  s_6e8baf847b791c::t_cf81a64aff7e5f 12-13,437-525
+code/packages/cli/src/lib/package-version-source.spec.ts
+  s_6e8baf847b791c::t_ff27581ed3b380 1-95
+code/packages/cli/src/lib/package-version-source.ts
+  s_6e8baf847b791c::t_93bdc7d66c8e32 1-75
+code/packages/cli/src/lib/project-cli.spec.ts
+  s_6e8baf847b791c::t_2c26aee8a52bc4 1-68
+code/packages/cli/src/lib/project-cli.ts
+  s_6e8baf847b791c::t_b39f99ea1dfaa6 1-65
+code/packages/cli/src/lib/release-labels.ts
+  s_6e8baf847b791c::t_c1e7c30d779228 1-18
+code/packages/cli/src/lib/release-resolve.spec.ts
+  s_6e8baf847b791c::t_e3aa0a45daa358 1-204
+code/packages/cli/src/lib/release-resolve.ts
+  s_6e8baf847b791c::t_f62d6549d38b41 1-193
+code/packages/cli/src/lib/semver.spec.ts
+  s_6e8baf847b791c::t_c8382cdf86d512 1-81
+code/packages/cli/src/lib/semver.ts
+  s_6e8baf847b791c::t_0cdea21bbc3d7e 1-95
+code/packages/cli/src/lib/site-mode.spec.ts
+  s_6e8baf847b791c::t_608fd4aebb1c7f 1-24
+code/packages/cli/src/lib/site-mode.ts
+  s_6e8baf847b791c::t_34189e1a9b450f 1-29
+code/packages/cli/templates/agent-support/AGENTS.md
+  s_6e8baf847b791c::t_938030b696636b 81-82
+code/packages/cli/templates/starter/src/modules/main/pages/getting-started.adoc
+  s_6e8baf847b791c::t_34bd7d0822fb89 91-96
+code/packages/cli/templates/workflows/docouture-release-preview.yml
+  s_6e8baf847b791c::t_cbb7ee242ed06c 23-33,63,87,128-164,168-169,171-172,174-187,196-200,233,236,249-270,288,319,324-329,335,354,377
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_6e8baf847b791c::t_bbbb1571c25e8d 58-67,140,167-169,297-328,339,344,451,464,494
+docs/src/modules/main/nav.adoc
+  s_6e8baf847b791c::t_a39727bda27847 41
+docs/src/modules/main/pages/guides-branching-model.adoc
+  s_6e8baf847b791c::t_2dd4b76db43529 76
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_6e8baf847b791c::t_fe1baf8cea8294 27-29,57-98,101-103,172-173
+docs/src/modules/main/pages/guides-versioning-modes.adoc
+  s_6e8baf847b791c::t_2a3aa45bfc23bd 40
+docs/src/modules/main/pages/reference-cli.adoc
+  s_6e8baf847b791c::t_cd98d6daa4396f 39-40,112-115,135-138,192-261
+docs/src/modules/main/pages/release-notes/1-4-0.adoc
+  s_6e8baf847b791c::t_752e99288c425a 1-64
+docs/src/modules/main/pages/release-notes/index.adoc
+  s_6e8baf847b791c::t_7f83032c720646 8
+openspec/changes/archive/2026-11-11-pluggable-docs-version-resolvers/.openspec.yaml
+  s_6e8baf847b791c::t_355fe8f230acd5 1-2
+openspec/changes/archive/2026-11-11-pluggable-docs-version-resolvers/design.md
+  s_6e8baf847b791c::t_0f415b6e5b7e25 1-41
+openspec/changes/archive/2026-11-11-pluggable-docs-version-resolvers/specs/docs-release-prerelease-sync/spec.md
+  s_6e8baf847b791c::t_6f2b10ec1bafad 1-23
+openspec/changes/archive/2026-11-11-pluggable-docs-version-resolvers/specs/docs-release-preview/spec.md
+  s_6e8baf847b791c::t_9aba9301b1ec38 1-36
+openspec/changes/archive/2026-11-11-pluggable-docs-version-resolvers/specs/docs-release-resolve/spec.md
+  s_6e8baf847b791c::t_1d9bbb18f45e77 1-85
+openspec/changes/archive/2026-11-11-pluggable-docs-version-resolvers/specs/docs-version-source/spec.md
+  s_6e8baf847b791c::t_4c4e4fc54e8037 1-64
+openspec/changes/archive/2026-11-11-pluggable-docs-version-resolvers/tasks.md
+  s_6e8baf847b791c::t_bca10d33d0d277 1-35
+openspec/changes/archive/2026-11-11-release-resolve-descriptor/.openspec.yaml
+  s_6e8baf847b791c::t_2249d4ddf770ca 1-2
+openspec/changes/archive/2026-11-11-release-resolve-descriptor/design.md
+  s_6e8baf847b791c::t_bafe107cb7c6c6 1-29
+openspec/changes/archive/2026-11-11-release-resolve-descriptor/proposal.md
+  s_6e8baf847b791c::t_4cc2202baf68ac 1-29
+openspec/changes/archive/2026-11-11-release-resolve-descriptor/specs/docs-release-resolve/spec.md
+  s_6e8baf847b791c::t_ba042b36992aee 1-56
+openspec/changes/archive/2026-11-11-release-resolve-descriptor/tasks.md
+  s_6e8baf847b791c::t_e8b23deb41971a 1-17
+openspec/specs/docs-release-prerelease-sync/spec.md
+  s_6e8baf847b791c::t_8b441f068c95fb 9,12,15-18,31,37-40
+openspec/specs/docs-release-preview/spec.md
+  s_6e8baf847b791c::t_c31536c69f16f4 31,34,38,84-105
+openspec/specs/docs-release-resolve/spec.md
+  s_6e8baf847b791c::t_c641a948824b0f 1-116
+openspec/specs/docs-version-source/spec.md
+  s_6e8baf847b791c::t_da201cee8fa97f 1-65
+skills/docouture-docs-versioning/SKILL.md
+  s_6e8baf847b791c::t_d4317692df954d 3,41-48
+skills/docouture-docs-versioning/reference/releasing.md
+  s_6e8baf847b791c::t_f7763aa5dff47e 77-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "8ec96b033e50aa5365e3f2711635b336640c6511",
+  "prompts": {},
+  "sessions": {
+    "s_6e8baf847b791c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e354f9a62ffeXBiYvfMU21D1zZ",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

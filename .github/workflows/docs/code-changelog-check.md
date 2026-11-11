@@ -16,7 +16,7 @@ Any pull request to `main` or `main-*` that is `opened`, `synchronize`d, `reopen
 - A maintainer can waive the rule with the `skip-release` label, which also skips the release on merge. The issues such a PR does close still get entries in the next release.
 - Dependabot PRs are exempt.
 - Issues labelled `kind/internal` or `kind/epic`, even together with a `kind/*` category, count as a link but get no entry, and an issue already listed in an earlier release is not listed again. Both are shown in the report. `skip-changelog` has no effect.
-- The check is warn-only for now: `CHANGELOG_LINK_ENFORCE` is `'false'`. Setting it to `'true'` (a follow-up PR, once a release has run end to end) makes a PR with no linked issue and no bypass fail.
+- The check is enforcing: `CHANGELOG_LINK_ENFORCE` is `'true'`, so a PR with no linked issue and no bypass fails. Set it back to `'false'` to make it warn-only.
 
 ## Jobs
 

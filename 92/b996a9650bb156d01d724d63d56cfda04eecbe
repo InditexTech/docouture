@@ -1,0 +1,37 @@
+code/packages/cli/src/commands/new.ts
+  s_6e8baf847b791c::t_bdeaa5c2abb097 519-563,590-592,595,647-649,652
+code/packages/cli/src/commands/release.ts
+  s_6e8baf847b791c::t_af55a55fdb4823 14-21,26-84,95,99,107-108,111,113,115-116,118-119,122,127
+code/packages/cli/src/commands/version-source.spec.ts
+  s_6e8baf847b791c::t_a18a8f6acf2bbd 67-72
+code/packages/cli/src/commands/version-source.ts
+  s_6e8baf847b791c::t_317275a6e0719b 14-18,20,22,52-58,60-63,68,70-73,75-76,78-89,91-95,97-103,109-115,119-125,128-134,136-137,139-157,159-160,162-171,173,175-179,181-190,192-198,200-205,207-212,214-228,230-238,245-246,250-253,256-258
+code/packages/cli/src/lib/docs-tags.ts
+  s_6e8baf847b791c::t_233eca2a2787a7 14,16-18
+code/packages/cli/src/lib/project-cli.ts
+  s_6e8baf847b791c::t_edb348e7915fae 36-47,49-52
+code/packages/cli/src/lib/release-resolve.spec.ts
+  s_6e8baf847b791c::t_0df2f9925dfc9d 13-14,86,88,91-94,99
+code/packages/cli/src/lib/release-resolve.ts
+  s_6e8baf847b791c::t_a339037c739492 7,77
+code/packages/cli/src/lib/semver.spec.ts
+  s_6e8baf847b791c::t_fb910db6d4fc33 9,82-120
+code/packages/cli/src/lib/semver.ts
+  s_6e8baf847b791c::t_ddfa06cd3b33cc 7-10,21-54,56-59,63-64,72-84,89-94,100,116,119,121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "92b996a9650bb156d01d724d63d56cfda04eecbe",
+  "prompts": {},
+  "sessions": {
+    "s_6e8baf847b791c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e354f9a62ffeXBiYvfMU21D1zZ",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

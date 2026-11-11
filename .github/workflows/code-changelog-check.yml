@@ -22,7 +22,7 @@ env:
   # 'true' fails a PR that has no linked issue and no bypass. 'false' only
   # warns: flip it to 'true' in a follow-up PR once a release has run end to
   # end with the generated changelog.
-  CHANGELOG_LINK_ENFORCE: "false"
+  CHANGELOG_LINK_ENFORCE: "true"
 
 jobs:
   closing-issue:

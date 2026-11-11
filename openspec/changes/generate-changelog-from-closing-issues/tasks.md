@@ -21,5 +21,5 @@
 
 ## 4. End-to-end verification and rollout (tracked in #302 and #303)
 
-- [ ] 4.1 Verify the check, the release preview comment, the empty-`[Unreleased]` bump and a real release run (InditexTech/docouture#302)
-- [ ] 4.2 Add the check to branch protection, retire the `skip-changelog` label, update the `skip-release` label description, and flip `CHANGELOG_LINK_ENFORCE` after one release (InditexTech/docouture#303)
+- [x] 4.1 Verify the check, the release preview comment, the empty-`[Unreleased]` bump and a real release run (InditexTech/docouture#302)
+- [x] 4.2 Add the check to branch protection, retire the `skip-changelog` label, update the `skip-release` label description, and flip `CHANGELOG_LINK_ENFORCE` after one release (InditexTech/docouture#303)

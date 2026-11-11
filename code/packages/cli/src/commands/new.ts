@@ -25,6 +25,9 @@ import { findRepoRoot } from '../lib/repo-root.js'
 import { normalizeSiteUrl, siteUrlLine } from '../lib/site-url.js'
 import { AGENTS_MD_FILENAME, hasManagedSection, mergeAgentsMd } from '../lib/agents-md.js'
 import { cacheWarmBranchesYaml, type Branching } from '../lib/branch-detect.js'
+import { setVersionSource } from '../lib/package-version-source.js'
+import { TAG_BUMP_LABEL_COMMANDS } from '../lib/release-labels.js'
+import { VERSION_SOURCES, type VersionSource } from '../lib/release-resolve.js'
 
 // Matches the rule an npm package name (and, not coincidentally, an Antora
 // component name — both end up as URL segments) can safely be: this is
@@ -208,6 +211,7 @@ interface WizardAnswers {
   branching: Branching
   prereleaseBranch: string
   releaseBranch: string
+  versionSource: VersionSource | undefined
   pm: PackageManager
 }
 
@@ -230,6 +234,7 @@ async function promptWizard(
     branch?: string
     prereleaseBranch?: string
     releaseBranch?: string
+    versionSource?: VersionSource
     pm?: PackageManager
   },
   defaults: { pm: PackageManager; siteUrl: string | undefined }
@@ -405,6 +410,41 @@ async function promptWizard(
     releaseBranch = branch
   }
 
+  // Where the docs release version comes from — versioned sites only,
+  // standalone always targets the rolling 'docs/stable' tag. See
+  // lib/release-resolve.ts and the docs-version-source spec.
+  const versionSource =
+    mode === 'versioned'
+      ? (initial.versionSource ??
+        (await select<VersionSource>(
+          {
+            message: 'Where does the docs release version come from?\n',
+            default: 'descriptor' as VersionSource,
+            choices: [
+              {
+                name: 'descriptor (docs/.release-version)',
+                value: 'descriptor',
+                description:
+                  'A release pull request commits the target version in docs/.release-version; the workflow bumps it to the next patch afterwards.',
+              },
+              {
+                name: 'github-release (the code release tag)',
+                value: 'github-release',
+                description:
+                  'The docs follow the code: publishing a GitHub Release releases the docs at that release tag. No version file.',
+              },
+              {
+                name: 'tag-bump (latest docs/v* tag + bump)',
+                value: 'tag-bump',
+                description:
+                  "The next version is the latest docs/v* tag plus a bump chosen by the PR's label (docs/release patch, docs/release-minor, docs/release-major). No version file.",
+              },
+            ],
+          },
+          context
+        )))
+      : undefined
+
   const pm =
     initial.pm ??
     (await select<PackageManager>(
@@ -428,6 +468,7 @@ async function promptWizard(
     branching,
     prereleaseBranch,
     releaseBranch,
+    versionSource,
     pm,
   }
 }
@@ -475,6 +516,51 @@ function parseEnumFlag<T extends string>(
   return { value: raw as T, error: null }
 }
 
+interface EnumFlags {
+  mode: Mode | undefined
+  branching: Branching | undefined
+  versionSource: VersionSource | undefined
+  pmChoice: PackageManager | undefined
+  error: string | null
+}
+
+// The four enum-valued flags (--mode, --flow, --version-source, --pm), each
+// either absent, a valid member, or an error to print verbatim.
+function parseEnumFlags(flags: Record<string, string | boolean>): EnumFlags {
+  const mode = parseEnumFlag(flags, 'mode', MODES, "'standalone' or 'versioned'")
+  const flow = parseEnumFlag(flags, 'flow', BRANCH_MODELS, "'trunk-based' or 'git-flow'")
+  const versionSource = parseEnumFlag(
+    flags,
+    'version-source',
+    VERSION_SOURCES,
+    "'descriptor', 'github-release' or 'tag-bump'"
+  )
+  const pm = parseEnumFlag(flags, 'pm', PACKAGE_MANAGERS, "'npm' or 'pnpm'")
+  return {
+    mode: mode.value,
+    branching: flow.value,
+    versionSource: versionSource.value,
+    pmChoice: pm.value,
+    error: mode.error ?? flow.error ?? versionSource.error ?? pm.error,
+  }
+}
+
+// A version source only exists for versioned sites: standalone rejects one,
+// versioned defaults to `descriptor`.
+function resolveVersionSource(
+  mode: Mode,
+  versionSource: VersionSource | undefined
+): { value: VersionSource | undefined; error: string | null } {
+  if (mode === 'standalone') {
+    const error =
+      versionSource === undefined
+        ? null
+        : "--version-source only applies to versioned sites: a standalone site has no docs version source\n(standalone releases always target the 'docs/stable' tag)"
+    return { value: undefined, error }
+  }
+  return { value: versionSource ?? 'descriptor', error: null }
+}
+
 export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<number> {
   const { positional, flags } = parseArgs(argv)
 
@@ -501,26 +587,12 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
   const integrationBranchFlag = stringFlag(flags, 'integration-branch')
   const releaseBranchFlag = stringFlag(flags, 'release-branch')
 
-  const modeFlag = parseEnumFlag(flags, 'mode', MODES, "'standalone' or 'versioned'")
-  if (modeFlag.error) {
-    console.error(modeFlag.error)
+  const enumFlags = parseEnumFlags(flags)
+  if (enumFlags.error) {
+    console.error(enumFlags.error)
     return 1
   }
-  let mode = modeFlag.value
-
-  const flowFlag = parseEnumFlag(flags, 'flow', BRANCH_MODELS, "'trunk-based' or 'git-flow'")
-  if (flowFlag.error) {
-    console.error(flowFlag.error)
-    return 1
-  }
-  let branching = flowFlag.value
-
-  const pmFlag = parseEnumFlag(flags, 'pm', PACKAGE_MANAGERS, "'npm' or 'pnpm'")
-  if (pmFlag.error) {
-    console.error(pmFlag.error)
-    return 1
-  }
-  let pmChoice = pmFlag.value
+  let { mode, branching, versionSource, pmChoice } = enumFlags
 
   // Best-effort guess for the wizard's own default (an existing
   // packageManager field/lockfile at --dir/cwd, or how docouture itself was
@@ -552,6 +624,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
         branch: branchFlag,
         prereleaseBranch: integrationBranchFlag,
         releaseBranch: releaseBranchFlag,
+        versionSource,
         pm: pmChoice,
       },
       { pm: pmGuess, siteUrl: derivedSiteUrl }
@@ -564,12 +637,19 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     branching = answers.branching
     prereleaseBranch = answers.prereleaseBranch
     releaseBranch = answers.releaseBranch
+    versionSource = answers.versionSource
     pmChoice = answers.pm
     io.output.write('\n')
   }
 
   mode = mode ?? 'standalone'
   branching = branching ?? 'trunk-based'
+  const versionSourceChoice = resolveVersionSource(mode, versionSource)
+  if (versionSourceChoice.error) {
+    console.error(versionSourceChoice.error)
+    return 1
+  }
+  versionSource = versionSourceChoice.value
   pmChoice = pmChoice ?? pmGuess
   urlSegment = urlSegment ?? false
   // '' (explicitly skipped) -> undefined; not given at all -> derived default.
@@ -592,7 +672,7 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     console.error(
       'usage: docouture new <name> [--dir <path>] [--title <title>] [--site-url <url>] [--url-segment] [--mode standalone|versioned] ' +
         '[--flow trunk-based|git-flow] [--branch <name>] [--integration-branch <name>] [--release-branch <name>] ' +
-        '[--pm npm|pnpm]'
+        '[--version-source descriptor|github-release|tag-bump] [--pm npm|pnpm]'
     )
     return 1
   }
@@ -650,11 +730,13 @@ export async function runNew(argv: string[], io: NewIO = defaultIO()): Promise<n
     branching,
     prereleaseBranch,
     releaseBranch,
+    versionSource,
     pmChoice,
   })
 
   printNextSteps({
     mode,
+    versionSource,
     branching,
     prereleaseBranch,
     releaseBranch,
@@ -748,6 +830,7 @@ async function scaffoldSite(params: {
   branching: Branching
   prereleaseBranch: string
   releaseBranch: string
+  versionSource: VersionSource | undefined
   pmChoice: PackageManager
 }): Promise<PackageManagerPlan> {
   const {
@@ -763,6 +846,7 @@ async function scaffoldSite(params: {
     branching,
     prereleaseBranch,
     releaseBranch,
+    versionSource,
     pmChoice,
   } = params
 
@@ -856,11 +940,17 @@ async function scaffoldSite(params: {
       join(docsDir, 'antora-playbook.yml'),
       values
     )
-    await writeTemplateFile(
-      join(starterDir, 'src', 'release-version.versioned'),
-      join(docsDir, '.release-version'),
-      values
-    )
+    const source = versionSource ?? 'descriptor'
+    await setVersionSource(join(docsDir, 'package.json'), source)
+    // Only `descriptor` keeps a version file; the other sources read the
+    // version from the release tag / the existing docs/v* tags.
+    if (source === 'descriptor') {
+      await writeTemplateFile(
+        join(starterDir, 'src', 'release-version.versioned'),
+        join(docsDir, '.release-version'),
+        values
+      )
+    }
   }
 
   return pm
@@ -872,6 +962,7 @@ async function scaffoldSite(params: {
 // own banner — see lib/theme.ts for why that's not picocolors directly.
 function printNextSteps(args: {
   mode: Mode
+  versionSource: VersionSource | undefined
   branching: Branching
   prereleaseBranch: string
   releaseBranch: string
@@ -881,7 +972,18 @@ function printNextSteps(args: {
   workflowsDir: string
   ghPagesUrl: string | undefined
 }): void {
-  const { mode, branching, prereleaseBranch, releaseBranch, pm, target, docsDir, workflowsDir, ghPagesUrl } = args
+  const {
+    mode,
+    versionSource,
+    branching,
+    prereleaseBranch,
+    releaseBranch,
+    pm,
+    target,
+    docsDir,
+    workflowsDir,
+    ghPagesUrl,
+  } = args
   const created = (path: string): string => `  ${theme.success('✓')} ${path}`
 
   // Relative to `target` (the repo root), not process.cwd() — cwd may be a
@@ -930,14 +1032,37 @@ function printNextSteps(args: {
     console.log(theme.bold('Versioning: Versioned (Full History)'))
     console.log(`  ${prereleaseBranch} is the prerelease channel.`)
     console.log('')
-    console.log('  To cut your first release:')
-    console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
-    console.log('    2. Open a PR that sets the target version in docs/.release-version (e.g. "1.0.0")')
-    console.log("    3. Label the PR 'docs/release'")
-    console.log('    4. Merge it — docouture-release.yml runs automatically and tags docs/vX.Y.Z')
-    console.log('')
-    console.log('  (or skip the label/PR entirely: run docouture-release.yml manually via workflow_dispatch')
-    console.log('  and type the version)')
+    if (versionSource === 'github-release') {
+      console.log('  Version source: github-release — the docs follow your code release.')
+      console.log('    The docs are released, at the release tag, when a GitHub Release is published;')
+      console.log('    there is no docs/.release-version. If your release tags carry a prefix (e.g. docs-site@),')
+      console.log('    run: docouture version-source github-release --prefix <prefix>')
+      console.log('')
+      console.log('  To cut your first release: publish a GitHub Release (or run docouture-release.yml')
+      console.log('  manually via workflow_dispatch and type the version).')
+    } else if (versionSource === 'tag-bump') {
+      console.log('  Version source: tag-bump — the next version is the latest docs/vX.Y.Z tag plus a bump.')
+      console.log('    There is no docs/.release-version.')
+      console.log('')
+      console.log('  To cut your first release (there is no tag to bump from yet):')
+      console.log('    run docouture-release.yml manually via workflow_dispatch and type the version (e.g. 1.0.0).')
+      console.log('')
+      console.log('  After that, label a merged PR to release: patch with docs/release, minor with')
+      console.log('  docs/release-minor, major with docs/release-major. Create the labels once:')
+      console.log('    gh label create docs/release')
+      for (const command of TAG_BUMP_LABEL_COMMANDS) console.log(`    ${command}`)
+    } else {
+      console.log('  Version source: descriptor — the target version is docs/.release-version.')
+      console.log('')
+      console.log('  To cut your first release:')
+      console.log("    1. Create the 'docs/release' label (once): gh label create docs/release")
+      console.log('    2. Open a PR that sets the target version in docs/.release-version (e.g. "1.0.0")')
+      console.log("    3. Label the PR 'docs/release'")
+      console.log('    4. Merge it — docouture-release.yml runs automatically and tags docs/vX.Y.Z')
+      console.log('')
+      console.log('  (or skip the label/PR entirely: run docouture-release.yml manually via workflow_dispatch')
+      console.log('  and type the version)')
+    }
     console.log('')
     console.log(
       '  See the docouture-docs-versioning skill (npx skills add InditexTech/docouture) for the full mechanism.'

@@ -1,6 +1,6 @@
 ---
 name: docouture-docs-versioning
-description: "How to cut a release or a prerelease on a docouture Antora documentation site scaffolded with Versioned (Full History) mode: docouture version, docs/.release-version, and the docouture-release.yml workflow. USE WHEN bumping a version, cutting a release, configuring what a release tag contains, or asking how versioning works on this site. EXAMPLES: 'cut a release', 'bump the docs version', 'what does docs/.release-version do', 'how do I release a new version of the docs'."
+description: "How to cut a release or a prerelease on a docouture Antora documentation site scaffolded with Versioned (Full History) mode: docouture version, docs/.release-version and its alternatives (docouture version-source: github-release, tag-bump), and the docouture-release.yml workflow. USE WHEN bumping a version, cutting a release, configuring what a release tag contains, or asking how versioning works on this site. EXAMPLES: 'cut a release', 'bump the docs version', 'what does docs/.release-version do', 'how do I release a new version of the docs'."
 ---
 
 # Docs versioning (Versioned — Full History)
@@ -35,3 +35,14 @@ a release tag, and what the release workflow actually does).
   `docs/.release-version` forward to the next patch version automatically and commits
   that to `main` — you shouldn't normally need to edit it yourself except to set an
   intentionally different next target (e.g. jumping to a new minor).
+- On a git-flow site the workflow also opens a sync pull request from the release branch
+  into the prerelease branch (`docs/package.json`'s `docouture.prereleaseBranch`) to carry
+  that bump over — merge it.
+- **Where the version comes from is configurable.** `docouture.versionSource` in
+  `docs/package.json` is `descriptor` (the default, everything above), `github-release`
+  (the published GitHub Release's tag, optionally minus `docouture.versionSourcePrefix`) or
+  `tag-bump` (the latest `docs/v*` tag plus a bump: `docs/release` patch,
+  `docs/release-minor` minor, `docs/release-major` major). Only `descriptor` uses
+  `docs/.release-version`, the post-release bump and the git-flow sync. Show or change it
+  with `docouture version-source [source]`; `docouture new --mode versioned` asks for it.
+  See `reference/releasing.md`.

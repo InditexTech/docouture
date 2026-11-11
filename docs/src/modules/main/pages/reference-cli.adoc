@@ -36,6 +36,8 @@ xref:main:guides-branching-model.adoc[]
 |`--branch <name>` |Trunk-based only: the one branch (default: `main`)
 |`--integration-branch <name>` |Git-flow only: the prerelease branch (default: `develop`)
 |`--release-branch <name>` |Git-flow only: the release branch (default: `main`)
+|`--version-source <source>` |Versioned mode only: where the docs release version comes from — `descriptor` (default, `docs/.release-version`),
+`github-release` or `tag-bump`; see xref:main:guides-releasing-a-documentation.adoc#version-sources[]. `tag-bump` prints the `gh label create` commands for `docs/release-minor` and `docs/release-major`. Rejected for a standalone site
 |`--pm <pm>` |`npm` or `pnpm` (default: auto-detected)
 |`--yes` |Skip the interactive wizard
 |===
@@ -107,7 +109,10 @@ Antora is installed, and (advisory only) whether `AGENTS.md` is still present, w
 (`docs/package.json`'s `docouture.branching`, plus `docouture.prereleaseBranch` under
 git-flow) agrees with what
 `antora-playbook.yml`/`docouture-release.yml` actually say — see
-xref:main:guides-branching-model.adoc[]. Does not check for the agent skills — see
+xref:main:guides-branching-model.adoc[]. On a versioned site it also shows the active
+version source and warns about a stray or missing `docs/.release-version`, a project CLI that
+differs from the running one, and a project CLI that predates `release resolve` — see
+xref:main:guides-releasing-a-documentation.adoc#version-sources[]. Does not check for the agent skills — see
 xref:main:reference-ai-first-approach.adoc[], those are a separate, self-serve install
 this CLI never scaffolds or verifies.
 
@@ -127,6 +132,10 @@ page a site owner has written — is never touched, with one exception: on a git
 it writes or corrects `docouture.branching` and `docouture.prereleaseBranch` in
 `docs/package.json` (derived from `antora-playbook.yml`), which `docouture-release.yml`
 reads to open the prerelease sync PR. This also backfills sites scaffolded before that field existed.
+On a versioned site without `docouture.versionSource` it writes `"versionSource": "descriptor"` (the
+current behavior, so nothing changes) and points at `docouture version-source`; it never changes an
+existing value, never prompts and never touches a standalone site. It warns when the project's
+installed `@inditextech/docouture-cli` differs from the running one, since the workflows use the project's.
 It also sets `runtime.log.failure_level` to `error` in `docs/antora-playbook*.yml`, replacing
 any other value and printing each file it changed: builds then fail on errors such as a
 broken `xref:` or a missing include, so run `docouture build` and fix what it reports before
@@ -178,6 +187,76 @@ stay manual steps, printed as a reminder after every real run.
 |`--integration-branch <name>` |Git-flow target only: the new prerelease branch
 |`--release-branch <name>` |Git-flow target only: overrides the release branch's name
 |`--dry-run` |Lists what would be written without writing it
+|===
+
+== `docouture version-source [source]`
+
+Show or change where a versioned site's docs release version comes from
+(`docs/package.json`'s `docouture.versionSource`). With no argument it prints the current
+source. See xref:main:guides-releasing-a-documentation.adoc#version-sources[] for what each
+source means.
+
+Refuses a standalone site, which always releases `docs/stable`. Per target:
+
+* `descriptor` creates `docs/.release-version` if it is missing, seeded with the next patch
+  of the latest `docs/v*` tag (or `--version`; `0.1.0` with no tag).
+* `github-release` removes `docs/.release-version`.
+* `tag-bump` removes `docs/.release-version` and prints the `gh label create` commands for
+  `docs/release-minor` and `docs/release-major`.
+
+Removing the file warns when it held a pending version. The command is idempotent. No
+workflow is re-rendered: the workflows read the source at run time, but they run the
+project's installed CLI, so install a version with `release resolve` first.
+
+[cols="1,2"]
+|===
+|Argument/Flag |Effect
+
+|`[source]` |`descriptor`, `github-release` or `tag-bump`; omit to show the current one
+|`--prefix <p>` |`github-release` only: strip this prefix from the release tag (`docouture.versionSourcePrefix`)
+|`--version <X.Y.Z>` |`descriptor` only: write this version to `docs/.release-version`
+|`--dry-run` |Lists what would change without changing anything
+|===
+
+== `docouture release resolve`
+
+Resolve the docs version and tag a release run targets. The `docouture-release` and
+`docouture-release-preview` workflows call it so the version rules live in one place.
+
+Where the version comes from depends on `docouture.versionSource` in `docs/package.json`
+(`descriptor` when absent):
+
+[cols="1,3"]
+|===
+|Source |Version
+
+|`descriptor` |`--version` when given (the `workflow_dispatch` input), otherwise `docs/.release-version`
+|`github-release` |The published release tag (`--release-tag`) minus `docouture.versionSourcePrefix`, when set. A merged `docs/release` pull request fails.
+|`tag-bump` |The highest `docs/v*` tag plus a bump chosen by `--labels`: `docs/release` patch, `docs/release-minor` minor, `docs/release-major` major (the highest wins). The first release needs `--version`.
+|===
+
+`--version` always takes precedence. A standalone site always targets `stable`. A versioned
+version must be present, valid SemVer and not `stable`; otherwise the command fails with
+exit code 1.
+
+Prints `version`, `tag`, `source`, `version_source` and `uses_descriptor` as `key=value`
+lines on stdout, ready to append to `$GITHUB_OUTPUT`. `uses_descriptor` is `true` only when
+the descriptor bump and the prerelease sync apply. With `--report`, a version error is printed
+as `error` (`missing`, `invalid`, `reserved`, `prefix` or `unsupported`) and `error_value`
+instead, and the exit code stays 0.
+
+[cols="1,2"]
+|===
+|Argument/Flag |Effect
+
+|`--mode <mode>` |Required: `versioned` or `standalone`
+|`--version <v>` |Explicit version; takes precedence over every source
+|`--event <name>` |GitHub event name (`workflow_dispatch`, `pull_request`, `release`)
+|`--release-tag <tag>` |Tag of the published GitHub Release (`github-release`)
+|`--labels <a,b>` |Pull request labels, comma-separated (`tag-bump`)
+|`--tags <a,b>` |Existing tag names instead of listing git tags (`tag-bump`)
+|`--report` |Report a version error as output instead of failing
+|`--dir <path>` |Repository root (default: cwd, or its enclosing repo)
 |===
 
 == `docouture eject <target>`

@@ -88,6 +88,12 @@ type the version into its `version` input.) *Standalone* mode has no such
 file — every release always targets the same `docs/stable` tag, so there is
 nothing to set beforehand.
 
+This is the default `descriptor` version source. A versioned site can instead take the version
+from the published GitHub Release's tag (`github-release`) or from the latest `docs/v*` tag plus a
+bump chosen by the pull request's label (`tag-bump`) — neither keeps a `docs/.release-version`.
+Show or change it with `docouture version-source` (see its `--help`); the reference page for the
+release workflow explains each source.
+
 `docouture version <value>` is a different, narrower tool: it directly
 rewrites `docs/antora.yml`'s `version:`/`prerelease:` fields in place and
 leaves everything else in this directory untouched. It is what

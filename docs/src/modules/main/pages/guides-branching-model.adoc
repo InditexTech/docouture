@@ -73,7 +73,7 @@ green.
   `main`), posting a preview comment. On merge, `docouture-release.yml` cuts the release
   (checks out `main`, tags it, pushes the tag) and calls `docouture-publish.yml` to build
   and publish.
-  A versioned release also bumps `docs/.release-version` on `main`; its
+  Under the default `descriptor` version source, a versioned release also bumps `docs/.release-version` on `main`; its
   `sync-prerelease` job then opens a pull request into `develop` carrying that bump
   (branch `automated/sync-docs-release-<version>-to-develop`) — merge it so `develop`
   doesn't go stale. It runs before the publish, which doesn't wait on its result: a

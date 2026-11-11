@@ -108,7 +108,8 @@ npx skills@latest add InditexTech/docouture --all
   that must agree, the home-page vs. content-page patterns, and how a site grows beyond
   its default `ROOT` + `main` modules.
 - **`docouture-docs-versioning`** — only relevant when this site was scaffolded with
-  `--mode versioned`: cutting releases, `docouture version`, and `docs/.release-version`.
+  `--mode versioned`: cutting releases, `docouture version`, `docs/.release-version` and the
+  alternative version sources (`docouture version-source`).
 
 <!-- docouture:end -->
 
@@ -152,6 +153,7 @@ issue belongs to.
 | structure.adoc                           | `code/README.md`, workspace `packages/` layout                                          | current |
 | guides-branching-model.adoc              | `code/packages/cli/templates/workflows/*.yml`                                          | current |
 | guides-releasing-a-documentation.adoc    | `code/packages/cli/templates/workflows/docouture-release.yml`, `docouture-release-preview.yml` | current |
+| release-notes/1-4-0.adoc (v1.4.0 entry)  | manual (hand-written: version sources, upgrade order, limitations) | current |
 | release-notes/1-3-2.adoc (v1.3.2 entry)  | manual (hand-written: combined-release preview wording and upgrade steps) | current |
 | release-notes/1-3-1.adoc (v1.3.1 entry)  | manual (hand-written: handlebars security floor and upgrade steps) | current |
 | release-notes/1-3-0.adoc (v1.3.0 entry)  | manual (hand-written: check-links removal and upgrade checklist) | current |

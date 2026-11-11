@@ -25,6 +25,8 @@ export const COMMANDS = [
   'doctor',
   'upgrade',
   'branch-model',
+  'version-source',
+  'release',
   'eject',
   'teardown',
   'completion',

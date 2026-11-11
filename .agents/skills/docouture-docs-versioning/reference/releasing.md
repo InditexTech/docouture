@@ -74,7 +74,34 @@ advanced or touched by this step; its own `docs/src/antora.yml` permanently keep
 released version, e.g. a docs typo caught after the tag went out) is a deliberate,
 ordinary act, not something needing a separate flag.
 
-## `docs/.release-version` after a release
+## Version sources
+
+`docs/package.json`'s `docouture.versionSource` picks where the version comes from;
+`docouture release resolve` implements all three for both workflows (release and preview).
+
+| source | version | notes |
+| --- | --- | --- |
+| `descriptor` (default) | `docs/.release-version` | the post-release bump and the git-flow sync below apply only here |
+| `github-release` | tag of the published GitHub Release, minus `docouture.versionSourcePrefix` | a merged `docs/release` PR fails with a clear message; no version file |
+| `tag-bump` | highest `docs/v*` tag + bump | `docs/release` patch, `docs/release-minor` minor, `docs/release-major` major (highest wins); semver-aware, prerelease tags included; the first release needs an explicit version via `workflow_dispatch`; no version file |
+
+`docouture version-source [descriptor|github-release|tag-bump] [--prefix <p>] [--version <v>]
+[--dry-run]` shows or changes it (refuses standalone sites): `descriptor` creates
+`docs/.release-version` seeded with the next patch of the latest tag, the others remove it
+(warning if it held a pending value), and `tag-bump` prints the `gh label create` commands
+for the two extra labels. Workflows read the source at run time, so none are re-rendered, but
+they run the project's installed CLI: bump `@inditextech/docouture-cli` and install first,
+then `docouture upgrade` (writes `"versionSource": "descriptor"` where missing), then
+optionally `docouture version-source`. `docouture doctor` shows the active source and warns
+about a stray or missing `.release-version` and about a CLI without `release resolve`.
+
+The preview comment follows the source: `descriptor` reads the file (no install),
+`github-release` says the docs follow the code release without a version, and `tag-bump`
+shows the version released if the PR merged now (it can change if another release lands
+first). Under `tag-bump`, a run started by a published GitHub Release has no PR labels, so it
+bumps patch; use `workflow_dispatch` with an explicit version for a minor or major bump there.
+
+## `docs/.release-version` after a release (`descriptor` only)
 
 Nothing clears it — it's bumped forward instead, except on a republish. On a genuine
 forward release (the target tag was new), a final step in the workflow advances the file
@@ -83,6 +110,12 @@ a sane next target rather than a stale, already-released value. This step is **s
 on a republish (the target tag already existed): that run's target version was typically
 already superseded by whatever the file currently holds as the next planned target, so
 bumping forward from the republished version would clobber that already-planned value.
+
+On a **git-flow** site the bump lands on the release branch only, so the workflow's
+`sync-prerelease` job opens a pull request into the prerelease branch (named by
+`docs/package.json`'s `docouture.prereleaseBranch`) to carry it over — merge that PR. A
+failed sync turns the run red but does not block publishing. Needs `pull-requests: write`
+on the GitHub App; older sites run `docouture upgrade` once to get the job and field.
 
 ## Why there's no `docouture release` command
 

@@ -17,6 +17,9 @@ import { resolveConfig } from '../lib/config-resolver.js'
 import { findRepoRoot } from '../lib/repo-root.js'
 import { AGENTS_MD_FILENAME, mergeAgentsMd } from '../lib/agents-md.js'
 import { setBranching } from '../lib/package-branching.js'
+import { readVersionSourceDeclaration, setVersionSource } from '../lib/package-version-source.js'
+import { cliSkewMessage, readProjectCli } from '../lib/project-cli.js'
+import { detectSiteMode } from '../lib/site-mode.js'
 import { removeCheckLinks } from '../lib/check-links-removal.js'
 import { setFailureLevel } from '../lib/playbook-yml.js'
 import { cacheWarmBranchesYaml, detectBranches } from '../lib/branch-detect.js'
@@ -228,12 +231,23 @@ export async function runUpgrade(argv: string[]): Promise<number> {
   const pkgText = (await exists(siteRootPackageJson)) ? await readFile(siteRootPackageJson, 'utf8') : null
   const pkgRemoval = pkgText === null ? null : removeCheckLinks(pkgText)
 
+  // Versioned sites that predate `docouture.versionSource` get the explicit
+  // default written back (no behavior change). Never touches an existing
+  // value, a standalone site, or a site with no docs/package.json.
+  const needsVersionSource =
+    pkgText !== null &&
+    (await detectSiteMode(siteRoot)) === 'versioned' &&
+    (await readVersionSourceDeclaration(siteRootPackageJson)).raw === null
+
   if (dryRun) {
     const plannedWorkflows = await copyTemplate(workflowsTemplateDir, workflowsDir, values, { dryRun: true })
 
     console.log('would write:')
     for (const path of [...plannedWorkflows, agentsMdFile, ...strictPlans.map((p) => p.file)]) {
       console.log(`  ${relative(target, path)}`)
+    }
+    if (needsVersionSource) {
+      console.log(`would set docouture.versionSource to 'descriptor' in ${relative(target, siteRootPackageJson)}`)
     }
     if (hasScript || pkgRemoval?.changed) {
       console.log('would remove (check-links is no longer part of docouture):')
@@ -289,6 +303,11 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     updatedPackageJson = await setBranching(packageJsonFile, 'git-flow', detected.prerelease)
   }
 
+  if (needsVersionSource) {
+    // After the check-links cleanup above has rewritten docs/package.json.
+    await setVersionSource(siteRootPackageJson, 'descriptor')
+  }
+
   for (const plan of strictPlans) {
     await writeFile(plan.file, plan.content, 'utf8')
     console.log(
@@ -312,6 +331,17 @@ export async function runUpgrade(argv: string[]): Promise<number> {
     )
   }
   console.log(`updated ${relative(target, agentsMdFile)}`)
+  if (needsVersionSource) {
+    console.log(`updated ${relative(target, siteRootPackageJson)} (docouture.versionSource 'descriptor')`)
+    console.log("note: the docs version still comes from docs/.release-version. To change that, run 'docouture")
+    console.log("      version-source <descriptor|github-release|tag-bump>' — see 'docouture version-source --help'.")
+  }
+
+  // The workflows just written run the project's own installed CLI, not this
+  // one: say so when they differ, since a stale CLI lacks newer commands.
+  const projectCli = await readProjectCli(siteRoot, target)
+  const skew = cliSkewMessage(cliVersion, projectCli)
+  if (skew !== null) console.warn(`warning: ${skew}`)
 
   return 0
 }

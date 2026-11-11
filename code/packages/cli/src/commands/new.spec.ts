@@ -510,6 +510,75 @@ describe('runNew', () => {
     expect(playbook).toContain('duplicate_latest_version: true')
   })
 
+  describe('--version-source', () => {
+    async function scaffoldVersioned(extra: string[]): Promise<{ code: number; repo: string }> {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      const code = await runNew(['my-project-docs', '--dir', repo, '--mode', 'versioned', ...extra])
+      return { code, repo }
+    }
+
+    async function declared(repo: string): Promise<Record<string, unknown> | undefined> {
+      const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
+        docouture?: Record<string, unknown>
+      }
+      return pkg.docouture
+    }
+
+    it('defaults to descriptor and lays down docs/.release-version', async () => {
+      const { code, repo } = await scaffoldVersioned([])
+      expect(code).toBe(0)
+      expect((await declared(repo))?.versionSource).toBe('descriptor')
+      expect((await readFile(join(repo, 'docs', '.release-version'), 'utf8')).trim()).toBe('0.1.0')
+    })
+
+    it.each(['github-release', 'tag-bump'])(
+      '%s declares the source and lays down no .release-version',
+      async (source) => {
+        const { code, repo } = await scaffoldVersioned(['--version-source', source])
+        expect(code).toBe(0)
+        expect((await declared(repo))?.versionSource).toBe(source)
+        await expect(readFile(join(repo, 'docs', '.release-version'), 'utf8')).rejects.toThrow()
+      }
+    )
+
+    it('prints the exact label commands for tag-bump', async () => {
+      await scaffoldVersioned(['--version-source', 'tag-bump'])
+      const printed = logSpy.mock.calls.flat().join('\n')
+      expect(printed).toContain('gh label create docs/release-minor')
+      expect(printed).toContain('gh label create docs/release-major')
+    })
+
+    it('rejects an invalid value', async () => {
+      const { code } = await scaffoldVersioned(['--version-source', 'bogus'])
+      expect(code).toBe(1)
+      expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("invalid --version-source: 'bogus'"))
+    })
+
+    it('rejects a standalone site', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      const code = await runNew([
+        'my-project-docs',
+        '--dir',
+        repo,
+        '--mode',
+        'standalone',
+        '--version-source',
+        'tag-bump',
+      ])
+      expect(code).toBe(1)
+      expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('standalone'))
+    })
+
+    it('writes no version source for a standalone site', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      await runNew(['my-project-docs', '--dir', repo])
+      expect(await declared(repo)).not.toHaveProperty('versionSource')
+    })
+  })
+
   it('pins @inditextech/docouture-cli and antora to exact versions in the scaffolded package.json', async () => {
     const repo = join(base, 'repo')
     await initRepo(repo)
@@ -555,12 +624,19 @@ describe('runNew', () => {
     input.write('\n') // Enter — accept the default (trunk-based)
     await waitForPrompt('Branch (plays both')
     input.write('\n') // Enter — accept the default (main)
+    await waitForPrompt('docs release version come from')
+    input.write('\n') // Enter — accept the default (descriptor)
     await waitForPrompt('Package manager')
     input.write('\n') // Enter — accept the default (npm, or whatever was auto-guessed)
 
     const code = await resultPromise
     input.end()
     expect(code).toBe(0)
+
+    const wizardPkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8')) as {
+      docouture?: Record<string, unknown>
+    }
+    expect(wizardPkg.docouture?.versionSource).toBe('descriptor')
 
     const antoraYml = await readFile(join(repo, 'docs', 'src', 'antora.yml'), 'utf8')
     expect(antoraYml).toContain('name: ROOT')

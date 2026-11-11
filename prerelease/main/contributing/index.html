@@ -837,11 +837,9 @@ versions the repository&#8217;s own <code>README.md</code> documents.</p>
 <p>Run <code>just check</code> (lint, typecheck, formatting — what CI runs).</p>
 </li>
 <li>
-<p>Update <code>code/CHANGELOG.md&#8217;s `[Unreleased]</code> section — required on every PR touching
-<code>code/**</code>, unless labelled <code>skip-release</code> for a change with no user-facing effect.</p>
-</li>
-<li>
-<p>Open a pull request linking the issue.</p>
+<p>Open a pull request that closes the issue (<code>Closes #N</code>; a plain <code>#N</code> does not count).
+Do not edit <code>code/CHANGELOG.md</code>: its entries are generated at release time from the
+closing issue&#8217;s title and <code>kind/*</code> label. A PR labelled <code>skip-release</code> may omit the issue.</p>
 </li>
 </ol>
 </div>

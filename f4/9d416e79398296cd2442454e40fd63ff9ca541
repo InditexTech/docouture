@@ -1,0 +1,35 @@
+.github/workflows/docouture-release.yml
+  s_6529f390035f72::t_28b56b770d867c 81-85,244-246
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_6529f390035f72::t_aee67d1151b528 81-85,240-242
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_6529f390035f72::t_cb7703e43dde55 137-151
+openspec/changes/archive/2026-11-11-release-bump-unnarrowed-app-token/.openspec.yaml
+  s_6529f390035f72::t_d85a3ae2e7f040 1-2
+openspec/changes/archive/2026-11-11-release-bump-unnarrowed-app-token/design.md
+  s_6529f390035f72::t_bda131c2795f9d 1-21
+openspec/changes/archive/2026-11-11-release-bump-unnarrowed-app-token/proposal.md
+  s_6529f390035f72::t_d7f3eb8888fc26 1-28
+openspec/changes/archive/2026-11-11-release-bump-unnarrowed-app-token/specs/docs-release-app-token/spec.md
+  s_6529f390035f72::t_84d27a0795fd52 1-26
+openspec/changes/archive/2026-11-11-release-bump-unnarrowed-app-token/tasks.md
+  s_6529f390035f72::t_1c7d3359e7aeba 1-19
+openspec/specs/docs-release-app-token/spec.md
+  s_6529f390035f72::t_ad57ad71a0eddf 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "f49d416e79398296cd2442454e40fd63ff9ca541",
+  "prompts": {},
+  "sessions": {
+    "s_6529f390035f72": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e355fe583ffeL4Q8qU1VwTI6gk",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.github/scripts/changelog-from-prs.mjs
+  s_6e8baf847b791c::t_3b156123c35cf5 71-74,161,166
+.github/scripts/changelog-from-prs.test.mjs
+  s_6e8baf847b791c::t_a53415a388a4a6 152-160,163-174
+.github/workflows/docs/code-changelog-check.md
+  s_6e8baf847b791c::t_b956c0a635a7ce 18
+.github/workflows/docs/code-npm_node-publish-release-and-snapshot.md
+  s_6e8baf847b791c::t_8ed10515d3a69c 83
+.opencode/skills/changelog/SKILL.md
+  s_6e8baf847b791c::t_005f7d03b0e5f6 64,67
+AGENTS.md
+  s_6e8baf847b791c::t_17e384d8857310 121
+CONTRIBUTING.md
+  s_6e8baf847b791c::t_b1198d23e38e73 100-102
+openspec/changes/generate-changelog-from-closing-issues/design.md
+  s_6e8baf847b791c::t_82776ba5a1adbf 28
+openspec/changes/generate-changelog-from-closing-issues/proposal.md
+  s_6e8baf847b791c::t_0583a1f924951f 10
+openspec/changes/generate-changelog-from-closing-issues/specs/changelog-generation/spec.md
+  s_6e8baf847b791c::t_2e43429b95cc0c 28,31,33
+openspec/changes/generate-changelog-from-closing-issues/tasks.md
+  s_6e8baf847b791c::t_ae7d284f2b20f8 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "da2926318842c5fd80d4c945c36c2e858ca97b0e",
+  "prompts": {},
+  "sessions": {
+    "s_6e8baf847b791c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e354f9a62ffeXBiYvfMU21D1zZ",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -631,6 +631,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-4-0/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.4.0</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-3-2/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.3.2</span></span>
       </a>
@@ -834,8 +843,9 @@ commit built on the release branch&#8217;s current tip, <code>git tag docs/v&lt;
 there, and the tag is pushed — the release branch itself is never advanced.</p>
 </div>
 <div class="paragraph">
-<p>Before any of that: <code>docs/.release-version</code> (or the <code>workflow_dispatch</code> version input,
-in versioned mode) is validated against full SemVer 2.0.0 — a leading <code>v</code>, a bare <code>1.2</code>,
+<p>Before any of that: the resolved version (<code>docs/.release-version</code>, or the
+<code>workflow_dispatch</code> version input, in versioned mode; see <a href="#version-sources">Where the version comes from</a> for the
+other sources) is validated against full SemVer 2.0.0 — a leading <code>v</code>, a bare <code>1.2</code>,
 or any other malformed value fails the workflow immediately with a clear error, instead
 of tagging first and only failing later inside the version-bump step.
 <code>docouture-release-preview.yml</code> runs the same check earlier, as a PR comment, before the
@@ -882,7 +892,76 @@ version directly — its form field is what a versioned-mode release actually re
 there, unlike standalone&#8217;s, where the default is fine.)</p>
 </div>
 <div class="sect2">
+<h3 id="version-sources"><a class="anchor" href="#version-sources"></a>Where the version comes from</h3>
+<div class="paragraph">
+<p>By default the version comes from <code>docs/.release-version</code>, as above. That file duplicates
+the <code>docs/v*</code> tags, and it needs the post-release bump push (and, under git-flow, the sync
+pull request below). A versioned site can instead choose another source with
+<code>docouture.versionSource</code> in <code>docs/package.json</code>:</p>
+</div>
+<div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Source</th>
+<th class="tableblock halign-left valign-top">The version comes from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>descriptor</code> (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>docs/.release-version</code>, committed by the release pull request. The forward-bump and the git-flow sync described here apply only to this source.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>github-release</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The tag of the published GitHub Release, minus the optional <code>docouture.versionSourcePrefix</code> (for example <code>docs-site@</code>). The docs follow the code release. A merged <code>docs/release</code> pull request fails with a message saying so.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tag-bump</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The highest existing <code>docs/v*</code> tag plus a bump: <code>docs/release</code> bumps patch, <code>docs/release-minor</code> minor and <code>docs/release-major</code> major (the highest wins when several are present). The first release has no tag to bump from, so run <code>docouture-release</code> manually with an explicit version.</p></td>
+</tr>
+</tbody>
+</table></div></div>
+<div class="paragraph">
+<p>Change the source with <code>docouture version-source &lt;source&gt;</code> (see <a href="../reference-cli/" class="xref page">CLI</a>);
+<code>docouture new --mode versioned</code> asks for it. Switching to <code>github-release</code> or <code>tag-bump</code>
+removes <code>docs/.release-version</code>; for <code>tag-bump</code> it also prints the <code>gh label create</code>
+commands for the two extra labels, which you create once. <code>docouture release resolve</code>
+implements the rules for both workflows.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The preview comment follows the source: <code>descriptor</code> reads the file (no dependency
+install), <code>github-release</code> says the docs follow the code release without naming a
+version, and <code>tag-bump</code> shows the version released <strong>if the pull request merged now</strong>, which
+can change if another release lands first.</p>
+</li>
+<li>
+<p>Under <code>tag-bump</code>, a run started by a published GitHub Release has no pull request
+labels to read, so it bumps patch. Use <code>workflow_dispatch</code> with an explicit version for
+a minor or major bump in that case.</p>
+</li>
+<li>
+<p>The workflows run the CLI your project installed. Update <code>@inditextech/docouture-cli</code>
+and install it first, then run <code>docouture upgrade</code> (which writes
+<code>"versionSource": "descriptor"</code> on a site that lacks it, with no behavior change), then
+optionally <code>docouture version-source</code>. <code>docouture doctor</code> shows the active source and
+warns about a stray or missing <code>docs/.release-version</code> and about a project CLI that
+predates <code>release resolve</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
 <h3 id="under-git-flow-the-sync-pull-request"><a class="anchor" href="#under-git-flow-the-sync-pull-request"></a>Under git-flow: the sync pull request</h3>
+<div class="paragraph">
+<p>This applies to the <code>descriptor</code> source only; the other sources have no bump to carry over
+and skip the job.</p>
+</div>
 <div class="paragraph">
 <p>The forward-bump is committed on the release branch only. On a git-flow site the
 workflow&#8217;s <code>sync-prerelease</code> job then opens a pull request from
@@ -994,8 +1073,8 @@ docs tag;</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>In versioned mode there is one more case. If <code>docs/.release-version</code> is missing or
-invalid, the docs release fails when the Release is published, after the code release has
+<p>In versioned mode under the <code>descriptor</code> source there is one more case. If
+<code>docs/.release-version</code> is missing or invalid, the docs release fails when the Release is published, after the code release has
 already gone out. The preview flags this on a pull request with <code>docs/release</code>; with
 <code>release-type/*</code> alone it does not check the file, which is normally present because every
 release bumps it forward.</p>

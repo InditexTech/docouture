@@ -631,6 +631,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-4-0/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.4.0</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-3-2/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.3.2</span></span>
       </a>
@@ -879,6 +888,11 @@ already puts the repository name in the URL. See <a href="../glossary/" class="x
 <td class="tableblock halign-left valign-top"><p class="tableblock">Git-flow only: the release branch (default: <code>main</code>)</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--version-source &lt;source&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Versioned mode only: where the docs release version comes from — <code>descriptor</code> (default, <code>docs/.release-version</code>),
+<code>github-release</code> or <code>tag-bump</code>; see <a href="../guides-releasing-a-documentation/#version-sources" class="xref page">main:guides-releasing-a-documentation.adoc#version-sources</a>. <code>tag-bump</code> prints the <code>gh label create</code> commands for <code>docs/release-minor</code> and <code>docs/release-major</code>. Rejected for a standalone site</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--pm &lt;pm&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>npm</code> or <code>pnpm</code> (default: auto-detected)</p></td>
 </tr>
@@ -1026,7 +1040,10 @@ Antora is installed, and (advisory only) whether <code>AGENTS.md</code> is still
 (<code>docs/package.json&#8217;s `docouture.branching</code>, plus <code>docouture.prereleaseBranch</code> under
 git-flow) agrees with what
 <code>antora-playbook.yml</code>/<code>docouture-release.yml</code> actually say — see
-<a href="../guides-branching-model/" class="xref page">Branching model</a>. Does not check for the agent skills — see
+<a href="../guides-branching-model/" class="xref page">Branching model</a>. On a versioned site it also shows the active
+version source and warns about a stray or missing <code>docs/.release-version</code>, a project CLI that
+differs from the running one, and a project CLI that predates <code>release resolve</code> — see
+<a href="../guides-releasing-a-documentation/#version-sources" class="xref page">main:guides-releasing-a-documentation.adoc#version-sources</a>. Does not check for the agent skills — see
 <a href="../reference-ai-first-approach/" class="xref page">AI-First approach</a>, those are a separate, self-serve install
 this CLI never scaffolds or verifies.</p>
 </div>
@@ -1061,6 +1078,10 @@ page a site owner has written — is never touched, with one exception: on a git
 it writes or corrects <code>docouture.branching</code> and <code>docouture.prereleaseBranch</code> in
 <code>docs/package.json</code> (derived from <code>antora-playbook.yml</code>), which <code>docouture-release.yml</code>
 reads to open the prerelease sync PR. This also backfills sites scaffolded before that field existed.
+On a versioned site without <code>docouture.versionSource</code> it writes <code>"versionSource": "descriptor"</code> (the
+current behavior, so nothing changes) and points at <code>docouture version-source</code>; it never changes an
+existing value, never prompts and never touches a standalone site. It warns when the project&#8217;s
+installed <code>@inditextech/docouture-cli</code> differs from the running one, since the workflows use the project&#8217;s.
 It also sets <code>runtime.log.failure_level</code> to <code>error</code> in <code>docs/antora-playbook*.yml</code>, replacing
 any other value and printing each file it changed: builds then fail on errors such as a
 broken <code>xref:</code> or a missing include, so run <code>docouture build</code> and fix what it reports before
@@ -1155,6 +1176,167 @@ stay manual steps, printed as a reminder after every real run.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dry-run</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Lists what would be written without writing it</p></td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="docouture-version-source-source"><a class="anchor" href="#docouture-version-source-source"></a><code>docouture version-source [source]</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Show or change where a versioned site&#8217;s docs release version comes from
+(<code>docs/package.json&#8217;s `docouture.versionSource</code>). With no argument it prints the current
+source. See <a href="../guides-releasing-a-documentation/#version-sources" class="xref page">main:guides-releasing-a-documentation.adoc#version-sources</a> for what each
+source means.</p>
+</div>
+<div class="paragraph">
+<p>Refuses a standalone site, which always releases <code>docs/stable</code>. Per target:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>descriptor</code> creates <code>docs/.release-version</code> if it is missing, seeded with the next patch
+of the latest <code>docs/v*</code> tag (or <code>--version</code>; <code>0.1.0</code> with no tag).</p>
+</li>
+<li>
+<p><code>github-release</code> removes <code>docs/.release-version</code>.</p>
+</li>
+<li>
+<p><code>tag-bump</code> removes <code>docs/.release-version</code> and prints the <code>gh label create</code> commands for
+<code>docs/release-minor</code> and <code>docs/release-major</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Removing the file warns when it held a pending version. The command is idempotent. No
+workflow is re-rendered: the workflows read the source at run time, but they run the
+project&#8217;s installed CLI, so install a version with <code>release resolve</code> first.</p>
+</div>
+<div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Argument/Flag</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[source]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>descriptor</code>, <code>github-release</code> or <code>tag-bump</code>; omit to show the current one</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--prefix &lt;p&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>github-release</code> only: strip this prefix from the release tag (<code>docouture.versionSourcePrefix</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--version &lt;X.Y.Z&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>descriptor</code> only: write this version to <code>docs/.release-version</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dry-run</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lists what would change without changing anything</p></td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="docouture-release-resolve"><a class="anchor" href="#docouture-release-resolve"></a><code>docouture release resolve</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Resolve the docs version and tag a release run targets. The <code>docouture-release</code> and
+<code>docouture-release-preview</code> workflows call it so the version rules live in one place.</p>
+</div>
+<div class="paragraph">
+<p>Where the version comes from depends on <code>docouture.versionSource</code> in <code>docs/package.json</code>
+(<code>descriptor</code> when absent):</p>
+</div>
+<div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Source</th>
+<th class="tableblock halign-left valign-top">Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--version</code> when given (the <code>workflow_dispatch</code> input), otherwise <code>docs/.release-version</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>github-release</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The published release tag (<code>--release-tag</code>) minus <code>docouture.versionSourcePrefix</code>, when set. A merged <code>docs/release</code> pull request fails.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tag-bump</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The highest <code>docs/v*</code> tag plus a bump chosen by <code>--labels</code>: <code>docs/release</code> patch, <code>docs/release-minor</code> minor, <code>docs/release-major</code> major (the highest wins). The first release needs <code>--version</code>.</p></td>
+</tr>
+</tbody>
+</table></div></div>
+<div class="paragraph">
+<p><code>--version</code> always takes precedence. A standalone site always targets <code>stable</code>. A versioned
+version must be present, valid SemVer and not <code>stable</code>; otherwise the command fails with
+exit code 1.</p>
+</div>
+<div class="paragraph">
+<p>Prints <code>version</code>, <code>tag</code>, <code>source</code>, <code>version_source</code> and <code>uses_descriptor</code> as <code>key=value</code>
+lines on stdout, ready to append to <code>$GITHUB_OUTPUT</code>. <code>uses_descriptor</code> is <code>true</code> only when
+the descriptor bump and the prerelease sync apply. With <code>--report</code>, a version error is printed
+as <code>error</code> (<code>missing</code>, <code>invalid</code>, <code>reserved</code>, <code>prefix</code> or <code>unsupported</code>) and <code>error_value</code>
+instead, and the exit code stays 0.</p>
+</div>
+<div class="tableblock-wrap"><div class="tablecontainer"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Argument/Flag</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mode &lt;mode&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required: <code>versioned</code> or <code>standalone</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--version &lt;v&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit version; takes precedence over every source</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--event &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub event name (<code>workflow_dispatch</code>, <code>pull_request</code>, <code>release</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--release-tag &lt;tag&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tag of the published GitHub Release (<code>github-release</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--labels &lt;a,b&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pull request labels, comma-separated (<code>tag-bump</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--tags &lt;a,b&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing tag names instead of listing git tags (<code>tag-bump</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--report</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Report a version error as output instead of failing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dir &lt;path&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repository root (default: cwd, or its enclosing repo)</p></td>
 </tr>
 </tbody>
 </table></div></div>

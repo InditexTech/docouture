@@ -78,7 +78,8 @@ npx skills@latest add InditexTech/docouture --all
   that must agree, the home-page vs. content-page patterns, and how a site grows beyond
   its default `ROOT` + `main` modules.
 - **`docouture-docs-versioning`** — only relevant when this site was scaffolded with
-  `--mode versioned`: cutting releases, `docouture version`, and `docs/.release-version`.
+  `--mode versioned`: cutting releases, `docouture version`, `docs/.release-version` and the
+  alternative version sources (`docouture version-source`).
 
 <!-- docouture:end -->
 

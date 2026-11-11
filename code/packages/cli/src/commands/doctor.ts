@@ -14,10 +14,15 @@ import { getContext } from '../lib/cli-context.js'
 import { theme } from '../lib/theme.js'
 import { readSourceUrl, readStartPageComponent, readStartPath } from '../lib/playbook-yml.js'
 import { detectBranches, inferBranching } from '../lib/branch-detect.js'
+import { readCliInfo } from '../lib/cli-info.js'
+import { readProjectCli } from '../lib/project-cli.js'
+import { detectSiteMode } from '../lib/site-mode.js'
 import {
   checkAgentFilesPresent,
   checkAntoraAvailable,
   checkBranchingAgrees,
+  checkProjectCli,
+  checkVersionSource,
   checkGitHasCommit,
   checkNamesAgree,
   checkNodeVersion,
@@ -30,7 +35,7 @@ interface PackageJson {
   name?: string
   engines?: { node?: string }
   packageManager?: string
-  docouture?: { branching?: string; prereleaseBranch?: string }
+  docouture?: { branching?: string; prereleaseBranch?: string; versionSource?: string }
 }
 
 interface JsonCheckResult extends CheckResult {
@@ -259,6 +264,21 @@ export async function runDoctor(argv: string[]): Promise<number> {
     'warn',
     json
   )
+
+  log('version source')
+  runCheck(
+    report,
+    'version source',
+    checkVersionSource({
+      mode: await detectSiteMode(siteRoot),
+      declared: pkg?.docouture?.versionSource ?? null,
+      descriptorExists: await exists(join(siteRoot, '.release-version')),
+    }),
+    'warn',
+    json
+  )
+  const { version: runningCli } = await readCliInfo(import.meta.url, 2)
+  runChecks(report, 'version source', checkProjectCli(runningCli, await readProjectCli(siteRoot, target)), 'warn', json)
 
   if (json) {
     process.stdout.write(`${JSON.stringify({ status: status === 0 ? 'ok' : 'fail', checks: report }, null, 2)}\n`)

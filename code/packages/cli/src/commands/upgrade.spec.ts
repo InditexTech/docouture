@@ -95,6 +95,85 @@ describe('runUpgrade', () => {
     expect(await readFile(pkgPath, 'utf8')).toBe(before)
   })
 
+  describe('docouture.versionSource backfill', () => {
+    async function legacyVersionedSite(): Promise<{ repo: string; pkgPath: string }> {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      await runNew(['my-docs', '--dir', repo, '--yes', '--mode', 'versioned'])
+      const pkgPath = join(repo, 'docs', 'package.json')
+      const pkg = JSON.parse(await readFile(pkgPath, 'utf8'))
+      delete pkg.docouture.versionSource
+      await writeFile(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, 'utf8')
+      return { repo, pkgPath }
+    }
+
+    it('writes descriptor on a versioned site that lacks it and points at version-source', async () => {
+      const { repo, pkgPath } = await legacyVersionedSite()
+      expect(await runUpgrade(['--dir', repo])).toBe(0)
+      expect(JSON.parse(await readFile(pkgPath, 'utf8')).docouture.versionSource).toBe('descriptor')
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("docouture.versionSource 'descriptor'"))
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('docouture'))
+    })
+
+    it('is idempotent', async () => {
+      const { repo, pkgPath } = await legacyVersionedSite()
+      await runUpgrade(['--dir', repo])
+      const first = await readFile(pkgPath, 'utf8')
+      logSpy.mockClear()
+      await runUpgrade(['--dir', repo])
+      expect(await readFile(pkgPath, 'utf8')).toBe(first)
+      expect(logSpy).not.toHaveBeenCalledWith(expect.stringContaining("docouture.versionSource 'descriptor'"))
+    })
+
+    it('never changes an existing value', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      await runNew(['my-docs', '--dir', repo, '--yes', '--mode', 'versioned', '--version-source', 'tag-bump'])
+      await runUpgrade(['--dir', repo])
+      const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8'))
+      expect(pkg.docouture.versionSource).toBe('tag-bump')
+    })
+
+    it('leaves a standalone site alone', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      await runNew(['my-docs', '--dir', repo, '--yes'])
+      await runUpgrade(['--dir', repo])
+      const pkg = JSON.parse(await readFile(join(repo, 'docs', 'package.json'), 'utf8'))
+      expect(pkg.docouture).not.toHaveProperty('versionSource')
+    })
+
+    it('--dry-run reports it without writing', async () => {
+      const { repo, pkgPath } = await legacyVersionedSite()
+      const before = await readFile(pkgPath, 'utf8')
+      await runUpgrade(['--dir', repo, '--dry-run'])
+      expect(await readFile(pkgPath, 'utf8')).toBe(before)
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("would set docouture.versionSource to 'descriptor'"))
+    })
+  })
+
+  describe('CLI skew warning', () => {
+    it("warns when the project's pinned CLI differs from the running one", async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      await runNew(['my-docs', '--dir', repo, '--yes'])
+      const pkgPath = join(repo, 'docs', 'package.json')
+      const pkg = JSON.parse(await readFile(pkgPath, 'utf8'))
+      pkg.devDependencies['@inditextech/docouture-cli'] = '0.0.1'
+      await writeFile(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, 'utf8')
+      await runUpgrade(['--dir', repo])
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('0.0.1'))
+    })
+
+    it('does not warn on a fresh scaffold', async () => {
+      const repo = join(base, 'repo')
+      await initRepo(repo)
+      await runNew(['my-docs', '--dir', repo, '--yes'])
+      await runUpgrade(['--dir', repo])
+      expect(warnSpy).not.toHaveBeenCalledWith(expect.stringContaining('differs from the project'))
+    })
+  })
+
   it('refuses to run when --dir is not inside a git repository', async () => {
     const notARepo = join(base, 'not-a-repo')
     await mkdir(notARepo, { recursive: true })

@@ -7,7 +7,9 @@
 'use strict'
 
 import { runNew } from './commands/new.js'
+import { runRelease } from './commands/release.js'
 import { runVersion } from './commands/version.js'
+import { runVersionSource } from './commands/version-source.js'
 import { runDev } from './commands/dev.js'
 import { runBuild } from './commands/build.js'
 import { runDoctor } from './commands/doctor.js'
@@ -42,6 +44,8 @@ const COMMAND_ORDER = [
   'doctor',
   'upgrade',
   'branch-model',
+  'version-source',
+  'release',
   'eject',
   'teardown',
   'completion',
@@ -240,6 +244,83 @@ Options:
   --dry-run                    List what would be written without changing anything
 `,
   },
+  'version-source': {
+    usageLine: 'version-source [source]',
+    summary: 'Choose where the docs release version comes from',
+    help: `Usage:
+  docouture version-source [descriptor|github-release|tag-bump] [--prefix <p>]
+    [--version <X.Y.Z>] [--dir <path>] [--dry-run]
+
+Show or change where a versioned site's docs release version comes from
+(docs/package.json's docouture.versionSource). With no argument it prints
+the current source.
+
+  descriptor      docs/.release-version, committed by the release PR (the
+                  default). Creates the file, seeded with the next patch of
+                  the latest docs/v* tag (or --version), if it is missing.
+  github-release  the tag of the published GitHub Release (--prefix strips a
+                  tag prefix such as docs-site@). Removes docs/.release-version.
+  tag-bump        the latest docs/v* tag plus a bump chosen by the PR's
+                  docs/release, docs/release-minor or docs/release-major
+                  label. Removes docs/.release-version and prints the
+                  'gh label create' commands for the two extra labels.
+
+Refuses a standalone site (it always releases docs/stable). Removing
+docs/.release-version warns when it held a pending version. Idempotent.
+Workflows read the source at run time, so none are re-rendered — but they
+run the project's installed CLI, so install a version with 'release resolve'
+first.
+
+Options:
+  --prefix <p>     github-release only: strip this prefix from the release tag
+  --version <v>    descriptor only: write this version to docs/.release-version
+  --dir <path>     Repository root (default: cwd, or its enclosing repo)
+  --dry-run        List what would change without changing anything
+`,
+  },
+  release: {
+    usageLine: 'release resolve',
+    summary: 'Resolve the docs version a release targets',
+    help: `Usage:
+  docouture release resolve --mode <versioned|standalone> [--version <v>]
+    [--event <name>] [--release-tag <tag>] [--labels <a,b>] [--tags <a,b>]
+    [--report] [--dir <path>]
+
+Resolve the docs version and tag a release run targets. Used by the
+docouture-release and docouture-release-preview workflows. Where the
+version comes from depends on docs/package.json's docouture.versionSource
+(default 'descriptor'):
+
+  descriptor      --version when given (the workflow_dispatch input), else
+                  docs/.release-version
+  github-release  the published release tag (--release-tag), minus
+                  docouture.versionSourcePrefix when set; a docs/release
+                  pull request fails
+  tag-bump        the highest docs/v* tag plus a bump chosen by --labels:
+                  docs/release patch, docs/release-minor minor,
+                  docs/release-major major (highest wins); the first
+                  release needs --version
+
+--version always wins. Standalone sites always target 'stable'.
+
+Prints key=value lines (version, tag, source, version_source,
+uses_descriptor) to stdout, ready to append to $GITHUB_OUTPUT.
+uses_descriptor is true only when the descriptor bump and prerelease sync
+apply. A missing or non-SemVer version fails with exit 1. With --report
+the failure is printed as error=<missing|invalid|reserved|prefix|
+unsupported> and error_value=<value> instead, and the exit code stays 0.
+
+Options:
+  --mode <mode>       'versioned' or 'standalone' (required)
+  --version <v>       Explicit version; takes precedence over every source
+  --event <name>      GitHub event name (workflow_dispatch, pull_request, release)
+  --release-tag <t>   Tag of the published GitHub Release (github-release)
+  --labels <a,b>      Pull request labels, comma-separated (tag-bump)
+  --tags <a,b>        Existing tag names instead of listing git tags (tag-bump)
+  --report            Report a version error as output instead of failing
+  --dir <path>        Repository root (default: cwd, or its enclosing repo)
+`,
+  },
   eject: {
     usageLine: 'eject <target>',
     summary: 'Copy a bundled default file out for customization',
@@ -294,8 +375,8 @@ Examples:
 const CLI_SUMMARY = 'Scaffold, build, and publish Antora documentation sites'
 
 // Left column width of the command table below, including the 2-space
-// indent — wide enough for the longest usageLine ('branch-model <model>').
-const COMMAND_COLUMN_WIDTH = 24
+// indent — wide enough for the longest usageLine ('version-source [source]').
+const COMMAND_COLUMN_WIDTH = 28
 
 const USAGE = `Usage: docouture <command> [options]
 
@@ -326,6 +407,8 @@ const RUNNERS: Record<string, Runner> = {
   doctor: runDoctor,
   upgrade: runUpgrade,
   'branch-model': runBranchModel,
+  'version-source': runVersionSource,
+  release: runRelease,
   eject: runEject,
   teardown: runTeardown,
   completion: async (argv) => runCompletion(argv),

@@ -24,8 +24,9 @@ Under the hood: `docouture version <value>` patches `docs/src/antora.yml` on a o
 commit built on the release branch's current tip, `git tag docs/v<value>` is created
 there, and the tag is pushed — the release branch itself is never advanced.
 
-Before any of that: `docs/.release-version` (or the `workflow_dispatch` version input,
-in versioned mode) is validated against full SemVer 2.0.0 — a leading `v`, a bare `1.2`,
+Before any of that: the resolved version (`docs/.release-version`, or the
+`workflow_dispatch` version input, in versioned mode; see <<version-sources>> for the
+other sources) is validated against full SemVer 2.0.0 — a leading `v`, a bare `1.2`,
 or any other malformed value fails the workflow immediately with a clear error, instead
 of tagging first and only failing later inside the version-bump step.
 `docouture-release-preview.yml` runs the same check earlier, as a PR comment, before the
@@ -53,7 +54,52 @@ triggered by a labelled PR merge:
 version directly — its form field is what a versioned-mode release actually requires
 there, unlike standalone's, where the default is fine.)
 
+[#version-sources]
+=== Where the version comes from
+
+By default the version comes from `docs/.release-version`, as above. That file duplicates
+the `docs/v*` tags, and it needs the post-release bump push (and, under git-flow, the sync
+pull request below). A versioned site can instead choose another source with
+`docouture.versionSource` in `docs/package.json`:
+
+[cols="1,3"]
+|===
+|Source |The version comes from
+
+|`descriptor` (default)
+|`docs/.release-version`, committed by the release pull request. The forward-bump and the git-flow sync described here apply only to this source.
+
+|`github-release`
+|The tag of the published GitHub Release, minus the optional `docouture.versionSourcePrefix` (for example `docs-site@`). The docs follow the code release. A merged `docs/release` pull request fails with a message saying so.
+
+|`tag-bump`
+|The highest existing `docs/v*` tag plus a bump: `docs/release` bumps patch, `docs/release-minor` minor and `docs/release-major` major (the highest wins when several are present). The first release has no tag to bump from, so run `docouture-release` manually with an explicit version.
+|===
+
+Change the source with `docouture version-source <source>` (see xref:main:reference-cli.adoc[]);
+`docouture new --mode versioned` asks for it. Switching to `github-release` or `tag-bump`
+removes `docs/.release-version`; for `tag-bump` it also prints the `gh label create`
+commands for the two extra labels, which you create once. `docouture release resolve`
+implements the rules for both workflows.
+
+* The preview comment follows the source: `descriptor` reads the file (no dependency
+  install), `github-release` says the docs follow the code release without naming a
+  version, and `tag-bump` shows the version released *if the pull request merged now*, which
+  can change if another release lands first.
+* Under `tag-bump`, a run started by a published GitHub Release has no pull request
+  labels to read, so it bumps patch. Use `workflow_dispatch` with an explicit version for
+  a minor or major bump in that case.
+* The workflows run the CLI your project installed. Update `@inditextech/docouture-cli`
+  and install it first, then run `docouture upgrade` (which writes
+  `"versionSource": "descriptor"` on a site that lacks it, with no behavior change), then
+  optionally `docouture version-source`. `docouture doctor` shows the active source and
+  warns about a stray or missing `docs/.release-version` and about a project CLI that
+  predates `release resolve`.
+
 === Under git-flow: the sync pull request
+
+This applies to the `descriptor` source only; the other sources have no bump to carry over
+and skip the job.
 
 The forward-bump is committed on the release branch only. On a git-flow site the
 workflow's `sync-prerelease` job then opens a pull request from
@@ -123,8 +169,8 @@ The docs release depends on the code release publishing a Release. They are not 
   docs tag;
 * your code release does not publish a GitHub Release at all.
 
-In versioned mode there is one more case. If `docs/.release-version` is missing or
-invalid, the docs release fails when the Release is published, after the code release has
+In versioned mode under the `descriptor` source there is one more case. If
+`docs/.release-version` is missing or invalid, the docs release fails when the Release is published, after the code release has
 already gone out. The preview flags this on a pull request with `docs/release`; with
 `release-type/*` alone it does not check the file, which is normally present because every
 release bumps it forward.

@@ -1,0 +1,64 @@
+= v1.4.0
+
+[.lead]
+A versioned site can now choose where its docs release version comes from. The default is
+unchanged, so nothing breaks, but the release workflows now call a new CLI command, so the
+CLI must be updated first. Existing sites get the new workflows by running
+`docouture upgrade`.
+
+== Do this
+
+. Update every `@inditextech/docouture-*` package, and the CLI if you install it, to
+  `1.4.0`, and install. In a scaffolded site these are pinned in `docs/package.json`.
+  Do this before the next step: the generated workflows run the CLI your project installed,
+  and `docouture-release.yml` now calls `docouture release resolve`, which older CLIs do
+  not have.
+. Run `docouture upgrade`, review the diff, and commit `.github/workflows/` and
+  `docs/package.json`. On a versioned site it writes `"versionSource": "descriptor"`, which
+  keeps today's behavior. It warns when the CLI you ran differs from the one your project
+  installed. See xref:main:reference-cli.adoc[].
+. Optional: run `docouture version-source` to see, or `docouture version-source <source>` to
+  change, where the docs version comes from. Run `docouture doctor` afterwards. It shows the
+  active source and warns about a stray or missing `docs/.release-version`.
+
+A standalone site needs only the first two steps and has nothing to choose: it always
+releases `docs/stable`.
+
+== What changed
+
+* *New: three version sources.* A versioned site sets `docouture.versionSource` in
+  `docs/package.json`:
+** `descriptor` (the default) reads `docs/.release-version`, exactly as before, including
+   the forward bump after each release and the git-flow sync pull request.
+** `github-release` takes the version from the tag of the published GitHub Release, minus an
+   optional `docouture.versionSourcePrefix`. The docs follow the code release.
+** `tag-bump` takes the latest `docs/v*` tag and bumps it: `docs/release` bumps patch,
+   `docs/release-minor` minor and `docs/release-major` major. Create the two extra labels
+   once; `docouture new` and `docouture version-source` print the `gh label create`
+   commands.
++
+Under `github-release` and `tag-bump` there is no `docs/.release-version`, no post-release
+bump push and no sync pull request, so the release no longer needs to push to the protected
+release branch. See xref:main:guides-releasing-a-documentation.adoc#version-sources[].
+* *New: `docouture version-source`.* Shows or changes the source, creating or removing
+  `docs/.release-version` for you. `--dry-run` previews it. Refuses a standalone site.
+* *New: `docouture release resolve`.* The release and preview workflows share one tested
+  implementation of the version rules, including SemVer validation.
+* *New: `docouture new --version-source`.* Versioned mode asks which source to use.
+* *Changed: `docouture upgrade` and `docouture doctor`.* `upgrade` backfills the default and
+  warns on a CLI mismatch. `doctor` shows the active source and warns when the project's
+  installed CLI differs from yours or predates `release resolve`.
+* *Changed: the release preview follows the source.* `descriptor` is unchanged and still
+  installs nothing. `github-release` says the docs follow the code release and names no
+  version. `tag-bump` shows the version released *if the pull request merged now*, which can
+  change if another release lands first. The job runs your package manager's install only
+  for `tag-bump`.
+
+== Limitations
+
+* Under `tag-bump`, a release started by a published GitHub Release has no pull request
+  labels to read, so it bumps patch. Use `workflow_dispatch` with an explicit version for a
+  minor or major bump, and for the first release, when there is no tag to bump from.
+* Under `github-release`, a merged pull request with `docs/release` fails the release
+  workflow with a message saying so. The preview comments that suggest adding `docs/release`
+  to a pull request without it still say so under `github-release`.

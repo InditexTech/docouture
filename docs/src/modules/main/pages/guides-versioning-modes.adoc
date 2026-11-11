@@ -37,7 +37,7 @@ content:
       tags: ['docs/v*']
 ----
 
-A versioned-mode site additionally gets `docs/.release-version` — a plain-text file
+Under the default `descriptor` version source, a versioned-mode site additionally gets `docs/.release-version` — a plain-text file
 holding the *next* release's target version, read by `docouture-release.yml` instead
 of a workflow input.
 

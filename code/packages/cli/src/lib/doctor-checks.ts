@@ -9,6 +9,8 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 
 import type { Branching } from './branch-detect.js'
+import { cliSkewMessage, type ProjectCli } from './project-cli.js'
+import { parseVersionSource, VERSION_SOURCES } from './release-resolve.js'
 
 // Each check here is a plain function returning a result rather than
 // printing directly — `commands/doctor.ts` owns all output formatting, so
@@ -431,4 +433,93 @@ export function checkBranchingAgrees(input: BranchingInput): CheckResult {
     detail:
       "run 'docouture branch-model <trunk-based|git-flow>' to re-sync everything, or fix docs/package.json's docouture.branching by hand if it's simply stale",
   }
+}
+
+export interface VersionSourceInput {
+  /** From antora-playbook.yml's `tags:` line; null when it could not be told. */
+  mode: 'versioned' | 'standalone' | null
+  /** `docs/package.json` -> `docouture.versionSource`, or null if absent. */
+  declared: string | null
+  /** Whether `docs/.release-version` exists. */
+  descriptorExists: boolean
+}
+
+/**
+ * Which resolver this site uses, and whether the files on disk agree with
+ * it. Advisory, same as the other release checks: a standalone site (which
+ * has no version source) or an unreadable mode is `ok: true`.
+ */
+export function checkVersionSource(input: VersionSourceInput): CheckResult {
+  const label = 'version source'
+  if (input.mode === 'standalone') {
+    return { ok: true, label, message: 'standalone site — releases always target docs/stable, no version source' }
+  }
+  if (input.mode === null) {
+    return { ok: true, label, message: 'could not tell the versioning mode from antora-playbook.yml — skipping' }
+  }
+
+  const source = input.declared === null ? 'descriptor' : parseVersionSource(input.declared)
+  if (source === null) {
+    return {
+      ok: false,
+      label,
+      message: `docouture.versionSource '${input.declared}' is not a known source`,
+      detail: `expected one of: ${VERSION_SOURCES.join(', ')} — run 'docouture version-source <source>' to fix it`,
+    }
+  }
+
+  const declaredNote = input.declared === null ? ' (default; not declared in docs/package.json)' : ''
+  if (source === 'descriptor' && !input.descriptorExists) {
+    return {
+      ok: false,
+      label,
+      message: `version source 'descriptor'${declaredNote} but docs/.release-version does not exist`,
+      detail: "run 'docouture version-source descriptor' to create it, or switch to another source",
+    }
+  }
+  if (source !== 'descriptor' && input.descriptorExists) {
+    return {
+      ok: false,
+      label,
+      message: `version source '${source}' but docs/.release-version still exists`,
+      detail: `the file is ignored under '${source}' — run 'docouture version-source ${source}' to remove it`,
+    }
+  }
+  return { ok: true, label, message: `version source '${source}'${declaredNote}` }
+}
+
+/**
+ * The generated workflows run the project's own installed CLI. Warns when it
+ * differs from the running one, and when it predates `release resolve`.
+ * Nothing to report when the project's CLI cannot be located.
+ */
+export function checkProjectCli(running: string, project: ProjectCli): CheckResult[] {
+  const results: CheckResult[] = []
+  const skew = cliSkewMessage(running, project)
+  results.push(
+    skew === null
+      ? {
+          ok: true,
+          label: 'CLI version',
+          message:
+            project.version === null
+              ? 'project CLI not found — skipping'
+              : `project CLI ${project.version} matches the running CLI`,
+        }
+      : {
+          ok: false,
+          label: 'CLI version',
+          message: skew,
+          detail: "update @inditextech/docouture-cli in docs/package.json, install, then run 'docouture upgrade'",
+        }
+  )
+  if (project.hasReleaseResolve === false) {
+    results.push({
+      ok: false,
+      label: 'release resolve',
+      message: `the project's installed CLI ${project.version} does not support 'release resolve'`,
+      detail: 'the docs release workflows call it — update @inditextech/docouture-cli and install before running them',
+    })
+  }
+  return results
 }

@@ -19,7 +19,9 @@ import {
   checkNamesAgree,
   checkNodeVersion,
   checkPackageManagerAvailable,
+  checkProjectCli,
   checkReleaseLabelExists,
+  checkVersionSource,
 } from './doctor-checks.js'
 
 describe('checkNodeVersion', () => {
@@ -290,5 +292,64 @@ describe('checkBranchingAgrees', () => {
     expect(result.message).toContain("'trunk-based'")
     expect(result.message).toContain("'git-flow'")
     expect(result.detail).toContain('docouture branch-model')
+  })
+})
+
+describe('checkVersionSource', () => {
+  it('skips a standalone site', () => {
+    expect(checkVersionSource({ mode: 'standalone', declared: null, descriptorExists: false }).ok).toBe(true)
+  })
+
+  it('skips when the mode cannot be told', () => {
+    expect(checkVersionSource({ mode: null, declared: null, descriptorExists: false }).ok).toBe(true)
+  })
+
+  it('shows the active source when everything agrees', () => {
+    const result = checkVersionSource({ mode: 'versioned', declared: 'tag-bump', descriptorExists: false })
+    expect(result).toMatchObject({ ok: true, message: "version source 'tag-bump'" })
+  })
+
+  it('treats an absent declaration as descriptor', () => {
+    const result = checkVersionSource({ mode: 'versioned', declared: null, descriptorExists: true })
+    expect(result.ok).toBe(true)
+    expect(result.message).toContain("'descriptor'")
+  })
+
+  it('warns when descriptor has no file', () => {
+    const result = checkVersionSource({ mode: 'versioned', declared: 'descriptor', descriptorExists: false })
+    expect(result.ok).toBe(false)
+    expect(result.detail).toContain('docouture version-source descriptor')
+  })
+
+  it.each(['github-release', 'tag-bump'])('warns when %s still has a .release-version', (declared) => {
+    const result = checkVersionSource({ mode: 'versioned', declared, descriptorExists: true })
+    expect(result.ok).toBe(false)
+    expect(result.detail).toContain(`docouture version-source ${declared}`)
+  })
+
+  it('warns on an unknown value', () => {
+    const result = checkVersionSource({ mode: 'versioned', declared: 'tag_bump', descriptorExists: false })
+    expect(result.ok).toBe(false)
+    expect(result.detail).toContain('descriptor, github-release, tag-bump')
+  })
+})
+
+describe('checkProjectCli', () => {
+  it('is clean when the project CLI matches and supports release resolve', () => {
+    const results = checkProjectCli('1.4.0', { version: '1.4.0', hasReleaseResolve: true, from: 'installed' })
+    expect(results).toHaveLength(1)
+    expect(results[0]?.ok).toBe(true)
+  })
+
+  it('warns on skew and on a CLI without release resolve', () => {
+    const results = checkProjectCli('1.4.0', { version: '1.3.2', hasReleaseResolve: false, from: 'installed' })
+    expect(results.map((r) => r.ok)).toEqual([false, false])
+    expect(results[1]?.message).toContain("does not support 'release resolve'")
+  })
+
+  it('skips when the project CLI cannot be found', () => {
+    const results = checkProjectCli('1.4.0', { version: null, hasReleaseResolve: null, from: null })
+    expect(results).toHaveLength(1)
+    expect(results[0]?.ok).toBe(true)
   })
 })

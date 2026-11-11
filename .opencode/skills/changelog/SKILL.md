@@ -61,10 +61,10 @@ released section is not listed again (it is reported as a warning). Entries up t
 | `kind/documentation` | `### Documentation` |
 | `kind/deprecated` | `### Deprecated` |
 | `kind/removed` | `### Removed` |
-| `kind/internal` / `kind/epic` alone | **no entry** (listed in the report as out of scope, never dropped silently) |
+| `kind/internal` / `kind/epic` (alone or with any other label) | **no entry** (listed in the report as out of scope, never dropped silently) |
 | none of the above | `### Changed`, with a "section guessed" warning — fix the label |
 
-A real category label wins over `kind/internal`/`kind/epic`; `kind/epic` is a size flag
+`kind/internal`/`kind/epic` always win over a real category label: an issue with either is excluded whatever else it carries. `kind/epic` is a size flag
 only. Empty sections are omitted.
 
 ## Where it runs

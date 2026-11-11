@@ -149,13 +149,29 @@ describe('buildEntries', () => {
     assert.deepEqual(warnings, []);
   });
 
-  it('a real category wins over kind/internal and kind/epic', () => {
-    const { entries, excluded } = buildEntries(
-      [pr(1, [issue(50, 'Big', ['kind/epic', 'kind/enhancement']), issue(51, 'Odd', ['kind/internal', 'kind/bug'])])],
+  it('kind/internal and kind/epic exclude an issue even with a real category', () => {
+    const { entries, excluded, warnings } = buildEntries(
+      [
+        pr(1, [
+          issue(50, 'Big', ['kind/epic', 'kind/enhancement']),
+          issue(51, 'Odd', ['kind/bug', 'kind/internal']),
+          issue(52, 'Real', ['kind/bug']),
+        ]),
+      ],
       { repo: REPO }
     );
-    assert.deepEqual(entries.map((entry) => [entry.ref, entry.section]), [['#50', 'Added'], ['#51', 'Fixed']]);
-    assert.deepEqual(excluded, []);
+    assert.deepEqual(entries.map((entry) => [entry.ref, entry.section]), [['#52', 'Fixed']]);
+    assert.deepEqual(excluded, [
+      { ref: '#50', pr: 1, label: 'kind/epic' },
+      { ref: '#51', pr: 1, label: 'kind/internal' },
+    ]);
+    assert.deepEqual(warnings, []);
+  });
+
+  it('matches the excluded labels case-insensitively', () => {
+    const { entries, excluded } = buildEntries([pr(1, [issue(53, 'Odd', ['Kind/Internal', 'kind/bug'])])], { repo: REPO });
+    assert.deepEqual(entries, []);
+    assert.deepEqual(excluded.map((item) => item.ref), ['#53']);
   });
 
   it('ignores skip-changelog: the issue labels alone decide', () => {

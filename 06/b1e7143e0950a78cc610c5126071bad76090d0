@@ -1,0 +1,59 @@
+.github/workflows/docouture-release-preview.yml
+  s_54dbd5d007adee::t_945523f5ab90ca 144-146,153,160,168-170,180,186,189-194,263,284-294,349-354
+.github/workflows/docouture-release.yml
+  s_54dbd5d007adee::t_2da0481070bf81 61-63,302-325,331-332,345,355-357
+AGENTS.md
+  s_54dbd5d007adee::t_d486c36d39a38e 156
+code/packages/cli/src/commands/release.spec.ts
+  s_54dbd5d007adee::t_27f91f01956704 129,146-184
+code/packages/cli/src/commands/release.ts
+  s_54dbd5d007adee::t_a7671a3c1f68dc 24,117
+code/packages/cli/src/lib/release-resolve.spec.ts
+  s_54dbd5d007adee::t_3b2cb53cab553b 148,152-202
+code/packages/cli/src/lib/release-resolve.ts
+  s_54dbd5d007adee::t_d83ed5728b7d9c 7,53-55,119-129,131-132,134-157,160
+code/packages/cli/templates/workflows/docouture-release-preview.yml
+  s_54dbd5d007adee::t_d4fbeb0e3cdd8a 144-146,149,156,164-166,176,182,185-190,259,280-290,345-350
+code/packages/cli/templates/workflows/docouture-release.yml
+  s_54dbd5d007adee::t_041ac2db3b54d0 61-63,298-321,327-328,341,351-353
+docs/src/modules/main/nav.adoc
+  s_54dbd5d007adee::t_69043c00f4cff2 41
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_54dbd5d007adee::t_c85553130e3314 73,86-88,100-150
+docs/src/modules/main/pages/reference-cli.adoc
+  s_54dbd5d007adee::t_c259d07f1d65c6 234,258
+docs/src/modules/main/pages/release-notes/1-4-1.adoc
+  s_54dbd5d007adee::t_d9f54ae725d7f3 1-42
+docs/src/modules/main/pages/release-notes/index.adoc
+  s_54dbd5d007adee::t_ff628411f111a5 8
+openspec/changes/github-release-docs-only-republish/.openspec.yaml
+  s_54dbd5d007adee::t_65db83e1d52412 1-2
+openspec/changes/github-release-docs-only-republish/design.md
+  s_54dbd5d007adee::t_008dde3dd7056b 1-46
+openspec/changes/github-release-docs-only-republish/specs/docs-release-preview/spec.md
+  s_54dbd5d007adee::t_e8277021a405e9 1-24
+openspec/changes/github-release-docs-only-republish/specs/docs-release-resolve/spec.md
+  s_54dbd5d007adee::t_e0627e6b79f9da 1-59
+openspec/changes/github-release-docs-only-republish/tasks.md
+  s_54dbd5d007adee::t_e39774214b7b2e 1-39
+skills/docouture-docs-versioning/SKILL.md
+  s_54dbd5d007adee::t_58ea4e047336c7 45-46
+skills/docouture-docs-versioning/reference/releasing.md
+  s_54dbd5d007adee::t_a50a21f90e3a0a 85,99,104-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "06b1e7143e0950a78cc610c5126071bad76090d0",
+  "prompts": {},
+  "sessions": {
+    "s_54dbd5d007adee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e34816882ffeCaoF2b185Dk5sj",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

@@ -13,6 +13,12 @@ full convention, including why some issues produce no entry at all). Entries bel
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-11-12
+
+### Added
+
+- [#313](https://github.com/InditexTech/docouture/issues/313) \[cli] github-release: let a docs-only PR (docs/release) republish the docs at the latest Release
+
 ## [1.4.0] - 2026-11-11
 
 ### Added
@@ -166,12 +172,22 @@ full convention, including why some issues produce no entry at all). Entries bel
 - [#47](https://github.com/InditexTech/docouture/pull/47) \[internal] migrate Weave.js content to example package
 - [#33](https://github.com/InditexTech/docouture/pull/33) \[skills] Correct the iop-ds-components skill against the shipped package
 
-[Unreleased]: https://github.com/InditexTech/docouture/compare/1.4.0...HEAD
+[Unreleased]: https://github.com/InditexTech/docouture/compare/1.4.1...HEAD
+
+[1.4.1]: https://github.com/InditexTech/docouture/compare/1.4.0...1.4.1
+
 [1.4.0]: https://github.com/InditexTech/docouture/compare/1.3.2...1.4.0
+
 [1.3.2]: https://github.com/InditexTech/docouture/compare/1.3.1...1.3.2
+
 [1.3.1]: https://github.com/InditexTech/docouture/compare/1.3.0...1.3.1
+
 [1.3.0]: https://github.com/InditexTech/docouture/compare/1.2.0...1.3.0
+
 [1.2.0]: https://github.com/InditexTech/docouture/compare/1.1.1...1.2.0
+
 [1.1.1]: https://github.com/InditexTech/docouture/compare/1.1.0...1.1.1
+
 [1.1.0]: https://github.com/InditexTech/docouture/compare/1.0.0...1.1.0
+
 [1.0.0]: https://github.com/InditexTech/docouture/releases/tag/1.0.0

@@ -4,7 +4,7 @@
 
 'use strict'
 
-import { bumpVersion, highestSemver, isSemver } from './semver.js'
+import { bumpVersion, highestSemver, isSemver, parseSemver } from './semver.js'
 
 export type ReleaseMode = 'versioned' | 'standalone'
 
@@ -50,6 +50,9 @@ export interface ResolveInput {
   event?: string
   // Tag of the published GitHub Release (github-release).
   releaseTag?: string
+  // Tags of the repository's published, non-draft, non-prerelease GitHub
+  // Releases (github-release, docs-only pull request). Order is irrelevant.
+  releases?: string[]
   // `docouture.versionSourcePrefix`, stripped from releaseTag (github-release).
   prefix?: string
   // Labels on the merged pull request (tag-bump, and the github-release guard).
@@ -113,21 +116,50 @@ export function resolveDescriptor(input: ResolveInput): ReleaseResolution {
   return result
 }
 
+// Highest stable SemVer among published Release tags: only tags that start
+// with the prefix count, the prefix is stripped, and anything that is not
+// SemVer or is a SemVer prerelease is ignored.
+function highestRelease(releases: string[], prefix: string): string | null {
+  const versions = releases
+    .filter((tag) => tag.startsWith(prefix))
+    .map((tag) => tag.slice(prefix.length))
+    .filter((version) => (parseSemver(version)?.prerelease.length ?? 1) === 0)
+  return highestSemver(versions)
+}
+
 // `github-release`: the docs follow the code release, so the version is the
-// published release tag minus an optional prefix.
+// published release tag minus an optional prefix. A docs-only pull request has
+// no release tag; it republishes the highest published Release instead.
 function resolveGithubRelease(input: ResolveInput, explicit: string): ReleaseResolution {
-  const sourceLabel = explicit ? INPUT_SOURCE : 'release tag'
-  if (!explicit && input.event === 'pull_request' && (input.labels ?? []).includes(RELEASE_LABEL)) {
-    return finish('', 'github-release', false, {
-      kind: 'unsupported',
-      value: RELEASE_LABEL,
-      message: `this site's docs version source is 'github-release': docs are released when the code release publishes a GitHub Release, not when a '${RELEASE_LABEL}' pull request merges — remove the label or switch source with 'docouture version-source'`,
-    })
+  const prefix = input.prefix ?? ''
+  const tag = input.releaseTag?.trim() ?? ''
+  const isDocsPullRequest = input.event === 'pull_request' && (input.labels ?? []).includes(RELEASE_LABEL)
+
+  if (!explicit && tag === '' && isDocsPullRequest) {
+    const releases = (input.releases ?? []).map((r) => r.trim()).filter((r) => r !== '')
+    if (releases.length === 0) {
+      return finish('', 'github-release', false, {
+        kind: 'unsupported',
+        value: RELEASE_LABEL,
+        message: `this site's docs version source is 'github-release': a '${RELEASE_LABEL}' pull request republishes the docs at the highest published GitHub Release, and none was found — publish a Release first, or start docouture-release manually with an explicit version`,
+      })
+    }
+    const latest = highestRelease(releases, prefix)
+    if (latest === null) {
+      const count = `${releases.length} published ${releases.length === 1 ? 'release' : 'releases'}`
+      const scope = prefix === '' ? '' : ` starting with the configured docouture.versionSourcePrefix '${prefix}'`
+      return finish('', 'github-release', false, {
+        kind: 'missing',
+        value: prefix,
+        message: `no stable SemVer GitHub Release tag${scope} was found among ${count} considered — publish a Release first, or start docouture-release manually with an explicit version`,
+      })
+    }
+    return finish(latest, 'latest GitHub Release', false)
   }
 
+  const sourceLabel = explicit ? INPUT_SOURCE : 'release tag'
   let version = explicit
   if (!explicit) {
-    const tag = input.releaseTag?.trim() ?? ''
     if (tag === '') {
       return finish('', sourceLabel, false, {
         kind: 'missing',
@@ -136,7 +168,6 @@ function resolveGithubRelease(input: ResolveInput, explicit: string): ReleaseRes
           "version source 'github-release' reads the published GitHub Release tag, and none was given — run it from a release event or pass an explicit version",
       })
     }
-    const prefix = input.prefix ?? ''
     if (prefix !== '' && !tag.startsWith(prefix)) {
       return finish(tag, sourceLabel, false, {
         kind: 'prefix',

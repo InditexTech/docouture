@@ -231,7 +231,7 @@ Where the version comes from depends on `docouture.versionSource` in `docs/packa
 |Source |Version
 
 |`descriptor` |`--version` when given (the `workflow_dispatch` input), otherwise `docs/.release-version`
-|`github-release` |The published release tag (`--release-tag`) minus `docouture.versionSourcePrefix`, when set. A merged `docs/release` pull request fails.
+|`github-release` |The published release tag (`--release-tag`) minus `docouture.versionSourcePrefix`, when set. For a `docs/release` pull request, the highest stable SemVer among `--releases` (filtered by the prefix); it fails when none qualifies.
 |`tag-bump` |The highest `docs/v*` tag plus a bump chosen by `--labels`: `docs/release` patch, `docs/release-minor` minor, `docs/release-major` major (the highest wins). The first release needs `--version`.
 |===
 
@@ -255,6 +255,7 @@ instead, and the exit code stays 0.
 |`--release-tag <tag>` |Tag of the published GitHub Release (`github-release`)
 |`--labels <a,b>` |Pull request labels, comma-separated (`tag-bump`)
 |`--tags <a,b>` |Existing tag names instead of listing git tags (`tag-bump`)
+|`--releases <a,b>` |Tags of the published, non-draft, non-prerelease GitHub Releases (`github-release`, `docs/release` pull request); order does not matter. `--release-tag` wins when both are given
 |`--report` |Report a version error as output instead of failing
 |`--dir <path>` |Repository root (default: cwd, or its enclosing repo)
 |===

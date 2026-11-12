@@ -70,7 +70,7 @@ pull request below). A versioned site can instead choose another source with
 |`docs/.release-version`, committed by the release pull request. The forward-bump and the git-flow sync described here apply only to this source.
 
 |`github-release`
-|The tag of the published GitHub Release, minus the optional `docouture.versionSourcePrefix` (for example `docs-site@`). The docs follow the code release. A merged `docs/release` pull request fails with a message saying so.
+|The tag of the published GitHub Release, minus the optional `docouture.versionSourcePrefix` (for example `docs-site@`). The docs follow the code release. A merged docs-only `docs/release` pull request republishes the docs at the *highest* published stable Release (see <<github-release-republish>>).
 
 |`tag-bump`
 |The highest existing `docs/v*` tag plus a bump: `docs/release` bumps patch, `docs/release-minor` minor and `docs/release-major` major (the highest wins when several are present). The first release has no tag to bump from, so run `docouture-release` manually with an explicit version.
@@ -83,8 +83,9 @@ commands for the two extra labels, which you create once. `docouture release res
 implements the rules for both workflows.
 
 * The preview comment follows the source: `descriptor` reads the file (no dependency
-  install), `github-release` says the docs follow the code release without naming a
-  version, and `tag-bump` shows the version released *if the pull request merged now*, which
+  install), `github-release` shows the version a docs-only pull request would republish
+  (or says the docs follow the code release when the pull request also carries
+  `release-type/*`), and `tag-bump` shows the version released *if the pull request merged now*, which
   can change if another release lands first.
 * Under `tag-bump`, a run started by a published GitHub Release has no pull request
   labels to read, so it bumps patch. Use `workflow_dispatch` with an explicit version for
@@ -95,6 +96,57 @@ implements the rules for both workflows.
   optionally `docouture version-source`. `docouture doctor` shows the active source and
   warns about a stray or missing `docs/.release-version` and about a project CLI that
   predates `release resolve`.
+
+[#github-release-republish]
+=== Republishing docs under `github-release`
+
+A pull request carries no version under `github-release`, so a merged docs-only pull
+request labelled `docs/release` takes it from the repository's published GitHub Releases
+instead: the *highest SemVer* version among them, not the newest one (a backport
+released after `1.4.0` does not make the docs go back to `1.3.9`). The workflow lists the
+non-draft, non-prerelease Releases and `docouture release resolve` then:
+
+* keeps only tags that start with `docouture.versionSourcePrefix` (all tags when none is
+  set), so a repository that publishes several packages picks the right one;
+* strips the prefix and ignores anything that is not SemVer, or is a SemVer prerelease such
+  as `1.5.0-rc.1`;
+* republishes `docs/v<highest>`. The tag is force-recreated like any republish, and there
+  is no descriptor bump or git-flow sync.
+
+Without a prefix, the highest tag across all of the repository's Releases wins, so declare
+`docouture.versionSourcePrefix` on a repository that publishes more than one package. If no
+Release matches, the merge fails with a message naming the prefix and how many releases were
+considered; the preview comment warns about it first.
+
+[#release-scenarios]
+=== Which trigger releases what
+
+What a merged pull request, or a manual run, releases under each version source. "Code release"
+means the pull request carries a `release-type/*` label (without `skip-release`) and the code
+release publishes a GitHub Release; see <<combined-releases>>.
+
+[cols="2,3,3,3"]
+|===
+|Scenario |`github-release` |`tag-bump` |`descriptor` (default)
+
+|*Pull request with code and docs* (`release-type/*`, with or without `docs/release`)
+|Not released on merge. When the code release publishes a Release, the docs are released at *that Release's tag*.
+|Not released on merge. When the code release publishes a Release, the docs are released at the latest `docs/v*` tag *plus a patch bump* (a Release event carries no labels).
+|Not released on merge. When the code release publishes a Release, the docs are released at the version in `docs/.release-version`.
+
+|*Pull request with only docs* (`docs/release`, no `release-type/*`)
+|Released on merge, republishing the *highest published stable Release* (no new version; see <<github-release-republish>>). Fails if no Release qualifies.
+|Released on merge at the latest `docs/v*` tag plus the bump the label selects: `docs/release` patch, `docs/release-minor` minor, `docs/release-major` major.
+|Released on merge at the version in `docs/.release-version`, which the pull request commits; the file is then bumped forward.
+
+|*Manual run* (`workflow_dispatch`)
+|Released at the version typed in the form.
+|Released at the version typed in the form. The only way to cut the first release, or a bump other than patch after a Release event.
+|Released at the version typed in the form; `docs/.release-version` is not bumped for a republish.
+|===
+
+In every case the tag is force-recreated if it already exists, and only `descriptor` runs the
+descriptor bump and the git-flow sync.
 
 === Under git-flow: the sync pull request
 

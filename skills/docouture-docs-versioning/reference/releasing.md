@@ -82,7 +82,7 @@ ordinary act, not something needing a separate flag.
 | source | version | notes |
 | --- | --- | --- |
 | `descriptor` (default) | `docs/.release-version` | the post-release bump and the git-flow sync below apply only here |
-| `github-release` | tag of the published GitHub Release, minus `docouture.versionSourcePrefix` | a merged `docs/release` PR fails with a clear message; no version file |
+| `github-release` | tag of the published GitHub Release, minus `docouture.versionSourcePrefix` | a merged docs-only `docs/release` PR republishes the highest published stable Release (highest SemVer, filtered by the prefix, prereleases ignored; no Release means a clear failure); no version file |
 | `tag-bump` | highest `docs/v*` tag + bump | `docs/release` patch, `docs/release-minor` minor, `docs/release-major` major (highest wins); semver-aware, prerelease tags included; the first release needs an explicit version via `workflow_dispatch`; no version file |
 
 `docouture version-source [descriptor|github-release|tag-bump] [--prefix <p>] [--version <v>]
@@ -96,10 +96,26 @@ optionally `docouture version-source`. `docouture doctor` shows the active sourc
 about a stray or missing `.release-version` and about a CLI without `release resolve`.
 
 The preview comment follows the source: `descriptor` reads the file (no install),
-`github-release` says the docs follow the code release without a version, and `tag-bump`
+`github-release` shows the version a docs-only PR would republish (or says the docs follow the code release when the PR also has `release-type/*`), and `tag-bump`
 shows the version released if the PR merged now (it can change if another release lands
 first). Under `tag-bump`, a run started by a published GitHub Release has no PR labels, so it
 bumps patch; use `workflow_dispatch` with an explicit version for a minor or major bump there.
+
+### Which trigger releases what
+
+"Code release" = the PR has `release-type/*` (no `skip-release`) and the code release publishes a GitHub Release.
+
+| scenario | `github-release` | `tag-bump` | `descriptor` (default) |
+| --- | --- | --- | --- |
+| PR with code + docs | not released on merge; on the Release, docs released at that Release's tag | not released on merge; on the Release, latest `docs/v*` tag + patch (a Release event has no labels) | not released on merge; on the Release, version in `docs/.release-version` |
+| PR with only docs (`docs/release`) | released on merge: republishes the highest published stable Release; fails if none qualifies | released on merge: latest `docs/v*` + the label's bump (`docs/release` patch, `-minor`, `-major`) | released on merge at `docs/.release-version`, then the file is bumped forward |
+| manual (`workflow_dispatch`) | version typed in the form | version typed in the form (the only way to cut the first release or a non-patch bump after a Release event) | version typed in the form; no bump on a republish |
+
+Under `github-release` the workflow lists the non-draft, non-prerelease Releases and
+`docouture release resolve --releases` filters by `versionSourcePrefix` (all tags with no
+prefix, so declare it when the repo publishes several packages), ignores non-SemVer and
+SemVer-prerelease tags and picks the highest. The tag is force-recreated; no descriptor bump
+or git-flow sync.
 
 ## `docs/.release-version` after a release (`descriptor` only)
 

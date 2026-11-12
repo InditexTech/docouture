@@ -145,10 +145,61 @@ describe('resolveRelease', () => {
       expect(r.error?.kind).toBe('invalid')
     })
 
-    it('fails a docs/release pull request', () => {
+    it('fails a docs/release pull request with no Release available', () => {
       const r = resolveRelease({ ...base, event: 'pull_request', labels: ['docs/release'] })
       expect(r.error?.kind).toBe('unsupported')
       expect(r.error?.message).toContain('github-release')
+      expect(r.error?.message).toContain('published GitHub Release')
+    })
+
+    describe('docs-only pull request', () => {
+      const pr = { ...base, event: 'pull_request', labels: ['docs/release'] } as const
+
+      it('republishes the highest Release', () => {
+        const r = resolveRelease({ ...pr, releases: ['1.3.9', '1.4.0', '1.2.0'] })
+        expect(r).toMatchObject({ version: '1.4.0', tag: 'docs/v1.4.0', usesDescriptor: false })
+        expect(r.error).toBeUndefined()
+      })
+
+      it('picks the highest SemVer, not the newest', () => {
+        expect(resolveRelease({ ...pr, releases: ['1.3.9', '1.4.0'] }).version).toBe('1.4.0')
+        expect(resolveRelease({ ...pr, releases: ['1.4.0', '1.3.9'] }).version).toBe('1.4.0')
+      })
+
+      it('lets the prefix select the package', () => {
+        const r = resolveRelease({
+          ...pr,
+          prefix: 'docs-site@',
+          releases: ['api@9.0.1', 'docs-site@1.4.0', 'docs-site@1.3.9'],
+        })
+        expect(r.version).toBe('1.4.0')
+      })
+
+      it('ignores prereleases and non-SemVer tags', () => {
+        expect(resolveRelease({ ...pr, releases: ['1.5.0-rc.1', 'nightly', '1.4.0'] }).version).toBe('1.4.0')
+      })
+
+      it('names the prefix and the count when nothing matches', () => {
+        const r = resolveRelease({ ...pr, prefix: 'docs-site@', releases: ['api@9.0.1'] })
+        expect(r.error?.kind).toBe('missing')
+        expect(r.error?.message).toContain('docs-site@')
+        expect(r.error?.message).toContain('1 published release ')
+      })
+
+      it('lets a release tag win over the supplied releases', () => {
+        const r = resolveRelease({ ...pr, releaseTag: '1.5.0', releases: ['1.9.0'] })
+        expect(r.version).toBe('1.5.0')
+      })
+
+      it('lets an explicit version win', () => {
+        const r = resolveRelease({ ...pr, explicit: '2.0.0', releases: ['1.9.0'] })
+        expect(r.version).toBe('2.0.0')
+      })
+
+      it('does not use releases without the docs/release label', () => {
+        const r = resolveRelease({ ...base, event: 'pull_request', labels: [], releases: ['1.9.0'] })
+        expect(r.error?.kind).toBe('missing')
+      })
     })
 
     it('lets an explicit version win, even for a labelled pull request', () => {

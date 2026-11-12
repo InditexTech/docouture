@@ -21,7 +21,7 @@ import {
 } from '../lib/release-resolve.js'
 
 const USAGE =
-  'usage: docouture release resolve --mode <versioned|standalone> [--version <v>] [--event <name>] [--release-tag <tag>] [--labels <a,b>] [--tags <a,b>] [--report] [--dir <path>]'
+  'usage: docouture release resolve --mode <versioned|standalone> [--version <v>] [--event <name>] [--release-tag <tag>] [--labels <a,b>] [--tags <a,b>] [--releases <a,b>] [--report] [--dir <path>]'
 
 type Flags = Record<string, string | boolean>
 
@@ -114,6 +114,7 @@ async function runResolve(argv: string[]): Promise<number> {
     source,
     event: stringFlag(flags, 'event'),
     releaseTag: stringFlag(flags, 'release-tag'),
+    releases: listFlag(stringFlag(flags, 'releases'), /[,\n]/) ?? [],
     prefix: declaration.prefix ?? undefined,
     labels: listFlag(stringFlag(flags, 'labels'), /,/) ?? [],
     tags: await resolveTags(mode, source, listFlag(stringFlag(flags, 'tags'), /[,\n]/), repoRoot),

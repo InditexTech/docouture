@@ -126,7 +126,7 @@ describe('runRelease resolve', () => {
       expect(out()).toContain('uses_descriptor=false')
     })
 
-    it('fails a docs/release pull request under github-release', async () => {
+    it('fails a docs/release pull request under github-release without Releases', async () => {
       await writeSource({ versionSource: 'github-release' })
       const argv = [
         'resolve',
@@ -141,6 +141,45 @@ describe('runRelease resolve', () => {
       ]
       expect(await runRelease(argv)).toBe(1)
       expect(errorSpy.mock.calls.flat().join('\n')).toContain('github-release')
+    })
+
+    it('republishes the highest injected Release for a docs/release pull request', async () => {
+      await writeSource({ versionSource: 'github-release', versionSourcePrefix: 'docs-site@' })
+      const argv = [
+        'resolve',
+        '--mode',
+        'versioned',
+        '--event',
+        'pull_request',
+        '--labels',
+        'docs/release',
+        '--releases',
+        'api@9.0.1,docs-site@1.3.9\ndocs-site@1.4.0',
+        '--dir',
+        dir,
+      ]
+      expect(await runRelease(argv)).toBe(0)
+      expect(out()).toContain('version=1.4.0')
+      expect(out()).toContain('tag=docs/v1.4.0')
+      expect(out()).toContain('uses_descriptor=false')
+    })
+
+    it('reports a missing Release in --report mode with exit 0', async () => {
+      await writeSource({ versionSource: 'github-release' })
+      const argv = [
+        'resolve',
+        '--mode',
+        'versioned',
+        '--event',
+        'pull_request',
+        '--labels',
+        'docs/release',
+        '--report',
+        '--dir',
+        dir,
+      ]
+      expect(await runRelease(argv)).toBe(0)
+      expect(out()).toContain('error=unsupported')
     })
 
     it('bumps tag-bump from real git tags and the label list', async () => {

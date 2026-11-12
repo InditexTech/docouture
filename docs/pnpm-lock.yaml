@@ -9,20 +9,20 @@ importers:
   .:
     devDependencies:
       '@inditextech/docouture-antora-extensions':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.4.1
+        version: 1.4.1
       '@inditextech/docouture-asciidoc-extensions':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.4.1
+        version: 1.4.1
       '@inditextech/docouture-cli':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.4.1
+        version: 1.4.1
       '@inditextech/docouture-publish-gh-pages':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.4.1
+        version: 1.4.1
       '@inditextech/docouture-ui-bundle':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 1.4.1
+        version: 1.4.1
       antora:
         specifier: 3.2.0
         version: 3.2.0
@@ -105,25 +105,25 @@ packages:
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
-  '@inditextech/docouture-antora-extensions@1.4.0':
-    resolution: {integrity: sha512-EY/BSGUxYZCYmIMXJQO2n1Pvf2esIl1qfznmuucEst+4nb7EGEn6xfqkKpA5r/d6TR0o4cwj+ehsC8phxAxh6A==}
+  '@inditextech/docouture-antora-extensions@1.4.1':
+    resolution: {integrity: sha512-B4CKB+dGwbXp1ZGkIDD3dN9OX7+a1jm6qwDAcucqWTW99qQJqbe+w4217EPy28aMEp8VqiiHs37Wjr8UDlxQJw==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-asciidoc-extensions@1.4.0':
-    resolution: {integrity: sha512-hHB1E77iKaKKXOmjeQKsGW5TxrPWKIceMP/4glq6cjoURYW0zV1qWGhGeiBNyG1bzWz8B4yjbTKDCMFFRedNnQ==}
+  '@inditextech/docouture-asciidoc-extensions@1.4.1':
+    resolution: {integrity: sha512-FWyLsU/8XCDzZHevW8ykIfgVW2uIQQLiSC0fAayrNpj4vpsENYIaMFkIT2CXD2JLxrxdbkceA2w4IE8Z3TWi+Q==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-cli@1.4.0':
-    resolution: {integrity: sha512-HQcB/rfWkSTAYaKacfu3XZ5GhxXTF38fg9AhvkRzewm6GRhtsA8Qk7nuxd75NZFNiresau00dKTzyHOTgU4JSg==}
+  '@inditextech/docouture-cli@1.4.1':
+    resolution: {integrity: sha512-dBXQ4R4aotK0VCSdpRpNvvs4zI5UNh7gdWpTnRmbYV7tAJDOGCyCuUXhcDvS7owEq9vVnkScrlefoHb7c8TXtQ==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
-  '@inditextech/docouture-publish-gh-pages@1.4.0':
-    resolution: {integrity: sha512-aY8j4+HJX7cCnrhVtKfh0o8Ia9xfSKe2CpnMRzWD1YksvnsFEdNXnMtZcTkPC7GMw/UQLZr1155rmdvWljoZxA==}
+  '@inditextech/docouture-publish-gh-pages@1.4.1':
+    resolution: {integrity: sha512-SddNPp8Y0zyn0f6vWDQuJrtqwk4v19w/EdUZ1m+AlYNcZsDCVJN+5srdl7P90CECNLVMy1Bx6ljnb0Wv2KaNcg==}
     engines: {node: '>=24.0.0'}
 
-  '@inditextech/docouture-ui-bundle@1.4.0':
-    resolution: {integrity: sha512-oytBwruKbbGJyoHkvkV6PAGT8r/ALYnxYIHM1WOoT8okwcmo07ynAHwrymoD4URN0e2FqrITrnoQWcvaDoU8iA==}
+  '@inditextech/docouture-ui-bundle@1.4.1':
+    resolution: {integrity: sha512-LIK/hT7Cx+8Om+TbPFThrwh8pMq0OBatXqIemSHYwHXiyC2xO5R1GcsgbbkqiCAjW7g955wFqpf3B5t4qawi2Q==}
     engines: {node: '>=24.0.0'}
 
   '@inquirer/ansi@1.0.2':
@@ -1312,12 +1312,12 @@ snapshots:
 
   '@iarna/toml@2.2.5': {}
 
-  '@inditextech/docouture-antora-extensions@1.4.0':
+  '@inditextech/docouture-antora-extensions@1.4.1':
     dependencies:
       '@antora/asciidoc-loader': 3.2.0
       '@antora/page-composer': 3.2.0
       '@antora/redirect-producer': 3.2.0
-      '@inditextech/docouture-asciidoc-extensions': 1.4.0
+      '@inditextech/docouture-asciidoc-extensions': 1.4.1
       '@shikijs/langs': 4.4.3
       '@shikijs/themes': 4.4.3
       handlebars: 4.7.10
@@ -1327,23 +1327,23 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
-  '@inditextech/docouture-asciidoc-extensions@1.4.0':
+  '@inditextech/docouture-asciidoc-extensions@1.4.1':
     dependencies:
       asciidoctor-core-2.2: '@asciidoctor/core@2.2.9'
       shiki: 4.4.3
 
-  '@inditextech/docouture-cli@1.4.0':
+  '@inditextech/docouture-cli@1.4.1':
     dependencies:
       '@inquirer/prompts': 7.10.1
       ora: 8.2.0
     transitivePeerDependencies:
       - '@types/node'
 
-  '@inditextech/docouture-publish-gh-pages@1.4.0':
+  '@inditextech/docouture-publish-gh-pages@1.4.1':
     dependencies:
       gh-pages: 6.3.0
 
-  '@inditextech/docouture-ui-bundle@1.4.0': {}
+  '@inditextech/docouture-ui-bundle@1.4.1': {}
 
   '@inquirer/ansi@1.0.2': {}
 

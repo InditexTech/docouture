@@ -141,22 +141,23 @@ jobs:
           echo "source=${source}" >> "$GITHUB_OUTPUT"
           echo "Version source: ${source}"
 
-      # Only `tag-bump` needs the project's own CLI here (semver ordering of
-      # the docs/v* tags); `descriptor` and `github-release` install nothing.
+      # `tag-bump` (semver ordering of the docs/v* tags) and `github-release`
+      # (highest published Release) need the project's own CLI here;
+      # `descriptor` installs nothing.
       - name: Setup pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           package_json_file: docs/package.json
 
       - name: Setup Node
-        if: steps.source.outputs.source == 'tag-bump'
+        if: steps.source.outputs.source != 'descriptor'
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: docs/package.json
           package-manager-cache: false
 
       - name: Install dependencies
-        if: steps.source.outputs.source == 'tag-bump'
+        if: steps.source.outputs.source != 'descriptor'
         run: pnpm install --frozen-lockfile
 
       # Standalone always targets 'stable'. Versioned depends on the source:
@@ -164,7 +165,9 @@ jobs:
       # expected to have committed — same source docouture-release.yml's
       # pull_request trigger reads (there is no workflow_dispatch input to fall
       # back to here); `github-release` has no version until the code release
-      # publishes; `tag-bump` asks `docouture release resolve` using the tags
+      # publishes, or, for a docs-only `docs/release` PR, the highest published
+      # Release (asked of `docouture release resolve`, like `tag-bump`);
+      # `tag-bump` asks `docouture release resolve` using the tags
       # from the REST API (checkout keeps no credentials, and is shallow).
       - name: Resolve version
         id: resolve
@@ -174,14 +177,21 @@ jobs:
           MODE: ${{ steps.detect.outputs.mode }}
           SOURCE: ${{ steps.source.outputs.source }}
           LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          HAS_RELEASE_TYPE: ${{ (contains(join(github.event.pull_request.labels.*.name, ', '), 'release-type/') && !contains(github.event.pull_request.labels.*.name, 'skip-release')) && 'true' || 'false' }}
         run: |
           error=""
           if [ "$MODE" != "versioned" ]; then
             version="stable"
             tag="docs/stable"
-          elif [ "$SOURCE" = "github-release" ]; then
+          elif [ "$SOURCE" = "github-release" ] && [ "$HAS_RELEASE_TYPE" = "true" ]; then
             version=""
             tag=""
+          elif [ "$SOURCE" = "github-release" ]; then
+            releases=$(gh api --paginate "repos/${REPOSITORY}/releases" --jq '.[] | select(.draft | not) | select(.prerelease | not) | .tag_name' | paste -sd, -)
+            resolved=$(npx docouture release resolve --mode versioned --event pull_request --labels "$LABELS" --releases "$releases" --report)
+            version=$(printf '%s\n' "$resolved" | sed -n 's/^version=//p')
+            tag=$(printf '%s\n' "$resolved" | sed -n 's/^tag=//p')
+            error=$(printf '%s\n' "$resolved" | sed -n 's/^error=//p')
           elif [ "$SOURCE" = "tag-bump" ]; then
             tags=$(gh api --paginate "repos/${REPOSITORY}/git/matching-refs/tags/docs/v" --jq '.[].ref | ltrimstr("refs/tags/")' | paste -sd, -)
             resolved=$(npx docouture release resolve --mode versioned --event pull_request --labels "$LABELS" --tags "$tags" --report)
@@ -250,7 +260,7 @@ jobs:
             FAIL_TIMING="If you merge it as it is, the docs release will fail."
           fi
 
-          if [ "$MODE" = "versioned" ] && [ "$SOURCE" = "github-release" ]; then
+          if [ "$MODE" = "versioned" ] && [ "$SOURCE" = "github-release" ] && [ "$HAS_RELEASE_TYPE" = "true" ]; then
             gh pr comment "$PR_NUMBER" --repo "$REPOSITORY" --body "
           ### :information_source: The docs are released with the code release
           This site's docs version source is \`github-release\`: the docs site is published when the code release publishes a GitHub Release, never when a Pull Request merges. No version can be shown here, and the \`docs/release\` label does **not** release the docs on merge.
@@ -268,6 +278,17 @@ jobs:
           ${FAIL_TIMING}
 
           **Before merging:** release the first version manually with \`docouture-release\` from the Actions tab, giving an explicit version such as \`1.0.0\`."
+            exit 0
+          fi
+
+          if [ "$MODE" = "versioned" ] && [ "$SOURCE" = "github-release" ] && [ -n "$ERROR" ]; then
+            gh pr comment "$PR_NUMBER" --repo "$REPOSITORY" --body "
+          ### :x: Docs release will fail: no published Release to republish
+          This site's docs version source is \`github-release\`, and no published stable GitHub Release was found (a Release matching \`docouture.versionSourcePrefix\` when one is set). A docs-only \`docs/release\` Pull Request republishes the docs at the highest published Release.
+
+          ${FAIL_TIMING}
+
+          **Before merging:** publish a Release first, or release the docs manually with \`docouture-release\` from the Actions tab, giving an explicit version."
             exit 0
           fi
 
@@ -323,6 +344,12 @@ jobs:
             if [ "$MODE" = "versioned" ] && [ "$SOURCE" = "descriptor" ]; then
               MESSAGE="${MESSAGE} If that is not what you want, change the version in \`docs/.release-version\`."
             fi
+          fi
+
+          if [ "$MODE" = "versioned" ] && [ "$SOURCE" = "github-release" ] && [ "$HAS_RELEASE_TYPE" != "true" ]; then
+            MESSAGE="${MESSAGE}
+
+          This republishes the highest published stable GitHub Release (matching \`docouture.versionSourcePrefix\` when one is set), **if this Pull Request merged now**. It can change if another Release publishes first."
           fi
 
           if [ "$MODE" = "versioned" ] && [ "$SOURCE" = "tag-bump" ]; then

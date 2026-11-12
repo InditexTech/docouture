@@ -1,0 +1,46 @@
+= v1.4.1
+
+[.lead]
+A patch release. Under the `github-release` version source, a docs-only pull request
+labelled `docs/release` can now republish the docs instead of failing after the merge.
+Nothing changes for `descriptor` or `tag-bump`. The workflows call a new CLI flag, so update
+the CLI first. Existing sites only get the new workflows by running `docouture upgrade`.
+
+== Do this
+
+. Update every `@inditextech/docouture-*` package, and the CLI if you install it, to
+  `1.4.1`, and install. The generated workflows run the CLI your project installed, and
+  they now pass `docouture release resolve --releases`, which older CLIs do not accept.
+. Run `docouture upgrade`, review the diff, and commit `.github/workflows/`. See
+  xref:main:reference-cli.adoc[].
+. If your Release tags carry a prefix, for example `my-lib@1.4.1` in a repository that
+  publishes several packages, set `docouture.versionSourcePrefix` (for example with
+  `docouture version-source github-release --prefix my-lib@`) so the right Release is
+  picked. The prefix applies to the Release tags, not to the `docs/v*` tags the workflow
+  creates. Without a prefix, only plain SemVer Release tags such as `1.4.1` are considered,
+  and prefixed tags are ignored. A repository with plain tags, like this one, needs
+  nothing.
+
+== What changed
+
+* *Changed: a docs-only `docs/release` pull request no longer fails under `github-release`.*
+  The workflow lists the repository's published, non-draft, non-prerelease GitHub Releases,
+  and `docouture release resolve` republishes the docs at the highest SemVer among them,
+  filtered by `docouture.versionSourcePrefix`. SemVer prereleases such as `1.5.0-rc.1` and
+  non-SemVer tags are ignored. The tag is force-recreated like any republish, with no
+  descriptor bump and no git-flow sync. With no usable Release, the merge fails with a
+  message naming the prefix and how many releases were considered.
+* *New: `docouture release resolve --releases <a,b>`.* The Release tags to choose from. Their
+  order does not matter, and `--release-tag` still takes precedence.
+* *Changed: the release preview under `github-release`.* A `docs/release` pull request now
+  says merging republishes `docs/vX.Y.Z`, or warns that no Release was found. A pull request
+  that also has `release-type/*` keeps the "docs follow the code release" comment. The
+  preview job now runs your package manager's install under `github-release`, like
+  `tag-bump`.
+* *New: a scenario-by-source table* of what each trigger releases, in
+  xref:main:guides-releasing-a-documentation.adoc#release-scenarios[].
+
+== Limitations
+
+* A pull request labelled only `docs/release-minor` or `docs/release-major` has no bump to
+  apply under `github-release` and still fails; use `docs/release`.

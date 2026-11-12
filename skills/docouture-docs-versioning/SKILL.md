@@ -42,7 +42,8 @@ a release tag, and what the release workflow actually does).
   `docs/package.json` is `descriptor` (the default, everything above), `github-release`
   (the published GitHub Release's tag, optionally minus `docouture.versionSourcePrefix`) or
   `tag-bump` (the latest `docs/v*` tag plus a bump: `docs/release` patch,
-  `docs/release-minor` minor, `docs/release-major` major). Only `descriptor` uses
+  `docs/release-minor` minor, `docs/release-major` major). Under `github-release`, a docs-only
+  `docs/release` PR republishes the highest published stable Release. Only `descriptor` uses
   `docs/.release-version`, the post-release bump and the git-flow sync. Show or change it
   with `docouture version-source [source]`; `docouture new --mode versioned` asks for it.
   See `reference/releasing.md`.

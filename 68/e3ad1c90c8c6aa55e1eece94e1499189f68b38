@@ -1,0 +1,27 @@
+docs/src/modules/main/pages/guides-releasing-a-documentation.adoc
+  s_54dbd5d007adee::t_352519e411815c 73,109-111,117-131
+docs/src/modules/main/pages/release-notes/1-4-1.adoc
+  s_54dbd5d007adee::t_e27f28227a016f 16-22
+openspec/changes/github-release-docs-only-republish/design.md
+  s_54dbd5d007adee::t_fabaed14f2cfbb 38
+openspec/changes/github-release-docs-only-republish/proposal.md
+  s_54dbd5d007adee::t_fc6b423408fa96 8
+skills/docouture-docs-versioning/reference/releasing.md
+  s_54dbd5d007adee::t_291bf03589fdc0 115-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "68e3ad1c90c8c6aa55e1eece94e1499189f68b38",
+  "prompts": {},
+  "sessions": {
+    "s_54dbd5d007adee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e34816882ffeCaoF2b185Dk5sj",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Jesus Manuel Piñeiro Cid <jesusmpc@inditex.com>"
+    }
+  }
+}

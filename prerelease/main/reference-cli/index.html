@@ -634,6 +634,15 @@
   <li class="side-menu__item">
     <div class="side-menu__row">
       <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
+        href="../release-notes/1-4-1/">
+        <span class="dt-list-item__text"><span class="dt-list-item__label">v1.4.1</span></span>
+      </a>
+    </div>
+
+  </li>
+  <li class="side-menu__item">
+    <div class="side-menu__row">
+      <a class="dt-list-item side-menu__link dt-list-item--tree--level-1"
         href="../release-notes/1-4-0/">
         <span class="dt-list-item__text"><span class="dt-list-item__label">v1.4.0</span></span>
       </a>
@@ -1280,7 +1289,7 @@ project&#8217;s installed CLI, so install a version with <code>release resolve</
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>github-release</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The published release tag (<code>--release-tag</code>) minus <code>docouture.versionSourcePrefix</code>, when set. A merged <code>docs/release</code> pull request fails.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The published release tag (<code>--release-tag</code>) minus <code>docouture.versionSourcePrefix</code>, when set. For a <code>docs/release</code> pull request, the highest stable SemVer among <code>--releases</code> (filtered by the prefix); it fails when none qualifies.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>tag-bump</code></p></td>
@@ -1335,6 +1344,10 @@ instead, and the exit code stays 0.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--tags &lt;a,b&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Existing tag names instead of listing git tags (<code>tag-bump</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--releases &lt;a,b&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tags of the published, non-draft, non-prerelease GitHub Releases (<code>github-release</code>, <code>docs/release</code> pull request); order does not matter. <code>--release-tag</code> wins when both are given</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--report</code></p></td>

@@ -13,9 +13,13 @@ the CLI first. Existing sites only get the new workflows by running `docouture u
   they now pass `docouture release resolve --releases`, which older CLIs do not accept.
 . Run `docouture upgrade`, review the diff, and commit `.github/workflows/`. See
   xref:main:reference-cli.adoc[].
-. On a repository that publishes several packages, set `docouture.versionSourcePrefix`
-  (for example with `docouture version-source github-release --prefix docs-site@`), so the
-  right Release is picked. Without a prefix, the highest tag across all Releases wins.
+. If your Release tags carry a prefix, for example `my-lib@1.4.1` in a repository that
+  publishes several packages, set `docouture.versionSourcePrefix` (for example with
+  `docouture version-source github-release --prefix my-lib@`) so the right Release is
+  picked. The prefix applies to the Release tags, not to the `docs/v*` tags the workflow
+  creates. Without a prefix, only plain SemVer Release tags such as `1.4.1` are considered,
+  and prefixed tags are ignored. A repository with plain tags, like this one, needs
+  nothing.
 
 == What changed
 

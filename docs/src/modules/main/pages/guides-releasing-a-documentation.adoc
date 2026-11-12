@@ -70,7 +70,7 @@ pull request below). A versioned site can instead choose another source with
 |`docs/.release-version`, committed by the release pull request. The forward-bump and the git-flow sync described here apply only to this source.
 
 |`github-release`
-|The tag of the published GitHub Release, minus the optional `docouture.versionSourcePrefix` (for example `docs-site@`). The docs follow the code release. A merged docs-only `docs/release` pull request republishes the docs at the *highest* published stable Release (see <<github-release-republish>>).
+|The tag of the published GitHub Release, minus the optional `docouture.versionSourcePrefix` (for example `my-lib@`). The docs follow the code release. A merged docs-only `docs/release` pull request republishes the docs at the *highest* published stable Release (see <<github-release-republish>>).
 
 |`tag-bump`
 |The highest existing `docs/v*` tag plus a bump: `docs/release` bumps patch, `docs/release-minor` minor and `docs/release-major` major (the highest wins when several are present). The first release has no tag to bump from, so run `docouture-release` manually with an explicit version.
@@ -106,17 +106,29 @@ instead: the *highest SemVer* version among them, not the newest one (a backport
 released after `1.4.0` does not make the docs go back to `1.3.9`). The workflow lists the
 non-draft, non-prerelease Releases and `docouture release resolve` then:
 
-* keeps only tags that start with `docouture.versionSourcePrefix` (all tags when none is
-  set), so a repository that publishes several packages picks the right one;
+* keeps only tags that start with `docouture.versionSourcePrefix` (with no prefix set, every
+  tag is tried as a version as it is), so a repository that publishes several packages picks
+  the right one;
 * strips the prefix and ignores anything that is not SemVer, or is a SemVer prerelease such
   as `1.5.0-rc.1`;
 * republishes `docs/v<highest>`. The tag is force-recreated like any republish, and there
   is no descriptor bump or git-flow sync.
 
-Without a prefix, the highest tag across all of the repository's Releases wins, so declare
-`docouture.versionSourcePrefix` on a repository that publishes more than one package. If no
-Release matches, the merge fails with a message naming the prefix and how many releases were
-considered; the preview comment warns about it first.
+The prefix applies to the *Release* tags the version is read from, never to the `docs/v*`
+tags this workflow creates. Docs tags are the output (`docs/v1.4.1`); Release tags are the
+input (`1.4.1`, or `my-lib@1.4.1` when a repository releases several packages and prefixes
+each package's tag).
+
+* *No prefix* (the default): only plain SemVer Release tags such as `1.4.1` are considered.
+  Prefixed tags like `my-lib@1.4.1` are not valid SemVer, so they are ignored.
+* *With a prefix*, such as `my-lib@`: only that package's Releases are considered, and the
+  prefix is stripped before ordering.
+
+For example, the docouture repository publishes plain Releases (`1.4.0`, `1.3.2`, ...) and
+sets no prefix, so a docs-only `docs/release` PR republishes `docs/v1.4.0`.
+
+If no Release matches, the merge fails with a message naming the prefix and how many
+releases were considered; the preview comment warns about it first.
 
 [#release-scenarios]
 === Which trigger releases what

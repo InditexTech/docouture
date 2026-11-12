@@ -112,10 +112,12 @@ bumps patch; use `workflow_dispatch` with an explicit version for a minor or maj
 | manual (`workflow_dispatch`) | version typed in the form | version typed in the form (the only way to cut the first release or a non-patch bump after a Release event) | version typed in the form; no bump on a republish |
 
 Under `github-release` the workflow lists the non-draft, non-prerelease Releases and
-`docouture release resolve --releases` filters by `versionSourcePrefix` (all tags with no
-prefix, so declare it when the repo publishes several packages), ignores non-SemVer and
-SemVer-prerelease tags and picks the highest. The tag is force-recreated; no descriptor bump
-or git-flow sync.
+`docouture release resolve --releases` filters by `versionSourcePrefix`, ignores non-SemVer
+and SemVer-prerelease tags and picks the highest. The prefix applies to the *Release* tags
+(input, e.g. `my-lib@1.4.1`), never to the `docs/v*` tags the workflow creates (output). With
+no prefix only plain SemVer Release tags (`1.4.1`) count and prefixed ones are ignored, so
+declare the prefix when Release tags carry one; this repo's own Releases are plain (`1.4.0`),
+so it sets none. The tag is force-recreated; no descriptor bump or git-flow sync.
 
 ## `docs/.release-version` after a release (`descriptor` only)
 

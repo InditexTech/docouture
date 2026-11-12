@@ -35,7 +35,7 @@ Both workflows exist twice: the template under `code/packages/cli/templates/work
 
 ## Risks / Trade-offs
 
-- [A repo with no prefix publishing several packages picks the highest tag across all of them] → Documented: declare `versionSourcePrefix`; the preview shows the version before merge.
+- [A repo with prefixed Release tags and no `versionSourcePrefix` finds no Release, because prefixed tags are not SemVer and are skipped] → The merge fails with a message naming the prefix and the count, the preview warns first, and the docs say to declare the prefix.
 - [`gh api --paginate` on a repo with very many Releases is slow] → Releases are returned newest first and a docs-only republish is rare; accepted, revisit only if it shows up.
 - [Preview and release resolve at different times, so the version can differ] → The preview text already says the version can change if another Release publishes first.
 - [Republishing overwrites the `docs/vX.Y.Z` tag] → That is the existing republish behavior for every source; this change adds no new force-push semantics.
